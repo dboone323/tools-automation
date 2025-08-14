@@ -255,25 +255,65 @@ case "${1:-}" in
         ;;
     "mcp")
         if [[ -n "${2:-}" ]]; then
-            if [[ "${2}" == "status" ]]; then
+            if [[ "${2}" == "status" || "${2}" == "autofix-all" ]]; then
                 "$CODE_DIR/Tools/Automation/mcp_workflow.sh" "$2"
             elif [[ -n "${3:-}" ]]; then
                 "$CODE_DIR/Tools/Automation/mcp_workflow.sh" "$2" "$3"
             else
                 echo "Usage: $0 mcp <command> [project_name]"
-                echo "Available MCP commands: check, ci-check, fix, status"
+                echo "Available MCP commands: check, ci-check, fix, autofix, autofix-all, validate, rollback, status"
                 exit 1
             fi
         else
             echo "Usage: $0 mcp <command> [project_name]"
-            echo "Available MCP commands: check, ci-check, fix, status"
+            echo "Available MCP commands: check, ci-check, fix, autofix, autofix-all, validate, rollback, status"
+            exit 1
+        fi
+        ;;
+    "autofix")
+        if [[ -n "${2:-}" ]]; then
+            "$CODE_DIR/Tools/Automation/intelligent_autofix.sh" fix "$2"
+        else
+            "$CODE_DIR/Tools/Automation/intelligent_autofix.sh" fix-all
+        fi
+        ;;
+    "validate")
+        if [[ -n "${2:-}" ]]; then
+            "$CODE_DIR/Tools/Automation/intelligent_autofix.sh" validate "$2"
+        else
+            echo "Usage: $0 validate <project_name>"
+            exit 1
+        fi
+        ;;
+    "rollback")
+        if [[ -n "${2:-}" ]]; then
+            "$CODE_DIR/Tools/Automation/intelligent_autofix.sh" rollback "$2"
+        else
+            echo "Usage: $0 rollback <project_name>"
+            exit 1
+        fi
+        ;;
+    "enhance")
+        if [[ -n "${2:-}" ]]; then
+            if [[ "${2}" == "analyze-all" || "${2}" == "auto-apply-all" || "${2}" == "report" || "${2}" == "status" ]]; then
+                "$CODE_DIR/Tools/Automation/ai_enhancement_system.sh" "$2"
+            elif [[ -n "${3:-}" ]]; then
+                "$CODE_DIR/Tools/Automation/ai_enhancement_system.sh" "$2" "$3"
+            else
+                echo "Usage: $0 enhance <command> [project_name]"
+                echo "Available commands: analyze, analyze-all, auto-apply, auto-apply-all, report, status"
+                exit 1
+            fi
+        else
+            echo "Usage: $0 enhance <command> [project_name]"
+            echo "Available commands: analyze, analyze-all, auto-apply, auto-apply-all, report, status"
             exit 1
         fi
         ;;
     *)
         echo "🏗️  Unified Code Architecture - Master Automation Controller"
         echo ""
-        echo "Usage: $0 {list|run <project>|all|status|format [project]|lint [project]|pods <project>|fastlane <project>|workflow <command> <project>|mcp <command> <project>|dashboard|unified}"
+        echo "Usage: $0 {list|run <project>|all|status|format [project]|lint [project]|pods <project>|fastlane <project>|workflow <command> <project>|mcp <command> <project>|autofix [project]|validate <project>|rollback <project>|enhance <command> [project]|dashboard|unified}"
         echo ""
         echo "Commands:"
         echo "  list                    # List all projects with status"
@@ -285,7 +325,11 @@ case "${1:-}" in
         echo "  pods <project>         # Initialize/update CocoaPods for project"
         echo "  fastlane <project>     # Setup Fastlane for iOS deployment"
         echo "  workflow <cmd> <proj>  # Run enhanced workflow (pre-commit, ios-setup, qa, deps)"
-        echo "  mcp <cmd> <proj>       # MCP GitHub workflow integration (check, ci-check, fix, status)"
+        echo "  mcp <cmd> <proj>       # MCP GitHub workflow integration (check, ci-check, fix, autofix, validate, rollback, status)"
+        echo "  autofix [project]      # Run intelligent auto-fix with safety checks (all projects if none specified)"
+        echo "  validate <project>     # Run comprehensive validation checks"
+        echo "  rollback <project>     # Rollback last auto-fix if backup exists"
+        echo "  enhance <cmd> [proj]   # AI-powered enhancement system (analyze, auto-apply, analyze-all, auto-apply-all, report, status)"
         echo "  dashboard              # Show comprehensive workflow status dashboard"
         echo "  unified                # Show unified workflow status across all projects"
         echo ""

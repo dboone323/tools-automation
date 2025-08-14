@@ -297,6 +297,10 @@ show_help() {
     echo "  check <project>        # Check workflow status and configuration"
     echo "  ci-check <project>     # Run local CI checks that mirror GitHub Actions"
     echo "  fix <project>          # Fix common workflow issues"
+    echo "  autofix <project>      # Run intelligent auto-fix with safety checks"
+    echo "  autofix-all           # Run intelligent auto-fix on all projects"
+    echo "  validate <project>     # Run comprehensive validation checks"
+    echo "  rollback <project>     # Rollback last auto-fix if backup exists"
     echo "  status                 # Check GitHub integration status"
     echo "  help                   # Show this help"
     echo ""
@@ -304,6 +308,8 @@ show_help() {
     echo "  $0 check MomentumFinance"
     echo "  $0 ci-check MomentumFinance"
     echo "  $0 fix MomentumFinance"
+    echo "  $0 autofix HabitQuest"
+    echo "  $0 autofix-all"
     echo ""
 }
 
@@ -330,6 +336,33 @@ case "${1:-}" in
             fix_workflow_issues "$2"
         else
             print_error "Usage: $0 fix <project_name>"
+            exit 1
+        fi
+        ;;
+    "autofix")
+        if [[ -n "${2:-}" ]]; then
+            "$CODE_DIR/Tools/Automation/intelligent_autofix.sh" fix "$2"
+        else
+            print_error "Usage: $0 autofix <project_name>"
+            exit 1
+        fi
+        ;;
+    "autofix-all")
+        "$CODE_DIR/Tools/Automation/intelligent_autofix.sh" fix-all
+        ;;
+    "validate")
+        if [[ -n "${2:-}" ]]; then
+            "$CODE_DIR/Tools/Automation/intelligent_autofix.sh" validate "$2"
+        else
+            print_error "Usage: $0 validate <project_name>"
+            exit 1
+        fi
+        ;;
+    "rollback")
+        if [[ -n "${2:-}" ]]; then
+            "$CODE_DIR/Tools/Automation/intelligent_autofix.sh" rollback "$2"
+        else
+            print_error "Usage: $0 rollback <project_name>"
             exit 1
         fi
         ;;
