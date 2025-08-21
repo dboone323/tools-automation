@@ -183,6 +183,25 @@ show_status() {
     list_projects
 }
 
+# Run automation for all projects
+run_all_automation() {
+    print_status "Running automation for all projects..."
+    for project in "$PROJECTS_DIR"/*; do
+        if [[ -d "$project" ]]; then
+            local project_name=$(basename "$project")
+            print_status "Attempting automation for $project_name"
+            # Call project-specific automation if available, otherwise run lint/format as fallback
+            if [[ -f "$project/automation/run_automation.sh" ]]; then
+                (cd "$project" && bash automation/run_automation.sh) || print_warning "Automation failed for $project_name"
+            else
+                print_warning "No automation script for $project_name — running lint as lightweight verification"
+                (cd "$project" && command -v swiftlint >/dev/null 2>&1 && swiftlint) || print_warning "Lint not available or failed for $project_name"
+            fi
+        fi
+    done
+    print_success "All project automations attempted"
+}
+
 # Check if a tool is available
 check_tool() {
     local tool="$1"
