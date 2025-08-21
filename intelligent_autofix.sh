@@ -641,22 +641,36 @@ run_comprehensive_autofix() {
     local post_check_result=$(run_post_build_checks "$project_path")
     local post_checks_passed=$(echo "$post_check_result" | cut -d'/' -f1)
     local post_total_checks=$(echo "$post_check_result" | cut -d'/' -f2)
-    
+
     print_status "Post-build validation: $post_check_result"
-    
+
+    # --- SwiftLint manual review report ---
+    print_status "Generating SwiftLint manual review report..."
+    local lint_report="$project_path/.swiftlint_manual_review.txt"
+    if command -v swiftlint &> /dev/null; then
+        swiftlint lint --reporter json 2>/dev/null | jq -r '.[] | select(.severity == "error") | "File: \(.file)\nLine: \(.line)\nRule: \(.rule_id)\nReason: \(.reason)\n---"' > "$lint_report"
+        local error_count=$(cat "$lint_report" | grep -c '^File: ')
+        if [[ "$error_count" -gt 0 ]]; then
+            print_warning "Manual review required for $error_count SwiftLint errors. See $lint_report."
+        else
+            print_success "No unfixable SwiftLint errors detected."
+            rm -f "$lint_report"
+        fi
+    else
+        print_warning "SwiftLint not available for manual review report."
+    fi
+
     # Determine if fixes were successful
     if [[ "$post_checks_passed" -eq "$post_total_checks" ]]; then
         cleanup_backup "$project_path"
         print_success "Auto-fix completed successfully for $project_name"
         print_success "Applied $total_fixes fixes across $fix_categories categories"
-        
         # Log success
         echo "$(date): SUCCESS - $project_name: $total_fixes fixes applied" >> "$LOG_FILE"
         return 0
     else
         print_error "Post-build validation failed - rolling back changes"
         restore_backup "$project_path"
-        
         # Log failure
         echo "$(date): ROLLBACK - $project_name: Fixes caused issues, restored backup" >> "$LOG_FILE"
         return 1

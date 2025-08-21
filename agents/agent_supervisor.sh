@@ -18,6 +18,11 @@ declare -A AGENT_LOGS
 AGENT_LOGS[agent_build.sh]="$AGENTS_DIR/build_agent.log"
 AGENT_LOGS[agent_debug.sh]="$AGENTS_DIR/debug_agent.log"
 AGENT_LOGS[agent_codegen.sh]="$AGENTS_DIR/codegen_agent.log"
+AGENT_LOGS[uiux_agent.sh]="$AGENTS_DIR/uiux_agent.log"
+AGENT_LOGS[apple_pro_agent.sh]="$AGENTS_DIR/apple_pro_agent.log"
+AGENT_LOGS[collab_agent.sh]="$AGENTS_DIR/collab_agent.log"
+AGENT_LOGS[updater_agent.sh]="$AGENTS_DIR/updater_agent.log"
+AGENT_LOGS[search_agent.sh]="$AGENTS_DIR/search_agent.log"
 
 # Restart throttling and limit
 declare -A AGENT_RESTART_COUNT
@@ -81,7 +86,7 @@ echo "[$(date)] Supervisor: All agents running." >> "$LOG_FILE"
 
 # Supervisor main loop: monitor logs and restart agents on error/rollback
 while true; do
-    for agent in "agent_build.sh" "agent_debug.sh" "agent_codegen.sh"; do
+    for agent in "agent_build.sh" "agent_debug.sh" "agent_codegen.sh" "uiux_agent.sh" "apple_pro_agent.sh" "collab_agent.sh" "updater_agent.sh" "search_agent.sh"; do
         log_file="${AGENT_LOGS["$agent"]}"
         rotate_log "$log_file"
         if [[ -f "$log_file" ]]; then
