@@ -213,12 +213,13 @@ run_all_automation() {
 			project_name=$(basename "${project}")
 			print_status "Attempting automation for ${project_name}"
 			if [[ -f "${project}/automation/run_automation.sh" ]]; then
-						mkdir -p "${project}/automation/logs" 2>/dev/null || true
-						# Run automation script with explicit check so set -e is preserved
-						(cd "${project}" && bash automation/run_automation.sh)
-						if [[ $? -ne 0 ]]; then
-							print_warning "Automation failed for ${project_name}"
-						fi
+				mkdir -p "${project}/automation/logs" 2>/dev/null || true
+				# Run automation script and check result directly
+				if (cd "${project}" && bash automation/run_automation.sh); then
+					: # success
+				else
+					print_warning "Automation failed for ${project_name}"
+				fi
 			else
 				print_warning "No automation script for ${project_name} — running lint as lightweight verification"
 				(cd "${project}" && command -v swiftlint >/dev/null 2>&1 && swiftlint) || print_warning "Lint not available or failed for ${project_name}"

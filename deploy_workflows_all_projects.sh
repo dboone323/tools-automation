@@ -100,15 +100,15 @@ push_project_workflows() {
 		print_status "${project_name}: No workflow changes to push"
 
 		# Check if we need to push any staged workflows
-	local staged_workflows
-	staged_workflows=$(git diff --cached --name-only .github/workflows/ 2>/dev/null) || staged_workflows=""
+		local staged_workflows
+		staged_workflows=$(git diff --cached --name-only .github/workflows/ 2>/dev/null) || staged_workflows=""
 	if [[ -n "${staged_workflows}" ]]; then
 			print_status "${project_name}: Found staged workflow changes"
 		else
 			# Try to push anyway in case there are committed but unpushed changes
 			local unpushed
 			unpushed=$(git log origin/main..HEAD --oneline 2>/dev/null) || unpushed=""
-			if [[ -z "${unpushed}" ]]; then
+			if [[ -z ${unpushed} ]]; then
 				# fallback to last commit if origin/main comparison failed
 				unpushed=$(git log --oneline -1 2>/dev/null) || unpushed=""
 			fi
@@ -124,7 +124,7 @@ push_project_workflows() {
 		echo "${workflow_changes}" | sed 's/^/    /'
 
 		# Stage workflow changes
-	git add .github/workflows/ 2>/dev/null || true
+		git add .github/workflows/ 2>/dev/null || true
 	fi
 
 	# Check current branch
