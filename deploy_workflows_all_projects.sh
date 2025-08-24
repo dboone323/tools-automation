@@ -36,6 +36,19 @@ print_error() {
 	echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# Ensure PyYAML is available for YAML validation
+check_pyyaml() {
+	if ! command -v python3 >/dev/null 2>&1; then
+		print_error "python3 not found; required for workflow YAML validation"
+		return 1
+	fi
+	if ! python3 -c "import yaml" >/dev/null 2>&1; then
+		print_error "PyYAML not installed for python3. Install with: python3 -m pip install pyyaml"
+		return 1
+	fi
+	return 0
+}
+
 # Validate workflows YAML syntax
 validate_workflows() {
 	local project_path="$1"
@@ -243,6 +256,11 @@ show_help() {
 validate_only() {
 	print_header
 	print_status "Validation mode - checking workflow syntax only..."
+
+	# Ensure PyYAML is available before validating
+	if ! check_pyyaml; then
+		return 1
+	fi
 
 	local validation_errors=0
 
