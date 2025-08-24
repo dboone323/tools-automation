@@ -6,6 +6,7 @@ set -euo pipefail
 
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PROJECTS_DIR="${CODE_DIR}/Projects"
+DRY_RUN=0
 
 # Colors
 GREEN='\033[0;32m'
@@ -208,21 +209,31 @@ show_status() {
 run_all_automation() {
 	print_status "Running automation for all projects..."
 	for project in "${PROJECTS_DIR}"/*; do
-		if [[ -d ${project} ]]; then
+		if [[ -d "${project}" ]]; then
 			local project_name
 			project_name=$(basename "${project}")
 			print_status "Attempting automation for ${project_name}"
+
 			if [[ -f "${project}/automation/run_automation.sh" ]]; then
 				mkdir -p "${project}/automation/logs" 2>/dev/null || true
-				# Run automation script and check result directly
+
+				if [[ "${DRY_RUN}" -eq 1 ]]; then
+					print_status "Dry-run: would run automation for ${project_name} (skipping actual execution)"
+					continue
+				fi
+
 				if (cd "${project}" && bash automation/run_automation.sh); then
-					: # success
+					print_success "${project_name} automation completed"
 				else
 					print_warning "Automation failed for ${project_name}"
 				fi
 			else
 				print_warning "No automation script for ${project_name} — running lint as lightweight verification"
-				(cd "${project}" && command -v swiftlint >/dev/null 2>&1 && swiftlint) || print_warning "Lint not available or failed for ${project_name}"
+				if command -v swiftlint >/dev/null 2>&1; then
+					(cd "${project}" && swiftlint) || print_warning "Lint not available or failed for ${project_name}"
+				else
+					print_warning "swiftlint not installed for ${project_name}"
+				fi
 			fi
 		fi
 	done
