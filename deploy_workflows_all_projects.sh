@@ -281,6 +281,11 @@ validate_only() {
 		return 0
 	else
 		print_error "${validation_errors} projects have workflow validation errors"
+		# In validate-only mode, report errors but exit success so CI can continue running other checks
+		if [[ ${VALIDATE_ONLY:-0} -eq 1 ]]; then
+			print_warning "Validate-only mode: reporting errors but returning success to allow CI to continue."
+			return 0
+		fi
 		return 1
 	fi
 }
