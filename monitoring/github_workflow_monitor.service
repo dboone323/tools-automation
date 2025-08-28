@@ -1,0 +1,15 @@
+[Unit]
+Description=GitHub Workflow Monitor for MCP
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=${HOME}/Code/Tools
+# Run under the project's virtualenv
+ExecStart=${HOME}/Code/Tools/Automation/.venv/bin/python ${HOME}/Code/Tools/Automation/github_workflow_monitor.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,46 @@
+
+================================================
+ 🚀 MULTI-PROJECT WORKFLOW DEPLOYMENT
+================================================
+
+[0;34m[DEPLOY] Validation mode - checking workflow syntax only...
+
+[1;33mValidating: AvoidObstaclesGame
+[0;34m[DEPLOY] Validating workflows for AvoidObstaclesGame...
+[1;33m[WARNING] No workflows directory found in AvoidObstaclesGame
+
+[1;33mValidating: CodingReviewer
+[0;34m[DEPLOY] Validating workflows for CodingReviewer...
+[1;33m[WARNING] No workflows directory found in CodingReviewer
+
+[1;33mValidating: HabitQuest
+[0;34m[DEPLOY] Validating workflows for HabitQuest...
+  ✅ ai-enhanced-cicd.yml: Valid YAML
+  ✅ ai-excellence.yml: Valid YAML
+  ✅ ai-self-healing 2.yml: Valid YAML
+  ✅ ai-self-healing.yml: Valid YAML
+  ✅ ci-cd-backup.yml: Valid YAML
+  ✅ ci-cd.yml: Valid YAML
+  ✅ ci.yml: Valid YAML
+  ✅ codeql-security.yml: Valid YAML
+  ✅ dependency-updates.yml: Valid YAML
+  ✅ release.yml: Valid YAML
+  ✅ security-monitoring.yml: Valid YAML
+  ✅ security.yml: Valid YAML
+  ✅ swift.yml: Valid YAML
+  ❌ swiftformat.yml: Invalid YAML
+  ❌ update-dependencies.yml: Invalid YAML
+
+[1;33mValidating: MomentumFinance
+[0;34m[DEPLOY] Validating workflows for MomentumFinance...
+  ✅ ci.yml: Valid YAML
+
+[1;33mValidating: PlannerApp
+[0;34m[DEPLOY] Validating workflows for PlannerApp...
+[1;33m[WARNING] No workflows directory found in PlannerApp
+
+[1;33mValidating: Tools
+[0;34m[DEPLOY] Validating workflows for Tools...
+[1;33m[WARNING] No workflows directory found in Tools
+[ERROR] 5 projects have workflow validation errors
+[1;33m[WARNING] Validate-only mode: reporting errors but returning success to allow CI to continue.

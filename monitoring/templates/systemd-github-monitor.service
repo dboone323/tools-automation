@@ -1,0 +1,14 @@
+[Unit]
+Description=GitHub Workflow Monitor
+After=network.target
+
+[Service]
+Type=simple
+User=%u
+WorkingDirectory=/Users/danielstevens/Desktop/Code/Tools
+ExecStart=/Users/danielstevens/Desktop/Code/Tools/Automation/.venv/bin/python Automation/github_workflow_monitor.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

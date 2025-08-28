@@ -1,0 +1,179 @@
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame dry_run=true enable_auto_fix=true
+Running checker with auto-fix analysis
+No architecture issues detected
+Project is not a git repo (no .git dir); leaving fixes uncommitted
+Invoking ai_workflow_recovery.py (dry-run enforced) for /Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame
+2025-08-25 11:54:00,625 - INFO - 🤖 AI Workflow Recovery initialized for dboone323/Quantum-workspace
+2025-08-25 11:54:00,625 - INFO - 🔍 Running in dry-run mode (analysis only)
+2025-08-25 11:54:00,658 - INFO - 🧠 Analyzing workflow failure with AI...
+2025-08-25 11:54:00,659 - INFO - 🎯 Match found: missing_file (confidence: 0.95)
+2025-08-25 11:54:00,659 - INFO - 🎯 Would apply fix: create_missing_file for missing_file
+Entrypoint finished
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/CodingReviewer ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/CodingReviewer dry_run=true enable_auto_fix=true
+Running checker with auto-fix analysis
+No architecture issues detected
+Project is not a git repo (no .git dir); leaving fixes uncommitted
+Invoking ai_workflow_recovery.py (dry-run enforced) for /Users/danielstevens/Desktop/Code/Projects/CodingReviewer
+2025-08-25 11:54:00,925 - INFO - 🤖 AI Workflow Recovery initialized for dboone323/Quantum-workspace
+2025-08-25 11:54:00,925 - INFO - 🔍 Running in dry-run mode (analysis only)
+2025-08-25 11:54:00,955 - INFO - 🧠 Analyzing workflow failure with AI...
+2025-08-25 11:54:00,955 - INFO - 🎯 Match found: missing_file (confidence: 0.95)
+2025-08-25 11:54:00,956 - INFO - 🎯 Would apply fix: create_missing_file for missing_file
+Entrypoint finished
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/HabitQuest ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/HabitQuest dry_run=true enable_auto_fix=true
+Running checker with auto-fix analysis
+Architecture issues detected:
+ - Project has 28 TODO/FIXME markers; consider cleaning up (threshold=10)
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/swift.yml may reference deprecated action major versions (check version pins)
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/ci.yml may reference deprecated action major versions (check version pins)
+AUTO_FIX_CANDIDATES:
+ - multi-doc: /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/security-monitoring.yml
+ - multi-doc: /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/release.yml
+ - multi-doc: /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/security.yml
+ - multi-doc: /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/swiftformat.yml
+ - multi-doc: /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/swift.yml
+ - multi-doc: /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/dependency-updates.yml
+ - multi-doc: /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/update-dependencies.yml
+ - multi-doc: /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/ai-enhanced-cicd.yml
+AUTO_FIX_RESULTS:
+ - SKIPPED: multi-doc -> /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/security-monitoring.yml: no-split-needed
+ - SKIPPED: multi-doc -> /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/release.yml: no-split-needed
+ - SKIPPED: multi-doc -> /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/security.yml: no-split-needed
+ - SKIPPED: multi-doc -> /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/swiftformat.yml: no-split-needed
+ - SKIPPED: multi-doc -> /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/swift.yml: no-split-needed
+ - SKIPPED: multi-doc -> /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/dependency-updates.yml: no-split-needed
+ - SKIPPED: multi-doc -> /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/update-dependencies.yml: no-split-needed
+ - SKIPPED: multi-doc -> /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/ai-enhanced-cicd.yml: no-split-needed
+Detected git repository at /Users/danielstevens/Desktop/Code/Projects/HabitQuest; attempting to commit fixes
+Running SwiftLint...
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/NotificationService.swift:154:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 141 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Models/Habit.swift:49:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 168 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/SmartNotificationService.swift:402:1: warning: File Length Violation: File should contain 400 lines or less: currently contains 402 (file_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/SmartNotificationService.swift:113:19: error: Identifier Name Violation: Variable name 's' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/SmartNotificationService.swift:113:26: error: Identifier Name Violation: Variable name 'p' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/SmartNotificationService.swift:115:19: error: Identifier Name Violation: Variable name 's' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/SmartNotificationService.swift:115:26: error: Identifier Name Violation: Variable name 'p' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/SmartNotificationService.swift:117:19: error: Identifier Name Violation: Variable name 's' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/SmartNotificationService.swift:119:22: error: Identifier Name Violation: Variable name 'p' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/SmartNotificationService.swift:382:20: warning: Identifier Name Violation: Variable name 'at' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Views/SharedAnalyticsComponents.swift:545:1: warning: File Length Violation: File should contain 400 lines or less: currently contains 545 (file_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Views/SharedAnalyticsComponents.swift:18:14: warning: Identifier Name Violation: Enum element name 'up' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Views/SharedAnalyticsComponents.swift:439:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 123 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/DataExportService.swift:60:17: warning: Function Body Length Violation: Function body should span 50 lines or less excluding comments and whitespace: currently spans 64 lines (function_body_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/DataExportService.swift:149:17: warning: Function Body Length Violation: Function body should span 50 lines or less excluding comments and whitespace: currently spans 56 lines (function_body_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/DataExportService.swift:204:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 127 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/DataExportService.swift:20:9: warning: Nesting Violation: Types should be nested at most 1 level deep (nesting)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/DataExportService.swift:28:9: warning: Nesting Violation: Types should be nested at most 1 level deep (nesting)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/DataExportService.swift:38:9: warning: Nesting Violation: Types should be nested at most 1 level deep (nesting)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/DataExportService.swift:43:9: warning: Nesting Violation: Types should be nested at most 1 level deep (nesting)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Models/HabitLog.swift:17:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 128 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/GameRules.swift:73:13: error: Identifier Name Violation: Variable name 'i' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/GameRules.swift:136:31: warning: Identifier Name Violation: Variable name 'xp' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/GameRules.swift:81:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 139 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/GameRules.swift:84:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 154 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/GameRules.swift:88:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 139 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AchievementService.swift:10:17: error: Function Body Length Violation: Function body should span 100 lines or less excluding comments and whitespace: currently spans 124 lines (function_body_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AchievementService.swift:265:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 143 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AchievementService.swift:310:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 145 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AchievementService.swift:6:1: warning: Type Body Length Violation: Type body should span 250 lines or less excluding comments and whitespace: currently spans 251 lines (type_body_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AdvancedAnalyticsEngine.swift:456:1: warning: File Length Violation: File should contain 400 lines or less: currently contains 456 (file_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AdvancedAnalyticsEngine.swift:208:19: error: Identifier Name Violation: Variable name 'm' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AdvancedAnalyticsEngine.swift:208:26: error: Identifier Name Violation: Variable name 'p' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AdvancedAnalyticsEngine.swift:210:19: error: Identifier Name Violation: Variable name 'm' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AdvancedAnalyticsEngine.swift:210:26: error: Identifier Name Violation: Variable name 'p' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AdvancedAnalyticsEngine.swift:212:19: error: Identifier Name Violation: Variable name 'm' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AdvancedAnalyticsEngine.swift:212:26: error: Identifier Name Violation: Variable name 'p' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AdvancedAnalyticsEngine.swift:214:22: error: Identifier Name Violation: Variable name 'p' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AdvancedAnalyticsEngine.swift:6:7: warning: Type Body Length Violation: Type body should span 250 lines or less excluding comments and whitespace: currently spans 284 lines (type_body_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakVisualization/StreakVisualizationView.swift:424:1: warning: File Length Violation: File should contain 400 lines or less: currently contains 424 (file_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakVisualization/StreakVisualizationView.swift:140:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 141 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Utilities/Logger.swift:13:14: warning: Identifier Name Violation: Enum element name 'ui' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Models/Achievement.swift:101:19: warning: Redundant String Enum Value Violation: String enum values can be omitted when they are equal to the enumcase name (redundant_string_enum_value)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Models/Achievement.swift:102:23: warning: Redundant String Enum Value Violation: String enum values can be omitted when they are equal to the enumcase name (redundant_string_enum_value)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Models/Achievement.swift:103:18: warning: Redundant String Enum Value Violation: String enum values can be omitted when they are equal to the enumcase name (redundant_string_enum_value)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Models/Achievement.swift:104:24: warning: Redundant String Enum Value Violation: String enum values can be omitted when they are equal to the enumcase name (redundant_string_enum_value)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Models/Achievement.swift:105:20: warning: Redundant String Enum Value Violation: String enum values can be omitted when they are equal to the enumcase name (redundant_string_enum_value)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/DataManagement/DataManagementView.swift:93:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 127 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/TodaysQuests/TodaysQuestsViewModel.swift:97:28: warning: Identifier Name Violation: Variable name 'xp' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/AnalyticsTest/AnalyticsTestView.swift:160:18: warning: Function Body Length Violation: Function body should span 50 lines or less excluding comments and whitespace: currently spans 53 lines (function_body_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AnalyticsService.swift:495:1: warning: File Length Violation: File should contain 400 lines or less: currently contains 495 (file_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AnalyticsService.swift:53:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 127 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AnalyticsService.swift:172:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 135 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AnalyticsService.swift:492:22: warning: Redundant String Enum Value Violation: String enum values can be omitted when they are equal to the enumcase name (redundant_string_enum_value)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AnalyticsService.swift:493:19: warning: Redundant String Enum Value Violation: String enum values can be omitted when they are equal to the enumcase name (redundant_string_enum_value)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Core/Services/AnalyticsService.swift:494:22: warning: Redundant String Enum Value Violation: String enum values can be omitted when they are equal to the enumcase name (redundant_string_enum_value)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakAnalytics/StreakAnalyticsView.swift:466:1: warning: File Length Violation: File should contain 400 lines or less: currently contains 466 (file_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakAnalytics/StreakAnalyticsView.swift:351:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 145 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakAnalytics/StreakAnalyticsView.swift:5:1: warning: Type Body Length Violation: Type body should span 250 lines or less excluding comments and whitespace: currently spans 340 lines (type_body_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakAnalytics/StreakAnalyticsView.swift:388:46: warning: Unused Enumerated Violation: When the index is not used, `.enumerated()` can be removed (unused_enumerated)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/CharacterProfile/ProfileView.swift:679:1: warning: File Length Violation: File should contain 400 lines or less: currently contains 679 (file_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/CharacterProfile/ProfileView.swift:415:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 122 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/CharacterProfile/ProfileView.swift:42:24: warning: Multiple Closures with Trailing Closure Violation: Trailing closure syntax should not be used when passing more than one closure argument (multiple_closures_with_trailing_closure)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/TodaysQuests/TodaysQuestsView.swift:224:1: warning: Line Length Violation: Line should be 120 characters or less; currently it has 124 characters (line_length)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakVisualization/StreakHeatMapView.swift:346:21: error: Force Try Violation: Force tries should be avoided (force_try)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakVisualization/StreakHeatMapView.swift:249:32: error: Identifier Name Violation: Variable name 'p' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakVisualization/StreakHeatMapView.swift:253:32: error: Identifier Name Violation: Variable name 'p' should be between 3 and 40 characters long (identifier_name)
+/Users/danielstevens/Desktop/Code/Projects/HabitQuest/HabitQuest/Features/StreakVisualization/StreakHeatMapView.swift:64:57: warning: Multiple Closures with Trailing Closure Violation: Trailing closure syntax should not be used when passing more than one closure argument (multiple_closures_with_trailing_closure)
+SwiftLint failed. Please fix the issues before committing.
+Everything up-to-date
+Invoking ai_workflow_recovery.py (dry-run enforced) for /Users/danielstevens/Desktop/Code/Projects/HabitQuest
+2025-08-25 11:54:02,572 - INFO - 🤖 AI Workflow Recovery initialized for dboone323/HabitQuest
+2025-08-25 11:54:02,572 - INFO - 🔍 Running in dry-run mode (analysis only)
+Entrypoint finished
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/MomentumFinance ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/MomentumFinance dry_run=true enable_auto_fix=true
+Running checker with auto-fix analysis
+Architecture issues detected:
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/MomentumFinance/.github/workflows/ci.yml may reference deprecated action major versions (check version pins)
+Warn-only mode: continuing with warnings
+Detected git repository at /Users/danielstevens/Desktop/Code/Projects/MomentumFinance; attempting to commit fixes
+[main 5481d0a] auto-fix: apply safe architecture fixes (multi-doc split, action pin bumps)
+ 1 file changed, 1 insertion(+)
+ create mode 100644 quantum_agent__Users_danielstevens_Desktop_Code_Projects_MomentumFinance.log
+fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+push failed or no remote
+Invoking ai_workflow_recovery.py (dry-run enforced) for /Users/danielstevens/Desktop/Code/Projects/MomentumFinance
+2025-08-25 11:54:03,440 - INFO - 🤖 AI Workflow Recovery initialized for unknown/unknown
+2025-08-25 11:54:03,440 - INFO - 🔍 Running in dry-run mode (analysis only)
+2025-08-25 11:54:03,472 - INFO - 🧠 Analyzing workflow failure with AI...
+2025-08-25 11:54:03,473 - INFO - 🎯 Match found: missing_file (confidence: 0.95)
+2025-08-25 11:54:03,473 - INFO - 🎯 Would apply fix: create_missing_file for missing_file
+Entrypoint finished
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/PlannerApp ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/PlannerApp dry_run=true enable_auto_fix=true
+Running checker with auto-fix analysis
+No architecture issues detected
+Project is not a git repo (no .git dir); leaving fixes uncommitted
+Invoking ai_workflow_recovery.py (dry-run enforced) for /Users/danielstevens/Desktop/Code/Projects/PlannerApp
+2025-08-25 11:54:03,851 - INFO - 🤖 AI Workflow Recovery initialized for dboone323/Quantum-workspace
+2025-08-25 11:54:03,851 - INFO - 🔍 Running in dry-run mode (analysis only)
+2025-08-25 11:54:03,882 - INFO - 🧠 Analyzing workflow failure with AI...
+2025-08-25 11:54:03,882 - INFO - 🎯 Match found: missing_file (confidence: 0.95)
+2025-08-25 11:54:03,882 - INFO - 🎯 Would apply fix: create_missing_file for missing_file
+Entrypoint finished
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/Tools ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/Tools dry_run=true enable_auto_fix=true
+Running checker with auto-fix analysis
+No architecture issues detected
+Project is not a git repo (no .git dir); leaving fixes uncommitted
+Invoking ai_workflow_recovery.py (dry-run enforced) for /Users/danielstevens/Desktop/Code/Projects/Tools
+2025-08-25 11:54:04,096 - INFO - 🤖 AI Workflow Recovery initialized for dboone323/Quantum-workspace
+2025-08-25 11:54:04,097 - INFO - 🔍 Running in dry-run mode (analysis only)
+2025-08-25 11:54:04,127 - INFO - 🧠 Analyzing workflow failure with AI...
+2025-08-25 11:54:04,128 - INFO - 🎯 Match found: missing_file (confidence: 0.95)
+2025-08-25 11:54:04,128 - INFO - 🎯 Would apply fix: create_missing_file for missing_file
+Entrypoint finished
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Tools ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Tools dry_run=true enable_auto_fix=true
+Running checker with auto-fix analysis
+Architecture issues detected:
+ - Project has 35 TODO/FIXME markers; consider cleaning up (threshold=10)
+Warn-only mode: continuing with warnings
+Detected git repository at /Users/danielstevens/Desktop/Code/Tools; attempting to commit fixes

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.quantum.test-agent-1</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/danielstevens/Desktop/Code/Tools/Automation/.venv/bin/python</string>
+    <string>/Users/danielstevens/Desktop/Code/Tools/Automation/agents/run_agent.py</string>
+    <string>--name</string>
+    <string>test-agent-1</string>
+    <string>--capabilities</string>
+    <string>status</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/Users/danielstevens/Desktop/Code/Tools/Automation/logs/test-agent-1.out</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/danielstevens/Desktop/Code/Tools/Automation/logs/test-agent-1.err</string>
+</dict>
+</plist>

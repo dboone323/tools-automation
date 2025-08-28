@@ -1,0 +1,43 @@
+name: Validate & Lint Automation (PR)
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "Tools/Automation/**"
+
+jobs:
+  validate-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install PyYAML
+        run: python -m pip install --upgrade pip && python -m pip install pyyaml
+
+      - name: Bash syntax check
+        run: |
+          bash -n Tools/Automation/master_automation.sh
+          bash -n Tools/Automation/deploy_workflows_all_projects.sh
+
+      - name: Run deploy validation
+        run: bash Tools/Automation/deploy_workflows_all_projects.sh --validate
+        env:
+          CODE_DIR: ${{ github.workspace }}
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Run ShellCheck
+        run: |
+          shellcheck Tools/Automation/master_automation.sh || true
+          shellcheck Tools/Automation/deploy_workflows_all_projects.sh || true
+
+      - name: Run master automation list (safe)
+        run: bash Tools/Automation/master_automation.sh list || true
