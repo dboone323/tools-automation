@@ -1,0 +1,94 @@
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame dry_run=true enable_auto_fix=true
+No architecture issues detected
+Running checker with auto-fix analysis
+No architecture issues detected
+Invoking ai_workflow_recovery.py --project /Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame --dry-run --enable-auto-fix
+usage: ai_workflow_recovery.py [-h] [--repo-path REPO_PATH]
+                               [--max-retries MAX_RETRIES] [--dry-run]
+ai_workflow_recovery.py: error: unrecognized arguments: --project /Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame --enable-auto-fix
+Entrypoint finished
+Changes detected after auto-fix for /Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame; committing
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/CodingReviewer ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/CodingReviewer dry_run=true enable_auto_fix=true
+No architecture issues detected
+Running checker with auto-fix analysis
+No architecture issues detected
+Invoking ai_workflow_recovery.py --project /Users/danielstevens/Desktop/Code/Projects/CodingReviewer --dry-run --enable-auto-fix
+usage: ai_workflow_recovery.py [-h] [--repo-path REPO_PATH]
+                               [--max-retries MAX_RETRIES] [--dry-run]
+ai_workflow_recovery.py: error: unrecognized arguments: --project /Users/danielstevens/Desktop/Code/Projects/CodingReviewer --enable-auto-fix
+Entrypoint finished
+Changes detected after auto-fix for /Users/danielstevens/Desktop/Code/Projects/CodingReviewer; committing
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/HabitQuest ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/HabitQuest dry_run=true enable_auto_fix=true
+Architecture issues detected:
+ - Project has 28 TODO/FIXME markers; consider cleaning up (threshold=10)
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/swift.yml may reference deprecated action major versions (check version pins)
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/ci.yml may reference deprecated action major versions (check version pins)
+Warn-only mode: continuing with warnings
+Running checker with auto-fix analysis
+Architecture issues detected:
+ - Project has 28 TODO/FIXME markers; consider cleaning up (threshold=10)
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/swift.yml may reference deprecated action major versions (check version pins)
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/ci.yml may reference deprecated action major versions (check version pins)
+Warn-only mode: continuing with warnings
+Invoking ai_workflow_recovery.py --project /Users/danielstevens/Desktop/Code/Projects/HabitQuest --dry-run --enable-auto-fix
+usage: ai_workflow_recovery.py [-h] [--repo-path REPO_PATH]
+                               [--max-retries MAX_RETRIES] [--dry-run]
+ai_workflow_recovery.py: error: unrecognized arguments: --project /Users/danielstevens/Desktop/Code/Projects/HabitQuest --enable-auto-fix
+Entrypoint finished
+Changes detected after auto-fix for /Users/danielstevens/Desktop/Code/Projects/HabitQuest; committing
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/MomentumFinance ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/MomentumFinance dry_run=true enable_auto_fix=true
+Architecture issues detected:
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/MomentumFinance/.github/workflows/ci.yml may reference deprecated action major versions (check version pins)
+Warn-only mode: continuing with warnings
+Running checker with auto-fix analysis
+Architecture issues detected:
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/MomentumFinance/.github/workflows/ci.yml may reference deprecated action major versions (check version pins)
+Warn-only mode: continuing with warnings
+Invoking ai_workflow_recovery.py --project /Users/danielstevens/Desktop/Code/Projects/MomentumFinance --dry-run --enable-auto-fix
+usage: ai_workflow_recovery.py [-h] [--repo-path REPO_PATH]
+                               [--max-retries MAX_RETRIES] [--dry-run]
+ai_workflow_recovery.py: error: unrecognized arguments: --project /Users/danielstevens/Desktop/Code/Projects/MomentumFinance --enable-auto-fix
+Entrypoint finished
+Changes detected after auto-fix for /Users/danielstevens/Desktop/Code/Projects/MomentumFinance; committing
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/PlannerApp ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/PlannerApp dry_run=true enable_auto_fix=true
+No architecture issues detected
+Running checker with auto-fix analysis
+No architecture issues detected
+Invoking ai_workflow_recovery.py --project /Users/danielstevens/Desktop/Code/Projects/PlannerApp --dry-run --enable-auto-fix
+usage: ai_workflow_recovery.py [-h] [--repo-path REPO_PATH]
+                               [--max-retries MAX_RETRIES] [--dry-run]
+ai_workflow_recovery.py: error: unrecognized arguments: --project /Users/danielstevens/Desktop/Code/Projects/PlannerApp --enable-auto-fix
+Entrypoint finished
+Changes detected after auto-fix for /Users/danielstevens/Desktop/Code/Projects/PlannerApp; committing
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Projects/Tools ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/Tools dry_run=true enable_auto_fix=true
+No architecture issues detected
+Running checker with auto-fix analysis
+No architecture issues detected
+Invoking ai_workflow_recovery.py --project /Users/danielstevens/Desktop/Code/Projects/Tools --dry-run --enable-auto-fix
+usage: ai_workflow_recovery.py [-h] [--repo-path REPO_PATH]
+                               [--max-retries MAX_RETRIES] [--dry-run]
+ai_workflow_recovery.py: error: unrecognized arguments: --project /Users/danielstevens/Desktop/Code/Projects/Tools --enable-auto-fix
+Entrypoint finished
+Changes detected after auto-fix for /Users/danielstevens/Desktop/Code/Projects/Tools; committing
+=== RUN ENTRYPOINT: /Users/danielstevens/Desktop/Code/Tools ===
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Tools dry_run=true enable_auto_fix=true
+Architecture issues detected:
+ - Project has 35 TODO/FIXME markers; consider cleaning up (threshold=10)
+Warn-only mode: continuing with warnings
+Running checker with auto-fix analysis
+Architecture issues detected:
+ - Project has 35 TODO/FIXME markers; consider cleaning up (threshold=10)
+Warn-only mode: continuing with warnings
+Invoking ai_workflow_recovery.py --project /Users/danielstevens/Desktop/Code/Tools --dry-run --enable-auto-fix
+usage: ai_workflow_recovery.py [-h] [--repo-path REPO_PATH]
+                               [--max-retries MAX_RETRIES] [--dry-run]
+ai_workflow_recovery.py: error: unrecognized arguments: --project /Users/danielstevens/Desktop/Code/Tools --enable-auto-fix
+Entrypoint finished
+Changes detected after auto-fix for /Users/danielstevens/Desktop/Code/Tools; committing
+Auto-fix run complete

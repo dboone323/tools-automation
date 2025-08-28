@@ -1,0 +1,16 @@
+[Unit]
+Description=MCP Server for Quantum workspace
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=${HOME}/Code/Tools
+ExecStart=${HOME}/Code/Tools/Automation/.venv/bin/python ${HOME}/Code/Tools/Automation/mcp_server.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=file:${HOME}/Code/Tools/Automation/logs/mcp_server.out
+StandardError=file:${HOME}/Code/Tools/Automation/logs/mcp_server.err
+
+[Install]
+WantedBy=multi-user.target

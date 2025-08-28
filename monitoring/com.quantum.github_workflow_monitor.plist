@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.quantum.github_workflow_monitor</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/Users/danielstevens/Code/Tools/Automation/.venv/bin/python</string>
+      <string>/Users/danielstevens/Code/Tools/Automation/github_workflow_monitor.py</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/danielstevens/Desktop/Code/Tools/Automation/logs/github_workflow_monitor.out</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/danielstevens/Desktop/Code/Tools/Automation/logs/github_workflow_monitor.err</string>
+  </dict>
+</plist>

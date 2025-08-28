@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Task Detail</title>
+  </head>
+  <body>
+    <h2>Task Detail</h2>
+    {% if task %}
+    <pre>{{ task|tojson(indent=2) }}</pre>
+    {% else %}
+    <p>No task found</p>
+    {% endif %}
+    <p><a href="/">Back</a></p>
+  </body>
+</html>

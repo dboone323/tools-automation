@@ -1,0 +1,46 @@
+body {
+  font-family:
+    system-ui,
+    Segoe UI,
+    Roboto,
+    Arial;
+  margin: 20px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+td,
+th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+th {
+  background: #f4f4f4;
+}
+/* Health indicator styles */
+#health {
+  display: inline-block;
+  margin-left: 20px;
+  vertical-align: middle;
+}
+#health span {
+  vertical-align: middle;
+}
+#health-indicator {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  background: #aaa;
+  vertical-align: middle;
+  border: 1px solid #888;
+}
+#health-text {
+  margin-left: 8px;
+  color: #444;
+}
+#health .label {
+  font-weight: 600;
+  margin-right: 8px;
+}
