@@ -38,14 +38,28 @@ print_error() {
 
 # Ensure PyYAML is available for YAML validation
 check_pyyaml() {
-	if ! command -v python3 >/dev/null 2>&1; then
-		print_error "python3 not found; required for workflow YAML validation"
+	# Determine which python command to use. Prefer PYTHON_CMD env if provided.
+	local py_cmd
+	py_cmd="${PYTHON_CMD:-}"
+	if [[ -z "${py_cmd}" ]]; then
+		if command -v python >/dev/null 2>&1; then
+			py_cmd=python
+		elif command -v python3 >/dev/null 2>&1; then
+			py_cmd=python3
+		else
+			print_error "python (or python3) not found; required for workflow YAML validation"
+			return 1
+		fi
+	fi
+
+	# Verify PyYAML is importable with the chosen interpreter
+	if ! ${py_cmd} -c "import yaml" >/dev/null 2>&1; then
+		print_error "PyYAML not installed for ${py_cmd}. Install with: ${py_cmd} -m pip install pyyaml"
 		return 1
 	fi
-	if ! python3 -c "import yaml" >/dev/null 2>&1; then
-		print_error "PyYAML not installed for python3. Install with: python3 -m pip install pyyaml"
-		return 1
-	fi
+
+	# Export resolved python command for other functions to reuse
+	PYTHON_CMD="${py_cmd}"
 	return 0
 }
 
@@ -63,11 +77,25 @@ validate_workflows() {
 
 	local validation_failed=0
 
+	# Choose python interpreter (respect PYTHON_CMD if set)
+	local py_cmd
+	py_cmd="${PYTHON_CMD:-}"
+	if [[ -z "${py_cmd}" ]]; then
+		if command -v python >/dev/null 2>&1; then
+			py_cmd=python
+		elif command -v python3 >/dev/null 2>&1; then
+			py_cmd=python3
+		else
+			print_error "python not found; cannot validate YAML"
+			return 1
+		fi
+	fi
+
 	for workflow_file in "${project_path}/.github/workflows"/*.yml; do
 		if [[ -f ${workflow_file} ]]; then
 			local filename
 			filename=$(basename "${workflow_file}")
-			if python3 -c "import yaml; yaml.safe_load(open('${workflow_file}', 'r'))" 2>/dev/null; then
+			if ${py_cmd} -c "import yaml; yaml.safe_load(open('${workflow_file}', 'r'))" 2>/dev/null; then
 				echo "  ✅ ${filename}: Valid YAML"
 			else
 				echo "  ❌ ${filename}: Invalid YAML"
