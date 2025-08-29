@@ -1,0 +1,24 @@
+{
+  "agents": {
+    "task_orchestrator_agent": {"status": "available", "last_seen": "2025-08-29T12:00:00Z", "tasks_completed": 0},
+    "pull_request_agent": {"status": "available", "last_seen": "2025-08-29T12:00:00Z", "tasks_completed": 0},
+    "auto_update_agent": {"status": "available", "last_seen": "2025-08-29T12:00:00Z", "tasks_completed": 0},
+    "knowledge_base_agent": {"status": "available", "last_seen": "2025-08-29T12:00:00Z", "tasks_completed": 0},
+    "public_api_agent": {"status": "available", "last_seen": "2025-08-29T12:00:00Z", "tasks_completed": 0},
+    "unified_dashboard_agent": {"status": "running", "last_seen": "2025-08-29T12:00:00Z", "tasks_completed": 0}
+  },
+  "system": {
+    "cpu_usage": "25%",
+    "memory_usage": "2.1GB",
+    "disk_usage": "45%",
+    "network_connections": "12",
+    "process_count": "89"
+  },
+  "tasks": {
+    "active": [],
+    "completed": [],
+    "failed": [],
+    "queued": []
+  },
+  "last_update": 1756487574
+}

@@ -1,0 +1,6 @@
+[Fri Aug 29 12:02:33 CDT 2025] [INFO] Unified Dashboard Agent starting...
+[Fri Aug 29 12:02:33 CDT 2025] [INFO] Starting dashboard web server on http://localhost:8080
+[Fri Aug 29 12:02:33 CDT 2025] [INFO] Dashboard server started with PID 91331
+[Fri Aug 29 12:02:34 CDT 2025] [INFO] Generated dashboard HTML: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard.html
+[Fri Aug 29 12:02:34 CDT 2025] [INFO] Dashboard data updated
+::1 - - [29/Aug/2025 12:02:54] "GET / HTTP/1.1" 200 -

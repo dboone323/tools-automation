@@ -1,0 +1,49 @@
+[Fri Aug 29 12:12:54 CDT 2025] [INFO] Simple Dashboard Agent starting...
+[Fri Aug 29 12:12:54 CDT 2025] [INFO] Starting dashboard server on port 8080
+[Fri Aug 29 12:12:54 CDT 2025] [INFO] Server started with PID 96392
+::1 - - [29/Aug/2025 12:14:06] "GET / HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:14:41] "GET /dashboard.html HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:14:46] "GET / HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:14:58] "GET / HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:15:20] "GET / HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:15:21] code 404, message File not found
+::1 - - [29/Aug/2025 12:15:21] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [29/Aug/2025 12:15:27] "GET /.gitignore HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:15:39] "GET /dashboard.html HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:15:40] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:16:00] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:16:10] "GET /dashboard_data.json HTTP/1.1" 304 -
+::1 - - [29/Aug/2025 12:16:40] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:17:10] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:17:40] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:18:10] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 12:18:40] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:30:56] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:32:30] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:32:34] "GET /dashboard.html HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:32:34] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:33:04] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:33:34] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:34:04] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:34:34] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:35:04] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:35:34] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:36:04] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:36:05] "GET /dashboard.html HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:36:05] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:36:36] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:37:06] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:37:36] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:38:06] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:38:36] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:39:06] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:39:53] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:40:33] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:41:13] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:48:19] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:48:23] "GET /dashboard.html HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:48:23] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:48:53] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:50:41] "GET /dashboard_data.json HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:50:45] "GET /dashboard.html HTTP/1.1" 200 -
+::1 - - [29/Aug/2025 16:50:45] "GET /dashboard_data.json HTTP/1.1" 200 -

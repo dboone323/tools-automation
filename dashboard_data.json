@@ -1,0 +1,54 @@
+{
+  "agents": {
+    "task_orchestrator_agent": {
+      "status": "available",
+      "last_seen": "1756487661",
+      "tasks_completed": 0,
+      "description": "Central task coordination and agent health monitoring"
+    },
+    "pull_request_agent": {
+      "status": "available",
+      "last_seen": "1756487661",
+      "tasks_completed": 0,
+      "description": "Automated PR creation and risk assessment"
+    },
+    "auto_update_agent": {
+      "status": "available",
+      "last_seen": "1756487661",
+      "tasks_completed": 0,
+      "description": "Code enhancement and best practices updates"
+    },
+    "knowledge_base_agent": {
+      "status": "available",
+      "last_seen": "1756487661",
+      "tasks_completed": 0,
+      "description": "Learning from operations and sharing insights"
+    },
+    "public_api_agent": {
+      "status": "available",
+      "last_seen": "1756487661",
+      "tasks_completed": 0,
+      "description": "Rate-limited API management and caching"
+    },
+    "unified_dashboard_agent": {
+      "status": "running",
+      "last_seen": "1756487661",
+      "tasks_completed": 0,
+      "description": "Real-time monitoring and visualization"
+    }
+  },
+  "system": {
+    "cpu_usage": "20.54%",
+    "memory_usage": "15G",
+    "disk_usage": "86%",
+    "network_connections": "34",
+    "process_count": "509"
+  },
+  "tasks": {
+    "active": [],
+    "completed": [],
+    "failed": [],
+    "queued": []
+  },
+  "last_update": 1756487661
+}
