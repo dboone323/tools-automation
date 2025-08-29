@@ -1,0 +1,124 @@
+---
+# Automation Configuration
+# This file contains centralized configuration for the Quantum workspace
+# automation system
+
+global:
+  # Maximum execution time for operations (in seconds)
+  max_execution_time: 300
+  # Number of retry attempts for failed operations
+  retry_attempts: 3
+  # Logging level (DEBUG, INFO, WARNING, ERROR)
+  log_level: INFO
+  # Enable performance monitoring
+  performance_monitoring: true
+  # Enable security validation
+  security_validation: true
+
+projects:
+  # AvoidObstaclesGame - iOS Game (iPhone 16, iOS 18.0)
+  AvoidObstaclesGame:
+    build_timeout: 120
+    test_parallel: false
+    skip_ui_tests: false
+    platform: ios
+    deployment_target: "18.0"
+    device: "iPhone 16"
+    build_configuration: Release
+    code_signing: false
+
+  # CodingReviewer - macOS & iOS App (Mac 15.0, iPhone 16, iOS 18.0)
+  CodingReviewer:
+    build_timeout: 180
+    test_parallel: true
+    skip_ui_tests: false
+    platforms:
+      - macos
+      - ios
+    macos_deployment_target: "15.0"
+    ios_deployment_target: "18.0"
+    ios_device: "iPhone 16"
+    macos_device: "Mac"
+    build_configuration: Release
+    code_signing: false
+
+  # HabitQuest - iOS App (iPhone 16, iOS 18.0)
+  HabitQuest:
+    build_timeout: 150
+    test_parallel: true
+    skip_ui_tests: false
+    platform: ios
+    deployment_target: "18.0"
+    device: "iPhone 16"
+    build_configuration: Release
+    code_signing: false
+
+  # MomentumFinance - macOS & iOS App (Mac 15.0, iPhone 16, iOS 18.0)
+  MomentumFinance:
+    build_timeout: 200
+    test_parallel: true
+    skip_ui_tests: false
+    platforms:
+      - macos
+      - ios
+    macos_deployment_target: "15.0"
+    ios_deployment_target: "18.0"
+    ios_device: "iPhone 16"
+    macos_device: "Mac"
+    build_configuration: Release
+    code_signing: false
+
+  # PlannerApp - macOS & iOS App (Mac 15.0, iPhone 16, iOS 18.0)
+  PlannerApp:
+    build_timeout: 180
+    test_parallel: true
+    skip_ui_tests: false
+    platforms:
+      - macos
+      - ios
+    macos_deployment_target: "15.0"
+    ios_deployment_target: "18.0"
+    ios_device: "iPhone 16"
+    macos_device: "Mac"
+    build_configuration: Release
+    code_signing: false
+
+# Performance thresholds (in seconds)
+performance:
+  critical_threshold: 300  # 5 minutes
+  warning_threshold: 120   # 2 minutes
+  slow_operation_threshold: 60  # 1 minute
+
+# Security settings
+security:
+  scan_for_secrets: true
+  check_file_permissions: true
+  validate_urls: true
+  audit_logging: true
+
+# Error recovery settings
+error_recovery:
+  max_retry_attempts: 3
+  backoff_multiplier: 2
+  circuit_breaker_timeout: 600  # 10 minutes
+
+# Monitoring and alerting
+monitoring:
+  enable_alerts: true
+  log_performance: true
+  generate_reports: true
+  alert_email: ""  # Set to enable email alerts
+
+# Integration testing
+testing:
+  enable_integration_tests: true
+  test_timeout: 300
+  parallel_execution: true
+  cleanup_after_test: true
+
+# Documentation settings
+documentation:
+  auto_generate: true
+  include_examples: true
+  generate_api_docs: true
+  output_format: markdown

@@ -1,0 +1,16 @@
+# Error Recovery Configuration
+
+circuit_breaker:
+  failure_threshold: 5
+  recovery_timeout: 300
+  monitoring_window: 600
+
+retry_policy:
+  max_attempts: 3
+  backoff_multiplier: 2
+  max_backoff_time: 60
+
+fallback_strategies:
+  - graceful_degradation
+  - cached_responses
+  - alternative_services

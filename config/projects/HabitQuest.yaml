@@ -1,0 +1,22 @@
+# HabitQuest Project Configuration
+
+project:
+  name: HabitQuest
+  type: ios_app
+  path: Projects/HabitQuest
+
+build:
+  timeout: 300
+  parallel_jobs: 2
+  clean_build: true
+
+testing:
+  enable_unit_tests: true
+  enable_ui_tests: false
+  test_timeout: 180
+
+deployment:
+  target_platforms:
+    - ios
+  code_signing: false
+  provisioning_profiles: []
