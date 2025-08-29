@@ -13,8 +13,8 @@ echo "---------------------------------------------------------------"
 # Tail all logs in parallel, highlight errors and inactivity
 multitail_installed=$(command -v multitail)
 if [ -n "$multitail_installed" ]; then
-	multitail -cS bash $(for log in "${LOGS[@]}"; do echo "$AGENTS_DIR/$log"; done)
+    multitail -cS bash $(for log in "${LOGS[@]}"; do echo "$AGENTS_DIR/$log"; done)
 else
-	tail -F $(for log in "${LOGS[@]}"; do echo "$AGENTS_DIR/$log"; done) |
-		grep --color=always -E "error|fail|stuck|timeout|complete|sleep|cycle|$" || true
+    tail -F $(for log in "${LOGS[@]}"; do echo "$AGENTS_DIR/$log"; done) |
+    grep --color=always -E "error|fail|stuck|timeout|complete|sleep|cycle|$" || true
 fi

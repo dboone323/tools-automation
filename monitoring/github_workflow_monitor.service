@@ -6,8 +6,7 @@ After=network.target
 Type=simple
 User=%i
 WorkingDirectory=${HOME}/Code/Tools
-# Run under the project's virtualenv
-ExecStart=${HOME}/Code/Tools/Automation/.venv/bin/python ${HOME}/Code/Tools/Automation/github_workflow_monitor.py
+ExecStart=${HOME}/Code/Tools/Automation/github_workflow_monitor.py
 Restart=on-failure
 RestartSec=10
 

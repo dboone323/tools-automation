@@ -1,9 +1,9 @@
+
 # Automation Agents System
 
 This directory contains autonomous agents for continuous automation, AI/ML log analysis, multi-level backup/restore, plugin extensibility, and secure API access.
 
 ## Agents & Tools
-
 - **agent_build.sh**: Watches for triggers and builds the project automatically, with backup/restore and test validation.
 - **agent_debug.sh**: Runs diagnostics/tests and applies auto-fixes if errors are detected, with backup/restore.
 - **agent_codegen.sh**: Runs code generation and auto-fix routines on a schedule, with backup/restore.
@@ -14,15 +14,12 @@ This directory contains autonomous agents for continuous automation, AI/ML log a
 - **ai_log_analyzer.py**: AI/ML log analysis for anomaly detection and recommendations.
 
 ## Onboarding
-
 Run the onboarding script to set up permissions and environment:
-
 ```sh
 ./onboard.sh
 ```
 
 ## Usage
-
 1. Start the supervisor to launch all agents:
    ```sh
    ./agent_supervisor.sh
@@ -38,22 +35,17 @@ Run the onboarding script to set up permissions and environment:
 4. Check logs and `audit.log` for all actions and events.
 
 ## Security & Policy
-
 - All critical actions are logged to `audit.log`.
 - Plugins and API require `API_TOKEN` and are restricted by `policy.conf`.
 
 ## Knowledge Base
-
 See `KNOWLEDGE_BASE.md` for an auto-generated summary of all agents, tools, and policies.
 
--
-
++
 ## Distributed/Scalable Agents
-
 - Use `distributed_launcher.sh` to launch agent supervisors on remote hosts via SSH.
 - Use `distributed_health_check.sh` to check health/status of remote agent supervisors.
 
 ## Customization
-
 - Edit agent scripts to change intervals, add notifications, or extend agent logic.
 - Add new agents or plugins by following the same pattern.

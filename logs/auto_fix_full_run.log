@@ -177,3 +177,16 @@ Architecture issues detected:
  - Project has 35 TODO/FIXME markers; consider cleaning up (threshold=10)
 Warn-only mode: continuing with warnings
 Detected git repository at /Users/danielstevens/Desktop/Code/Tools; attempting to commit fixes
+[main d24f03e] auto-fix: apply safe architecture fixes (multi-doc split, action pin bumps)
+ 9 files changed, 259 insertions(+), 27 deletions(-)
+ create mode 100644 Automation/logs/auto_fix_full_run.log
+To https://github.com/dboone323/Quantum-workspace.git
+   25c3cdf..d24f03e  HEAD -> main
+Invoking ai_workflow_recovery.py (dry-run enforced) for /Users/danielstevens/Desktop/Code/Tools
+2025-08-25 11:56:46,472 - INFO - 🤖 AI Workflow Recovery initialized for dboone323/Quantum-workspace
+2025-08-25 11:56:46,472 - INFO - 🔍 Running in dry-run mode (analysis only)
+2025-08-25 11:56:46,501 - INFO - 🧠 Analyzing workflow failure with AI...
+2025-08-25 11:56:46,502 - INFO - 🎯 Match found: missing_file (confidence: 0.95)
+2025-08-25 11:56:46,502 - INFO - 🎯 Would apply fix: create_missing_file for missing_file
+Entrypoint finished
+Full auto-fix run complete

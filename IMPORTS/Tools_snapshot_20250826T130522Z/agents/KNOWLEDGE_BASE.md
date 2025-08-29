@@ -26,7 +26,6 @@ _Last updated: 2025-08-21 07:46:31_
 - **supervisor.log**: Audit or agent log file.
 
 ## Quickstart
-
 - Run `onboard.sh` to set up environment and permissions.
 - Start supervisor: `./agent_supervisor.sh`
 - Run API server: `python3 api_server.py`

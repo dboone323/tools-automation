@@ -1,0 +1,336 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -scheme PlannerApp -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.1" build
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'PlannerApp' in project 'PlannerApp' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.4.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/danielstevens/Desktop/PlannerApp/PlannerApp/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 93e980b2624e090155f40aee2c67dc61
+Build description path: /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/XCBuildData/93e980b2624e090155f40aee2c67dc61.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.4.sdk /Users/danielstevens/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator18.4-22E235-71825a6d136aa4733edcbe86ece5525b.sdkstatcache
+    cd /Users/danielstevens/Desktop/PlannerApp/PlannerApp.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.4.sdk -o /Users/danielstevens/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator18.4-22E235-71825a6d136aa4733edcbe86ece5525b.sdkstatcache
+
+ProcessInfoPlistFile /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/PlannerApp.app/Info.plist /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/empty-PlannerApp.plist (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    builtin-infoPlistUtility /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/empty-PlannerApp.plist -producttype com.apple.product-type.application -genpkginfo /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/PlannerApp.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/assetcatalog_generated_info.plist -o /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/PlannerApp.app/Info.plist
+
+SwiftDriver PlannerApp normal arm64 com.apple.xcode.tools.swift.compiler (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name PlannerApp -Onone -enforce-exclusivity\=checked @/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.4.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Index.noindex/DataStore -swift-version 5 -I /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator -F /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator -emit-localized-strings -emit-localized-strings-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64 -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/danielstevens/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator18.4-22E235-71825a6d136aa4733edcbe86ece5525b.sdkstatcache -output-file-map /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/danielstevens/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp_const_extract_protocols.json -Xcc -iquote -Xcc /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-generated-files.hmap -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-own-target-headers.hmap -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-all-target-headers.hmap -Xcc -iquote -Xcc /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-project-headers.hmap -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources-normal/arm64 -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources/arm64 -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp-Swift.h -working-directory /Users/danielstevens/Desktop/PlannerApp -experimental-emit-module-separately -disable-cmo
+
+SwiftCompile normal arm64 Compiling\ PlannerApp.swift,\ CalendarDataManager.swift,\ AddCalendarEventView.swift,\ TaskDataManager.swift,\ AddGoalView.swift /Users/danielstevens/Desktop/PlannerApp/MainApp/PlannerApp.swift /Users/danielstevens/Desktop/PlannerApp/DataManagers/CalendarDataManager.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/AddCalendarEventView.swift /Users/danielstevens/Desktop/PlannerApp/DataManagers/TaskDataManager.swift /Users/danielstevens/Desktop/PlannerApp/Views/Goals/AddGoalView.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/MainApp/PlannerApp.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/DataManagers/CalendarDataManager.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/AddCalendarEventView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/DataManagers/TaskDataManager.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Goals/AddGoalView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 Compiling\ SyncStatusView.swift,\ iOSAdaptivePopups.swift,\ ModernCard.swift,\ DashboardViewModel.swift,\ ThemeManager.swift /Users/danielstevens/Desktop/PlannerApp/Components/SyncStatusView.swift /Users/danielstevens/Desktop/PlannerApp/Components/iOSAdaptivePopups.swift /Users/danielstevens/Desktop/PlannerApp/Components/ModernCard.swift /Users/danielstevens/Desktop/PlannerApp/ViewModels/DashboardViewModel.swift /Users/danielstevens/Desktop/PlannerApp/Styling/ThemeManager.swift (in target 'PlannerApp' from project 'PlannerApp')
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Components/SyncStatusView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Components/iOSAdaptivePopups.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Components/ModernCard.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/ViewModels/DashboardViewModel.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Styling/ThemeManager.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 Compiling\ PlatformAdaptiveNavigation.swift,\ CloudKitEnhancements.swift,\ CloudKitSyncView.swift,\ CloudKitManager.swift,\ CloudKitOnboardingView.swift /Users/danielstevens/Desktop/PlannerApp/Components/PlatformAdaptiveNavigation.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitEnhancements.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitSyncView.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitManager.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitOnboardingView.swift (in target 'PlannerApp' from project 'PlannerApp')
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Components/PlatformAdaptiveNavigation.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitEnhancements.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitSyncView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitManager.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitOnboardingView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 Compiling\ Goal.swift,\ CalendarEvent.swift,\ GoalsView.swift,\ AddJournalEntryView.swift,\ Task.swift /Users/danielstevens/Desktop/PlannerApp/Models/Goal.swift /Users/danielstevens/Desktop/PlannerApp/Models/CalendarEvent.swift /Users/danielstevens/Desktop/PlannerApp/Views/Goals/GoalsView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Journal/AddJournalEntryView.swift /Users/danielstevens/Desktop/PlannerApp/Models/Task.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Models/Goal.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Models/CalendarEvent.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Goals/GoalsView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Journal/AddJournalEntryView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Models/Task.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ PlannerApp (in target 'PlannerApp' from project 'PlannerApp')
+
+EmitSwiftModule normal arm64 (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 Compiling\ NotificationExtensions.swift,\ NetworkMonitor.swift,\ ThemePreviewView.swift,\ MainTabView_Enhanced.swift,\ GeneratedAssetSymbols.swift /Users/danielstevens/Desktop/PlannerApp/Utilities/NotificationExtensions.swift /Users/danielstevens/Desktop/PlannerApp/Utilities/NetworkMonitor.swift /Users/danielstevens/Desktop/PlannerApp/Views/Settings/ThemePreviewView.swift /Users/danielstevens/Desktop/PlannerApp/MainApp/MainTabView_Enhanced.swift /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'PlannerApp' from project 'PlannerApp')
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Utilities/NotificationExtensions.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Utilities/NetworkMonitor.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Settings/ThemePreviewView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/MainApp/MainTabView_Enhanced.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 Compiling\ MainTabView.swift,\ AccessibilityEnhancements.swift,\ CloudKitMigrationHelper.swift,\ EnhancedCloudKitManager.swift,\ EnhancedPlatformNavigation.swift /Users/danielstevens/Desktop/PlannerApp/MainApp/MainTabView.swift /Users/danielstevens/Desktop/PlannerApp/Accessibility/AccessibilityEnhancements.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitMigrationHelper.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/EnhancedCloudKitManager.swift /Users/danielstevens/Desktop/PlannerApp/Components/EnhancedPlatformNavigation.swift (in target 'PlannerApp' from project 'PlannerApp')
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/MainApp/MainTabView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Accessibility/AccessibilityEnhancements.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitMigrationHelper.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/CloudKit/EnhancedCloudKitManager.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Components/EnhancedPlatformNavigation.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 Compiling\ DashboardView.swift,\ JournalEntry.swift,\ TaskManagerView.swift,\ AppSettingKeys.swift,\ JournalDataManager.swift,\ Theme.swift /Users/danielstevens/Desktop/PlannerApp/MainApp/DashboardView.swift /Users/danielstevens/Desktop/PlannerApp/Models/JournalEntry.swift /Users/danielstevens/Desktop/PlannerApp/Views/Tasks/TaskManagerView.swift /Users/danielstevens/Desktop/PlannerApp/Utilities/AppSettingKeys.swift /Users/danielstevens/Desktop/PlannerApp/DataManagers/JournalDataManager.swift /Users/danielstevens/Desktop/PlannerApp/Styling/Theme.swift (in target 'PlannerApp' from project 'PlannerApp')
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/MainApp/DashboardView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+/Users/danielstevens/Desktop/PlannerApp/MainApp/DashboardView.swift:46:17: error: cannot find 'PullToRefresh' in scope
+                PullToRefresh(coordinateSpaceName: "pullToRefresh") {
+                ^~~~~~~~~~~~~
+/Users/danielstevens/Desktop/PlannerApp/MainApp/DashboardView.swift:346:25: error: type 'Task' has no member 'sleep'
+        try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                   ~~~~ ^~~~~
+/Users/danielstevens/Desktop/PlannerApp/MainApp/DashboardView.swift:352:25: error: type 'Task' has no member 'sleep'
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+                   ~~~~ ^~~~~
+/Users/danielstevens/Desktop/PlannerApp/MainApp/DashboardView.swift:364:25: error: type 'Task' has no member 'sleep'
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+                   ~~~~ ^~~~~
+/Users/danielstevens/Desktop/PlannerApp/MainApp/DashboardView.swift:370:12: error: cannot find 'showDemoDelay' in scope
+        if showDemoDelay {
+           ^~~~~~~~~~~~~
+/Users/danielstevens/Desktop/PlannerApp/MainApp/DashboardView.swift:373:29: error: type 'Task' has no member 'sleep'
+            try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second delay for demonstration
+                       ~~~~ ^~~~~
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Models/JournalEntry.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Tasks/TaskManagerView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Utilities/AppSettingKeys.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/DataManagers/JournalDataManager.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Styling/Theme.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+Failed frontend command:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/danielstevens/Desktop/PlannerApp/DataManagers/GoalDataManager.swift /Users/danielstevens/Desktop/PlannerApp/Views/Settings/SettingsView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Journal/JournalView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/CalendarView.swift /Users/danielstevens/Desktop/PlannerApp/DataManagers/DataManagerError.swift /Users/danielstevens/Desktop/PlannerApp/Views/Journal/JournalDetailView.swift -primary-file /Users/danielstevens/Desktop/PlannerApp/MainApp/DashboardView.swift -primary-file /Users/danielstevens/Desktop/PlannerApp/Models/JournalEntry.swift -primary-file /Users/danielstevens/Desktop/PlannerApp/Views/Tasks/TaskManagerView.swift -primary-file /Users/danielstevens/Desktop/PlannerApp/Utilities/AppSettingKeys.swift -primary-file /Users/danielstevens/Desktop/PlannerApp/DataManagers/JournalDataManager.swift -primary-file /Users/danielstevens/Desktop/PlannerApp/Styling/Theme.swift /Users/danielstevens/Desktop/PlannerApp/MainApp/PlannerApp.swift /Users/danielstevens/Desktop/PlannerApp/DataManagers/CalendarDataManager.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/AddCalendarEventView.swift /Users/danielstevens/Desktop/PlannerApp/DataManagers/TaskDataManager.swift /Users/danielstevens/Desktop/PlannerApp/Views/Goals/AddGoalView.swift /Users/danielstevens/Desktop/PlannerApp/Components/PlatformAdaptiveNavigation.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitEnhancements.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitSyncView.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitManager.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitOnboardingView.swift /Users/danielstevens/Desktop/PlannerApp/Components/SyncStatusView.swift /Users/danielstevens/Desktop/PlannerApp/Components/iOSAdaptivePopups.swift /Users/danielstevens/Desktop/PlannerApp/Components/ModernCard.swift /Users/danielstevens/Desktop/PlannerApp/ViewModels/DashboardViewModel.swift /Users/danielstevens/Desktop/PlannerApp/Styling/ThemeManager.swift /Users/danielstevens/Desktop/PlannerApp/Models/Goal.swift /Users/danielstevens/Desktop/PlannerApp/Models/CalendarEvent.swift /Users/danielstevens/Desktop/PlannerApp/Views/Goals/GoalsView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Journal/AddJournalEntryView.swift /Users/danielstevens/Desktop/PlannerApp/Models/Task.swift /Users/danielstevens/Desktop/PlannerApp/MainApp/MainTabView.swift /Users/danielstevens/Desktop/PlannerApp/Accessibility/AccessibilityEnhancements.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/CloudKitMigrationHelper.swift /Users/danielstevens/Desktop/PlannerApp/CloudKit/EnhancedCloudKitManager.swift /Users/danielstevens/Desktop/PlannerApp/Components/EnhancedPlatformNavigation.swift /Users/danielstevens/Desktop/PlannerApp/Components/VisualEnhancements.swift /Users/danielstevens/Desktop/PlannerApp/Platform/PlatformFeatures.swift /Users/danielstevens/Desktop/PlannerApp/Styling/ModernThemes.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/CalendarComponents.swift /Users/danielstevens/Desktop/PlannerApp/PlannerApp/ContentView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/CalendarGrid.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/DateSectionView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/EventRowView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/GoalRowView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/TaskRowView.swift /Users/danielstevens/Desktop/PlannerApp/Utilities/NotificationExtensions.swift /Users/danielstevens/Desktop/PlannerApp/Utilities/NetworkMonitor.swift /Users/danielstevens/Desktop/PlannerApp/Views/Settings/ThemePreviewView.swift /Users/danielstevens/Desktop/PlannerApp/MainApp/MainTabView_Enhanced.swift /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources/GeneratedAssetSymbols.swift -supplementary-output-file-map /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/supplementaryOutputs-2 -emit-localized-strings -emit-localized-strings-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64 -target arm64-apple-ios18.0-simulator -Xllvm -aarch64-use-tbi -enable-objc-interop -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.4.sdk -I /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator -F /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator -no-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=5 -module-cache-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -profile-generate -profile-coverage-mapping -swift-version 5 -enforce-exclusivity\=checked -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp_const_extract_protocols.json -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/danielstevens/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/danielstevens/Desktop/PlannerApp -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift -enable-anonymous-context-mangled-names -file-compilation-dir /Users/danielstevens/Desktop/PlannerApp -Xcc -ivfsstatcache -Xcc /Users/danielstevens/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator18.4-22E235-71825a6d136aa4733edcbe86ece5525b.sdkstatcache -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-generated-files.hmap -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-own-target-headers.hmap -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-all-target-headers.hmap -Xcc -iquote -Xcc /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-project-headers.hmap -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources-normal/arm64 -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources/arm64 -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources -Xcc -DDEBUG\=1 -module-name PlannerApp -frontend-parseable-output -disable-clang-spi -target-sdk-version 18.4 -target-sdk-name iphonesimulator18.4 -external-plugin-path /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server -external-plugin-path /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/local/lib/swift/host/plugins\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/local/lib/swift/host/plugins -o /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/DashboardView.o -o /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/JournalEntry.o -o /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/TaskManagerView.o -o /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/AppSettingKeys.o -o /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/JournalDataManager.o -o /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/Theme.o -index-unit-output-path /PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/DashboardView.o -index-unit-output-path /PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/JournalEntry.o -index-unit-output-path /PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/TaskManagerView.o -index-unit-output-path /PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/AppSettingKeys.o -index-unit-output-path /PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/JournalDataManager.o -index-unit-output-path /PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/Theme.o -index-store-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Index.noindex/DataStore -index-system-modules
+SwiftCompile normal arm64 Compiling\ CalendarGrid.swift,\ DateSectionView.swift,\ EventRowView.swift,\ GoalRowView.swift,\ TaskRowView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/CalendarGrid.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/DateSectionView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/EventRowView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/GoalRowView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/TaskRowView.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/CalendarGrid.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/DateSectionView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/EventRowView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/GoalRowView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/TaskRowView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 Compiling\ GoalDataManager.swift,\ SettingsView.swift,\ JournalView.swift,\ CalendarView.swift,\ DataManagerError.swift,\ JournalDetailView.swift /Users/danielstevens/Desktop/PlannerApp/DataManagers/GoalDataManager.swift /Users/danielstevens/Desktop/PlannerApp/Views/Settings/SettingsView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Journal/JournalView.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/CalendarView.swift /Users/danielstevens/Desktop/PlannerApp/DataManagers/DataManagerError.swift /Users/danielstevens/Desktop/PlannerApp/Views/Journal/JournalDetailView.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/DataManagers/GoalDataManager.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Settings/SettingsView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Journal/JournalView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/CalendarView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/DataManagers/DataManagerError.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Journal/JournalDetailView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 Compiling\ VisualEnhancements.swift,\ PlatformFeatures.swift,\ ModernThemes.swift,\ CalendarComponents.swift,\ ContentView.swift /Users/danielstevens/Desktop/PlannerApp/Components/VisualEnhancements.swift /Users/danielstevens/Desktop/PlannerApp/Platform/PlatformFeatures.swift /Users/danielstevens/Desktop/PlannerApp/Styling/ModernThemes.swift /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/CalendarComponents.swift /Users/danielstevens/Desktop/PlannerApp/PlannerApp/ContentView.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Components/VisualEnhancements.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Platform/PlatformFeatures.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+/Users/danielstevens/Desktop/PlannerApp/Platform/PlatformFeatures.swift:449:13: warning: initialization of immutable value 'activityViewController' was never used; consider replacing with assignment to '_' or removing it
+        let activityViewController = UIActivityViewController(activityItems: [content], applicationActivities: nil)
+        ~~~~^~~~~~~~~~~~~~~~~~~~~~
+        _
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Styling/ModernThemes.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/Views/Calendar/CalendarComponents.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftCompile normal arm64 /Users/danielstevens/Desktop/PlannerApp/PlannerApp/ContentView.swift (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    
+
+SwiftDriverJobDiscovery normal arm64 Compiling PlannerApp.swift, CalendarDataManager.swift, AddCalendarEventView.swift, TaskDataManager.swift, AddGoalView.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for PlannerApp (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftDriver\ Compilation\ Requirements PlannerApp normal arm64 com.apple.xcode.tools.swift.compiler (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name PlannerApp -Onone -enforce-exclusivity\=checked @/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.4.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Index.noindex/DataStore -swift-version 5 -I /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator -F /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator -emit-localized-strings -emit-localized-strings-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64 -c -j10 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/danielstevens/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator18.4-22E235-71825a6d136aa4733edcbe86ece5525b.sdkstatcache -output-file-map /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/danielstevens/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp_const_extract_protocols.json -Xcc -iquote -Xcc /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-generated-files.hmap -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-own-target-headers.hmap -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-all-target-headers.hmap -Xcc -iquote -Xcc /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/PlannerApp-project-headers.hmap -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources-normal/arm64 -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources/arm64 -Xcc -I/Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp-Swift.h -working-directory /Users/danielstevens/Desktop/PlannerApp -experimental-emit-module-separately -disable-cmo
+
+Copy /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/PlannerApp.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.swiftmodule (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.swiftmodule /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/PlannerApp.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/PlannerApp.swiftmodule/arm64-apple-ios-simulator.abi.json /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.abi.json (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.abi.json /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/PlannerApp.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/PlannerApp.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.swiftsourceinfo (in target 'PlannerApp' from project 'PlannerApp')
+    cd /Users/danielstevens/Desktop/PlannerApp
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Intermediates.noindex/PlannerApp.build/Debug-iphonesimulator/PlannerApp.build/Objects-normal/arm64/PlannerApp.swiftsourceinfo /Users/danielstevens/Library/Developer/Xcode/DerivedData/PlannerApp-fuyobflswmmvqafwsenmnhdghtxi/Build/Products/Debug-iphonesimulator/PlannerApp.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling Goal.swift, CalendarEvent.swift, GoalsView.swift, AddJournalEntryView.swift, Task.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftDriverJobDiscovery normal arm64 Compiling CalendarGrid.swift, DateSectionView.swift, EventRowView.swift, GoalRowView.swift, TaskRowView.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftDriverJobDiscovery normal arm64 Compiling SyncStatusView.swift, iOSAdaptivePopups.swift, ModernCard.swift, DashboardViewModel.swift, ThemeManager.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftDriverJobDiscovery normal arm64 Compiling PlatformAdaptiveNavigation.swift, CloudKitEnhancements.swift, CloudKitSyncView.swift, CloudKitManager.swift, CloudKitOnboardingView.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftDriverJobDiscovery normal arm64 Compiling NotificationExtensions.swift, NetworkMonitor.swift, ThemePreviewView.swift, MainTabView_Enhanced.swift, GeneratedAssetSymbols.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftDriverJobDiscovery normal arm64 Compiling GoalDataManager.swift, SettingsView.swift, JournalView.swift, CalendarView.swift, DataManagerError.swift, JournalDetailView.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftDriverJobDiscovery normal arm64 Compiling MainTabView.swift, AccessibilityEnhancements.swift, CloudKitMigrationHelper.swift, EnhancedCloudKitManager.swift, EnhancedPlatformNavigation.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+SwiftDriverJobDiscovery normal arm64 Compiling VisualEnhancements.swift, PlatformFeatures.swift, ModernThemes.swift, CalendarComponents.swift, ContentView.swift (in target 'PlannerApp' from project 'PlannerApp')
+
+note: Disabling hardened runtime with ad-hoc codesigning. (in target 'PlannerApp' from project 'PlannerApp')

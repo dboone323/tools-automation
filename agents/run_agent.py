@@ -5,24 +5,21 @@ Usage: run_agent.py --name NAME --capabilities cap1,cap2
 It will register with MCP at http://127.0.0.1:5005/register and send periodic heartbeats.
 """
 import argparse
-import json
 import os
-import sys
 import time
+import json
+import sys
 
 try:
     import requests
 except Exception:
-    print(
-        "requests library required. Install into Automation/.venv: pip install requests",
-        file=sys.stderr,
-    )
+    print("requests library required. Install into Automation/.venv: pip install requests", file=sys.stderr)
     raise
 
 
 def register(mcp_url, name, capabilities):
-    url = mcp_url.rstrip("/") + "/register"
-    payload = {"agent": name, "capabilities": capabilities}
+    url = mcp_url.rstrip('/') + '/register'
+    payload = {'agent': name, 'capabilities': capabilities}
     try:
         r = requests.post(url, json=payload, timeout=5)
         r.raise_for_status()
@@ -33,9 +30,9 @@ def register(mcp_url, name, capabilities):
 
 
 def heartbeat(mcp_url, name):
-    url = mcp_url.rstrip("/") + "/heartbeat"
+    url = mcp_url.rstrip('/') + '/heartbeat'
     try:
-        r = requests.post(url, json={"agent": name}, timeout=5)
+        r = requests.post(url, json={'agent': name}, timeout=5)
         return r.status_code == 200
     except Exception:
         return False
@@ -43,7 +40,7 @@ def heartbeat(mcp_url, name):
 
 def write_pid(pidfile):
     try:
-        with open(pidfile, "w") as f:
+        with open(pidfile, 'w') as f:
             f.write(str(os.getpid()))
     except Exception:
         pass
@@ -53,7 +50,6 @@ def perform_backup(path):
     # simple backup: copy file to .bak.timestamp
     try:
         import shutil
-
         ts = int(time.time())
         bak = f"{path}.bak.{ts}"
         shutil.copy2(path, bak)
@@ -71,23 +67,20 @@ def _with_file_lock(path, func, *a, **kw):
     locker = None
     try:
         import portalocker
-
-        locker = "portalocker"
+        locker = 'portalocker'
     except Exception:
         try:
             import fcntl
-
-            locker = "fcntl"
+            locker = 'fcntl'
         except Exception:
             try:
                 import msvcrt
-
-                locker = "msvcrt"
+                locker = 'msvcrt'
             except Exception:
                 locker = None
 
-    if locker == "portalocker":
-        fd = open(path, "a+")
+    if locker == 'portalocker':
+        fd = open(path, 'a+')
         try:
             portalocker.lock(fd, portalocker.LOCK_EX)
             return func(*a, **kw)
@@ -101,10 +94,9 @@ def _with_file_lock(path, func, *a, **kw):
             except Exception:
                 pass
 
-    if locker == "fcntl":
+    if locker == 'fcntl':
         import fcntl
-
-        fd = open(path, "a+")
+        fd = open(path, 'a+')
         try:
             fcntl.flock(fd.fileno(), fcntl.LOCK_EX)
             return func(*a, **kw)
@@ -118,10 +110,9 @@ def _with_file_lock(path, func, *a, **kw):
             except Exception:
                 pass
 
-    if locker == "msvcrt":
+    if locker == 'msvcrt':
         import msvcrt
-
-        fd = open(path, "a+")
+        fd = open(path, 'a+')
         try:
             msvcrt.locking(fd.fileno(), msvcrt.LK_LOCK, 1)
             return func(*a, **kw)
@@ -142,8 +133,7 @@ def _with_file_lock(path, func, *a, **kw):
 def restore_backup(bak):
     try:
         import shutil
-
-        orig = bak.rsplit(".bak.", 1)[0]
+        orig = bak.rsplit('.bak.', 1)[0]
         shutil.copy2(bak, orig)
         return True
     except Exception as e:
@@ -154,11 +144,10 @@ def restore_backup(bak):
 def _atomic_write(path, data):
     """Write data to path atomically using a temporary file and os.replace."""
     import tempfile
-
     d = os.path.dirname(path)
     fd, tmp = tempfile.mkstemp(dir=d)
     try:
-        with os.fdopen(fd, "w") as f:
+        with os.fdopen(fd, 'w') as f:
             f.write(data)
         os.replace(tmp, path)
     finally:
@@ -174,9 +163,7 @@ def _latest_backup_for(path):
     try:
         d = os.path.dirname(path)
         base = os.path.basename(path)
-        candidates = [
-            os.path.join(d, x) for x in os.listdir(d) if x.startswith(base + ".bak.")
-        ]
+        candidates = [os.path.join(d, x) for x in os.listdir(d) if x.startswith(base + '.bak.')]
         if not candidates:
             return None
         candidates.sort()
@@ -187,38 +174,30 @@ def _latest_backup_for(path):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--name", required=True)
-    p.add_argument("--capabilities", default="")
-    p.add_argument("--mcp", default=os.environ.get("MCP_URL", "http://127.0.0.1:5005"))
-    p.add_argument(
-        "--backup-target",
-        default=os.environ.get("AGENT_BACKUP_TARGET", None),
-        help="path to file to backup/restore (for tests)",
-    )
-    p.add_argument(
-        "--interval", type=int, default=30, help="heartbeat interval seconds"
-    )
+    p.add_argument('--name', required=True)
+    p.add_argument('--capabilities', default='')
+    p.add_argument('--mcp', default=os.environ.get('MCP_URL', 'http://127.0.0.1:5005'))
+    p.add_argument('--backup-target', default=os.environ.get('AGENT_BACKUP_TARGET', None), help='path to file to backup/restore (for tests)')
+    p.add_argument('--interval', type=int, default=30, help='heartbeat interval seconds')
     args = p.parse_args()
 
-    caps = [c.strip() for c in args.capabilities.split(",") if c.strip()]
+    caps = [c.strip() for c in args.capabilities.split(',') if c.strip()]
     print(f"Starting agent {args.name} -> MCP {args.mcp} capabilities={caps}")
     # write pidfile
-    pidfile = os.path.join(os.path.dirname(__file__), "..", "logs", f"{args.name}.pid")
+    pidfile = os.path.join(os.path.dirname(__file__), '..', 'logs', f"{args.name}.pid")
     write_pid(pidfile)
 
     # simple HTTP health endpoint
     try:
-        from http.server import BaseHTTPRequestHandler, HTTPServer
+        from http.server import HTTPServer, BaseHTTPRequestHandler
 
         class HealthHandler(BaseHTTPRequestHandler):
             def do_GET(self):
-                if self.path == "/health":
+                if self.path == '/health':
                     self.send_response(200)
-                    self.send_header("Content-Type", "application/json")
+                    self.send_header('Content-Type', 'application/json')
                     self.end_headers()
-                    self.wfile.write(
-                        json.dumps({"ok": True, "agent": args.name}).encode("utf-8")
-                    )
+                    self.wfile.write(json.dumps({'ok': True, 'agent': args.name}).encode('utf-8'))
                 else:
                     self.send_response(404)
                     self.end_headers()
@@ -226,7 +205,7 @@ def main():
         # run health server in background thread
         def run_health():
             try:
-                srv = HTTPServer(("127.0.0.1", 0), HealthHandler)
+                srv = HTTPServer(('127.0.0.1', 0), HealthHandler)
                 sa = srv.socket.getsockname()
                 print(f"health listening on {sa}")
                 srv.serve_forever()
@@ -234,7 +213,6 @@ def main():
                 pass
 
         import threading
-
         threading.Thread(target=run_health, daemon=True).start()
     except Exception:
         pass
@@ -256,30 +234,24 @@ def main():
             print(f"heartbeat {'ok' if ok else 'fail'}")
 
             # if this agent can execute, poll /status tasks for queued tasks and exec them
-            if "execute" in caps:
+            if 'execute' in caps:
                 try:
-                    r = requests.get(args.mcp.rstrip("/") + "/status", timeout=3)
+                    r = requests.get(args.mcp.rstrip('/') + '/status', timeout=3)
                     st = r.json()
-                    for t in st.get("tasks", []):
-                        tid = t.get("id")
+                    for t in st.get('tasks', []):
+                        tid = t.get('id')
                         # always ensure a marker exists for modify-fail tasks when possible
-                        if t.get("command") == "modify-fail":
+                        if t.get('command') == 'modify-fail':
                             try:
-                                target = args.backup_target or os.path.join(
-                                    os.path.dirname(__file__),
-                                    "..",
-                                    "test_modify_target.txt",
-                                )
+                                target = args.backup_target or os.path.join(os.path.dirname(__file__), '..', 'test_modify_target.txt')
                                 target = os.path.abspath(target)
                                 marker = f"{target}.bak_marker"
-                                if os.path.exists(target) and not os.path.exists(
-                                    marker
-                                ):
+                                if os.path.exists(target) and not os.path.exists(marker):
                                     # create backup file and marker under a file lock; best-effort
                                     def _do_backup():
                                         bak = perform_backup(target)
                                         try:
-                                            _atomic_write(marker, str(bak or ""))
+                                            _atomic_write(marker, str(bak or ''))
                                         except Exception:
                                             pass
                                         return bak
@@ -289,27 +261,18 @@ def main():
                             except Exception as e:
                                 print(f"backup check failed: {e}")
 
-                        if t.get("status") == "queued":
+                        if t.get('status') == 'queued':
                             # attempt to execute via /execute_task
                             try:
                                 # create a lightweight backup marker to avoid duplicate backups
-                                target = args.backup_target or os.path.join(
-                                    os.path.dirname(__file__),
-                                    "..",
-                                    "test_modify_target.txt",
-                                )
+                                target = args.backup_target or os.path.join(os.path.dirname(__file__), '..', 'test_modify_target.txt')
                                 target = os.path.abspath(target)
                                 marker = f"{target}.bak_marker"
-                                if (
-                                    t.get("command") == "modify-fail"
-                                    and os.path.exists(target)
-                                    and not os.path.exists(marker)
-                                ):
-
+                                if t.get('command') == 'modify-fail' and os.path.exists(target) and not os.path.exists(marker):
                                     def _do_backup_marker():
                                         bak = perform_backup(target)
                                         try:
-                                            _atomic_write(marker, str(bak or ""))
+                                            _atomic_write(marker, str(bak or ''))
                                         except Exception:
                                             pass
                                         return bak
@@ -317,11 +280,7 @@ def main():
                                     bak = _with_file_lock(target, _do_backup_marker)
                                     print(f"backup created and marker written: {bak}")
 
-                                er = requests.post(
-                                    args.mcp.rstrip("/") + "/execute_task",
-                                    json={"task_id": tid},
-                                    timeout=5,
-                                )
+                                er = requests.post(args.mcp.rstrip('/') + '/execute_task', json={'task_id': tid}, timeout=5)
                                 print(f"requested execute {tid} -> {er.status_code}")
 
                                 # if we requested execute, poll task status and restore on failure
@@ -330,34 +289,18 @@ def main():
                                     poll_start = time.time()
                                     while time.time() - poll_start < 30:
                                         try:
-                                            st = requests.get(
-                                                args.mcp.rstrip("/") + "/status",
-                                                timeout=3,
-                                            ).json()
+                                            st = requests.get(args.mcp.rstrip('/') + '/status', timeout=3).json()
                                         except Exception:
                                             break
-                                        task = next(
-                                            (
-                                                x
-                                                for x in st.get("tasks", [])
-                                                if x.get("id") == tid
-                                            ),
-                                            None,
-                                        )
+                                        task = next((x for x in st.get('tasks', []) if x.get('id') == tid), None)
                                         if not task:
                                             break
-                                        if task.get("status") in (
-                                            "success",
-                                            "failed",
-                                            "error",
-                                        ):
+                                        if task.get('status') in ('success', 'failed', 'error'):
                                             # if failed/error, try restore
-                                            if task.get("status") != "success":
+                                            if task.get('status') != 'success':
                                                 latest = _latest_backup_for(target)
                                                 if latest:
-                                                    print(
-                                                        f"task {tid} failed; restoring from {latest}"
-                                                    )
+                                                    print(f"task {tid} failed; restoring from {latest}")
                                                     restore_backup(latest)
                                             break
                                         time.sleep(0.5)
@@ -372,5 +315,5 @@ def main():
         print("agent exiting")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

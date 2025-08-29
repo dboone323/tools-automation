@@ -1,0 +1,82 @@
+/*
+// Fix for DashboardViewModel.swift - Replace both methods with these versions:
+// This file contains sample code and should not be compiled directly.
+// Use this code within the DashboardViewModel class.
+
+private func generateRecentActivities() {
+    var activities: [DashboardActivity] = []
+    
+    // Add completed tasks from last few days
+    let allTasks = TaskDataManager.shared.load()
+    let recentCompletedTasks = allTasks.filter { task in
+        // Only include tasks that are actually completed AND were created or completed recently
+        task.isCompleted &&
+        (Calendar.current.isDateInYesterday(task.createdAt) ||
+         Calendar.current.isDateInToday(task.createdAt))
+    }.prefix(dashboardItemLimit)
+    
+    for task in recentCompletedTasks {
+        activities.append(DashboardActivity(
+            title: "Completed Task",
+            subtitle: task.title,
+            icon: "checkmark.circle.fill",
+            color: .green,
+            timestamp: task.createdAt
+        ))
+    }
+    
+    // Add recent events
+    let allEvents = CalendarDataManager.shared.load()
+    let recentEvents = allEvents.filter { event in
+        Calendar.current.isDateInYesterday(event.date) || Calendar.current.isDateInToday(event.date)
+    }.prefix(dashboardItemLimit)
+    
+    for event in recentEvents {
+        activities.append(DashboardActivity(
+            title: "Event",
+            subtitle: event.title,
+            icon: "calendar",
+            color: .orange,
+            timestamp: event.date
+        ))
+    }
+    
+    // Apply final limit and sort by timestamp (most recent first)
+    self.recentActivities = activities.sorted { $0.timestamp > $1.timestamp }.prefix(dashboardItemLimit).map { $0 }
+}
+
+private func generateUpcomingItems() {
+    var items: [UpcomingItem] = []
+    
+    // Add upcoming events
+    let allEvents = CalendarDataManager.shared.load()
+    let futureEvents = allEvents.filter { $0.date > Date() }.prefix(dashboardItemLimit)
+    
+    for event in futureEvents {
+        items.append(UpcomingItem(
+            title: event.title,
+            subtitle: "Event",
+            date: event.date,
+            icon: "calendar",
+            color: .orange
+        ))
+    }
+    
+    // Add upcoming goals
+    let allGoals = GoalDataManager.shared.load()
+    let futureGoals = allGoals.filter { $0.targetDate > Date() }.prefix(dashboardItemLimit)
+    
+    for goal in futureGoals {
+        items.append(UpcomingItem(
+            title: goal.title,
+            subtitle: "Goal deadline",
+            date: goal.targetDate,
+            icon: "target",
+            color: .green
+        ))
+    }
+    
+    // Sort by date and apply the final limit
+    self.upcomingItems = items.sorted { $0.date < $1.date }.prefix(dashboardItemLimit).map { $0 }
+}
+*/

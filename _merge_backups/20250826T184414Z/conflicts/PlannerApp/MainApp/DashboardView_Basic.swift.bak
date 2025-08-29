@@ -1,0 +1,472 @@
+// PlannerApp/MainApp/DashboardView.swift (Modern Enhanced Version)
+import SwiftUI
+import Foundation
+
+// Import required types from the project
+import CloudKit
+
+struct DashboardView: View {
+    @EnvironmentObject var themeManager: ThemeManager
+    @StateObject private var viewModel = DashboardViewModel()
+    @AppStorage(AppSettingKeys.userName) private var userName: String = ""
+    @AppStorage(AppSettingKeys.use24HourTime) private var use24HourTime: Bool = false
+    @AppStorage(AppSettingKeys.dashboardItemLimit) private var dashboardItemLimit: Int = 3
+
+    // Date formatters
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }
+
+    private var timeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        formatter.locale = Locale(identifier: use24HourTime ? "en_GB" : "en_US")
+        return formatter
+    }
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                LazyVStack(spacing: 20) {
+                    // Welcome Header
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(greetingText)
+                                    .font(.title2)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                                
+                                if !userName.isEmpty {
+                                    Text(userName)
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(themeManager.currentTheme.primaryAccentColor)
+                                }
+                                
+                                Text(dateFormatter.string(from: Date()))
+                                    .font(.subheadline)
+                                    .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                            }
+                            
+                            Spacer()
+                            
+                            VStack(alignment: .trailing, spacing: 4) {
+                                Text(timeFormatter.string(from: Date()))
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                                
+                                Text("Today")
+                                    .font(.caption)
+                                    .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.top, 20)
+
+                    // Quick Stats Row
+                    HStack(spacing: 16) {
+                        QuickStatCard(
+                            title: "Tasks",
+                            value: "\\(viewModel.totalTasks)",
+                            subtitle: "\\(viewModel.completedTasks) completed",
+                            icon: "checkmark.circle.fill",
+                            color: themeManager.currentTheme.primaryAccentColor
+                        )
+                        
+                        QuickStatCard(
+                            title: "Goals",
+                            value: "\\(viewModel.totalGoals)",
+                            subtitle: "\\(viewModel.completedGoals) achieved",
+                            icon: "target",
+                            color: .green
+                        )
+                        
+                        QuickStatCard(
+                            title: "Events",
+                            value: "\\(viewModel.todayEvents)",
+                            subtitle: "today",
+                            icon: "calendar",
+                            color: .orange
+                        )
+                    }
+                    .padding(.horizontal, 24)
+
+                    // Quick Actions
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("Quick Actions")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                                .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                            Spacer()
+                        }
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 2), spacing: 16) {
+                            QuickActionCard(
+                                title: "Add Task",
+                                icon: "plus.circle.fill",
+                                color: themeManager.currentTheme.primaryAccentColor
+                            ) {
+                                // TODO: Navigate to add task
+                                print("Add Task tapped")
+                            }
+                            
+                            QuickActionCard(
+                                title: "New Goal",
+                                icon: "target",
+                                color: .green
+                            ) {
+                                // TODO: Navigate to add goal
+                                print("New Goal tapped")
+                            }
+                            
+                            QuickActionCard(
+                                title: "Schedule Event",
+                                icon: "calendar.badge.plus",
+                                color: .orange
+                            ) {
+                                // TODO: Navigate to add event
+                                print("Schedule Event tapped")
+                            }
+                            
+                            QuickActionCard(
+                                title: "Journal Entry",
+                                icon: "book.fill",
+                                color: .purple
+                            ) {
+                                // TODO: Navigate to add journal entry
+                                print("Journal Entry tapped")
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 24)
+
+                    // Recent Activities
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("Recent Activities")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                                .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                            
+                            Spacer()
+                            
+                            Button("View All") {
+                                // TODO: Navigate to activities view
+                                print("View All tapped")
+                            }
+                            .font(.caption)
+                            .foregroundColor(themeManager.currentTheme.primaryAccentColor)
+                        }
+                        
+                        LazyVStack(spacing: 12) {
+                            ForEach(viewModel.recentActivities.prefix(dashboardItemLimit), id: \.id) { activity in
+                                ActivityRowView(activity: activity)
+                            }
+                            
+                            if viewModel.recentActivities.isEmpty {
+                                VStack(spacing: 12) {
+                                    Image(systemName: "tray")
+                                        .font(.system(size: 40))
+                                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                                    
+                                    Text("No recent activities")
+                                        .font(.subheadline)
+                                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                                    
+                                    Text("Start by creating a task or goal!")
+                                        .font(.caption)
+                                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                                }
+                                .padding(.vertical, 40)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 24)
+
+                    // Upcoming Items
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("Upcoming")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                                .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                            
+                            Spacer()
+                            
+                            Button("View Calendar") {
+                                // TODO: Navigate to calendar
+                                print("View Calendar tapped")
+                            }
+                            .font(.caption)
+                            .foregroundColor(themeManager.currentTheme.primaryAccentColor)
+                        }
+                        
+                        LazyVStack(spacing: 12) {
+                            ForEach(viewModel.upcomingItems.prefix(dashboardItemLimit), id: \.id) { item in
+                                UpcomingItemView(item: item)
+                            }
+                            
+                            if viewModel.upcomingItems.isEmpty {
+                                VStack(spacing: 12) {
+                                    Image(systemName: "calendar")
+                                        .font(.system(size: 40))
+                                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                                    
+                                    Text("Nothing upcoming")
+                                        .font(.subheadline)
+                                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                                    
+                                    Text("Schedule some events to see them here")
+                                        .font(.caption)
+                                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                                }
+                                .padding(.vertical, 40)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 24)
+                    
+                    // Bottom spacing
+                    Color.clear.frame(height: 40)
+                }
+            }
+            .background(themeManager.currentTheme.primaryBackgroundColor.ignoresSafeArea())
+            .navigationTitle("Dashboard")
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+        }
+        .onAppear {
+            viewModel.refreshData()
+        }
+    }
+    
+    private var greetingText: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5..<12:
+            return "Good Morning"
+        case 12..<17:
+            return "Good Afternoon"
+        case 17..<22:
+            return "Good Evening"
+        default:
+            return "Good Night"
+        }
+    }
+}
+
+// MARK: - Supporting Views
+
+struct QuickStatCard: View {
+    let title: String
+    let value: String
+    let subtitle: String
+    let icon: String
+    let color: Color
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(color)
+                    .font(.title3)
+                
+                Spacer()
+            }
+            
+            Text(value)
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(themeManager.currentTheme.primaryTextColor)
+            
+            Text(title)
+                .font(.caption)
+                .fontWeight(.medium)
+                .foregroundColor(themeManager.currentTheme.primaryTextColor)
+            
+            Text(subtitle)
+                .font(.caption2)
+                .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(themeManager.currentTheme.secondaryBackgroundColor)
+                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+        )
+    }
+}
+
+struct QuickActionCard: View {
+    let title: String
+    let icon: String
+    let color: Color
+    let action: () -> Void
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.title2)
+                    .foregroundColor(color)
+                
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 20)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(themeManager.currentTheme.secondaryBackgroundColor)
+                    .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+struct ActivityRowView: View {
+    let activity: DashboardActivity
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: activity.icon)
+                .foregroundColor(activity.color)
+                .font(.title3)
+                .frame(width: 24, height: 24)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(activity.title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                
+                Text(activity.subtitle)
+                    .font(.caption)
+                    .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+            }
+            
+            Spacer()
+            
+            Text(timeAgoString(from: activity.timestamp))
+                .font(.caption2)
+                .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(themeManager.currentTheme.secondaryBackgroundColor)
+                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+        )
+    }
+    
+    private func timeAgoString(from date: Date) -> String {
+        let interval = Date().timeIntervalSince(date)
+        
+        if interval < 60 {
+            return "now"
+        } else if interval < 3600 {
+            let minutes = Int(interval / 60)
+            return "\(minutes)m ago"
+        } else if interval < 86400 {
+            let hours = Int(interval / 3600)
+            return "\(hours)h ago"
+        } else {
+            let days = Int(interval / 86400)
+            return "\(days)d ago"
+        }
+    }
+}
+
+struct UpcomingItemView: View {
+    let item: UpcomingItem
+    @EnvironmentObject var themeManager: ThemeManager
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(spacing: 4) {
+                Text(dayFormatter.string(from: item.date))
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                
+                Text(dayNumberFormatter.string(from: item.date))
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundColor(themeManager.currentTheme.primaryAccentColor)
+            }
+            .frame(width: 40)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(item.title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                
+                if let subtitle = item.subtitle {
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                }
+                
+                Text(timeFormatter.string(from: item.date))
+                    .font(.caption2)
+                    .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+            }
+            
+            Spacer()
+            
+            Image(systemName: item.icon)
+                .foregroundColor(item.color)
+                .font(.title3)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(themeManager.currentTheme.secondaryBackgroundColor)
+                .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+        )
+    }
+    
+    private var dayFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE"
+        return formatter
+    }
+    
+    private var dayNumberFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d"
+        return formatter
+    }
+    
+    private var timeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        return formatter
+    }
+}
+
+#Preview {
+    DashboardView()
+        .environmentObject(ThemeManager())
+}

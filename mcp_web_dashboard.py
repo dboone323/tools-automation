@@ -6,16 +6,15 @@ No external dependencies.
 """
 import json
 import os
-import urllib.request
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
+import urllib.request
 
-MCP_URL = os.environ.get("MCP_URL", "http://127.0.0.1:5005")
-HOST = "127.0.0.1"
-PORT = int(os.environ.get("MCP_WEB_PORT", "8080"))
+MCP_URL = os.environ.get('MCP_URL', 'http://127.0.0.1:5005')
+HOST = '127.0.0.1'
+PORT = int(os.environ.get('MCP_WEB_PORT', '8080'))
 
-HTML = (
-    r"""
+HTML = r"""
 <!doctype html>
 <html>
 <head>
@@ -49,50 +48,44 @@ HTML = (
   </table>
 </body>
 </html>
-"""
-    % MCP_URL
-)
+""" % MCP_URL
 
 
 class Handler(BaseHTTPRequestHandler):
-    def _send(self, data, status=200, content_type="application/json"):
-        b = data.encode("utf-8")
+    def _send(self, data, status=200, content_type='application/json'):
+        b = data.encode('utf-8')
         self.send_response(status)
-        self.send_header("Content-Type", content_type)
-        self.send_header("Content-Length", str(len(b)))
+        self.send_header('Content-Type', content_type)
+        self.send_header('Content-Length', str(len(b)))
         self.end_headers()
         self.wfile.write(b)
 
     def do_GET(self):
         parsed = urlparse(self.path)
-        if parsed.path == "/":
-            self._send(HTML, content_type="text/html")
+        if parsed.path == '/':
+            self._send(HTML, content_type='text/html')
             return
-        if parsed.path == "/api/status":
+        if parsed.path == '/api/status':
             try:
-                with urllib.request.urlopen(MCP_URL + "/status", timeout=2) as r:
-                    data = r.read().decode("utf-8")
+                with urllib.request.urlopen(MCP_URL + '/status', timeout=2) as r:
+                    data = r.read().decode('utf-8')
                     self._send(data)
                     return
             except Exception as e:
-                self._send(
-                    json.dumps(
-                        {"ok": False, "error": str(e), "agents": [], "tasks": []}
-                    )
-                )
+                self._send(json.dumps({'ok': False, 'error': str(e), 'agents': [], 'tasks': []}))
                 return
 
-        self._send(json.dumps({"error": "not_found"}), status=404)
+        self._send(json.dumps({'error': 'not_found'}), status=404)
 
 
 def run(host=HOST, port=PORT):
     httpd = HTTPServer((host, port), Handler)
-    print(f"MCP Web Dashboard running on http://{host}:{port} (proxy -> {MCP_URL})")
+    print(f'MCP Web Dashboard running on http://{host}:{port} (proxy -> {MCP_URL})')
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print("Shutting down")
+        print('Shutting down')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     run()

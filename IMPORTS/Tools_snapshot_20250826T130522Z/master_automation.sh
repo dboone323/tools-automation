@@ -209,7 +209,7 @@ show_status() {
 run_all_automation() {
 	print_status "Running automation for all projects..."
 	for project in "${PROJECTS_DIR}"/*; do
-		if [[ -d ${project} ]]; then
+		if [[ -d "${project}" ]]; then
 			local project_name
 			project_name=$(basename "${project}")
 			print_status "Attempting automation for ${project_name}"
@@ -217,7 +217,7 @@ run_all_automation() {
 			if [[ -f "${project}/automation/run_automation.sh" ]]; then
 				mkdir -p "${project}/automation/logs" 2>/dev/null || true
 
-				if [[ ${DRY_RUN} -eq 1 ]]; then
+				if [[ "${DRY_RUN}" -eq 1 ]]; then
 					print_status "Dry-run: would run automation for ${project_name} (skipping actual execution)"
 					continue
 				fi

@@ -6,16 +6,17 @@
     <string>com.quantum.github_workflow_monitor</string>
     <key>ProgramArguments</key>
     <array>
-      <string>/Users/danielstevens/Code/Tools/Automation/.venv/bin/python</string>
-      <string>/Users/danielstevens/Code/Tools/Automation/github_workflow_monitor.py</string>
+      <string>/usr/bin/env</string>
+      <string>python3</string>
+      <string>/Users/USERNAME/Code/Tools/Automation/github_workflow_monitor.py</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
     <true/>
     <key>StandardOutPath</key>
-    <string>/Users/danielstevens/Desktop/Code/Tools/Automation/logs/github_workflow_monitor.out</string>
+    <string>/Users/USERNAME/Code/Tools/Automation/logs/github_workflow_monitor.out</string>
     <key>StandardErrorPath</key>
-    <string>/Users/danielstevens/Desktop/Code/Tools/Automation/logs/github_workflow_monitor.err</string>
+    <string>/Users/USERNAME/Code/Tools/Automation/logs/github_workflow_monitor.err</string>
   </dict>
 </plist>

@@ -64,7 +64,7 @@ validate_workflows() {
 	local validation_failed=0
 
 	for workflow_file in "${project_path}/.github/workflows"/*.yml; do
-		if [[ -f ${workflow_file} ]]; then
+		if [[ -f "${workflow_file}" ]]; then
 			local filename
 			filename=$(basename "${workflow_file}")
 			if python3 -c "import yaml; yaml.safe_load(open('${workflow_file}', 'r'))" 2>/dev/null; then
@@ -115,7 +115,7 @@ push_project_workflows() {
 		# Check if we need to push any staged workflows
 		local staged_workflows
 		staged_workflows=$(git diff --cached --name-only .github/workflows/ 2>/dev/null) || staged_workflows=""
-		if [[ -n ${staged_workflows} ]]; then
+	if [[ -n "${staged_workflows}" ]]; then
 			print_status "${project_name}: Found staged workflow changes"
 		else
 			# Try to push anyway in case there are committed but unpushed changes
@@ -125,7 +125,7 @@ push_project_workflows() {
 				# fallback to last commit if origin/main comparison failed
 				unpushed=$(git log --oneline -1 2>/dev/null) || unpushed=""
 			fi
-			if [[ -n ${unpushed} ]]; then
+			if [[ -n "${unpushed}" ]]; then
 				print_status "${project_name}: Found unpushed commits, attempting push..."
 			else
 				print_success "${project_name}: Workflows are up to date"

@@ -11,7 +11,7 @@ Usage
    python3 mcp_dashboard_flask.py
 
 3. To commit and push changes locally:
-   git add static/_ templates/_ mcp_dashboard_flask.py build_assets.py README-ASSETS.md
+   git add static/* templates/* mcp_dashboard_flask.py build_assets.py README-ASSETS.md
    git commit -m "Add asset build step and hashed static assets; manifest support"
    git push
 

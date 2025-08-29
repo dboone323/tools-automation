@@ -21,5 +21,4 @@ curl -X POST \
 ```
 
 Notes:
-
 - Create PRs in small batches (1-3) with a 3s delay between batches to avoid rate limits and terminal instability.
