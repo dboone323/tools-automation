@@ -327,7 +327,7 @@
         // Load dashboard data
         async function loadDashboardData() {
             try {
-                const response = await fetch('./dashboard_data.json');
+                const response = await fetch('http://localhost:8002/api/dashboard-data');
                 const data = await response.json();
                 agentData = data.agents || {};
                 systemMetrics = data.system || {};
@@ -335,7 +335,18 @@
                 return true;
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
-                return false;
+                // Fallback to local file if API is unavailable
+                try {
+                    const response = await fetch('./dashboard_data.json');
+                    const data = await response.json();
+                    agentData = data.agents || {};
+                    systemMetrics = data.system || {};
+                    taskData = data.tasks || {};
+                    return true;
+                } catch (fallbackError) {
+                    console.error('Fallback also failed:', fallbackError);
+                    return false;
+                }
             }
         }
 

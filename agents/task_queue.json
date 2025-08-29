@@ -1,0 +1,116 @@
+{
+    "tasks": [
+        {
+            "id": "debug_task_001",
+            "type": "debug",
+            "description": "Analyze MomentumFinance project for potential memory leaks and performance issues",
+            "priority": 8,
+            "assigned_agent": "agent_debug.sh",
+            "status": "completed",
+            "created": 1756505576,
+            "dependencies": []
+        },
+        {
+            "id": "uiux_task_001",
+            "type": "ui",
+            "description": "Review CodingReviewer UI components for accessibility and user experience improvements",
+            "priority": 6,
+            "assigned_agent": "uiux_agent.sh",
+            "status": "completed",
+            "created": 1756505576,
+            "dependencies": []
+        },
+        {
+            "id": "apple_pro_task_001",
+            "type": "swift",
+            "description": "Audit PlannerApp for Apple framework best practices and Swift concurrency patterns",
+            "priority": 7,
+            "assigned_agent": "apple_pro_agent.sh",
+            "status": "completed",
+            "created": 1756505576,
+            "dependencies": []
+        },
+        {
+            "id": "codegen_task_001",
+            "type": "generate",
+            "description": "Generate unit tests for HabitQuest data models and view models",
+            "priority": 5,
+            "assigned_agent": "agent_codegen.sh",
+            "status": "completed",
+            "created": 1756505576,
+            "dependencies": []
+        },
+        {
+            "id": "search_task_001",
+            "type": "search",
+            "description": "Find all deprecated API usage across all projects and suggest modern alternatives",
+            "priority": 4,
+            "assigned_agent": "search_agent.sh",
+            "status": "completed",
+            "created": 1756505576,
+            "dependencies": []
+        },
+        {
+            "id": "debug_task_002",
+            "type": "debug",
+            "description": "Investigate AvoidObstaclesGame build failures and identify root causes",
+            "priority": 9,
+            "assigned_agent": "agent_debug.sh",
+            "status": "completed",
+            "created": 1756505576,
+            "dependencies": []
+        },
+        {
+            "id": "uiux_task_002",
+            "type": "ux",
+            "description": "Analyze MomentumFinance transaction views for better data visualization",
+            "priority": 5,
+            "assigned_agent": "uiux_agent.sh",
+            "status": "completed",
+            "created": 1756505576,
+            "dependencies": []
+        },
+        {
+            "id": "apple_pro_task_002",
+            "type": "ios",
+            "description": "Review all projects for proper iOS 18 and macOS 15 compatibility",
+            "priority": 8,
+            "assigned_agent": "apple_pro_agent.sh",
+            "status": "completed",
+            "created": 1756505576,
+            "dependencies": []
+        },
+        {
+            "id": "momentum_tests_001",
+            "type": "test",
+            "description": "Create comprehensive unit tests for MomentumFinance project - currently has 0% test coverage",
+            "priority": 9,
+            "assigned_agent": "testing_agent.sh",
+            "status": "pending",
+            "created": 1756507705,
+            "dependencies": []
+        },
+        {
+            "id": "avoidobstacles_lint_001",
+            "type": "lint",
+            "description": "Fix 129 linting violations in AvoidObstaclesGame (4 serious issues need immediate attention)",
+            "priority": 8,
+            "assigned_agent": "quality_agent.sh",
+            "status": "pending",
+            "created": 1756507705,
+            "dependencies": []
+        },
+        {
+            "id": "momentum_build_fix_001",
+            "type": "debug",
+            "description": "Fix MomentumFinance build error: Unable to find module dependency 'Features'",
+            "priority": 10,
+            "assigned_agent": "agent_debug.sh",
+            "status": "pending",
+            "created": 1756507705,
+            "dependencies": []
+        }
+    ],
+    "completed": [],
+    "failed": []
+}

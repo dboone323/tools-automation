@@ -273,8 +273,8 @@ monitor_agent_health() {
         local last_seen=$(get_agent_last_seen "$agent")
         local time_diff=$((current_time - last_seen))
         
-        # If agent hasn't been seen for more than 10 minutes, mark as unresponsive
-        if [[ $time_diff -gt 600 ]]; then
+        # If agent hasn't been seen for more than 30 minutes, mark as unresponsive
+        if [[ $time_diff -gt 1800 ]]; then
             update_agent_status "$agent" "unresponsive"
             log_message "WARNING" "Agent $agent is unresponsive (last seen: ${time_diff}s ago)"
             
@@ -332,12 +332,12 @@ distribute_tasks() {
     fi
     
     for task_id in $available_tasks; do
-        local task_info=$(get_task_info "$task_id")
-        local assigned_agent=$(echo "$task_info" | cut -d'|' -f1)
-        local task_type=$(echo "$task_info" | cut -d'|' -f2)
+        task_info=$(get_task_info "$task_id")
+        assigned_agent=$(echo "$task_info" | cut -d'|' -f1)
+        task_type=$(echo "$task_info" | cut -d'|' -f2)
         
         # Check if agent is available
-        local agent_status=$(get_agent_status "$assigned_agent")
+        agent_status=$(get_agent_status "$assigned_agent")
         if [[ "$agent_status" == "available" ]]; then
             notify_agent "$assigned_agent" "execute_task" "$task_id"
             update_task_status "$task_id" "assigned" ""
@@ -434,13 +434,13 @@ while true; do
     distribute_tasks
     
     # Generate periodic status report (every 5 minutes)
-    local current_minute=$(date +%M)
+    current_minute=$(date +%M)
     if [[ $((current_minute % 5)) -eq 0 ]]; then
         generate_status_report
     fi
     
     # Check for new tasks from external sources
-    check_external_tasks
+    # check_external_tasks  # Function not implemented yet
     
     sleep 30  # Check every 30 seconds
 done

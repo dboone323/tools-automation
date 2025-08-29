@@ -39,6 +39,19 @@ notify_completion() {
     echo "$(date +%s)|$task_id|$success" >> "$COMPLETED_FILE"
 }
 
+# Update agent status with orchestrator
+update_agent_status() {
+    local status="$1"
+    local status_file="$(dirname "$0")/agent_status.json"
+    local current_time=$(date +%s)
+    
+    if command -v jq &> /dev/null && [[ -f "$status_file" ]]; then
+        jq --arg agent "pull_request_agent.sh" --arg status "$status" --arg last_seen "$current_time" \
+            '.agents[$agent] = {"status": $status, "last_seen": $last_seen, "tasks_completed": (.agents[$agent].tasks_completed // 0)}' \
+            "$status_file" > "$status_file.tmp" && mv "$status_file.tmp" "$status_file"
+    fi
+}
+
 # Assess risk of a pull request
 assess_risk() {
     local pr_title="$1"
@@ -446,8 +459,20 @@ process_notifications() {
 
 # Main agent loop
 log_message "INFO" "Pull Request Agent starting..."
+update_agent_status "active"
+
+last_heartbeat=$(date +%s)
 
 while true; do
+    current_time=$(date +%s)
+    
+    # Send heartbeat every 5 minutes
+    if [[ $((current_time - last_heartbeat)) -gt 300 ]]; then
+        update_agent_status "active"
+        last_heartbeat=$current_time
+        log_message "INFO" "Heartbeat sent to orchestrator"
+    fi
+    
     # Process notifications from orchestrator
     process_notifications
     

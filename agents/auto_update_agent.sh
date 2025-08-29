@@ -69,6 +69,19 @@ notify_completion() {
     echo "$(date +%s)|$task_id|$success" >> "$COMPLETED_FILE"
 }
 
+# Update agent status with orchestrator
+update_agent_status() {
+    local status="$1"
+    local status_file="$(dirname "$0")/agent_status.json"
+    local current_time=$(date +%s)
+    
+    if command -v jq &> /dev/null && [[ -f "$status_file" ]]; then
+        jq --arg agent "auto_update_agent.sh" --arg status "$status" --arg last_seen "$current_time" \
+            '.agents[$agent] = {"status": $status, "last_seen": $last_seen, "tasks_completed": (.agents[$agent].tasks_completed // 0)}' \
+            "$status_file" > "$status_file.tmp" && mv "$status_file.tmp" "$status_file"
+    fi
+}
+
 # Check for available updates
 check_for_updates() {
     log_message "INFO" "Checking for available updates..."
@@ -544,6 +557,7 @@ process_notifications() {
 
 # Main agent loop
 log_message "INFO" "Auto-Update Agent starting..."
+update_agent_status "active"
 
 while true; do
     # Process notifications from orchestrator
@@ -565,6 +579,9 @@ while true; do
     if [[ $((current_time % 21600)) -lt 60 ]]; then
         generate_update_report
     fi
+    
+    # Send heartbeat to orchestrator
+    update_agent_status "active"
     
     sleep 300  # Check every 5 minutes
 done

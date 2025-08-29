@@ -1060,3 +1060,303 @@ OSError: [Errno 48] Address already in use
 [Fri Aug 29 17:10:53 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171053.md
 [Fri Aug 29 17:11:24 CDT 2025] [INFO] Dashboard data updated
 [Fri Aug 29 17:11:24 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171124.md
+[Fri Aug 29 17:11:55 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:11:55 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171155.md
+[Fri Aug 29 17:12:26 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:12:26 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171226.md
+[Fri Aug 29 17:12:58 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:12:58 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171258.md
+[Fri Aug 29 17:13:29 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:13:29 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171329.md
+[Fri Aug 29 17:14:00 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:14:00 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171400.md
+[Fri Aug 29 17:14:31 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:14:31 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171431.md
+[Fri Aug 29 17:15:02 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:15:02 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171502.md
+[Fri Aug 29 17:15:33 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:15:33 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171533.md
+[Fri Aug 29 17:16:04 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:16:04 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171604.md
+[Fri Aug 29 17:16:36 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:16:36 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171636.md
+[Fri Aug 29 17:17:07 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:17:07 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171707.md
+[Fri Aug 29 17:17:38 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:17:38 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171738.md
+[Fri Aug 29 17:18:09 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:18:09 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171809.md
+[Fri Aug 29 17:18:40 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:18:40 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171840.md
+[Fri Aug 29 17:19:11 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:19:11 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171911.md
+[Fri Aug 29 17:19:42 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:19:42 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_171942.md
+[Fri Aug 29 17:20:13 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:20:13 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172013.md
+[Fri Aug 29 17:20:44 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:20:44 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172044.md
+[Fri Aug 29 17:21:15 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:21:15 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172115.md
+[Fri Aug 29 17:21:46 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:21:46 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172146.md
+[Fri Aug 29 17:22:17 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:22:17 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172217.md
+[Fri Aug 29 17:22:48 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:22:48 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172248.md
+[Fri Aug 29 17:23:19 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:23:19 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172319.md
+[Fri Aug 29 17:23:50 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:23:50 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172350.md
+[Fri Aug 29 17:24:21 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:24:21 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172421.md
+[Fri Aug 29 17:24:52 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:24:52 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172452.md
+[Fri Aug 29 17:25:23 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:25:23 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172523.md
+[Fri Aug 29 17:25:54 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:25:54 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172554.md
+[Fri Aug 29 17:26:25 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:26:25 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172625.md
+[Fri Aug 29 17:26:56 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:26:56 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172656.md
+[Fri Aug 29 17:27:27 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:27:27 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172727.md
+[Fri Aug 29 17:27:58 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:27:58 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172758.md
+[Fri Aug 29 17:28:30 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:28:30 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172830.md
+[Fri Aug 29 17:29:01 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:29:01 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172901.md
+[Fri Aug 29 17:29:32 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:29:32 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_172932.md
+[Fri Aug 29 17:30:03 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:30:03 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173003.md
+[Fri Aug 29 17:30:34 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:30:34 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173034.md
+[Fri Aug 29 17:31:05 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:31:05 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173105.md
+[Fri Aug 29 17:31:36 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:31:36 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173136.md
+[Fri Aug 29 17:32:07 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:32:07 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173207.md
+[Fri Aug 29 17:32:38 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:32:38 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173238.md
+[Fri Aug 29 17:33:09 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:33:09 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173309.md
+[Fri Aug 29 17:33:40 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:33:40 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173340.md
+[Fri Aug 29 17:34:11 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:34:11 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173411.md
+[Fri Aug 29 17:34:42 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:34:42 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173442.md
+[Fri Aug 29 17:35:13 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:35:13 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173513.md
+[Fri Aug 29 17:35:44 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:35:44 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173544.md
+[Fri Aug 29 17:36:15 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:36:15 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173615.md
+[Fri Aug 29 17:36:46 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:36:46 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173646.md
+[Fri Aug 29 17:37:17 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:37:17 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173717.md
+[Fri Aug 29 17:37:48 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:37:48 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173748.md
+[Fri Aug 29 17:38:20 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:38:20 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173820.md
+[Fri Aug 29 17:38:51 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:38:51 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173851.md
+[Fri Aug 29 17:39:22 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:39:22 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173922.md
+[Fri Aug 29 17:39:53 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:39:53 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_173953.md
+[Fri Aug 29 17:40:24 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:40:24 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174024.md
+[Fri Aug 29 17:40:55 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:40:55 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174055.md
+[Fri Aug 29 17:41:26 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:41:26 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174126.md
+[Fri Aug 29 17:41:57 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:41:57 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174157.md
+[Fri Aug 29 17:42:28 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:42:28 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174228.md
+[Fri Aug 29 17:42:59 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:42:59 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174259.md
+[Fri Aug 29 17:43:30 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:43:30 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174330.md
+[Fri Aug 29 17:44:01 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:44:01 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174401.md
+[Fri Aug 29 17:44:32 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:44:32 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174432.md
+[Fri Aug 29 17:45:03 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:45:03 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174503.md
+[Fri Aug 29 17:45:34 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:45:34 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174534.md
+[Fri Aug 29 17:46:05 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:46:05 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174605.md
+[Fri Aug 29 17:46:36 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:46:36 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174636.md
+[Fri Aug 29 17:47:07 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:47:07 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174707.md
+[Fri Aug 29 17:47:38 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:47:38 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174738.md
+[Fri Aug 29 17:48:09 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:48:09 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174809.md
+[Fri Aug 29 17:48:40 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:48:40 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174840.md
+[Fri Aug 29 17:49:11 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:49:11 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174911.md
+[Fri Aug 29 17:49:42 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:49:42 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_174942.md
+[Fri Aug 29 17:50:13 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:50:13 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175013.md
+[Fri Aug 29 17:50:47 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:50:47 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175047.md
+[Fri Aug 29 17:51:18 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:51:18 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175118.md
+[Fri Aug 29 17:51:49 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:51:49 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175149.md
+[Fri Aug 29 17:52:20 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:52:20 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175220.md
+[Fri Aug 29 17:52:51 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:52:51 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175251.md
+[Fri Aug 29 17:53:22 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:53:22 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175322.md
+[Fri Aug 29 17:53:54 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:53:54 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175354.md
+[Fri Aug 29 17:54:25 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:54:25 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175425.md
+[Fri Aug 29 17:54:56 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:54:56 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175456.md
+[Fri Aug 29 17:55:27 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:55:27 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175527.md
+[Fri Aug 29 17:55:58 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:55:58 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175558.md
+[Fri Aug 29 17:56:29 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:56:29 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175629.md
+[Fri Aug 29 17:57:00 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:57:00 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175700.md
+[Fri Aug 29 17:57:31 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:57:31 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175731.md
+[Fri Aug 29 17:58:02 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:58:02 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175802.md
+[Fri Aug 29 17:58:33 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:58:33 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175833.md
+[Fri Aug 29 17:59:04 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:59:04 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175904.md
+[Fri Aug 29 17:59:35 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 17:59:35 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_175935.md
+[Fri Aug 29 18:00:06 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:00:07 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180006.md
+[Fri Aug 29 18:00:38 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:00:38 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180038.md
+[Fri Aug 29 18:01:09 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:01:09 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180109.md
+[Fri Aug 29 18:01:40 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:01:40 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180140.md
+[Fri Aug 29 18:02:11 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:02:11 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180211.md
+[Fri Aug 29 18:02:42 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:02:42 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180242.md
+[Fri Aug 29 18:03:13 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:03:13 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180313.md
+[Fri Aug 29 18:03:44 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:03:44 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180344.md
+[Fri Aug 29 18:04:15 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:04:15 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180415.md
+[Fri Aug 29 18:04:46 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:04:46 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180446.md
+[Fri Aug 29 18:05:18 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:05:18 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180518.md
+[Fri Aug 29 18:05:49 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:05:49 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180549.md
+[Fri Aug 29 18:06:20 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:06:20 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180620.md
+[Fri Aug 29 18:06:51 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:06:51 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180651.md
+[Fri Aug 29 18:07:22 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:07:22 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180722.md
+[Fri Aug 29 18:07:53 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:07:53 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180753.md
+[Fri Aug 29 18:08:25 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:08:25 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180825.md
+[Fri Aug 29 18:08:56 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:08:56 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180856.md
+[Fri Aug 29 18:09:27 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:09:27 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180927.md
+[Fri Aug 29 18:09:58 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:09:58 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_180958.md
+[Fri Aug 29 18:10:29 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:10:29 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181029.md
+[Fri Aug 29 18:11:00 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:11:00 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181100.md
+[Fri Aug 29 18:11:32 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:11:32 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181132.md
+[Fri Aug 29 18:12:03 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:12:03 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181203.md
+[Fri Aug 29 18:12:34 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:12:34 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181234.md
+[Fri Aug 29 18:13:05 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:13:05 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181305.md
+[Fri Aug 29 18:13:36 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:13:36 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181336.md
+[Fri Aug 29 18:14:07 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:14:07 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181407.md
+[Fri Aug 29 18:14:38 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:14:38 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181438.md
+[Fri Aug 29 18:15:10 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:15:10 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181510.md
+[Fri Aug 29 18:15:41 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:15:41 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181541.md
+[Fri Aug 29 18:16:12 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:16:12 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181612.md
+[Fri Aug 29 18:16:43 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:16:43 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181643.md
+[Fri Aug 29 18:17:14 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:17:14 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181714.md
+[Fri Aug 29 18:17:46 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:17:46 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181746.md
+[Fri Aug 29 18:18:17 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:18:17 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181817.md
+[Fri Aug 29 18:18:48 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:18:48 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181848.md
+[Fri Aug 29 18:19:19 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:19:19 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181919.md
+[Fri Aug 29 18:19:51 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:19:51 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_181951.md
+[Fri Aug 29 18:20:22 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:20:22 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182022.md
+[Fri Aug 29 18:20:53 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:20:53 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182053.md
+[Fri Aug 29 18:21:24 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:21:24 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182124.md
+[Fri Aug 29 18:21:55 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:21:55 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182155.md
+[Fri Aug 29 18:22:26 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:22:26 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182226.md
+[Fri Aug 29 18:23:02 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:23:02 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182302.md
+[Fri Aug 29 18:23:34 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:23:34 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182334.md
+[Fri Aug 29 18:24:07 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:24:07 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182407.md
+[Fri Aug 29 18:24:40 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:24:40 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182440.md
+[Fri Aug 29 18:25:14 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:25:14 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182514.md
+[Fri Aug 29 18:25:48 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:25:48 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182548.md
+[Fri Aug 29 18:26:22 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:26:22 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182622.md
+[Fri Aug 29 18:26:52 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:26:52 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182652.md
+[Fri Aug 29 18:27:26 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:27:26 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182726.md
+[Fri Aug 29 18:28:01 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:28:01 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182801.md
+[Fri Aug 29 18:28:35 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:28:35 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182835.md
+[Fri Aug 29 18:29:05 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:29:05 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182905.md
+[Fri Aug 29 18:29:35 CDT 2025] [INFO] Dashboard data updated
+[Fri Aug 29 18:29:35 CDT 2025] [INFO] Dashboard report generated: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_reports/dashboard_report_20250829_182935.md

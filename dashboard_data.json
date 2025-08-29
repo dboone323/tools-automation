@@ -1,48 +1,90 @@
 {
   "agents": {
-    "task_orchestrator_agent": {
-      "status": "available",
-      "last_seen": "1756487661",
+    "task_orchestrator.sh": {
+      "status": "active",
+      "last_seen": "1756507419",
       "tasks_completed": 0,
       "description": "Central task coordination and agent health monitoring"
     },
-    "pull_request_agent": {
+    "learning_agent.sh": {
       "status": "available",
-      "last_seen": "1756487661",
+      "last_seen": "1756507700",
       "tasks_completed": 0,
-      "description": "Automated PR creation and risk assessment"
+      "description": "Pattern analysis and learning from best practices"
     },
-    "auto_update_agent": {
+    "quality_agent.sh": {
       "status": "available",
-      "last_seen": "1756487661",
+      "last_seen": "1756507702",
       "tasks_completed": 0,
-      "description": "Code enhancement and best practices updates"
+      "description": "Code quality analysis and improvement recommendations"
     },
-    "knowledge_base_agent": {
+    "testing_agent.sh": {
       "status": "available",
-      "last_seen": "1756487661",
+      "last_seen": "1756507687",
       "tasks_completed": 0,
-      "description": "Learning from operations and sharing insights"
+      "description": "Test coverage analysis and testing best practices"
     },
-    "public_api_agent": {
+    "documentation_agent.sh": {
       "status": "available",
-      "last_seen": "1756487661",
+      "last_seen": "1756507700",
       "tasks_completed": 0,
-      "description": "Rate-limited API management and caching"
+      "description": "Documentation coverage and quality assessment"
     },
-    "unified_dashboard_agent": {
-      "status": "running",
-      "last_seen": "1756487661",
+    "performance_agent.sh": {
+      "status": "available",
+      "last_seen": "1756507687",
       "tasks_completed": 0,
-      "description": "Real-time monitoring and visualization"
+      "description": "Performance optimization and bottleneck detection"
+    },
+    "security_agent.sh": {
+      "status": "available",
+      "last_seen": "1756507702",
+      "tasks_completed": 0,
+      "description": "Security vulnerability analysis and recommendations"
+    },
+    "agent_build.sh": {
+      "status": "restarting",
+      "last_seen": "1756507419",
+      "tasks_completed": 0,
+      "description": "Automated build and deployment management"
+    },
+    "agent_debug.sh": {
+      "status": "available",
+      "last_seen": "1756507401",
+      "tasks_completed": 0,
+      "description": "Debugging and error resolution assistance"
+    },
+    "agent_codegen.sh": {
+      "status": "available",
+      "last_seen": "1756507699",
+      "tasks_completed": 0,
+      "description": "Automated code generation and refactoring"
+    },
+    "uiux_agent.sh": {
+      "status": "available",
+      "last_seen": "1756507677",
+      "tasks_completed": 0,
+      "description": "UI/UX design and user experience optimization"
+    },
+    "apple_pro_agent.sh": {
+      "status": "available",
+      "last_seen": "1756507691",
+      "tasks_completed": 0,
+      "description": "Apple platform expertise and best practices"
+    },
+    "search_agent.sh": {
+      "status": "available",
+      "last_seen": "1756507677",
+      "tasks_completed": 0,
+      "description": "Advanced search and information retrieval"
     }
   },
   "system": {
-    "cpu_usage": "20.54%",
-    "memory_usage": "15G",
-    "disk_usage": "86%",
-    "network_connections": "34",
-    "process_count": "509"
+    "cpu_usage": "25.30%",
+    "memory_usage": "18G",
+    "disk_usage": "87%",
+    "network_connections": "42",
+    "process_count": "617"
   },
   "tasks": {
     "active": [],
@@ -50,5 +92,5 @@
     "failed": [],
     "queued": []
   },
-  "last_update": 1756487661
+  "last_update": 1756507705
 }

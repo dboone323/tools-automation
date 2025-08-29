@@ -140,6 +140,27 @@
             color: white;
         }
 
+        .status-stopped {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .status-failed {
+            background-color: #dc3545;
+            color: white;
+            animation: blink 1s infinite;
+        }
+
+        .status-restarting {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
+
         .metric {
             display: flex;
             justify-content: space-between;
@@ -320,22 +341,43 @@
             'running': { class: 'status-running', color: '#28a745' },
             'available': { class: 'status-available', color: '#28a745' },
             'busy': { class: 'status-busy', color: '#ffc107' },
-            'unresponsive': { class: 'status-unresponsive', color: '#dc3545' },
+            'stopped': { class: 'status-stopped', color: '#6c757d' },
+            'failed': { class: 'status-failed', color: '#dc3545' },
+            'restarting': { class: 'status-restarting', color: '#ffc107' },
             'unknown': { class: 'status-unresponsive', color: '#6c757d' }
         };
 
         // Load dashboard data
         async function loadDashboardData() {
             try {
-                const response = await fetch('./dashboard_data.json');
+                console.log('Fetching dashboard data from API...');
+                const response = await fetch('http://localhost:8003/api/dashboard-data');
+                console.log('API response status:', response.status);
                 const data = await response.json();
+                console.log('Received data:', data);
+
                 agentData = data.agents || {};
                 systemMetrics = data.system || {};
                 taskData = data.tasks || {};
+
+                console.log('Processed data - Agents:', Object.keys(agentData).length, 'System metrics:', Object.keys(systemMetrics).length, 'Tasks:', taskData);
                 return true;
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
-                return false;
+                // Fallback to local file if API is unavailable
+                try {
+                    console.log('Trying fallback to local file...');
+                    const response = await fetch('./dashboard_data.json');
+                    const data = await response.json();
+                    agentData = data.agents || {};
+                    systemMetrics = data.system || {};
+                    taskData = data.tasks || {};
+                    console.log('Fallback successful');
+                    return true;
+                } catch (fallbackError) {
+                    console.error('Fallback also failed:', fallbackError);
+                    return false;
+                }
             }
         }
 
@@ -357,7 +399,7 @@
                             <div class="agent-name">${displayName}</div>
                             <div class="agent-description">${data.description || 'No description available'}</div>
                         </div>
-                        <span class="agent-status ${statusInfo.class}">
+                        <span class="agent-status ${statusInfo.class}" title="Last seen: ${new Date(data.last_seen * 1000).toLocaleString()}">
                             ${data.status || 'unknown'}
                         </span>
                     `;
@@ -394,16 +436,25 @@
         function updateTaskQueue() {
             const taskQueue = document.getElementById('taskQueue');
 
-            if (taskData && taskData.active && taskData.active.length > 0) {
+            // Handle both old format (direct array) and new format (object with arrays)
+            let activeTasks = [];
+            if (taskData && taskData.active && Array.isArray(taskData.active)) {
+                activeTasks = taskData.active;
+            } else if (taskData && typeof taskData === 'object') {
+                // New format with categorized tasks
+                activeTasks = taskData.active || taskData.queued || [];
+            }
+
+            if (activeTasks.length > 0) {
                 taskQueue.innerHTML = '';
 
-                taskData.active.slice(0, 10).forEach(task => {
+                activeTasks.slice(0, 10).forEach(task => {
                     const taskDiv = document.createElement('div');
                     const priority = task.priority >= 7 ? 'high' : task.priority >= 4 ? 'medium' : 'low';
                     taskDiv.className = `task-item task-priority-${priority}`;
 
                     taskDiv.innerHTML = `
-                        <strong>${task.type || 'Unknown'}</strong><br>
+                        <strong>${task.type || task.title || 'Unknown'}</strong><br>
                         <small>${task.description || 'No description'}</small><br>
                         <small>Priority: ${task.priority || 'N/A'} | Agent: ${task.assigned_agent || 'Unassigned'}</small>
                     `;
@@ -421,17 +472,40 @@
 
             // Calculate performance metrics
             const totalAgents = agentData ? Object.keys(agentData).length : 0;
-            const healthyAgents = agentData ?
-                Object.values(agentData).filter(agent => agent.status === 'running' || agent.status === 'available').length : 0;
-            const healthPercentage = totalAgents > 0 ? Math.round((healthyAgents / totalAgents) * 100) : 0;
+            const runningAgents = agentData ?
+                Object.values(agentData).filter(agent => agent.status === 'running').length : 0;
+            const availableAgents = agentData ?
+                Object.values(agentData).filter(agent => agent.status === 'available').length : 0;
+            const failedAgents = agentData ?
+                Object.values(agentData).filter(agent => agent.status === 'failed').length : 0;
+            const stoppedAgents = agentData ?
+                Object.values(agentData).filter(agent => agent.status === 'stopped').length : 0;
+            const operationalAgents = runningAgents + availableAgents;
+            const healthPercentage = totalAgents > 0 ? Math.round((operationalAgents / totalAgents) * 100) : 0;
+
+            // Handle different task data formats
+            let activeTaskCount = 0;
+            if (taskData && taskData.active && Array.isArray(taskData.active)) {
+                activeTaskCount = taskData.active.length;
+            } else if (taskData && typeof taskData === 'object') {
+                activeTaskCount = (taskData.active || []).length + (taskData.queued || []).length;
+            }
 
             perfDiv.innerHTML = `
                 <div class="metric">
                     <span class="metric-name">Agent Health</span>
-                    <span class="metric-value">${healthyAgents}/${totalAgents} operational</span>
+                    <span class="metric-value">${operationalAgents}/${totalAgents} operational</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${healthPercentage}%"></div>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Running / Available</span>
+                    <span class="metric-value">${runningAgents} / ${availableAgents}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-name">Failed / Stopped</span>
+                    <span class="metric-value" style="color: ${failedAgents > 0 ? '#dc3545' : '#6c757d'};">${failedAgents} / ${stoppedAgents}</span>
                 </div>
                 <div class="metric">
                     <span class="metric-name">System Health Score</span>
@@ -439,7 +513,7 @@
                 </div>
                 <div class="metric">
                     <span class="metric-name">Active Tasks</span>
-                    <span class="metric-value">${taskData && taskData.active ? taskData.active.length : 0}</span>
+                    <span class="metric-value">${activeTaskCount}</span>
                 </div>
                 <div class="metric">
                     <span class="metric-name">Uptime</span>

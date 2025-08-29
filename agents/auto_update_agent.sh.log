@@ -1,0 +1,8 @@
+./auto_update_agent.sh: line 155: syntax error near unexpected token `)'
+./auto_update_agent.sh: line 155: `            queue_update "swiftpm" "$description" "$risk_level" "swiftpm_update_$(date +%Y%m%d)")'
+./auto_update_agent.sh: line 155: syntax error near unexpected token `)'
+./auto_update_agent.sh: line 155: `            queue_update "swiftpm" "$description" "$risk_level" "swiftpm_update_$(date +%Y%m%d)")'
+./auto_update_agent.sh: line 155: syntax error near unexpected token `)'
+./auto_update_agent.sh: line 155: `            queue_update "swiftpm" "$description" "$risk_level" "swiftpm_update_$(date +%Y%m%d)")'
+./auto_update_agent.sh: line 166: syntax error near unexpected token `)'
+./auto_update_agent.sh: line 166: `            queue_update "swiftpm" "$description" "$risk_level" "swiftpm_update_$(date +%Y%m%d)")'

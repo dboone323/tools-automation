@@ -61,11 +61,17 @@ log_message() {
     echo "[$(date)] [$level] $message" >> "$LOG_FILE"
 }
 
-# Notify orchestrator of task completion
-notify_completion() {
-    local task_id="$1"
-    local success="$2"
-    echo "$(date +%s)|$task_id|$success" >> "$COMPLETED_FILE"
+# Update agent status with orchestrator
+update_agent_status() {
+    local status="$1"
+    local status_file="$(dirname "$0")/agent_status.json"
+    local current_time=$(date +%s)
+    
+    if command -v jq &> /dev/null && [[ -f "$status_file" ]]; then
+        jq --arg agent "knowledge_base_agent.sh" --arg status "$status" --arg last_seen "$current_time" \
+            '.agents[$agent] = {"status": $status, "last_seen": $last_seen, "tasks_completed": (.agents[$agent].tasks_completed // 0)}' \
+            "$status_file" > "$status_file.tmp" && mv "$status_file.tmp" "$status_file"
+    fi
 }
 
 # Learn from agent logs
@@ -229,10 +235,9 @@ share_knowledge() {
     for agent_script in "$(dirname "$0")"/agent_*.sh; do
         if [[ -f "$agent_script" ]]; then
             local agent_name=$(basename "$agent_script" .sh)
-            local agent_capabilities="${AGENT_CAPABILITIES[$agent_script]}"
             
             # Generate personalized knowledge for this agent
-            generate_agent_knowledge "$agent_name" "$agent_capabilities"
+            generate_agent_knowledge "$agent_name" "general"
             ((shared_count++))
         fi
     done
@@ -385,8 +390,20 @@ process_notifications() {
 
 # Main learning and knowledge sharing loop
 log_message "INFO" "Knowledge Base Agent starting..."
+update_agent_status "active"
+
+last_heartbeat=$(date +%s)
 
 while true; do
+    current_time=$(date +%s)
+    
+    # Send heartbeat every 5 minutes
+    if [[ $((current_time - last_heartbeat)) -gt 300 ]]; then
+        update_agent_status "active"
+        last_heartbeat=$current_time
+        log_message "INFO" "Heartbeat sent to orchestrator"
+    fi
+    
     # Process notifications from orchestrator
     process_notifications
     
@@ -405,7 +422,7 @@ while true; do
     update_metadata
     
     # Generate periodic report (every 2 hours)
-    local current_minute=$(date +%M)
+    current_minute=$(date +%M)
     if [[ $((current_minute % 120)) -eq 0 ]]; then
         generate_knowledge_report
     fi

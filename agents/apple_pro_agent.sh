@@ -1,24 +1,125 @@
 #!/bin/bash
 # Apple Pro Engineer Agent: Ensures code and project follow Apple best practices and advanced engineering standards
 
-AGENT_NAME="AppleProAgent"
-LOG_FILE="$(dirname "$0")/apple_pro_agent.log"
-PROJECT="CodingReviewer"
+AGENT_NAME="apple_pro_agent.sh"
+LOG_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/apple_pro_agent.log"
+NOTIFICATION_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
+AGENT_STATUS_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json"
+TASK_QUEUE_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/task_queue.json"
 
-SLEEP_INTERVAL=3600 # 1 hour
-MIN_INTERVAL=600
-MAX_INTERVAL=7200
+# Update agent status to available when starting
+update_status() {
+    local status="$1"
+    if command -v jq &> /dev/null; then
+        jq ".agents[\"$AGENT_NAME\"].status = \"$status\" | .agents[\"$AGENT_NAME\"].last_seen = $(date +%s)" "$AGENT_STATUS_FILE" > "${AGENT_STATUS_FILE}.tmp" && mv "${AGENT_STATUS_FILE}.tmp" "$AGENT_STATUS_FILE"
+    fi
+    echo "[$(date)] $AGENT_NAME: Status updated to $status" >> "$LOG_FILE"
+}
+
+# Process a specific task
+process_task() {
+    local task_id="$1"
+    echo "[$(date)] $AGENT_NAME: Processing task $task_id" >> "$LOG_FILE"
+
+    # Get task details
+    if command -v jq &> /dev/null; then
+        local task_desc=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .description" "$TASK_QUEUE_FILE")
+        local task_type=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .type" "$TASK_QUEUE_FILE")
+        echo "[$(date)] $AGENT_NAME: Task description: $task_desc" >> "$LOG_FILE"
+        echo "[$(date)] $AGENT_NAME: Task type: $task_type" >> "$LOG_FILE"
+
+        # Process based on task type
+        case "$task_type" in
+            "ios"|"swift"|"apple"|"frameworks")
+                run_apple_pro_analysis "$task_desc"
+                ;;
+            *)
+                echo "[$(date)] $AGENT_NAME: Unknown task type: $task_type" >> "$LOG_FILE"
+                ;;
+        esac
+
+        # Mark task as completed
+        update_task_status "$task_id" "completed"
+        echo "[$(date)] $AGENT_NAME: Task $task_id completed" >> "$LOG_FILE"
+    fi
+}
+
+# Update task status
+update_task_status() {
+    local task_id="$1"
+    local status="$2"
+    if command -v jq &> /dev/null; then
+        jq "(.tasks[] | select(.id == \"$task_id\") | .status) = \"$status\"" "$TASK_QUEUE_FILE" > "${TASK_QUEUE_FILE}.tmp" && mv "${TASK_QUEUE_FILE}.tmp" "$TASK_QUEUE_FILE"
+    fi
+}
+
+# Apple Pro analysis function
+run_apple_pro_analysis() {
+    local task_desc="$1"
+    echo "[$(date)] $AGENT_NAME: Running Apple Pro analysis for: $task_desc" >> "$LOG_FILE"
+
+    # Extract project name from task description
+    if [[ "$task_desc" =~ CodingReviewer ]]; then
+        PROJECT="CodingReviewer"
+    elif [[ "$task_desc" =~ MomentumFinance ]]; then
+        PROJECT="MomentumFinance"
+    elif [[ "$task_desc" =~ HabitQuest ]]; then
+        PROJECT="HabitQuest"
+    elif [[ "$task_desc" =~ PlannerApp ]]; then
+        PROJECT="PlannerApp"
+    elif [[ "$task_desc" =~ AvoidObstaclesGame ]]; then
+        PROJECT="AvoidObstaclesGame"
+    else
+        PROJECT="CodingReviewer"  # Default
+    fi
+
+    echo "[$(date)] $AGENT_NAME: Analyzing project: $PROJECT" >> "$LOG_FILE"
+
+    # Run Apple Pro engineering checks
+    if [[ -d "/Users/danielstevens/Desktop/Code/Projects/$PROJECT" ]]; then
+        cd "/Users/danielstevens/Desktop/Code/Projects/$PROJECT"
+        echo "[$(date)] $AGENT_NAME: Running Apple Pro checks on $PROJECT..." >> "$LOG_FILE"
+
+        # Check for Swift concurrency patterns
+        find . -name "*.swift" -exec grep -l "async\|await\|Task\|Actor" {} \; >> "$LOG_FILE" 2>&1 || true
+
+        # Look for Apple framework usage
+        find . -name "*.swift" -exec grep -l "UIKit\|SwiftUI\|Foundation\|CoreData\|Combine" {} \; >> "$LOG_FILE" 2>&1 || true
+
+        # Check for memory management patterns
+        find . -name "*.swift" -exec grep -l "weak\|unowned\|ARC\|retain" {} \; >> "$LOG_FILE" 2>&1 || true
+
+        # Look for iOS/macOS compatibility issues
+        find . -name "*.swift" -exec grep -l "@available\|#available\|iOS\|macOS" {} \; >> "$LOG_FILE" 2>&1 || true
+    fi
+}
+
+# Main agent loop
+echo "[$(date)] $AGENT_NAME: Starting agent..." >> "$LOG_FILE"
+update_status "available"
+
+# Track processed tasks to avoid duplicates
+declare -A processed_tasks
 
 while true; do
-    echo "[$(date)] $AGENT_NAME: Running Apple Pro engineering checks..." >> "$LOG_FILE"
-    # Run advanced SwiftLint, SwiftFormat, and Apple guidelines checks
-    /Users/danielstevens/Desktop/Code/Tools/Automation/agents/plugins/apple_pro_check.sh "$PROJECT" >> "$LOG_FILE" 2>&1
-    # Suggest and optionally auto-apply advanced Apple best practices
-    /Users/danielstevens/Desktop/Code/Tools/Automation/agents/plugins/apple_pro_suggest.sh "$PROJECT" >> "$LOG_FILE" 2>&1
-    /Users/danielstevens/Desktop/Code/Tools/Automation/agents/plugins/apple_pro_apply.sh "$PROJECT" >> "$LOG_FILE" 2>&1
-    echo "[$(date)] $AGENT_NAME: Apple Pro engineering checks complete." >> "$LOG_FILE"
-    SLEEP_INTERVAL=$(( SLEEP_INTERVAL + 600 ))
-    if [[ $SLEEP_INTERVAL -gt $MAX_INTERVAL ]]; then SLEEP_INTERVAL=$MAX_INTERVAL; fi
-    echo "[$(date)] $AGENT_NAME: Sleeping for $SLEEP_INTERVAL seconds." >> "$LOG_FILE"
-    sleep $SLEEP_INTERVAL
+    # Check for new task notifications
+    if [[ -f "$NOTIFICATION_FILE" ]]; then
+        while IFS='|' read -r timestamp action task_id; do
+            if [[ "$action" == "execute_task" && -z "${processed_tasks[$task_id]}" ]]; then
+                update_status "busy"
+                process_task "$task_id"
+                update_status "available"
+                processed_tasks[$task_id]="completed"
+                echo "[$(date)] $AGENT_NAME: Marked task $task_id as processed" >> "$LOG_FILE"
+            fi
+        done < "$NOTIFICATION_FILE"
+
+        # Clear processed notifications to prevent re-processing
+        > "$NOTIFICATION_FILE"
+    fi
+
+    # Update last seen timestamp
+    update_status "available"
+
+    sleep 30  # Check every 30 seconds
 done
