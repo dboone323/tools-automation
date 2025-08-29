@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Controllers</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          Segoe UI,
+          Roboto,
+          Arial;
+        margin: 20px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      td,
+      th {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      th {
+        background: #f4f4f4;
+      }
+      .muted {
+        color: #666;
+        font-size: 90%;
+      }
+    </style>
+    <script>
+      function ago(ts) {
+        if (!ts) return "-";
+        let d = new Date(Math.floor(ts * 1000));
+        let diff = Math.floor((Date.now() - d.getTime()) / 1000);
+        if (diff < 60) return diff + "s ago";
+        if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+        if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
+        return Math.floor(diff / 86400) + "d ago";
+      }
+      let ctrlBackoff = 0.5;
+      async function refreshControllers() {
+        try {
+          let r = await fetch("/api/status");
+          if (r.status === 429) {
+            ctrlBackoff = Math.min(ctrlBackoff * 2, 10);
+            setTimeout(refreshControllers, ctrlBackoff * 1000);
+            return;
+          }
+          let j = await r.json();
+          let tbody = document.querySelector("table");
+          // update rows
+          let rows = "";
+          for (let c of j.controllers || []) {
+            rows += `<tr><td>${c.agent}</td><td>${c.project || "-"}</td><td data-ts='${c.last_heartbeat || 0}'>${ago(c.last_heartbeat || 0)}</td></tr>`;
+          }
+          document.querySelector("table").innerHTML =
+            "<tr><th>Agent</th><th>Project</th><th>Last seen</th></tr>" + rows;
+          ctrlBackoff = 0.5;
+        } catch (e) {
+          console.error(e);
+          ctrlBackoff = Math.min(ctrlBackoff * 2, 10);
+        }
+        setTimeout(refreshControllers, ctrlBackoff * 1000);
+      }
+      window.onload = () => {
+        refreshControllers();
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Controllers</h1>
+    <p class="muted">
+      Shows registered controller agents and last heartbeat (auto-updates on
+      page load).
+    </p>
+    <table>
+      <tr>
+        <th>Agent</th>
+        <th>Project</th>
+        <th>Last seen</th>
+      </tr>
+      {% for c in controllers %}
+      <tr>
+        <td>{{ c.agent }}</td>
+        <td>{{ c.project or '-' }}</td>
+        <td data-ts="{{ c.last_heartbeat or 0 }}">
+          {{ c.last_heartbeat or '-' }}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

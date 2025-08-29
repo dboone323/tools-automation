@@ -1,0 +1,15 @@
+[Unit]
+Description=Quantum Automation Agent %i
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/Users/danielstevens/Desktop/Code/Tools/Automation/.venv/bin/python /Users/danielstevens/Desktop/Code/Tools/Automation/agents/run_agent.py --name %i --capabilities status
+Restart=always
+StandardOutput=file:/Users/danielstevens/Desktop/Code/Tools/Automation/logs/%i.out
+StandardError=file:/Users/danielstevens/Desktop/Code/Tools/Automation/logs/%i.err
+
+[Install]
+WantedBy=multi-user.target

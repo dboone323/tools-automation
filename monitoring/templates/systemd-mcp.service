@@ -1,0 +1,14 @@
+[Unit]
+Description=MCP Local Coordinator
+After=network.target
+
+[Service]
+Type=simple
+User=%u
+WorkingDirectory=/Users/danielstevens/Desktop/Code/Tools
+ExecStart=/Users/danielstevens/Desktop/Code/Tools/Automation/.venv/bin/python Automation/mcp_server.py 127.0.0.1 5005
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -6,7 +6,9 @@ set -euo pipefail
 
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PROJECTS_DIR="${CODE_DIR}/Projects"
-DRY_RUN=0
+# Allow DRY_RUN to be set from environment for safe dry-run executions.
+# Default remains 0 to preserve existing behavior.
+DRY_RUN="${DRY_RUN:-0}"
 
 # Colors
 GREEN='\033[0;32m'
@@ -37,14 +39,30 @@ list_projects() {
 		if [[ -d ${project} ]]; then
 			local project_name
 			project_name=$(basename "${project}")
-			local swift_files
-			swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
-			local has_automation
-			if [[ -d "${project}/automation" ]]; then
-				has_automation=" (✅ automation)"
-			else
-				has_automation=" (❌ no automation)"
+			# Count Swift files in both the canonical Projects location and the
+			# staged import location (Tools/Projects). Some imports are staged
+			# under Tools/Projects during the snapshot workflow, so only
+			# inspecting ${PROJECTS_DIR} can lead to 0-file counts even when
+			# sources exist in the alternate path.
+			local swift_files=0
+			local alt_project_path="${CODE_DIR}/Tools/Projects/${project_name}"
+
+			if [[ -d ${project} ]]; then
+				swift_files=$((swift_files + $(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')))
 			fi
+
+			if [[ -d ${alt_project_path} ]]; then
+				# Add counts from the staged import path. If files exist there
+				# this will ensure we report accurate totals instead of 0.
+				swift_files=$((swift_files + $(find "${alt_project_path}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')))
+			fi
+
+			local has_automation=" (❌ no automation)"
+			if [[ -d "${project}/automation" ]] || [[ -d "${project}/.github/workflows" ]] || [[ -d "${project}/Tools/Automation" ]] || [[ -d "${project}/Tools" ]] ||
+				[[ -d "${alt_project_path}/automation" ]] || [[ -d "${alt_project_path}/.github/workflows" ]] || [[ -d "${alt_project_path}/Tools/Automation" ]] || [[ -d "${alt_project_path}/Tools" ]]; then
+				has_automation=" (✅ automation)"
+			fi
+
 			echo "  - ${project_name}: ${swift_files} Swift files${has_automation}"
 		fi
 	done
@@ -209,7 +227,7 @@ show_status() {
 run_all_automation() {
 	print_status "Running automation for all projects..."
 	for project in "${PROJECTS_DIR}"/*; do
-		if [[ -d "${project}" ]]; then
+		if [[ -d ${project} ]]; then
 			local project_name
 			project_name=$(basename "${project}")
 			print_status "Attempting automation for ${project_name}"
@@ -217,7 +235,7 @@ run_all_automation() {
 			if [[ -f "${project}/automation/run_automation.sh" ]]; then
 				mkdir -p "${project}/automation/logs" 2>/dev/null || true
 
-				if [[ "${DRY_RUN}" -eq 1 ]]; then
+				if [[ ${DRY_RUN} -eq 1 ]]; then
 					print_status "Dry-run: would run automation for ${project_name} (skipping actual execution)"
 					continue
 				fi

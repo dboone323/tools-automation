@@ -1,0 +1,20 @@
+=== CHECK: /Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame ===
+No architecture issues detected
+=== CHECK: /Users/danielstevens/Desktop/Code/Projects/CodingReviewer ===
+No architecture issues detected
+=== CHECK: /Users/danielstevens/Desktop/Code/Projects/HabitQuest ===
+Architecture issues detected:
+ - Project has 28 TODO/FIXME markers; consider cleaning up (threshold=10)
+Warn-only mode: continuing with warnings
+=== CHECK: /Users/danielstevens/Desktop/Code/Projects/MomentumFinance ===
+Architecture issues detected:
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/MomentumFinance/.github/workflows/ci.yml may reference deprecated action major versions (check version pins)
+Warn-only mode: continuing with warnings
+=== CHECK: /Users/danielstevens/Desktop/Code/Projects/PlannerApp ===
+No architecture issues detected
+=== CHECK: /Users/danielstevens/Desktop/Code/Projects/Tools ===
+No architecture issues detected
+=== CHECK: /Users/danielstevens/Desktop/Code/Tools ===
+Architecture issues detected:
+ - Project has 35 TODO/FIXME markers; consider cleaning up (threshold=10)
+Warn-only mode: continuing with warnings

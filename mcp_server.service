@@ -1,0 +1,17 @@
+
+[Unit]
+Description=Local MCP Server
+After=network.target
+
+[Service]
+Type=simple
+User=danielstevens
+WorkingDirectory=/Users/danielstevens/Desktop/Code/Tools/Automation
+ExecStart=/usr/bin/env python3 /Users/danielstevens/Desktop/Code/Tools/Automation/mcp_server.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=file:/Users/danielstevens/Desktop/Code/Tools/Automation/logs/mcp_server.log
+StandardError=file:/Users/danielstevens/Desktop/Code/Tools/Automation/logs/mcp_server.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+Quantum Agent entrypoint: project=/Users/danielstevens/Desktop/Code/Projects/HabitQuest dry_run=true enable_auto_fix=false
+Architecture issues detected:
+ - Project has 28 TODO/FIXME markers; consider cleaning up (threshold=10)
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/swift.yml may reference deprecated action major versions (check version pins)
+ - Workflow /Users/danielstevens/Desktop/Code/Projects/HabitQuest/.github/workflows/ci.yml may reference deprecated action major versions (check version pins)
+Warn-only mode: continuing with warnings
+Invoking ai_workflow_recovery.py (dry-run enforced) for /Users/danielstevens/Desktop/Code/Projects/HabitQuest
+2025-08-27 11:12:18,756 - INFO - 🤖 AI Workflow Recovery initialized for dboone323/HabitQuest
+2025-08-27 11:12:18,757 - INFO - 🔍 Running in dry-run mode (analysis only)
+Entrypoint finished

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>MCP Dashboard (Flask)</title>
+    <link rel="stylesheet" href="{{ asset_url('mcp_dashboard.css') }}" />
+    <link rel="manifest" href="{{ asset_url('manifest.webmanifest') }}" />
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0b5fff" />
+    <link
+      rel="icon"
+      href="{{ asset_url('favicon.svg') }}"
+      type="image/svg+xml"
+    />
+    <script src="{{ asset_url('mcp_dashboard.js') }}" defer></script>
+  </head>
+  <body>
+    <h2>MCP Dashboard (Flask)</h2>
+    <p>Proxying to: <code>{{ mcp_url }}</code></p>
+    <div id="health">
+      <span class="label">Health:</span>
+      <span id="health-indicator" title="server health"></span>
+      <span id="health-text">unknown</span>
+    </div>
+    <div>
+      <button onclick="load()">Refresh</button>
+      <label
+        ><input
+          type="checkbox"
+          id="autorefresh"
+          checked
+          onchange="if(this.checked) interval= setInterval(load,2000); else clearInterval(interval)"
+        />
+        Auto-refresh</label
+      >
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Project</th>
+          <th>Status</th>
+          <th>Code</th>
+          <th>Stdout</th>
+        </tr>
+      </thead>
+      <tbody id="tasks"></tbody>
+    </table>
+    <h3>Artifacts</h3>
+    <ul id="artlist"></ul>
+    <script>
+      /* artifacts and health polling moved into static JS */
+    </script>
+  </body>
+</html>
