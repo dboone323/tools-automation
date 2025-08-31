@@ -41,7 +41,7 @@ Daemon helper & log rotation
 Use `run_mcp_daemon.sh` to start the MCP server and auto-rotate logs before start.
 You can configure rotation via env vars:
 
-```bash
+````bash
 export MAX_LOG_BYTES=2097152   # 2MB
 export MAX_LOG_COUNT=10
 ./run_mcp_daemon.sh
@@ -54,8 +54,9 @@ If you prefer a richer UI, a Flask-based dashboard is included. Install dependen
 python3 -m pip install -r requirements.txt
 python3 mcp_dashboard_flask.py
 # open http://127.0.0.1:8080
-```
-```
+````
+
+````
 
 
 Notes
@@ -87,7 +88,7 @@ Usage examples:
 
 # Validate workflows only
 ./deploy_workflows_all_projects.sh --validate
-```
+````
 
 If you'd like I can also add a lightweight GitHub Actions workflow to run `master_automation.sh --validate` on PRs. Let me know if you want that added.
 

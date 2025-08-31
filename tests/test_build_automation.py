@@ -4,12 +4,13 @@ Build Automation Tests
 Tests for the master automation script and project build processes.
 """
 
+import os
+import shutil
 import subprocess
 import sys
-import os
 import tempfile
-import shutil
 from pathlib import Path
+
 import pytest
 
 
@@ -22,7 +23,7 @@ class TestBuildAutomation:
             ["./Tools/Automation/master_automation.sh", "status"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Tools"
+            cwd="/Users/danielstevens/Desktop/Code/Tools",
         )
 
         assert result.returncode == 0, f"Status command failed: {result.stderr}"
@@ -36,7 +37,7 @@ class TestBuildAutomation:
             ["./Tools/Automation/master_automation.sh", "list"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Tools"
+            cwd="/Users/danielstevens/Desktop/Code/Tools",
         )
 
         assert result.returncode == 0, f"List command failed: {result.stderr}"
@@ -46,7 +47,7 @@ class TestBuildAutomation:
             "CodingReviewer",
             "HabitQuest",
             "MomentumFinance",
-            "PlannerApp"
+            "PlannerApp",
         ]
 
         for project in expected_projects:
@@ -58,7 +59,7 @@ class TestBuildAutomation:
             ["./Tools/Automation/master_automation.sh", "all"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Tools"
+            cwd="/Users/danielstevens/Desktop/Code/Tools",
         )
 
         # The script should complete (may have warnings but should attempt all builds)
@@ -75,7 +76,7 @@ class TestBuildAutomation:
             "CodingReviewer",
             "HabitQuest",
             "MomentumFinance",
-            "PlannerApp"
+            "PlannerApp",
         ]
 
         for project in required_projects:
@@ -88,7 +89,9 @@ class TestBuildAutomation:
             has_swift_files = any(project_path.rglob("*.swift"))
 
             # At least one should exist
-            assert has_xcodeproj or has_swift_files, f"Project {project} has no Swift files or Xcode project"
+            assert (
+                has_xcodeproj or has_swift_files
+            ), f"Project {project} has no Swift files or Xcode project"
 
 
 class TestProjectBuilds:
@@ -97,16 +100,25 @@ class TestProjectBuilds:
     def test_avoid_obstacles_game_build(self):
         """Test AvoidObstaclesGame builds successfully."""
         result = subprocess.run(
-            ["xcodebuild", "-project", "AvoidObstaclesGame.xcodeproj", "-scheme", "AvoidObstaclesGame", "build"],
+            [
+                "xcodebuild",
+                "-project",
+                "AvoidObstaclesGame.xcodeproj",
+                "-scheme",
+                "AvoidObstaclesGame",
+                "build",
+            ],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame"
+            cwd="/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame",
         )
 
         # In development environment, builds may fail due to provisioning but should not crash
         # Accept return codes that indicate the build process worked but failed due to signing
         acceptable_codes = [0, 65, 70]  # 0=success, 65=provisioning, 70=signing
-        assert result.returncode in acceptable_codes, f"Build failed critically: {result.stderr}"
+        assert (
+            result.returncode in acceptable_codes
+        ), f"Build failed critically: {result.stderr}"
 
         # If it didn't succeed, should at least show build process started
         if result.returncode != 0:
@@ -115,15 +127,24 @@ class TestProjectBuilds:
     def test_habit_quest_build(self):
         """Test HabitQuest builds successfully."""
         result = subprocess.run(
-            ["xcodebuild", "-project", "HabitQuest.xcodeproj", "-scheme", "HabitQuest", "build"],
+            [
+                "xcodebuild",
+                "-project",
+                "HabitQuest.xcodeproj",
+                "-scheme",
+                "HabitQuest",
+                "build",
+            ],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/HabitQuest"
+            cwd="/Users/danielstevens/Desktop/Code/Projects/HabitQuest",
         )
 
         # Accept provisioning/signing failures as expected in dev environment
         acceptable_codes = [0, 65, 70]
-        assert result.returncode in acceptable_codes, f"Build failed critically: {result.stderr}"
+        assert (
+            result.returncode in acceptable_codes
+        ), f"Build failed critically: {result.stderr}"
 
         if result.returncode != 0:
             assert "Command line invocation:" in result.stdout
@@ -131,15 +152,24 @@ class TestProjectBuilds:
     def test_momentum_finance_build(self):
         """Test MomentumFinance builds successfully."""
         result = subprocess.run(
-            ["xcodebuild", "-project", "MomentumFinance.xcodeproj", "-scheme", "MomentumFinance", "build"],
+            [
+                "xcodebuild",
+                "-project",
+                "MomentumFinance.xcodeproj",
+                "-scheme",
+                "MomentumFinance",
+                "build",
+            ],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/MomentumFinance"
+            cwd="/Users/danielstevens/Desktop/Code/Projects/MomentumFinance",
         )
 
         # Accept various failure codes including project corruption
         acceptable_codes = [0, 65, 70, 74]  # 74 = project file corruption
-        assert result.returncode in acceptable_codes, f"Build failed critically: {result.stderr}"
+        assert (
+            result.returncode in acceptable_codes
+        ), f"Build failed critically: {result.stderr}"
 
         if result.returncode != 0:
             assert "Command line invocation:" in result.stdout
@@ -147,14 +177,23 @@ class TestProjectBuilds:
     def test_planner_app_build(self):
         """Test PlannerApp builds successfully."""
         result = subprocess.run(
-            ["xcodebuild", "-project", "PlannerApp.xcodeproj", "-scheme", "PlannerApp", "build"],
+            [
+                "xcodebuild",
+                "-project",
+                "PlannerApp.xcodeproj",
+                "-scheme",
+                "PlannerApp",
+                "build",
+            ],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/PlannerApp"
+            cwd="/Users/danielstevens/Desktop/Code/Projects/PlannerApp",
         )
 
         acceptable_codes = [0, 65, 70]
-        assert result.returncode in acceptable_codes, f"Build failed critically: {result.stderr}"
+        assert (
+            result.returncode in acceptable_codes
+        ), f"Build failed critically: {result.stderr}"
 
         if result.returncode != 0:
             assert "Command line invocation:" in result.stdout
@@ -166,9 +205,7 @@ class TestLinting:
     def test_swiftlint_available(self):
         """Test that SwiftLint is available and working."""
         result = subprocess.run(
-            ["swiftlint", "version"],
-            capture_output=True,
-            text=True
+            ["swiftlint", "version"], capture_output=True, text=True
         )
 
         assert result.returncode == 0, "SwiftLint not available"
@@ -180,19 +217,24 @@ class TestLinting:
             ["swiftlint", "lint", "--reporter", "json"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/PlannerApp"
+            cwd="/Users/danielstevens/Desktop/Code/Projects/PlannerApp",
         )
 
         # SwiftLint returns:
         # 0 if no violations, 1 if violations found, 2 if fatal error
         # We expect violations in PlannerApp, but should not have fatal errors
-        assert result.returncode in [0, 1, 2], f"SwiftLint failed unexpectedly: {result.stderr}"
+        assert result.returncode in [
+            0,
+            1,
+            2,
+        ], f"SwiftLint failed unexpectedly: {result.stderr}"
 
         # If we got violations (exit code 1), verify we got JSON output
         if result.returncode == 1:
             assert result.stdout.strip(), "Expected JSON output for violations"
             # Should be valid JSON array
             import json
+
             try:
                 violations = json.loads(result.stdout)
                 assert isinstance(violations, list), "Violations should be a JSON array"
@@ -209,14 +251,16 @@ class TestAutomationScripts:
 
     def test_habit_quest_dev_script(self):
         """Test HabitQuest dev.sh script."""
-        dev_script = Path("/Users/danielstevens/Desktop/Code/Projects/HabitQuest/dev.sh")
+        dev_script = Path(
+            "/Users/danielstevens/Desktop/Code/Projects/HabitQuest/dev.sh"
+        )
         assert dev_script.exists(), "dev.sh script missing"
 
         result = subprocess.run(
             ["bash", str(dev_script)],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/HabitQuest"
+            cwd="/Users/danielstevens/Desktop/Code/Projects/HabitQuest",
         )
 
         # Script should run without critical errors
@@ -224,18 +268,24 @@ class TestAutomationScripts:
 
     def test_avoid_obstacles_game_test_script(self):
         """Test AvoidObstaclesGame test script."""
-        test_script = Path("/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame/test_game.sh")
+        test_script = Path(
+            "/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame/test_game.sh"
+        )
         assert test_script.exists(), "test_game.sh script missing"
 
         result = subprocess.run(
             ["bash", str(test_script)],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame"
+            cwd="/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame",
         )
 
         # Script should run (may return various codes depending on test results)
-        assert result.returncode in [0, 1, 2], f"test_game.sh failed critically: {result.stderr}"
+        assert result.returncode in [
+            0,
+            1,
+            2,
+        ], f"test_game.sh failed critically: {result.stderr}"
 
 
 if __name__ == "__main__":

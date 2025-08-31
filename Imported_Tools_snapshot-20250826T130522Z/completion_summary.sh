@@ -6,7 +6,7 @@ echo "════════════════════════�
 echo ""
 echo "✅ Successfully installed and integrated:"
 echo "   • SwiftFormat (v0.57.2) - Code formatting"
-echo "   • Fastlane (v2.228.0) - iOS deployment automation"  
+echo "   • Fastlane (v2.228.0) - iOS deployment automation"
 echo "   • CocoaPods (v1.16.2) - Dependency management"
 echo "   • VS Code Extensions - Enhanced development environment"
 echo ""

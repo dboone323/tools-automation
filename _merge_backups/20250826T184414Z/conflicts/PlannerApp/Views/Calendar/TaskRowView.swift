@@ -4,7 +4,7 @@ import SwiftUI
 struct TaskRowView: View {
     @EnvironmentObject var themeManager: ThemeManager
     let task: Task
-    
+
     private var priorityColor: Color {
         switch task.priority {
         case .high:
@@ -15,7 +15,7 @@ struct TaskRowView: View {
             return .green
         }
     }
-    
+
     private var priorityText: String {
         switch task.priority {
         case .high:
@@ -26,12 +26,12 @@ struct TaskRowView: View {
             return "Low"
         }
     }
-    
+
     private var isOverdue: Bool {
         guard let dueDate = task.dueDate else { return false }
         return !task.isCompleted && dueDate < Date()
     }
-    
+
     var body: some View {
         HStack(spacing: 12) {
             // Priority and status indicator
@@ -49,52 +49,52 @@ struct TaskRowView: View {
                         .fill(priorityColor)
                         .frame(width: 8, height: 8)
                 }
-                
+
                 Text(priorityText)
                     .font(.caption2)
                     .fontWeight(.medium)
                     .foregroundColor(task.isCompleted ? .green : (isOverdue ? .red : priorityColor))
             }
             .frame(width: 50)
-            
+
             // Task details
             VStack(alignment: .leading, spacing: 2) {
                 Text(task.title)
                     .font(.subheadline)
                     .fontWeight(.medium)
-                    .foregroundColor(task.isCompleted ? 
-                        themeManager.currentTheme.secondaryTextColor : 
+                    .foregroundColor(task.isCompleted ?
+                        themeManager.currentTheme.secondaryTextColor :
                         themeManager.currentTheme.primaryTextColor)
                     .strikethrough(task.isCompleted)
                     .lineLimit(2)
-                
+
                 if !task.description.isEmpty {
                     Text(task.description)
                         .font(.caption)
                         .foregroundColor(themeManager.currentTheme.secondaryTextColor)
                         .lineLimit(1)
                 }
-                
+
                 // Due date indicator
                 if let dueDate = task.dueDate {
                     HStack(spacing: 4) {
                         Image(systemName: "clock")
                             .font(.caption2)
                             .foregroundColor(isOverdue ? .red : themeManager.currentTheme.secondaryTextColor)
-                        
+
                         Text("Due: \(dueDateFormatter.string(from: dueDate))")
                             .font(.caption2)
                             .foregroundColor(isOverdue ? .red : themeManager.currentTheme.secondaryTextColor)
                     }
                 }
             }
-            
+
             Spacer()
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
     }
-    
+
     private var dueDateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -113,7 +113,7 @@ struct TaskRowView: View {
             priority: .high,
             dueDate: Date()
         ))
-        
+
         TaskRowView(task: Task(
             id: UUID(),
             title: "Buy Groceries",
@@ -122,7 +122,7 @@ struct TaskRowView: View {
             priority: .medium,
             dueDate: Calendar.current.date(byAdding: .hour, value: -2, to: Date())
         ))
-        
+
         TaskRowView(task: Task(
             id: UUID(),
             title: "Completed Task",

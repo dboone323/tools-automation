@@ -5,8 +5,8 @@
 //  Created by Daniel Stevens on 5/16/25.
 //
 
-import Testing
 @testable import AvoidObstaclesGame
+import Testing
 
 struct AvoidObstaclesGameTests {
 

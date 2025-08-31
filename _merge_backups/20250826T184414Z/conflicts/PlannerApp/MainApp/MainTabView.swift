@@ -1,9 +1,9 @@
 // PlannerApp/MainApp/MainTabView.swift (Updated)
 import SwiftUI
 #if os(macOS)
-import AppKit
+    import AppKit
 #else
-import UIKit
+    import UIKit
 #endif
 
 struct MainTabView: View {
@@ -14,15 +14,14 @@ struct MainTabView: View {
     @Binding var selectedTabTag: String
 
     // Define constants or an enum for tab tags to avoid string typos.
-     struct TabTags {
-         static let dashboard = "Dashboard"
-         static let tasks = "Tasks"
-         static let calendar = "Calendar"
-         static let goals = "Goals"
-         static let journal = "Journal"
-         static let settings = "Settings"
-     }
-
+    enum TabTags {
+        static let dashboard = "Dashboard"
+        static let tasks = "Tasks"
+        static let calendar = "Calendar"
+        static let goals = "Goals"
+        static let journal = "Journal"
+        static let settings = "Settings"
+    }
 
     var body: some View {
         // TabView container. The `selection` parameter is bound to `selectedTabTag`.
@@ -59,13 +58,13 @@ struct MainTabView: View {
         }
         // Apply the theme's primary accent color to the selected tab item's icon and text tint.
         .accentColor(themeManager.currentTheme.primaryAccentColor)
-         // Attempt to influence the appearance of unselected tabs by setting the color scheme.
-         // This is an indirect way, as direct styling of unselected items is limited.
-         // It tells SwiftUI whether the overall view context is light or dark.
-         .environment(\.colorScheme, themeManager.currentTheme.primaryBackgroundColor.isDark() ? .dark : .light)
+        // Attempt to influence the appearance of unselected tabs by setting the color scheme.
+        // This is an indirect way, as direct styling of unselected items is limited.
+        // It tells SwiftUI whether the overall view context is light or dark.
+        .environment(\.colorScheme, themeManager.currentTheme.primaryBackgroundColor.isDark() ? .dark : .light)
         #if os(macOS)
-        // Ensure full window utilization on macOS
-        .frame(minWidth: 800, minHeight: 600)
+            // Ensure full window utilization on macOS
+            .frame(minWidth: 800, minHeight: 600)
         #endif
     }
 }
@@ -75,37 +74,36 @@ struct MainTabView: View {
 extension Color {
     func isDark() -> Bool {
         #if os(macOS)
-        // For macOS, we'll use NSColor to determine if a color is dark
-        let nsColor = NSColor(self)
-        let colorSpace = NSColorSpace.deviceRGB
-        guard let convertedColor = nsColor.usingColorSpace(colorSpace) else { return false }
-        
-        let red = convertedColor.redComponent
-        let green = convertedColor.greenComponent
-        let blue = convertedColor.blueComponent
-        
-        // Calculate luminance using standard coefficients.
-        let luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
-        // Consider the color dark if luminance is below a threshold (e.g., 0.5).
-        return luminance < 0.5
+            // For macOS, we'll use NSColor to determine if a color is dark
+            let nsColor = NSColor(self)
+            let colorSpace = NSColorSpace.deviceRGB
+            guard let convertedColor = nsColor.usingColorSpace(colorSpace) else { return false }
+
+            let red = convertedColor.redComponent
+            let green = convertedColor.greenComponent
+            let blue = convertedColor.blueComponent
+
+            // Calculate luminance using standard coefficients.
+            let luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+            // Consider the color dark if luminance is below a threshold (e.g., 0.5).
+            return luminance < 0.5
         #else
-        // For iOS/iPadOS, we'll use UIColor to determine if a color is dark
-        let uiColor = UIColor(self)
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-        
-        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        
-        // Calculate luminance using standard coefficients.
-        let luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
-        // Consider the color dark if luminance is below a threshold (e.g., 0.5).
-        return luminance < 0.5
+            // For iOS/iPadOS, we'll use UIColor to determine if a color is dark
+            let uiColor = UIColor(self)
+            var red: CGFloat = 0
+            var green: CGFloat = 0
+            var blue: CGFloat = 0
+            var alpha: CGFloat = 0
+
+            uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+            // Calculate luminance using standard coefficients.
+            let luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+            // Consider the color dark if luminance is below a threshold (e.g., 0.5).
+            return luminance < 0.5
         #endif
     }
 }
-
 
 // Preview Provider for MainTabView
 struct MainTabView_Previews: PreviewProvider {

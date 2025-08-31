@@ -5,15 +5,14 @@
 //  Created by Daniel Stevens on 4/29/25.
 //
 
-
 // PlannerApp/Styling/Theme.swift
 // (Create a new folder Styling if it doesn't exist)
 
 import SwiftUI
 #if os(macOS)
-import AppKit
+    import AppKit
 #else
-import UIKit
+    import UIKit
 #endif
 
 // Defines the properties of a visual theme
@@ -63,37 +62,37 @@ struct Theme: Identifiable, Equatable { // Added Equatable for comparison
         primaryFontName: nil, // System default
         secondaryFontName: nil // System default
     )
-    
+
     // Platform-specific default colors
     private static var defaultPrimaryBackgroundColor: Color {
         #if os(macOS)
-        return Color(nsColor: .windowBackgroundColor)
+            return Color(nsColor: .windowBackgroundColor)
         #else
-        return Color(UIColor.systemBackground)
+            return Color(UIColor.systemBackground)
         #endif
     }
-    
+
     private static var defaultSecondaryBackgroundColor: Color {
         #if os(macOS)
-        return Color(nsColor: .controlBackgroundColor)
+            return Color(nsColor: .controlBackgroundColor)
         #else
-        return Color(UIColor.secondarySystemBackground)
+            return Color(UIColor.secondarySystemBackground)
         #endif
     }
-    
+
     private static var defaultPrimaryTextColor: Color {
         #if os(macOS)
-        return Color(nsColor: .labelColor)
+            return Color(nsColor: .labelColor)
         #else
-        return Color(UIColor.label)
+            return Color(UIColor.label)
         #endif
     }
-    
+
     private static var defaultSecondaryTextColor: Color {
         #if os(macOS)
-        return Color(nsColor: .secondaryLabelColor)
+            return Color(nsColor: .secondaryLabelColor)
         #else
-        return Color(UIColor.secondaryLabel)
+            return Color(UIColor.secondaryLabel)
         #endif
     }
 
@@ -125,7 +124,7 @@ struct Theme: Identifiable, Equatable { // Added Equatable for comparison
         secondaryFontName: nil
     )
 
-     static let sunsetOrange = Theme(
+    static let sunsetOrange = Theme(
         name: "Sunset Orange",
         primaryAccentColor: Color(red: 0.90, green: 0.50, blue: 0.15), // Warm orange
         secondaryAccentColor: Color(red: 0.95, green: 0.70, blue: 0.40),
@@ -184,7 +183,6 @@ struct Theme: Identifiable, Equatable { // Added Equatable for comparison
         secondaryFontName: nil
     )
 
-
     // List of all available themes for pickers etc.
     static let availableThemes: [Theme] = [
         defaultTheme,
@@ -193,10 +191,11 @@ struct Theme: Identifiable, Equatable { // Added Equatable for comparison
         sunsetOrange,
         midnightDark,
         minimalGray,
-        rosePink
+        rosePink,
     ]
-    
+
     // MARK: - Enhanced Modern Themes (defined in ModernThemes.swift)
+
     // These will be added via extension in ModernThemes.swift
 
     // Implement Equatable based on name to compare themes

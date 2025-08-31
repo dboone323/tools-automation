@@ -1,5 +1,5 @@
-import Foundation
 import CloudKit
+import Foundation
 
 struct JournalEntry: Identifiable, Codable {
     let id: UUID
@@ -7,8 +7,8 @@ struct JournalEntry: Identifiable, Codable {
     var body: String
     var date: Date
     var mood: String
-    var modifiedAt: Date?  // Added for CloudKit sync/merge
-    
+    var modifiedAt: Date? // Added for CloudKit sync/merge
+
     init(id: UUID = UUID(), title: String, body: String, date: Date, mood: String, modifiedAt: Date? = Date()) {
         self.id = id
         self.title = title
@@ -17,9 +17,9 @@ struct JournalEntry: Identifiable, Codable {
         self.mood = mood
         self.modifiedAt = modifiedAt
     }
-    
+
     // MARK: - CloudKit Conversion
-    
+
     /// Convert to CloudKit record for syncing
     func toCKRecord() -> CKRecord {
         let record = CKRecord(recordType: "JournalEntry", recordID: CKRecord.ID(recordName: id.uuidString))
@@ -30,7 +30,7 @@ struct JournalEntry: Identifiable, Codable {
         record["modifiedAt"] = modifiedAt
         return record
     }
-    
+
     /// Create a JournalEntry from CloudKit record
     static func from(ckRecord: CKRecord) throws -> JournalEntry {
         guard let title = ckRecord["title"] as? String,
@@ -41,7 +41,7 @@ struct JournalEntry: Identifiable, Codable {
         else {
             throw NSError(domain: "JournalEntryConversionError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to convert CloudKit record to JournalEntry"])
         }
-        
+
         return JournalEntry(
             id: id,
             title: title,

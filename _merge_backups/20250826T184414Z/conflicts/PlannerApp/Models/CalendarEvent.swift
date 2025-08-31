@@ -1,13 +1,13 @@
-import Foundation
 import CloudKit
+import Foundation
 
 struct CalendarEvent: Identifiable, Codable {
     let id: UUID
     var title: String
     var date: Date
     var createdAt: Date
-    var modifiedAt: Date?  // Added for CloudKit sync/merge
-    
+    var modifiedAt: Date? // Added for CloudKit sync/merge
+
     init(id: UUID = UUID(), title: String, date: Date, createdAt: Date = Date(), modifiedAt: Date? = Date()) {
         self.id = id
         self.title = title
@@ -15,9 +15,9 @@ struct CalendarEvent: Identifiable, Codable {
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt
     }
-    
+
     // MARK: - CloudKit Conversion
-    
+
     /// Convert to CloudKit record for syncing
     func toCKRecord() -> CKRecord {
         let record = CKRecord(recordType: "CalendarEvent", recordID: CKRecord.ID(recordName: id.uuidString))
@@ -27,7 +27,7 @@ struct CalendarEvent: Identifiable, Codable {
         record["modifiedAt"] = modifiedAt
         return record
     }
-    
+
     /// Create a CalendarEvent from CloudKit record
     static func from(ckRecord: CKRecord) throws -> CalendarEvent {
         guard let title = ckRecord["title"] as? String,
@@ -36,7 +36,7 @@ struct CalendarEvent: Identifiable, Codable {
         else {
             throw NSError(domain: "CalendarEventConversionError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to convert CloudKit record to CalendarEvent"])
         }
-        
+
         return CalendarEvent(
             id: id,
             title: title,

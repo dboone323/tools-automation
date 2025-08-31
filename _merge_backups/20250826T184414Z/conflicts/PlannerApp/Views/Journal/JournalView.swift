@@ -1,5 +1,6 @@
 // PlannerApp/Views/Journal/JournalView.swift (Biometrics Removed - v10)
 import SwiftUI
+
 // Removed LocalAuthentication import
 
 struct JournalView: View {
@@ -22,8 +23,8 @@ struct JournalView: View {
         if searchText.isEmpty { return sorted }
         return sorted.filter {
             $0.title.localizedCaseInsensitiveContains(searchText) ||
-            $0.body.localizedCaseInsensitiveContains(searchText) ||
-            $0.mood.contains(searchText)
+                $0.body.localizedCaseInsensitiveContains(searchText) ||
+                $0.mood.contains(searchText)
         }
     }
 
@@ -33,34 +34,34 @@ struct JournalView: View {
         NavigationStack {
             // Directly show journal content, bypassing lock checks
             journalContent
-            .navigationTitle("Journal")
-            .toolbar {
-                // Always show toolbar items
-                ToolbarItem(placement: .primaryAction) {
-                    Button { showAddEntry.toggle() } label: { Image(systemName: "plus") }
-                }
-                ToolbarItem(placement: .navigation) {
-                    Button("Edit") {
-                        // Custom edit implementation for macOS
+                .navigationTitle("Journal")
+                .toolbar {
+                    // Always show toolbar items
+                    ToolbarItem(placement: .primaryAction) {
+                        Button { showAddEntry.toggle() } label: { Image(systemName: "plus") }
+                    }
+                    ToolbarItem(placement: .navigation) {
+                        Button("Edit") {
+                            // Custom edit implementation for macOS
+                        }
                     }
                 }
-            }
-            .sheet(isPresented: $showAddEntry) {
-                AddJournalEntryView(journalEntries: $journalEntries)
-                    .environmentObject(themeManager) // Pass ThemeManager
-                    .onDisappear(perform: saveEntries)
-            }
-            .onAppear {
-                 print("[JournalView Simplified] onAppear.")
-                 // Only load entries
-                 loadEntries()
-            }
-             // Apply theme accent color to toolbar items
-            .accentColor(themeManager.currentTheme.primaryAccentColor)
-             // Removed alert for authentication errors
+                .sheet(isPresented: $showAddEntry) {
+                    AddJournalEntryView(journalEntries: $journalEntries)
+                        .environmentObject(themeManager) // Pass ThemeManager
+                        .onDisappear(perform: saveEntries)
+                }
+                .onAppear {
+                    print("[JournalView Simplified] onAppear.")
+                    // Only load entries
+                    loadEntries()
+                }
+                // Apply theme accent color to toolbar items
+                .accentColor(themeManager.currentTheme.primaryAccentColor)
+            // Removed alert for authentication errors
 
         } // End NavigationStack
-         // Removed .onChange(of: biometricsEnabled)
+        // Removed .onChange(of: biometricsEnabled)
     }
 
     // --- View Builder for Journal Content ---
@@ -68,23 +69,23 @@ struct JournalView: View {
     private var journalContent: some View {
         VStack(spacing: 0) {
             List {
-                 if journalEntries.isEmpty {
-                     makeEmptyStateText("No journal entries yet. Tap '+' to add one.")
-                 } else if filteredEntries.isEmpty && !searchText.isEmpty {
-                      makeEmptyStateText("No results found for \"\(searchText)\"")
-                 } else {
+                if journalEntries.isEmpty {
+                    makeEmptyStateText("No journal entries yet. Tap '+' to add one.")
+                } else if filteredEntries.isEmpty && !searchText.isEmpty {
+                    makeEmptyStateText("No results found for \"\(searchText)\"")
+                } else {
                     ForEach(filteredEntries) { entry in
                         NavigationLink {
-                             JournalDetailView(entry: entry)
-                                 .environmentObject(themeManager)
+                            JournalDetailView(entry: entry)
+                                .environmentObject(themeManager)
                         } label: {
-                             JournalRow(entry: entry)
-                                 .environmentObject(themeManager)
+                            JournalRow(entry: entry)
+                                .environmentObject(themeManager)
                         }
                     }
                     .onDelete(perform: deleteEntry) // Use the updated deleteEntry function
                     .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
-                 }
+                }
             }
             .background(themeManager.currentTheme.primaryBackgroundColor)
             .scrollContentBackground(.hidden)
@@ -103,33 +104,31 @@ struct JournalView: View {
             .padding(.vertical)
     }
 
-     // --- View Builder for Locked State (REMOVED) ---
+    // --- View Builder for Locked State (REMOVED) ---
 
     // --- Authentication Function (REMOVED) ---
 
-
     // --- Data Functions ---
     private func deleteEntry(at offsets: IndexSet) {
-         print("[JournalView Simplified] deleteEntry called with offsets: \(offsets)")
-         let idsToDelete = offsets.map { offset -> UUID in
-             return filteredEntries[offset].id
-         }
-         print("[JournalView Simplified] IDs to delete: \(idsToDelete)")
-         journalEntries.removeAll { entry in
-             idsToDelete.contains(entry.id)
-         }
-         saveEntries()
+        print("[JournalView Simplified] deleteEntry called with offsets: \(offsets)")
+        let idsToDelete = offsets.map { offset -> UUID in
+            return filteredEntries[offset].id
+        }
+        print("[JournalView Simplified] IDs to delete: \(idsToDelete)")
+        journalEntries.removeAll { entry in
+            idsToDelete.contains(entry.id)
+        }
+        saveEntries()
     }
 
-
     private func loadEntries() {
-         print("[JournalView Simplified] loadEntries called")
+        print("[JournalView Simplified] loadEntries called")
         journalEntries = JournalDataManager.shared.load()
         print("[JournalView Simplified] Loaded \(journalEntries.count) entries.")
     }
 
     private func saveEntries() {
-         print("[JournalView Simplified] saveEntries called")
+        print("[JournalView Simplified] saveEntries called")
         JournalDataManager.shared.save(entries: journalEntries)
     }
 }

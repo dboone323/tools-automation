@@ -1,5 +1,5 @@
-import SwiftUI
 import PlannerApp
+import SwiftUI
 
 struct AddGoalView: View {
     @Environment(\.dismiss) var dismiss
@@ -8,7 +8,7 @@ struct AddGoalView: View {
     @State private var title = ""
     @State private var description = ""
     @State private var targetDate = Date()
-    
+
     var body: some View {
         NavigationView {
             Form {

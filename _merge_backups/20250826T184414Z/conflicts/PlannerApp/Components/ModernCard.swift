@@ -10,11 +10,11 @@ import SwiftUI
 struct ModernCard<Content: View>: View {
     let content: Content
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     var shadowRadius: CGFloat = 8
     var cornerRadius: CGFloat = 16
     var padding: CGFloat = 16
-    
+
     init(
         shadowRadius: CGFloat = 8,
         cornerRadius: CGFloat = 16,
@@ -26,7 +26,7 @@ struct ModernCard<Content: View>: View {
         self.padding = padding
         self.content = content()
     }
-    
+
     var body: some View {
         content
             .padding(padding)
@@ -47,19 +47,19 @@ struct ModernButton: View {
     let title: String
     let action: () -> Void
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     var style: ButtonStyle = .primary
     var size: ButtonSize = .medium
     var isDestructive: Bool = false
     var isDisabled: Bool = false
-    
+
     enum ButtonStyle {
         case primary, secondary, tertiary
     }
-    
+
     enum ButtonSize {
         case small, medium, large
-        
+
         var height: CGFloat {
             switch self {
             case .small: return 32
@@ -67,7 +67,7 @@ struct ModernButton: View {
             case .large: return 56
             }
         }
-        
+
         var fontSize: CGFloat {
             switch self {
             case .small: return 14
@@ -75,7 +75,7 @@ struct ModernButton: View {
             case .large: return 18
             }
         }
-        
+
         var padding: CGFloat {
             switch self {
             case .small: return 12
@@ -84,7 +84,7 @@ struct ModernButton: View {
             }
         }
     }
-    
+
     var body: some View {
         Button(action: action) {
             Text(title)
@@ -99,16 +99,16 @@ struct ModernButton: View {
         .disabled(isDisabled)
         .opacity(isDisabled ? 0.6 : 1.0)
     }
-    
+
     private var backgroundColor: Color {
         if isDisabled {
             return themeManager.currentTheme.secondaryTextColor.opacity(0.3)
         }
-        
+
         if isDestructive {
             return themeManager.currentTheme.destructiveColor
         }
-        
+
         switch style {
         case .primary:
             return themeManager.currentTheme.primaryAccentColor
@@ -118,12 +118,12 @@ struct ModernButton: View {
             return Color.clear
         }
     }
-    
+
     private var textColor: Color {
         if isDestructive || style == .primary {
             return Color.white
         }
-        
+
         switch style {
         case .secondary:
             return themeManager.currentTheme.primaryTextColor
@@ -139,10 +139,10 @@ struct ModernButton: View {
 struct ProgressBar: View {
     let progress: Double // 0.0 to 1.0
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     var height: CGFloat = 8
     var showPercentage: Bool = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             if showPercentage {
@@ -153,13 +153,13 @@ struct ProgressBar: View {
                         .foregroundColor(themeManager.currentTheme.secondaryTextColor)
                 }
             }
-            
+
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: height / 2)
                         .fill(themeManager.currentTheme.secondaryAccentColor.opacity(0.3))
                         .frame(height: height)
-                    
+
                     RoundedRectangle(cornerRadius: height / 2)
                         .fill(themeManager.currentTheme.primaryAccentColor)
                         .frame(width: geometry.size.width * CGFloat(progress), height: height)
@@ -176,21 +176,21 @@ struct ModernTextField: View {
     @Binding var text: String
     let placeholder: String
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     var isSecure: Bool = false
     #if os(iOS)
-    var keyboardType: UIKeyboardType = .default
+        var keyboardType: UIKeyboardType = .default
     #endif
-    
+
     var body: some View {
         Group {
             if isSecure {
                 SecureField(placeholder, text: $text)
             } else {
                 TextField(placeholder, text: $text)
-                    #if os(iOS)
+                #if os(iOS)
                     .keyboardType(keyboardType)
-                    #endif
+                #endif
             }
         }
         .padding()
@@ -216,16 +216,16 @@ struct ModernTextField: View {
                     .font(.subheadline)
             }
         }
-        
+
         ModernButton(title: "Primary Button") {}
-        
+
         ModernButton(title: "Secondary Button") {}
             .onAppear {
                 // Can't directly modify in preview, but showing usage
             }
-        
+
         ProgressBar(progress: 0.7, showPercentage: true)
-        
+
         ModernTextField(text: Binding.constant(""), placeholder: "Enter text")
     }
     .padding()

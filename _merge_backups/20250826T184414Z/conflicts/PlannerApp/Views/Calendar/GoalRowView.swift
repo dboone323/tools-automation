@@ -4,7 +4,7 @@ import SwiftUI
 struct GoalRowView: View {
     @EnvironmentObject var themeManager: ThemeManager
     let goal: Goal
-    
+
     private var priorityColor: Color {
         switch goal.priority {
         case .high:
@@ -15,7 +15,7 @@ struct GoalRowView: View {
             return .green
         }
     }
-    
+
     private var priorityText: String {
         switch goal.priority {
         case .high:
@@ -26,11 +26,11 @@ struct GoalRowView: View {
             return "Low"
         }
     }
-    
+
     private var progressPercentage: Double {
-        return goal.progress
+        goal.progress
     }
-    
+
     var body: some View {
         HStack(spacing: 12) {
             // Priority indicator
@@ -38,14 +38,14 @@ struct GoalRowView: View {
                 Circle()
                     .fill(priorityColor)
                     .frame(width: 8, height: 8)
-                
+
                 Text(priorityText)
                     .font(.caption2)
                     .fontWeight(.medium)
                     .foregroundColor(priorityColor)
             }
             .frame(width: 50)
-            
+
             // Goal details
             VStack(alignment: .leading, spacing: 4) {
                 Text(goal.title)
@@ -53,14 +53,14 @@ struct GoalRowView: View {
                     .fontWeight(.medium)
                     .foregroundColor(themeManager.currentTheme.primaryTextColor)
                     .lineLimit(2)
-                
+
                 if !goal.description.isEmpty {
                     Text(goal.description)
                         .font(.caption)
                         .foregroundColor(themeManager.currentTheme.secondaryTextColor)
                         .lineLimit(1)
                 }
-                
+
                 // Progress bar
                 if progressPercentage > 0 {
                     VStack(alignment: .leading, spacing: 2) {
@@ -74,16 +74,16 @@ struct GoalRowView: View {
                                 .fontWeight(.medium)
                                 .foregroundColor(.green)
                         }
-                        
+
                         ProgressView(value: progressPercentage)
                             .progressViewStyle(LinearProgressViewStyle(tint: .green))
                             .scaleEffect(y: 0.8)
                     }
                 }
             }
-            
+
             Spacer()
-            
+
             // Completion status
             if goal.isCompleted {
                 Image(systemName: "checkmark.circle.fill")
@@ -111,7 +111,7 @@ struct GoalRowView: View {
             priority: .high,
             progress: 0.75
         ))
-        
+
         GoalRowView(goal: Goal(
             id: UUID(),
             title: "Read 50 Books",

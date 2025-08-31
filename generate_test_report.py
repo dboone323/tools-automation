@@ -4,11 +4,12 @@ Quantum Workspace Test Report Generator
 Generates comprehensive test reports for the entire workspace.
 """
 
-import os
 import json
+import os
 import subprocess
 from datetime import datetime
 from pathlib import Path
+
 import yaml
 
 
@@ -26,11 +27,11 @@ class TestReportGenerator:
             "report_metadata": {
                 "generated_at": datetime.now().isoformat(),
                 "workspace": str(self.workspace_root),
-                "test_type": "comprehensive_workspace_validation"
+                "test_type": "comprehensive_workspace_validation",
             },
             "test_results": {},
             "system_status": {},
-            "recommendations": []
+            "recommendations": [],
         }
 
         # Run all test suites
@@ -43,8 +44,11 @@ class TestReportGenerator:
         report["recommendations"] = self._generate_recommendations(report)
 
         # Save report
-        report_file = self.reports_dir / f"workspace_test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        with open(report_file, 'w') as f:
+        report_file = (
+            self.reports_dir
+            / f"workspace_test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
+        with open(report_file, "w") as f:
             json.dump(report, f, indent=2, default=str)
 
         return report_file, report
@@ -59,13 +63,13 @@ class TestReportGenerator:
                 ["python3", "-m", "pytest", "Automation/tests/", "--tb=short", "-q"],
                 capture_output=True,
                 text=True,
-                cwd=self.workspace_root / "Tools"
+                cwd=self.workspace_root / "Tools",
             )
             test_results["python_tests"] = {
                 "passed": "passed" in result.stdout,
                 "output": result.stdout,
                 "errors": result.stderr,
-                "return_code": result.returncode
+                "return_code": result.returncode,
             }
         except Exception as e:
             test_results["python_tests"] = {"error": str(e)}
@@ -76,13 +80,13 @@ class TestReportGenerator:
                 ["./Tools/Automation/master_automation.sh", "all"],
                 capture_output=True,
                 text=True,
-                cwd=self.workspace_root / "Tools"
+                cwd=self.workspace_root / "Tools",
             )
             test_results["swift_builds"] = {
                 "completed": result.returncode == 0,
                 "output": result.stdout[-2000:],  # Last 2000 chars
                 "errors": result.stderr,
-                "return_code": result.returncode
+                "return_code": result.returncode,
             }
         except Exception as e:
             test_results["swift_builds"] = {"error": str(e)}
@@ -100,19 +104,21 @@ class TestReportGenerator:
         if workflows_dir.exists():
             for workflow_file in workflows_dir.glob("*.yml"):
                 try:
-                    with open(workflow_file, 'r') as f:
+                    with open(workflow_file, "r") as f:
                         workflow = yaml.safe_load(f)
 
                     workflow_results[workflow_file.name] = {
                         "valid": True,
-                        "name": workflow.get('name', 'Unknown'),
-                        "has_jobs": bool(workflow.get('jobs')),
-                        "trigger_type": "workflow_call" if True in workflow else "traditional"
+                        "name": workflow.get("name", "Unknown"),
+                        "has_jobs": bool(workflow.get("jobs")),
+                        "trigger_type": (
+                            "workflow_call" if True in workflow else "traditional"
+                        ),
                     }
                 except Exception as e:
                     workflow_results[workflow_file.name] = {
                         "valid": False,
-                        "error": str(e)
+                        "error": str(e),
                     }
         else:
             workflow_results["status"] = "No workflows directory found"
@@ -130,13 +136,13 @@ class TestReportGenerator:
         for tool in tools:
             try:
                 result = subprocess.run(
-                    [tool, "--version"],
-                    capture_output=True,
-                    text=True
+                    [tool, "--version"], capture_output=True, text=True
                 )
                 status["development_tools"][tool] = {
                     "available": result.returncode == 0,
-                    "version": result.stdout.strip() if result.returncode == 0 else None
+                    "version": (
+                        result.stdout.strip() if result.returncode == 0 else None
+                    ),
                 }
             except Exception as e:
                 status["development_tools"][tool] = {"error": str(e)}
@@ -161,7 +167,7 @@ class TestReportGenerator:
                         "exists": True,
                         "has_xcodeproj": any(project_dir.glob("*.xcodeproj")),
                         "swift_files": len(list(project_dir.rglob("*.swift"))),
-                        "path": str(project_dir)
+                        "path": str(project_dir),
                     }
 
         return project_status
@@ -173,13 +179,17 @@ class TestReportGenerator:
                 ["git", "status", "--porcelain"],
                 capture_output=True,
                 text=True,
-                cwd=self.workspace_root
+                cwd=self.workspace_root,
             )
 
             return {
                 "clean": len(result.stdout.strip()) == 0,
-                "changes": len(result.stdout.strip().split('\n')) if result.stdout.strip() else 0,
-                "output": result.stdout
+                "changes": (
+                    len(result.stdout.strip().split("\n"))
+                    if result.stdout.strip()
+                    else 0
+                ),
+                "output": result.stdout,
             }
         except Exception as e:
             return {"error": str(e)}
@@ -192,56 +202,71 @@ class TestReportGenerator:
         test_results = report.get("test_results", {})
 
         if not test_results.get("python_tests", {}).get("passed", False):
-            recommendations.append({
-                "priority": "high",
-                "category": "testing",
-                "issue": "Python tests are failing",
-                "action": "Fix failing Python tests in Automation/tests/"
-            })
+            recommendations.append(
+                {
+                    "priority": "high",
+                    "category": "testing",
+                    "issue": "Python tests are failing",
+                    "action": "Fix failing Python tests in Automation/tests/",
+                }
+            )
 
         if not test_results.get("swift_builds", {}).get("completed", False):
-            recommendations.append({
-                "priority": "medium",
-                "category": "build",
-                "issue": "Swift builds have issues",
-                "action": "Address build failures, likely related to code signing and provisioning"
-            })
+            recommendations.append(
+                {
+                    "priority": "medium",
+                    "category": "build",
+                    "issue": "Swift builds have issues",
+                    "action": "Address build failures, likely related to code signing and provisioning",
+                }
+            )
 
         # Check system status
         system_status = report.get("system_status", {})
         dev_tools = system_status.get("development_tools", {})
 
-        missing_tools = [tool for tool, info in dev_tools.items() if not info.get("available")]
+        missing_tools = [
+            tool for tool, info in dev_tools.items() if not info.get("available")
+        ]
         if missing_tools:
-            recommendations.append({
-                "priority": "high",
-                "category": "environment",
-                "issue": f"Missing development tools: {', '.join(missing_tools)}",
-                "action": "Install missing development tools"
-            })
+            recommendations.append(
+                {
+                    "priority": "high",
+                    "category": "environment",
+                    "issue": f"Missing development tools: {', '.join(missing_tools)}",
+                    "action": "Install missing development tools",
+                }
+            )
 
         # Check projects
         projects = system_status.get("projects", {})
-        projects_without_xcodeproj = [name for name, info in projects.items()
-                                    if info.get("exists") and not info.get("has_xcodeproj")]
+        projects_without_xcodeproj = [
+            name
+            for name, info in projects.items()
+            if info.get("exists") and not info.get("has_xcodeproj")
+        ]
 
         if projects_without_xcodeproj:
-            recommendations.append({
-                "priority": "low",
-                "category": "project_structure",
-                "issue": f"Projects without Xcode project files: {', '.join(projects_without_xcodeproj)}",
-                "action": "Review project structure and add Xcode project files if needed"
-            })
+            recommendations.append(
+                {
+                    "priority": "low",
+                    "category": "project_structure",
+                    "issue": f"Projects without Xcode project files: {', '.join(projects_without_xcodeproj)}",
+                    "action": "Review project structure and add Xcode project files if needed",
+                }
+            )
 
         # Git status
         git_status = system_status.get("git_status", {})
         if not git_status.get("clean", True):
-            recommendations.append({
-                "priority": "medium",
-                "category": "version_control",
-                "issue": f"Repository has uncommitted changes ({git_status.get('changes', 0)} files)",
-                "action": "Commit or stash changes before deployment"
-            })
+            recommendations.append(
+                {
+                    "priority": "medium",
+                    "category": "version_control",
+                    "issue": f"Repository has uncommitted changes ({git_status.get('changes', 0)} files)",
+                    "action": "Commit or stash changes before deployment",
+                }
+            )
 
         return recommendations
 
@@ -304,7 +329,9 @@ def main():
     if recommendations:
         print("RECOMMENDATIONS:")
         for rec in recommendations:
-            priority_icon = {"high": "🔴", "medium": "🟡", "low": "🟢"}.get(rec["priority"], "⚪")
+            priority_icon = {"high": "🔴", "medium": "🟡", "low": "🟢"}.get(
+                rec["priority"], "⚪"
+            )
             print(f"  {priority_icon} [{rec['priority'].upper()}] {rec['issue']}")
             print(f"      → {rec['action']}")
         print()

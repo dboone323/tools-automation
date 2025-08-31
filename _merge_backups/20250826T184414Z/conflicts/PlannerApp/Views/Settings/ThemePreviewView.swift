@@ -10,21 +10,21 @@ import SwiftUI
 struct ThemePreviewView: View {
     @EnvironmentObject var themeManager: ThemeManager
     @Environment(\.presentationMode) var presentationMode
-    @State private var selectedTheme: Theme = Theme.defaultTheme
-    
+    @State private var selectedTheme: Theme = .defaultTheme
+
     let sampleTasks = [
         "Complete project proposal",
-        "Review quarterly reports", 
+        "Review quarterly reports",
         "Schedule team meeting",
-        "Update documentation"
+        "Update documentation",
     ]
-    
+
     let sampleGoals = [
         "Read 12 books this year",
         "Exercise 3x per week",
-        "Learn Swift programming"
+        "Learn Swift programming",
     ]
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -39,24 +39,24 @@ struct ThemePreviewView: View {
                                 selectedTheme = theme
                                 // Apply haptic feedback if enabled
                                 #if os(iOS)
-                                let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-                                impactFeedback.impactOccurred()
+                                    let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                                    impactFeedback.impactOccurred()
                                 #endif
                             }
                         }
                     }
                     .padding(.horizontal)
-                    
+
                     Divider()
                         .padding(.horizontal)
-                    
+
                     // Live Preview Section
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Preview")
                             .font(.title2.bold())
                             .foregroundColor(selectedTheme.primaryTextColor)
                             .padding(.horizontal)
-                        
+
                         // Sample Dashboard Card
                         ModernCard {
                             VStack(alignment: .leading, spacing: 12) {
@@ -69,7 +69,7 @@ struct ThemePreviewView: View {
                                         .font(.title2.bold())
                                         .foregroundColor(selectedTheme.primaryAccentColor)
                                 }
-                                
+
                                 ForEach(sampleTasks.prefix(3), id: \.self) { task in
                                     HStack {
                                         Image(systemName: "circle")
@@ -80,36 +80,36 @@ struct ThemePreviewView: View {
                                         Spacer()
                                     }
                                 }
-                                
+
                                 ProgressBar(progress: 0.6, showPercentage: true)
                                     .environmentObject(createThemeManager(for: selectedTheme))
                             }
                         }
                         .environmentObject(createThemeManager(for: selectedTheme))
                         .padding(.horizontal)
-                        
+
                         // Sample Buttons
                         VStack(spacing: 12) {
                             ModernButton(title: "Primary Action") {}
                                 .environmentObject(createThemeManager(for: selectedTheme))
-                            
+
                             HStack(spacing: 12) {
                                 ModernButton(title: "Secondary") {}
                                     .environmentObject(createThemeManager(for: selectedTheme))
-                                
+
                                 ModernButton(title: "Destructive") {}
                                     .environmentObject(createThemeManager(for: selectedTheme))
                             }
                         }
                         .padding(.horizontal)
-                        
+
                         // Sample Goals Section
                         ModernCard {
                             VStack(alignment: .leading, spacing: 12) {
                                 Text("Goals Progress")
                                     .font(.headline)
                                     .foregroundColor(selectedTheme.primaryTextColor)
-                                
+
                                 ForEach(Array(sampleGoals.enumerated()), id: \.offset) { index, goal in
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(goal)
@@ -130,29 +130,29 @@ struct ThemePreviewView: View {
             .background(selectedTheme.primaryBackgroundColor.ignoresSafeArea())
             .navigationTitle("Theme Preview")
             #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
+                .navigationBarTitleDisplayMode(.inline)
             #endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        presentationMode.wrappedValue.dismiss()
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Apply") {
+                            themeManager.setTheme(selectedTheme)
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        .fontWeight(.semibold)
                     }
                 }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Apply") {
-                        themeManager.setTheme(selectedTheme)
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                    .fontWeight(.semibold)
-                }
-            }
         }
         .onAppear {
             selectedTheme = themeManager.currentTheme
         }
     }
-    
+
     private func createThemeManager(for theme: Theme) -> ThemeManager {
         let manager = ThemeManager()
         manager.setTheme(theme)
@@ -164,7 +164,7 @@ struct ThemePreviewCard: View {
     let theme: Theme
     let isSelected: Bool
     let onTap: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
             VStack(spacing: 12) {
@@ -181,19 +181,19 @@ struct ThemePreviewCard: View {
                         .frame(width: 16, height: 16)
                     Spacer()
                 }
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(theme.name)
                         .font(.headline)
                         .foregroundColor(theme.primaryTextColor)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    
+
                     Text("Sample text")
                         .font(.caption)
                         .foregroundColor(theme.secondaryTextColor)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                
+
                 Spacer()
             }
             .padding()

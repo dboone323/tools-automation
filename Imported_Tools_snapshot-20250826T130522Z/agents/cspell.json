@@ -1,8 +1,4 @@
 {
-    "version": "0.2",
-    "words": [
-        "danielstevens",
-        "codegen",
-        "Codegen"
-    ]
+  "version": "0.2",
+  "words": ["danielstevens", "codegen", "Codegen"]
 }

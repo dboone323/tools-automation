@@ -1,12 +1,12 @@
-import Foundation
 import CloudKit
 import CoreTransferable
+import Foundation
 
 enum TaskPriority: String, CaseIterable, Codable {
-    case low = "low"
-    case medium = "medium"
-    case high = "high"
-    
+    case low
+    case medium
+    case high
+
     var displayName: String {
         switch self {
         case .low: return "Low"
@@ -24,8 +24,8 @@ struct Task: Identifiable, Codable, Transferable {
     var priority: TaskPriority
     var dueDate: Date?
     var createdAt: Date
-    var modifiedAt: Date?  // Added for CloudKit sync/merge
-    
+    var modifiedAt: Date? // Added for CloudKit sync/merge
+
     init(id: UUID = UUID(), title: String, description: String = "", isCompleted: Bool = false, priority: TaskPriority = .medium, dueDate: Date? = nil, createdAt: Date = Date(), modifiedAt: Date? = Date()) {
         self.id = id
         self.title = title
@@ -36,9 +36,9 @@ struct Task: Identifiable, Codable, Transferable {
         self.createdAt = createdAt
         self.modifiedAt = modifiedAt
     }
-    
+
     // MARK: - CloudKit Conversion
-    
+
     /// Convert to CloudKit record for syncing
     func toCKRecord() -> CKRecord {
         let record = CKRecord(recordType: "Task", recordID: CKRecord.ID(recordName: id.uuidString))
@@ -51,7 +51,7 @@ struct Task: Identifiable, Codable, Transferable {
         record["modifiedAt"] = modifiedAt
         return record
     }
-    
+
     /// Create a Task from CloudKit record
     static func from(ckRecord: CKRecord) throws -> Task {
         guard
@@ -62,7 +62,7 @@ struct Task: Identifiable, Codable, Transferable {
         else {
             throw NSError(domain: "TaskConversionError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to convert CloudKit record to Task"])
         }
-        
+
         return Task(
             id: id,
             title: title,
@@ -74,8 +74,9 @@ struct Task: Identifiable, Codable, Transferable {
             modifiedAt: ckRecord["modifiedAt"] as? Date
         )
     }
-    
+
     // MARK: - Transferable Implementation
+
     static var transferRepresentation: some TransferRepresentation {
         CodableRepresentation(contentType: .data)
     }

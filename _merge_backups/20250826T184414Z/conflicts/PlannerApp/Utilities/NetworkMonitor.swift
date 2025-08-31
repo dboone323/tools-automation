@@ -11,44 +11,44 @@ extension NSNotification.Name {
 
 class NetworkMonitor {
     static let shared = NetworkMonitor()
-    
+
     private let monitor = NWPathMonitor()
     private let queue = DispatchQueue(label: "NetworkMonitorQueue")
-    
+
     private(set) var isConnected = true
     private(set) var connectionType: ConnectionType = .wifi
-    
+
     enum ConnectionType {
         case wifi
         case cellular
         case ethernet
         case unknown
     }
-    
+
     private init() {
         startMonitoring()
     }
-    
+
     func startMonitoring() {
         monitor.start(queue: queue)
-        
+
         monitor.pathUpdateHandler = { [weak self] path in
             self?.isConnected = path.status == .satisfied
             self?.getConnectionType(path)
-            
+
             // Post notification of status change
             NotificationCenter.default.post(
-                name: .networkStatusChanged, 
+                name: .networkStatusChanged,
                 object: nil,
                 userInfo: ["isConnected": self?.isConnected ?? false]
             )
         }
     }
-    
+
     func stopMonitoring() {
         monitor.cancel()
     }
-    
+
     private func getConnectionType(_ path: NWPath) {
         if path.usesInterfaceType(.wifi) {
             connectionType = .wifi

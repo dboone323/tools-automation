@@ -6,22 +6,22 @@ struct DateSectionView<Content: View>: View {
     let title: String
     let color: Color
     @ViewBuilder let content: Content
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Circle()
                     .fill(color)
                     .frame(width: 12, height: 12)
-                
+
                 Text(title)
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundColor(themeManager.currentTheme.primaryTextColor)
-                
+
                 Spacer()
             }
-            
+
             VStack(spacing: 6) {
                 content
             }

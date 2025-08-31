@@ -9,7 +9,7 @@ import SwiftUI
 
 extension Theme {
     // MARK: - Modern Enhanced Themes
-    
+
     // Modern productivity theme with better contrast
     static let productivityPro = Theme(
         name: "Productivity Pro",
@@ -24,7 +24,7 @@ extension Theme {
         primaryFontName: nil,
         secondaryFontName: nil
     )
-    
+
     // Nature-inspired theme with warm colors
     static let natureInspired = Theme(
         name: "Nature Inspired",
@@ -39,7 +39,7 @@ extension Theme {
         primaryFontName: nil,
         secondaryFontName: nil
     )
-    
+
     // High contrast theme for better accessibility
     static let highContrast = Theme(
         name: "High Contrast",
@@ -54,7 +54,7 @@ extension Theme {
         primaryFontName: nil,
         secondaryFontName: nil
     )
-    
+
     // Modern gradient theme
     static let modernGradient = Theme(
         name: "Modern Gradient",
@@ -69,7 +69,7 @@ extension Theme {
         primaryFontName: nil,
         secondaryFontName: nil
     )
-    
+
     // Updated list including new themes
     static let allAvailableThemes: [Theme] = [
         defaultTheme,
@@ -82,11 +82,12 @@ extension Theme {
         midnightDark,
         highContrast,
         minimalGray,
-        rosePink
+        rosePink,
     ]
 }
 
 // MARK: - Gradient Support Extensions
+
 extension Color {
     // Create gradient colors for modern effects
     static func gradient(from startColor: Color, to endColor: Color) -> LinearGradient {
@@ -96,7 +97,7 @@ extension Color {
             endPoint: .bottomTrailing
         )
     }
-    
+
     // Glass morphism effect
     var glassMorphism: some View {
         self.opacity(0.7)
@@ -105,17 +106,18 @@ extension Color {
 }
 
 // MARK: - Modern Card with Gradient Support
+
 struct GradientCard<Content: View>: View {
     let content: Content
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     var useGradient: Bool = false
-    
+
     init(useGradient: Bool = false, @ViewBuilder content: () -> Content) {
         self.useGradient = useGradient
         self.content = content()
     }
-    
+
     var body: some View {
         content
             .padding()

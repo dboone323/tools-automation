@@ -18,19 +18,19 @@ CONSERVATIVE_RISK="low"  # Only apply very safe updates
 MODERATE_RISK="medium"   # Apply safe and moderately risky updates
 AGGRESSIVE_RISK="high"   # Apply most updates (use with caution)
 
-CURRENT_RISK_LEVEL="$MODERATE_RISK"
+CURRENT_RISK_LEVEL="${MODERATE_RISK}"
 
 # Initialize files
 mkdir -p "$(dirname "$0")/communication" "$(dirname "$0")/backups"
-touch "$NOTIFICATION_FILE"
-touch "$COMPLETED_FILE"
+touch "${NOTIFICATION_FILE}"
+touch "${COMPLETED_FILE}"
 
-if [[ ! -f "$UPDATE_QUEUE_FILE" ]]; then
-    echo '{"updates": [], "applied": [], "rejected": []}' > "$UPDATE_QUEUE_FILE"
+if [[ ! -f "${UPDATE_QUEUE_FILE}" ]]; then
+    echo '{"updates": [], "applied": [], "rejected": []}' > "${UPDATE_QUEUE_FILE}"
 fi
 
-if [[ ! -f "$BEST_PRACTICES_FILE" ]]; then
-    cat > "$BEST_PRACTICES_FILE" << 'EOF'
+if [[ ! -f "${BEST_PRACTICES_FILE}" ]]; then
+    cat > "${BEST_PRACTICES_FILE}" << 'EOF'
 {
   "swift": {
     "version": "6.2",
@@ -59,27 +59,14 @@ fi
 log_message() {
     local level="$1"
     local message="$2"
-    echo "[$(date)] [$level] $message" >> "$LOG_FILE"
+    echo "[$(date)] [${level}] ${message}" >> "${LOG_FILE}"
 }
 
 # Notify orchestrator of task completion
 notify_completion() {
     local task_id="$1"
     local success="$2"
-    echo "$(date +%s)|$task_id|$success" >> "$COMPLETED_FILE"
-}
-
-# Update agent status with orchestrator
-update_agent_status() {
-    local status="$1"
-    local status_file="$(dirname "$0")/agent_status.json"
-    local current_time=$(date +%s)
-    
-    if command -v jq &> /dev/null && [[ -f "$status_file" ]]; then
-        jq --arg agent "auto_update_agent.sh" --arg status "$status" --arg last_seen "$current_time" \
-            '.agents[$agent] = {"status": $status, "last_seen": $last_seen, "tasks_completed": (.agents[$agent].tasks_completed // 0)}' \
-            "$status_file" > "$status_file.tmp" && mv "$status_file.tmp" "$status_file"
-    fi
+    echo "$(date +%s)|${task_id}|${success}" >> "${COMPLETED_FILE}"
 }
 
 # Check for available updates
@@ -108,9 +95,9 @@ check_for_updates() {
     check_performance_updates
     ((updates_found += $?))
     
-    log_message "INFO" "Update check complete. Found $updates_found potential updates."
+    log_message "INFO" "Update check complete. Found ${updates_found} potential updates."
     
-    echo $updates_found
+    echo "${updates_found}"
 }
 
 # Check for Swift version updates
@@ -127,16 +114,16 @@ check_swift_updates() {
         latest_version=$(curl -s "https://api.github.com/repos/apple/swift/releases/latest" 2>/dev/null | jq -r '.tag_name' | sed 's/swift-//')
     fi
     
-    if [[ -n "$current_version" && -n "$latest_version" && "$current_version" != "$latest_version" ]]; then
+    if [[ -n "${current_version}" && -n "${latest_version}" && "${current_version}" != "${latest_version}" ]]; then
         local risk_level="medium"
-        local description="Update Swift from $current_version to $latest_version"
+        local description="Update Swift from ${current_version} to ${latest_version}"
         
-        if [[ "$CURRENT_RISK_LEVEL" == "low" ]]; then
+        if [[ "${CURRENT_RISK_LEVEL}" == "low" ]]; then
             risk_level="high"  # Version updates are riskier for conservative users
         fi
         
-        queue_update "swift_version" "$description" "$risk_level" "swift_update_$latest_version"
-        log_message "INFO" "Swift update available: $current_version -> $latest_version"
+        queue_update "swift_version" "${description}" "${risk_level}" "swift_update_${latest_version}"
+        log_message "INFO" "Swift update available: ${current_version} -> ${latest_version}"
         return 1
     fi
     
@@ -154,7 +141,7 @@ check_dependency_updates() {
         if pod outdated 2>/dev/null | grep -q "The following updates are available"; then
             local risk_level="low"
             local description="Update CocoaPods dependencies"
-            queue_update "cocoapods" "$description" "$risk_level" "cocoapods_update_$(date +%Y%m%d)"
+            queue_update "cocoapods" "${description}" "${risk_level}" "cocoapods_update_$(date +%Y%m%d)"
             ((updates_found++))
         fi
     fi
@@ -165,12 +152,12 @@ check_dependency_updates() {
         if swift package update --dry-run 2>/dev/null | grep -q "would update"; then
             local risk_level="low"
             local description="Update Swift Package Manager dependencies"
-            queue_update "swiftpm" "$description" "$risk_level" "swiftpm_update_$(date +%Y%m%d)")
+            queue_update "swiftpm" "${description}" "${risk_level}" "swiftpm_update_$(date +%Y%m%d)"
             ((updates_found++))
         fi
     fi
     
-    echo $updates_found
+    echo "${updates_found}"
 }
 
 # Check for code improvements
@@ -182,12 +169,12 @@ check_code_improvements() {
     # Check for SwiftLint improvements
     if command -v swiftlint &> /dev/null; then
         local lint_output=$(swiftlint --reporter json 2>/dev/null)
-        local error_count=$(echo "$lint_output" | jq '. | length' 2>/dev/null || echo "0")
+        local error_count=$(echo "${lint_output}" | jq '. | length' 2>/dev/null || echo "0")
         
-        if [[ $error_count -gt 0 ]]; then
+        if [[ ${error_count} -gt 0 ]]; then
             local risk_level="low"
-            local description="Fix $error_count SwiftLint violations"
-            queue_update "swiftlint" "$description" "$risk_level" "lint_fix_$(date +%Y%m%d)")
+            local description="Fix ${error_count} SwiftLint violations"
+            queue_update "swiftlint" "${description}" "${risk_level}" "lint_fix_$(date +%Y%m%d)"
             ((improvements_found++))
         fi
     fi
@@ -197,12 +184,12 @@ check_code_improvements() {
         if ! swiftformat --dryrun . 2>/dev/null; then
             local risk_level="low"
             local description="Apply SwiftFormat code formatting"
-            queue_update "swiftformat" "$description" "$risk_level" "format_fix_$(date +%Y%m%d)")
+            queue_update "swiftformat" "${description}" "${risk_level}" "format_fix_$(date +%Y%m%d)"
             ((improvements_found++))
         fi
     fi
     
-    echo $improvements_found
+    echo "${improvements_found}"
 }
 
 # Check for security updates
@@ -215,7 +202,7 @@ check_security_updates() {
     if grep -r "force_cast\|force_try\|unsafe" --include="*.swift" --exclude-dir=".git" --exclude-dir="*.backup" . 2>/dev/null | head -5 > /dev/null; then
         local risk_level="medium"
         local description="Address unsafe code patterns"
-        queue_update "security" "$description" "$risk_level" "security_fix_$(date +%Y%m%d)")
+        queue_update "security" "${description}" "${risk_level}" "security_fix_$(date +%Y%m%d)"
         ((security_issues++))
     fi
     
@@ -223,11 +210,11 @@ check_security_updates() {
     if grep -r "deprecated\|unavailable" --include="*.swift" --exclude-dir=".git" . 2>/dev/null | head -3 > /dev/null; then
         local risk_level="low"
         local description="Update deprecated API usage"
-        queue_update "deprecated_api" "$description" "$risk_level" "api_update_$(date +%Y%m%d)")
+        queue_update "deprecated_api" "${description}" "${risk_level}" "api_update_$(date +%Y%m%d)"
         ((security_issues++))
     fi
     
-    echo $security_issues
+    echo "${security_issues}"
 }
 
 # Check for performance optimizations
@@ -240,11 +227,11 @@ check_performance_updates() {
     if find . -name "*.swift" -exec grep -l "for.*in.*0\.\.<" {} \; 2>/dev/null | head -3 > /dev/null; then
         local risk_level="low"
         local description="Optimize collection iterations"
-        queue_update "performance" "$description" "$risk_level" "perf_opt_$(date +%Y%m%d)")
+        queue_update "performance" "${description}" "${risk_level}" "perf_opt_$(date +%Y%m%d)"
         ((perf_improvements++))
     fi
     
-    echo $perf_improvements
+    echo "${perf_improvements"}
 }
 
 # Queue an update for processing
@@ -254,13 +241,13 @@ queue_update() {
     local risk_level="$3"
     local update_id="$4"
     
-    local update_data="{\"id\": \"$update_id\", \"type\": \"$update_type\", \"description\": \"$description\", \"risk_level\": \"$risk_level\", \"status\": \"queued\", \"created\": $(date +%s)}"
+    local update_data="{\"id\": \"${update_id}\", \"type\": \"${update_type}\", \"description\": \"${description}\", \"risk_level\": \"${risk_level}\", \"status\": \"queued\", \"created\": $(date +%s)}"
     
     if command -v jq &> /dev/null; then
-        jq --argjson update "$update_data" '.updates += [$update]' "$UPDATE_QUEUE_FILE" > "$UPDATE_QUEUE_FILE.tmp" && mv "$UPDATE_QUEUE_FILE.tmp" "$UPDATE_QUEUE_FILE"
+        jq --argjson update "${update_data}" '.updates += [$update]' "${UPDATE_QUEUE_FILE}" > "${UPDATE_QUEUE_FILE}.tmp" && mv "${UPDATE_QUEUE_FILE}.tmp" "${UPDATE_QUEUE_FILE}"
     fi
     
-    log_message "INFO" "Queued update: $update_id ($update_type - $risk_level risk)"
+    log_message "INFO" "Queued update: ${update_id} (${update_type} - ${risk_level} risk)"
 }
 
 # Apply queued updates
@@ -272,46 +259,46 @@ apply_updates() {
         return 1
     fi
     
-    local queued_updates=$(jq -r '.updates[] | select(.status == "queued") | .id' "$UPDATE_QUEUE_FILE")
+    local queued_updates=$(jq -r '.updates[] | select(.status == "queued") | .id' "${UPDATE_QUEUE_FILE}")
     local applied_count=0
     
-    for update_id in $queued_updates; do
-        local update_data=$(jq -r ".updates[] | select(.id == \"$update_id\")" "$UPDATE_QUEUE_FILE")
-        local update_type=$(echo "$update_data" | jq -r '.type')
-        local risk_level=$(echo "$update_data" | jq -r '.risk_level')
+    for update_id in ${queued_updates}; do
+        local update_data=$(jq -r ".updates[] | select(.id == \"${update_id}\")" "${UPDATE_QUEUE_FILE}")
+        local update_type=$(echo "${update_data}" | jq -r '.type')
+        local risk_level=$(echo "${update_data}" | jq -r '.risk_level')
         
         # Check if we should apply this update based on risk level
-        if should_apply_update "$risk_level"; then
-            if apply_specific_update "$update_type" "$update_id"; then
-                mark_update_applied "$update_id" "success"
+        if should_apply_update "${risk_level}"; then
+            if apply_specific_update "${update_type}" "${update_id}"; then
+                mark_update_applied "${update_id}" "success"
                 ((applied_count++))
-                log_message "INFO" "Successfully applied update: $update_id"
+                log_message "INFO" "Successfully applied update: ${update_id}"
             else
-                mark_update_applied "$update_id" "failed"
-                log_message "ERROR" "Failed to apply update: $update_id"
+                mark_update_applied "${update_id}" "failed"
+                log_message "ERROR" "Failed to apply update: ${update_id}"
             fi
         else
-            mark_update_rejected "$update_id" "risk_too_high"
-            log_message "INFO" "Rejected update due to risk level: $update_id ($risk_level)"
+            mark_update_rejected "${update_id}" "risk_too_high"
+            log_message "INFO" "Rejected update due to risk level: ${update_id} (${risk_level})"
         fi
     done
     
-    log_message "INFO" "Applied $applied_count updates"
+    log_message "INFO" "Applied ${applied_count} updates"
 }
 
 # Check if update should be applied based on risk level
 should_apply_update() {
     local risk_level="$1"
     
-    case "$CURRENT_RISK_LEVEL" in
+    case "${CURRENT_RISK_LEVEL}" in
         "low")
-            [[ "$risk_level" == "low" ]]
+            [[ "${risk_level}" == "low" ]]
             ;;
         "medium")
-            [[ "$risk_level" == "low" || "$risk_level" == "medium" ]]
+            [[ "${risk_level}" == "low" || "${risk_level}" == "medium" ]]
             ;;
         "high")
-            [[ "$risk_level" == "low" || "$risk_level" == "medium" || "$risk_level" == "high" ]]
+            [[ "${risk_level}" == "low" || "${risk_level}" == "medium" || "${risk_level}" == "high" ]]
             ;;
         *)
             false
@@ -324,12 +311,12 @@ apply_specific_update() {
     local update_type="$1"
     local update_id="$2"
     
-    log_message "INFO" "Applying $update_type update: $update_id"
+    log_message "INFO" "Applying ${update_type} update: ${update_id}"
     
     # Create backup before applying
-    create_backup "$update_id"
+    create_backup "${update_id}"
     
-    case "$update_type" in
+    case "${update_type}" in
         "swiftlint")
             apply_swiftlint_fixes
             ;;
@@ -352,7 +339,7 @@ apply_specific_update() {
             apply_performance_optimizations
             ;;
         *)
-            log_message "WARNING" "Unknown update type: $update_type"
+            log_message "WARNING" "Unknown update type: ${update_type}"
             return 1
             ;;
     esac
@@ -432,24 +419,24 @@ apply_performance_optimizations() {
 # Create backup before applying updates
 create_backup() {
     local update_id="$1"
-    local backup_dir="$(dirname "$0")/backups/backup_$update_id"
+    local backup_dir="$(dirname "$0")/backups/backup_${update_id}"
     
-    mkdir -p "$backup_dir"
+    mkdir -p "${backup_dir}"
     
     # Backup current state
     if [[ -f "Package.swift" ]]; then
-        cp Package.swift "$backup_dir/"
+        cp Package.swift "${backup_dir}/"
     fi
     
     if [[ -f "Podfile" ]]; then
-        cp Podfile "$backup_dir/"
-        cp Podfile.lock "$backup_dir/" 2>/dev/null || true
+        cp Podfile "${backup_dir}/"
+        cp Podfile.lock "${backup_dir}/" 2>/dev/null || true
     fi
     
     # Backup current git state
-    git status --porcelain > "$backup_dir/git_status.txt"
+    git status --porcelain > "${backup_dir}/git_status.txt"
     
-    log_message "INFO" "Created backup: $backup_dir"
+    log_message "INFO" "Created backup: ${backup_dir}"
 }
 
 # Mark update as applied
@@ -458,10 +445,10 @@ mark_update_applied() {
     local result="$2"
     
     if command -v jq &> /dev/null; then
-        local update_data=$(jq -r ".updates[] | select(.id == \"$update_id\")" "$UPDATE_QUEUE_FILE")
-        jq --arg update_id "$update_id" --arg result "$result" \
+        local update_data=$(jq -r ".updates[] | select(.id == \"${update_id}\")" "${UPDATE_QUEUE_FILE}")
+        jq --arg update_id "${update_id}" --arg result "${result}" \
             '(.updates[] | select(.id == $update_id)) as $update | .updates = (.updates - [$update]) | .applied += [$update + {"result": $result, "applied_at": now}]' \
-            "$UPDATE_QUEUE_FILE" > "$UPDATE_QUEUE_FILE.tmp" && mv "$UPDATE_QUEUE_FILE.tmp" "$UPDATE_QUEUE_FILE"
+            "${UPDATE_QUEUE_FILE}" > "${UPDATE_QUEUE_FILE}.tmp" && mv "${UPDATE_QUEUE_FILE}.tmp" "${UPDATE_QUEUE_FILE}"
     fi
 }
 
@@ -471,21 +458,21 @@ mark_update_rejected() {
     local reason="$2"
     
     if command -v jq &> /dev/null; then
-        local update_data=$(jq -r ".updates[] | select(.id == \"$update_id\")" "$UPDATE_QUEUE_FILE")
-        jq --arg update_id "$update_id" --arg reason "$reason" \
+        local update_data=$(jq -r ".updates[] | select(.id == \"${update_id}\")" "${UPDATE_QUEUE_FILE}")
+        jq --arg update_id "${update_id}" --arg reason "${reason}" \
             '(.updates[] | select(.id == $update_id)) as $update | .updates = (.updates - [$update]) | .rejected += [$update + {"reason": $reason, "rejected_at": now}]' \
-            "$UPDATE_QUEUE_FILE" > "$UPDATE_QUEUE_FILE.tmp" && mv "$UPDATE_QUEUE_FILE.tmp" "$UPDATE_QUEUE_FILE"
+            "${UPDATE_QUEUE_FILE}" > "${UPDATE_QUEUE_FILE}.tmp" && mv "${UPDATE_QUEUE_FILE}.tmp" "${UPDATE_QUEUE_FILE}"
     fi
 }
 
 # Clean up old backups
 cleanup_old_backups() {
     local backup_dir="$(dirname "$0")/backups"
-    local cutoff_date=$(date -v-${BACKUP_RETENTION}d +%Y%m%d 2>/dev/null || date -d "${BACKUP_RETENTION} days ago" +%Y%m%d)
+    local cutoff_date=$(date -v-"${BACKUP_RETENTION}"d +%Y%m%d 2>/dev/null || date -d "${BACKUP_RETENTION} days ago" +%Y%m%d)
     
-    if [[ -d "$backup_dir" ]]; then
-        find "$backup_dir" -name "backup_*" -type d -mtime +${BACKUP_RETENTION} -exec rm -rf {} \; 2>/dev/null || true
-        log_message "INFO" "Cleaned up old backups older than $BACKUP_RETENTION days"
+    if [[ -d "${backup_dir}" ]]; then
+        find "${backup_dir}" -name "backup_*" -type d -mtime +"${BACKUP_RETENTION}" -exec rm -rf {} \; 2>/dev/null || true
+        log_message "INFO" "Cleaned up old backups older than ${BACKUP_RETENTION} days"
     fi
 }
 
@@ -496,68 +483,67 @@ generate_update_report() {
     {
         echo "# Auto-Update Report"
         echo "Generated: $(date)"
-        echo "Risk Level: $CURRENT_RISK_LEVEL"
+        echo "Risk Level: ${CURRENT_RISK_LEVEL}"
         echo ""
         
         if command -v jq &> /dev/null; then
-            local queued_count=$(jq '.updates | length' "$UPDATE_QUEUE_FILE")
-            local applied_count=$(jq '.applied | length' "$UPDATE_QUEUE_FILE")
-            local rejected_count=$(jq '.rejected | length' "$UPDATE_QUEUE_FILE")
+            local queued_count=$(jq '.updates | length' "${UPDATE_QUEUE_FILE}")
+            local applied_count=$(jq '.applied | length' "${UPDATE_QUEUE_FILE}")
+            local rejected_count=$(jq '.rejected | length' "${UPDATE_QUEUE_FILE}")
             
             echo "## Update Summary"
-            echo "- Queued: $queued_count"
-            echo "- Applied: $applied_count"
-            echo "- Rejected: $rejected_count"
+            echo "- Queued: ${queued_count}"
+            echo "- Applied: ${applied_count}"
+            echo "- Rejected: ${rejected_count}"
             echo ""
             
-            if [[ $applied_count -gt 0 ]]; then
+            if [[ ${applied_count} -gt 0 ]]; then
                 echo "## Recently Applied Updates"
-                jq -r '.applied[-5:][] | "- \(.id): \(.description) (\(.result))"' "$UPDATE_QUEUE_FILE"
+                jq -r '.applied[-5:][] | "- \(.id): \(.description) (\(.result))"' "${UPDATE_QUEUE_FILE}"
                 echo ""
             fi
             
-            if [[ $rejected_count -gt 0 ]]; then
+            if [[ ${rejected_count} -gt 0 ]]; then
                 echo "## Recently Rejected Updates"
-                jq -r '.rejected[-3:][] | "- \(.id): \(.description) (\(.reason))"' "$UPDATE_QUEUE_FILE"
+                jq -r '.rejected[-3:][] | "- \(.id): \(.description) (\(.reason))"' "${UPDATE_QUEUE_FILE}"
                 echo ""
             fi
         fi
         
         echo "## System Status"
-        echo "- Current Risk Level: $CURRENT_RISK_LEVEL"
+        echo "- Current Risk Level: ${CURRENT_RISK_LEVEL}"
         echo "- Last Update Check: $(date)"
         
-    } > "$report_file"
+    } > "${report_file}"
     
-    log_message "INFO" "Update report generated: $report_file"
+    log_message "INFO" "Update report generated: ${report_file}"
 }
 
 # Process notifications from orchestrator
 process_notifications() {
-    if [[ -f "$NOTIFICATION_FILE" ]]; then
+    if [[ -f "${NOTIFICATION_FILE}" ]]; then
         while IFS='|' read -r timestamp notification_type task_id; do
-            case "$notification_type" in
+            case "${notification_type}" in
                 "new_task")
-                    log_message "INFO" "Received new task: $task_id"
+                    log_message "INFO" "Received new task: ${task_id}"
                     ;;
                 "execute_task")
-                    log_message "INFO" "Executing task: $task_id"
+                    log_message "INFO" "Executing task: ${task_id}"
                     ;;
                 "check_updates")
                     log_message "INFO" "Manual update check requested"
                     check_for_updates > /dev/null
                     ;;
             esac
-        done < "$NOTIFICATION_FILE"
+        done < "${NOTIFICATION_FILE}"
         
         # Clear processed notifications
-        > "$NOTIFICATION_FILE"
+        > "${NOTIFICATION_FILE}"
     fi
 }
 
 # Main agent loop
 log_message "INFO" "Auto-Update Agent starting..."
-update_agent_status "active"
 
 while true; do
     # Process notifications from orchestrator
@@ -579,9 +565,6 @@ while true; do
     if [[ $((current_time % 21600)) -lt 60 ]]; then
         generate_update_report
     fi
-    
-    # Send heartbeat to orchestrator
-    update_agent_status "active"
     
     sleep 300  # Check every 5 minutes
 done

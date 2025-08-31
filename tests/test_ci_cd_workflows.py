@@ -5,11 +5,12 @@ Tests for GitHub Actions workflows and deployment processes.
 """
 
 import os
-import yaml
 import subprocess
 import tempfile
 from pathlib import Path
+
 import pytest
+import yaml
 
 
 class TestCIWorkflows:
@@ -22,13 +23,15 @@ class TestCIWorkflows:
         if not workflows_dir.exists():
             pytest.skip("No .github/workflows directory found")
 
-        workflow_files = list(workflows_dir.glob("*.yml")) + list(workflows_dir.glob("*.yaml"))
+        workflow_files = list(workflows_dir.glob("*.yml")) + list(
+            workflows_dir.glob("*.yaml")
+        )
 
         assert len(workflow_files) > 0, "No workflow files found"
 
         for workflow_file in workflow_files:
             # Test YAML is valid
-            with open(workflow_file, 'r') as f:
+            with open(workflow_file, "r") as f:
                 content = f.read()
                 try:
                     yaml.safe_load(content)
@@ -42,27 +45,33 @@ class TestCIWorkflows:
         if not workflows_dir.exists():
             pytest.skip("No .github/workflows directory found")
 
-        workflow_files = list(workflows_dir.glob("*.yml")) + list(workflows_dir.glob("*.yaml"))
+        workflow_files = list(workflows_dir.glob("*.yml")) + list(
+            workflows_dir.glob("*.yaml")
+        )
 
         for workflow_file in workflow_files:
-            with open(workflow_file, 'r') as f:
+            with open(workflow_file, "r") as f:
                 workflow = yaml.safe_load(f)
 
             # Check required top-level keys
-            assert 'name' in workflow, f"Workflow {workflow_file} missing 'name'"
+            assert "name" in workflow, f"Workflow {workflow_file} missing 'name'"
             # Workflows can have 'on' trigger OR 'workflow_call' for reusable workflows
-            has_trigger = 'on' in workflow or True in workflow  # True key indicates workflow_call
-            assert has_trigger, f"Workflow {workflow_file} missing trigger ('on' or 'workflow_call')"
-            assert 'jobs' in workflow, f"Workflow {workflow_file} missing 'jobs'"
+            has_trigger = (
+                "on" in workflow or True in workflow
+            )  # True key indicates workflow_call
+            assert (
+                has_trigger
+            ), f"Workflow {workflow_file} missing trigger ('on' or 'workflow_call')"
+            assert "jobs" in workflow, f"Workflow {workflow_file} missing 'jobs'"
 
             # Check jobs structure
-            jobs = workflow['jobs']
+            jobs = workflow["jobs"]
             assert isinstance(jobs, dict), "Jobs should be a dictionary"
             assert len(jobs) > 0, "Workflow should have at least one job"
 
             for job_name, job_config in jobs.items():
-                assert 'runs-on' in job_config, f"Job {job_name} missing 'runs-on'"
-                assert 'steps' in job_config, f"Job {job_name} missing 'steps'"
+                assert "runs-on" in job_config, f"Job {job_name} missing 'runs-on'"
+                assert "steps" in job_config, f"Job {job_name} missing 'steps'"
 
 
 class TestGitIntegration:
@@ -74,7 +83,7 @@ class TestGitIntegration:
             ["git", "status", "--porcelain"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code"
+            cwd="/Users/danielstevens/Desktop/Code",
         )
 
         assert result.returncode == 0, f"Git status failed: {result.stderr}"
@@ -85,12 +94,12 @@ class TestGitIntegration:
             ["git", "branch", "-a"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code"
+            cwd="/Users/danielstevens/Desktop/Code",
         )
 
         assert result.returncode == 0, f"Git branch failed: {result.stderr}"
         # Should have at least main/master branch
-        assert 'main' in result.stdout or 'master' in result.stdout
+        assert "main" in result.stdout or "master" in result.stdout
 
     def test_git_remotes(self):
         """Test that git remotes are configured."""
@@ -98,7 +107,7 @@ class TestGitIntegration:
             ["git", "remote", "-v"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code"
+            cwd="/Users/danielstevens/Desktop/Code",
         )
 
         assert result.returncode == 0, f"Git remote failed: {result.stderr}"
@@ -111,7 +120,9 @@ class TestDeploymentScripts:
 
     def test_create_ci_compatible_script(self):
         """Test HabitQuest's CI-compatible project creation script."""
-        script_path = Path("/Users/danielstevens/Desktop/Code/Projects/HabitQuest/create_ci_compatible_project.sh")
+        script_path = Path(
+            "/Users/danielstevens/Desktop/Code/Projects/HabitQuest/create_ci_compatible_project.sh"
+        )
 
         if not script_path.exists():
             pytest.skip("CI-compatible script not found")
@@ -125,7 +136,7 @@ class TestDeploymentScripts:
             ["bash", str(script_path), "--help"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/HabitQuest"
+            cwd="/Users/danielstevens/Desktop/Code/Projects/HabitQuest",
         )
 
         # Script should handle --help or show usage
@@ -137,7 +148,9 @@ class TestQualityGates:
 
     def test_quality_config_exists(self):
         """Test that quality configuration files exist."""
-        quality_config = Path("/Users/danielstevens/Desktop/Code/Tools/quality-config.yaml")
+        quality_config = Path(
+            "/Users/danielstevens/Desktop/Code/Tools/quality-config.yaml"
+        )
 
         if not quality_config.exists():
             pytest.skip("Quality config not found")
@@ -145,7 +158,7 @@ class TestQualityGates:
         assert quality_config.exists()
 
         # Test YAML is valid
-        with open(quality_config, 'r') as f:
+        with open(quality_config, "r") as f:
             try:
                 config = yaml.safe_load(f)
                 assert isinstance(config, dict), "Quality config should be a dictionary"
@@ -158,7 +171,7 @@ class TestQualityGates:
             Path("/Users/danielstevens/Desktop/Code/Projects/cspell.json"),
             Path("/Users/danielstevens/Desktop/Code/Shared/cspell.json"),
             Path("/Users/danielstevens/Desktop/Code/Tools/cspell.json"),
-            Path("/Users/danielstevens/Desktop/Code/Documentation/cspell.json")
+            Path("/Users/danielstevens/Desktop/Code/Documentation/cspell.json"),
         ]
 
         found_configs = [config for config in cspell_configs if config.exists()]
@@ -166,8 +179,9 @@ class TestQualityGates:
 
         # Test at least one config is valid JSON
         for config in found_configs:
-            with open(config, 'r') as f:
+            with open(config, "r") as f:
                 import json
+
                 try:
                     json.load(f)
                 except json.JSONDecodeError as e:
@@ -179,7 +193,9 @@ class TestMonitoringAndLogging:
 
     def test_monitoring_dashboard_exists(self):
         """Test that monitoring dashboard exists."""
-        dashboard = Path("/Users/danielstevens/Desktop/Code/Tools/monitoring-dashboard.html")
+        dashboard = Path(
+            "/Users/danielstevens/Desktop/Code/Tools/monitoring-dashboard.html"
+        )
 
         if not dashboard.exists():
             pytest.skip("Monitoring dashboard not found")
@@ -188,9 +204,9 @@ class TestMonitoringAndLogging:
         assert dashboard.stat().st_size > 0, "Monitoring dashboard is empty"
 
         # Check it's an HTML file
-        with open(dashboard, 'r') as f:
+        with open(dashboard, "r") as f:
             content = f.read()
-            assert '<html' in content.lower(), "Dashboard doesn't appear to be HTML"
+            assert "<html" in content.lower(), "Dashboard doesn't appear to be HTML"
 
     def test_log_files_exist(self):
         """Test that log files exist for quantum agents."""
@@ -198,11 +214,13 @@ class TestMonitoringAndLogging:
             "quantum_agent__Users_danielstevens_Desktop_Code_Projects_AvoidObstaclesGame.log",
             "quantum_agent__Users_danielstevens_Desktop_Code_Projects_CodingReviewer.log",
             "quantum_agent__Users_danielstevens_Desktop_Code_Projects_HabitQuest.log",
-            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_MomentumFinance.log"
+            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_MomentumFinance.log",
         ]
 
         tools_dir = Path("/Users/danielstevens/Desktop/Code/Tools")
-        found_logs = [tools_dir / log for log in log_files if (tools_dir / log).exists()]
+        found_logs = [
+            tools_dir / log for log in log_files if (tools_dir / log).exists()
+        ]
 
         # At least some logs should exist
         assert len(found_logs) > 0, "No quantum agent log files found"

@@ -1,9 +1,9 @@
 // PlannerApp/Views/Tasks/TaskManagerView.swift (Updated with iOS enhancements)
-import SwiftUI
 import Foundation
+import SwiftUI
 
 #if os(iOS)
-import UIKit
+    import UIKit
 #endif
 
 // Type alias to resolve conflict between Swift's built-in Task and our custom Task model
@@ -21,8 +21,9 @@ struct TaskManagerView: View {
     private var incompleteTasks: [TaskModel] {
         tasks.filter { !$0.isCompleted }.sortedById() // Use helper extension for sorting
     }
+
     private var completedTasks: [TaskModel] {
-        tasks.filter { $0.isCompleted }.sortedById() // Use helper extension for sorting
+        tasks.filter(\.isCompleted).sortedById() // Use helper extension for sorting
     }
 
     var body: some View {
@@ -31,7 +32,7 @@ struct TaskManagerView: View {
             HStack {
                 Button("Done") {
                     #if os(iOS)
-                    HapticManager.lightImpact()
+                        HapticManager.lightImpact()
                     #endif
                     dismiss()
                 }
@@ -39,27 +40,27 @@ struct TaskManagerView: View {
                 .buttonStyle(.iOSSecondary)
                 #endif
                 .foregroundColor(themeManager.currentTheme.primaryAccentColor)
-                
+
                 Spacer()
-                
+
                 Text("Task Manager")
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundColor(themeManager.currentTheme.primaryTextColor)
-                
+
                 Spacer()
-                
+
                 // Invisible button for balance
-                Button("") { }
+                Button("") {}
                     .disabled(true)
                     .opacity(0)
-                    #if os(iOS)
+                #if os(iOS)
                     .frame(minWidth: 60, minHeight: 44)
-                    #endif
+                #endif
             }
             .padding()
             .background(themeManager.currentTheme.secondaryBackgroundColor)
-            
+
             // Main container using VStack with no spacing for tight layout control
             VStack(spacing: 0) {
                 // --- Input Area ---
@@ -73,18 +74,18 @@ struct TaskManagerView: View {
                         .focused($isInputFieldFocused) // Link focus state
                         .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.primaryFontName, size: 16))
                         .foregroundColor(themeManager.currentTheme.primaryTextColor)
-                        #if os(iOS)
+                    #if os(iOS)
                         .textInputAutocapitalization(.sentences)
                         .submitLabel(.done)
                         .onSubmit {
                             addTask()
                         }
-                        #endif
+                    #endif
 
                     // Add Task Button
                     Button(action: {
                         #if os(iOS)
-                        HapticManager.notificationSuccess()
+                            HapticManager.notificationSuccess()
                         #endif
                         addTask()
                     }) {
@@ -106,45 +107,45 @@ struct TaskManagerView: View {
                 List {
                     // --- Incomplete Tasks Section ---
                     Section("To Do (\(incompleteTasks.count))") {
-                         if incompleteTasks.isEmpty {
-                             // Message shown when no incomplete tasks exist
-                             Text("No tasks yet!")
+                        if incompleteTasks.isEmpty {
+                            // Message shown when no incomplete tasks exist
+                            Text("No tasks yet!")
                                 .foregroundColor(themeManager.currentTheme.secondaryTextColor)
                                 .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 15))
-                         } else {
-                             // Iterate over incomplete tasks and display using TaskRow
-                             ForEach(incompleteTasks) { task in
-                                 TaskRow(taskItem: task, tasks: $tasks) // Pass task and binding to tasks array
-                                     .environmentObject(themeManager) // Ensure TaskRow can access theme
-                             }
-                             .onDelete(perform: deleteTaskIncomplete) // Enable swipe-to-delete
-                         }
+                        } else {
+                            // Iterate over incomplete tasks and display using TaskRow
+                            ForEach(incompleteTasks) { task in
+                                TaskRow(taskItem: task, tasks: $tasks) // Pass task and binding to tasks array
+                                    .environmentObject(themeManager) // Ensure TaskRow can access theme
+                            }
+                            .onDelete(perform: deleteTaskIncomplete) // Enable swipe-to-delete
+                        }
                     }
-                     .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor) // Theme row background
-                     .foregroundColor(themeManager.currentTheme.primaryTextColor) // Theme row text color
-                     .headerProminence(.increased) // Style section header
+                    .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor) // Theme row background
+                    .foregroundColor(themeManager.currentTheme.primaryTextColor) // Theme row text color
+                    .headerProminence(.increased) // Style section header
 
                     // --- Completed Tasks Section ---
                     Section("Completed (\(completedTasks.count))") {
                         if completedTasks.isEmpty {
-                             // Message shown when no completed tasks exist
-                             Text("No completed tasks.")
+                            // Message shown when no completed tasks exist
+                            Text("No completed tasks.")
                                 .foregroundColor(themeManager.currentTheme.secondaryTextColor)
                                 .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 15))
-                         } else {
-                             // Iterate over completed tasks
-                             ForEach(completedTasks) { task in
+                        } else {
+                            // Iterate over completed tasks
+                            ForEach(completedTasks) { task in
                                 TaskRow(taskItem: task, tasks: $tasks)
-                                     .environmentObject(themeManager)
-                             }
-                             .onDelete(perform: deleteTaskCompleted) // Enable swipe-to-delete
+                                    .environmentObject(themeManager)
+                            }
+                            .onDelete(perform: deleteTaskCompleted) // Enable swipe-to-delete
                         }
                     }
-                     .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
-                     .foregroundColor(themeManager.currentTheme.primaryTextColor)
-                     .headerProminence(.increased)
+                    .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
+                    .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                    .headerProminence(.increased)
                 }
-                 // Apply theme background color to the List view itself
+                // Apply theme background color to the List view itself
                 .background(themeManager.currentTheme.primaryBackgroundColor)
                 // Hide the default List background style (e.g., plain/grouped)
                 .scrollContentBackground(.hidden)
@@ -152,7 +153,7 @@ struct TaskManagerView: View {
                 .onTapGesture {
                     isInputFieldFocused = false
                     #if os(iOS)
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     #endif
                 }
                 #if os(iOS)
@@ -169,20 +170,20 @@ struct TaskManagerView: View {
                 performAutoDeletionIfNeeded() // Check and perform auto-deletion
             }
             .toolbar {
-                 // Custom Edit button for macOS list reordering/deletion mode
-                 ToolbarItem(placement: .navigation) {
-                     Button("Edit") {
-                         // Custom edit implementation for macOS
-                     }
-                 }
-                 // Add a "Done" button to the keyboard toolbar
-                 ToolbarItem(placement: .keyboard) {
-                     HStack {
-                         Spacer() // Push button to the right
-                         Button("Done") { isInputFieldFocused = false } // Dismiss keyboard on tap
-                         // Uses theme accent color automatically
-                     }
-                 }
+                // Custom Edit button for macOS list reordering/deletion mode
+                ToolbarItem(placement: .navigation) {
+                    Button("Edit") {
+                        // Custom edit implementation for macOS
+                    }
+                }
+                // Add a "Done" button to the keyboard toolbar
+                ToolbarItem(placement: .keyboard) {
+                    HStack {
+                        Spacer() // Push button to the right
+                        Button("Done") { isInputFieldFocused = false } // Dismiss keyboard on tap
+                        // Uses theme accent color automatically
+                    }
+                }
             }
             // Apply theme accent color to navigation bar items (Edit, Done buttons)
             .accentColor(themeManager.currentTheme.primaryAccentColor)
@@ -204,7 +205,7 @@ struct TaskManagerView: View {
 
         // Create new Task instance. Ensure Task model has necessary initializers.
         // If Task needs `completionDate`, initialize it as nil here.
-        let newTask = TaskModel(title: trimmedTitle /*, completionDate: nil */)
+        let newTask = TaskModel(title: trimmedTitle /* , completionDate: nil */ )
         tasks.append(newTask) // Add to the local state array
         newTaskTitle = "" // Clear the input field
         saveTasks() // Persist changes
@@ -223,12 +224,12 @@ struct TaskManagerView: View {
 
     // Helper function to delete tasks based on offsets from a filtered array
     private func deleteTask(from sourceArray: [TaskModel], at offsets: IndexSet) {
-         // Get the IDs of the tasks to be deleted from the source (filtered) array
-         let idsToDelete = offsets.map { sourceArray[$0].id }
-         // Remove tasks with matching IDs from the main `tasks` array
-         tasks.removeAll { idsToDelete.contains($0.id) }
-         saveTasks() // Persist changes
-     }
+        // Get the IDs of the tasks to be deleted from the source (filtered) array
+        let idsToDelete = offsets.map { sourceArray[$0].id }
+        // Remove tasks with matching IDs from the main `tasks` array
+        tasks.removeAll { idsToDelete.contains($0.id) }
+        saveTasks() // Persist changes
+    }
 
     // Loads tasks from the data manager
     private func loadTasks() {
@@ -245,49 +246,49 @@ struct TaskManagerView: View {
     // --- Auto Deletion Logic ---
     // Checks settings and performs auto-deletion if enabled
     private func performAutoDeletionIfNeeded() {
-         // Read settings directly using AppStorage within this function scope
-         @AppStorage(AppSettingKeys.autoDeleteCompleted) var autoDeleteEnabled: Bool = false
-         @AppStorage(AppSettingKeys.autoDeleteDays) var autoDeleteDays: Int = 30
+        // Read settings directly using AppStorage within this function scope
+        @AppStorage(AppSettingKeys.autoDeleteCompleted) var autoDeleteEnabled = false
+        @AppStorage(AppSettingKeys.autoDeleteDays) var autoDeleteDays = 30
 
-         // Only proceed if auto-delete is enabled
-         guard autoDeleteEnabled else {
-             print("Auto-deletion skipped (disabled).")
-             return
-         }
+        // Only proceed if auto-delete is enabled
+        guard autoDeleteEnabled else {
+            print("Auto-deletion skipped (disabled).")
+            return
+        }
 
-         // Calculate the cutoff date based on the setting
-         guard Calendar.current.date(byAdding: .day, value: -autoDeleteDays, to: Date()) != nil else {
-             print("Could not calculate cutoff date for auto-deletion.")
-             return
-         }
+        // Calculate the cutoff date based on the setting
+        guard Calendar.current.date(byAdding: .day, value: -autoDeleteDays, to: Date()) != nil else {
+            print("Could not calculate cutoff date for auto-deletion.")
+            return
+        }
 
-         let initialCount = tasks.count
-         // IMPORTANT: Requires Task model to have `completionDate: Date?`
-         tasks.removeAll { task in
-             // Ensure task is completed and has a completion date
-             guard task.isCompleted /*, let completionDate = task.completionDate */ else {
-                 return false // Keep incomplete or tasks without completion date
-             }
-             // *** Uncomment the completionDate check above and ensure Task model supports it ***
+        let initialCount = tasks.count
+        // IMPORTANT: Requires Task model to have `completionDate: Date?`
+        tasks.removeAll { task in
+            // Ensure task is completed and has a completion date
+            guard task.isCompleted /* , let completionDate = task.completionDate */ else {
+                return false // Keep incomplete or tasks without completion date
+            }
+            // *** Uncomment the completionDate check above and ensure Task model supports it ***
 
-             // *** Placeholder Warning if completionDate is missing ***
-             print("Warning: Task model needs 'completionDate' for accurate auto-deletion based on date. Checking only 'isCompleted' status for now.")
-             // If completionDate is missing, this would delete ALL completed tasks immediately
-             // return true // DO NOT UNCOMMENT without completionDate check
-             return false // Safely keep all tasks if completionDate logic is missing
-             // *** End Placeholder ***
+            // *** Placeholder Warning if completionDate is missing ***
+            print("Warning: Task model needs 'completionDate' for accurate auto-deletion based on date. Checking only 'isCompleted' status for now.")
+            // If completionDate is missing, this would delete ALL completed tasks immediately
+            // return true // DO NOT UNCOMMENT without completionDate check
+            return false // Safely keep all tasks if completionDate logic is missing
+            // *** End Placeholder ***
 
-             // Actual logic: Remove if completion date is before the cutoff
-             // return completionDate < cutoffDate
-         }
+            // Actual logic: Remove if completion date is before the cutoff
+            // return completionDate < cutoffDate
+        }
 
-         // Save only if tasks were actually removed
-         if tasks.count < initialCount {
-             print("Auto-deleted \(initialCount - tasks.count) tasks older than \(autoDeleteDays) days.")
-             saveTasks()
-         } else {
-             print("No tasks found matching auto-deletion criteria.")
-         }
+        // Save only if tasks were actually removed
+        if tasks.count < initialCount {
+            print("Auto-deleted \(initialCount - tasks.count) tasks older than \(autoDeleteDays) days.")
+            saveTasks()
+        } else {
+            print("No tasks found matching auto-deletion criteria.")
+        }
     }
 }
 
@@ -330,14 +331,14 @@ struct TaskRow: View {
         // Find the index of this task in the main array
         if let index = tasks.firstIndex(where: { $0.id == taskItem.id }) {
             #if os(iOS)
-            // Add haptic feedback for task completion
-            if tasks[index].isCompleted {
-                HapticManager.lightImpact()
-            } else {
-                HapticManager.notificationSuccess()
-            }
+                // Add haptic feedback for task completion
+                if tasks[index].isCompleted {
+                    HapticManager.lightImpact()
+                } else {
+                    HapticManager.notificationSuccess()
+                }
             #endif
-            
+
             // Toggle the boolean state
             tasks[index].isCompleted.toggle()
             // ** IMPORTANT: Update completionDate if Task model supports it **
@@ -350,13 +351,12 @@ struct TaskRow: View {
 }
 
 // --- Helper extension for sorting Task array ---
-extension Array where Element == TaskModel {
+extension [TaskModel] {
     // Sorts tasks stably based on their UUID string representation
     func sortedById() -> [TaskModel] {
         self.sorted(by: { $0.id.uuidString < $1.id.uuidString })
     }
 }
-
 
 // --- Preview Provider ---
 struct TaskManagerView_Previews: PreviewProvider {

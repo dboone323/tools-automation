@@ -22,14 +22,14 @@ struct GoalsView: View {
         NavigationStack {
             // Use List to display goals
             List {
-                 // Display a message if no goals exist
-                 if goals.isEmpty {
-                     Text("No goals set yet. Tap '+' to add one!")
-                         .foregroundColor(themeManager.currentTheme.secondaryTextColor)
-                         .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 15))
-                         .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
-                         .frame(maxWidth: .infinity, alignment: .center) // Center the text
-                 } else {
+                // Display a message if no goals exist
+                if goals.isEmpty {
+                    Text("No goals set yet. Tap '+' to add one!")
+                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                        .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 15))
+                        .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
+                        .frame(maxWidth: .infinity, alignment: .center) // Center the text
+                } else {
                     // Iterate over goals sorted by target date
                     ForEach(goals.sorted(by: { $0.targetDate < $1.targetDate })) { goal in
                         // Layout for each goal row
@@ -51,9 +51,9 @@ struct GoalsView: View {
                         .padding(.vertical, 6) // Add vertical padding inside the row
                     }
                     .onDelete(perform: deleteGoal) // Enable swipe-to-delete
-                     // Apply theme background to all rows in the list
+                    // Apply theme background to all rows in the list
                     .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
-                 }
+                }
             }
             .background(themeManager.currentTheme.primaryBackgroundColor) // Apply theme background to List
             .scrollContentBackground(.hidden) // Hide default List background style
@@ -63,12 +63,12 @@ struct GoalsView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button { showAddGoal.toggle() } label: { Image(systemName: "plus") }
                 }
-                 // Custom Edit button for macOS
-                 ToolbarItem(placement: .navigation) {
-                     Button("Edit") {
-                         // Custom edit implementation for macOS
-                     }
-                 }
+                // Custom Edit button for macOS
+                ToolbarItem(placement: .navigation) {
+                    Button("Edit") {
+                        // Custom edit implementation for macOS
+                    }
+                }
             }
             .sheet(isPresented: $showAddGoal) {
                 // Present AddGoalView, passing binding and theme
@@ -83,7 +83,7 @@ struct GoalsView: View {
             .accentColor(themeManager.currentTheme.primaryAccentColor)
 
         } // End NavigationStack
-         // Use stack navigation style
+        // Use stack navigation style
     }
 
     // --- Data Functions ---
@@ -104,6 +104,7 @@ struct GoalsView: View {
         goals = GoalDataManager.shared.load()
         print("Goals loaded. Count: \(goals.count)")
     }
+
     // Saves the current state of the `goals` array to the data manager
     private func saveGoals() {
         GoalDataManager.shared.save(goals: goals)

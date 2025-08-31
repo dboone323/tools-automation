@@ -1,5 +1,5 @@
-import SwiftUI
 import Foundation
+import SwiftUI
 
 struct AddCalendarEventView: View {
     @Environment(\.dismiss) var dismiss // Use dismiss environment
@@ -7,7 +7,7 @@ struct AddCalendarEventView: View {
 
     @State private var title = ""
     @State private var date = Date()
-    
+
     // Focus state for iOS keyboard management
     @FocusState private var isTitleFocused: Bool
 
@@ -21,7 +21,7 @@ struct AddCalendarEventView: View {
             HStack {
                 Button("Cancel") {
                     #if os(iOS)
-                    HapticManager.lightImpact()
+                        HapticManager.lightImpact()
                     #endif
                     dismiss()
                 }
@@ -29,18 +29,18 @@ struct AddCalendarEventView: View {
                 .buttonStyle(.iOSSecondary)
                 #endif
                 .foregroundColor(.blue)
-                
+
                 Spacer()
-                
+
                 Text("New Event")
                     .font(.title3)
                     .fontWeight(.semibold)
-                
+
                 Spacer()
-                
+
                 Button("Save") {
                     #if os(iOS)
-                    HapticManager.notificationSuccess()
+                        HapticManager.notificationSuccess()
                     #endif
                     saveEvent()
                     dismiss()
@@ -53,24 +53,24 @@ struct AddCalendarEventView: View {
             }
             .padding()
             #if os(macOS)
-            .background(Color(NSColor.controlBackgroundColor))
+                .background(Color(NSColor.controlBackgroundColor))
             #else
-            .background(Color(.systemBackground))
+                .background(Color(.systemBackground))
             #endif
             #if os(iOS)
             .iOSEnhancedTouchTarget()
             #endif
-            
+
             Form {
                 TextField("Event Title", text: $title)
                     .focused($isTitleFocused)
-                    #if os(iOS)
+                #if os(iOS)
                     .textInputAutocapitalization(.words)
                     .submitLabel(.done)
                     .onSubmit {
                         isTitleFocused = false
                     }
-                    #endif
+                #endif
                 DatePicker("Event Date", selection: $date, displayedComponents: [.date, .hourAndMinute])
             }
             #if os(iOS)
@@ -102,7 +102,7 @@ struct AddCalendarEventView: View {
         let newEvent = CalendarEvent(title: title.trimmingCharacters(in: .whitespacesAndNewlines),
                                      date: date)
         events.append(newEvent)
-        
+
         // Save to persistent storage via data manager
         CalendarDataManager.shared.save(events: events)
     }

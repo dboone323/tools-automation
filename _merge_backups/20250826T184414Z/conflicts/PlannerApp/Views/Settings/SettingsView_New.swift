@@ -1,18 +1,18 @@
 // filepath: /Users/danielstevens/Desktop/PlannerApp/Views/Settings/SettingsView.swift
 // PlannerApp/Views/Settings/SettingsView.swift
 
+import LocalAuthentication
 import SwiftUI
 import UserNotifications
-import LocalAuthentication
 #if os(macOS)
-import AppKit
+    import AppKit
 #endif
 import Foundation
 
 struct SettingsView: View {
     // Import ThemeManager properly
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     // State properties with AppStorage keys
     @AppStorage(AppSettingKeys.userName) private var userName: String = ""
     @AppStorage(AppSettingKeys.dashboardItemLimit) private var dashboardItemLimit: Int = 3
@@ -42,19 +42,19 @@ struct SettingsView: View {
         let context = LAContext()
         return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
-    
+
     private let reminderTimeOptions: [String: Int] = [
         "5 minutes": 300,
         "15 minutes": 900,
         "30 minutes": 1800,
         "1 hour": 3600,
-        "1 day": 86400
+        "1 day": 86400,
     ]
-    
+
     private var sortedReminderKeys: [String] {
         reminderTimeOptions.keys.sorted { reminderTimeOptions[$0]! < reminderTimeOptions[$1]! }
     }
-    
+
     private let defaultViewOptions = ["Dashboard", "Tasks", "Calendar", "Goals", "Journal"]
 
     var body: some View {
@@ -79,7 +79,7 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    
+
                     Button(action: { showingThemePreview = true }) {
                         HStack {
                             Text("Theme Preview")
@@ -98,7 +98,7 @@ struct SettingsView: View {
 
                 // Dashboard Section
                 Section("Dashboard") {
-                    Stepper("Items per section: \(dashboardItemLimit)", value: $dashboardItemLimit, in: 1...10)
+                    Stepper("Items per section: \(dashboardItemLimit)", value: $dashboardItemLimit, in: 1 ... 10)
                 }
                 .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
 
@@ -139,9 +139,9 @@ struct SettingsView: View {
                     }
 
                     Toggle("Auto-Delete Completed Tasks", isOn: $autoDeleteCompleted)
-                    
+
                     if autoDeleteCompleted {
-                        Stepper("Delete after: \(autoDeleteDays) days", value: $autoDeleteDays, in: 1...90)
+                        Stepper("Delete after: \(autoDeleteDays) days", value: $autoDeleteDays, in: 1 ... 90)
                     }
                 }
                 .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
@@ -170,9 +170,9 @@ struct SettingsView: View {
                                 .foregroundColor(themeManager.currentTheme.secondaryTextColor)
                         }
                     }
-                    
+
                     Toggle("Auto Sync", isOn: $autoSyncEnabled)
-                    
+
                     Picker("Sync Frequency", selection: $syncFrequency) {
                         Text("Every 15 minutes").tag("15min")
                         Text("Hourly").tag("hourly")
@@ -187,7 +187,7 @@ struct SettingsView: View {
                 Section("Enhanced Features") {
                     Toggle("Haptic Feedback", isOn: $enableHapticFeedback)
                     Toggle("Enable Analytics", isOn: $enableAnalytics)
-                    
+
                     if enableAnalytics {
                         Text("Help improve PlannerApp by sharing anonymous usage data.")
                             .font(.caption)
@@ -247,6 +247,7 @@ struct SettingsView: View {
     }
 
     // MARK: - Action Handlers
+
     func handleNotificationToggle(enabled: Bool) {
         if enabled {
             requestNotificationPermission()
@@ -269,11 +270,11 @@ struct SettingsView: View {
 
     func openAppSettings() {
         #if os(iOS)
-        if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-            UIApplication.shared.open(settingsURL)
-        }
+            if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(settingsURL)
+            }
         #elseif os(macOS)
-        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.notifications")!)
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.notifications")!)
         #endif
     }
 
@@ -298,9 +299,10 @@ struct SettingsView: View {
 }
 
 // MARK: - CloudKit Settings View
+
 struct CloudKitSettingsView: View {
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
@@ -320,10 +322,11 @@ struct CloudKitSettingsView: View {
 }
 
 // MARK: - Theme Preview Sheet
+
 struct ThemePreviewSheet: View {
     @EnvironmentObject var themeManager: ThemeManager
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -351,11 +354,12 @@ struct ThemePreviewSheet: View {
 }
 
 // MARK: - Theme Card
+
 struct ThemeCard: View {
     let theme: Theme
     let isSelected: Bool
     let onTap: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
             VStack(spacing: 8) {
@@ -368,12 +372,12 @@ struct ThemeCard: View {
                         .frame(width: 16, height: 16)
                     Spacer()
                 }
-                
+
                 Text(theme.name)
                     .font(.headline)
                     .foregroundColor(theme.primaryTextColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 Text("Sample text")
                     .font(.caption)
                     .foregroundColor(theme.secondaryTextColor)
@@ -392,13 +396,15 @@ struct ThemeCard: View {
 }
 
 // MARK: - Bundle Extension
+
 extension Bundle {
     var appVersion: String? {
-        return infoDictionary?["CFBundleShortVersionString"] as? String
+        infoDictionary?["CFBundleShortVersionString"] as? String
     }
 }
 
 // MARK: - Preview
+
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView()

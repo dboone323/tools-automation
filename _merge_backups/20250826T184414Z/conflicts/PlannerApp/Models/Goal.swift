@@ -1,11 +1,11 @@
-import Foundation
 import CloudKit
+import Foundation
 
 enum GoalPriority: String, CaseIterable, Codable {
-    case low = "low"
-    case medium = "medium"
-    case high = "high"
-    
+    case low
+    case medium
+    case high
+
     var displayName: String {
         switch self {
         case .low: return "Low"
@@ -21,11 +21,11 @@ struct Goal: Identifiable, Codable {
     var description: String
     var targetDate: Date
     var createdAt: Date
-    var modifiedAt: Date?  // Added for CloudKit sync/merge
-    var isCompleted: Bool  // Adding completion status for goals
-    var priority: GoalPriority  // Goal priority
-    var progress: Double  // Goal progress (0.0 to 1.0)
-    
+    var modifiedAt: Date? // Added for CloudKit sync/merge
+    var isCompleted: Bool // Adding completion status for goals
+    var priority: GoalPriority // Goal priority
+    var progress: Double // Goal progress (0.0 to 1.0)
+
     init(id: UUID = UUID(), title: String, description: String, targetDate: Date, createdAt: Date = Date(), modifiedAt: Date? = Date(), isCompleted: Bool = false, priority: GoalPriority = .medium, progress: Double = 0.0) {
         self.id = id
         self.title = title
@@ -37,9 +37,9 @@ struct Goal: Identifiable, Codable {
         self.priority = priority
         self.progress = progress
     }
-    
+
     // MARK: - CloudKit Conversion
-    
+
     /// Convert to CloudKit record for syncing
     func toCKRecord() -> CKRecord {
         let record = CKRecord(recordType: "Goal", recordID: CKRecord.ID(recordName: id.uuidString))
@@ -53,7 +53,7 @@ struct Goal: Identifiable, Codable {
         record["progress"] = progress
         return record
     }
-    
+
     /// Create a Goal from CloudKit record
     static func from(ckRecord: CKRecord) throws -> Goal {
         guard let title = ckRecord["title"] as? String,
@@ -62,10 +62,10 @@ struct Goal: Identifiable, Codable {
         else {
             throw NSError(domain: "GoalConversionError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to convert CloudKit record to Goal"])
         }
-        
+
         let priorityString = ckRecord["priority"] as? String ?? "medium"
         let priority = GoalPriority(rawValue: priorityString) ?? .medium
-        
+
         return Goal(
             id: id,
             title: title,

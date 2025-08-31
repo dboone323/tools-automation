@@ -7,10 +7,10 @@
 
 import SwiftUI
 #if os(iOS)
-import UIKit
+    import UIKit
 #elseif os(macOS)
-import AppKit
-import Cocoa
+    import AppKit
+    import Cocoa
 #endif
 
 // MARK: - Accessibility Manager
@@ -21,54 +21,54 @@ class AccessibilityManager: ObservableObject {
     @Published var prefersDynamicType = false
     @Published var prefersReducedMotion = false
     @Published var prefersHighContrast = false
-    
+
     init() {
         updateAccessibilitySettings()
-        
+
         #if os(iOS)
-        // Listen for accessibility changes on iOS
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(accessibilitySettingsChanged),
-            name: UIAccessibility.voiceOverStatusDidChangeNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(accessibilitySettingsChanged),
-            name: UIContentSizeCategory.didChangeNotification,
-            object: nil
-        )
+            // Listen for accessibility changes on iOS
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(accessibilitySettingsChanged),
+                name: UIAccessibility.voiceOverStatusDidChangeNotification,
+                object: nil
+            )
+
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(accessibilitySettingsChanged),
+                name: UIContentSizeCategory.didChangeNotification,
+                object: nil
+            )
         #elseif os(macOS)
-        // For macOS, we use different notification mechanisms
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(accessibilitySettingsChanged),
-            name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
-            object: nil
-        )
+            // For macOS, we use different notification mechanisms
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(accessibilitySettingsChanged),
+                name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+                object: nil
+            )
         #endif
     }
-    
+
     @objc private func accessibilitySettingsChanged() {
         DispatchQueue.main.async {
             self.updateAccessibilitySettings()
         }
     }
-    
+
     private func updateAccessibilitySettings() {
         #if os(iOS)
-        isVoiceOverEnabled = UIAccessibility.isVoiceOverRunning
-        prefersDynamicType = UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
-        prefersReducedMotion = UIAccessibility.isReduceMotionEnabled
-        prefersHighContrast = UIAccessibility.isDarkerSystemColorsEnabled
+            isVoiceOverEnabled = UIAccessibility.isVoiceOverRunning
+            prefersDynamicType = UIApplication.shared.preferredContentSizeCategory.isAccessibilityCategory
+            prefersReducedMotion = UIAccessibility.isReduceMotionEnabled
+            prefersHighContrast = UIAccessibility.isDarkerSystemColorsEnabled
         #elseif os(macOS)
-        // Use macOS equivalents
-        isVoiceOverEnabled = NSWorkspace.shared.isVoiceOverEnabled
-        prefersReducedMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
-        prefersHighContrast = NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
-        prefersDynamicType = UserDefaults.standard.bool(forKey: "AppleAccessibilityDynamicTypeEnabled")
+            // Use macOS equivalents
+            isVoiceOverEnabled = NSWorkspace.shared.isVoiceOverEnabled
+            prefersReducedMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+            prefersHighContrast = NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
+            prefersDynamicType = UserDefaults.standard.bool(forKey: "AppleAccessibilityDynamicTypeEnabled")
         #endif
     }
 }
@@ -79,11 +79,11 @@ struct AccessibleButton: View {
     let title: String
     let action: () -> Void
     @EnvironmentObject var accessibilityManager: AccessibilityManager
-    
+
     var role: ButtonRole?
     var hint: String?
     var isEnabled: Bool = true
-    
+
     var body: some View {
         Button(action: action) {
             Text(title)
@@ -101,7 +101,7 @@ struct AccessibleButton: View {
         .accessibilityHint(hint ?? "")
         .accessibilityAddTraits(isEnabled ? .isButton : .isButton)
     }
-    
+
     private var dynamicFontSize: CGFloat {
         let baseSize: CGFloat = 16
         if accessibilityManager.prefersDynamicType {
@@ -109,20 +109,20 @@ struct AccessibleButton: View {
         }
         return baseSize
     }
-    
+
     private var minimumTouchTarget: CGFloat {
-        return 44 // Apple's recommended minimum touch target
+        44 // Apple's recommended minimum touch target
     }
-    
+
     private var backgroundColor: Color {
         let baseColor = role == .destructive ? Color.red : Color.blue
-        
+
         if accessibilityManager.prefersHighContrast {
             return baseColor.opacity(0.9)
         }
         return baseColor
     }
-    
+
     private var textColor: Color {
         if accessibilityManager.prefersHighContrast {
             return Color.white
@@ -136,17 +136,17 @@ struct AccessibleButton: View {
 struct AccessibleListRow<Content: View>: View {
     let content: Content
     @EnvironmentObject var accessibilityManager: AccessibilityManager
-    
+
     var accessibilityLabel: String?
     var accessibilityValue: String?
     var accessibilityHint: String?
     var accessibilityActions: [AccessibilityActionInfo] = []
-    
+
     struct AccessibilityActionInfo {
         let name: String
         let action: () -> Void
     }
-    
+
     init(
         accessibilityLabel: String? = nil,
         accessibilityValue: String? = nil,
@@ -160,7 +160,7 @@ struct AccessibleListRow<Content: View>: View {
         self.accessibilityActions = accessibilityActions
         self.content = content()
     }
-    
+
     var body: some View {
         content
             .frame(minHeight: minimumRowHeight)
@@ -175,7 +175,7 @@ struct AccessibleListRow<Content: View>: View {
                 }
             }
     }
-    
+
     private var minimumRowHeight: CGFloat {
         if accessibilityManager.prefersDynamicType {
             return 60
@@ -188,13 +188,13 @@ struct AccessibleListRow<Content: View>: View {
 
 struct HighContrastModifier: ViewModifier {
     @EnvironmentObject var accessibilityManager: AccessibilityManager
-    
+
     func body(content: Content) -> some View {
         content
             .environment(\.colorScheme, accessibilityManager.prefersHighContrast ? .dark : .light)
             .foregroundColor(
-                accessibilityManager.prefersHighContrast ? 
-                Color.white : Color.primary
+                accessibilityManager.prefersHighContrast ?
+                    Color.white : Color.primary
             )
     }
 }
@@ -210,7 +210,7 @@ extension View {
 struct ReducedMotionModifier: ViewModifier {
     @EnvironmentObject var accessibilityManager: AccessibilityManager
     let animation: Animation
-    
+
     func body(content: Content) -> some View {
         content
             .animation(
@@ -231,10 +231,10 @@ extension View {
 struct FocusableView<Content: View>: View {
     let content: Content
     @FocusState private var isFocused: Bool
-    
+
     var accessibilityLabel: String
     var onFocusChange: ((Bool) -> Void)?
-    
+
     init(
         accessibilityLabel: String,
         onFocusChange: ((Bool) -> Void)? = nil,
@@ -244,7 +244,7 @@ struct FocusableView<Content: View>: View {
         self.onFocusChange = onFocusChange
         self.content = content()
     }
-    
+
     var body: some View {
         content
             .focused($isFocused)
@@ -257,37 +257,37 @@ struct FocusableView<Content: View>: View {
 
 // MARK: - Screen Reader Announcements
 
-struct ScreenReaderAnnouncement {
+enum ScreenReaderAnnouncement {
     static func announce(_ message: String) {
         DispatchQueue.main.async {
             #if os(iOS)
-            UIAccessibility.post(notification: .announcement, argument: message)
+                UIAccessibility.post(notification: .announcement, argument: message)
             #elseif os(macOS)
-            // Using the correct method without an argument parameter
-            let userInfo: [NSAccessibility.NotificationUserInfoKey: Any] = [NSAccessibility.NotificationUserInfoKey.announcement: message]
-            NSAccessibility.post(element: NSApp as Any, notification: .announcementRequested, userInfo: userInfo)
+                // Using the correct method without an argument parameter
+                let userInfo: [NSAccessibility.NotificationUserInfoKey: Any] = [NSAccessibility.NotificationUserInfoKey.announcement: message]
+                NSAccessibility.post(element: NSApp as Any, notification: .announcementRequested, userInfo: userInfo)
             #endif
         }
     }
-    
+
     static func announcePageChange(_ pageName: String) {
         DispatchQueue.main.async {
             #if os(iOS)
-            UIAccessibility.post(notification: .screenChanged, argument: pageName)
+                UIAccessibility.post(notification: .screenChanged, argument: pageName)
             #elseif os(macOS)
-            // Using a simpler approach for macOS - remove the extra argument parameter
-            NSAccessibility.post(element: NSApp as Any, notification: .selectedTextChanged)
+                // Using a simpler approach for macOS - remove the extra argument parameter
+                NSAccessibility.post(element: NSApp as Any, notification: .selectedTextChanged)
             #endif
         }
     }
-    
+
     static func announceLayoutChange() {
         DispatchQueue.main.async {
             #if os(iOS)
-            UIAccessibility.post(notification: .layoutChanged, argument: "")
+                UIAccessibility.post(notification: .layoutChanged, argument: "")
             #elseif os(macOS)
-            // Make sure we're using the correct API without an argument parameter
-            NSAccessibility.post(element: NSApp as Any, notification: .layoutChanged, userInfo: nil)
+                // Make sure we're using the correct API without an argument parameter
+                NSAccessibility.post(element: NSApp as Any, notification: .layoutChanged, userInfo: nil)
             #endif
         }
     }
@@ -299,9 +299,9 @@ struct DynamicTypeText: View {
     let text: String
     let style: Font.TextStyle
     @EnvironmentObject var accessibilityManager: AccessibilityManager
-    
+
     var maxFontSize: CGFloat = 28
-    
+
     var body: some View {
         Text(text)
             .font(.system(style, design: .default))
@@ -316,7 +316,7 @@ struct DynamicTypeText: View {
 struct AccessibleProgressView: View {
     let progress: Double // 0.0 to 1.0
     let label: String
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -324,7 +324,7 @@ struct AccessibleProgressView: View {
                 Spacer()
                 DynamicTypeText(text: "\(Int(progress * 100))%", style: .caption)
             }
-            
+
             ProgressView(value: progress)
                 .progressViewStyle(LinearProgressViewStyle(tint: .blue))
                 .accessibilityLabel("\(label) progress")
@@ -338,23 +338,23 @@ struct AccessibleProgressView: View {
 struct AccessibilityDemoView: View {
     @StateObject private var accessibilityManager = AccessibilityManager()
     @State private var progress: Double = 0.7
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 DynamicTypeText(text: "Accessibility Demo", style: .title)
-                
+
                 AccessibleListRow(
                     accessibilityLabel: "Sample task",
                     accessibilityValue: "Completed",
                     accessibilityHint: "Double tap to edit",
                     accessibilityActions: [
-                        .init(name: "Edit") { 
+                        .init(name: "Edit") {
                             ScreenReaderAnnouncement.announce("Edit mode activated")
                         },
-                        .init(name: "Delete") { 
+                        .init(name: "Delete") {
                             ScreenReaderAnnouncement.announce("Task deleted")
-                        }
+                        },
                     ]
                 ) {
                     HStack {
@@ -364,7 +364,7 @@ struct AccessibilityDemoView: View {
                         Spacer()
                     }
                 }
-                
+
                 AccessibleButton(
                     title: "Add New Task",
                     action: {
@@ -372,9 +372,9 @@ struct AccessibilityDemoView: View {
                     },
                     hint: "Opens the add task screen"
                 )
-                
+
                 AccessibleProgressView(progress: progress, label: "Goal Progress")
-                
+
                 Group {
                     HStack {
                         DynamicTypeText(text: "VoiceOver:", style: .caption)
@@ -384,7 +384,7 @@ struct AccessibilityDemoView: View {
                             style: .caption
                         )
                     }
-                    
+
                     HStack {
                         DynamicTypeText(text: "Dynamic Type:", style: .caption)
                         Spacer()
@@ -393,7 +393,7 @@ struct AccessibilityDemoView: View {
                             style: .caption
                         )
                     }
-                    
+
                     HStack {
                         DynamicTypeText(text: "Reduced Motion:", style: .caption)
                         Spacer()

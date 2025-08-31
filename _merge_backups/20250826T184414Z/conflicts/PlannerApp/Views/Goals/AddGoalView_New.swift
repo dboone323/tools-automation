@@ -1,6 +1,7 @@
+import Foundation
+
 // PlannerApp/Views/Goals/AddGoalView.swift
 import SwiftUI
-import Foundation
 
 struct AddGoalView: View {
     // Access shared ThemeManager and dismiss action
@@ -19,7 +20,7 @@ struct AddGoalView: View {
     // Computed property to check if the form is valid for saving
     private var isFormValid: Bool {
         !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        !description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            !description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     var body: some View {
@@ -30,16 +31,16 @@ struct AddGoalView: View {
                     dismiss()
                 }
                 .foregroundColor(themeManager.currentTheme.primaryAccentColor)
-                
+
                 Spacer()
-                
+
                 Text("Add Goal")
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(themeManager.currentTheme.primaryTextColor)
-                
+
                 Spacer()
-                
+
                 Button("Save") {
                     // Create the new goal
                     let newGoal = Goal(
@@ -47,13 +48,13 @@ struct AddGoalView: View {
                         description: description.trimmingCharacters(in: .whitespacesAndNewlines),
                         targetDate: targetDate
                     )
-                    
+
                     // Append the new goal to the array
                     goals.append(newGoal)
-                    
+
                     // Save goals to the data manager
                     GoalDataManager.shared.save(goals: goals)
-                    
+
                     // Dismiss the sheet
                     dismiss()
                 }
@@ -62,7 +63,7 @@ struct AddGoalView: View {
             }
             .padding()
             .background(themeManager.currentTheme.secondaryBackgroundColor)
-            
+
             // Use Form for standard iOS settings/input layout
             Form {
                 // Section for the main goal details
@@ -71,20 +72,20 @@ struct AddGoalView: View {
                     TextField("Goal Title", text: $title)
                         .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.primaryFontName, size: 16))
                         .foregroundColor(themeManager.currentTheme.primaryTextColor)
-                    
+
                     // TextEditor for the goal description
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Description")
                             .font(.caption)
                             .foregroundColor(themeManager.currentTheme.secondaryTextColor)
-                        
+
                         TextEditor(text: $description)
                             .frame(minHeight: 80)
                             .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 15))
                             .foregroundColor(themeManager.currentTheme.primaryTextColor)
                             .focused($isDescriptionFocused)
                     }
-                    
+
                     // DatePicker for the target date
                     DatePicker("Target Date", selection: $targetDate, displayedComponents: .date)
                         .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.primaryFontName, size: 16))

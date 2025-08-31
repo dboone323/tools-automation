@@ -9,24 +9,28 @@ The Unified Agent Dashboard provides real-time monitoring, visualization, and ma
 ## Features
 
 ### 🖥️ Real-time Monitoring
+
 - **Agent Status**: Live status of all agents (healthy, degraded, critical, unknown)
 - **System Metrics**: CPU, memory, disk usage, network connections, process count
 - **Task Queue**: Active tasks, priorities, and assignments
 - **Performance Analytics**: Health scores, utilization metrics, completion rates
 
 ### 📊 Visual Dashboard
+
 - **Modern Web Interface**: Responsive design with real-time updates
 - **Interactive Elements**: Color-coded status indicators, progress bars, task lists
 - **Auto-refresh**: Updates every 30 seconds automatically
 - **Mobile-friendly**: Responsive design for all devices
 
 ### 🤖 Agent Integration
+
 - **Health Monitoring**: Automatic agent health assessment
 - **Communication**: Inter-agent messaging and coordination
 - **Task Distribution**: Real-time task assignment and completion tracking
 - **Error Handling**: Comprehensive error reporting and recovery
 
 ### 📈 Reporting & Analytics
+
 - **Automated Reports**: Hourly dashboard reports in Markdown format
 - **Historical Data**: Track performance trends over time
 - **Export Capabilities**: Generate reports for documentation
@@ -55,6 +59,7 @@ The Unified Agent Dashboard provides real-time monitoring, visualization, and ma
 ## Installation & Setup
 
 ### Prerequisites
+
 - **Python 3**: For the web server (built-in HTTP server)
 - **jq**: For JSON processing (optional but recommended)
 - **bash**: Shell environment
@@ -63,16 +68,19 @@ The Unified Agent Dashboard provides real-time monitoring, visualization, and ma
 ### Quick Start
 
 1. **Navigate to the agents directory:**
+
    ```bash
    cd /Users/danielstevens/Desktop/Code/Tools/Automation/agents
    ```
 
 2. **Start the dashboard:**
+
    ```bash
    ./dashboard_launcher.sh start
    ```
 
 3. **Open your browser:**
+
    ```
    http://localhost:8080
    ```
@@ -106,12 +114,14 @@ The Unified Agent Dashboard provides real-time monitoring, visualization, and ma
 ### Dashboard Features
 
 #### Agent Status Panel
+
 - **Real-time Status**: Color-coded agent health indicators
 - **Task Completion**: Track completed tasks per agent
 - **Last Seen**: Monitor agent activity timestamps
 - **Health Scores**: Percentage-based health assessment
 
 #### System Metrics Panel
+
 - **CPU Usage**: Real-time processor utilization
 - **Memory Usage**: RAM consumption monitoring
 - **Disk Usage**: Storage utilization tracking
@@ -119,12 +129,14 @@ The Unified Agent Dashboard provides real-time monitoring, visualization, and ma
 - **Process Count**: Total system processes
 
 #### Task Queue Panel
+
 - **Active Tasks**: Currently running tasks
 - **Task Priorities**: High, medium, low priority indicators
 - **Assigned Agents**: Which agent is handling each task
 - **Task Descriptions**: Detailed task information
 
 #### Performance Panel
+
 - **Agent Health**: Overall system health percentage
 - **Progress Bars**: Visual health indicators
 - **Active Tasks**: Current task count
@@ -238,6 +250,7 @@ Monitor dashboard activity through log files:
 ### Common Issues
 
 #### Dashboard Not Starting
+
 ```bash
 # Check if port 8080 is available
 lsof -i :8080
@@ -250,6 +263,7 @@ kill -9 <PID>
 ```
 
 #### Agents Not Showing
+
 ```bash
 # Check agent status files
 ls -la agent_*.json
@@ -262,6 +276,7 @@ tail -f agent_*.log
 ```
 
 #### High Resource Usage
+
 ```bash
 # Monitor dashboard process
 top -p $(cat dashboard_agent.pid)
@@ -285,11 +300,13 @@ LOG_LEVEL="DEBUG"  # Options: DEBUG, INFO, WARN, ERROR
 ## Security Considerations
 
 ### Access Control
+
 - **Local Access Only**: Dashboard runs on localhost by default
 - **No Authentication**: Consider adding authentication for production use
 - **Firewall Rules**: Ensure proper firewall configuration
 
 ### Data Protection
+
 - **Log Rotation**: Implement log rotation for long-term operation
 - **Sensitive Data**: Avoid logging sensitive information
 - **File Permissions**: Restrict access to dashboard files
@@ -297,6 +314,7 @@ LOG_LEVEL="DEBUG"  # Options: DEBUG, INFO, WARN, ERROR
 ## Future Enhancements
 
 ### Planned Features
+
 - **Authentication System**: User login and role-based access
 - **Alert Notifications**: Email/SMS alerts for critical events
 - **Historical Analytics**: Long-term performance trend analysis
@@ -305,6 +323,7 @@ LOG_LEVEL="DEBUG"  # Options: DEBUG, INFO, WARN, ERROR
 - **Mobile App**: Native mobile dashboard application
 
 ### Extensibility
+
 - **Plugin System**: Modular dashboard components
 - **Custom Metrics**: User-defined monitoring metrics
 - **Third-party Integration**: Support for external monitoring tools
@@ -313,6 +332,7 @@ LOG_LEVEL="DEBUG"  # Options: DEBUG, INFO, WARN, ERROR
 ## Contributing
 
 ### Development Setup
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -320,6 +340,7 @@ LOG_LEVEL="DEBUG"  # Options: DEBUG, INFO, WARN, ERROR
 5. Submit a pull request
 
 ### Code Standards
+
 - Follow bash best practices
 - Include comprehensive error handling
 - Add detailed logging
@@ -333,6 +354,7 @@ This dashboard system is part of the Quantum Workspace Agent ecosystem.
 ## Support
 
 For issues and questions:
+
 1. Check the troubleshooting section
 2. Review log files for error messages
 3. Verify agent integration requirements

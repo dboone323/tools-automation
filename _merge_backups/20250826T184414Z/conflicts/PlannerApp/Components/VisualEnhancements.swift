@@ -8,13 +8,14 @@
 import SwiftUI
 
 // MARK: - Glass Morphism Card
+
 struct GlassMorphismCard<Content: View>: View {
     let content: Content
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     var cornerRadius: CGFloat = 16
     var shadowIntensity: CGFloat = 0.1
-    
+
     init(
         cornerRadius: CGFloat = 16,
         shadowIntensity: CGFloat = 0.1,
@@ -24,7 +25,7 @@ struct GlassMorphismCard<Content: View>: View {
         self.shadowIntensity = shadowIntensity
         self.content = content()
     }
-    
+
     var body: some View {
         content
             .padding()
@@ -35,7 +36,7 @@ struct GlassMorphismCard<Content: View>: View {
                         LinearGradient(
                             gradient: Gradient(colors: [
                                 themeManager.currentTheme.primaryAccentColor.opacity(0.05),
-                                themeManager.currentTheme.secondaryAccentColor.opacity(0.02)
+                                themeManager.currentTheme.secondaryAccentColor.opacity(0.02),
                             ]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -48,7 +49,7 @@ struct GlassMorphismCard<Content: View>: View {
                         LinearGradient(
                             gradient: Gradient(colors: [
                                 Color.white.opacity(0.6),
-                                Color.white.opacity(0.1)
+                                Color.white.opacity(0.1),
                             ]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -66,16 +67,17 @@ struct GlassMorphismCard<Content: View>: View {
 }
 
 // MARK: - Animated Progress Ring
+
 struct AnimatedProgressRing: View {
     let progress: Double
     let title: String
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     @State private var animatedProgress: Double = 0
-    
+
     var ringWidth: CGFloat = 12
     var size: CGFloat = 100
-    
+
     var body: some View {
         ZStack {
             // Background ring
@@ -85,7 +87,7 @@ struct AnimatedProgressRing: View {
                     lineWidth: ringWidth
                 )
                 .frame(width: size, height: size)
-            
+
             // Progress ring
             Circle()
                 .trim(from: 0, to: animatedProgress)
@@ -93,7 +95,7 @@ struct AnimatedProgressRing: View {
                     LinearGradient(
                         gradient: Gradient(colors: [
                             themeManager.currentTheme.primaryAccentColor,
-                            themeManager.currentTheme.secondaryAccentColor
+                            themeManager.currentTheme.secondaryAccentColor,
                         ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -103,14 +105,14 @@ struct AnimatedProgressRing: View {
                 .frame(width: size, height: size)
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 1.5), value: animatedProgress)
-            
+
             // Center content
             VStack(spacing: 4) {
                 Text("\(Int(animatedProgress * 100))%")
                     .font(.system(size: size * 0.2, weight: .bold, design: .rounded))
                     .foregroundColor(themeManager.currentTheme.primaryTextColor)
                     .contentTransition(.numericText())
-                
+
                 Text(title)
                     .font(.system(size: size * 0.1, weight: .medium))
                     .foregroundColor(themeManager.currentTheme.secondaryTextColor)
@@ -131,25 +133,26 @@ struct AnimatedProgressRing: View {
 }
 
 // MARK: - Floating Action Button
+
 struct FloatingActionButton: View {
     let icon: String
     let action: () -> Void
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     @State private var isPressed = false
     @State private var rotationAngle: Double = 0
-    
+
     var body: some View {
         Button(action: {
             #if os(iOS)
-            let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-            impactFeedback.impactOccurred()
+                let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                impactFeedback.impactOccurred()
             #endif
-            
+
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                 rotationAngle += 180
             }
-            
+
             action()
         }) {
             Image(systemName: icon)
@@ -162,7 +165,7 @@ struct FloatingActionButton: View {
                             LinearGradient(
                                 gradient: Gradient(colors: [
                                     themeManager.currentTheme.primaryAccentColor,
-                                    themeManager.currentTheme.primaryAccentColor.opacity(0.8)
+                                    themeManager.currentTheme.primaryAccentColor.opacity(0.8),
                                 ]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
@@ -188,18 +191,19 @@ struct FloatingActionButton: View {
 }
 
 // MARK: - Animated Card Flip
+
 struct FlipCard<Front: View, Back: View>: View {
     let front: Front
     let back: Back
-    
+
     @State private var isFlipped = false
     @State private var flipDegrees = 0.0
-    
+
     init(@ViewBuilder front: () -> Front, @ViewBuilder back: () -> Back) {
         self.front = front()
         self.back = back()
     }
-    
+
     var body: some View {
         ZStack {
             if flipDegrees < 90 {
@@ -220,10 +224,11 @@ struct FlipCard<Front: View, Back: View>: View {
 }
 
 // MARK: - Particle System for Celebrations
+
 struct ParticleSystem: View {
     @State private var particles: [Particle] = []
     @State private var isAnimating = false
-    
+
     struct Particle: Identifiable {
         let id = UUID()
         var x: CGFloat
@@ -233,9 +238,9 @@ struct ParticleSystem: View {
         var scale: CGFloat
         var opacity: Double
     }
-    
+
     var body: some View {
-        GeometryReader { geometry in
+        GeometryReader { _ in
             ZStack {
                 ForEach(particles) { particle in
                     Circle()
@@ -254,26 +259,26 @@ struct ParticleSystem: View {
             }
         }
     }
-    
+
     private func createParticles() {
-        particles = (0..<50).map { _ in
+        particles = (0 ..< 50).map { _ in
             Particle(
-                x: CGFloat.random(in: 50...350),
+                x: CGFloat.random(in: 50 ... 350),
                 y: 400,
                 velocity: CGVector(
-                    dx: CGFloat.random(in: -200...200),
-                    dy: CGFloat.random(in: -400...(-200))
+                    dx: CGFloat.random(in: -200 ... 200),
+                    dy: CGFloat.random(in: -400 ... -200)
                 ),
                 color: [Color.blue, Color.green, Color.orange, Color.red, Color.purple].randomElement()!,
-                scale: CGFloat.random(in: 0.5...1.5),
+                scale: CGFloat.random(in: 0.5 ... 1.5),
                 opacity: 1.0
             )
         }
     }
-    
+
     private func animateParticles() {
         isAnimating = true
-        
+
         withAnimation(.linear(duration: 3.0)) {
             for i in particles.indices {
                 particles[i].x += particles[i].velocity.dx * 0.01
@@ -282,7 +287,7 @@ struct ParticleSystem: View {
                 particles[i].scale *= 0.1
             }
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             particles.removeAll()
             isAnimating = false
@@ -291,10 +296,11 @@ struct ParticleSystem: View {
 }
 
 // MARK: - Shimmer Loading Effect
+
 struct ShimmerView: View {
     @State private var shimmerOffset: CGFloat = -200
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     var body: some View {
         RoundedRectangle(cornerRadius: 12)
             .fill(themeManager.currentTheme.secondaryBackgroundColor)
@@ -305,7 +311,7 @@ struct ShimmerView: View {
                             gradient: Gradient(colors: [
                                 Color.clear,
                                 Color.white.opacity(0.4),
-                                Color.clear
+                                Color.clear,
                             ]),
                             startPoint: .leading,
                             endPoint: .trailing
@@ -324,17 +330,18 @@ struct ShimmerView: View {
 }
 
 // MARK: - Interactive 3D Card
+
 struct Interactive3DCard<Content: View>: View {
     let content: Content
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     @State private var rotation: CGFloat = 0
     @State private var translation: CGSize = .zero
-    
+
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
-    
+
     var body: some View {
         content
             .padding()
@@ -373,30 +380,31 @@ struct Interactive3DCard<Content: View>: View {
 }
 
 // MARK: - Breathing Animation
+
 struct BreathingView<Content: View>: View {
     let content: Content
     @State private var scale: CGFloat = 1.0
-    
+
     var duration: Double = 2.0
-    var scaleRange: ClosedRange<CGFloat> = 0.95...1.05
-    
+    var scaleRange: ClosedRange<CGFloat> = 0.95 ... 1.05
+
     init(
         duration: Double = 2.0,
-        scaleRange: ClosedRange<CGFloat> = 0.95...1.05,
+        scaleRange: ClosedRange<CGFloat> = 0.95 ... 1.05,
         @ViewBuilder content: () -> Content
     ) {
         self.duration = duration
         self.scaleRange = scaleRange
         self.content = content()
     }
-    
+
     var body: some View {
         content
             .scaleEffect(scale)
             .onAppear {
                 withAnimation(
                     .easeInOut(duration: duration)
-                    .repeatForever(autoreverses: true)
+                        .repeatForever(autoreverses: true)
                 ) {
                     scale = scaleRange.upperBound
                 }
@@ -405,10 +413,11 @@ struct BreathingView<Content: View>: View {
 }
 
 // MARK: - Enhanced Visual Components Preview
+
 struct VisualEnhancementsPreview: View {
     @StateObject private var themeManager = ThemeManager()
     @State private var showParticles = false
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: 30) {
@@ -423,16 +432,16 @@ struct VisualEnhancementsPreview: View {
                     }
                 }
                 .environmentObject(themeManager)
-                
+
                 // Animated Progress Ring
                 HStack(spacing: 30) {
                     AnimatedProgressRing(progress: 0.75, title: "Tasks")
                         .environmentObject(themeManager)
-                    
+
                     AnimatedProgressRing(progress: 0.45, title: "Goals")
                         .environmentObject(themeManager)
                 }
-                
+
                 // Interactive 3D Card
                 Interactive3DCard {
                     VStack {
@@ -445,7 +454,7 @@ struct VisualEnhancementsPreview: View {
                     .frame(height: 100)
                 }
                 .environmentObject(themeManager)
-                
+
                 // Flip Card
                 FlipCard(
                     front: {
@@ -469,17 +478,17 @@ struct VisualEnhancementsPreview: View {
                         .frame(height: 100)
                     }
                 )
-                
+
                 // Shimmer Loading
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Loading Shimmer Effect")
                         .font(.headline)
-                    
+
                     ShimmerView()
                         .frame(height: 60)
                         .environmentObject(themeManager)
                 }
-                
+
                 // Breathing Animation
                 BreathingView {
                     Circle()
@@ -491,7 +500,7 @@ struct VisualEnhancementsPreview: View {
                                 .font(.headline)
                         )
                 }
-                
+
                 // Celebration Button
                 Button("Celebrate! 🎉") {
                     showParticles = true

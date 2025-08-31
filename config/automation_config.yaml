@@ -85,9 +85,9 @@ projects:
 
 # Performance thresholds (in seconds)
 performance:
-  critical_threshold: 300  # 5 minutes
-  warning_threshold: 120   # 2 minutes
-  slow_operation_threshold: 60  # 1 minute
+  critical_threshold: 300 # 5 minutes
+  warning_threshold: 120 # 2 minutes
+  slow_operation_threshold: 60 # 1 minute
 
 # Security settings
 security:
@@ -100,14 +100,14 @@ security:
 error_recovery:
   max_retry_attempts: 3
   backoff_multiplier: 2
-  circuit_breaker_timeout: 600  # 10 minutes
+  circuit_breaker_timeout: 600 # 10 minutes
 
 # Monitoring and alerting
 monitoring:
   enable_alerts: true
   log_performance: true
   generate_reports: true
-  alert_email: ""  # Set to enable email alerts
+  alert_email: "" # Set to enable email alerts
 
 # Integration testing
 testing:

@@ -34,13 +34,13 @@ struct JournalDetailView: View {
 
                 // Title Section
                 Text(entry.title)
-                     // Apply theme font (primary, large title size, bold) and color
+                    // Apply theme font (primary, large title size, bold) and color
                     .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.primaryFontName, size: 30, weight: .bold))
                     .foregroundColor(themeManager.currentTheme.primaryTextColor)
 
                 // Date Section
                 Text(entry.date, formatter: detailDateFormatter) // Use the detailed formatter
-                     // Apply theme font (secondary, smaller size) and color
+                    // Apply theme font (secondary, smaller size) and color
                     .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 16))
                     .foregroundColor(themeManager.currentTheme.secondaryTextColor)
 
@@ -49,7 +49,7 @@ struct JournalDetailView: View {
 
                 // Body Text Section
                 Text(entry.body)
-                     // Apply theme font (primary, body size) and color
+                    // Apply theme font (primary, body size) and color
                     .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.primaryFontName, size: 17))
                     .foregroundColor(themeManager.currentTheme.primaryTextColor)
                     .lineSpacing(5) // Add extra space between lines for readability

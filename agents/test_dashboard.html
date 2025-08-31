@@ -1,44 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Quantum Workspace Dashboard</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f0f0f0; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
-        h1 { color: #333; text-align: center; }
-        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
-        .healthy { background: #d4edda; color: #155724; }
-        .warning { background: #fff3cd; color: #856404; }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background: #f0f0f0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+      .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+      .healthy {
+        background: #d4edda;
+        color: #155724;
+      }
+      .warning {
+        background: #fff3cd;
+        color: #856404;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>🚀 Quantum Workspace Agent Dashboard</h1>
-        <p>Dashboard loaded successfully at: <span id="timestamp"></span></p>
+      <h1>🚀 Quantum Workspace Agent Dashboard</h1>
+      <p>Dashboard loaded successfully at: <span id="timestamp"></span></p>
 
-        <div class="status healthy">
-            <h3>✅ System Status: Operational</h3>
-            <p>All core agents are configured and ready.</p>
-        </div>
+      <div class="status healthy">
+        <h3>✅ System Status: Operational</h3>
+        <p>All core agents are configured and ready.</p>
+      </div>
 
-        <div class="status warning">
-            <h3>⚠️  Note</h3>
-            <p>This is a simplified test dashboard. Full functionality will be available soon.</p>
-        </div>
+      <div class="status warning">
+        <h3>⚠️ Note</h3>
+        <p>
+          This is a simplified test dashboard. Full functionality will be
+          available soon.
+        </p>
+      </div>
 
-        <h3>Agent Overview:</h3>
-        <ul>
-            <li>✅ Task Orchestrator Agent</li>
-            <li>✅ Pull Request Agent</li>
-            <li>✅ Auto-Update Agent</li>
-            <li>✅ Knowledge Base Agent</li>
-            <li>✅ Public API Agent</li>
-            <li>✅ Dashboard Agent (Current)</li>
-        </ul>
+      <h3>Agent Overview:</h3>
+      <ul>
+        <li>✅ Task Orchestrator Agent</li>
+        <li>✅ Pull Request Agent</li>
+        <li>✅ Auto-Update Agent</li>
+        <li>✅ Knowledge Base Agent</li>
+        <li>✅ Public API Agent</li>
+        <li>✅ Dashboard Agent (Current)</li>
+      </ul>
     </div>
 
     <script>
-        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+      document.getElementById("timestamp").textContent =
+        new Date().toLocaleString();
     </script>
-</body>
+  </body>
 </html>

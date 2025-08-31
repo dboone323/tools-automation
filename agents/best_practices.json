@@ -2,7 +2,7 @@
   "swift": {
     "version": "6.2",
     "lint_rules": ["trailing_whitespace", "force_cast", "force_try"],
-    "format_options": {"indent": "spaces", "line_length": 120}
+    "format_options": { "indent": "spaces", "line_length": 120 }
   },
   "ios": {
     "deployment_target": "15.0",

@@ -3,6 +3,7 @@
 This document outlines the steps needed to properly configure your PlannerApp for distribution through App Store Connect, with specific focus on CloudKit integration.
 
 ## Prerequisites
+
 - Apple Developer Account with App Store Connect access
 - Xcode 14+ with your PlannerApp project
 - Bundle ID reserved in App Store Connect
@@ -85,26 +86,33 @@ This document outlines the steps needed to properly configure your PlannerApp fo
 ## Common Issues and Solutions
 
 ### Container Mismatch
+
 **Issue**: The container ID in your code doesn't match the one in App Store Connect
 **Solution**: Double-check that the container ID is identical in:
+
 - Xcode project entitlements
 - Developer Portal registration
 - App Store Connect settings
 
 ### Sandbox vs. Production
+
 **Issue**: Data doesn't sync between TestFlight and Production versions
 **Solution**: Development and Production environments use separate databases. When moving to production, users will start with empty CloudKit data.
 
 ### Schema Changes
+
 **Issue**: Adding new fields to your data models after release
-**Solution**: 
+**Solution**:
+
 1. Update CloudKit schema in dashboard first
 2. Add migration code to handle missing fields in older versions
 3. Use conditional code to check if fields exist
 
 ### CloudKit Quotas
+
 **Issue**: Reaching CloudKit storage limits
 **Solution**:
+
 1. Monitor usage in CloudKit Dashboard
 2. Implement data cleanup for old records
 3. Consider paid CloudKit options for heavy usage

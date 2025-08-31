@@ -1,8 +1,8 @@
 // PlannerApp/Styling/ThemeManager.swift
 
-import SwiftUI
 import Combine
 import Foundation
+import SwiftUI
 
 // Include Theme from the same Styling directory
 // Include AppSettingKeys from Utilities directory
@@ -11,7 +11,7 @@ class ThemeManager: ObservableObject {
 
     // Published property holding the currently active theme. Views observe this.
     // Initialize by finding the theme matching the name currently stored in UserDefaults.
-    @Published var currentTheme: Theme = Theme.availableThemes.first {
+    @Published var currentTheme: Theme = .availableThemes.first {
         $0.name == UserDefaults.standard.string(forKey: AppSettingKeys.themeColorName)
     } ?? Theme.defaultTheme // Fallback to default theme if no match or nothing saved
 
@@ -47,9 +47,9 @@ class ThemeManager: ObservableObject {
     // Static computed property to easily get the names of available themes,
     // useful for populating Pickers in the UI.
     static var availableThemeNames: [String] {
-        Theme.availableThemes.map { $0.name }
+        Theme.availableThemes.map(\.name)
     }
-    
+
     // Manually set a theme (used by ThemePreviewView)
     func setTheme(_ theme: Theme) {
         currentThemeName = theme.name
