@@ -10,7 +10,7 @@ import Foundation
 
 struct SettingsView: View {
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     // State properties with AppStorage keys
     @AppStorage(AppSettingKeys.userName) private var userName: String = ""
     @AppStorage(AppSettingKeys.dashboardItemLimit) private var dashboardItemLimit: Int = 3
@@ -45,7 +45,7 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    
+
                     Button(action: { showingThemePreview = true }) {
                         HStack {
                             Text("Theme Preview")
@@ -104,7 +104,7 @@ struct SettingsView: View {
     }
 
     // MARK: - Helper Methods
-    
+
     private func requestNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             DispatchQueue.main.async {
@@ -114,13 +114,13 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     private func openAppSettings() {
-        #if os(macOS)
+#if os(macOS)
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Notifications")!)
-        #else
+#else
         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-        #endif
+#endif
     }
 }
 
@@ -128,7 +128,7 @@ struct SettingsView: View {
 struct ThemePreviewSheet: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -143,20 +143,25 @@ struct ThemePreviewSheet: View {
                 .padding()
             }
             .navigationTitle("Choose Theme")
-            #if os(iOS)
+#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
-            #endif
             .toolbar {
-                #if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
-                #else
-                ToolbarItem(placement: .primaryAction) {
-                #endif
                     Button("Done") {
                         dismiss()
                     }
                 }
             }
+#else
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+#endif
             .background(themeManager.currentTheme.primaryBackgroundColor)
         }
     }
@@ -165,7 +170,7 @@ struct ThemePreviewSheet: View {
 struct ThemeCard: View {
     let theme: Theme
     @EnvironmentObject var themeManager: ThemeManager
-    
+
     var body: some View {
         VStack(spacing: 12) {
             // Theme preview
@@ -181,7 +186,7 @@ struct ThemeCard: View {
                                     .fill(theme.primaryAccentColor)
                                     .frame(width: 60, height: 20)
                             )
-                        
+
                         HStack(spacing: 4) {
                             Circle()
                                 .fill(theme.primaryAccentColor)
@@ -205,7 +210,7 @@ struct ThemeCard: View {
                             lineWidth: 2
                         )
                 )
-            
+
             // Theme name
             Text(theme.name)
                 .font(.caption)
@@ -224,3 +229,4 @@ struct SettingsView_Previews: PreviewProvider {
             .environmentObject(ThemeManager())
     }
 }
+            .environmentObject(ThemeManager())
