@@ -99,7 +99,8 @@ get_recent_runs() {
 analyze_health() {
 	local status_file="$1"
 	local runs_file="$2"
-	local report_file="${REPORTS_DIR}/health_report_$(date +%Y%m%d_%H%M%S).md"
+	local report_file
+	report_file="${REPORTS_DIR}/health_report_$(date +%Y%m%d_%H%M%S).md"
 
 	print_status "Analyzing workflow health..."
 
@@ -197,7 +198,8 @@ analyze_health() {
 generate_alerts() {
 	local status_file="$1"
 	local runs_file="$2"
-	local alert_file="${ALERTS_DIR}/alerts_$(date +%Y%m%d_%H%M%S).md"
+	local alert_file
+	alert_file="${ALERTS_DIR}/alerts_$(date +%Y%m%d_%H%M%S).md"
 
 	print_status "Checking for alerts..."
 
@@ -278,14 +280,14 @@ generate_alerts() {
 		echo "## Next Steps"
 		echo ""
 		if [[ ${failure_count} -gt 0 ]]; then
-			echo '- Run: `gh run list --limit 10` to see recent failures'
+			echo "- Run: $(gh run list --limit 10) to see recent failures"
 			echo "- Check workflow logs for error details"
 		fi
 		if [[ ${action_required} -gt 0 ]]; then
-			echo '- Run: `gh run list --limit 10` to see pending runs'
+			echo "- Run: $(gh run list --limit 10) to see pending runs"
 			echo "- Review and take necessary actions"
 		fi
-		echo '- Monitor daily with: `bash simple_monitoring.sh`'
+		echo "- Monitor daily with: $(bash simple_monitoring.sh)"
 		echo ""
 
 	} >"${alert_file}"
@@ -308,14 +310,12 @@ run_monitoring() {
 	fi
 
 	local status_file
-	status_file=$(get_workflow_status)
-	if [[ $? -ne 0 ]]; then
+	if ! status_file=$(get_workflow_status); then
 		return 1
 	fi
 
 	local runs_file
-	runs_file=$(get_recent_runs 30)
-	if [[ $? -ne 0 ]]; then
+	if ! runs_file=$(get_recent_runs 30); then
 		return 1
 	fi
 

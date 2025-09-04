@@ -193,7 +193,26 @@ Deployment timestamp: $(date '+%Y-%m-%d %H:%M:%S')"; then
 }
 
 # Main deployment function
+# Run security check before deployment
+run_security_check() {
+	print_status "Running security validation..."
+	if [[ -f "Tools/Automation/security_check.sh" ]]; then
+		if ! bash Tools/Automation/security_check.sh; then
+			print_error "Security check failed! Aborting deployment."
+			print_status "Run: bash Tools/Automation/security_check.sh for details"
+			return 1
+		fi
+	else
+		print_warning "Security check script not found - skipping security validation"
+	fi
+	return 0
+}
+
 deploy_all_workflows() {
+	if ! run_security_check; then
+		return 1
+	fi
+
 	print_header
 
 	local total_projects=0
@@ -242,13 +261,15 @@ show_help() {
 	echo "Deploy GitHub Actions workflows to all projects"
 	echo ""
 	echo "Options:"
-	echo "  -h, --help     Show this help message"
-	echo "  -v, --validate Validate workflows only (no push)"
-	echo "  -p, --project  Deploy to specific project only"
+	echo "  -h, --help           Show this help message"
+	echo "  -v, --validate       Validate workflows only (no push)"
+	echo "  -a, --allow-failures Continue on validation errors (with --validate)"
+	echo "  -p, --project        Deploy to specific project only"
 	echo ""
 	echo "Examples:"
 	echo "  $0                           # Deploy workflows to all projects"
-	echo "  $0 --validate               # Validate all workflows without pushing"
+	echo "  $0 --validate               # Validate all workflows (fail on errors)"
+	echo "  $0 --validate --allow-failures # Validate but continue on errors"
 	echo "  $0 --project CodingReviewer # Deploy only to CodingReviewer"
 }
 
@@ -281,8 +302,15 @@ validate_only() {
 		return 0
 	else
 		print_error "${validation_errors} projects have workflow validation errors"
+		# Exit with error code unless explicitly allowing failures
+		if [[ ${ALLOW_FAILURES:-0} -eq 0 ]]; then
+			echo -e "\n${YELLOW}💡 Tip: Use --allow-failures flag to continue on validation errors${NC}"
+			return 1
+		else
+			print_warning "Continuing despite validation errors (--allow-failures enabled)"
+			return 0
+		fi
 	fi
-	return 1
 }
 
 # Deploy to specific project
@@ -315,9 +343,26 @@ main() {
 		exit 0
 		;;
 	-v | --validate)
+		# Check for allow-failures flag
+		if [[ ${2-} == "--allow-failures" ]] || [[ ${2-} == "-a" ]]; then
+			ALLOW_FAILURES=1
+			print_status "Allow failures mode enabled - will continue on validation errors"
+		fi
 		# Set global flag to indicate validate-only mode and run validation
 		VALIDATE_ONLY=1
 		validate_only
+		exit $?
+		;;
+	-a | --allow-failures)
+		ALLOW_FAILURES=1
+		if [[ ${2-} == "--validate" ]] || [[ ${2-} == "-v" ]]; then
+			VALIDATE_ONLY=1
+			validate_only
+		else
+			print_error "--allow-failures must be used with --validate"
+			show_help
+			exit 1
+		fi
 		exit $?
 		;;
 	-p | --project)

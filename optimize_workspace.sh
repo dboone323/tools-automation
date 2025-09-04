@@ -75,7 +75,7 @@ cleanup_duplicates() {
 
 	# Remove old backup directories
 	local backup_count=$(find "${WORKSPACE_DIR}" -name "*backup*" -type d | wc -l)
-	if [[ $backup_count -gt 5 ]]; then
+	if [[ ${backup_count} -gt 5 ]]; then
 		print_status "Removing old backup directories..."
 		find "${WORKSPACE_DIR}" -name "*backup*" -type d -mtime +30 -exec rm -rf {} \; 2>/dev/null || true
 		echo "- Removed old backup directories (older than 30 days)" >>"${OPTIMIZATION_LOG}"
@@ -90,7 +90,7 @@ cleanup_duplicates() {
 
 	# Remove old import snapshots
 	local import_count=$(find "${WORKSPACE_DIR}" -name "*snapshot*" -type d | wc -l)
-	if [[ $import_count -gt 2 ]]; then
+	if [[ ${import_count} -gt 2 ]]; then
 		print_status "Removing old import snapshots..."
 		find "${WORKSPACE_DIR}" -name "*snapshot*" -type d -mtime +7 -exec rm -rf {} \; 2>/dev/null || true
 		echo "- Removed old import snapshots (older than 7 days)" >>"${OPTIMIZATION_LOG}"
@@ -98,7 +98,7 @@ cleanup_duplicates() {
 
 	# Clean up .DS_Store files
 	local ds_store_count=$(find "${WORKSPACE_DIR}" -name ".DS_Store" -type f | wc -l)
-	if [[ $ds_store_count -gt 0 ]]; then
+	if [[ ${ds_store_count} -gt 0 ]]; then
 		print_status "Removing .DS_Store files..."
 		find "${WORKSPACE_DIR}" -name ".DS_Store" -type f -delete
 		echo "- Removed ${ds_store_count} .DS_Store files" >>"${OPTIMIZATION_LOG}"
@@ -106,7 +106,7 @@ cleanup_duplicates() {
 
 	# Clean up temporary files
 	local temp_count=$(find "${WORKSPACE_DIR}" -name "*.tmp" -o -name "*.temp" -o -name "*~" -type f | wc -l)
-	if [[ $temp_count -gt 0 ]]; then
+	if [[ ${temp_count} -gt 0 ]]; then
 		print_status "Removing temporary files..."
 		find "${WORKSPACE_DIR}" -name "*.tmp" -o -name "*.temp" -o -name "*~" -type f -delete
 		echo "- Removed ${temp_count} temporary files" >>"${OPTIMIZATION_LOG}"
@@ -314,9 +314,9 @@ create_summary() {
 	echo "" >>"${OPTIMIZATION_LOG}"
 
 	echo "## Quick Commands" >>"${OPTIMIZATION_LOG}"
-	echo '- Check performance: `./Tools/Automation/performance_monitor.sh`' >>"${OPTIMIZATION_LOG}"
-	echo '- Clean build: `make clean && make build`' >>"${OPTIMIZATION_LOG}"
-	echo '- AI status: `curl http://localhost:11434/api/tags`' >>"${OPTIMIZATION_LOG}"
+	echo "- Check performance: $(./Tools/Automation/performance_monitor.sh)" >>"${OPTIMIZATION_LOG}"
+	echo "- Clean build: $(make clean && make build)" >>"${OPTIMIZATION_LOG}"
+	echo "- AI status: $(curl http://localhost:11434/api/tags)" >>"${OPTIMIZATION_LOG}"
 
 	print_success "Optimization summary created: ${OPTIMIZATION_LOG}"
 }

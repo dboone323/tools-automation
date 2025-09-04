@@ -32,9 +32,13 @@ print_warning() {
 log_execution_time() {
 	local operation="$1"
 	local start_time="$2"
-	local end_time=$(date +%s)
-	local duration=$((end_time - start_time))
-	local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+	local end_time
+	local duration
+	local timestamp
+
+	end_time=$(date +%s)
+	duration=$((end_time - start_time))
+	timestamp=$(date '+%Y-%m-%d %H:%M:%S')
 
 	# Create metrics directory if it doesn't exist
 	mkdir -p "${METRICS_DIR}"
@@ -71,13 +75,18 @@ log_alert() {
 	local operation="$2"
 	local duration="$3"
 	local threshold="$4"
-	local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+	local timestamp
+
+	timestamp=$(date '+%Y-%m-%d %H:%M:%S')
 
 	echo "${timestamp}|${level}|${operation}|${duration}|${threshold}" >>"${METRICS_DIR}/alerts.log"
 }
 
 generate_performance_report() {
-	local report_file="${METRICS_DIR}/performance_report_$(date +%Y%m%d_%H%M%S).md"
+	local report_file
+	local current_time
+
+	report_file="${METRICS_DIR}/performance_report_$(date +%Y%m%d_%H%M%S).md"
 
 	echo "# Performance Report - $(date)" >"${report_file}"
 	echo "" >>"${report_file}"
@@ -85,7 +94,7 @@ generate_performance_report() {
 	echo "" >>"${report_file}"
 
 	# Calculate session duration
-	local current_time=$(date +%s)
+	current_time=$(date +%s)
 	local session_duration=$((current_time - SESSION_START_TIME))
 	echo "- **Session Duration**: ${session_duration}s" >>"${report_file}"
 	echo "- **Report Generated**: $(date)" >>"${report_file}"
@@ -109,9 +118,13 @@ generate_performance_report() {
 		# Performance trends
 		echo "### Performance Trends (Last 24h)" >>"${report_file}"
 		echo "" >>"${report_file}"
-		local yesterday=$(date -v-1d +%s)
-		local slow_count=$(awk -F'|' -v yesterday="${yesterday}" '$4 > yesterday && $3 > 60 {count++} END {print count+0}' "${PERFORMANCE_LOG}")
-		local total_count=$(awk -F'|' -v yesterday="${yesterday}" '$4 > yesterday {count++} END {print count+0}' "${PERFORMANCE_LOG}")
+		local yesterday
+		local slow_count
+		local total_count
+
+		yesterday=$(date -v-1d +%s)
+		slow_count=$(awk -F'|' -v yesterday="${yesterday}" '$4 > yesterday && $3 > 60 {count++} END {print count+0}' "${PERFORMANCE_LOG}")
+		total_count=$(awk -F'|' -v yesterday="${yesterday}" '$4 > yesterday {count++} END {print count+0}' "${PERFORMANCE_LOG}")
 
 		if [[ ${total_count} -gt 0 ]]; then
 			local slow_percentage=$((slow_count * 100 / total_count))
@@ -138,12 +151,15 @@ generate_performance_report() {
 
 	# Generate recommendations based on performance data
 	if [[ -f ${PERFORMANCE_LOG} ]]; then
-		local avg_duration=$(awk -F'|' '{sum+=$3; count++} END {if(count>0) print int(sum/count); else print 0}' "${PERFORMANCE_LOG}")
+		local avg_duration
+		local error_rate
+
+		avg_duration=$(awk -F'|' '{sum+=$3; count++} END {if(count>0) print int(sum/count); else print 0}' "${PERFORMANCE_LOG}")
 		if [[ ${avg_duration} -gt 120 ]]; then
 			echo "- ⚠️  **High Average Duration**: Consider optimizing frequently slow operations" >>"${report_file}"
 		fi
 
-		local error_rate=$(grep -c "ERROR\|FAILED\|CRITICAL" "${METRICS_DIR}/alerts.log" 2>/dev/null || echo "0")
+		error_rate=$(grep -c "ERROR\|FAILED\|CRITICAL" "${METRICS_DIR}/alerts.log" 2>/dev/null || echo "0")
 		if [[ ${error_rate} -gt 5 ]]; then
 			echo "- 🚨 **High Error Rate**: Review error patterns and implement better error handling" >>"${report_file}"
 		fi
@@ -159,25 +175,32 @@ generate_performance_report() {
 
 track_performance_metrics() {
 	local operation="$1"
-	local start_time=$(date +%s)
+	local start_time
+	local end_time
+	local duration
+	local memory_usage
+	local cpu_usage
+
+	start_time=$(date +%s)
 
 	# Execute the operation (passed as remaining arguments)
 	shift
 	"$@"
 	local exit_code=$?
 
-	local end_time=$(date +%s)
-	local duration=$((end_time - start_time))
+	end_time=$(date +%s)
+	duration=$((end_time - start_time))
 
 	# Log the performance metrics
 	log_execution_time "${operation}" "${start_time}"
 
 	# Track additional metrics
-	local memory_usage=$(ps -o rss= -p $$ 2>/dev/null | awk '{print $1*1024}' || echo "0")
-	local cpu_usage=$(ps -o pcpu= -p $$ 2>/dev/null || echo "0")
+	memory_usage=$(ps -o rss= -p $$ 2>/dev/null | awk '{print $1*1024}' || echo "0")
+	cpu_usage=$(ps -o pcpu= -p $$ 2>/dev/null || echo "0")
 
 	# Log detailed metrics
-	local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+	local timestamp
+	timestamp=$(date '+%Y-%m-%d %H:%M:%S')
 	echo "${timestamp}|${operation}|${duration}|${memory_usage}|${cpu_usage}|${exit_code}" >>"${METRICS_DIR}/detailed_metrics.log"
 
 	return "${exit_code}"
@@ -189,7 +212,9 @@ retry_operation() {
 	local operation_name="$2"
 	local max_attempts="${RETRY_ATTEMPTS:-3}"
 	local attempt=1
-	local start_time=$(date +%s)
+	local start_time
+
+	start_time=$(date +%s)
 
 	print_status "Starting ${operation_name} (max ${max_attempts} attempts)"
 
@@ -223,7 +248,9 @@ log_error() {
 	local operation="$1"
 	local message="$2"
 	local error_code="$3"
-	local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+	local timestamp
+
+	timestamp=$(date '+%Y-%m-%d %H:%M:%S')
 
 	mkdir -p "${METRICS_DIR}"
 	echo "${timestamp}|ERROR|${operation}|${message}|${error_code}" >>"${METRICS_DIR}/errors.log"
@@ -236,7 +263,9 @@ print_error() {
 # Security Enhancement Functions
 validate_security() {
 	local project_path="$1"
-	local operation_start=$(date +%s)
+	local operation_start
+
+	operation_start=$(date +%s)
 
 	print_status "🔒 Running security validation..."
 
@@ -249,8 +278,9 @@ validate_security() {
 	fi
 
 	# Check for insecure file permissions
-	local insecure_files=$(find "${project_path}" -name "*.pem" -o -name "*.key" -o -name "*.p12" | xargs ls -la 2>/dev/null | grep -v "r--------" | wc -l | tr -d ' ')
-	if [[ ${insecur_files} -gt 0 ]]; then
+	local insecure_files
+	insecure_files=$(find "${project_path}" -name "*.pem" -o -name "*.key" -o -name "*.p12" | xargs ls -la 2>/dev/null | grep -v "r--------" | wc -l | tr -d ' ')
+	if [[ ${insecure_files} -gt 0 ]]; then
 		print_warning "Found ${insecure_files} files with insecure permissions"
 		((issues_found++))
 	fi
@@ -311,8 +341,10 @@ validate_config() {
 
 # Documentation Generation Functions
 generate_docs() {
-	local operation_start=$(date +%s)
+	local operation_start
 	local docs_dir="${CODE_DIR}/Tools/Documentation"
+
+	operation_start=$(date +%s)
 
 	print_status "📚 Generating documentation..."
 
@@ -328,16 +360,16 @@ generate_docs() {
 		echo ""
 		echo "| Command | Description |"
 		echo "|---------|-------------|"
-		echo '| `list` | List all projects with status |'
-		echo '| `run <project>` | Run automation for specific project |'
-		echo '| `all` | Run automation for all projects |'
-		echo '| `status` | Show unified architecture status |'
-		echo '| `format [project]` | Format Swift code |'
-		echo '| `lint [project]` | Lint Swift code |'
-		echo '| `pods <project>` | Initialize/update CocoaPods |'
-		echo '| `fastlane <project>` | Setup Fastlane for iOS deployment |'
-		echo '| `performance` | Generate performance report |'
-		echo '| `security [project]` | Run security validation |'
+		echo "| list | List all projects with status |"
+		echo "| run \<project\> | Run automation for specific project |"
+		echo "| all | Run automation for all projects |"
+		echo "| status | Show unified architecture status |"
+		echo "| format [project] | Format Swift code |"
+		echo "| lint [project] | Lint Swift code |"
+		echo "| pods \<project\> | Initialize/update CocoaPods |"
+		echo "| fastlane \<project\> | Setup Fastlane for iOS deployment |"
+		echo "| performance | Generate performance report |"
+		echo "| security [project] | Run security validation |"
 	} >"${docs_dir}/commands.md"
 
 	# Generate project status report
@@ -358,14 +390,17 @@ generate_docs() {
 
 # Integration Testing Functions
 run_integration_tests() {
-	local operation_start=$(date +%s)
+	local operation_start
 	local test_results_dir="${METRICS_DIR}/integration_tests"
+
+	operation_start=$(date +%s)
 
 	print_status "🧪 Running integration tests..."
 
 	mkdir -p "${test_results_dir}"
 
-	local test_report="${test_results_dir}/integration_test_$(date +%Y%m%d_%H%M%S).md"
+	local test_report
+	test_report="${test_results_dir}/integration_test_$(date +%Y%m%d_%H%M%S).md"
 	{
 		echo "# Integration Test Report"
 		echo ""
@@ -382,7 +417,11 @@ run_integration_tests() {
 	# Test project dependencies
 	for project in "${PROJECTS_DIR}"/*; do
 		if [[ -d ${project} ]]; then
-			local project_name=$(basename "${project}")
+			local project_name
+			local xcodeproj_count
+			local xcworkspace_count
+
+			project_name=$(basename "${project}")
 			((total_tests++))
 
 			print_status "Testing ${project_name} integration..."
@@ -390,8 +429,8 @@ run_integration_tests() {
 			# Test 1: Check if project builds successfully
 			if [[ -d ${project} ]] && cd "${project}"; then
 				# Check for Xcode project files using find command
-				local xcodeproj_count=$(find . -maxdepth 1 -name "*.xcodeproj" 2>/dev/null | wc -l | tr -d ' ')
-				local xcworkspace_count=$(find . -maxdepth 1 -name "*.xcworkspace" 2>/dev/null | wc -l | tr -d ' ')
+				xcodeproj_count=$(find . -maxdepth 1 -name "*.xcodeproj" 2>/dev/null | wc -l | tr -d ' ')
+				xcworkspace_count=$(find . -maxdepth 1 -name "*.xcworkspace" 2>/dev/null | wc -l | tr -d ' ')
 
 				if [[ ${xcodeproj_count} -gt 0 ]] || [[ ${xcworkspace_count} -gt 0 ]]; then
 					if xcodebuild -list 2>/dev/null | grep -q "Targets:"; then
@@ -459,14 +498,17 @@ list_projects() {
 	print_status "Available projects in unified Code architecture:"
 	for project in "${PROJECTS_DIR}"/*; do
 		if [[ -d ${project} ]]; then
-			local project_name=$(basename "${project}")
+			local project_name
+			local swift_files
+
+			project_name=$(basename "${project}")
 
 			# Skip the Tools directory as it's not a project
 			if [[ ${project_name} == "Tools" ]]; then
 				continue
 			fi
 
-			local swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
+			swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
 
 			# Check for automation in multiple ways
 			local has_automation=""
@@ -524,7 +566,8 @@ run_project_automation() {
 		automation_script="${project_path}/Tools/smart_builder.sh"
 	# Check for any .sh script in Tools directory
 	else
-		local script=$(find "${project_path}/Tools" -name "*.sh" 2>/dev/null | head -1)
+		local script
+		script=$(find "${project_path}/Tools" -name "*.sh" 2>/dev/null | head -1)
 		if [[ -n ${script} ]]; then
 			automation_script="${script}"
 		fi
@@ -560,7 +603,8 @@ format_code() {
 		print_status "Formatting Swift code in all projects..."
 		for project in "${PROJECTS_DIR}"/*; do
 			if [[ -d ${project} ]]; then
-				local project_name=$(basename "${project}")
+				local project_name
+				project_name=$(basename "${project}")
 				print_status "Formatting ${project_name}..."
 				swiftformat "${project}" --exclude "*.backup" 2>/dev/null
 			fi
@@ -586,7 +630,8 @@ lint_code() {
 		print_status "Linting Swift code in all projects..."
 		for project in "${PROJECTS_DIR}"/*; do
 			if [[ -d ${project} ]]; then
-				local project_name=$(basename "${project}")
+				local project_name
+				project_name=$(basename "${project}")
 				print_status "Linting ${project_name}..."
 				cd "${project}" && swiftlint
 			fi
@@ -670,7 +715,8 @@ run_all_automation() {
 	print_status "Running automation for all projects..."
 	for project in "${PROJECTS_DIR}"/*; do
 		if [[ -d ${project} ]]; then
-			local project_name=$(basename "${project}")
+			local project_name
+			project_name=$(basename "${project}")
 			print_status "Attempting automation for ${project_name}"
 
 			# Try to find automation script using improved detection

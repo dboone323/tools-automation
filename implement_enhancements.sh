@@ -4,8 +4,8 @@
 # Implements all features from ENHANCEMENT_PLAN.md across all projects
 
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-MASTER_AUTOMATION="$CODE_DIR/Tools/Automation/master_automation.sh"
-ENHANCEMENT_PLAN="$CODE_DIR/Tools/Automation/ENHANCEMENT_PLAN.md"
+MASTER_AUTOMATION="${CODE_DIR}/Tools/Automation/master_automation.sh"
+ENHANCEMENT_PLAN="${CODE_DIR}/Tools/Automation/ENHANCEMENT_PLAN.md"
 
 # Colors
 GREEN='\033[0;32m'
@@ -49,16 +49,16 @@ implement_performance_monitoring() {
 	print_status "Setting up performance monitoring infrastructure..."
 
 	# Create metrics directories
-	mkdir -p "$CODE_DIR/Tools/Automation/metrics/performance"
-	mkdir -p "$CODE_DIR/Tools/Automation/metrics/errors"
-	mkdir -p "$CODE_DIR/Tools/Automation/metrics/security"
-	mkdir -p "$CODE_DIR/Tools/Automation/metrics/reports"
-	mkdir -p "$CODE_DIR/Tools/Automation/logs"
+	mkdir -p "${CODE_DIR}/Tools/Automation/metrics/performance"
+	mkdir -p "${CODE_DIR}/Tools/Automation/metrics/errors"
+	mkdir -p "${CODE_DIR}/Tools/Automation/metrics/security"
+	mkdir -p "${CODE_DIR}/Tools/Automation/metrics/reports"
+	mkdir -p "${CODE_DIR}/Tools/Automation/logs"
 
 	print_success "Metrics directories created"
 
 	# Test performance monitoring
-	if bash "$MASTER_AUTOMATION" performance >/dev/null 2>&1; then
+	if bash "${MASTER_AUTOMATION}" performance >/dev/null 2>&1; then
 		print_success "Performance monitoring system operational"
 	else
 		print_warning "Performance monitoring needs configuration"
@@ -66,7 +66,7 @@ implement_performance_monitoring() {
 
 	# Create performance baseline
 	print_status "Creating performance baseline..."
-	local baseline_file="$CODE_DIR/Tools/Automation/metrics/performance/baseline_$(date +%Y%m%d).log"
+	local baseline_file="${CODE_DIR}/Tools/Automation/metrics/performance/baseline_$(date +%Y%m%d).log"
 
 	{
 		echo "# Performance Baseline - $(date)"
@@ -79,9 +79,9 @@ implement_performance_monitoring() {
 		echo ""
 		echo "## Baseline Metrics"
 		echo ""
-	} >"$baseline_file"
+	} >"${baseline_file}"
 
-	print_success "Performance baseline created: $baseline_file"
+	print_success "Performance baseline created: ${baseline_file}"
 }
 
 # Phase 2: Enhanced Error Recovery & Resilience
@@ -91,14 +91,14 @@ implement_error_recovery() {
 	print_status "Implementing circuit breaker patterns..."
 
 	# Test retry mechanism
-	if bash "$MASTER_AUTOMATION" retry-test >/dev/null 2>&1; then
+	if bash "${MASTER_AUTOMATION}" retry-test >/dev/null 2>&1; then
 		print_success "Retry mechanism operational"
 	else
 		print_error "Retry mechanism needs implementation"
 	fi
 
 	# Create error recovery configuration
-	local error_config="$CODE_DIR/Tools/Automation/config/error_recovery.yaml"
+	local error_config="${CODE_DIR}/Tools/Automation/config/error_recovery.yaml"
 	{
 		echo "# Error Recovery Configuration"
 		echo ""
@@ -116,18 +116,18 @@ implement_error_recovery() {
 		echo "  - graceful_degradation"
 		echo "  - cached_responses"
 		echo "  - alternative_services"
-	} >"$error_config"
+	} >"${error_config}"
 
 	print_success "Error recovery configuration created"
 
 	# Test error handling across projects
 	print_status "Testing error handling across projects..."
-	local error_test_results="$CODE_DIR/Tools/Automation/metrics/errors/error_handling_test_$(date +%Y%m%d).log"
+	local error_test_results="${CODE_DIR}/Tools/Automation/metrics/errors/error_handling_test_$(date +%Y%m%d).log"
 
 	{
 		echo "# Error Handling Test Results - $(date)"
 		echo ""
-	} >"$error_test_results"
+	} >"${error_test_results}"
 
 	print_success "Error recovery implementation completed"
 }
@@ -139,7 +139,7 @@ implement_security_enhancements() {
 	print_status "Implementing security validation system..."
 
 	# Create security configuration
-	local security_config="$CODE_DIR/Tools/Automation/config/security.yaml"
+	local security_config="${CODE_DIR}/Tools/Automation/config/security.yaml"
 	{
 		echo "# Security Configuration"
 		echo ""
@@ -163,31 +163,31 @@ implement_security_enhancements() {
 		echo "access_control:"
 		echo "  audit_logging: true"
 		echo "  permission_validation: true"
-	} >"$security_config"
+	} >"${security_config}"
 
 	print_success "Security configuration created"
 
 	# Test security validation on all projects
 	print_status "Running security validation on all projects..."
-	local security_results="$CODE_DIR/Tools/Automation/metrics/security/security_scan_$(date +%Y%m%d).log"
+	local security_results="${CODE_DIR}/Tools/Automation/metrics/security/security_scan_$(date +%Y%m%d).log"
 
 	{
 		echo "# Security Scan Results - $(date)"
 		echo ""
 		echo "## Projects Scanned"
 		echo ""
-	} >"$security_results"
+	} >"${security_results}"
 
 	# Scan each project
-	for project in "$CODE_DIR/Projects"/*; do
-		if [[ -d $project ]]; then
-			local project_name=$(basename "$project")
-			print_status "Scanning $project_name..."
+	for project in "${CODE_DIR}/Projects"/*; do
+		if [[ -d ${project} ]]; then
+			local project_name=$(basename "${project}")
+			print_status "Scanning ${project_name}..."
 
-			if bash "$MASTER_AUTOMATION" security "$project_name" >/dev/null 2>&1; then
-				echo "- ✅ $project_name: Security scan completed" >>"$security_results"
+			if bash "${MASTER_AUTOMATION}" security "${project_name}" >/dev/null 2>&1; then
+				echo "- ✅ ${project_name}: Security scan completed" >>"${security_results}"
 			else
-				echo "- ⚠️  $project_name: Security scan had issues" >>"$security_results"
+				echo "- ⚠️  ${project_name}: Security scan had issues" >>"${security_results}"
 			fi
 		fi
 	done
@@ -202,7 +202,7 @@ implement_configuration_management() {
 	print_status "Setting up centralized configuration management..."
 
 	# Validate main configuration
-	if [[ -f "$CODE_DIR/Tools/Automation/config/automation_config.yaml" ]]; then
+	if [[ -f "${CODE_DIR}/Tools/Automation/config/automation_config.yaml" ]]; then
 		print_success "Main configuration file exists"
 	else
 		print_error "Main configuration file missing"
@@ -212,20 +212,20 @@ implement_configuration_management() {
 	# Create project-specific configurations
 	print_status "Creating project-specific configurations..."
 
-	for project in "$CODE_DIR/Projects"/*; do
-		if [[ -d $project ]]; then
-			local project_name=$(basename "$project")
-			local project_config="$CODE_DIR/Tools/Automation/config/projects/$project_name.yaml"
+	for project in "${CODE_DIR}/Projects"/*; do
+		if [[ -d ${project} ]]; then
+			local project_name=$(basename "${project}")
+			local project_config="${CODE_DIR}/Tools/Automation/config/projects/${project_name}.yaml"
 
-			mkdir -p "$CODE_DIR/Tools/Automation/config/projects"
+			mkdir -p "${CODE_DIR}/Tools/Automation/config/projects"
 
 			{
-				echo "# $project_name Project Configuration"
+				echo "# ${project_name} Project Configuration"
 				echo ""
 				echo "project:"
-				echo "  name: $project_name"
+				echo "  name: ${project_name}"
 				echo "  type: ios_app"
-				echo "  path: Projects/$project_name"
+				echo "  path: Projects/${project_name}"
 				echo ""
 				echo "build:"
 				echo "  timeout: 300"
@@ -242,14 +242,14 @@ implement_configuration_management() {
 				echo "    - ios"
 				echo "  code_signing: false"
 				echo "  provisioning_profiles: []"
-			} >"$project_config"
+			} >"${project_config}"
 
-			print_success "Configuration created for $project_name"
+			print_success "Configuration created for ${project_name}"
 		fi
 	done
 
 	# Test configuration validation
-	if bash "$MASTER_AUTOMATION" config >/dev/null 2>&1; then
+	if bash "${MASTER_AUTOMATION}" config >/dev/null 2>&1; then
 		print_success "Configuration management operational"
 	else
 		print_warning "Configuration validation needs attention"
@@ -263,7 +263,7 @@ implement_documentation() {
 	print_status "Generating comprehensive documentation..."
 
 	# Generate documentation
-	if bash "$MASTER_AUTOMATION" docs >/dev/null 2>&1; then
+	if bash "${MASTER_AUTOMATION}" docs >/dev/null 2>&1; then
 		print_success "Documentation generated successfully"
 	else
 		print_error "Documentation generation failed"
@@ -271,8 +271,8 @@ implement_documentation() {
 	fi
 
 	# Create API documentation structure
-	local api_docs_dir="$CODE_DIR/Documentation/API"
-	mkdir -p "$api_docs_dir"
+	local api_docs_dir="${CODE_DIR}/Documentation/API"
+	mkdir -p "${api_docs_dir}"
 
 	{
 		echo "# API Documentation"
@@ -282,25 +282,25 @@ implement_documentation() {
 		echo "### Endpoints"
 		echo ""
 		echo "#### Status"
-		echo '- **URL**: `/status`'
+		echo "- **URL**: $(/status)"
 		echo "- **Method**: GET"
 		echo "- **Description**: Get unified architecture status"
 		echo ""
 		echo "#### Projects"
-		echo '- **URL**: `/projects`'
+		echo "- **URL**: $(/projects)"
 		echo "- **Method**: GET"
 		echo "- **Description**: List all projects"
 		echo ""
 		echo "#### Run Automation"
-		echo '- **URL**: `/run/{project}`'
+		echo "- **URL**: /run/{project}"
 		echo "- **Method**: POST"
 		echo "- **Description**: Run automation for specific project"
-	} >"$api_docs_dir/master_automation_api.md"
+	} >"${api_docs_dir}/master_automation_api.md"
 
 	print_success "API documentation created"
 
 	# Create troubleshooting guide
-	local troubleshooting_file="$CODE_DIR/Documentation/troubleshooting.md"
+	local troubleshooting_file="${CODE_DIR}/Documentation/troubleshooting.md"
 	{
 		echo "# Troubleshooting Guide"
 		echo ""
@@ -312,15 +312,15 @@ implement_documentation() {
 		echo "- Clean build folder and rebuild"
 		echo ""
 		echo "### Performance Issues"
-		echo '- Run performance report: `./master_automation.sh performance`'
+		echo "- Run performance report: $(./master_automation.sh performance)"
 		echo "- Check system resources"
 		echo "- Review recent changes for bottlenecks"
 		echo ""
 		echo "### Security Alerts"
-		echo '- Run security scan: `./master_automation.sh security <project>`'
+		echo "- Run security scan: ./master_automation.sh security <project>"
 		echo "- Review exposed secrets"
 		echo "- Update dependencies"
-	} >"$troubleshooting_file"
+	} >"${troubleshooting_file}"
 
 	print_success "Troubleshooting guide created"
 }
@@ -332,7 +332,7 @@ implement_integration_testing() {
 	print_status "Setting up integration testing framework..."
 
 	# Create integration test configuration
-	local integration_config="$CODE_DIR/Tools/Automation/config/integration_testing.yaml"
+	local integration_config="${CODE_DIR}/Tools/Automation/config/integration_testing.yaml"
 	{
 		echo "# Integration Testing Configuration"
 		echo ""
@@ -351,19 +351,19 @@ implement_integration_testing() {
 		echo "  generate_reports: true"
 		echo "  report_format: markdown"
 		echo "  include_performance: true"
-	} >"$integration_config"
+	} >"${integration_config}"
 
 	print_success "Integration testing configuration created"
 
 	# Run integration tests
-	if bash "$MASTER_AUTOMATION" integration-test >/dev/null 2>&1; then
+	if bash "${MASTER_AUTOMATION}" integration-test >/dev/null 2>&1; then
 		print_success "Integration tests completed successfully"
 	else
 		print_warning "Some integration tests failed - review results"
 	fi
 
 	# Create test automation script
-	local test_script="$CODE_DIR/Tools/Automation/run_integration_tests.sh"
+	local test_script="${CODE_DIR}/Tools/Automation/run_integration_tests.sh"
 	{
 		echo "#!/bin/bash"
 		echo ""
@@ -371,16 +371,16 @@ implement_integration_testing() {
 		echo "# Automatically runs integration tests and generates reports"
 		echo ""
 		echo 'SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"'
-		echo 'MASTER_AUTOMATION="$SCRIPT_DIR/master_automation.sh"'
+		echo 'MASTER_AUTOMATION="${SCRIPT_DIR}/master_automation.sh"'
 		echo ""
 		echo 'echo "Running integration test suite..."'
-		echo 'bash "$MASTER_AUTOMATION" integration-test'
+		echo 'bash "${MASTER_AUTOMATION}" integration-test'
 		echo ""
 		echo 'echo "Generating test report..."'
-		echo 'bash "$MASTER_AUTOMATION" performance'
-	} >"$test_script"
+		echo 'bash "${MASTER_AUTOMATION}" performance'
+	} >"${test_script}"
 
-	chmod +x "$test_script"
+	chmod +x "${test_script}"
 	print_success "Integration test automation script created"
 }
 
@@ -448,7 +448,7 @@ implement_all_enhancements() {
 	local end_time=$(date +%s)
 	local total_time=$((end_time - start_time))
 
-	local report_file="$CODE_DIR/Tools/Automation/metrics/reports/enhancement_implementation_$(date +%Y%m%d_%H%M%S).md"
+	local report_file="${CODE_DIR}/Tools/Automation/metrics/reports/enhancement_implementation_$(date +%Y%m%d_%H%M%S).md"
 	{
 		echo "# Enhancement Implementation Report"
 		echo ""
@@ -456,8 +456,8 @@ implement_all_enhancements() {
 		echo ""
 		echo "## Implementation Summary"
 		echo ""
-		echo "- **Total Phases**: $total_phases"
-		echo "- **Completed**: $phases_completed"
+		echo "- **Total Phases**: ${total_phases}"
+		echo "- **Completed**: ${phases_completed}"
 		echo "- **Success Rate**: $((phases_completed * 100 / total_phases))%"
 		echo "- **Total Time**: ${total_time}s"
 		echo ""
@@ -501,7 +501,7 @@ implement_all_enhancements() {
 		echo ""
 		echo "## Next Steps"
 		echo ""
-		echo '1. **Monitor Performance**: Run `./master_automation.sh performance` regularly'
+		echo "1. **Monitor Performance**: Run ./master_automation.sh performance regularly"
 		echo "2. **Security Audits**: Schedule weekly security scans"
 		echo "3. **Integration Testing**: Include in CI/CD pipeline"
 		echo "4. **Documentation Updates**: Keep docs synchronized with code changes"
@@ -510,19 +510,19 @@ implement_all_enhancements() {
 		echo "## Files Created/Modified"
 		echo ""
 		echo "### New Directories"
-		echo '- `Tools/Automation/metrics/` - Performance and monitoring data'
-		echo '- `Tools/Automation/config/projects/` - Project-specific configurations'
-		echo '- `Documentation/API/` - API documentation'
+		echo "- Tools/Automation/metrics/ - Performance and monitoring data"
+		echo "- Tools/Automation/config/projects/ - Project-specific configurations"
+		echo "- Documentation/API/ - API documentation"
 		echo ""
 		echo "### New Files"
-		echo '- `config/automation_config.yaml` - Main configuration'
-		echo '- `config/error_recovery.yaml` - Error handling config'
-		echo '- `config/security.yaml` - Security settings'
-		echo '- `config/integration_testing.yaml` - Test configuration'
-		echo '- `run_integration_tests.sh` - Test automation script'
-		echo '- `Documentation/troubleshooting.md` - Troubleshooting guide'
+		echo "- config/automation_config.yaml - Main configuration"
+		echo "- config/error_recovery.yaml - Error handling config"
+		echo "- config/security.yaml - Security settings"
+		echo "- config/integration_testing.yaml - Test configuration"
+		echo "- run_integration_tests.sh - Test automation script"
+		echo "- Documentation/troubleshooting.md - Troubleshooting guide"
 		echo ""
-	} >"$report_file"
+	} >"${report_file}"
 
 	echo ""
 	echo -e "${GREEN}================================================${NC}"
@@ -530,9 +530,9 @@ implement_all_enhancements() {
 	echo -e "${GREEN}================================================${NC}"
 	echo ""
 	print_success "Implementation completed in ${total_time}s"
-	print_success "$phases_completed/$total_phases phases successful"
+	print_success "${phases_completed}/${total_phases} phases successful"
 	echo ""
-	print_status "View detailed report: $report_file"
+	print_status "View detailed report: ${report_file}"
 	echo ""
 	print_status "Next steps:"
 	echo "  1. Review the implementation report"

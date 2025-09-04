@@ -58,7 +58,7 @@ create_maintenance_schedule() {
 		echo "## Daily Maintenance (Automated)"
 		echo ""
 		echo "### Morning Check (8:00 AM)"
-		echo '- ✅ Run CI/CD monitoring: `bash Tools/Automation/simple_monitoring.sh`'
+		echo "- ✅ Run CI/CD monitoring: $(bash Tools/Automation/simple_monitoring.sh)"
 		echo "- ✅ Check for failed workflows"
 		echo "- ✅ Review alert notifications"
 		echo "- ✅ Validate workflow configurations"
@@ -359,7 +359,7 @@ generate_disaster_recovery() {
 		echo "### External Resources"
 		echo "- GitHub Status: https://www.githubstatus.com/"
 		echo "- Documentation: \`${SCHEDULES_DIR}\`"
-		echo '- Monitoring: `Tools/Monitoring/`'
+		echo "- Monitoring: Tools/Monitoring/"
 		echo ""
 
 	} >"${recovery_file}"

@@ -85,7 +85,7 @@ verify_build_readiness() {
 
 	# Check for remaining duplicates
 	local duplicate_count=$(find "${WORKSPACE_DIR}" -name "*.swift" -type f | sed 's|.*/||' | sort | uniq -c | awk '$1 > 1' | wc -l)
-	if [[ $duplicate_count -gt 0 ]]; then
+	if [[ ${duplicate_count} -gt 0 ]]; then
 		print_warning "Still found ${duplicate_count} types of duplicate files"
 		find "${WORKSPACE_DIR}" -name "*.swift" -type f | sed 's|.*/||' | sort | uniq -c | awk '$1 > 1' | head -5
 	else
@@ -134,14 +134,14 @@ create_report() {
 	echo "- Package.swift files: $(find "${WORKSPACE_DIR}" -name "Package.swift" -type f | wc -l)" >>"${report_file}"
 	echo "" >>"${report_file}"
 	echo "## Next Steps" >>"${report_file}"
-	echo '1. Test your builds: `swift build` or `xcodebuild`' >>"${report_file}"
+	echo "1. Test your builds: $(swift build) or $(xcodebuild)" >>"${report_file}"
 	echo "2. If issues persist, check the backup directory for needed files" >>"${report_file}"
-	echo '3. Run performance monitoring: `./Tools/Automation/performance_monitor.sh`' >>"${report_file}"
+	echo "3. Run performance monitoring: $(./Tools/Automation/performance_monitor.sh)" >>"${report_file}"
 	echo "" >>"${report_file}"
 	echo "## Quick Commands" >>"${report_file}"
-	echo '- Test build: `cd Projects/MomentumFinance && swift build`' >>"${report_file}"
+	echo "- Test build: $(cd Projects/MomentumFinance && swift build)" >>"${report_file}"
 	echo "- Check duplicates: \`find . -name \"*.swift\" | sed 's|.*/||' | sort | uniq -c | awk '\$1 > 1'\`" >>"${report_file}"
-	echo '- Performance: `./Tools/Automation/performance_monitor.sh`' >>"${report_file}"
+	echo "- Performance: $(./Tools/Automation/performance_monitor.sh)" >>"${report_file}"
 
 	print_success "Report created: ${report_file}"
 }
