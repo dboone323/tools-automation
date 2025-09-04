@@ -1,98 +1,13 @@
-mv: rename /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json.tmp to /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json: No such file or directory
-mv: rename /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json.tmp to /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json: No such file or directory
-mv: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json.tmp: No such file or directory
-mv: rename /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json.tmp to /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json: No such file or directory
-mv: rename /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json.tmp to /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json: No such file or directory
-mv: rename /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json.tmp to /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json: No such file or directory
-mv: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json.tmp: No such file or directory
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-search_agent.sh: fork: retry: Resource temporarily unavailable
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-jq: parse error: Unmatched '}' at line 85, column 1
-search_agent.sh: fork: retry: Resource temporarily unavailable
-search_agent.sh: fork: retry: Resource temporarily unavailable
-:58:57 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 17:59:27 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 17:59:57 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:00:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:00:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:01:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:01:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:02:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:02:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:03:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:03:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:04:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:04:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:05:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:05:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:06:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:06:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:07:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:07:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:08:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:08:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:09:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:09:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:10:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:10:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:11:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:11:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:12:28 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:12:58 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:13:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:13:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:14:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:14:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:15:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:15:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:16:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:16:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:17:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:17:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:18:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:18:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:19:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:19:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:20:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:20:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:21:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:21:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:22:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:22:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:23:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:23:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:24:29 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:24:59 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:25:30 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:26:01 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:26:31 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:27:01 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:27:32 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:28:02 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:28:32 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:29:02 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:29:32 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:30:02 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:30:32 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:31:02 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:31:32 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:32:02 CDT 2025] search_agent.sh: Status updated to available
-[Fri Aug 29 18:32:35 CDT 2025] search_agent.sh: Status updated to available
+./search_agent.sh: line 279: declare: -A: invalid option
+declare: usage: declare [-afFirtx] [-p] [name[=value] ...]
+atus updated to available
+[Thu Sep  4 17:55:13 CDT 2025] search_agent.sh: Status updated to available
+[Thu Sep  4 17:55:43 CDT 2025] search_agent.sh: Status updated to available
+[Thu Sep  4 17:56:13 CDT 2025] search_agent.sh: Status updated to available
+[Thu Sep  4 17:56:43 CDT 2025] search_agent.sh: Status updated to available
+[Thu Sep  4 17:57:13 CDT 2025] search_agent.sh: Status updated to available
+[Thu Sep  4 17:57:43 CDT 2025] search_agent.sh: Status updated to available
+[Thu Sep  4 17:58:13 CDT 2025] search_agent.sh: Status updated to available
+[Thu Sep  4 17:58:43 CDT 2025] search_agent.sh: Status updated to available
+[Thu Sep  4 17:59:13 CDT 2025] search_agent.sh: Status updated to available
+[Thu Sep  4 17:59:43 CDT 2025] search_agent.sh: Status updated to available
