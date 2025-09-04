@@ -11,14 +11,14 @@ else
 	git checkout -b "${IMPORT_BRANCH}"
 fi
 
-mkdir -p Tools/Projects Tools/SharedComponents Tools/Imported Documentation Automation/IMPORTS
+mkdir -p Projects Shared Tools/Imported Documentation Automation/IMPORTS
 
 # Copy Projects
 rsync -a --exclude='.git' --exclude='BuildData_*' --exclude='*.xcuserdata' --exclude='DerivedData' --prune-empty-dirs \
-	/Users/danielstevens/Desktop/Code/Projects/ Tools/Projects/
+	/Users/danielstevens/Desktop/Code/Projects/ Projects/
 
 # Copy Shared
-rsync -a --exclude='.git' /Users/danielstevens/Desktop/Code/Shared/ Tools/SharedComponents/
+rsync -a --exclude='.git' /Users/danielstevens/Desktop/Code/Shared/ Shared/
 
 # Copy Tools (Automation separately)
 rsync -a --exclude='.git' /Users/danielstevens/Desktop/Code/Tools/Automation/ Automation/IMPORTS/Tools_snapshot_"${TS}"/
@@ -28,7 +28,7 @@ rsync -a --exclude='.git' /Users/danielstevens/Desktop/Code/Tools/ Tools/Importe
 rsync -a --exclude='.git' /Users/danielstevens/Desktop/Code/Documentation/ Documentation/Imported_CodeWorkspace_"${TS}"/
 
 # Copy CodingReviewer-Modular
-rsync -a --exclude='.git' /Users/danielstevens/Desktop/CodingReviewer-Modular/ Tools/Projects/CodingReviewer-Modular/
+rsync -a --exclude='.git' /Users/danielstevens/Desktop/CodingReviewer-Modular/ Projects/CodingReviewer-Modular/
 
 # Show staged candidate changes
 echo "Copy complete. Run 'git add' to stage what you want or I can add everything and commit for you."

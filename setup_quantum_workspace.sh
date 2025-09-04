@@ -6,7 +6,7 @@ set -euo pipefail
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+WORKSPACE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 LOG_FILE="${WORKSPACE_DIR}/setup_log_$(date +%Y%m%d_%H%M%S).txt"
 
 # Colors for output
@@ -20,7 +20,7 @@ NC='\033[0m' # No Color
 
 # Logging functions
 log() {
-	echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"
+	echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "${LOG_FILE}"
 }
 
 print_header() {
@@ -51,7 +51,7 @@ print_info() {
 
 # Check if running on macOS
 check_macos() {
-	if [[ $OSTYPE != "darwin"* ]]; then
+	if [[ ${OSTYPE} != "darwin"* ]]; then
 		print_error "This setup script is designed for macOS only."
 		exit 1
 	fi
@@ -106,12 +106,12 @@ install_dev_tools() {
 	)
 
 	for tool in "${tools[@]}"; do
-		if ! command -v "$tool" &>/dev/null && ! brew list "$tool" &>/dev/null; then
-			print_info "Installing $tool..."
-			brew install "$tool"
-			print_success "$tool installed"
+		if ! command -v "${tool}" &>/dev/null && ! brew list "${tool}" &>/dev/null; then
+			print_info "Installing ${tool}..."
+			brew install "${tool}"
+			print_success "${tool} installed"
 		else
-			print_success "$tool already installed"
+			print_success "${tool} already installed"
 		fi
 	done
 }
@@ -134,10 +134,10 @@ setup_python() {
 
 	# Create virtual environment for the workspace
 	local venv_dir="${WORKSPACE_DIR}/.venv"
-	if [[ ! -d $venv_dir ]]; then
+	if [[ ! -d ${venv_dir} ]]; then
 		print_info "Creating Python virtual environment..."
-		python3 -m venv "$venv_dir"
-		print_success "Virtual environment created at $venv_dir"
+		python3 -m venv "${venv_dir}"
+		print_success "Virtual environment created at ${venv_dir}"
 	else
 		print_success "Virtual environment already exists"
 	fi
@@ -161,15 +161,20 @@ setup_python() {
 setup_nodejs() {
 	print_step "Setting up Node.js environment..."
 
+	# Setup NVM
+	export NVM_DIR="${HOME}/.nvm"
+	[[ -s "${NVM_DIR}/nvm.sh" ]] && \. "${NVM_DIR}/nvm.sh"
+	[[ -s "${NVM_DIR}/bash_completion" ]] && \. "${NVM_DIR}/bash_completion"
+
 	# Install nvm (Node Version Manager)
-	if [[ ! -d "$HOME/.nvm" ]]; then
+	if [[ ! -d "${HOME}/.nvm" ]]; then
 		print_info "Installing NVM..."
 		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 
-		# Source nvm
-		export NVM_DIR="$HOME/.nvm"
-		[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-		[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+		# Source nvm again after installation
+		export NVM_DIR="${HOME}/.nvm"
+		[[ -s "${NVM_DIR}/nvm.sh" ]] && \. "${NVM_DIR}/nvm.sh"
+		[[ -s "${NVM_DIR}/bash_completion" ]] && \. "${NVM_DIR}/bash_completion"
 
 		print_success "NVM installed"
 	else
@@ -178,12 +183,18 @@ setup_nodejs() {
 
 	# Install latest LTS Node.js
 	print_info "Installing Node.js LTS..."
-	nvm install --lts
-	nvm use --lts
-	nvm alias default 'lts/*'
+	if command -v nvm &>/dev/null; then
+		nvm install --lts
+		nvm use --lts
+		nvm alias default 'lts/*'
 
-	print_success "Node.js $(node --version) installed"
-	print_success "npm $(npm --version) ready"
+		print_success "Node.js $(node --version) installed"
+		print_success "npm $(npm --version) ready"
+	else
+		print_warning "NVM not available, installing Node.js via Homebrew..."
+		brew install node
+		print_success "Node.js installed via Homebrew"
+	fi
 }
 
 # Setup Ollama
@@ -214,11 +225,11 @@ setup_ollama() {
 	)
 
 	for model in "${models[@]}"; do
-		print_info "Pulling Ollama model: $model..."
-		if ollama pull "$model"; then
-			print_success "Model $model downloaded"
+		print_info "Pulling Ollama model: ${model}..."
+		if ollama pull "${model}"; then
+			print_success "Model ${model} downloaded"
 		else
-			print_warning "Failed to download model $model"
+			print_warning "Failed to download model ${model}"
 		fi
 	done
 
@@ -238,7 +249,7 @@ setup_trunk() {
 	fi
 
 	# Initialize trunk in workspace
-	cd "$WORKSPACE_DIR"
+	cd "${WORKSPACE_DIR}"
 	if [[ ! -f ".trunk/trunk.yaml" ]]; then
 		print_info "Initializing Trunk configuration..."
 		trunk init
@@ -328,11 +339,11 @@ setup_vscode_extensions() {
 		)
 
 		for ext in "${extensions[@]}"; do
-			print_info "Installing VS Code extension: $ext..."
-			if code --install-extension "$ext" --force; then
-				print_success "Extension $ext installed"
+			print_info "Installing VS Code extension: ${ext}..."
+			if code --install-extension "${ext}" --force; then
+				print_success "Extension ${ext} installed"
 			else
-				print_warning "Failed to install extension $ext"
+				print_warning "Failed to install extension ${ext}"
 			fi
 		done
 	else
@@ -355,11 +366,11 @@ setup_workspace() {
 	)
 
 	for dir in "${dirs[@]}"; do
-		if [[ ! -d $dir ]]; then
-			mkdir -p "$dir"
-			print_success "Created directory: $dir"
+		if [[ ! -d ${dir} ]]; then
+			mkdir -p "${dir}"
+			print_success "Created directory: ${dir}"
 		else
-			print_success "Directory exists: $dir"
+			print_success "Directory exists: ${dir}"
 		fi
 	done
 
@@ -374,8 +385,8 @@ create_config_files() {
 
 	# Create agent status file
 	local agent_status_file="${WORKSPACE_DIR}/Tools/Automation/agents/agent_status.json"
-	if [[ ! -f $agent_status_file ]]; then
-		cat >"$agent_status_file" <<'EOF'
+	if [[ ! -f ${agent_status_file} ]]; then
+		cat >"${agent_status_file}" <<'EOF'
 {
   "agents": {
     "quality_agent.sh": {
@@ -402,8 +413,8 @@ EOF
 
 	# Create task queue file
 	local task_queue_file="${WORKSPACE_DIR}/Tools/Automation/agents/task_queue.json"
-	if [[ ! -f $task_queue_file ]]; then
-		cat >"$task_queue_file" <<'EOF'
+	if [[ ! -f ${task_queue_file} ]]; then
+		cat >"${task_queue_file}" <<'EOF'
 {
   "tasks": [],
   "last_updated": 0
@@ -417,11 +428,11 @@ EOF
 setup_shell_env() {
 	print_step "Setting up shell environment..."
 
-	local shell_rc="$HOME/.zshrc"
+	local shell_rc="${HOME}/.zshrc"
 
 	# Add workspace functions
-	if ! grep -q "quantum-workspace" "$shell_rc"; then
-		cat >>"$shell_rc" <<'EOF'
+	if ! grep -q "quantum-workspace" "${shell_rc}"; then
+		cat >>"${shell_rc}" <<'EOF'
 
 # Quantum Workspace Environment
 export QUANTUM_WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
@@ -488,11 +499,11 @@ final_verification() {
 
 	for tool in "${essential_tools[@]}"; do
 		((total_checks++))
-		if command -v "$tool" &>/dev/null; then
-			print_success "$tool: ✓"
+		if command -v "${tool}" &>/dev/null; then
+			print_success "${tool}: ✓"
 			((checks_passed++))
 		else
-			print_error "$tool: ✗"
+			print_error "${tool}: ✗"
 		fi
 	done
 
@@ -515,9 +526,9 @@ final_verification() {
 	fi
 
 	echo ""
-	print_info "Verification complete: $checks_passed/$total_checks checks passed"
+	print_info "Verification complete: ${checks_passed}/${total_checks} checks passed"
 
-	if [[ $checks_passed -eq $total_checks ]]; then
+	if [[ ${checks_passed} -eq ${total_checks} ]]; then
 		print_success "🎉 Setup completed successfully!"
 		echo ""
 		print_info "Next steps:"
@@ -566,7 +577,7 @@ case "${1-}" in
 	;;
 "clean")
 	print_warning "Cleaning up setup files..."
-	rm -f "$LOG_FILE"
+	rm -f "${LOG_FILE}"
 	print_success "Cleanup completed"
 	;;
 *)
