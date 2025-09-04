@@ -201,7 +201,7 @@ main() {
 	((total_tests++))
 
 	echo ""
-	echo "📈 Test Results:${$tests_passe}d${$total_test}s tests passed"
+	echo "📈 Test Results: ${tests_passed}/${total_tests} tests passed"
 
 	if [[ ${tests_passed} -eq ${total_tests} ]]; then
 		print_success "All tests passed! Free AI integration is working correctly."
