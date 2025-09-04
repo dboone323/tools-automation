@@ -3,7 +3,7 @@
 # Test Free AI Integration
 # Verifies that Ollama and Hugging Face are working correctly
 
-set -e
+# set -e  # Commented out to see all test results
 
 echo "🧪 Testing Free AI Integration"
 echo "=============================="
@@ -40,8 +40,8 @@ test_ollama_server() {
 
 		# Get available models
 		models=$(curl -s http://localhost:11434/api/tags | jq -r '.models[].name' 2>/dev/null || echo "")
-		if [[ -n $models ]]; then
-			print_success "Available models: $models"
+		if [[ -n ${models} ]]; then
+			print_success "Available models: ${models}"
 		else
 			print_warning "No models found - run: ollama pull llama2"
 		fi
@@ -67,7 +67,7 @@ test_ollama_generation() {
             "stream": false
           }' | jq -r '.response // empty' 2>/dev/null)
 
-		if [[ -n $response ]]; then
+		if [[ -n ${response} ]]; then
 			print_success "Ollama generation works!"
 			echo "Response: ${response:0:100}..."
 		else
@@ -89,7 +89,7 @@ test_huggingface_api() {
 		-H "Content-Type: application/json" \
 		-d '{"inputs": "Hello, this is a test", "parameters": {"max_length": 50}}' | jq -r '.[0].generated_text // empty' 2>/dev/null)
 
-	if [[ -n $response ]]; then
+	if [[ -n ${response} ]]; then
 		print_success "Hugging Face API works (free tier)!"
 		echo "Response: ${response:0:100}..."
 	else
@@ -105,7 +105,7 @@ test_huggingface_api() {
 			-H "Content-Type: application/json" \
 			-d '{"inputs": "Hello with token", "parameters": {"max_length": 50}}' | jq -r '.[0].generated_text // empty' 2>/dev/null)
 
-		if [[ -n $response ]]; then
+		if [[ -n ${response} ]]; then
 			print_success "Hugging Face API works with token!"
 		else
 			print_warning "Hugging Face API with token failed"
@@ -201,11 +201,11 @@ main() {
 	((total_tests++))
 
 	echo ""
-	echo "📈 Test Results: $tests_passed/$total_tests tests passed"
+	echo "📈 Test Results:${$tests_passe}d${$total_test}s tests passed"
 
-	if [[ $tests_passed -eq $total_tests ]]; then
+	if [[ ${tests_passed} -eq ${total_tests} ]]; then
 		print_success "All tests passed! Free AI integration is working correctly."
-	elif [[ $tests_passed -gt 0 ]]; then
+	elif [[ ${tests_passed} -gt 0 ]]; then
 		print_warning "Some tests passed. Free AI is partially working."
 	else
 		print_error "No tests passed. Check setup and try again."
