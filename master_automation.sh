@@ -460,12 +460,12 @@ list_projects() {
 	for project in "${PROJECTS_DIR}"/*; do
 		if [[ -d ${project} ]]; then
 			local project_name=$(basename "${project}")
-			
+
 			# Skip the Tools directory as it's not a project
 			if [[ ${project_name} == "Tools" ]]; then
 				continue
 			fi
-			
+
 			local swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
 
 			# Check for automation in multiple ways

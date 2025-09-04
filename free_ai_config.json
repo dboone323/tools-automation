@@ -1,0 +1,26 @@
+{
+  "primary_service": "ollama",
+  "services": {
+    "ollama": {
+      "endpoint": "http://localhost:11434",
+      "models": {
+        "general": "llama2",
+        "code": "codellama"
+      },
+      "cost": "free"
+    },
+    "huggingface": {
+      "endpoint": "https://api-inference.huggingface.co",
+      "models": {
+        "general": "microsoft/DialoGPT-medium",
+        "code": "microsoft/codebert-base"
+      },
+      "cost": "free_tier"
+    }
+  },
+  "fallback_order": ["ollama", "huggingface"],
+  "rate_limits": {
+    "ollama": "unlimited",
+    "huggingface": "3000_requests/hour"
+  }
+}
