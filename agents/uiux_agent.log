@@ -219,3 +219,5 @@ declare: usage: declare [-afFirtx] [-p] [name[=value] ...]
 ./uiux_agent.sh: line 16: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/uiux_agent.log: No such file or directory
 ./uiux_agent.sh: line 14: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json.tmp: No such file or directory
 ./uiux_agent.sh: line 16: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/uiux_agent.log: No such file or directory
+./uiux_agent.sh: line 14: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json.tmp: No such file or directory
+./uiux_agent.sh: line 16: /Users/danielstevens/Desktop/Code/Tools/Automation/agents/uiux_agent.log: No such file or directory
