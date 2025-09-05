@@ -87,7 +87,7 @@ class TestGitIntegration:
             ["git", "status", "--porcelain"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace",
         )
 
         assert result.returncode == 0, f"Git status failed: {result.stderr}"
@@ -98,7 +98,7 @@ class TestGitIntegration:
             ["git", "branch", "-a"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace",
         )
 
         assert result.returncode == 0, f"Git branch failed: {result.stderr}"
@@ -111,7 +111,7 @@ class TestGitIntegration:
             ["git", "remote", "-v"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace",
         )
 
         assert result.returncode == 0, f"Git remote failed: {result.stderr}"
@@ -217,10 +217,10 @@ class TestMonitoringAndLogging:
     def test_log_files_exist(self):
         """Test that log files exist for quantum agents."""
         log_files = [
-            "quantum_agent__Users_danielstevens_Desktop_Quantum-workspace_Projects_AvoidObstaclesGame.log",
-            "quantum_agent__Users_danielstevens_Desktop_Quantum-workspace_Projects_CodingReviewer.log",
-            "quantum_agent__Users_danielstevens_Desktop_Quantum-workspace_Projects_HabitQuest.log",
-            "quantum_agent__Users_danielstevens_Desktop_Quantum-workspace_Projects_MomentumFinance.log",
+            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_AvoidObstaclesGame.log",
+            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_CodingReviewer.log",
+            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_HabitQuest.log",
+            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_MomentumFinance.log",
         ]
 
         tools_dir = Path("/Users/danielstevens/Desktop/Quantum-workspace/Tools")
