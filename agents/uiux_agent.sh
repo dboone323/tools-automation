@@ -2,10 +2,11 @@
 # UI/UX Agent: Analyzes and suggests improvements for user interface and experience
 
 AGENT_NAME="uiux_agent.sh"
-LOG_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/uiux_agent.log"
-NOTIFICATION_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
-AGENT_STATUS_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json"
-TASK_QUEUE_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/task_queue.json"
+WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
+LOG_FILE="${WORKSPACE}/Tools/Automation/agents/uiux_agent.log"
+NOTIFICATION_FILE="${WORKSPACE}/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
+AGENT_STATUS_FILE="${WORKSPACE}/Tools/Automation/agents/agent_status.json"
+TASK_QUEUE_FILE="${WORKSPACE}/Tools/Automation/agents/task_queue.json"
 
 # Update agent status to available when starting
 update_status() {
@@ -53,7 +54,7 @@ update_task_status() {
 	fi
 }
 
-# UI/UX analysis function
+# UI/UX analysis function with Ollama integration
 run_uiux_analysis() {
 	local task_desc="$1"
 	echo "[$(date)] $AGENT_NAME: Running UI/UX analysis for: $task_desc" >>"$LOG_FILE"
@@ -75,10 +76,104 @@ run_uiux_analysis() {
 
 	echo "[$(date)] $AGENT_NAME: Analyzing project: $PROJECT" >>"$LOG_FILE"
 
+	# Run Ollama-powered UI/UX analysis
+	run_ollama_uiux_analysis "$task_desc" "$PROJECT"
+
+	# Run traditional file-based analysis as backup
+	run_traditional_uiux_analysis "$PROJECT"
+}
+
+# Ollama-powered UI/UX analysis
+run_ollama_uiux_analysis() {
+	local task_desc="$1"
+	local project="$2"
+
+	echo "[$(date)] $AGENT_NAME: Running Ollama-powered UI/UX analysis..." >>"$LOG_FILE"
+
+	# Check if Ollama is available
+	if ! curl -s -m 5 http://localhost:11434/api/tags >/dev/null 2>&1; then
+		echo "[$(date)] $AGENT_NAME: Ollama not available, skipping AI analysis" >>"$LOG_FILE"
+		return 1
+	fi
+
+	# Collect UI-related code for analysis
+	local ui_code=""
+	if [[ -d "${WORKSPACE}/Projects/$project" ]]; then
+		cd "${WORKSPACE}/Projects/$project" || return 1
+
+		# Find SwiftUI and UI-related files
+		while IFS= read -r -d '' file; do
+			if [[ -f $file ]]; then
+				ui_code+="// File: $file\n$(cat "$file")\n\n"
+			fi
+		done < <(find . -name "*.swift" -exec grep -l "SwiftUI\|UIKit\|View\|Controller\|Storyboard" {} \; -print0 2>/dev/null)
+	fi
+
+	if [[ -z $ui_code ]]; then
+		echo "[$(date)] $AGENT_NAME: No UI code found for Ollama analysis" >>"$LOG_FILE"
+		return 1
+	fi
+
+	# Create analysis prompt for Ollama
+	local analysis_prompt="Analyze this Swift UI/UX code and provide suggestions for improvement:
+
+${ui_code}
+
+Please provide:
+1. UI/UX issues found
+2. Accessibility improvements needed
+3. Design pattern recommendations
+4. Performance optimization suggestions
+5. Best practices compliance
+
+Focus on SwiftUI and iOS development best practices."
+
+	# Call Ollama API
+	local ollama_response
+	ollama_response=$(curl -s -X POST http://localhost:11434/api/generate \
+		-H "Content-Type: application/json" \
+		-d "{\"model\": \"llama2\", \"prompt\": \"$analysis_prompt\", \"stream\": false}" 2>/dev/null)
+
+	if [[ $? -eq 0 && -n $ollama_response ]]; then
+		local analysis_result
+		analysis_result=$(echo "$ollama_response" | jq -r '.response' 2>/dev/null || echo "$ollama_response")
+
+		# Save Ollama analysis results
+		local timestamp
+		timestamp=$(date +%Y%m%d_%H%M%S)
+		mkdir -p "${WORKSPACE}/Tools/Automation/results"
+		local result_file="${WORKSPACE}/Tools/Automation/results/UIUX_Analysis_${project}_${timestamp}.txt"
+
+		{
+			echo "Ollama-Powered UI/UX Analysis for: $task_desc"
+			echo "Project: $project"
+			echo "Analysis Type: AI-Powered UI/UX Review"
+			echo "Timestamp: $(date)"
+			echo "========================================"
+			echo ""
+			echo "AI Analysis Results:"
+			echo "$analysis_result"
+			echo ""
+			echo "========================================"
+		} >"$result_file"
+
+		echo "[$(date)] $AGENT_NAME: Ollama UI/UX analysis saved to $result_file" >>"$LOG_FILE"
+	else
+		echo "[$(date)] $AGENT_NAME: Failed to get Ollama analysis" >>"$LOG_FILE"
+	fi
+}
+
+# Traditional file-based UI/UX analysis
+run_traditional_uiux_analysis() {
+	local project="$1"
+
 	# Run UI/UX analysis
-	if [[ -d "/Users/danielstevens/Desktop/Code/Projects/$PROJECT" ]]; then
-		cd "/Users/danielstevens/Desktop/Code/Projects/$PROJECT"
-		echo "[$(date)] $AGENT_NAME: Running UI/UX analysis on $PROJECT..." >>"$LOG_FILE"
+	if [[ -d "${WORKSPACE}/Projects/$project" ]]; then
+		cd "${WORKSPACE}/Projects/$project" || {
+			echo "[$(date)] $AGENT_NAME: ERROR - Could not cd to ${WORKSPACE}/Projects/$project" >>"$LOG_FILE"
+			return 1
+		}
+		echo "[$(date)] $AGENT_NAME: Running traditional UI/UX analysis on $project..." >>"$LOG_FILE"
 
 		# Analyze SwiftUI and interface files
 		find . -name "*.swift" -exec grep -l "SwiftUI\|UIKit\|View\|Controller" {} \; >>"$LOG_FILE" 2>&1 || true
@@ -101,7 +196,7 @@ declare -A processed_tasks
 while true; do
 	# Check for new task notifications
 	if [[ -f $NOTIFICATION_FILE ]]; then
-		while IFS='|' read -r timestamp action task_id; do
+		while IFS='|' read -r _timestamp action task_id; do
 			if [[ $action == "execute_task" && -z ${processed_tasks[$task_id]} ]]; then
 				update_status "busy"
 				process_task "$task_id"
@@ -112,7 +207,7 @@ while true; do
 		done <"$NOTIFICATION_FILE"
 
 		# Clear processed notifications to prevent re-processing
-		>"$NOTIFICATION_FILE"
+		true >"$NOTIFICATION_FILE"
 	fi
 
 	# Update last seen timestamp

@@ -2,10 +2,62 @@
 # Security Agent: Analyzes and improves code security
 
 AGENT_NAME="security_agent.sh"
-LOG_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/security_agent.log"
-NOTIFICATION_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
-AGENT_STATUS_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json"
-TASK_QUEUE_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/task_queue.json"
+WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
+LOG_FILE="${WORKSPACE}/Tools/Automation/agents/security_agent.log"
+NOTIFICATION_FILE="${WORKSPACE}/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
+AGENT_STATUS_FILE="${WORKSPACE}/Tools/Automation/agents/agent_status.json"
+TASK_QUEUE_FILE="${WORKSPACE}/Tools/Automation/agents/task_queue.json"
+OLLAMA_ENDPOINT="http://localhost:11434"
+
+# Logging function
+log() {
+	echo "[$(date)] $AGENT_NAME: $*" >>"$LOG_FILE"
+}
+
+# Ollama Integration Functions
+ollama_query() {
+	local prompt="$1"
+	local model="${2:-codellama}"
+
+	curl -s -X POST "$OLLAMA_ENDPOINT/api/generate" \
+		-H "Content-Type: application/json" \
+		-d "{\"model\": \"$model\", \"prompt\": \"$prompt\", \"stream\": false}" |
+		jq -r '.response // empty'
+}
+
+analyze_security_vulnerabilities() {
+	local code_content="$1"
+	local file_path="$2"
+
+	local prompt="Analyze this code for security vulnerabilities:
+
+File: $file_path
+Code:
+$code_content
+
+Check for:
+1. Input validation vulnerabilities
+2. Authentication/authorization issues
+3. Data exposure risks
+4. Injection vulnerabilities (SQL, command, etc.)
+5. Cryptographic weaknesses
+6. Access control flaws
+7. Error handling that leaks sensitive information
+8. Hardcoded secrets or credentials
+
+Provide specific vulnerability findings with severity levels and fix recommendations."
+
+	local analysis
+	analysis=$(ollama_query "$prompt")
+
+	if [[ -n $analysis ]]; then
+		echo "$analysis"
+		return 0
+	else
+		log "ERROR: Failed to analyze security vulnerabilities with Ollama"
+		return 1
+	fi
+}
 
 # Update agent status to available when starting
 update_status() {
@@ -23,8 +75,10 @@ process_task() {
 
 	# Get task details
 	if command -v jq &>/dev/null; then
-		local task_desc=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .description" "$TASK_QUEUE_FILE")
-		local task_type=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .type" "$TASK_QUEUE_FILE")
+		local task_desc
+		task_desc=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .description" "$TASK_QUEUE_FILE")
+		local task_type
+		task_type=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .type" "$TASK_QUEUE_FILE")
 		echo "[$(date)] $AGENT_NAME: Task description: $task_desc" >>"$LOG_FILE"
 		echo "[$(date)] $AGENT_NAME: Task type: $task_type" >>"$LOG_FILE"
 
@@ -62,27 +116,34 @@ run_security_analysis() {
 	local projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
 
 	for project in "${projects[@]}"; do
-		if [[ -d "/Users/danielstevens/Desktop/Code/Projects/$project" ]]; then
-			echo "[$(date)] $AGENT_NAME: Analyzing security in $project..." >>"$LOG_FILE"
-			cd "/Users/danielstevens/Desktop/Code/Projects/$project"
+		if [[ -d "${WORKSPACE}/Projects/$project" ]]; then
+			log "Analyzing security in $project..."
+			cd "${WORKSPACE}/Projects/$project" || return
 
 			# Security metrics
 			echo "[$(date)] $AGENT_NAME: Calculating security metrics for $project..." >>"$LOG_FILE"
 
 			# Count Swift files
-			local swift_files=$(find . -name "*.swift" | wc -l)
-			echo "[$(date)] $AGENT_NAME: Total Swift files: $swift_files" >>"$LOG_FILE"
+			local swift_files
+			swift_files=$(find . -name "*.swift" | wc -l)
+			log "Total Swift files: $swift_files"
 
 			# Analyze security vulnerabilities
-			echo "[$(date)] $AGENT_NAME: Analyzing security vulnerabilities..." >>"$LOG_FILE"
+			log "Analyzing security vulnerabilities..."
 
 			# Check for common security issues
-			local hard_coded_secrets=$(find . -name "*.swift" -exec grep -l "password\|secret\|key.*=.*\"" {} \; | wc -l)
-			local sql_injection=$(find . -name "*.swift" -exec grep -l "SELECT.*+.*\|INSERT.*+.*\|UPDATE.*+.*" {} \; | wc -l)
-			local weak_crypto=$(find . -name "*.swift" -exec grep -l "MD5\|SHA1" {} \; | wc -l)
-			local unsafe_urls=$(find . -name "*.swift" -exec grep -l "http://" {} \; | wc -l)
-			local exposed_data=$(find . -name "*.swift" -exec grep -l "UserDefaults\|Keychain" {} \; | wc -l)
-			local input_validation=$(find . -name "*.swift" -exec grep -l "guard.*let\|if.*nil" {} \; | wc -l)
+			local hard_coded_secrets
+			hard_coded_secrets=$(find . -name "*.swift" -exec grep -l "password\|secret\|key.*=.*\"" {} \; | wc -l)
+			local sql_injection
+			sql_injection=$(find . -name "*.swift" -exec grep -l "SELECT.*+.*\|INSERT.*+.*\|UPDATE.*+.*" {} \; | wc -l)
+			local weak_crypto
+			weak_crypto=$(find . -name "*.swift" -exec grep -l "MD5\|SHA1" {} \; | wc -l)
+			local unsafe_urls
+			unsafe_urls=$(find . -name "*.swift" -exec grep -l "http://" {} \; | wc -l)
+			local exposed_data
+			exposed_data=$(find . -name "*.swift" -exec grep -l "UserDefaults\|Keychain" {} \; | wc -l)
+			local input_validation
+			input_validation=$(find . -name "*.swift" -exec grep -l "guard.*let\|if.*nil" {} \; | wc -l)
 
 			echo "[$(date)] $AGENT_NAME: Hard-coded secrets found in $hard_coded_secrets files" >>"$LOG_FILE"
 			echo "[$(date)] $AGENT_NAME: SQL injection risks found in $sql_injection files" >>"$LOG_FILE"
@@ -92,8 +153,10 @@ run_security_analysis() {
 			echo "[$(date)] $AGENT_NAME: Input validation found in $input_validation files" >>"$LOG_FILE"
 
 			# Check for authentication and authorization
-			local auth_usage=$(find . -name "*.swift" -exec grep -l "authenticate\|login\|session" {} \; | wc -l)
-			local permission_checks=$(find . -name "*.swift" -exec grep -l "canRead\|canWrite\|hasPermission" {} \; | wc -l)
+			local auth_usage
+			auth_usage=$(find . -name "*.swift" -exec grep -l "authenticate\|login\|session" {} \; | wc -l)
+			local permission_checks
+			permission_checks=$(find . -name "*.swift" -exec grep -l "canRead\|canWrite\|hasPermission" {} \; | wc -l)
 
 			echo "[$(date)] $AGENT_NAME: Authentication usage: $auth_usage files" >>"$LOG_FILE"
 			echo "[$(date)] $AGENT_NAME: Permission checks: $permission_checks files" >>"$LOG_FILE"
@@ -106,8 +169,25 @@ run_security_analysis() {
 
 			echo "[$(date)] $AGENT_NAME: Security score for $project: $security_score%" >>"$LOG_FILE"
 
-			# Generate security recommendations
-			echo "[$(date)] $AGENT_NAME: Generating security recommendations..." >>"$LOG_FILE"
+			# Use Ollama for intelligent security analysis
+			log "Using Ollama for intelligent security analysis..."
+
+			# Find files with potential security issues for deep analysis
+			local suspicious_files
+			suspicious_files=$(find . -name "*.swift" -exec grep -l "password\|secret\|SELECT.*+\|INSERT.*+\|MD5\|SHA1\|http://" {} \; | head -3)
+
+			for file in $suspicious_files; do
+				if [[ -f $file ]]; then
+					log "Deep security analysis of $file using Ollama..."
+					local content
+					content=$(cat "$file")
+					local ollama_analysis
+					ollama_analysis=$(analyze_security_vulnerabilities "$content" "$file")
+					if [[ -n $ollama_analysis ]]; then
+						log "Ollama security analysis completed for $file"
+					fi
+				fi
+			done
 
 			if [[ $hard_coded_secrets -gt 0 ]]; then
 				echo "[$(date)] $AGENT_NAME: CRITICAL: Remove hard-coded secrets and use secure storage" >>"$LOG_FILE"
@@ -156,7 +236,7 @@ declare -A processed_tasks
 while true; do
 	# Check for new task notifications
 	if [[ -f $NOTIFICATION_FILE ]]; then
-		while IFS='|' read -r timestamp action task_id; do
+		while IFS='|' read -r _ action task_id; do
 			if [[ $action == "execute_task" && -z ${processed_tasks[$task_id]} ]]; then
 				update_status "busy"
 				process_task "$task_id"
@@ -167,7 +247,7 @@ while true; do
 		done <"$NOTIFICATION_FILE"
 
 		# Clear processed notifications to prevent re-processing
-		>"$NOTIFICATION_FILE"
+		true >"$NOTIFICATION_FILE"
 	fi
 
 	# Update last seen timestamp

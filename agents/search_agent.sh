@@ -62,11 +62,28 @@ run_search() {
 	local task_desc="$1"
 	echo "[$(date)] ${AGENT_NAME}: Running Ollama-powered search for: ${task_desc}" >>"${LOG_FILE}"
 
-	# Check if Ollama is running
-	if ! curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
-		echo "[$(date)] ${AGENT_NAME}: ERROR - Ollama server not running. Starting..." >>"${LOG_FILE}"
-		brew services start ollama >>"${LOG_FILE}" 2>&1
-		sleep 5 # Wait for Ollama to start
+	# Check if Ollama is running with better error handling
+	local ollama_status
+	if ! ollama_status=$(curl -s -m 5 http://localhost:11434/api/tags 2>/dev/null); then
+		echo "[$(date)] ${AGENT_NAME}: ERROR - Ollama server not responding. Attempting to start..." >>"${LOG_FILE}"
+		if command -v brew &>/dev/null; then
+			brew services start ollama >>"${LOG_FILE}" 2>&1
+			sleep 10 # Wait longer for Ollama to fully start
+			if ! curl -s -m 5 http://localhost:11434/api/tags >/dev/null 2>&1; then
+				echo "[$(date)] ${AGENT_NAME}: ERROR - Failed to start Ollama server" >>"${LOG_FILE}"
+				return 1
+			fi
+		else
+			echo "[$(date)] ${AGENT_NAME}: ERROR - Homebrew not available to start Ollama" >>"${LOG_FILE}"
+			return 1
+		fi
+	fi
+
+	# Verify Ollama has available models
+	if ! echo "${ollama_status}" | grep -q '"name"'; then
+		echo "[$(date)] ${AGENT_NAME}: ERROR - No models available in Ollama. Pulling default model..." >>"${LOG_FILE}"
+		ollama pull llama2 >>"${LOG_FILE}" 2>&1
+		sleep 5
 	fi
 
 	# Determine search type based on task description

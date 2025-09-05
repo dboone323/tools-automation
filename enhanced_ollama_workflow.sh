@@ -7,7 +7,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE="$(cd "$SCRIPT_DIR/../.." && pwd)"
 AGENTS_DIR="${SCRIPT_DIR}/agents"
-LOG_FILE="${WORKSPACE}/Tools/ollama_workflow_$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE="${WORKSPACE}/Tools/Automation/logs/enhanced_workflow_$(date +%Y%m%d_%H%M%S).log"
 
 # Colors for output
 RED='\033[0;31m'
