@@ -18,7 +18,9 @@ class TestCIWorkflows:
 
     def test_workflow_files_exist(self):
         """Test that workflow files exist and are valid YAML."""
-        workflows_dir = Path("/Users/danielstevens/Desktop/Code/.github/workflows")
+        workflows_dir = Path(
+            "/Users/danielstevens/Desktop/Quantum-workspace/.github/workflows"
+        )
 
         if not workflows_dir.exists():
             pytest.skip("No .github/workflows directory found")
@@ -40,7 +42,9 @@ class TestCIWorkflows:
 
     def test_workflow_structure(self):
         """Test that workflows have required structure."""
-        workflows_dir = Path("/Users/danielstevens/Desktop/Code/.github/workflows")
+        workflows_dir = Path(
+            "/Users/danielstevens/Desktop/Quantum-workspace/.github/workflows"
+        )
 
         if not workflows_dir.exists():
             pytest.skip("No .github/workflows directory found")
@@ -121,7 +125,7 @@ class TestDeploymentScripts:
     def test_create_ci_compatible_script(self):
         """Test HabitQuest's CI-compatible project creation script."""
         script_path = Path(
-            "/Users/danielstevens/Desktop/Code/Projects/HabitQuest/create_ci_compatible_project.sh"
+            "/Users/danielstevens/Desktop/Quantum-workspace/Projects/HabitQuest/create_ci_compatible_project.sh"
         )
 
         if not script_path.exists():
@@ -136,7 +140,7 @@ class TestDeploymentScripts:
             ["bash", str(script_path), "--help"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/HabitQuest",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Projects/HabitQuest",
         )
 
         # Script should handle --help or show usage
@@ -149,7 +153,7 @@ class TestQualityGates:
     def test_quality_config_exists(self):
         """Test that quality configuration files exist."""
         quality_config = Path(
-            "/Users/danielstevens/Desktop/Code/Tools/quality-config.yaml"
+            "/Users/danielstevens/Desktop/Quantum-workspace/Tools/quality-config.yaml"
         )
 
         if not quality_config.exists():
@@ -168,10 +172,12 @@ class TestQualityGates:
     def test_cspell_config_exists(self):
         """Test that cspell configuration exists."""
         cspell_configs = [
-            Path("/Users/danielstevens/Desktop/Code/Projects/cspell.json"),
-            Path("/Users/danielstevens/Desktop/Code/Shared/cspell.json"),
-            Path("/Users/danielstevens/Desktop/Code/Tools/cspell.json"),
-            Path("/Users/danielstevens/Desktop/Code/Documentation/cspell.json"),
+            Path("/Users/danielstevens/Desktop/Quantum-workspace/Projects/cspell.json"),
+            Path("/Users/danielstevens/Desktop/Quantum-workspace/Shared/cspell.json"),
+            Path("/Users/danielstevens/Desktop/Quantum-workspace/Tools/cspell.json"),
+            Path(
+                "/Users/danielstevens/Desktop/Quantum-workspace/Documentation/cspell.json"
+            ),
         ]
 
         found_configs = [config for config in cspell_configs if config.exists()]
@@ -194,7 +200,7 @@ class TestMonitoringAndLogging:
     def test_monitoring_dashboard_exists(self):
         """Test that monitoring dashboard exists."""
         dashboard = Path(
-            "/Users/danielstevens/Desktop/Code/Tools/monitoring-dashboard.html"
+            "/Users/danielstevens/Desktop/Quantum-workspace/Tools/monitoring-dashboard.html"
         )
 
         if not dashboard.exists():
@@ -211,13 +217,13 @@ class TestMonitoringAndLogging:
     def test_log_files_exist(self):
         """Test that log files exist for quantum agents."""
         log_files = [
-            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_AvoidObstaclesGame.log",
-            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_CodingReviewer.log",
-            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_HabitQuest.log",
-            "quantum_agent__Users_danielstevens_Desktop_Code_Projects_MomentumFinance.log",
+            "quantum_agent__Users_danielstevens_Desktop_Quantum-workspace_Projects_AvoidObstaclesGame.log",
+            "quantum_agent__Users_danielstevens_Desktop_Quantum-workspace_Projects_CodingReviewer.log",
+            "quantum_agent__Users_danielstevens_Desktop_Quantum-workspace_Projects_HabitQuest.log",
+            "quantum_agent__Users_danielstevens_Desktop_Quantum-workspace_Projects_MomentumFinance.log",
         ]
 
-        tools_dir = Path("/Users/danielstevens/Desktop/Code/Tools")
+        tools_dir = Path("/Users/danielstevens/Desktop/Quantum-workspace/Tools")
         found_logs = [
             tools_dir / log for log in log_files if (tools_dir / log).exists()
         ]

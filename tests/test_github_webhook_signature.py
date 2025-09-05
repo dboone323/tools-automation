@@ -2,7 +2,7 @@ import hashlib
 import hmac
 import json
 
-from Automation import mcp_server
+import mcp_server
 
 
 def make_sig(secret: str, payload: bytes, algo: str = "sha256") -> str:

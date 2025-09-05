@@ -20,10 +20,10 @@ class TestBuildAutomation:
     def test_master_automation_status(self):
         """Test that master automation status command works."""
         result = subprocess.run(
-            ["./Tools/Automation/master_automation.sh", "status"],
+            ["./Automation/master_automation.sh", "status"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Tools",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Tools",
         )
 
         assert result.returncode == 0, f"Status command failed: {result.stderr}"
@@ -34,10 +34,10 @@ class TestBuildAutomation:
     def test_master_automation_list(self):
         """Test that master automation list command works."""
         result = subprocess.run(
-            ["./Tools/Automation/master_automation.sh", "list"],
+            ["./Automation/master_automation.sh", "list"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Tools",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Tools",
         )
 
         assert result.returncode == 0, f"List command failed: {result.stderr}"
@@ -56,10 +56,10 @@ class TestBuildAutomation:
     def test_master_automation_all_builds(self):
         """Test that master automation all command builds all projects."""
         result = subprocess.run(
-            ["./Tools/Automation/master_automation.sh", "all"],
+            ["./Automation/master_automation.sh", "all"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Tools",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Tools",
         )
 
         # The script should complete (may have warnings but should attempt all builds)
@@ -69,7 +69,8 @@ class TestBuildAutomation:
 
     def test_project_structure_integrity(self):
         """Test that all projects have required structure."""
-        projects_dir = Path("/Users/danielstevens/Desktop/Code/Projects")
+        # Check project structure
+        projects_dir = Path("/Users/danielstevens/Desktop/Quantum-workspace/Projects")
 
         required_projects = [
             "AvoidObstaclesGame",
@@ -110,7 +111,7 @@ class TestProjectBuilds:
             ],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame",
         )
 
         # In development environment, builds may fail due to provisioning but should not crash
@@ -137,7 +138,7 @@ class TestProjectBuilds:
             ],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/HabitQuest",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Projects/HabitQuest",
         )
 
         # Accept provisioning/signing failures as expected in dev environment
@@ -162,7 +163,7 @@ class TestProjectBuilds:
             ],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/MomentumFinance",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance",
         )
 
         # Accept various failure codes including project corruption
@@ -187,7 +188,7 @@ class TestProjectBuilds:
             ],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/PlannerApp",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Projects/PlannerApp",
         )
 
         acceptable_codes = [0, 65, 70]
@@ -217,7 +218,7 @@ class TestLinting:
             ["swiftlint", "lint", "--reporter", "json"],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/PlannerApp",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Projects/PlannerApp",
         )
 
         # SwiftLint returns:
@@ -252,7 +253,7 @@ class TestAutomationScripts:
     def test_habit_quest_dev_script(self):
         """Test HabitQuest dev.sh script."""
         dev_script = Path(
-            "/Users/danielstevens/Desktop/Code/Projects/HabitQuest/dev.sh"
+            "/Users/danielstevens/Desktop/Quantum-workspace/Projects/HabitQuest/dev.sh"
         )
         assert dev_script.exists(), "dev.sh script missing"
 
@@ -260,7 +261,7 @@ class TestAutomationScripts:
             ["bash", str(dev_script)],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/HabitQuest",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Projects/HabitQuest",
         )
 
         # Script should run without critical errors
@@ -269,7 +270,7 @@ class TestAutomationScripts:
     def test_avoid_obstacles_game_test_script(self):
         """Test AvoidObstaclesGame test script."""
         test_script = Path(
-            "/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame/test_game.sh"
+            "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/test_game.sh"
         )
         assert test_script.exists(), "test_game.sh script missing"
 
@@ -277,7 +278,7 @@ class TestAutomationScripts:
             ["bash", str(test_script)],
             capture_output=True,
             text=True,
-            cwd="/Users/danielstevens/Desktop/Code/Projects/AvoidObstaclesGame",
+            cwd="/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame",
         )
 
         # Script should run (may return various codes depending on test results)
