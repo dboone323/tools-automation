@@ -1,0 +1,21 @@
+{
+  "fix_id": "scenario_20250814_145503_002",
+  "timestamp": "2025-08-13T17:55:03.817733",
+  "project": "HabitQuest",
+  "platform": "iOS",
+  "error_pattern": {
+    "type": "environment_issue",
+    "context": "macOS notarization failure",
+    "complexity": 1
+  },
+  "solution_pattern": {
+    "method": "tool_upgrade",
+    "success_rate": 0.8560142293717692,
+    "confidence": 0.40985827611522596
+  },
+  "outcome": {
+    "status": "resolved",
+    "learning_value": 0.40985827611522596,
+    "reproducible": true
+  }
+}

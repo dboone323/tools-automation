@@ -1,0 +1,567 @@
+import Foundation
+
+// MARK: - FinancialIntelligenceService Helpers
+//
+// All helper functions have been extracted to focused component files for better maintainability:
+//
+// - FormattingUtilities.swift: Currency formatting, date formatting, text cleaning utilities
+// - TransactionPatternDetection.swift: Recurring transaction and pattern detection methods  
+// - AnomalyDetection.swift: Anomalous transaction and outlier detection algorithms
+// - OptimizationSuggestions.swift: Idle cash and credit utilization optimization insights
+// - BudgetRecommendations.swift: Budget recommendation generation based on spending patterns
+// - FinancialForecasting.swift: Financial forecasting and cash flow analysis
+//
+// This architectural decomposition reduces the original 567-line helper file into 6 focused
+// components while maintaining all functionality for financial intelligence analysis.
+
+func fi_findRecurringTransactions(_ transactions: [FinancialTransaction]) -> [FinancialTransaction]
+{
+    var transactionsByNameAndAmount: [String: [FinancialTransaction]] = [:]
+
+    for transaction in transactions where transaction.amount < 0 {
+        let simplifiedName = transaction.title.lowercased()
+            .replacingOccurrences(of: "[^a-z0-9]", with: "", options: .regularExpression)
+
+        let roundedAmount = round(abs(transaction.amount) * 100) / 100
+        let key = "\(simplifiedName)_\(roundedAmount)"
+
+        transactionsByNameAndAmount[key, default: []].append(transaction)
+    }
+
+    var recurringTransactions: [FinancialTransaction] = []
+
+    for (_, similarTransactions) in transactionsByNameAndAmount where similarTransactions.count >= 3
+    {
+        let sortedTransactions = similarTransactions.sorted { $0.date < $1.date }
+
+        var intervals: [TimeInterval] = []
+        for intervalIndex in 1..<sortedTransactions.count {
+            let interval = sortedTransactions[intervalIndex].date.timeIntervalSince(
+                sortedTransactions[intervalIndex - 1].date)
+            intervals.append(interval)
+        }
+
+        if !intervals.isEmpty {
+            let averageInterval = intervals.reduce(0, +) / Double(intervals.count)
+            var isRegular = true
+            for interval in intervals where abs(interval - averageInterval) > averageInterval * 0.2
+            {
+                isRegular = false
+                break
+            }
+
+            let isMonthly =
+                averageInterval >= 28 * 24 * 60 * 60 && averageInterval <= 31 * 24 * 60 * 60
+            let isWeekly =
+                averageInterval >= 6.5 * 24 * 60 * 60 && averageInterval <= 7.5 * 24 * 60 * 60
+            let isYearly =
+                averageInterval >= 360 * 24 * 60 * 60 && averageInterval <= 370 * 24 * 60 * 60
+
+            if isRegular && (isMonthly || isWeekly || isYearly) {
+                recurringTransactions.append(sortedTransactions.last!)
+            }
+        }
+    }
+
+    return recurringTransactions
+}
+
+func fi_findPotentialDuplicates(_ transactions: [FinancialTransaction]) -> [[FinancialTransaction]]
+{
+    var transactionsByNameAndAmount: [String: [FinancialTransaction]] = [:]
+
+    for transaction in transactions where transaction.amount < 0 {
+        let simplifiedName = transaction.title.lowercased()
+            .replacingOccurrences(of: "[^a-z0-9]", with: "", options: .regularExpression)
+
+        let exactAmount = abs(transaction.amount)
+        let key = "\(simplifiedName)_\(exactAmount)"
+
+        transactionsByNameAndAmount[key, default: []].append(transaction)
+    }
+
+    var duplicateSuspects: [[FinancialTransaction]] = []
+
+    for (_, similarTransactions) in transactionsByNameAndAmount where similarTransactions.count >= 2
+    {
+        let sortedTransactions = similarTransactions.sorted { $0.date < $1.date }
+        for dupIndex in 1..<sortedTransactions.count {
+            let interval = sortedTransactions[dupIndex].date.timeIntervalSince(
+                sortedTransactions[dupIndex - 1].date)
+            if interval < 48 * 60 * 60 {
+                duplicateSuspects.append([
+                    sortedTransactions[dupIndex - 1], sortedTransactions[dupIndex],
+                ])
+                break
+            }
+        }
+    }
+
+    return duplicateSuspects
+}
+
+func fi_extractTransactionFeatures(_ transaction: FinancialTransaction) -> [String: Any] {
+    var features: [String: Any] = [:]
+    features["name"] = transaction.title.lowercased()
+    features["amount"] = abs(transaction.amount)
+    features["is_expense"] = transaction.amount < 0
+    let calendar = Calendar.current
+    features["day_of_week"] = calendar.component(.weekday, from: transaction.date)
+    features["month"] = calendar.component(.month, from: transaction.date)
+    return features
+}
+
+// MARK: - Anomaly helpers
+
+func fi_detectCategoryOutliers(_ transactions: [FinancialTransaction]) -> [FinancialInsight] {
+    var insights: [FinancialInsight] = []
+
+    var transactionsByCategory: [String: [FinancialTransaction]] = [:]
+    for transaction in transactions where transaction.amount < 0 {
+        guard let category = transaction.category else { continue }
+        let categoryId = category.id.hashValue.description
+        transactionsByCategory[categoryId, default: []].append(transaction)
+    }
+
+    for (_, categoryTransactions) in transactionsByCategory {
+        guard categoryTransactions.count >= 5 else { continue }
+
+        let amounts = categoryTransactions.map { abs($0.amount) }
+        let mean = amounts.reduce(0, +) / Double(amounts.count)
+        let variance = amounts.map { pow($0 - mean, 2) }.reduce(0, +) / Double(amounts.count)
+        let stdDev = sqrt(variance)
+
+        let outlierThreshold = mean + (2 * stdDev)
+        let outliers = categoryTransactions.filter { abs($0.amount) > outlierThreshold }
+            .sorted { abs($0.amount) > abs($1.amount) }
+
+        if let topOutlier = outliers.first, let category = topOutlier.category {
+            let transactionAmount = abs(topOutlier.amount)
+            let percentageHigher = mean > 0 ? Int((transactionAmount / mean - 1) * 100) : 0
+            let formattedAmount = fi_formatCurrency(transactionAmount, code: "USD")
+            let formattedDate = fi_formatDateShort(topOutlier.date)
+            let categoryName = category.name
+            let titlePart = "\(topOutlier.title) (\(formattedAmount))"
+            let restPart =
+                " on \(formattedDate) is \(percentageHigher)% higher than your average \(categoryName) transaction."
+            let descriptionText = titlePart + restPart
+
+            let insight = FinancialInsight(
+                title: "Unusual Spending in \(categoryName)",
+                description: descriptionText,
+                priority: .high,
+                type: .anomaly,
+                relatedTransactionId: topOutlier.id.hashValue.description,
+                visualizationType: .boxPlot,
+                data: [
+                    ("Average", mean),
+                    ("This Transaction", transactionAmount),
+                    ("Typical Range", mean + stdDev),
+                ]
+            )
+            insights.append(insight)
+        }
+    }
+    return insights
+}
+
+func fi_detectRecentFrequencyAnomalies(_ transactions: [FinancialTransaction], days: Int = 30)
+    -> [FinancialInsight]
+{
+    var insights: [FinancialInsight] = []
+    let calendar = Calendar.current
+    let recentTransactions = transactions.filter {
+        calendar.dateComponents([.day], from: $0.date, to: Date()).day ?? 0 < days
+    }
+
+    let transactionsByDay = Dictionary(grouping: recentTransactions) { transaction in
+        calendar.startOfDay(for: transaction.date)
+    }
+
+    let sortedDays = transactionsByDay.sorted { $0.key > $1.key }
+    guard sortedDays.count >= 7 else { return insights }
+
+    let last7Days = sortedDays.prefix(7)
+    let transactionCounts = last7Days.map(\.value.count)
+    let averageCount = Double(transactionCounts.reduce(0, +)) / Double(transactionCounts.count)
+
+    if let highestDay = last7Days.max(by: { $0.value.count < $1.value.count }),
+        Double(highestDay.value.count) > averageCount * 2
+    {
+        let transactionCount = highestDay.value.count
+        let percentageMore = Int((Double(transactionCount) / averageCount - 1) * 100)
+        let formattedDate = highestDay.key.formatted(date: .abbreviated, time: .omitted)
+        let chartData = last7Days.map { dayData in
+            (fi_formatDateShort(dayData.key), Double(dayData.value.count))
+        }
+        let partA = "You had \(transactionCount) transactions on \(formattedDate),"
+        let partB = " which is \(percentageMore)% more than your daily average."
+        let descriptionText = partA + partB
+        let insight = FinancialInsight(
+            title: "Unusual Transaction Activity",
+            description: descriptionText,
+            priority: .medium,
+            type: .anomaly,
+            visualizationType: .barChart,
+            data: chartData
+        )
+        insights.append(insight)
+    }
+
+    return insights
+}
+
+// MARK: - Optimization helpers
+
+func fi_suggestIdleCashInsights(transactions: [FinancialTransaction], accounts: [FinancialAccount])
+    -> [FinancialInsight]
+{
+    var insights: [FinancialInsight] = []
+
+    let checkingAccounts = accounts.filter { $0.accountType == .checking }
+    for account in checkingAccounts {
+        guard account.balance > 5_000 else { continue }
+
+        let accountTransactions = transactions.filter {
+            $0.account?.id == account.id && $0.amount < 0
+        }
+
+        let calendar = Calendar.current
+        let monthlyTransactions = Dictionary(grouping: accountTransactions) { transaction in
+            calendar.startOfMonth(for: transaction.date)
+        }
+
+        let monthlyExpenses = monthlyTransactions.map { $0.value.reduce(0) { $0 + abs($1.amount) } }
+        let averageMonthlyExpense =
+            monthlyExpenses.isEmpty
+            ? 0 : monthlyExpenses.reduce(0, +) / Double(monthlyExpenses.count)
+
+        let recommendedBuffer = averageMonthlyExpense * 2
+
+        if account.balance > recommendedBuffer {
+            let excessCash = account.balance - recommendedBuffer
+            let excessCashStr = fi_formatCurrency(excessCash, code: account.currencyCode)
+            let accountName = account.name
+            let idleDescription =
+                "You have \(excessCashStr) more than needed in your \(accountName). "
+                + "Consider moving some to a higher-yielding savings or investment account."
+
+            let insight = FinancialInsight(
+                title: "Idle Cash Detected",
+                description: idleDescription,
+                priority: .medium,
+                type: .optimization,
+                relatedAccountId: String(account.id.hashValue),
+                data: [
+                    ("Current Balance", account.balance),
+                    ("Recommended Buffer", recommendedBuffer),
+                    ("Excess Cash", excessCash),
+                ]
+            )
+            insights.append(insight)
+        }
+    }
+
+    return insights
+}
+
+func fi_suggestCreditUtilizationInsights(accounts: [FinancialAccount]) -> [FinancialInsight] {
+    var insights: [FinancialInsight] = []
+
+    let creditAccounts = accounts.filter { $0.accountType == .credit }
+    for account in creditAccounts {
+        guard let creditLimit = account.creditLimit, creditLimit > 0 else { continue }
+
+        let balance = abs(account.balance)
+        let utilization = balance / creditLimit
+
+        if utilization > 0.3 {
+            let utilDescription =
+                "Your credit utilization on \(account.name) is \(Int(utilization * 100))%. "
+                + "It's recommended to keep this under 30% to maintain a good credit score."
+
+            let insight = FinancialInsight(
+                title: "High Credit Utilization",
+                description: utilDescription,
+                priority: utilization > 0.7 ? .critical : .high,
+                type: .optimization,
+                relatedAccountId: String(account.id.hashValue),
+                visualizationType: .progressBar,
+                data: [
+                    ("Balance", balance),
+                    ("Credit Limit", creditLimit),
+                    ("Utilization", utilization),
+                ]
+            )
+            insights.append(insight)
+        }
+    }
+
+    return insights
+}
+
+func fi_suggestDuplicatePaymentInsights(transactions: [FinancialTransaction]) -> [FinancialInsight]
+{
+    var insights: [FinancialInsight] = []
+
+    let calendar = Calendar.current
+    let recentTransactions = transactions.filter { transaction in
+        calendar.dateComponents([.day], from: transaction.date, to: Date()).day ?? 0 < 14
+    }
+
+    let duplicateSuspects = fi_findPotentialDuplicates(recentTransactions)
+    for duplicate in duplicateSuspects {
+        let dupTitle = duplicate.first?.title ?? ""
+        let dupAmount = duplicate.first?.amount ?? 0
+        let dupDescription =
+            "You may have duplicate payments: \(dupTitle) for "
+            + fi_formatCurrency(dupAmount, code: "USD") + " on multiple dates."
+
+        let dupData = duplicate.map { txn in
+            (
+                DateFormatter.localizedString(from: txn.date, dateStyle: .short, timeStyle: .none),
+                abs(txn.amount)
+            )
+        }
+
+        let insight = FinancialInsight(
+            title: "Potential Duplicate Payment",
+            description: dupDescription,
+            priority: .high,
+            type: .anomaly,
+            relatedTransactionId: duplicate.first?.id.hashValue.description,
+            data: dupData
+        )
+        insights.append(insight)
+    }
+
+    return insights
+}
+
+// MARK: - Budget recommendation helper
+
+func fi_findBudgetRecommendations(transactions: [FinancialTransaction], budgets: [Budget])
+    -> [FinancialInsight]
+{
+    var insights: [FinancialInsight] = []
+
+    let calendar = Calendar.current
+    let currentMonth = calendar.component(.month, from: Date())
+    let currentYear = calendar.component(.year, from: Date())
+
+    let currentMonthTransactions = transactions.filter { transaction in
+        let month = calendar.component(.month, from: transaction.date)
+        let year = calendar.component(.year, from: transaction.date)
+        return month == currentMonth && year == currentYear
+    }
+
+    let categoriesWithBudgets = Set(budgets.compactMap { $0.category?.id.hashValue.description })
+    var spendingByCategory: [String: Double] = [:]
+
+    for transaction in currentMonthTransactions where transaction.amount < 0 {
+        guard let category = transaction.category else { continue }
+        let categoryId = category.id.hashValue.description
+        guard !categoriesWithBudgets.contains(categoryId) else { continue }
+
+        spendingByCategory[categoryId] =
+            (spendingByCategory[categoryId] ?? 0) + abs(transaction.amount)
+    }
+
+    let significantSpending = spendingByCategory.filter { $0.value > 100 }.sorted {
+        $0.value > $1.value
+    }
+
+    for (categoryId, amount) in significantSpending.prefix(3) {
+        if let category = transactions.first(where: {
+            $0.category?.id.hashValue.description == categoryId
+        })?.category {
+            let amountStr = fi_formatCurrency(amount, code: "USD")
+            let categoryName = category.name
+            let insight = FinancialInsight(
+                title: "Budget Recommendation",
+                description:
+                    "You've spent \(amountStr) on \(categoryName) without a budget. Consider creating one.",
+                priority: .medium,
+                type: .budgetRecommendation,
+                relatedCategoryId: categoryId,
+                data: [("Amount", amount)]
+            )
+            insights.append(insight)
+        }
+    }
+
+    return insights
+}
+
+// MARK: - Forecasting helpers (moved to top-level)
+
+func fi_projectedBalances(
+    startingBalance: Double, monthlyChange: Double, months: Int, calendar: Calendar
+) -> [(String, Double)] {
+    var projected: [(String, Double)] = []
+    var projectedBalance = startingBalance
+    let currentMonth = calendar.startOfMonth(for: Date())
+    for monthIndex in 0..<months {
+        guard
+            let futureMonth = calendar.date(
+                byAdding: .month, value: monthIndex + 1, to: currentMonth
+            )
+        else { continue }
+        projectedBalance += monthlyChange
+        projected.append((fi_formatMonthAbbrev(futureMonth), projectedBalance))
+    }
+    return projected
+}
+
+// MARK: - Forecasting helpers
+
+func fi_monthlyNetCashFlow(_ transactions: [FinancialTransaction], monthsAgo: Int = 6) -> [(
+    Date, Double
+)] {
+    let calendar = Calendar.current
+    let since = calendar.date(byAdding: .month, value: -monthsAgo, to: Date()) ?? Date()
+    var monthlyNetCashFlow: [Date: Double] = [:]
+
+    for transaction in transactions where transaction.date >= since {
+        let month = calendar.startOfMonth(for: transaction.date)
+        monthlyNetCashFlow[month] = (monthlyNetCashFlow[month] ?? 0) + transaction.amount
+    }
+
+    return monthlyNetCashFlow.sorted { $0.key < $1.key }.map { ($0.key, $0.value) }
+}
+
+/// Simple trend detector + naive next-step forecast using average month-to-month change
+func fi_trendAndForecast(values: [Double]) -> (
+    trendDirection: String, trendPercentage: Double, nextForecast: Double?
+) {
+    guard values.count >= 2 else { return ("stable", 0, nil) }
+
+    let latest = values.last ?? 0
+    let previous = values[values.count - 2]
+    var trendDirection = "stable"
+    var trendPercentage = 0.0
+
+    if previous != 0 {
+        trendPercentage = ((latest - previous) / abs(previous)) * 100
+        if trendPercentage > 10 {
+            trendDirection = "improving"
+        } else if trendPercentage < -10 {
+            trendDirection = "declining"
+        }
+    }
+
+    // average month-to-month delta
+    let deltas = zip(values.dropFirst(), values).map { $0 - $1 }
+    let avgDelta = deltas.reduce(0, +) / Double(deltas.count)
+    let next = (values.last ?? 0) + avgDelta
+
+    return (trendDirection, trendPercentage, next)
+}
+
+// MARK: - Anomaly Detection
+extension FinancialIntelligenceService {
+    func fi_detectAnomalies(transactions: [FinancialTransaction]) -> [FinancialInsight] {
+        var insights: [FinancialInsight] = []
+        let calendar = Calendar.current
+
+        // Group transactions by category
+        var transactionsByCategory: [String: [FinancialTransaction]] = [:]
+
+        for transaction in transactions where transaction.amount < 0 {
+            guard let category = transaction.category else { continue }
+            let categoryId = category.id.hashValue.description
+
+            if transactionsByCategory[categoryId] == nil {
+                transactionsByCategory[categoryId] = []
+            }
+
+            transactionsByCategory[categoryId]?.append(transaction)
+        }
+
+        // Detect outliers within each category
+        for (_, categoryTransactions) in transactionsByCategory {
+            guard categoryTransactions.count >= 5 else { continue }
+
+            let amounts = categoryTransactions.map { abs($0.amount) }
+            let mean = amounts.reduce(0, +) / Double(amounts.count)
+            let variance = amounts.map { pow($0 - mean, 2) }.reduce(0, +) / Double(amounts.count)
+            let stdDev = sqrt(variance)
+
+            // Find transactions that are more than 2 standard deviations away from the mean
+            let outlierThreshold = mean + (2 * stdDev)
+            let outliers = categoryTransactions.filter { abs($0.amount) > outlierThreshold }
+                .sorted { abs($0.amount) > abs($1.amount) }
+
+            if let topOutlier = outliers.first, let category = topOutlier.category {
+                let transactionAmount = abs(topOutlier.amount)
+                let percentageHigher = Int((transactionAmount / mean - 1) * 100)
+                let formattedAmount = transactionAmount.formatted(.currency(code: "USD"))
+                let formattedDate = topOutlier.date.formatted(date: .abbreviated, time: .omitted)
+
+                let categoryName = category.name
+                let descriptionText =
+                    "\(topOutlier.title) (\(formattedAmount)) on \(formattedDate) is \(percentageHigher)% higher than your average \(categoryName) transaction."
+
+                let insight = FinancialInsight(
+                    title: "Unusual Spending in \(categoryName)",
+                    description: descriptionText,
+                    priority: .high,
+                    type: .anomaly,
+                    relatedTransactionId: topOutlier.id.hashValue.description,
+                    visualizationType: .boxPlot,
+                    data: [
+                        ("Average", mean),
+                        ("This Transaction", transactionAmount),
+                        ("Typical Range", mean + stdDev),
+                    ],
+                )
+                insights.append(insight)
+            }
+        }
+
+        // Detect unusual transaction frequency
+        let recentTransactions = transactions.filter {
+            calendar.dateComponents([.day], from: $0.date, to: Date()).day ?? 0 < 30
+        }
+
+        let transactionsByDay = Dictionary(grouping: recentTransactions) { transaction in
+            calendar.startOfDay(for: transaction.date)
+        }
+
+        let sortedDays = transactionsByDay.sorted { $0.key > $1.key }
+        if sortedDays.count >= 7 {
+            let last7Days = sortedDays.prefix(7)
+            let transactionCounts = last7Days.map(\.value.count)
+            let averageCount =
+                Double(transactionCounts.reduce(0, +)) / Double(transactionCounts.count)
+
+            if let highestDay = last7Days.max(by: { $0.value.count < $1.value.count }),
+                Double(highestDay.value.count) > averageCount * 2
+            {
+                let transactionCount = highestDay.value.count
+                let percentageMore = Int((Double(transactionCount) / averageCount - 1) * 100)
+                let formattedDate = highestDay.key.formatted(date: .abbreviated, time: .omitted)
+
+                let chartData = last7Days.map { dayData in
+                    (
+                        dayData.key.formatted(date: .abbreviated, time: .omitted),
+                        Double(dayData.value.count)
+                    )
+                }
+
+                let insight = FinancialInsight(
+                    title: "Unusual Transaction Activity",
+                    description:
+                        "You had \(transactionCount) transactions on \(formattedDate), which is \(percentageMore)% more than your daily average.",
+                    priority: .medium,
+                    type: .anomaly,
+                    visualizationType: .barChart,
+                    data: chartData,
+                )
+                insights.append(insight)
+            }
+        }
+
+        return insights
+    }
+}

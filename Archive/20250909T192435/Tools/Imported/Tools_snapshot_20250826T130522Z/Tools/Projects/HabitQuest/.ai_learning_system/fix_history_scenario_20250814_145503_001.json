@@ -1,0 +1,21 @@
+{
+  "fix_id": "scenario_20250814_145503_001",
+  "timestamp": "2025-08-14T12:55:03.813869",
+  "project": "CodingReviewer",
+  "platform": "macOS",
+  "error_pattern": {
+    "type": "build_failure",
+    "context": "Unit test timeout in CI environment",
+    "complexity": 2
+  },
+  "solution_pattern": {
+    "method": "tool_upgrade",
+    "success_rate": 0.8202354463640845,
+    "confidence": 0.3618551292833313
+  },
+  "outcome": {
+    "status": "needs_attention",
+    "learning_value": 0.3618551292833313,
+    "reproducible": true
+  }
+}

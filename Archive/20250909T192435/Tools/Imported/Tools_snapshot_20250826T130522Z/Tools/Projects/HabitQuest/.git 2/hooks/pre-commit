@@ -1,0 +1,30 @@
+#!/bin/bash
+# Pre-commit hook for code quality checks
+
+# Check for Swift files and run SwiftLint if available
+swift_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.swift$')
+if [ -n "$swift_files" ] && command -v swiftlint &> /dev/null; then
+    echo "Running SwiftLint..."
+    swiftlint lint --quiet
+    if [ $? -ne 0 ]; then
+        echo "SwiftLint failed. Please fix the issues before committing."
+        exit 1
+    fi
+fi
+
+# Check for large files
+large_files=$(git diff --cached --name-only | xargs -I {} sh -c 'if [ -f "{}" ] && [ $(stat -f%z "{}") -gt 1048576 ]; then echo "{}"; fi')
+if [ -n "$large_files" ]; then
+    echo "Warning: Large files detected (>1MB):"
+    echo "$large_files"
+    echo "Consider using Git LFS for large files."
+fi
+
+# Check for TODO/FIXME in staged files
+todos=$(git diff --cached | grep -n "TODO\|FIXME\|XXX" || true)
+if [ -n "$todos" ]; then
+    echo "Note: TODO/FIXME comments found in staged changes:"
+    echo "$todos"
+fi
+
+exit 0

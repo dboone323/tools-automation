@@ -1,0 +1,29 @@
+{
+    "project": {
+        "name": "HabitQuest",
+        "type": "ios_swift",
+        "path": "/Users/danielstevens/Desktop/HabitQuest",
+        "automation_version": "1.0.0"
+    },
+    "build": {
+        "scheme": "HabitQuest",
+        "configuration": "Debug",
+    "destination": "platform=iOS Simulator,name=iPhone 16,OS=latest"
+    },
+    "testing": {
+        "unit_tests": true,
+        "ui_tests": true,
+        "performance_tests": true,
+        "coverage_threshold": 80
+    },
+    "automation": {
+        "auto_build": true,
+        "auto_test": true,
+        "auto_format": true,
+        "auto_documentation": true
+    },
+    "notifications": {
+        "slack_webhook": "",
+        "email_notifications": false
+    }
+}

@@ -1,0 +1,21 @@
+{
+  "fix_id": "scenario_20250814_145503_005",
+  "timestamp": "2025-08-12T12:55:03.813898",
+  "project": "CodingReviewer",
+  "platform": "macOS",
+  "error_pattern": {
+    "type": "syntax_error",
+    "context": "Xcode build configuration issue",
+    "complexity": 2
+  },
+  "solution_pattern": {
+    "method": "permission_fix",
+    "success_rate": 0.9672370071485306,
+    "confidence": 0.9705803169603483
+  },
+  "outcome": {
+    "status": "needs_attention",
+    "learning_value": 0.9705803169603483,
+    "reproducible": false
+  }
+}

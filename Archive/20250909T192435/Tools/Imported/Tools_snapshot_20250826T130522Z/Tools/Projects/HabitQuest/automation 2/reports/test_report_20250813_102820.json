@@ -1,0 +1,56 @@
+{
+  "timestamp": "2025-08-13T10:28:20.697492",
+  "project": "HabitQuest",
+  "project_path": "/Users/danielstevens/Desktop/HabitQuest",
+  "tests": {
+    "project_structure": {
+      "status": "passed",
+      "metrics": {
+        "total_swift_files": 40,
+        "source_files": 31,
+        "test_files": 9,
+        "total_lines": 7286,
+        "avg_lines_per_file": 235,
+        "xcode_projects": 1,
+        "has_tests": true
+      }
+    },
+    "git_repository": {
+      "status": "passed",
+      "metrics": {
+        "current_branch": "main",
+        "total_commits": 6,
+        "modified_files": 6,
+        "is_clean": false
+      }
+    },
+    "automation_system": {
+      "status": "passed",
+      "components": {
+        "config": true,
+        "runner": true,
+        "src": true,
+        "logs": true,
+        "reports": true
+      },
+      "runner_functional": true
+    },
+    "code_quality": {
+      "status": "passed",
+      "metrics": {
+        "quality_score": 100,
+        "todo_comments": 0,
+        "fixme_comments": 0,
+        "long_files": 2,
+        "empty_files": 0,
+        "total_source_files": 31
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "success_rate": 100.0
+  }
+}

@@ -1,0 +1,73 @@
+Act as a principal software architect and expert Apple developer, specializing in building complex, data-driven, multi-platform financial applications. Your task is to generate the foundational boilerplate for a comprehensive, all-in-one personal finance app named "Momentum Finance".
+
+The architecture must be modular and scalable, using SwiftUI and MVVM. We will structure the app around a main TabView, with each tab representing a core feature module. Each module should have its own folder containing its specific Views, ViewModels, and logic to keep the project organized.
+
+---
+
+### **1. Project Specifications**
+
+* **App Name:** `Momentum Finance`
+* **Core Role/Goal:** `An all-in-one finance application to help users track transactions, manage recurring subscriptions, create and follow budgets, and monitor savings goals.`
+* **Target Platforms:** `iOS and macOS`
+* **Desired Multi-Platform Strategy:** `Shared Core Logic, Separate UI`
+
+---
+
+### **2. Core Data Models (SwiftData)**
+
+Generate the following SwiftData `@Model` classes. They must be designed to interact with each other. For example, a Transaction will link to a Category and a FinancialAccount.
+
+1.  **`FinancialAccount.swift`**: Represents a user's account (e.g., Checking, Savings).
+    * `name: String`, `balance: Double`, `iconName: String`.
+2.  **`Transaction.swift`**: Represents a single income or expense.
+    * `title: String`, `amount: Double`, `date: Date`, `transactionType: enum (Income, Expense)`.
+    * **Relationships:** It should have a relationship to a `Category` and a `FinancialAccount`.
+3.  **`Subscription.swift`**: Represents a recurring bill or income.
+    * `name: String`, `amount: Double`, `billingCycle: enum (Weekly, Monthly, Yearly)`, `nextDueDate: Date`.
+    * **Relationships:** It should also link to a `Category` and a `FinancialAccount`.
+    * **Note:** This model will be used to automatically generate `Transaction` records on its due date.
+4.  **`Budget.swift`**: Represents a monthly spending limit for a category.
+    * `limitAmount: Double`, `spentAmount: Double` (calculated), `month: Date`.
+    * **Relationships:** It must have a relationship to a `Category`.
+5.  **`Category.swift`**: A shared model for organizing transactions and budgets.
+    * `name: String`, `iconName: String`.
+6.  **`SavingsGoal.swift`**: Represents a financial savings goal.
+    * `name: String`, `targetAmount: Double`, `currentAmount: Double`.
+
+---
+
+### **3. Application Structure (Modular TabView)**
+
+Generate the boilerplate code for a main `TabView` that connects the following feature modules. For each module, create a placeholder View and ViewModel.
+
+* **Module 1: Dashboard (`DashboardView.swift`, `DashboardViewModel.swift`)**
+    * This is the main overview screen. The view should have sections for a summary of account balances, upcoming subscriptions, and current budget progress.
+
+* **Module 2: Transactions (`TransactionsView.swift`, `TransactionsViewModel.swift`)**
+    * This view should display a list of all `Transaction` records. Include a button to add a new transaction.
+
+* **Module 3: Budgets (`BudgetsView.swift`, `BudgetsViewModel.swift`)**
+    * This view should display a list of all `Budget` entities for the current month, showing the amount spent vs. the limit for each category.
+
+* **Module 4: Subscriptions (`SubscriptionsView.swift`, `SubscriptionsViewModel.swift`)**
+    * This view should display a list of all active `Subscription` records, sorted by their next due date.
+
+* **Module 5: Goals & Reports (`GoalsAndReportsView.swift`, `GoalsAndReportsViewModel.swift`)**
+    * This view should have sections for displaying `SavingsGoal` progress and placeholders for future charts (e.g., a pie chart for spending by category).
+
+---
+
+### **4. Supporting Files**
+
+* **`.swiftlint.yml`**: A comprehensive configuration file for SwiftLint.
+* **`.gitignore`**: A standard Swift/.gitignore file for multi-platform Xcode projects.
+* **`verify-project.sh`**: A shell script to build/test for both iOS & macOS and run SwiftLint. The script should use "Momentum Finance" as the scheme name.
+* **`Logger.swift` & `ErrorHandler.swift`**: The platform-agnostic helper utilities we defined previously.
+
+---
+
+### **5. Feedback and Next Steps**
+
+As a principal architect, after generating the code, please provide:
+1.  **Key Architectural Challenge**: What is the single biggest challenge in building "Momentum Finance" (e.g., ensuring data consistency, efficient data queries, background processing for subscriptions)? Briefly explain how to approach it.
+2.  **Implementation Order**: Suggest the order in which I should build out the core logic for these five modules to ensure a smooth development process for "Momentum Finance".

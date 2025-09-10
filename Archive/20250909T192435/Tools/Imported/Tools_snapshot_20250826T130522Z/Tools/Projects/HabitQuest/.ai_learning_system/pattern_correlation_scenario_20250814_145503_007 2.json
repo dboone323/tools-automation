@@ -1,0 +1,9 @@
+{
+  "pattern_id": "pattern_scenario_20250814_145503_007",
+  "timestamp": "2025-08-12T21:55:03.817764",
+  "error_fingerprint": "permission_denied_5",
+  "solution_fingerprint": "timeout_increase_96",
+  "correlation_strength": 0.24665667078868886,
+  "occurrence_count": 3,
+  "cross_project_applicability": false
+}

@@ -1,0 +1,29 @@
+{
+  "patterns": [
+    {
+      "pattern_id": "syntax_error",
+      "error_signature": "SyntaxError|EOL while scanning",
+      "fix_template": "fix_python_syntax",
+      "success_rate": 0.95,
+      "usage_count": 0,
+      "last_used": null
+    },
+    {
+      "pattern_id": "import_error", 
+      "error_signature": "F401.*imported but unused|ModuleNotFoundError",
+      "fix_template": "fix_imports",
+      "success_rate": 0.90,
+      "usage_count": 0,
+      "last_used": null
+    },
+    {
+      "pattern_id": "missing_file",
+      "error_signature": "No such file or directory|FileNotFoundError",
+      "fix_template": "create_missing_file",
+      "success_rate": 0.85,
+      "usage_count": 0,
+      "last_used": null
+    }
+  ],
+  "updated": "$(date -Iseconds)"
+}

@@ -1,0 +1,21 @@
+{
+  "fix_id": "scenario_20250814_145503_005",
+  "timestamp": "2025-08-14T05:55:03.820630",
+  "project": "MomentumFinance",
+  "platform": "Universal",
+  "error_pattern": {
+    "type": "resource_conflict",
+    "context": "CocoaPods dependency conflict",
+    "complexity": 3
+  },
+  "solution_pattern": {
+    "method": "dependency_update",
+    "success_rate": 0.9026699353826244,
+    "confidence": 0.22444664096480796
+  },
+  "outcome": {
+    "status": "needs_attention",
+    "learning_value": 0.22444664096480796,
+    "reproducible": false
+  }
+}

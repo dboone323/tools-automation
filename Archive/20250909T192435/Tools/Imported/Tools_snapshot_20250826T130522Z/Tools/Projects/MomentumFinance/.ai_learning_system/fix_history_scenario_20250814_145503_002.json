@@ -1,0 +1,21 @@
+{
+  "fix_id": "scenario_20250814_145503_002",
+  "timestamp": "2025-08-12T14:55:03.820611",
+  "project": "MomentumFinance",
+  "platform": "Universal",
+  "error_pattern": {
+    "type": "permission_denied",
+    "context": "Memory leak in release build",
+    "complexity": 3
+  },
+  "solution_pattern": {
+    "method": "dependency_update",
+    "success_rate": 0.9230165967610384,
+    "confidence": 0.8419687241928294
+  },
+  "outcome": {
+    "status": "resolved",
+    "learning_value": 0.8419687241928294,
+    "reproducible": true
+  }
+}

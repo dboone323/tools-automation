@@ -1,0 +1,29 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python (for any test runners)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run basic repository checks
+        run: |
+          echo "No-op sanity checks"
+          # If there are tests or linters in this repo they can be added here.
+
+      - name: Upload validation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-validation-log
+          path: .

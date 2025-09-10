@@ -1,0 +1,21 @@
+{
+  "fix_id": "scenario_20250814_145503_007",
+  "timestamp": "2025-08-13T09:55:03.820641",
+  "project": "MomentumFinance",
+  "platform": "Universal",
+  "error_pattern": {
+    "type": "dependency_issue",
+    "context": "macOS notarization failure",
+    "complexity": 9
+  },
+  "solution_pattern": {
+    "method": "cache_clear",
+    "success_rate": 0.6652862087523798,
+    "confidence": 0.5890507231299235
+  },
+  "outcome": {
+    "status": "resolved",
+    "learning_value": 0.5890507231299235,
+    "reproducible": true
+  }
+}

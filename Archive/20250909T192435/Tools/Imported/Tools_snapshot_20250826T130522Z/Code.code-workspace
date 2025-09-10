@@ -1,0 +1,114 @@
+{
+    "folders": [
+        {
+            "name": "🏗️ Projects",
+            "path": "./Projects"
+        },
+        {
+            "name": "🔧 Shared Components",
+            "path": "./Shared"
+        },
+        {
+            "name": "⚙️ Tools & Automation",
+            "path": "./Tools"
+        },
+        {
+            "name": "📚 Documentation",
+            "path": "./Documentation"
+        }
+    ],
+    "settings": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+        },
+        "files.associations": {
+            "*.swift": "swift",
+            "*.sh": "shellscript",
+            "*.py": "python"
+        },
+        "terminal.integrated.defaultProfile.osx": "zsh",
+        "search.exclude": {
+            "**/build": true,
+            "**/DerivedData": true,
+            "**/.git": true,
+            "**/node_modules": true
+        },
+        "files.exclude": {
+            "**/.DS_Store": true,
+            "**/build": true,
+            "**/DerivedData": true
+        },
+        "editor.codeActions.triggerOnFocusChange": false,
+        "github.copilot.chat.codesearch.enabled": true,
+        "github.copilot.chat.languageContext.fix.typescript.enabled": true
+    },
+    "extensions": {
+        "recommendations": [
+            "sswg.swift-lang",
+            "ms-python.python",
+            "ms-vscode.vscode-json"
+        ]
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "Run Master Automation",
+                "type": "shell",
+                "command": "./Tools/Automation/master_automation.sh",
+                "args": [
+                    "all"
+                ],
+                "group": "build",
+                "presentation": {
+                    "echo": true,
+                    "reveal": "always",
+                    "focus": false,
+                    "panel": "shared"
+                }
+            },
+            {
+                "label": "List Projects",
+                "type": "shell",
+                "command": "./Tools/Automation/master_automation.sh",
+                "args": [
+                    "list"
+                ],
+                "group": "build"
+            },
+            {
+                "label": "Architecture Status",
+                "type": "shell",
+                "command": "./Tools/Automation/master_automation.sh",
+                "args": [
+                    "status"
+                ],
+                "group": "build"
+            }
+        ]
+    },
+    "launch": {
+        "configurations": [
+            {
+                "type": "swift",
+                "request": "launch",
+                "args": [],
+                "cwd": "${workspaceFolder:🏗️ Projects}/MomentumFinance",
+                "name": "Debug MomentumFinance (🏗️ Projects/MomentumFinance)",
+                "program": "${workspaceFolder:🏗️ Projects}/MomentumFinance/.build/debug/MomentumFinance",
+                "preLaunchTask": "swift: Build Debug MomentumFinance (🏗️ Projects/MomentumFinance)"
+            },
+            {
+                "type": "swift",
+                "request": "launch",
+                "args": [],
+                "cwd": "${workspaceFolder:🏗️ Projects}/MomentumFinance",
+                "name": "Release MomentumFinance (🏗️ Projects/MomentumFinance)",
+                "program": "${workspaceFolder:🏗️ Projects}/MomentumFinance/.build/release/MomentumFinance",
+                "preLaunchTask": "swift: Build Release MomentumFinance (🏗️ Projects/MomentumFinance)"
+            }
+        ]
+    }
+}

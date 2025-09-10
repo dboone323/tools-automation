@@ -1,0 +1,167 @@
+// PlannerApp/MainApp/DashboardView.swift (Updated)
+import SwiftUI
+import Foundation
+
+struct DashboardView: View {
+    // Access the shared ThemeManager from the environment.
+    @EnvironmentObject var themeManager: ThemeManager
+
+    // Create and manage the ViewModel instance for this view.
+    @StateObject private var viewModel = DashboardViewModel()
+    // Access user settings directly using @AppStorage.
+    @AppStorage(AppSettingKeys.userName) private var userName: String = ""
+    @AppStorage(AppSettingKeys.use24HourTime) private var use24HourTime: Bool = false
+
+    // --- Date Formatters ---
+    // Computed properties ensure formatters update if settings change (e.g., use24HourTime).
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium // e.g., Apr 29, 2025
+        formatter.timeStyle = .none
+        return formatter
+    }
+
+    private var timeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short // e.g., 1:47 PM or 13:47
+        // Set locale based on the 24-hour setting for correct time formatting.
+        formatter.locale = Locale(identifier: use24HourTime ? "en_GB" : "en_US")
+        return formatter
+    }
+
+    var body: some View {
+        NavigationView {
+            // Use List for structured layout and automatic scrolling.
+            List {
+                // --- Welcome Section ---
+                Section {
+                     VStack(alignment: .leading, spacing: 5) {
+                          // Display personalized welcome message or default.
+                          Text(userName.isEmpty ? "Welcome!" : "Welcome, \(userName)!")
+                              // Apply theme font and color.
+                              .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.primaryFontName, size: 28, weight: .bold))
+                              .foregroundColor(themeManager.currentTheme.primaryTextColor)
+
+                          // Display current date using the themed formatter.
+                          Text("Overview for \(Date(), formatter: dateFormatter)")
+                              .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 17))
+                              .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                     }
+                     .padding(.vertical, 8) // Add padding within the row.
+                     // Apply themed background to the list row content area.
+                     .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
+                }
+
+
+                // --- Today's Events Section ---
+                // Header includes the total count before limiting.
+                Section("Today's Events (\(viewModel.totalTodaysEventsCount))") {
+                    // Show message if there are no events at all.
+                    if viewModel.todaysEvents.isEmpty && viewModel.totalTodaysEventsCount == 0 {
+                        Text("No events scheduled for today.")
+                            .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                            .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 15))
+                    } else {
+                        // Display the limited list of events.
+                        ForEach(viewModel.todaysEvents) { event in
+                            HStack {
+                                Text(event.title)
+                                    .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.primaryFontName, size: 16))
+                                Spacer()
+                                Text(event.date, formatter: timeFormatter) // Format time
+                                    .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 14))
+                                    .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                            }
+                        }
+                        // Show "...and X more" if the total count exceeds the displayed count.
+                        if viewModel.totalTodaysEventsCount > viewModel.todaysEvents.count {
+                            Text("... and \(viewModel.totalTodaysEventsCount - viewModel.todaysEvents.count) more.")
+                                .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                                .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 14))
+                        }
+                    }
+                }
+                // Apply theme to section rows and header.
+                .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
+                .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                .headerProminence(.increased)
+
+
+                // --- Incomplete Tasks Section ---
+                Section("Pending Tasks (\(viewModel.totalIncompleteTasksCount))") {
+                    if viewModel.incompleteTasks.isEmpty && viewModel.totalIncompleteTasksCount == 0 {
+                        Text("All tasks completed!")
+                            .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                            .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 15))
+                    } else {
+                        ForEach(viewModel.incompleteTasks) { task in
+                            Text(task.title)
+                                .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.primaryFontName, size: 16))
+                        }
+                        if viewModel.totalIncompleteTasksCount > viewModel.incompleteTasks.count {
+                            Text("... and \(viewModel.totalIncompleteTasksCount - viewModel.incompleteTasks.count) more.")
+                                .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                                .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 14))
+                        }
+                    }
+                }
+                .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
+                .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                .headerProminence(.increased)
+
+                // --- Upcoming Goals Section ---
+                Section("Upcoming Goals (\(viewModel.totalUpcomingGoalsCount))") {
+                     if viewModel.upcomingGoals.isEmpty && viewModel.totalUpcomingGoalsCount == 0 {
+                         Text("No goals due soon.")
+                             .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                             .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 15))
+                     } else {
+                         ForEach(viewModel.upcomingGoals) { goal in
+                             HStack {
+                                 Text(goal.title)
+                                     .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.primaryFontName, size: 16))
+                                 Spacer()
+                                 Text(goal.targetDate, formatter: dateFormatter) // Format date
+                                     .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 14))
+                                     .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                             }
+                         }
+                          if viewModel.totalUpcomingGoalsCount > viewModel.upcomingGoals.count {
+                             Text("... and \(viewModel.totalUpcomingGoalsCount - viewModel.upcomingGoals.count) more.")
+                                 .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                                 .font(themeManager.currentTheme.font(forName: themeManager.currentTheme.secondaryFontName, size: 14))
+                         }
+                     }
+                }
+                .listRowBackground(themeManager.currentTheme.secondaryBackgroundColor)
+                .foregroundColor(themeManager.currentTheme.primaryTextColor)
+                .headerProminence(.increased)
+
+            } // End List
+            // Apply theme background color to the List itself.
+            .background(themeManager.currentTheme.primaryBackgroundColor)
+            // Hide the default List background style (e.g., plain, grouped) to show the view's background.
+            .scrollContentBackground(.hidden)
+            .navigationTitle("Dashboard")
+            // Fetch data whenever the view appears on screen.
+            .onAppear {
+                viewModel.fetchDashboardData()
+                print("Dashboard appeared, fetching data.") // Debugging log
+            }
+            // TODO: Apply theme to Navigation Bar background/tint if needed (requires more advanced techniques)
+
+        } // End NavigationView
+          // Use stack navigation style
+    }
+}
+
+// Preview Provider for DashboardView
+struct DashboardView_Previews: PreviewProvider {
+    static var previews: some View {
+        DashboardView()
+            // Provide the ThemeManager for the preview.
+            .environmentObject(ThemeManager())
+            // Optionally, inject a ViewModel with sample data for a more realistic preview.
+    }
+}

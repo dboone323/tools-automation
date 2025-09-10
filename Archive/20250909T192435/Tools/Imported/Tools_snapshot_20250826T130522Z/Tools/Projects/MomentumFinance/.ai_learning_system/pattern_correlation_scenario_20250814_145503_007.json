@@ -1,0 +1,9 @@
+{
+  "pattern_id": "pattern_scenario_20250814_145503_007",
+  "timestamp": "2025-08-13T09:55:03.820641",
+  "error_fingerprint": "dependency_issue_9",
+  "solution_fingerprint": "cache_clear_66",
+  "correlation_strength": 0.5890507231299235,
+  "occurrence_count": 4,
+  "cross_project_applicability": true
+}

@@ -1,0 +1,3 @@
+Command line invocation:
+    /Applications/Xcode-beta.app/Contents/Developer/usr/bin/xcodebuild -workspace MomentumFinance.xcworkspace -scheme MomentumFinance -configuration Debug -destination "platform=iOS Simulator,name=iPhone 16,OS=18.0" clean build
+

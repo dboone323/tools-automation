@@ -1,0 +1,46 @@
+# SwiftFormat Configuration for Unified Code Architecture
+# https://github.com/nicklockwood/SwiftFormat
+
+# File options
+--exclude .build,Package.swift
+
+# Format options
+--indent 4
+--linebreaks lf
+--commas always
+--wraparguments preserve
+--wrapparameters preserve
+--wrapcollections preserve
+--closingparen balanced
+--hexliteralcase uppercase
+--exponentcase lowercase
+--decimalgrouping 3,6
+--binarygrouping 4,8
+--hexgrouping 4,8
+--octalgrouping 4,8
+--patternlet hoist
+--stripunusedargs closure-only
+--elseposition same-line
+
+# Enabled rules
+--enable isEmpty
+--enable hoistPatternLet
+--enable wrapMultilineStatementBraces
+--enable blankLinesBetweenScopes
+--enable consecutiveSpaces
+--enable duplicateImports
+--enable sortedImports
+--enable unusedArguments
+--enable void
+--enable trailingCommas
+--enable strongifiedSelf
+
+# Disabled rules
+--disable andOperator
+--disable blankLinesAtStartOfScope
+--disable blankLinesAtEndOfScope
+--disable redundantSelf
+--disable wrapEnumCases
+
+# Swift version
+--swiftversion 5.7

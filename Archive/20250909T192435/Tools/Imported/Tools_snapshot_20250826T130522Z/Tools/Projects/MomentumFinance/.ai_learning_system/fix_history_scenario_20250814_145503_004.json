@@ -1,0 +1,21 @@
+{
+  "fix_id": "scenario_20250814_145503_004",
+  "timestamp": "2025-08-14T10:55:03.820623",
+  "project": "MomentumFinance",
+  "platform": "Universal",
+  "error_pattern": {
+    "type": "permission_denied",
+    "context": "App Store Connect upload failure",
+    "complexity": 10
+  },
+  "solution_pattern": {
+    "method": "dependency_update",
+    "success_rate": 0.6994523475292116,
+    "confidence": 0.13132161493655894
+  },
+  "outcome": {
+    "status": "resolved",
+    "learning_value": 0.13132161493655894,
+    "reproducible": true
+  }
+}

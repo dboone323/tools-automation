@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - SWIFT_ENV=development
+    ports:
+      # Expose port if needed for web interface
+      # - "8080:8080"
+    command: swift run MomentumFinance

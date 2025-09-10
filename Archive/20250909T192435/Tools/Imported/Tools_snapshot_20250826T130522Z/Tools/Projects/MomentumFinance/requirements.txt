@@ -1,0 +1,27 @@
+# MomentumFinance Requirements
+# Core iOS app development dependencies
+
+# Data processing and analysis
+pandas>=1.5.0
+numpy>=1.24.0
+
+# Network requests for financial data APIs
+requests>=2.31.0
+urllib3>=1.26.0
+
+# JSON handling and data serialization
+jsonschema>=4.17.0
+
+# Testing framework
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Code quality and formatting
+flake8>=6.0.0
+black>=23.0.0
+
+# Documentation
+sphinx>=7.0.0
+
+# Development utilities
+pre-commit>=3.3.0

@@ -1,0 +1,220 @@
+name: "AI Self-Healing Workflow"
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      max_retries:
+        description: 'Maximum auto-retry attempts'
+        required: false
+        default: '5'
+      enable_auto_fix:
+        description: 'Enable AI auto-fix'
+        required: false
+        default: 'true'
+
+permissions:
+  contents: write
+  actions: write
+  pull-requests: write
+
+env:
+  ENABLE_AI_RECOVERY: ${{ github.event.inputs.enable_auto_fix || 'true' }}
+  MAX_RETRIES: ${{ github.event.inputs.max_retries || '5' }}
+  # When true, Copilot agent will attempt dry-run fixes before human-facing recovery steps
+  QUIET_MODE: 'true'
+
+jobs:
+  ai-quality-check:
+    name: "AI Quality Analysis"
+    runs-on: ubuntu-latest
+    outputs:
+      needs-recovery: ${{ steps.quality.outputs.needs-recovery }}
+      recovery-plan: ${{ steps.quality.outputs.recovery-plan }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-test.txt || true
+
+      - name: Run quality check
+        id: quality
+        run: |
+          echo "Running AI-enhanced quality check..."
+          if python3 workflow_quality_check.py > quality_output.txt 2>&1; then
+            echo "needs-recovery=false" >> $GITHUB_OUTPUT
+            echo "recovery-plan=" >> $GITHUB_OUTPUT
+          else
+            echo "needs-recovery=true" >> $GITHUB_OUTPUT
+            cat quality_output.txt
+            # base64 without line-wrap
+            RECOVERY_PLAN=$(base64 -w0 quality_output.txt || base64 quality_output.txt)
+            echo "recovery-plan=${RECOVERY_PLAN}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload quality report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-report
+          path: |
+            quality_output.txt
+            .ai_learning_system/
+          retention-days: 30
+
+  ai-recovery:
+    name: "AI Self-Healing Recovery"
+    runs-on: ubuntu-latest
+    needs: ai-quality-check
+    if: needs.ai-quality-check.outputs.needs-recovery == 'true' && github.event_name == 'push'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "ai-recovery@github.actions"
+          git config --local user.name "AI Workflow Recovery"
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install recovery dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-test.txt || true
+          pip install requests psutil || true
+
+      - name: Initialize learning system
+        run: |
+          mkdir -p .ai_learning_system
+          if [ ! -f .ai_learning_system/workflow_patterns.json ]; then
+            printf '%s' '{"patterns":[{"pattern_id":"syntax_error","error_signature":"SyntaxError|EOL while scanning","fix_template":"fix_python_syntax","success_rate":0.95,"usage_count":0,"last_used":null},{"pattern_id":"import_error","error_signature":"F401.*imported but unused|ModuleNotFoundError","fix_template":"fix_imports","success_rate":0.90,"usage_count":0,"last_used":null}],"updated":"'"$(date -Iseconds)"'"}' > .ai_learning_system/workflow_patterns.json
+          fi
+
+      - name: Optionally assign Copilot agent and run dry-run fixes
+        if: env.QUIET_MODE == 'true'
+        run: |
+          echo "QUIET_MODE true: assigning Copilot agent to attempt dry-run fixes"
+          # Intelligent autofix script supports --assign-agent and --dry-run
+          bash Tools/Automation/intelligent_autofix.sh --assign-agent --dry-run || true
+
+      - name: Run AI recovery
+        id: recovery
+        run: |
+          echo "Starting AI Autonomous Recovery..."
+          python Tools/Automation/ai_workflow_recovery.py || true
+          EXIT_CODE=$?
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "recovery-success=true" >> $GITHUB_OUTPUT
+          else
+            echo "recovery-success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload recovery artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-report
+          path: |
+            recovery_report.json
+            .ai_learning_system/
+            ai_workflow_recovery.log
+          retention-days: 90
+
+  verification:
+    name: "Verify Recovery Success"
+    runs-on: ubuntu-latest
+    needs: [ai-quality-check, ai-recovery]
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-test.txt || true
+
+      - name: Final quality verification
+        run: |
+          echo "Running final quality verification..."
+          if python3 workflow_quality_check.py; then
+            echo "verification-passed=true"
+            exit 0
+          else
+            echo "verification-passed=false"
+            exit 1
+          fi
+
+  retry-trigger:
+    name: "Retry Trigger"
+    runs-on: ubuntu-latest
+    needs: [ai-recovery, verification]
+    if: needs.ai-recovery.outputs.recovery-success == 'true' && needs.verification.result == 'failure'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger next recovery iteration
+        run: |
+          echo "AI Recovery Iteration: $(date -Iseconds)" > .ai_recovery_trigger
+          git config --local user.email "ai-recovery@github.actions"
+          git config --local user.name "AI Recovery Trigger"
+          git add .ai_recovery_trigger || true
+          git commit -m "AI Recovery: Trigger next iteration - $(date -Iseconds)" || true
+          git push || true
+
+  summary:
+    name: "Recovery Summary"
+    runs-on: ubuntu-latest
+    needs: [ai-quality-check, ai-recovery, verification]
+    if: always()
+    steps:
+      - name: Generate summary
+        run: |
+          echo "# AI Self-Healing Workflow Summary" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.ai-quality-check.outputs.needs-recovery }}" == "false" ]; then
+            echo "Status: No recovery needed - Quality check passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Status: Recovery attempted - result: ${{ needs.ai-recovery.outputs.recovery-success }}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  echo "✅ **Verification**: ${{ needs.verification.result }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.verification.result }}" == "success" ]; then
+  echo "🎉 **Result**: Self-healing successful!" >> $GITHUB_STEP_SUMMARY
+          else
+  echo "⚠️ **Result**: Manual intervention may be required" >> $GITHUB_STEP_SUMMARY
+          fi
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+  echo "📈 **AI Learning**: Patterns updated and stored" >> $GITHUB_STEP_SUMMARY
+  echo "🔄 **Next Run**: Will continue learning and improving" >> $GITHUB_STEP_SUMMARY

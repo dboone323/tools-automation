@@ -1,0 +1,9 @@
+{
+  "pattern_id": "pattern_scenario_20250814_145503_000",
+  "timestamp": "2025-08-13T18:55:03.813846",
+  "error_fingerprint": "deployment_failure_4",
+  "solution_fingerprint": "environment_setup_92",
+  "correlation_strength": 0.22693823441016414,
+  "occurrence_count": 4,
+  "cross_project_applicability": false
+}

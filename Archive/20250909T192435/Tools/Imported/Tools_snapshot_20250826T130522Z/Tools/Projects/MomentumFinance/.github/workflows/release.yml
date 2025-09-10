@@ -1,0 +1,62 @@
+---
+name: Release Automation
+on:
+  push:
+  tags:
+  workflow_dispatch:
+  inputs:
+  version:
+  description: 'Release version (e.g., v1.0.0)'
+  required: true
+  type: string
+jobs:
+  build-and-release:
+name: Build and Release
+  runs-on: macos-latest
+  steps:
+      - name: Checkout Code
+  uses: actions/checkout@v4
+      - name: Select Xcode Version
+  run: sudo xcode-select -s /Applications/Xcode_15.0.app/Contents/Developer
+      - name: Build Release Version
+  run: |
+          echo "🏗️ Building release version..."
+          xcodebuild -scheme MomentumFinance \
+          clean build \
+            CODE_SIGNING_ALLOWED=NO
+  run: |
+          echo "🧪 Running full test suite..."
+          xcodebuild test \
+          CODE_SIGNING_ALLOWED=NO
+  run: |
+          echo "📝 Generating release notes..."
+          # Get version from tag or input
+          VERSION="${{ github.ref_name }}"
+          if [[ -z "$VERSION" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+            mkdir -p release_artifacts
+          cat > release_artifacts/RELEASE_NOTES.md << EOF
+          # MomentumFinance ${VERSION}
+            Released on $(date -u +%Y-%m-%d)
+            ## What's New
+            ## Technical Improvements
+            ## Security Updates
+  **Full Changelog**: https://github.com/${{ github.repository }}/compare/previous...${VERSION}
+          EOF
+if: startsWith(github.ref, 'refs/tags/')
+  uses: actions/github-script@v7
+  with:
+  script: |
+          const fs = require('fs');
+          const releaseNotes = fs.readFileSync('release_artifacts/RELEASE_NOTES.md', 'utf8');
+            const release = await github.rest.repos.createRelease({
+  owner: context.repo.owner,
+  repo: context.repo.repo,
+  tag_name: context.ref.replace('refs/tags/', ''),
+name: `MomentumFinance ${context.ref.replace('refs/tags/', '')}`,
+  body: releaseNotes,
+  draft: false,
+  prerelease: false
+    });
+  console.log(`Release created: ${release.data.html_url}`);

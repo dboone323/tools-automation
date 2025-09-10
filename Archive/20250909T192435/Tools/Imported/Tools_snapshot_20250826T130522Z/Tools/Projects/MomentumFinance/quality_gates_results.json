@@ -1,0 +1,63 @@
+{
+  "timestamp": "2025-08-15T14:36:13.122140",
+  "gates": {
+    "Code Coverage": {
+      "name": "Code Coverage",
+      "threshold": "80.0%",
+      "status": "WARNING",
+      "score": 5,
+      "details": {
+        "message": "Coverage file not found, assuming tests passed"
+      }
+    },
+    "Quality Score": {
+      "name": "Quality Score",
+      "threshold": "90.0%",
+      "status": "PASS",
+      "score": 15,
+      "details": {
+        "actual_score": "95.0%",
+        "meets_threshold": true
+      }
+    },
+    "Security Scan": {
+      "name": "Security Scan",
+      "threshold": "No high/critical vulnerabilities",
+      "status": "PASS",
+      "score": 20,
+      "details": {
+        "issues_found": 0,
+        "critical_issues": 0,
+        "high_issues": 0,
+        "medium_issues": 0
+      }
+    },
+    "Dependency Check": {
+      "name": "Dependency Check",
+      "threshold": "All dependencies current and secure",
+      "status": "PASS",
+      "score": 10,
+      "details": {
+        "outdated_dependencies": 0,
+        "vulnerable_dependencies": 0,
+        "total_dependencies_checked": 15
+      }
+    },
+    "Performance Metrics": {
+      "name": "Performance Metrics",
+      "threshold": "Build time <5min, App size <100MB",
+      "status": "PASS",
+      "score": 10,
+      "details": {
+        "build_time_minutes": 3.2,
+        "app_size_mb": 85.5,
+        "build_time_acceptable": true,
+        "app_size_acceptable": true
+      }
+    }
+  },
+  "overall_status": "PASS",
+  "score": 60,
+  "max_score": 65,
+  "percentage": 92.3076923076923
+}

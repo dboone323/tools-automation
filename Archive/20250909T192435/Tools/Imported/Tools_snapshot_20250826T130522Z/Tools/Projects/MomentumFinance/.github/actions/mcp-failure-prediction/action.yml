@@ -1,0 +1,702 @@
+name: 'MCP Failure Prediction with AI Learning'
+description: 'AI-powered failure prediction and prevention with adaptive learning'
+inputs:
+  github-token:
+    description: 'GitHub token for API access'
+    required: true
+    default: ${{ github.token }}
+  workflow_type:
+    description: 'Type of workflow being analyzed'
+    required: false
+    default: 'ci'
+  repository:
+    description: 'Repository to analyze'
+    required: false
+  learning_mode:
+    description: 'Learning mode: passive, active, or aggressive'
+    required: false
+    default: 'active'
+outputs:
+  risk-level:
+    description: 'Predicted risk level (low/medium/high/critical)'
+    value: ${{ steps.predict.outputs.risk-level }}
+  recommendations:
+    description: 'AI recommendations'
+    value: ${{ steps.predict.outputs.recommendations }}
+  confidence:
+    description: 'Prediction confidence percentage'
+    value: ${{ steps.predict.outputs.confidence }}
+  learning_insights:
+    description: 'AI learning insights and patterns'
+    value: ${{ steps.predict.outputs.learning-insights }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Initialize AI Learning System
+      shell: bash
+      run: |
+        echo "🧠 Initializing MCP AI Failure Prediction System..."
+        
+        # Create prediction directories
+        mkdir -p .mcp_prediction/{models,history,patterns,alerts}
+        
+        # Initialize prediction model database
+        if [[ ! -f .mcp_prediction/models/failure_prediction_model.json ]]; then
+          cat > .mcp_prediction/models/failure_prediction_model.json << 'EOF'
+        {
+          "version": "2.0",
+          "model_type": "pattern_recognition",
+          "training_data": {
+            "total_workflows": 0,
+            "failed_workflows": 0,
+            "success_patterns": {},
+            "failure_patterns": {},
+            "temporal_patterns": {}
+          },
+          "prediction_accuracy": {
+            "overall": 0.0,
+            "by_workflow_type": {},
+            "by_repository": {},
+            "trend": []
+          },
+          "learning_parameters": {
+            "sensitivity": 0.7,
+            "confidence_threshold": 0.6,
+            "pattern_weight": 0.8,
+            "temporal_weight": 0.2
+          }
+        }
+        EOF
+        fi
+        
+        echo "✅ AI Learning system initialized"
+
+    - name: Advanced Pattern Analysis with AI
+      id: predict
+      shell: bash
+      run: |
+        echo "🔮 Running advanced AI failure pattern analysis..."
+        
+        # Create comprehensive AI analysis script
+        cat > ai_failure_analysis.py << 'EOF'
+        #!/usr/bin/env python3
+        import json
+        import os
+        import glob
+        import hashlib
+        import subprocess
+        from datetime import datetime, timedelta
+        
+        def analyze_code_patterns():
+            """Analyze code patterns for potential failure indicators"""
+            patterns = {
+                "complexity_score": 0,
+                "risk_indicators": [],
+                "project_health": {},
+                "dependency_risks": []
+            }
+            
+            # Swift project analysis
+            swift_files = glob.glob('**/*.swift', recursive=True)
+            if swift_files:
+                total_lines = 0
+                large_files = 0
+                complex_functions = 0
+                
+                for swift_file in swift_files[:50]:  # Analyze first 50 files
+                    try:
+                        with open(swift_file, 'r', encoding='utf-8') as f:
+                            content = f.read()
+                            lines = len(content.split('\n'))
+                            total_lines += lines
+                            
+                            # Large file indicator
+                            if lines > 300:
+                                large_files += 1
+                                patterns["risk_indicators"].append(f"Large file: {swift_file}")
+                            
+                            # Complex function detection
+                            if content.count('if ') + content.count('for ') + content.count('while ') > 20:
+                                complex_functions += 1
+                                patterns["risk_indicators"].append(f"Complex logic: {swift_file}")
+                            
+                            # Force unwrapping detection
+                            if content.count('!') > 10:
+                                patterns["risk_indicators"].append(f"High force unwrap usage: {swift_file}")
+                    except Exception as e:
+                        patterns["risk_indicators"].append(f"File read error: {swift_file}")
+                
+                patterns["project_health"] = {
+                    "total_swift_files": len(swift_files),
+                    "average_file_size": total_lines // len(swift_files) if swift_files else 0,
+                    "large_files_ratio": large_files / len(swift_files) if swift_files else 0,
+                    "complex_functions": complex_functions
+                }
+                
+                # Calculate complexity score
+                patterns["complexity_score"] = min(1.0, 
+                    (large_files * 0.1) + 
+                    (complex_functions * 0.15) + 
+                    (patterns["project_health"]["average_file_size"] / 1000)
+                )
+            
+            # Project structure analysis
+            if os.path.exists('Package.swift'):
+                patterns["dependency_risks"].append("Swift Package Manager")
+            if os.path.exists('Podfile'):
+                patterns["dependency_risks"].append("CocoaPods")
+            if glob.glob('*.xcodeproj'):
+                patterns["dependency_risks"].append("Xcode Project")
+            
+            # Check for missing essential files
+            if not os.path.exists('README.md'):
+                patterns["risk_indicators"].append("Missing documentation")
+            
+            if not glob.glob('**/*Test*.swift', recursive=True):
+                patterns["risk_indicators"].append("No test files detected")
+            
+            return patterns
+        
+        def analyze_git_history():
+            """Analyze git history for instability patterns"""
+            history_patterns = {
+                "commit_frequency": 0,
+                "recent_changes": [],
+                "file_churn": {},
+                "stability_score": 1.0
+            }
+            
+            try:
+                # Get recent commits
+                result = subprocess.run(['git', 'log', '--oneline', '-20'], 
+                                      capture_output=True, text=True, timeout=15)
+                if result.returncode == 0:
+                    commits = result.stdout.strip().split('\n')
+                    history_patterns["commit_frequency"] = len([c for c in commits if c.strip()])
+                    history_patterns["recent_changes"] = commits[:5]
+                
+                # Check for file churn (frequently changed files)
+                result = subprocess.run(['git', 'log', '--name-only', '--pretty=format:', '-10'], 
+                                      capture_output=True, text=True, timeout=15)
+                if result.returncode == 0:
+                    files = [f for f in result.stdout.split('\n') if f.strip()]
+                    for file in files:
+                        history_patterns["file_churn"][file] = history_patterns["file_churn"].get(file, 0) + 1
+                
+                # High churn indicates instability
+                high_churn_files = [f for f, count in history_patterns["file_churn"].items() if count > 3]
+                if high_churn_files:
+                    history_patterns["stability_score"] *= 0.8
+                
+            except Exception as e:
+                history_patterns["recent_changes"] = [f"Git analysis failed: {str(e)}"]
+            
+            return history_patterns
+        
+        def analyze_workflow_files():
+            """Analyze workflow configuration for potential issues"""
+            workflow_patterns = {
+                "workflow_count": 0,
+                "configuration_risks": [],
+                "missing_actions": [],
+                "complexity_indicators": []
+            }
+            
+            workflow_files = glob.glob('.github/workflows/*.yml') + glob.glob('.github/workflows/*.yaml')
+            workflow_patterns["workflow_count"] = len(workflow_files)
+            
+            for workflow_file in workflow_files:
+                try:
+                    with open(workflow_file, 'r') as f:
+                        content = f.read()
+                        
+                        # Check for risky patterns
+                        if 'uses: ./' in content:
+                            workflow_patterns["configuration_risks"].append(f"Local action reference in {workflow_file}")
+                        
+                        if content.count('run:') > 10:
+                            workflow_patterns["complexity_indicators"].append(f"Complex workflow: {workflow_file}")
+                        
+                        # Check for missing custom actions
+                        import re
+                        local_actions = re.findall(r'uses:\s*\./\.github/actions/([^/\s]+)', content)
+                        for action in local_actions:
+                            action_path = f'.github/actions/{action}'
+                            if not os.path.exists(action_path):
+                                workflow_patterns["missing_actions"].append(action)
+                
+                except Exception as e:
+                    workflow_patterns["configuration_risks"].append(f"Workflow parse error: {workflow_file}")
+            
+            return workflow_patterns
+        
+        def calculate_ai_risk_prediction(code_patterns, history_patterns, workflow_patterns):
+            """Calculate comprehensive risk prediction using AI-like analysis"""
+            risk_score = 0.0
+            risk_factors = []
+            confidence = 0.5
+            
+            # Code complexity risk (30% weight)
+            complexity_weight = 0.3
+            if code_patterns["complexity_score"] > 0.7:
+                risk_score += complexity_weight * 0.8
+                risk_factors.append("High code complexity detected")
+                confidence += 0.1
+            elif code_patterns["complexity_score"] > 0.4:
+                risk_score += complexity_weight * 0.5
+                risk_factors.append("Moderate code complexity")
+                confidence += 0.05
+            
+            # Project health risk (25% weight)
+            health_weight = 0.25
+            health = code_patterns["project_health"]
+            if health.get("large_files_ratio", 0) > 0.3:
+                risk_score += health_weight * 0.6
+                risk_factors.append("High ratio of large files")
+                confidence += 0.1
+            
+            if len(code_patterns["risk_indicators"]) > 5:
+                risk_score += health_weight * 0.4
+                risk_factors.append("Multiple code quality issues")
+                confidence += 0.1
+            
+            # Git stability risk (20% weight)
+            stability_weight = 0.2
+            if history_patterns["stability_score"] < 0.8:
+                risk_score += stability_weight * 0.7
+                risk_factors.append("Repository instability detected")
+                confidence += 0.1
+            
+            if history_patterns["commit_frequency"] > 15:
+                risk_score += stability_weight * 0.3
+                risk_factors.append("High commit frequency")
+                confidence += 0.05
+            
+            # Workflow configuration risk (25% weight)
+            workflow_weight = 0.25
+            if workflow_patterns["missing_actions"]:
+                risk_score += workflow_weight * 0.9
+                risk_factors.append(f"Missing actions: {', '.join(workflow_patterns['missing_actions'])}")
+                confidence += 0.2
+            
+            if workflow_patterns["configuration_risks"]:
+                risk_score += workflow_weight * 0.6
+                risk_factors.append("Workflow configuration issues")
+                confidence += 0.15
+            
+            if len(workflow_patterns["complexity_indicators"]) > 2:
+                risk_score += workflow_weight * 0.4
+                risk_factors.append("Complex workflow configurations")
+                confidence += 0.1
+            
+            # Normalize risk score and confidence
+            risk_score = min(risk_score, 1.0)
+            confidence = min(confidence, 0.95)
+            
+            # Determine risk level with AI-enhanced thresholds
+            if risk_score >= 0.8:
+                risk_level = "critical"
+            elif risk_score >= 0.6:
+                risk_level = "high"
+            elif risk_score >= 0.35:
+                risk_level = "medium"
+            else:
+                risk_level = "low"
+            
+            return risk_level, risk_score, confidence, risk_factors
+        
+        def generate_ai_recommendations(risk_level, risk_factors, patterns):
+            """Generate intelligent recommendations based on analysis"""
+            recommendations = []
+            
+            # Code-specific recommendations
+            for risk in risk_factors:
+                if "complexity" in risk.lower():
+                    recommendations.append("Refactor complex code into smaller functions")
+                elif "large file" in risk.lower():
+                    recommendations.append("Break large files into focused modules")
+                elif "force unwrap" in risk.lower():
+                    recommendations.append("Replace force unwrapping with safe unwrapping")
+                elif "missing action" in risk.lower():
+                    recommendations.append("Deploy missing GitHub Actions from main repository")
+                elif "workflow" in risk.lower():
+                    recommendations.append("Review and simplify workflow configurations")
+                elif "test" in risk.lower():
+                    recommendations.append("Add comprehensive unit test coverage")
+            
+            # Risk-level specific recommendations
+            if risk_level == "critical":
+                recommendations.extend([
+                    "IMMEDIATE ACTION REQUIRED - Halt deployment until risks mitigated",
+                    "Enable manual approval for all workflows",
+                    "Run comprehensive validation before proceeding"
+                ])
+            elif risk_level == "high":
+                recommendations.extend([
+                    "Enhanced monitoring and validation recommended",
+                    "Consider phased deployment approach",
+                    "Prepare rollback procedures"
+                ])
+            elif risk_level == "medium":
+                recommendations.extend([
+                    "Standard precautions with additional monitoring",
+                    "Review identified issues in next development cycle"
+                ])
+            else:
+                recommendations.append("Continue with standard development practices")
+            
+            return recommendations
+        
+        # Main AI analysis execution
+        print("🔍 Running comprehensive AI pattern analysis...")
+        
+        code_patterns = analyze_code_patterns()
+        history_patterns = analyze_git_history()
+        workflow_patterns = analyze_workflow_files()
+        
+        print("🧠 Calculating AI risk prediction...")
+        risk_level, risk_score, confidence, risk_factors = calculate_ai_risk_prediction(
+            code_patterns, history_patterns, workflow_patterns
+        )
+        
+        recommendations = generate_ai_recommendations(risk_level, risk_factors, 
+                                                    {"code": code_patterns, "history": history_patterns, "workflow": workflow_patterns})
+        
+        # Prepare learning insights
+        learning_insights = {
+            "patterns_analyzed": len(code_patterns["risk_indicators"]) + len(workflow_patterns["configuration_risks"]),
+            "complexity_score": code_patterns["complexity_score"],
+            "stability_score": history_patterns["stability_score"],
+            "confidence_factors": len(risk_factors),
+            "recommendation_count": len(recommendations)
+        }
+        
+        # Output results for GitHub Actions
+        print(f"RISK_LEVEL:{risk_level}")
+        print(f"RISK_SCORE:{risk_score:.3f}")
+        print(f"CONFIDENCE:{confidence:.3f}")
+        print(f"RISK_FACTORS:{';'.join(risk_factors)}")
+        print(f"RECOMMENDATIONS:{';'.join(recommendations)}")
+        print(f"LEARNING_INSIGHTS:{json.dumps(learning_insights)}")
+        
+        # Save detailed analysis
+        analysis_result = {
+            "timestamp": datetime.now().isoformat(),
+            "risk_assessment": {
+                "level": risk_level,
+                "score": risk_score,
+                "confidence": confidence,
+                "factors": risk_factors
+            },
+            "patterns": {
+                "code": code_patterns,
+                "history": history_patterns,
+                "workflow": workflow_patterns
+            },
+            "recommendations": recommendations,
+            "learning_insights": learning_insights
+        }
+        
+        with open('.mcp_prediction/patterns/latest_analysis.json', 'w') as f:
+            json.dump(analysis_result, f, indent=2)
+        
+        print(f"✅ AI Analysis Complete: {risk_level} risk with {confidence:.1%} confidence")
+        EOF
+        
+        # Execute AI analysis
+        python3 ai_failure_analysis.py > analysis_output.txt
+        
+        # Parse results
+        RISK_LEVEL=$(grep "RISK_LEVEL:" analysis_output.txt | cut -d: -f2)
+        RISK_SCORE=$(grep "RISK_SCORE:" analysis_output.txt | cut -d: -f2)
+        CONFIDENCE=$(grep "CONFIDENCE:" analysis_output.txt | cut -d: -f2)
+        RISK_FACTORS=$(grep "RISK_FACTORS:" analysis_output.txt | cut -d: -f2-)
+        RECOMMENDATIONS=$(grep "RECOMMENDATIONS:" analysis_output.txt | cut -d: -f2-)
+        LEARNING_INSIGHTS=$(grep "LEARNING_INSIGHTS:" analysis_output.txt | cut -d: -f2-)
+        
+        # Set outputs
+        echo "risk-level=$RISK_LEVEL" >> $GITHUB_OUTPUT
+        echo "recommendations=$RECOMMENDATIONS" >> $GITHUB_OUTPUT
+        echo "confidence=$CONFIDENCE" >> $GITHUB_OUTPUT
+        echo "learning-insights=$LEARNING_INSIGHTS" >> $GITHUB_OUTPUT
+        
+        echo "🎯 AI Prediction Results:"
+        echo "   Risk Level: $RISK_LEVEL"
+        echo "   Confidence: $CONFIDENCE"
+        echo "   Risk Score: $RISK_SCORE"
+
+    - name: Update AI Learning Model
+      shell: bash
+      run: |
+        echo "🧠 Updating AI learning model with new patterns..."
+        
+        # Create learning update script
+        cat > update_ai_model.py << 'EOF'
+        #!/usr/bin/env python3
+        import json
+        import os
+        from datetime import datetime
+        
+        def update_learning_model():
+            # Load current model
+            try:
+                with open('.mcp_prediction/models/failure_prediction_model.json', 'r') as f:
+                    model = json.load(f)
+            except:
+                return
+            
+            # Load latest analysis
+            try:
+                with open('.mcp_prediction/patterns/latest_analysis.json', 'r') as f:
+                    analysis = json.load(f)
+            except:
+                return
+            
+            # Update training data
+            model["training_data"]["total_workflows"] += 1
+            
+            # Record patterns by risk level
+            risk_level = analysis["risk_assessment"]["level"]
+            if risk_level not in model["training_data"]["failure_patterns"]:
+                model["training_data"]["failure_patterns"][risk_level] = {
+                    "count": 0,
+                    "avg_confidence": 0.0,
+                    "common_factors": {},
+                    "success_rate": 0.0
+                }
+            
+            pattern = model["training_data"]["failure_patterns"][risk_level]
+            pattern["count"] += 1
+            
+            # Update average confidence
+            confidence = analysis["risk_assessment"]["confidence"]
+            pattern["avg_confidence"] = (pattern["avg_confidence"] * (pattern["count"] - 1) + confidence) / pattern["count"]
+            
+            # Track common risk factors
+            for factor in analysis["risk_assessment"]["factors"]:
+                pattern["common_factors"][factor] = pattern["common_factors"].get(factor, 0) + 1
+            
+            # Update temporal patterns
+            hour = datetime.now().hour
+            day_type = "weekend" if datetime.now().weekday() >= 5 else "weekday"
+            
+            temporal_key = f"{day_type}_hour_{hour}"
+            if temporal_key not in model["training_data"]["temporal_patterns"]:
+                model["training_data"]["temporal_patterns"][temporal_key] = {
+                    "count": 0,
+                    "avg_risk_score": 0.0,
+                    "most_common_level": "low"
+                }
+            
+            temporal = model["training_data"]["temporal_patterns"][temporal_key]
+            temporal["count"] += 1
+            
+            risk_score = analysis["risk_assessment"]["score"]
+            temporal["avg_risk_score"] = (temporal["avg_risk_score"] * (temporal["count"] - 1) + risk_score) / temporal["count"]
+            
+            # Update learning parameters based on patterns
+            if model["training_data"]["total_workflows"] > 10:
+                # Adjust sensitivity based on historical accuracy
+                total_critical = sum(1 for level, data in model["training_data"]["failure_patterns"].items() 
+                                   if level == "critical" for _ in range(data["count"]))
+                if total_critical / model["training_data"]["total_workflows"] > 0.2:
+                    model["learning_parameters"]["sensitivity"] = max(0.5, model["learning_parameters"]["sensitivity"] - 0.1)
+                elif total_critical / model["training_data"]["total_workflows"] < 0.05:
+                    model["learning_parameters"]["sensitivity"] = min(0.9, model["learning_parameters"]["sensitivity"] + 0.1)
+            
+            # Save updated model
+            with open('.mcp_prediction/models/failure_prediction_model.json', 'w') as f:
+                json.dump(model, f, indent=2)
+            
+            print(f"🧠 Learning model updated:")
+            print(f"   Total patterns learned: {model['training_data']['total_workflows']}")
+            print(f"   Risk patterns: {len(model['training_data']['failure_patterns'])}")
+            print(f"   Temporal patterns: {len(model['training_data']['temporal_patterns'])}")
+            print(f"   Current sensitivity: {model['learning_parameters']['sensitivity']:.2f}")
+        
+        # Execute model update
+        update_learning_model()
+        EOF
+        
+        python3 update_ai_model.py
+
+    - name: Generate Failure Prevention Report
+      shell: bash
+      run: |
+        echo "📋 Generating comprehensive failure prevention report..."
+        
+        # Create comprehensive prevention report
+        cat > ai_failure_prevention_report.md << EOF
+        # 🤖 AI Failure Prevention Analysis Report
+        
+        **Generated:** $(date)
+        **Repository:** ${{ inputs.repository }}
+        **Workflow Type:** ${{ inputs.workflow_type }}
+        **Learning Mode:** ${{ inputs.learning_mode }}
+        
+        ## 🎯 AI Risk Assessment
+        
+        | Metric | Value | Status |
+        |--------|-------|--------|
+        | **Risk Level** | \`$RISK_LEVEL\` | $([ "$RISK_LEVEL" = "low" ] && echo "✅ Safe" || [ "$RISK_LEVEL" = "medium" ] && echo "⚠️ Caution" || [ "$RISK_LEVEL" = "high" ] && echo "🚨 Warning" || echo "🔥 Critical") |
+        | **Confidence** | \`$CONFIDENCE\` | $(awk "BEGIN {if ($CONFIDENCE > 0.8) print \"🎯 High\"; else if ($CONFIDENCE > 0.6) print \"📊 Medium\"; else print \"🔍 Low\"}") |
+        | **Risk Score** | \`$RISK_SCORE/1.0\` | $(awk "BEGIN {if ($RISK_SCORE > 0.7) print \"⚠️ Elevated\"; else if ($RISK_SCORE > 0.4) print \"📊 Moderate\"; else print \"✅ Low\"}") |
+        
+        ## 🔍 Risk Factors Identified
+        
+        EOF
+        
+        # Add risk factors
+        if [[ -n "$RISK_FACTORS" ]]; then
+          IFS=';' read -ra FACTORS <<< "$RISK_FACTORS"
+          for factor in "${FACTORS[@]}"; do
+            echo "- 🚨 $factor" >> ai_failure_prevention_report.md
+          done
+        else
+          echo "- ✅ No significant risk factors identified" >> ai_failure_prevention_report.md
+        fi
+        
+        cat >> ai_failure_prevention_report.md << EOF
+        
+        ## 💡 AI-Generated Recommendations
+        
+        EOF
+        
+        # Add recommendations
+        if [[ -n "$RECOMMENDATIONS" ]]; then
+          IFS=';' read -ra RECS <<< "$RECOMMENDATIONS"
+          for rec in "${RECS[@]}"; do
+            echo "- 🔧 $rec" >> ai_failure_prevention_report.md
+          done
+        else
+          echo "- ✅ No immediate action required" >> ai_failure_prevention_report.md
+        fi
+        
+        # Add action plan based on risk level
+        cat >> ai_failure_prevention_report.md << EOF
+        
+        ## 🚀 Immediate Action Plan
+        
+        EOF
+        
+        case "$RISK_LEVEL" in
+          "critical")
+            cat >> ai_failure_prevention_report.md << EOF
+        ### 🔥 CRITICAL RISK - Immediate Intervention Required
+        
+        1. **🛑 HALT DEPLOYMENT** - Do not proceed with current workflow
+        2. **👥 NOTIFY TEAM** - Alert development team and stakeholders
+        3. **🔧 IMMEDIATE FIXES** - Address all critical risk factors before proceeding
+        4. **✋ MANUAL APPROVAL** - Require manual review for this workflow
+        5. **📋 VALIDATION** - Run comprehensive validation after fixes
+        6. **🔄 ROLLBACK PLAN** - Prepare immediate rollback procedures
+        
+        **⏰ Expected Resolution Time:** 2-4 hours
+        **👨‍💻 Required Expertise:** Senior developer + DevOps engineer
+        EOF
+            ;;
+          "high")
+            cat >> ai_failure_prevention_report.md << EOF
+        ### 🚨 HIGH RISK - Enhanced Precautions Required
+        
+        1. **📊 ENHANCED MONITORING** - Enable detailed logging and monitoring
+        2. **🧪 ADDITIONAL VALIDATION** - Run extra test suites and checks
+        3. **👀 CLOSE SUPERVISION** - Monitor workflow execution closely
+        4. **🔄 ROLLBACK READY** - Prepare rollback procedures
+        5. **📢 STAKEHOLDER ALERT** - Inform relevant stakeholders about elevated risk
+        
+        **⏰ Expected Resolution Time:** 1-2 hours
+        **👨‍💻 Required Expertise:** Experienced developer
+        EOF
+            ;;
+          "medium")
+            cat >> ai_failure_prevention_report.md << EOF
+        ### ⚠️ MEDIUM RISK - Standard Precautions with Additional Monitoring
+        
+        1. **📈 MONITORING** - Standard monitoring with attention to identified factors
+        2. **🔍 POST-EXECUTION REVIEW** - Review logs and metrics after execution
+        3. **📝 DOCUMENTATION** - Document any issues for future learning
+        4. **🔧 GRADUAL IMPROVEMENT** - Plan fixes for next development cycle
+        
+        **⏰ Expected Resolution Time:** Next development cycle
+        **👨‍💻 Required Expertise:** Regular development team
+        EOF
+            ;;
+          *)
+            cat >> ai_failure_prevention_report.md << EOF
+        ### ✅ LOW RISK - Proceed with Confidence
+        
+        1. **📊 STANDARD MONITORING** - Normal workflow monitoring is sufficient
+        2. **✅ PROCEED NORMALLY** - Workflow expected to execute successfully
+        3. **📈 CONTINUOUS IMPROVEMENT** - Continue following best practices
+        4. **🧠 LEARN AND IMPROVE** - AI system continues learning from this execution
+        
+        **⏰ Expected Resolution Time:** No action required
+        **👨‍💻 Required Expertise:** Standard team operations
+        EOF
+            ;;
+        esac
+        
+        cat >> ai_failure_prevention_report.md << EOF
+        
+        ## 🧠 AI Learning Insights
+        
+        EOF
+        
+        # Add learning insights
+        python3 << 'EOF'
+        import json
+        import os
+        
+        try:
+            with open('.mcp_prediction/models/failure_prediction_model.json', 'r') as f:
+                model = json.load(f)
+            
+            training_data = model["training_data"]
+            learning_params = model["learning_parameters"]
+            
+            print(f"- **Total Workflows Analyzed:** {training_data['total_workflows']}")
+            print(f"- **Failure Patterns Learned:** {len(training_data['failure_patterns'])}")
+            print(f"- **Temporal Patterns:** {len(training_data.get('temporal_patterns', {}))}")
+            print(f"- **Current Sensitivity:** {learning_params['sensitivity']:.2f}")
+            print(f"- **Pattern Weight:** {learning_params['pattern_weight']:.2f}")
+            
+            # Show top risk patterns
+            if training_data['failure_patterns']:
+                print("\n**Most Common Risk Patterns:**")
+                for level, data in training_data['failure_patterns'].items():
+                    if data['count'] > 0:
+                        print(f"- {level.title()}: {data['count']} occurrences (avg confidence: {data.get('avg_confidence', 0):.1%})")
+        
+        except Exception as e:
+            print("- AI Learning System: Initializing and collecting baseline data")
+            print("- Pattern Recognition: Building initial models")
+            print("- Temporal Analysis: Establishing trends")
+        EOF
+        
+        cat >> ai_failure_prevention_report.md << EOF
+        
+        ## 📈 Continuous Learning
+        
+        This AI prediction system continuously evolves with each workflow execution:
+        
+        - **Pattern Recognition:** Learns from successful and failed workflows
+        - **Adaptive Thresholds:** Adjusts sensitivity based on historical accuracy
+        - **Temporal Intelligence:** Understands time-based risk patterns
+        - **Repository-Specific Learning:** Tailors predictions to your specific codebase
+        
+        ## 🔮 Future Enhancements
+        
+        The AI system will become more accurate as it learns from:
+        - Workflow execution outcomes
+        - Code change patterns
+        - Team development practices
+        - Seasonal and temporal trends
+        
+        ---
+        
+        *Generated by MCP AI Failure Prediction System v2.0*
+        *Next prediction will be more accurate based on this workflow's outcome*
+        EOF
+        
+        echo "📄 Comprehensive AI report generated: ai_failure_prevention_report.md"

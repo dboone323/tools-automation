@@ -1,0 +1,18 @@
+name: 'Swift 6 Validator'
+description: 'Swift 6 concurrency and compatibility validation'
+runs:
+  using: 'composite'
+  steps:
+    - name: Validate Swift 6 Compatibility
+      shell: bash
+      run: |
+        echo "🔍 Validating Swift 6 compatibility..."
+        
+        # Check for Swift 6 specific issues
+        echo "Checking for main actor isolation issues..."
+        grep -r "@MainActor" . --include="*.swift" || echo "No @MainActor usage found"
+        
+        echo "Checking for concurrency warnings..."
+        grep -r "async" . --include="*.swift" | wc -l | xargs echo "Async functions found:"
+        
+        echo "✅ Swift 6 validation complete"

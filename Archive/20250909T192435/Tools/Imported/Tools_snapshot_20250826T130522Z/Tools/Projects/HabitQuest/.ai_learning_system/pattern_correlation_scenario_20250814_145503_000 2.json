@@ -1,0 +1,9 @@
+{
+  "pattern_id": "pattern_scenario_20250814_145503_000",
+  "timestamp": "2025-08-12T18:55:03.817702",
+  "error_fingerprint": "configuration_error_9",
+  "solution_fingerprint": "config_correction_95",
+  "correlation_strength": 0.8790201843988633,
+  "occurrence_count": 3,
+  "cross_project_applicability": true
+}

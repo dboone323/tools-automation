@@ -1,0 +1,21 @@
+{
+  "fix_id": "scenario_20250814_145503_007",
+  "timestamp": "2025-08-12T21:55:03.817764",
+  "project": "HabitQuest",
+  "platform": "iOS",
+  "error_pattern": {
+    "type": "permission_denied",
+    "context": "CocoaPods dependency conflict",
+    "complexity": 5
+  },
+  "solution_pattern": {
+    "method": "timeout_increase",
+    "success_rate": 0.960590247208441,
+    "confidence": 0.24665667078868886
+  },
+  "outcome": {
+    "status": "resolved",
+    "learning_value": 0.24665667078868886,
+    "reproducible": false
+  }
+}

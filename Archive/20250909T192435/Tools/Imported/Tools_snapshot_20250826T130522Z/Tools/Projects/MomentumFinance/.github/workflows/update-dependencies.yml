@@ -1,0 +1,40 @@
+---
+name: Update Dependencies
+on:
+  schedule:
+  workflow_dispatch:  # Allow manual trigger
+jobs:
+  update-dependencies:
+  runs-on: macos-latest
+  steps:
+      - uses: actions/checkout@v4
+  with:
+  token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update Swift Package Dependencies
+  run: |
+  # Update Package.resolved
+          if [ -f "Package.swift" ]; then
+          swift package update
+          fi
+      - name: Check for Changes
+  id: verify-changed-files
+  run: |
+          if [ -n "$(git status --porcelain)" ]; then
+          echo "changed=true" >> $GITHUB_OUTPUT
+          else
+          echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+    if: steps.verify-changed-files.outputs.changed == 'true'
+      uses: peter-evans/create-pull-request@v7
+      with:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      commit-message: 'chore: update Swift package dependencies'
+      title: 'Update Swift Package Dependencies'
+  body: |
+  ## Automated Dependency Update
+    This PR updates Swift package dependencies to their latest versions.
+    ### Changes
+    ### Testing
+      Please review the changes and test thoroughly before merging.
+  branch: automated/update-dependencies
+  delete-branch: true

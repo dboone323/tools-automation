@@ -1,0 +1,21 @@
+{
+  "fix_id": "scenario_20250814_145503_001",
+  "timestamp": "2025-08-13T14:55:03.817726",
+  "project": "HabitQuest",
+  "platform": "iOS",
+  "error_pattern": {
+    "type": "dependency_issue",
+    "context": "Memory leak in release build",
+    "complexity": 8
+  },
+  "solution_pattern": {
+    "method": "environment_setup",
+    "success_rate": 0.8553531041316011,
+    "confidence": 0.4943384332581181
+  },
+  "outcome": {
+    "status": "resolved",
+    "learning_value": 0.4943384332581181,
+    "reproducible": false
+  }
+}
