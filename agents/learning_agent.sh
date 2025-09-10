@@ -1,11 +1,14 @@
 #!/bin/bash
-# Learning Agent: Analyzes code patterns and learns from best practices across projects
+# Learning Ag	local task_desc
+	task_desc=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .description" "$TASK_QUEUE_FILE")
+	local task_type
+	task_type=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .type" "$TASK_QUEUE_FILE")t: Analyzes code patterns and learns from best practices across projects
 
 AGENT_NAME="learning_agent.sh"
-LOG_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/learning_agent.log"
-NOTIFICATION_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
-AGENT_STATUS_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json"
-TASK_QUEUE_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/task_queue.json"
+LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/learning_agent.log"
+NOTIFICATION_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
+AGENT_STATUS_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/agent_status.json"
+TASK_QUEUE_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/task_queue.json"
 
 # Update agent status to available when starting
 update_status() {
@@ -23,8 +26,10 @@ process_task() {
 
 	# Get task details
 	if command -v jq &>/dev/null; then
-		local task_desc=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .description" "$TASK_QUEUE_FILE")
-		local task_type=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .type" "$TASK_QUEUE_FILE")
+		local task_desc
+		task_desc=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .description" "$TASK_QUEUE_FILE")
+		local task_type
+		task_type=$(jq -r ".tasks[] | select(.id == \"$task_id\") | .type" "$TASK_QUEUE_FILE")
 		echo "[$(date)] $AGENT_NAME: Task description: $task_desc" >>"$LOG_FILE"
 		echo "[$(date)] $AGENT_NAME: Task type: $task_type" >>"$LOG_FILE"
 
@@ -64,7 +69,7 @@ run_pattern_analysis() {
 	for project in "${projects[@]}"; do
 		if [[ -d "/Users/danielstevens/Desktop/Code/Projects/$project" ]]; then
 			echo "[$(date)] $AGENT_NAME: Analyzing patterns in $project..." >>"$LOG_FILE"
-			cd "/Users/danielstevens/Desktop/Code/Projects/$project"
+			cd "/Users/danielstevens/Desktop/Quantum-workspace/Projects/$project" || continue
 
 			# Analyze code patterns
 			echo "[$(date)] $AGENT_NAME: Finding common patterns in $project..." >>"$LOG_FILE"
@@ -95,7 +100,7 @@ declare -A processed_tasks
 while true; do
 	# Check for new task notifications
 	if [[ -f $NOTIFICATION_FILE ]]; then
-		while IFS='|' read -r timestamp action task_id; do
+		while IFS='|' read -r _ action task_id; do
 			if [[ $action == "execute_task" && -z ${processed_tasks[$task_id]} ]]; then
 				update_status "busy"
 				process_task "$task_id"
@@ -106,7 +111,7 @@ while true; do
 		done <"$NOTIFICATION_FILE"
 
 		# Clear processed notifications to prevent re-processing
-		>"$NOTIFICATION_FILE"
+		true >"$NOTIFICATION_FILE"
 	fi
 
 	# Update last seen timestamp

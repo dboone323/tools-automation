@@ -8,6 +8,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
+PURPLE='\033[0;35m'
 NC='\033[0m'
 
 print_status() {
@@ -29,36 +30,34 @@ print_error() {
 # Check workflow status for a repository
 check_workflow_status() {
 	local repo_name="$1"
-	local project_path="${CODE_DIR}/Projects/${repo_name}"
+	local project_path="$CODE_DIR/Projects/$repo_name"
 
-	if [[ ! -d ${project_path} ]]; then
-		print_error "Project ${repo_name} not found"
+	if [[ ! -d $project_path ]]; then
+		print_error "Project $repo_name not found"
 		return 1
 	fi
 
-	print_status "Checking workflow status for ${repo_name}..."
+	print_status "Checking workflow status for $repo_name..."
 
 	# Check if this is a git repository with GitHub workflows
-	cd "${project_path}" || exit
+	cd "$project_path"
 	if [[ ! -d ".github/workflows" ]]; then
-		print_warning "No GitHub workflows found in ${repo_name}"
+		print_warning "No GitHub workflows found in $repo_name"
 		return 0
 	fi
 
 	# List workflow files
-	local workflow_files
-	workflow_files=$(find .github/workflows -name "*.yml" -o -name "*.yaml" 2>/dev/null)
-	if [[ -z ${workflow_files} ]]; then
+	local workflow_files=$(find .github/workflows -name "*.yml" -o -name "*.yaml" 2>/dev/null)
+	if [[ -z $workflow_files ]]; then
 		print_warning "No workflow files found"
 		return 0
 	fi
 
 	echo ""
 	echo "📋 Workflow files found:"
-	for workflow in ${workflow_files}; do
-		local workflow_name
-		workflow_name=$(basename "${workflow}" .yml)
-		echo "  • ${workflow_name}: ${workflow}"
+	for workflow in $workflow_files; do
+		local workflow_name=$(basename "$workflow" .yml)
+		echo "  • $workflow_name: $workflow"
 	done
 	echo ""
 }
@@ -66,15 +65,15 @@ check_workflow_status() {
 # Run pre-commit checks that mirror CI/CD
 run_local_ci_checks() {
 	local project_name="$1"
-	local project_path="${CODE_DIR}/Projects/${project_name}"
+	local project_path="$CODE_DIR/Projects/$project_name"
 
-	if [[ ! -d ${project_path} ]]; then
-		print_error "Project ${project_name} not found"
+	if [[ ! -d $project_path ]]; then
+		print_error "Project $project_name not found"
 		return 1
 	fi
 
-	print_status "Running local CI checks for ${project_name} (mirroring GitHub Actions)..."
-	cd "${project_path}" || exit
+	print_status "Running local CI checks for $project_name (mirroring GitHub Actions)..."
+	cd "$project_path"
 
 	local checks_passed=0
 	local total_checks=5
@@ -82,17 +81,15 @@ run_local_ci_checks() {
 	# Check 1: Swift Version Compatibility
 	print_status "1. Checking Swift version compatibility..."
 	if [[ -f "Package.swift" ]]; then
-		local swift_version
-		swift_version=$(head -1 Package.swift | grep -o '[0-9]\+\.[0-9]\+' | head -1)
-		local system_swift
-		system_swift=$(swift --version | grep -o 'Swift version [0-9]\+\.[0-9]\+' | grep -o '[0-9]\+\.[0-9]\+')
+		local swift_version=$(head -1 Package.swift | grep -o '[0-9]\+\.[0-9]\+' | head -1)
+		local system_swift=$(swift --version | grep -o 'Swift version [0-9]\+\.[0-9]\+' | grep -o '[0-9]\+\.[0-9]\+')
 
-		if [[ -n ${swift_version} ]] && [[ -n ${system_swift} ]]; then
-			echo "   Package requires: Swift ${swift_version}"
-			echo "   System has: Swift ${system_swift}"
+		if [[ -n $swift_version ]] && [[ -n $system_swift ]]; then
+			echo "   Package requires: Swift $swift_version"
+			echo "   System has: Swift $system_swift"
 
 			# Compare versions (simplified)
-			if [[ ${system_swift} =~ ^${swift_version} ]]; then
+			if [[ $system_swift =~ ^$swift_version ]]; then
 				print_success "Swift version compatible"
 				((checks_passed++))
 			else
@@ -128,19 +125,16 @@ run_local_ci_checks() {
 	# Check 3: SwiftLint
 	print_status "3. Running SwiftLint check..."
 	if command -v swiftlint &>/dev/null; then
-		local lint_output
-		lint_output=$(swiftlint 2>&1)
+		local lint_output=$(swiftlint 2>&1)
 		local lint_exit_code=$?
 
-		if [[ ${lint_exit_code} -eq 0 ]]; then
+		if [[ $lint_exit_code -eq 0 ]]; then
 			print_success "SwiftLint passed"
 			((checks_passed++))
 		else
-			local warnings
-			warnings=$(echo "${lint_output}" | grep -c "warning:" || echo "0")
-			local errors
-			errors=$(echo "${lint_output}" | grep -c "error:" || echo "0")
-			print_warning "SwiftLint found ${warnings} warnings, ${errors} errors"
+			local warnings=$(echo "$lint_output" | grep -c "warning:" || echo "0")
+			local errors=$(echo "$lint_output" | grep -c "error:" || echo "0")
+			print_warning "SwiftLint found $warnings warnings, $errors errors"
 		fi
 	else
 		print_warning "SwiftLint not installed"
@@ -173,10 +167,9 @@ run_local_ci_checks() {
 			print_warning "Swift package tests failed or no tests found"
 		fi
 	else
-		local test_files
-		test_files=$(find . -name "*Test*.swift" -o -name "*test*.swift" | wc -l | tr -d ' ')
-		if [[ ${test_files} -gt 0 ]]; then
-			print_success "Found ${test_files} test files"
+		local test_files=$(find . -name "*Test*.swift" -o -name "*test*.swift" | wc -l | tr -d ' ')
+		if [[ $test_files -gt 0 ]]; then
+			print_success "Found $test_files test files"
 			((checks_passed++))
 		else
 			print_warning "No test files found"
@@ -185,13 +178,13 @@ run_local_ci_checks() {
 
 	# Summary
 	echo ""
-	print_status "CI Check Summary for ${project_name}:"
-	echo "   ✅ Passed: ${checks_passed}/${total_checks} checks"
+	print_status "CI Check Summary for $project_name:"
+	echo "   ✅ Passed: $checks_passed/$total_checks checks"
 
-	if [[ ${checks_passed} -eq ${total_checks} ]]; then
+	if [[ $checks_passed -eq $total_checks ]]; then
 		print_success "All checks passed - ready for CI/CD!"
 		return 0
-	elif [[ ${checks_passed} -ge 3 ]]; then
+	elif [[ $checks_passed -ge 3 ]]; then
 		print_warning "Most checks passed - minor issues to fix"
 		return 1
 	else
@@ -203,15 +196,15 @@ run_local_ci_checks() {
 # Fix common workflow issues
 fix_workflow_issues() {
 	local project_name="$1"
-	local project_path="${CODE_DIR}/Projects/${project_name}"
+	local project_path="$CODE_DIR/Projects/$project_name"
 
-	if [[ ! -d ${project_path} ]]; then
-		print_error "Project ${project_name} not found"
+	if [[ ! -d $project_path ]]; then
+		print_error "Project $project_name not found"
 		return 1
 	fi
 
-	print_status "Fixing common workflow issues for ${project_name}..."
-	cd "${project_path}" || exit
+	print_status "Fixing common workflow issues for $project_name..."
+	cd "$project_path"
 
 	# Fix 1: Update Swift version in workflows
 	if [[ -d ".github/workflows" ]]; then
@@ -223,18 +216,18 @@ fix_workflow_issues() {
 		fi
 
 		for workflow_file in .github/workflows/*.yml .github/workflows/*.yaml; do
-			if [[ -f ${workflow_file} ]]; then
+			if [[ -f $workflow_file ]]; then
 				# Update checkout action
-				sed -i.bak 's/actions\/checkout@v3/actions\/checkout@v4/g' "${workflow_file}"
+				sed -i.bak 's/actions\/checkout@v3/actions\/checkout@v4/g' "$workflow_file"
 
 				# Update swift-actions setup
-				sed -i.bak 's/swift-actions\/setup-swift@v1/swift-actions\/setup-swift@v2/g' "${workflow_file}"
+				sed -i.bak 's/swift-actions\/setup-swift@v1/swift-actions\/setup-swift@v2/g' "$workflow_file"
 
 				# Update Swift version
-				sed -i.bak "s/swift-version: '[0-9]\+\.[0-9]\+'/swift-version: '${swift_version}'/g" "${workflow_file}"
+				sed -i.bak "s/swift-version: '[0-9]\+\.[0-9]\+'/swift-version: '$swift_version'/g" "$workflow_file"
 
 				rm -f "${workflow_file}.bak"
-				print_success "Updated $(basename "${workflow_file}")"
+				print_success "Updated $(basename "$workflow_file")"
 			fi
 		done
 	fi
@@ -242,7 +235,7 @@ fix_workflow_issues() {
 	# Fix 2: Ensure .swiftformat exists
 	print_status "2. Checking .swiftformat configuration..."
 	if [[ ! -f ".swiftformat" ]]; then
-		cp "${CODE_DIR}/.swiftformat" ".swiftformat"
+		cp "$CODE_DIR/.swiftformat" ".swiftformat"
 		print_success "Added .swiftformat configuration"
 	else
 		print_success ".swiftformat already exists"
@@ -257,7 +250,7 @@ fix_workflow_issues() {
 		print_warning "SwiftFormat not available"
 	fi
 
-	print_success "Workflow fixes completed for ${project_name}"
+	print_success "Workflow fixes completed for $project_name"
 }
 
 # GitHub integration status
@@ -282,12 +275,12 @@ check_github_integration() {
 	local mcp_tools=("mcp_github_list_workflows" "mcp_github_list_workflow_runs" "mcp_github_get_job_logs")
 	local mcp_available=0
 
-	for _ in "${mcp_tools[@]}"; do
+	for tool in "${mcp_tools[@]}"; do
 		# This is a simplified check - in reality, we'd check if MCP tools are available
 		((mcp_available++))
 	done
 
-	if [[ ${mcp_available} -eq ${#mcp_tools[@]} ]]; then
+	if [[ $mcp_available -eq ${#mcp_tools[@]} ]]; then
 		print_success "MCP GitHub tools available"
 	else
 		print_warning "Some MCP GitHub tools may not be available"
@@ -348,18 +341,18 @@ case "${1-}" in
 	;;
 "autofix")
 	if [[ -n ${2-} ]]; then
-		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" fix "$2"
+		"$CODE_DIR/Tools/Automation/intelligent_autofix.sh" fix "$2"
 	else
 		print_error "Usage: $0 autofix <project_name>"
 		exit 1
 	fi
 	;;
 "autofix-all")
-	"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" fix-all
+	"$CODE_DIR/Tools/Automation/intelligent_autofix.sh" fix-all
 	;;
 "validate")
 	if [[ -n ${2-} ]]; then
-		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" validate "$2"
+		"$CODE_DIR/Tools/Automation/intelligent_autofix.sh" validate "$2"
 	else
 		print_error "Usage: $0 validate <project_name>"
 		exit 1
@@ -367,7 +360,7 @@ case "${1-}" in
 	;;
 "rollback")
 	if [[ -n ${2-} ]]; then
-		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" rollback "$2"
+		"$CODE_DIR/Tools/Automation/intelligent_autofix.sh" rollback "$2"
 	else
 		print_error "Usage: $0 rollback <project_name>"
 		exit 1

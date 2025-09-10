@@ -1,0 +1,432 @@
+//
+//  CloudKitManager.swift
+//  PlannerApp
+//
+//  Handles CloudKit integration for cross-device data synchronization
+//
+
+import Foundation
+import CloudKit
+import SwiftUI
+
+@MainActor
+class CloudKitManager: ObservableObject {
+    static let shared = CloudKitManager()
+    
+    private let container = CKContainer.default()
+    private let database: CKDatabase
+    
+    @Published var isSignedInToiCloud = false
+    @Published var syncStatus: SyncStatus = .idle
+    @Published var lastSyncDate: Date?
+    
+    enum SyncStatus {
+        case idle
+        case syncing(SyncProgress)
+        
+        enum SyncProgress {
+            case inProgress(Int) // Percentage
+            case success
+            case error
+        }
+    }
+    
+    private init() {
+        self.database = container.privateCloudDatabase
+        checkiCloudStatus()
+    }
+    
+    // MARK: - iCloud Status
+    
+    func checkiCloudStatus() {
+        container.accountStatus { [weak self] status, error in
+            DispatchQueue.main.async {
+                switch status {
+                case .available:
+                    self?.isSignedInToiCloud = true
+                case .noAccount, .restricted, .couldNotDetermine, .temporarilyUnavailable:
+                    self?.isSignedInToiCloud = false
+                @unknown default:
+                    self?.isSignedInToiCloud = false
+                }
+            }
+        }
+    }
+    
+    func checkAccountStatus() async {
+        await MainActor.run {
+            syncStatus = .syncing(.inProgress(0))
+        }
+        
+        container.accountStatus { [weak self] status, error in
+            DispatchQueue.main.async {
+                switch status {
+                case .available:
+                    self?.isSignedInToiCloud = true
+                    self?.syncStatus = .syncing(.success)
+                case .noAccount, .restricted, .couldNotDetermine, .temporarilyUnavailable:
+                    self?.isSignedInToiCloud = false
+                    self?.syncStatus = .syncing(.error)
+                @unknown default:
+                    self?.isSignedInToiCloud = false
+                    self?.syncStatus = .syncing(.error)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Sync Operations
+    
+    func syncAllData() async {
+        guard isSignedInToiCloud else {
+            syncStatus = .syncing(.error)
+            return
+        }
+        
+        syncStatus = .syncing(.inProgress(0))
+        
+        do {
+            // Sync different data types
+            try await syncTasks()
+            syncStatus = .syncing(.inProgress(25))
+            
+            try await syncGoals()
+            syncStatus = .syncing(.inProgress(50))
+            
+            try await syncJournalEntries()
+            syncStatus = .syncing(.inProgress(75))
+            
+            try await syncCalendarEvents()
+            
+            lastSyncDate = Date()
+            syncStatus = .syncing(.success)
+            
+            // Auto-sync completed, schedule next sync
+            scheduleNextSync()
+            
+        } catch {
+            print("CloudKit sync error: \(error.localizedDescription)")
+            syncStatus = .syncing(.error)
+        }
+    }
+    
+    private func scheduleNextSync() {
+        // Schedule next sync in 15 minutes
+        DispatchQueue.main.asyncAfter(deadline: .now() + 900, execute: {
+            Task { [weak self] in
+                await self?.syncAllData()
+            }
+        })
+    }
+    
+    // MARK: - Task Sync
+    
+    private func syncTasks() async throws {
+        // Fetch local and remote tasks
+        let localTasks = TaskDataManager.shared.load()
+        let remoteTasks = try await fetchRemoteTasks()
+        
+        // Perform merge operation
+        let (tasksToUpload, tasksToUpdate) = mergeTaskData(local: localTasks, remote: remoteTasks)
+        
+        // Update local storage with merged data
+        if !tasksToUpdate.isEmpty {
+            TaskDataManager.shared.save(tasks: tasksToUpdate)
+        }
+        
+        // Upload new/updated tasks to CloudKit
+        try await uploadTasks(tasksToUpload)
+    }
+    
+    private func fetchRemoteTasks() async throws -> [Task] {
+        let query = CKQuery(recordType: "Task", predicate: NSPredicate(value: true))
+        let result = try await database.records(matching: query)
+        
+        return result.matchResults.compactMap { _, result in
+            do {
+                let record = try result.get()
+                return try Task.from(ckRecord: record)
+            } catch {
+                print("Error decoding task record: \(error)")
+                return nil
+            }
+        }
+    }
+    
+    private func mergeTaskData(local: [Task], remote: [Task]) -> ([Task], [Task]) {
+        var tasksToUpload = [Task]()
+        var mergedTasks = local
+        
+        // Process remote tasks
+        for remoteTask in remote {
+            if let localIndex = local.firstIndex(where: { $0.id == remoteTask.id }) {
+                let localTask = local[localIndex]
+                
+                // Determine which version is newer based on modifiedAt (we'll need to add this field)
+                if let remoteModified = remoteTask.modifiedAt, let localModified = localTask.modifiedAt,
+                   remoteModified > localModified {
+                    // Remote is newer, update local
+                    mergedTasks[localIndex] = remoteTask
+                } else {
+                    // Local is newer or same, keep for upload
+                    tasksToUpload.append(localTask)
+                }
+            } else {
+                // Task exists in remote but not locally, add it
+                mergedTasks.append(remoteTask)
+            }
+        }
+        
+        // Find tasks that exist locally but not remotely
+        for localTask in local {
+            if !remote.contains(where: { $0.id == localTask.id }) {
+                tasksToUpload.append(localTask)
+            }
+        }
+        
+        return (tasksToUpload, mergedTasks)
+    }
+    
+    private func uploadTasks(_ tasks: [Task]) async throws {
+        let records = tasks.map { $0.toCKRecord() }
+        
+        for record in records {
+            try await database.save(record)
+        }
+    }
+    
+    // MARK: - Goal Sync
+    
+    private func syncGoals() async throws {
+        // Fetch local and remote goals
+        let localGoals = GoalDataManager.shared.load()
+        let remoteGoals = try await fetchRemoteGoals()
+        
+        // Perform merge operation
+        let (goalsToUpload, goalsToUpdate) = mergeGoalData(local: localGoals, remote: remoteGoals)
+        
+        // Update local storage with merged data
+        if !goalsToUpdate.isEmpty {
+            GoalDataManager.shared.save(goals: goalsToUpdate)
+        }
+        
+        // Upload new/updated goals to CloudKit
+        try await uploadGoals(goalsToUpload)
+    }
+    
+    private func fetchRemoteGoals() async throws -> [Goal] {
+        let query = CKQuery(recordType: "Goal", predicate: NSPredicate(value: true))
+        let result = try await database.records(matching: query)
+        
+        return result.matchResults.compactMap { _, result in
+            do {
+                let record = try result.get()
+                return try Goal.from(ckRecord: record)
+            } catch {
+                print("Error decoding goal record: \(error)")
+                return nil
+            }
+        }
+    }
+    
+    private func mergeGoalData(local: [Goal], remote: [Goal]) -> ([Goal], [Goal]) {
+        var goalsToUpload = [Goal]()
+        var mergedGoals = local
+        
+        // Process remote goals
+        for remoteGoal in remote {
+            if let localIndex = local.firstIndex(where: { $0.id == remoteGoal.id }) {
+                let localGoal = local[localIndex]
+                
+                // Determine which version is newer based on modifiedAt
+                if let remoteModified = remoteGoal.modifiedAt, let localModified = localGoal.modifiedAt,
+                   remoteModified > localModified {
+                    // Remote is newer, update local
+                    mergedGoals[localIndex] = remoteGoal
+                } else {
+                    // Local is newer or same, keep for upload
+                    goalsToUpload.append(localGoal)
+                }
+            } else {
+                // Goal exists in remote but not locally, add it
+                mergedGoals.append(remoteGoal)
+            }
+        }
+        
+        // Find goals that exist locally but not remotely
+        for localGoal in local {
+            if !remote.contains(where: { $0.id == localGoal.id }) {
+                goalsToUpload.append(localGoal)
+            }
+        }
+        
+        return (goalsToUpload, mergedGoals)
+    }
+    
+    private func uploadGoals(_ goals: [Goal]) async throws {
+        let records = goals.map { $0.toCKRecord() }
+        
+        for record in records {
+            try await database.save(record)
+        }
+    }
+    
+    // Similar patterns for Journal and Calendar events
+    private func syncJournalEntries() async throws {
+        // Implementation follows same pattern as tasks and goals
+        let localEntries = JournalDataManager.shared.load()
+        let remoteEntries = try await fetchRemoteJournalEntries()
+        
+        let (entriesToUpload, entriesToUpdate) = mergeJournalEntryData(local: localEntries, remote: remoteEntries)
+        
+        if !entriesToUpdate.isEmpty {
+            JournalDataManager.shared.save(entries: entriesToUpdate)
+        }
+        
+        try await uploadJournalEntries(entriesToUpload)
+    }
+    
+    private func fetchRemoteJournalEntries() async throws -> [JournalEntry] {
+        let query = CKQuery(recordType: "JournalEntry", predicate: NSPredicate(value: true))
+        let result = try await database.records(matching: query)
+        
+        return result.matchResults.compactMap { _, result in
+            do {
+                let record = try result.get()
+                return try JournalEntry.from(ckRecord: record)
+            } catch {
+                print("Error decoding journal entry record: \(error)")
+                return nil
+            }
+        }
+    }
+    
+    private func mergeJournalEntryData(local: [JournalEntry], remote: [JournalEntry]) -> ([JournalEntry], [JournalEntry]) {
+        // Implementation follows same pattern as tasks and goals
+        var entriesToUpload = [JournalEntry]()
+        var mergedEntries = local
+        
+        for remoteEntry in remote {
+            if let localIndex = local.firstIndex(where: { $0.id == remoteEntry.id }) {
+                let localEntry = local[localIndex]
+                
+                if let remoteModified = remoteEntry.modifiedAt, let localModified = localEntry.modifiedAt,
+                   remoteModified > localModified {
+                    mergedEntries[localIndex] = remoteEntry
+                } else {
+                    entriesToUpload.append(localEntry)
+                }
+            } else {
+                mergedEntries.append(remoteEntry)
+            }
+        }
+        
+        for localEntry in local {
+            if !remote.contains(where: { $0.id == localEntry.id }) {
+                entriesToUpload.append(localEntry)
+            }
+        }
+        
+        return (entriesToUpload, mergedEntries)
+    }
+    
+    private func uploadJournalEntries(_ entries: [JournalEntry]) async throws {
+        let records = entries.map { $0.toCKRecord() }
+        
+        for record in records {
+            try await database.save(record)
+        }
+    }
+    
+    private func syncCalendarEvents() async throws {
+        // Implementation follows same pattern as tasks and goals
+        let localEvents = CalendarDataManager.shared.load()
+        let remoteEvents = try await fetchRemoteCalendarEvents()
+        
+        let (eventsToUpload, eventsToUpdate) = mergeCalendarEventData(local: localEvents, remote: remoteEvents)
+        
+        if !eventsToUpdate.isEmpty {
+            CalendarDataManager.shared.save(events: eventsToUpdate)
+        }
+        
+        try await uploadCalendarEvents(eventsToUpload)
+    }
+    
+    private func fetchRemoteCalendarEvents() async throws -> [CalendarEvent] {
+        let query = CKQuery(recordType: "CalendarEvent", predicate: NSPredicate(value: true))
+        let result = try await database.records(matching: query)
+        
+        return result.matchResults.compactMap { _, result in
+            do {
+                let record = try result.get()
+                return try CalendarEvent.from(ckRecord: record)
+            } catch {
+                print("Error decoding calendar event record: \(error)")
+                return nil
+            }
+        }
+    }
+    
+    private func mergeCalendarEventData(local: [CalendarEvent], remote: [CalendarEvent]) -> ([CalendarEvent], [CalendarEvent]) {
+        // Implementation follows same pattern as tasks and goals
+        var eventsToUpload = [CalendarEvent]()
+        var mergedEvents = local
+        
+        for remoteEvent in remote {
+            if let localIndex = local.firstIndex(where: { $0.id == remoteEvent.id }) {
+                let localEvent = local[localIndex]
+                
+                if let remoteModified = remoteEvent.modifiedAt, let localModified = localEvent.modifiedAt,
+                   remoteModified > localModified {
+                    mergedEvents[localIndex] = remoteEvent
+                } else {
+                    eventsToUpload.append(localEvent)
+                }
+            } else {
+                mergedEvents.append(remoteEvent)
+            }
+        }
+        
+        for localEvent in local {
+            if !remote.contains(where: { $0.id == localEvent.id }) {
+                eventsToUpload.append(localEvent)
+            }
+        }
+        
+        return (eventsToUpload, mergedEvents)
+    }
+    
+    private func uploadCalendarEvents(_ events: [CalendarEvent]) async throws {
+        let records = events.map { $0.toCKRecord() }
+        
+        for record in records {
+            try await database.save(record)
+        }
+    }
+    
+    // MARK: - Public API
+    
+    /// Manually trigger a sync
+    func performSync() async {
+        await syncAllData()
+    }
+    
+    /// Request iCloud permissions if needed
+    func requestiCloudAccess() {
+        container.requestApplicationPermission(.userDiscoverability) { [weak self] status, error in
+            if status == .granted {
+                self?.checkiCloudStatus()
+            }
+        }
+    }
+    
+    /// Handle new device login and data merging
+    func handleNewDeviceLogin() async {
+        // Show merge confirmation dialog in UI
+        // Actual merge happens during syncAllData
+        await syncAllData()
+    }
+}
+
+// MARK: - Extensions for CloudKit Records
+// CloudKit conversion methods are defined in the individual model files

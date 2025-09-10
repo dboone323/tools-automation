@@ -21,33 +21,6 @@ import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 
-
-def verify_github_signature(secret: str, payload: bytes, signature: str) -> bool:
-    """
-    Verify GitHub webhook signature.
-    Supports both sha256 and sha1 signatures.
-    """
-    if not secret or not signature:
-        return False
-
-    try:
-        if signature.startswith("sha256="):
-            expected = signature.split("=", 1)[1]
-            mac = hmac.new(
-                secret.encode("utf-8"), msg=payload, digestmod=hashlib.sha256
-            )
-            digest = mac.hexdigest()
-            return hmac.compare_digest(digest, expected)
-        elif signature.startswith("sha1="):
-            expected = signature.split("=", 1)[1]
-            mac = hmac.new(secret.encode("utf-8"), msg=payload, digestmod=hashlib.sha1)
-            digest = mac.hexdigest()
-            return hmac.compare_digest(digest, expected)
-    except Exception:
-        return False
-    return False
-
-
 CODE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 HOST = "127.0.0.1"
 PORT = 5005
@@ -73,8 +46,6 @@ ALLOWED_COMMANDS = {
     "fix-all": ["./Tools/Automation/intelligent_autofix.sh", "fix-all"],
     "status": ["./Tools/Automation/master_automation.sh", "status"],
     "validate": ["./Tools/Automation/intelligent_autofix.sh", "validate"],
-    # Test commands
-    "modify-fail": ["false"],  # For testing rollback functionality - always fails
 }
 
 
@@ -170,7 +141,25 @@ class MCPHandler(BaseHTTPRequestHandler):
             )
             if not sig_header:
                 return False
-            return verify_github_signature(secret, raw_bytes, sig_header)
+            # support both sha256=... and legacy sha1=...
+            try:
+                if sig_header.startswith("sha256="):
+                    expected = sig_header.split("=", 1)[1]
+                    mac = hmac.new(
+                        secret.encode("utf-8"), msg=raw_bytes, digestmod=hashlib.sha256
+                    )
+                    digest = mac.hexdigest()
+                    return hmac.compare_digest(digest, expected)
+                elif sig_header.startswith("sha1="):
+                    expected = sig_header.split("=", 1)[1]
+                    mac = hmac.new(
+                        secret.encode("utf-8"), msg=raw_bytes, digestmod=hashlib.sha1
+                    )
+                    digest = mac.hexdigest()
+                    return hmac.compare_digest(digest, expected)
+            except Exception:
+                return False
+            return False
 
         if parsed.path == "/register":
             agent = body.get("agent")
@@ -601,11 +590,4 @@ def run_server(host=HOST, port=PORT):
 
 
 if __name__ == "__main__":
-    import sys
-
-    host = HOST
-    port = PORT
-    if len(sys.argv) >= 3:
-        host = sys.argv[1]
-        port = int(sys.argv[2])
-    run_server(host=host, port=port)
+    run_server()

@@ -2,10 +2,10 @@
 # Performance Agent: Analyzes and optimizes code performance
 
 AGENT_NAME="performance_agent.sh"
-LOG_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/performance_agent.log"
-NOTIFICATION_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
-AGENT_STATUS_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json"
-TASK_QUEUE_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/task_queue.json"
+LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/performance_agent.log"
+NOTIFICATION_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
+AGENT_STATUS_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/agent_status.json"
+TASK_QUEUE_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/task_queue.json"
 
 # Update agent status to available when starting
 update_status() {
@@ -62,9 +62,9 @@ run_performance_analysis() {
 	local projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
 
 	for project in "${projects[@]}"; do
-		if [[ -d "/Users/danielstevens/Desktop/Code/Projects/$project" ]]; then
+		if [[ -d "/Users/danielstevens/Desktop/Quantum-workspace/Projects/$project" ]]; then
 			echo "[$(date)] $AGENT_NAME: Analyzing performance in $project..." >>"$LOG_FILE"
-			cd "/Users/danielstevens/Desktop/Code/Projects/$project"
+			cd "/Users/danielstevens/Desktop/Quantum-workspace/Projects/$project" || continue
 
 			# Performance metrics
 			echo "[$(date)] $AGENT_NAME: Calculating performance metrics for $project..." >>"$LOG_FILE"

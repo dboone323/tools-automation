@@ -1,38 +1,5 @@
-# Development requirements for Quantum Workspace
-# Additional tools for development and testing
-
-# Include main requirements
+# Dev/test dependencies
 -r requirements.txt
-
-# Code quality and formatting
-pre-commit>=2.20.0
-isort>=5.10.0
-bandit>=1.7.0
-safety>=2.3.0
-
-# Testing and coverage
 pytest>=7.1,<8
-pytest-xdist>=2.5.0
-pytest-mock>=3.8.0
-coverage>=6.4.0
 requests>=2.30,<3
 portalocker>=2.8,<3
-
-# Documentation
-sphinx>=5.0.0
-sphinx-rtd-theme>=1.0.0
-
-# Development server
-watchdog>=2.1.0
-
-# Jupyter for interactive development
-jupyter>=1.0.0
-ipykernel>=6.15.0
-
-# Database and caching (if needed)
-redis>=4.3.0
-sqlalchemy>=1.4.0
-
-# Additional utilities
-pyinstaller>=5.0.0  # For creating executables
-twine>=4.0.0       # For package publishing

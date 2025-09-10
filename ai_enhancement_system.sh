@@ -25,7 +25,7 @@ print_suggestion() { echo -e "${BLUE}💡 SUGGESTION:${NC} $1"; }
 print_auto_applied() { echo -e "${GREEN}🤖 AUTO-APPLIED:${NC} $1"; }
 
 # Configuration
-readonly CODE_DIR="${CODE_DIR:-/Users/danielstevens/Desktop/Quantum-workspace}"
+readonly CODE_DIR="${CODE_DIR:-/Users/danielstevens/Desktop/Code}"
 readonly ENHANCEMENT_DIR="$CODE_DIR/Documentation/Enhancements"
 readonly AUTO_ENHANCE_LOG="$CODE_DIR/.ai_enhancements.log"
 

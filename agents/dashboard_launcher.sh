@@ -1,9 +1,9 @@
 #!/bin/bash
 # Dashboard Launcher Script
 
-DASHBOARD_AGENT="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/unified_dashboard_agent.sh"
-DASHBOARD_PID_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_server.pid"
-LOG_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_launcher.log"
+DASHBOARD_AGENT="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/unified_dashboard_agent.sh"
+DASHBOARD_PID_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/dashboard_server.pid"
+LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/dashboard_launcher.log"
 
 # Colors for output
 RED='\033[0;31m'
@@ -51,7 +51,7 @@ start_dashboard() {
 
 	# Check if agent is still running
 	if kill -0 "$agent_pid" 2>/dev/null; then
-		echo $agent_pid >"/Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_agent.pid"
+		echo $agent_pid >"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/dashboard_agent.pid"
 		log_message "INFO" "Dashboard agent started with PID $agent_pid"
 		echo -e "${GREEN}✅ Dashboard agent started successfully!${NC}"
 		echo -e "${BLUE}🌐 Dashboard will be available at: http://localhost:8080${NC}"
@@ -84,7 +84,7 @@ stop_dashboard() {
 	fi
 
 	# Stop the dashboard agent
-	local agent_pid_file="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_agent.pid"
+	local agent_pid_file="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/dashboard_agent.pid"
 	if [[ -f $agent_pid_file ]]; then
 		local agent_pid=$(cat "$agent_pid_file")
 		if kill -0 "$agent_pid" 2>/dev/null; then
@@ -114,7 +114,7 @@ show_status() {
 		echo -e "${BLUE}🔢 Server PID: $pid${NC}"
 
 		# Show agent status
-		local agent_pid_file="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/dashboard_agent.pid"
+		local agent_pid_file="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/dashboard_agent.pid"
 		if [[ -f $agent_pid_file ]]; then
 			local agent_pid=$(cat "$agent_pid_file")
 			echo -e "${BLUE}🤖 Agent PID: $agent_pid${NC}"

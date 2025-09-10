@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Deploy AI Self-Healing Workflow to All Projects
+# Deploy AI Self-Healing Workflow to 	local project_name
+	project_name=$(basename "$project_dir")ll Projects
 # This script deploys the advanced AI-powered workflow recovery system
 
 set -e # Exit on any error
@@ -20,15 +21,17 @@ echo
 
 # Define project directories
 PROJECTS=(
-	"/Users/danielstevens/Desktop/Code/Projects/CodingReviewer"
-	"/Users/danielstevens/Desktop/Code/Projects/HabitQuest"
-	"/Users/danielstevens/Desktop/Code/Projects/MomentumFinance"
+	"/Users/danielstevens/Desktop/Quantum-workspace/Projects/CodingReviewer"
+	"/Users/danielstevens/Desktop/Quantum-workspace/Projects/HabitQuest"
+	"/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance"
+	"/Users/danielstevens/Desktop/Quantum-workspace/Projects/PlannerApp"
+	"/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame"
 )
 
-SOURCE_WORKFLOW="/Users/danielstevens/Desktop/Code/Projects/CodingReviewer/.github/workflows/ai-self-healing.yml"
-AI_RECOVERY_SCRIPT="/Users/danielstevens/Desktop/Code/Tools/Automation/ai_workflow_recovery.py"
-QUALITY_CHECK_SCRIPT="/Users/danielstevens/Desktop/Code/Projects/CodingReviewer/workflow_quality_check.py"
-REQUIREMENTS="/Users/danielstevens/Desktop/Code/Projects/CodingReviewer/requirements-recovery.txt"
+SOURCE_WORKFLOW="/Users/danielstevens/Desktop/Quantum-workspace/Projects/CodingReviewer/.github/workflows/ai-self-healing.yml"
+AI_RECOVERY_SCRIPT="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_workflow_recovery.py"
+QUALITY_CHECK_SCRIPT="/Users/danielstevens/Desktop/Quantum-workspace/Projects/CodingReviewer/workflow_quality_check.py"
+REQUIREMENTS="/Users/danielstevens/Desktop/Quantum-workspace/Projects/CodingReviewer/requirements-recovery.txt"
 
 # Counters
 total_projects=0
@@ -46,24 +49,25 @@ echo
 # Function to deploy to a single project
 deploy_to_project() {
 	local project_dir="$1"
-	local project_name=$(basename "$project_dir")
+	local project_name
+	project_name=$(basename "${project_dir}")
 
 	echo -e "${YELLOW}🚀 Deploying to ${project_name}...${NC}"
 
-	if [ ! -d "$project_dir" ]; then
-		echo -e "${RED}❌ Project directory not found: $project_dir${NC}"
+	if [[ ! -d "${project_dir}" ]]; then
+		echo -e "${RED}❌ Project directory not found: ${project_dir}${NC}"
 		return 1
 	fi
 
-	cd "$project_dir"
+	cd "${project_dir}"
 
 	# Create necessary directories
 	mkdir -p .github/workflows
 	mkdir -p Tools/Automation
 
 	# Copy AI self-healing workflow
-	if [ -f "$SOURCE_WORKFLOW" ]; then
-		cp "$SOURCE_WORKFLOW" .github/workflows/ai-self-healing.yml
+	if [[ -f "${SOURCE_WORKFLOW}" ]]; then
+		cp "${SOURCE_WORKFLOW}" .github/workflows/ai-self-healing.yml
 		echo -e "   ✅ AI self-healing workflow deployed"
 	else
 		echo -e "   ${RED}❌ Source workflow not found${NC}"
@@ -71,8 +75,8 @@ deploy_to_project() {
 	fi
 
 	# Copy AI recovery system
-	if [ -f "$AI_RECOVERY_SCRIPT" ]; then
-		cp "$AI_RECOVERY_SCRIPT" Tools/Automation/ai_workflow_recovery.py
+	if [[ -f "${AI_RECOVERY_SCRIPT}" ]]; then
+		cp "${AI_RECOVERY_SCRIPT}" Tools/Automation/ai_workflow_recovery.py
 		chmod +x Tools/Automation/ai_workflow_recovery.py
 		echo -e "   ✅ AI recovery system deployed"
 	else
@@ -81,8 +85,8 @@ deploy_to_project() {
 	fi
 
 	# Copy quality check script
-	if [ -f "$QUALITY_CHECK_SCRIPT" ]; then
-		cp "$QUALITY_CHECK_SCRIPT" workflow_quality_check.py
+	if [[ -f "${QUALITY_CHECK_SCRIPT}" ]]; then
+		cp "${QUALITY_CHECK_SCRIPT}" workflow_quality_check.py
 		echo -e "   ✅ Quality checker deployed"
 	else
 		echo -e "   ${RED}❌ Quality check script not found${NC}"
@@ -90,8 +94,8 @@ deploy_to_project() {
 	fi
 
 	# Copy requirements
-	if [ -f "$REQUIREMENTS" ]; then
-		cp "$REQUIREMENTS" requirements-recovery.txt
+	if [[ -f "${REQUIREMENTS}" ]]; then
+		cp "${REQUIREMENTS}" requirements-recovery.txt
 		echo -e "   ✅ Recovery dependencies deployed"
 	else
 		echo -e "   ${YELLOW}⚠️ Recovery requirements not found, creating basic version${NC}"
@@ -107,7 +111,7 @@ EOF
 
 	# Initialize AI learning system
 	mkdir -p .ai_learning_system
-	if [ ! -f .ai_learning_system/workflow_patterns.json ]; then
+	if [[ ! -f .ai_learning_system/workflow_patterns.json ]]; then
 		cat >.ai_learning_system/workflow_patterns.json <<'EOF'
 {
   "patterns": [
@@ -149,27 +153,27 @@ EOF
 
 	local validation_passed=true
 
-	if [ ! -f .github/workflows/ai-self-healing.yml ]; then
+	if [[ ! -f .github/workflows/ai-self-healing.yml ]]; then
 		echo -e "   ${RED}❌ Workflow file missing${NC}"
 		validation_passed=false
 	fi
 
-	if [ ! -f Tools/Automation/ai_workflow_recovery.py ]; then
+	if [[ ! -f Tools/Automation/ai_workflow_recovery.py ]]; then
 		echo -e "   ${RED}❌ AI recovery script missing${NC}"
 		validation_passed=false
 	fi
 
-	if [ ! -f workflow_quality_check.py ]; then
+	if [[ ! -f workflow_quality_check.py ]]; then
 		echo -e "   ${RED}❌ Quality checker missing${NC}"
 		validation_passed=false
 	fi
 
-	if [ ! -f .ai_learning_system/workflow_patterns.json ]; then
+	if [[ ! -f .ai_learning_system/workflow_patterns.json ]]; then
 		echo -e "   ${RED}❌ AI learning system missing${NC}"
 		validation_passed=false
 	fi
 
-	if [ "$validation_passed" = true ]; then
+	if [[ "${validation_passed}" = true ]]; then
 		echo -e "   ${GREEN}✅ Deployment validation passed${NC}"
 
 		# Test the AI recovery system
@@ -191,12 +195,12 @@ EOF
 for project in "${PROJECTS[@]}"; do
 	total_projects=$((total_projects + 1))
 
-	if deploy_to_project "$project"; then
+	if deploy_to_project "${project}"; then
 		successful_deployments=$((successful_deployments + 1))
-		echo -e "${GREEN}✅ Successfully deployed to $(basename "$project")${NC}"
+		echo -e "${GREEN}✅ Successfully deployed to $(basename "${project}")${NC}"
 	else
 		failed_deployments=$((failed_deployments + 1))
-		echo -e "${RED}❌ Failed to deploy to $(basename "$project")${NC}"
+		echo -e "${RED}❌ Failed to deploy to $(basename "${project}")${NC}"
 	fi
 	echo
 done
@@ -204,11 +208,11 @@ done
 # Summary report
 echo -e "${CYAN}📊 Deployment Summary${NC}"
 echo -e "${CYAN}=====================${NC}"
-echo -e "Total Projects: $total_projects"
-echo -e "${GREEN}Successful: $successful_deployments${NC}"
-echo -e "${RED}Failed: $failed_deployments${NC}"
+echo -e "Total Projects: ${total_projects}"
+echo -e "${GREEN}Successful: ${successful_deployments}${NC}"
+echo -e "${RED}Failed: ${failed_deployments}${NC}"
 
-if [ $successful_deployments -eq $total_projects ]; then
+if [[ "${successful_deployments}" -eq "${total_projects}" ]]; then
 	echo -e "${GREEN}🎉 All projects successfully upgraded with AI self-healing capabilities!${NC}"
 	echo
 	echo -e "${BLUE}🤖 AI Self-Healing Features Deployed:${NC}"

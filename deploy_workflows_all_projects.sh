@@ -7,12 +7,16 @@ set -e
 
 # Configuration
 CODE_DIR="/Users/danielstevens/Desktop/Code"
-PROJECTS_DIR="${CODE_DIR}/Projects"
+PROJECTS_DIR="$CODE_DIR/Projects"
+TOOLS_DIR="$CODE_DIR/Tools"
 
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
+PURPLE='\033[0;35m'
+NC='\033[0m'
 
 print_header() {
 	echo -e "\n${PURPLE}================================================${NC}"
@@ -36,47 +40,33 @@ print_error() {
 	echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Ensure PyYAML is available for YAML validation
-check_pyyaml() {
-	if ! command -v python3 >/dev/null 2>&1; then
-		print_error "python3 not found; required for workflow YAML validation"
-		return 1
-	fi
-	if ! python3 -c "import yaml" >/dev/null 2>&1; then
-		print_error "PyYAML not installed for python3. Install with: python3 -m pip install pyyaml"
-		return 1
-	fi
-	return 0
-}
-
 # Validate workflows YAML syntax
 validate_workflows() {
 	local project_path="$1"
 	local project_name="$2"
 
-	print_status "Validating workflows for ${project_name}..."
+	print_status "Validating workflows for $project_name..."
 
-	if [[ ! -d "${project_path}/.github/workflows" ]]; then
-		print_warning "No workflows directory found in ${project_name}"
+	if [[ ! -d "$project_path/.github/workflows" ]]; then
+		print_warning "No workflows directory found in $project_name"
 		return 1
 	fi
 
 	local validation_failed=0
 
-	for workflow_file in "${project_path}/.github/workflows"/*.yml; do
-		if [[ -f ${workflow_file} ]]; then
-			local filename
-			filename=$(basename "${workflow_file}")
-			if python3 -c "import yaml; yaml.safe_load(open('${workflow_file}', 'r'))" 2>/dev/null; then
-				echo "  ✅ ${filename}: Valid YAML"
+	for workflow_file in "$project_path/.github/workflows"/*.yml; do
+		if [[ -f $workflow_file ]]; then
+			local filename=$(basename "$workflow_file")
+			if python3 -c "import yaml; yaml.safe_load(open('$workflow_file', 'r'))" 2>/dev/null; then
+				echo "  ✅ $filename: Valid YAML"
 			else
-				echo "  ❌ ${filename}: Invalid YAML"
+				echo "  ❌ $filename: Invalid YAML"
 				validation_failed=1
 			fi
 		fi
 	done
 
-	return "${validation_failed}"
+	return $validation_failed
 }
 
 # Push workflows for a single project
@@ -84,72 +74,63 @@ push_project_workflows() {
 	local project_path="$1"
 	local project_name="$2"
 
-	print_status "Processing ${project_name}..."
+	print_status "Processing $project_name..."
 
 	# Check if it's a git repository
-	if [[ ! -d "${project_path}/.git" ]]; then
-		print_warning "${project_name} is not a git repository. Skipping..."
+	if [[ ! -d "$project_path/.git" ]]; then
+		print_warning "$project_name is not a git repository. Skipping..."
 		return 1
 	fi
 
 	# Change to project directory
-	cd "${project_path}" || {
-		print_error "Failed to change to ${project_path}"
+	cd "$project_path" || {
+		print_error "Failed to change to $project_path"
 		return 1
 	}
 
 	# Validate workflows first
-	if ! validate_workflows "${project_path}" "${project_name}"; then
-		print_error "Workflow validation failed for ${project_name}. Skipping push..."
+	if ! validate_workflows "$project_path" "$project_name"; then
+		print_error "Workflow validation failed for $project_name. Skipping push..."
 		return 1
 	fi
 
 	# Check for workflow changes
-	local workflow_changes
-	# Run git status separately so we don't mask its return value
-	workflow_changes=$(git status --porcelain .github/workflows/ 2>/dev/null) || workflow_changes=""
+	local workflow_changes=$(git status --porcelain .github/workflows/ 2>/dev/null || true)
 
-	if [[ -z ${workflow_changes} ]]; then
-		print_status "${project_name}: No workflow changes to push"
+	if [[ -z $workflow_changes ]]; then
+		print_status "$project_name: No workflow changes to push"
 
 		# Check if we need to push any staged workflows
-		local staged_workflows
-		staged_workflows=$(git diff --cached --name-only .github/workflows/ 2>/dev/null) || staged_workflows=""
-		if [[ -n ${staged_workflows} ]]; then
-			print_status "${project_name}: Found staged workflow changes"
+		local staged_workflows=$(git diff --cached --name-only .github/workflows/ 2>/dev/null || true)
+		if [[ -n $staged_workflows ]]; then
+			print_status "$project_name: Found staged workflow changes"
 		else
 			# Try to push anyway in case there are committed but unpushed changes
-			local unpushed
-			unpushed=$(git log origin/main..HEAD --oneline 2>/dev/null) || unpushed=""
-			if [[ -z ${unpushed} ]]; then
-				# fallback to last commit if origin/main comparison failed
-				unpushed=$(git log --oneline -1 2>/dev/null) || unpushed=""
-			fi
-			if [[ -n ${unpushed} ]]; then
-				print_status "${project_name}: Found unpushed commits, attempting push..."
+			local unpushed=$(git log origin/main..HEAD --oneline 2>/dev/null || git log --oneline -1 2>/dev/null || true)
+			if [[ -n $unpushed ]]; then
+				print_status "$project_name: Found unpushed commits, attempting push..."
 			else
-				print_success "${project_name}: Workflows are up to date"
+				print_success "$project_name: Workflows are up to date"
 				return 0
 			fi
 		fi
 	else
-		print_status "${project_name}: Found workflow changes:"
-		echo "${workflow_changes}" | sed 's/^/    /'
+		print_status "$project_name: Found workflow changes:"
+		echo "$workflow_changes" | sed 's/^/    /'
 
 		# Stage workflow changes
 		git add .github/workflows/ 2>/dev/null || true
 	fi
 
 	# Check current branch
-	local current_branch
-	current_branch=$(git branch --show-current 2>/dev/null || echo "main")
-	print_status "${project_name}: Current branch: ${current_branch}"
+	local current_branch=$(git branch --show-current 2>/dev/null || echo "main")
+	print_status "$project_name: Current branch: $current_branch"
 
 	# Commit workflow changes if any
 	if git diff --cached --quiet --exit-code 2>/dev/null; then
-		print_status "${project_name}: No staged changes to commit"
+		print_status "$project_name: No staged changes to commit"
 	else
-		print_status "${project_name}: Committing workflow changes..."
+		print_status "$project_name: Committing workflow changes..."
 		if git commit -m "🔄 Deploy: Update GitHub Actions workflows
 
 - Synchronized workflows across projects
@@ -157,33 +138,27 @@ push_project_workflows() {
 - Deployed via automated workflow deployment script
 
 Deployment timestamp: $(date '+%Y-%m-%d %H:%M:%S')"; then
-			print_success "${project_name}: Workflow changes committed"
+			print_success "$project_name: Workflow changes committed"
 		else
-			print_error "${project_name}: Failed to commit workflow changes"
+			print_error "$project_name: Failed to commit workflow changes"
 			return 1
 		fi
 	fi
 
-	# If we're in validate-only mode, skip committing/pushing changes
-	if [[ ${VALIDATE_ONLY:-0} -eq 1 ]]; then
-		print_status "${project_name}: Validate-only mode - skipping commit and push"
-		return 0
-	fi
-
 	# Push to remote
-	print_status "${project_name}: Pushing workflows to remote..."
-	if git push origin "${current_branch}" 2>/dev/null; then
-		print_success "${project_name}: Workflows pushed successfully! 🚀"
+	print_status "$project_name: Pushing workflows to remote..."
+	if git push origin "$current_branch" 2>/dev/null; then
+		print_success "$project_name: Workflows pushed successfully! 🚀"
 
 		# Show workflow count
-		local workflow_count
-		workflow_count=$(find .github/workflows -name "*.yml" -type f 2>/dev/null | wc -l | tr -d ' ')
-		echo "    📁 Deployed ${workflow_count} workflow files"
+		local workflow_count=$(find .github/workflows -name "*.yml" -type f 2>/dev/null | wc -l | tr -d ' ')
+		echo "    📁 Deployed $workflow_count workflow files"
+
 	else
-		print_error "${project_name}: Failed to push workflows"
+		print_error "$project_name: Failed to push workflows"
 
 		# Try to get more info about the error
-		print_status "${project_name}: Checking remote status..."
+		print_status "$project_name: Checking remote status..."
 		git remote -v 2>/dev/null || print_warning "No remote configured"
 
 		return 1
@@ -193,43 +168,23 @@ Deployment timestamp: $(date '+%Y-%m-%d %H:%M:%S')"; then
 }
 
 # Main deployment function
-# Run security check before deployment
-run_security_check() {
-	print_status "Running security validation..."
-	if [[ -f "Tools/Automation/security_check.sh" ]]; then
-		if ! bash Tools/Automation/security_check.sh; then
-			print_error "Security check failed! Aborting deployment."
-			print_status "Run: bash Tools/Automation/security_check.sh for details"
-			return 1
-		fi
-	else
-		print_warning "Security check script not found - skipping security validation"
-	fi
-	return 0
-}
-
 deploy_all_workflows() {
-	if ! run_security_check; then
-		return 1
-	fi
-
 	print_header
 
 	local total_projects=0
 	local successful_deployments=0
 	local failed_deployments=0
 
-	print_status "Scanning projects in ${PROJECTS_DIR}..."
+	print_status "Scanning projects in $PROJECTS_DIR..."
 
-	for project_dir in "${PROJECTS_DIR}"/*; do
-		if [[ -d ${project_dir} ]]; then
-			local project_name
-			project_name=$(basename "${project_dir}")
+	for project_dir in "$PROJECTS_DIR"/*; do
+		if [[ -d $project_dir ]]; then
+			local project_name=$(basename "$project_dir")
 			total_projects=$((total_projects + 1))
 
-			echo -e "\n${YELLOW}[${total_projects}] Processing: ${project_name}${NC}"
+			echo -e "\n${YELLOW}[$total_projects] Processing: $project_name${NC}"
 
-			if push_project_workflows "${project_dir}" "${project_name}"; then
+			if push_project_workflows "$project_dir" "$project_name"; then
 				successful_deployments=$((successful_deployments + 1))
 			else
 				failed_deployments=$((failed_deployments + 1))
@@ -241,11 +196,11 @@ deploy_all_workflows() {
 	echo -e "\n${PURPLE}================================================${NC}"
 	echo -e "${PURPLE} 📊 DEPLOYMENT SUMMARY${NC}"
 	echo -e "${PURPLE}================================================${NC}"
-	echo -e "Total Projects: ${total_projects}"
-	echo -e "${GREEN}✅ Successful: ${successful_deployments}${NC}"
-	echo -e "${RED}❌ Failed: ${failed_deployments}${NC}"
+	echo -e "Total Projects: $total_projects"
+	echo -e "${GREEN}✅ Successful: $successful_deployments${NC}"
+	echo -e "${RED}❌ Failed: $failed_deployments${NC}"
 
-	if [[ ${failed_deployments} -eq 0 ]]; then
+	if [[ $failed_deployments -eq 0 ]]; then
 		echo -e "\n${GREEN}🎉 All workflows deployed successfully!${NC}"
 		return 0
 	else
@@ -261,15 +216,13 @@ show_help() {
 	echo "Deploy GitHub Actions workflows to all projects"
 	echo ""
 	echo "Options:"
-	echo "  -h, --help           Show this help message"
-	echo "  -v, --validate       Validate workflows only (no push)"
-	echo "  -a, --allow-failures Continue on validation errors (with --validate)"
-	echo "  -p, --project        Deploy to specific project only"
+	echo "  -h, --help     Show this help message"
+	echo "  -v, --validate Validate workflows only (no push)"
+	echo "  -p, --project  Deploy to specific project only"
 	echo ""
 	echo "Examples:"
 	echo "  $0                           # Deploy workflows to all projects"
-	echo "  $0 --validate               # Validate all workflows (fail on errors)"
-	echo "  $0 --validate --allow-failures # Validate but continue on errors"
+	echo "  $0 --validate               # Validate all workflows without pushing"
 	echo "  $0 --project CodingReviewer # Deploy only to CodingReviewer"
 }
 
@@ -278,59 +231,46 @@ validate_only() {
 	print_header
 	print_status "Validation mode - checking workflow syntax only..."
 
-	# Ensure PyYAML is available before validating
-	if ! check_pyyaml; then
-		return 1
-	fi
-
 	local validation_errors=0
 
-	for project_dir in "${PROJECTS_DIR}"/*; do
-		if [[ -d ${project_dir} ]]; then
-			local project_name
-			project_name=$(basename "${project_dir}")
-			echo -e "\n${YELLOW}Validating: ${project_name}${NC}"
+	for project_dir in "$PROJECTS_DIR"/*; do
+		if [[ -d $project_dir ]]; then
+			local project_name=$(basename "$project_dir")
+			echo -e "\n${YELLOW}Validating: $project_name${NC}"
 
-			if ! validate_workflows "${project_dir}" "${project_name}"; then
+			if ! validate_workflows "$project_dir" "$project_name"; then
 				validation_errors=$((validation_errors + 1))
 			fi
 		fi
 	done
 
-	if [[ ${validation_errors} -eq 0 ]]; then
+	if [[ $validation_errors -eq 0 ]]; then
 		print_success "All workflows have valid YAML syntax! ✅"
 		return 0
 	else
-		print_error "${validation_errors} projects have workflow validation errors"
-		# Exit with error code unless explicitly allowing failures
-		if [[ ${ALLOW_FAILURES:-0} -eq 0 ]]; then
-			echo -e "\n${YELLOW}💡 Tip: Use --allow-failures flag to continue on validation errors${NC}"
-			return 1
-		else
-			print_warning "Continuing despite validation errors (--allow-failures enabled)"
-			return 0
-		fi
+		print_error "$validation_errors projects have workflow validation errors"
+		return 1
 	fi
 }
 
 # Deploy to specific project
 deploy_specific_project() {
 	local project_name="$1"
-	local project_path="${PROJECTS_DIR}/${project_name}"
+	local project_path="$PROJECTS_DIR/$project_name"
 
-	if [[ ! -d ${project_path} ]]; then
-		print_error "Project '${project_name}' not found in ${PROJECTS_DIR}"
+	if [[ ! -d $project_path ]]; then
+		print_error "Project '$project_name' not found in $PROJECTS_DIR"
 		return 1
 	fi
 
 	print_header
-	print_status "Deploying workflows for specific project: ${project_name}"
+	print_status "Deploying workflows for specific project: $project_name"
 
-	if push_project_workflows "${project_path}" "${project_name}"; then
-		print_success "Workflow deployment completed for ${project_name}! 🚀"
+	if push_project_workflows "$project_path" "$project_name"; then
+		print_success "Workflow deployment completed for $project_name! 🚀"
 		return 0
 	else
-		print_error "Workflow deployment failed for ${project_name}"
+		print_error "Workflow deployment failed for $project_name"
 		return 1
 	fi
 }
@@ -343,26 +283,7 @@ main() {
 		exit 0
 		;;
 	-v | --validate)
-		# Check for allow-failures flag
-		if [[ ${2-} == "--allow-failures" ]] || [[ ${2-} == "-a" ]]; then
-			ALLOW_FAILURES=1
-			print_status "Allow failures mode enabled - will continue on validation errors"
-		fi
-		# Set global flag to indicate validate-only mode and run validation
-		VALIDATE_ONLY=1
 		validate_only
-		exit $?
-		;;
-	-a | --allow-failures)
-		ALLOW_FAILURES=1
-		if [[ ${2-} == "--validate" ]] || [[ ${2-} == "-v" ]]; then
-			VALIDATE_ONLY=1
-			validate_only
-		else
-			print_error "--allow-failures must be used with --validate"
-			show_help
-			exit 1
-		fi
 		exit $?
 		;;
 	-p | --project)

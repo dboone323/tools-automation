@@ -9,21 +9,7 @@ SLEEP_INTERVAL=300 # Start with 5 minutes
 MIN_INTERVAL=60
 MAX_INTERVAL=1800
 
-# Update agent status with orchestrator
-update_agent_status() {
-	local status="$1"
-	local status_file="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/agent_status.json"
-	local current_time=$(date +%s)
-
-	if command -v jq &>/dev/null && [[ -f $status_file ]]; then
-		jq --arg agent "agent_build.sh" --arg status "$status" --arg last_seen "$current_time" \
-			'.agents[$agent] = {"status": $status, "last_seen": $last_seen, "tasks_completed": (.agents[$agent].tasks_completed // 0)}' \
-			"$status_file" >"$status_file.tmp" && mv "$status_file.tmp" "$status_file"
-	fi
-}
-
 while true; do
-	update_agent_status "active"
 	echo "[$(date)] $AGENT_NAME: Checking for build trigger..." >>"$LOG_FILE"
 	# Trigger build if ENABLE_AUTO_BUILD is true
 	if grep -q 'ENABLE_AUTO_BUILD=true' "/Users/danielstevens/Desktop/Code/Projects/CodingReviewer/Tools/Automation/project_config.sh"; then
@@ -55,13 +41,5 @@ while true; do
 		fi
 	fi
 	echo "[$(date)] $AGENT_NAME: Sleeping for $SLEEP_INTERVAL seconds." >>"$LOG_FILE"
-
-	# Send heartbeats during sleep period
-	local heartbeat_interval=300 # 5 minutes
-	local slept=0
-	while [[ $slept -lt $SLEEP_INTERVAL ]]; do
-		sleep $heartbeat_interval
-		update_agent_status "active"
-		slept=$((slept + heartbeat_interval))
-	done
+	sleep $SLEEP_INTERVAL
 done

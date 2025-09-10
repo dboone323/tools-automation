@@ -8,7 +8,6 @@ import time
 import requests
 
 MCP_PY = os.path.join(os.path.dirname(__file__), "..", "mcp_server.py")
-AGENT_PY = os.path.join(os.path.dirname(__file__), "..", "agents", "run_agent.py")
 
 
 def start_mcp():
@@ -29,38 +28,7 @@ def start_mcp():
     raise RuntimeError("MCP did not start")
 
 
-def start_agent(name, capabilities, backup_target=None):
-    """Start an agent process for testing."""
-    env = os.environ.copy()
-    env["PYTHONUNBUFFERED"] = "1"
-    env["MCP_URL"] = "http://127.0.0.1:5005"
-    if backup_target:
-        env["AGENT_BACKUP_TARGET"] = backup_target
-
-    cmd = [
-        sys.executable,
-        AGENT_PY,
-        "--name",
-        name,
-        "--capabilities",
-        capabilities,
-        "--interval",
-        "1",
-    ]
-    p = subprocess.Popen(cmd, env=env)
-    time.sleep(0.5)  # Give agent time to start
-    return p
-
-
 def stop_mcp(p):
-    try:
-        p.terminate()
-        p.wait(timeout=2)
-    except Exception:
-        p.kill()
-
-
-def stop_agent(p):
     try:
         p.terminate()
         p.wait(timeout=2)
@@ -115,16 +83,12 @@ def test_register_and_run_execute_flow():
 def test_modify_fail_and_rollback():
     # start MCP
     p = start_mcp()
-    agent_p = None
     try:
         # ensure target file exists
         target = os.path.join(os.path.dirname(__file__), "..", "test_modify_target.txt")
         target = os.path.abspath(target)
         with open(target, "w") as f:
             f.write("original\n")
-
-        # start agent with execute capability
-        agent_p = start_agent("pytest-exec", "execute", backup_target=target)
 
         # register a test agent with execute capability
         r = requests.post(
@@ -192,6 +156,4 @@ def test_modify_fail_and_rollback():
         assert "original" in data
 
     finally:
-        if agent_p:
-            stop_agent(agent_p)
         stop_mcp(p)
