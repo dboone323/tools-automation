@@ -1,45 +1,72 @@
 #!/bin/bash
+echo "[$(date)] build_agent: Script started, PID=$$" >> "/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/build_agent.log"
 # Build Agent: Watches for changes and triggers builds automatically
 
 AGENT_NAME="BuildAgent"
-LOG_FILE="/Users/danielstevens/Desktop/Code/Tools/Automation/agents/build_agent.log"
+LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/build_agent.log"
 PROJECT="CodingReviewer"
 
 SLEEP_INTERVAL=300 # Start with 5 minutes
 MIN_INTERVAL=60
 MAX_INTERVAL=1800
 
-while true; do
-	echo "[$(date)] $AGENT_NAME: Checking for build trigger..." >>"$LOG_FILE"
-	# Trigger build if ENABLE_AUTO_BUILD is true
-	if grep -q 'ENABLE_AUTO_BUILD=true' "/Users/danielstevens/Desktop/Code/Projects/CodingReviewer/Tools/Automation/project_config.sh"; then
-		echo "[$(date)] $AGENT_NAME: Creating multi-level backup before build..." >>"$LOG_FILE"
-		/Users/danielstevens/Desktop/Code/Tools/Automation/agents/backup_manager.sh backup CodingReviewer >>"$LOG_FILE" 2>&1 || true
-		echo "[$(date)] $AGENT_NAME: Running build..." >>"$LOG_FILE"
-		/Users/danielstevens/Desktop/Code/Projects/CodingReviewer/Tools/Automation/automate.sh build >>"$LOG_FILE" 2>&1
-		echo "[$(date)] $AGENT_NAME: Running AI enhancement analysis..." >>"$LOG_FILE"
-		/Users/danielstevens/Desktop/Code/Projects/CodingReviewer/Tools/Automation/ai_enhancement_system.sh analyze CodingReviewer >>"$LOG_FILE" 2>&1
-		echo "[$(date)] $AGENT_NAME: Auto-applying safe AI enhancements..." >>"$LOG_FILE"
-		/Users/danielstevens/Desktop/Code/Projects/CodingReviewer/Tools/Automation/ai_enhancement_system.sh auto-apply CodingReviewer >>"$LOG_FILE" 2>&1
-		echo "[$(date)] $AGENT_NAME: Validating build and enhancements..." >>"$LOG_FILE"
-		/Users/danielstevens/Desktop/Code/Tools/Automation/intelligent_autofix.sh validate CodingReviewer >>"$LOG_FILE" 2>&1
-		echo "[$(date)] $AGENT_NAME: Running automated tests after build and enhancements..." >>"$LOG_FILE"
-		/Users/danielstevens/Desktop/Code/Projects/CodingReviewer/Tools/Automation/automate.sh test >>"$LOG_FILE" 2>&1
-		if tail -40 "$LOG_FILE" | grep -q 'ROLLBACK'; then
-			echo "[$(date)] $AGENT_NAME: Rollback detected after validation. Investigate issues." >>"$LOG_FILE"
-			SLEEP_INTERVAL=$((SLEEP_INTERVAL / 2))
-			if [[ $SLEEP_INTERVAL -lt $MIN_INTERVAL ]]; then SLEEP_INTERVAL=$MIN_INTERVAL; fi
-		elif tail -40 "$LOG_FILE" | grep -q 'error'; then
-			echo "[$(date)] $AGENT_NAME: Test failure detected, restoring last backup..." >>"$LOG_FILE"
-			/Users/danielstevens/Desktop/Code/Tools/Automation/agents/backup_manager.sh restore CodingReviewer >>"$LOG_FILE" 2>&1
-			SLEEP_INTERVAL=$((SLEEP_INTERVAL / 2))
-			if [[ $SLEEP_INTERVAL -lt $MIN_INTERVAL ]]; then SLEEP_INTERVAL=$MIN_INTERVAL; fi
-		else
-			echo "[$(date)] $AGENT_NAME: Build, AI enhancement, validation, and tests completed successfully." >>"$LOG_FILE"
-			SLEEP_INTERVAL=$((SLEEP_INTERVAL + 60))
-			if [[ $SLEEP_INTERVAL -gt $MAX_INTERVAL ]]; then SLEEP_INTERVAL=$MAX_INTERVAL; fi
-		fi
+STATUS_FILE="$(dirname "$0")/agent_status.json"
+TASK_QUEUE="$(dirname "$0")/task_queue.json"
+PID=$$
+function update_status() {
+	local status="$1"
+	echo "[$(date)] build_agent: update_status called with status '$status'" >> "$LOG_FILE"
+	# Ensure status file exists and is valid JSON
+	if [ ! -s "$STATUS_FILE" ]; then
+		echo '{"agents":{"build_agent":{"status":"unknown","pid":null},"debug_agent":{"status":"unknown","pid":null},"codegen_agent":{"status":"unknown","pid":null}},"last_update":0}' > "$STATUS_FILE"
 	fi
-	echo "[$(date)] $AGENT_NAME: Sleeping for $SLEEP_INTERVAL seconds." >>"$LOG_FILE"
-	sleep $SLEEP_INTERVAL
+	jq ".agents.build_agent.status = \"$status\" | .agents.build_agent.pid = $PID | .last_update = $(date +%s)" "$STATUS_FILE" > "$STATUS_FILE.tmp"
+	if [ $? -eq 0 ] && [ -s "$STATUS_FILE.tmp" ]; then
+		mv "$STATUS_FILE.tmp" "$STATUS_FILE"
+	else
+		echo "[$(date)] $AGENT_NAME: Failed to update agent_status.json (jq or mv error)" >>"$LOG_FILE"
+		rm -f "$STATUS_FILE.tmp"
+	fi
+}
+trap 'update_status stopped; exit 0' SIGTERM SIGINT
+while true; do
+	update_status running
+	echo "[$(date)] ${AGENT_NAME}: Checking for build trigger..." >>"${LOG_FILE}"
+	# Check for queued build tasks
+	HAS_TASK=$(jq '.tasks[] | select(.assigned_agent=="agent_build.sh" and .status=="queued")' "${TASK_QUEUE}" 2>/dev/null)
+	if [[ -n "${HAS_TASK}" ]] || grep -q 'ENABLE_AUTO_BUILD=true' "/Users/danielstevens/Desktop/Quantum-workspace/Projects/CodingReviewer/Tools/Automation/project_config.sh"; then
+		echo "[$(date)] ${AGENT_NAME}: Creating multi-level backup before build..." >>"${LOG_FILE}"
+		/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup CodingReviewer >>"${LOG_FILE}" 2>&1 || true
+		echo "[$(date)] ${AGENT_NAME}: Running build..." >>"${LOG_FILE}"
+		/Users/danielstevens/Desktop/Quantum-workspace/Projects/CodingReviewer/Tools/Automation/automate.sh build >>"${LOG_FILE}" 2>&1
+		echo "[$(date)] ${AGENT_NAME}: Running AI enhancement analysis..." >>"${LOG_FILE}"
+		/Users/danielstevens/Desktop/Quantum-workspace/Projects/CodingReviewer/Tools/Automation/ai_enhancement_system.sh analyze CodingReviewer >>"${LOG_FILE}" 2>&1
+		echo "[$(date)] ${AGENT_NAME}: Auto-applying safe AI enhancements..." >>"${LOG_FILE}"
+		/Users/danielstevens/Desktop/Quantum-workspace/Projects/CodingReviewer/Tools/Automation/ai_enhancement_system.sh auto-apply CodingReviewer >>"${LOG_FILE}" 2>&1
+		echo "[$(date)] ${AGENT_NAME}: Validating build and enhancements..." >>"${LOG_FILE}"
+		/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/intelligent_autofix.sh validate CodingReviewer >>"${LOG_FILE}" 2>&1
+		echo "[$(date)] ${AGENT_NAME}: Running automated tests after build and enhancements..." >>"${LOG_FILE}"
+		/Users/danielstevens/Desktop/Quantum-workspace/Projects/CodingReviewer/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1
+		if tail -40 "${LOG_FILE}" | grep -q 'ROLLBACK'; then
+			echo "[$(date)] ${AGENT_NAME}: Rollback detected after validation. Investigate issues." >>"${LOG_FILE}"
+			SLEEP_INTERVAL=$((SLEEP_INTERVAL / 2))
+			if [[ ${SLEEP_INTERVAL} -lt ${MIN_INTERVAL} ]]; then SLEEP_INTERVAL=${MIN_INTERVAL}; fi
+		elif tail -40 "${LOG_FILE}" | grep -q 'error'; then
+			echo "[$(date)] ${AGENT_NAME}: Test failure detected, restoring last backup..." >>"${LOG_FILE}"
+			/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh restore CodingReviewer >>"${LOG_FILE}" 2>&1
+			SLEEP_INTERVAL=$((SLEEP_INTERVAL / 2))
+			if [[ ${SLEEP_INTERVAL} -lt ${MIN_INTERVAL} ]]; then SLEEP_INTERVAL=${MIN_INTERVAL}; fi
+		else
+			echo "[$(date)] ${AGENT_NAME}: Build, AI enhancement, validation, and tests completed successfully." >>"${LOG_FILE}"
+			SLEEP_INTERVAL=$((SLEEP_INTERVAL + 60))
+			if [[ ${SLEEP_INTERVAL} -gt ${MAX_INTERVAL} ]]; then SLEEP_INTERVAL=${MAX_INTERVAL}; fi
+		fi
+	else
+		update_status idle
+			   echo "[$(date)] ${AGENT_NAME}: No build tasks found. Sleeping as idle." >>"${LOG_FILE}"
+			   sleep 60
+			   continue
+	fi
+	echo "[$(date)] ${AGENT_NAME}: Sleeping for ${SLEEP_INTERVAL} seconds." >>"${LOG_FILE}"
+	sleep "${SLEEP_INTERVAL}"
 done

@@ -1,0 +1,17 @@
+{
+  "agents": {
+    "build_agent": {
+      "status": "running",
+      "pid": 51072
+    },
+    "debug_agent": {
+      "status": "running",
+      "pid": 51073
+    },
+    "codegen_agent": {
+      "status": "running",
+      "pid": 55429
+    }
+  },
+  "last_update": 1757555293
+}

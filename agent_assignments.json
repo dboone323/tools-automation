@@ -1,0 +1,72 @@
+[
+  {
+    "id": "assign_1757549117368084000",
+    "file": "AvoidObstaclesGame/AvoidObstaclesGame/GameScene.swift",
+    "line": 42,
+    "text": "TODO: Refactor collision detection logic for better performance.",
+    "agent": "performance_agent.sh"
+  },
+  {
+    "id": "assign_1757549117440261000",
+    "file": "CodingReviewer/CodingReviewer/ReviewEngine.swift",
+    "line": 15,
+    "text": "TODO: Add support for multi-language code review.",
+    "agent": "agent_debug.sh"
+  },
+  {
+    "id": "assign_1757549117513780000",
+    "file": "HabitQuest/HabitQuest/QuestManager.swift",
+    "line": 88,
+    "text": "TODO: Implement streak freeze feature.",
+    "agent": "agent_debug.sh"
+  },
+  {
+    "id": "assign_1757549117589108000",
+    "file": "MomentumFinance/MomentumFinance/FinanceTracker.swift",
+    "line": 27,
+    "text": "TODO: Integrate with external budgeting APIs.",
+    "agent": "agent_debug.sh"
+  },
+  {
+    "id": "assign_1757549117657792000",
+    "file": "PlannerApp/PlannerApp/PlannerView.swift",
+    "line": 60,
+    "text": "TODO: Add drag-and-drop for tasks.",
+    "agent": "agent_debug.sh"
+  },
+  {
+    "id": "assign_1757549783273528000",
+    "file": "AvoidObstaclesGame/AvoidObstaclesGame/GameScene.swift",
+    "line": 42,
+    "text": "TODO: Refactor collision detection logic for better performance.",
+    "agent": "performance_agent.sh"
+  },
+  {
+    "id": "assign_1757549783361421000",
+    "file": "CodingReviewer/CodingReviewer/ReviewEngine.swift",
+    "line": 15,
+    "text": "TODO: Add support for multi-language code review.",
+    "agent": "code_review_agent.sh"
+  },
+  {
+    "id": "assign_1757549783460151000",
+    "file": "HabitQuest/HabitQuest/QuestManager.swift",
+    "line": 88,
+    "text": "TODO: Implement streak freeze feature.",
+    "agent": "agent_debug.sh"
+  },
+  {
+    "id": "assign_1757549783534515000",
+    "file": "MomentumFinance/MomentumFinance/FinanceTracker.swift",
+    "line": 27,
+    "text": "TODO: Integrate with external budgeting APIs.",
+    "agent": "public_api_agent.sh"
+  },
+  {
+    "id": "assign_1757549783636447000",
+    "file": "PlannerApp/PlannerApp/PlannerView.swift",
+    "line": 60,
+    "text": "TODO: Add drag-and-drop for tasks.",
+    "agent": "agent_debug.sh"
+  }
+]

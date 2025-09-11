@@ -163,54 +163,66 @@ class DashboardAPIHandler(http.server.SimpleHTTPRequestHandler):
             }
 
     def process_agent_data(self, agent_status, current_time):
-        """Process agent status data"""
+        """Process agent status data and always include all known agents"""
         agents = {}
-
-        if "agents" in agent_status:
-            for agent_name, agent_info in agent_status["agents"].items():
-                status = agent_info.get("status", "unknown")
-                last_seen = agent_info.get("last_seen", current_time)
-
-                # Determine if agent is running based on recent activity
-                is_running = False
-                if isinstance(last_seen, str):
-                    try:
-                        last_seen = int(last_seen)
-                    except:
-                        last_seen = current_time
-
+        # List of all known agents (should match frontend)
+        known_agents = [
+            "build_agent",
+            "debug_agent",
+            "codegen_agent",
+            "uiux_agent",
+            "apple_pro_agent",
+            "collab_agent",
+            "updater_agent",
+            "search_agent",
+            "quality_agent",
+            "testing_agent",
+            "documentation_agent",
+            "performance_agent",
+            "security_agent",
+            "pull_request_agent",
+            "auto_update_agent",
+            "knowledge_base_agent"
+        ]
+        status_agents = agent_status.get("agents", {})
+        for agent_name in known_agents:
+            agent_info = status_agents.get(agent_name, {})
+            status = agent_info.get("status", "offline")
+            last_seen = agent_info.get("last_seen", 0)
+            # Determine if agent is running based on recent activity
+            is_running = False
+            if last_seen:
+                try:
+                    last_seen = int(last_seen)
+                except:
+                    last_seen = 0
                 time_diff = current_time - last_seen
-                if time_diff < 300:  # 5 minutes
+                if time_diff < 300:
                     is_running = True
-
-                # Map status to dashboard format with better failure detection
-                if status == "active" and is_running:
-                    display_status = "running"
-                elif status == "restarting" and is_running:
-                    display_status = "running"  # Recently active, so running
-                elif status == "restarting" and not is_running:
-                    display_status = (
-                        "failed"  # Restarting but not seen recently = failed
-                    )
-                elif status == "available" and is_running:
-                    display_status = "running"
-                elif status == "available" and not is_running:
-                    display_status = "stopped"  # Available but not seen = stopped
-                elif is_running:
-                    display_status = "running"
-                else:
-                    display_status = (
-                        "failed"  # Not running and status not recognized = failed
-                    )
-
-                agents[agent_name] = {
-                    "status": display_status,
-                    "last_seen": last_seen,
-                    "tasks_completed": agent_info.get("tasks_completed", 0),
-                    "description": self.get_agent_description(agent_name),
-                    "is_online": is_running,
-                }
-
+            # Map status to dashboard format
+            if status == "active" and is_running:
+                display_status = "running"
+            elif status == "restarting" and is_running:
+                display_status = "running"
+            elif status == "restarting" and not is_running:
+                display_status = "failed"
+            elif status == "available" and is_running:
+                display_status = "running"
+            elif status == "available" and not is_running:
+                display_status = "stopped"
+            elif is_running:
+                display_status = "running"
+            elif status == "offline":
+                display_status = "offline"
+            else:
+                display_status = "failed"
+            agents[agent_name] = {
+                "status": display_status,
+                "last_seen": last_seen,
+                "tasks_completed": agent_info.get("tasks_completed", 0),
+                "description": self.get_agent_description(agent_name),
+                "is_online": is_running,
+            }
         return agents
 
     def process_task_data(self, task_queue):

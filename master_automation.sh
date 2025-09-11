@@ -2,7 +2,10 @@
 
 # Master Automation Controller for Unified Code Architecture
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PROJECTS_DIR="$CODE_DIR/Projects"
+PROJECTS_DIR="${CODE_DIR}/Projects"
+
+# Export TODOs as JSON for agent/automation integration
+"${CODE_DIR}/Tools/Automation/export_todos_json.sh"
 
 # Colors
 GREEN='\033[0;32m'
@@ -25,17 +28,19 @@ print_warning() {
 # List available projects
 list_projects() {
 	print_status "Available projects in unified Code architecture:"
-	for project in "$PROJECTS_DIR"/*; do
-		if [[ -d $project ]]; then
-			local project_name=$(basename "$project")
-			local swift_files=$(find "$project" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
+	for project in "${PROJECTS_DIR}"/*; do
+		if [[ -d ${project} ]]; then
+			local project_name
+			project_name=$(basename "${project}")
+			local swift_files
+			swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
 			local has_automation=""
-			if [[ -d "$project/automation" ]]; then
+			if [[ -d "${project}/automation" ]]; then
 				has_automation=" (✅ automation)"
 			else
 				has_automation=" (❌ no automation)"
 			fi
-			echo "  - $project_name: $swift_files Swift files$has_automation"
+			echo "  - ${project_name}: ${swift_files} Swift files${has_automation}"
 		fi
 	done
 }
@@ -43,20 +48,20 @@ list_projects() {
 # Run automation for specific project
 run_project_automation() {
 	local project_name="$1"
-	local project_path="$PROJECTS_DIR/$project_name"
+	local project_path="${PROJECTS_DIR}/${project_name}"
 
-	if [[ ! -d $project_path ]]; then
-		echo "❌ Project $project_name not found"
+	if [[ ! -d ${project_path} ]]; then
+		echo "❌ Project ${project_name} not found"
 		return 1
 	fi
 
-	print_status "Running automation for $project_name..."
+	print_status "Running automation for ${project_name}..."
 
-	if [[ -f "$project_path/automation/run_automation.sh" ]]; then
-		cd "$project_path" && bash automation/run_automation.sh
-		print_success "$project_name automation completed"
+	if [[ -f "${project_path}/automation/run_automation.sh" ]]; then
+		cd "${project_path}" && bash automation/run_automation.sh
+		print_success "${project_name} automation completed"
 	else
-		print_warning "No automation script found for $project_name"
+		print_warning "No automation script found for ${project_name}"
 		return 1
 	fi
 }
@@ -65,22 +70,23 @@ run_project_automation() {
 format_code() {
 	local project_name="${1-}"
 
-	if [[ -n $project_name ]]; then
-		local project_path="$PROJECTS_DIR/$project_name"
-		if [[ ! -d $project_path ]]; then
-			echo "❌ Project $project_name not found"
+	if [[ -n ${project_name} ]]; then
+		local project_path="${PROJECTS_DIR}/${project_name}"
+		if [[ ! -d ${project_path} ]]; then
+			echo "❌ Project ${project_name} not found"
 			return 1
 		fi
-		print_status "Formatting Swift code in $project_name..."
-		swiftformat "$project_path" --exclude "*.backup" 2>/dev/null
-		print_success "Code formatting completed for $project_name"
+		print_status "Formatting Swift code in ${project_name}..."
+		swiftformat "${project_path}" --exclude "*.backup" 2>/dev/null
+		print_success "Code formatting completed for ${project_name}"
 	else
 		print_status "Formatting Swift code in all projects..."
-		for project in "$PROJECTS_DIR"/*; do
-			if [[ -d $project ]]; then
-				local project_name=$(basename "$project")
-				print_status "Formatting $project_name..."
-				swiftformat "$project" --exclude "*.backup" 2>/dev/null
+		for project in "${PROJECTS_DIR}"/*; do
+			if [[ -d ${project} ]]; then
+				local project_name
+				project_name=$(basename "${project}")
+				print_status "Formatting ${project_name}..."
+				swiftformat "${project}" --exclude "*.backup" 2>/dev/null
 			fi
 		done
 		print_success "Code formatting completed for all projects"
@@ -91,22 +97,24 @@ format_code() {
 lint_code() {
 	local project_name="${1-}"
 
-	if [[ -n $project_name ]]; then
-		local project_path="$PROJECTS_DIR/$project_name"
-		if [[ ! -d $project_path ]]; then
-			echo "❌ Project $project_name not found"
+	if [[ -n ${project_name} ]]; then
+		local project_path="${PROJECTS_DIR}/${project_name}"
+		if [[ ! -d ${project_path} ]]; then
+			echo "❌ Project ${project_name} not found"
 			return 1
 		fi
-		print_status "Linting Swift code in $project_name..."
-		cd "$project_path" && swiftlint
-		print_success "Code linting completed for $project_name"
+		print_status "Linting Swift code in ${project_name}..."
+		cd "${project_path}" && swiftlint
+		print_success "Code linting completed for ${project_name}"
 	else
 		print_status "Linting Swift code in all projects..."
-		for project in "$PROJECTS_DIR"/*; do
-			if [[ -d $project ]]; then
-				local project_name=$(basename "$project")
-				print_status "Linting $project_name..."
-				cd "$project" && swiftlint
+		for project in "${PROJECTS_DIR}"/*; do
+			if [[ -d ${project} ]]; then
+				local project_name
+				project_name=$(basename "${project}")
+				print_status "Linting ${project_name}..."
+				cd "${project}" || exit
+				swiftlint
 			fi
 		done
 		print_success "Code linting completed for all projects"
@@ -116,15 +124,15 @@ lint_code() {
 # Initialize CocoaPods for a project
 init_pods() {
 	local project_name="$1"
-	local project_path="$PROJECTS_DIR/$project_name"
+	local project_path="${PROJECTS_DIR}/${project_name}"
 
-	if [[ ! -d $project_path ]]; then
-		echo "❌ Project $project_name not found"
+	if [[ ! -d ${project_path} ]]; then
+		echo "❌ Project ${project_name} not found"
 		return 1
 	fi
 
-	print_status "Initializing CocoaPods for $project_name..."
-	cd "$project_path"
+	print_status "Initializing CocoaPods for ${project_name}..."
+	cd "${project_path}" || exit
 
 	if [[ ! -f "Podfile" ]]; then
 		print_status "Creating Podfile..."
@@ -140,15 +148,15 @@ init_pods() {
 # Setup Fastlane for iOS deployment
 init_fastlane() {
 	local project_name="$1"
-	local project_path="$PROJECTS_DIR/$project_name"
+	local project_path="${PROJECTS_DIR}/${project_name}"
 
-	if [[ ! -d $project_path ]]; then
-		echo "❌ Project $project_name not found"
+	if [[ ! -d ${project_path} ]]; then
+		echo "❌ Project ${project_name} not found"
 		return 1
 	fi
 
-	print_status "Setting up Fastlane for $project_name..."
-	cd "$project_path"
+	print_status "Setting up Fastlane for ${project_name}..."
+	cd "${project_path}" || exit
 
 	if [[ ! -d "fastlane" ]]; then
 		print_status "Initializing Fastlane..."
@@ -164,8 +172,8 @@ show_status() {
 	print_status "Unified Code Architecture Status"
 	echo ""
 
-	echo "📍 Location: $CODE_DIR"
-	echo "📊 Projects: $(find "$PROJECTS_DIR" -maxdepth 1 -type d | tail -n +2 | wc -l | tr -d ' ')"
+	echo "📍 Location: ${CODE_DIR}"
+	echo "📊 Projects: $(find "${PROJECTS_DIR}" -maxdepth 1 -type d | tail -n +2 | wc -l | tr -d ' ')"
 
 	# Check tool availability
 	echo ""
@@ -186,16 +194,17 @@ show_status() {
 # Run automation for all projects
 run_all_automation() {
 	print_status "Running automation for all projects..."
-	for project in "$PROJECTS_DIR"/*; do
-		if [[ -d $project ]]; then
-			local project_name=$(basename "$project")
-			print_status "Attempting automation for $project_name"
+	for project in "${PROJECTS_DIR}"/*; do
+		if [[ -d ${project} ]]; then
+			local project_name
+			project_name=$(basename "${project}")
+			print_status "Attempting automation for ${project_name}"
 			# Call project-specific automation if available, otherwise run lint/format as fallback
-			if [[ -f "$project/automation/run_automation.sh" ]]; then
-				(cd "$project" && bash automation/run_automation.sh) || print_warning "Automation failed for $project_name"
+			if [[ -f "${project}/automation/run_automation.sh" ]]; then
+				(cd "${project}" && bash automation/run_automation.sh) || print_warning "Automation failed for ${project_name}"
 			else
-				print_warning "No automation script for $project_name — running lint as lightweight verification"
-				(cd "$project" && command -v swiftlint >/dev/null 2>&1 && swiftlint) || print_warning "Lint not available or failed for $project_name"
+				print_warning "No automation script for ${project_name} — running lint as lightweight verification"
+				(cd "${project}" && command -v swiftlint >/dev/null 2>&1 && swiftlint) || print_warning "Lint not available or failed for ${project_name}"
 			fi
 		fi
 	done
@@ -206,10 +215,10 @@ run_all_automation() {
 check_tool() {
 	local tool="$1"
 	local description="$2"
-	if command -v "$tool" &>/dev/null; then
-		echo "  ✅ $description"
+	if command -v "${tool}" &>/dev/null; then
+		echo "  ✅ ${description}"
 	else
-		echo "  ❌ $description (not installed)"
+		echo "  ❌ ${description} (not installed)"
 	fi
 }
 
@@ -259,7 +268,7 @@ case "${1-}" in
 	;;
 "workflow")
 	if [[ -n ${2-} ]] && [[ -n ${3-} ]]; then
-		"$CODE_DIR/Tools/Automation/enhanced_workflow.sh" "$2" "$3"
+		"${CODE_DIR}/Tools/Automation/enhanced_workflow.sh" "$2" "$3"
 	else
 		echo "Usage: $0 workflow <command> <project_name>"
 		echo "Available workflow commands: pre-commit, ios-setup, qa, deps"
@@ -267,17 +276,17 @@ case "${1-}" in
 	fi
 	;;
 "dashboard")
-	"$CODE_DIR/Tools/Automation/workflow_dashboard.sh"
+	"${CODE_DIR}/Tools/Automation/workflow_dashboard.sh"
 	;;
 "unified")
-	"$CODE_DIR/Tools/Automation/unified_dashboard.sh"
+	"${CODE_DIR}/Tools/Automation/unified_dashboard.sh"
 	;;
 "mcp")
 	if [[ -n ${2-} ]]; then
 		if [[ ${2} == "status" || ${2} == "autofix-all" ]]; then
-			"$CODE_DIR/Tools/Automation/mcp_workflow.sh" "$2"
+			"${CODE_DIR}/Tools/Automation/mcp_workflow.sh" "$2"
 		elif [[ -n ${3-} ]]; then
-			"$CODE_DIR/Tools/Automation/mcp_workflow.sh" "$2" "$3"
+			"${CODE_DIR}/Tools/Automation/mcp_workflow.sh" "$2" "$3"
 		else
 			echo "Usage: $0 mcp <command> [project_name]"
 			echo "Available MCP commands: check, ci-check, fix, autofix, autofix-all, validate, rollback, status"
@@ -291,14 +300,14 @@ case "${1-}" in
 	;;
 "autofix")
 	if [[ -n ${2-} ]]; then
-		"$CODE_DIR/Tools/Automation/intelligent_autofix.sh" fix "$2"
+		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" fix "$2"
 	else
-		"$CODE_DIR/Tools/Automation/intelligent_autofix.sh" fix-all
+		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" fix-all
 	fi
 	;;
 "validate")
 	if [[ -n ${2-} ]]; then
-		"$CODE_DIR/Tools/Automation/intelligent_autofix.sh" validate "$2"
+		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" validate "$2"
 	else
 		echo "Usage: $0 validate <project_name>"
 		exit 1
@@ -306,7 +315,7 @@ case "${1-}" in
 	;;
 "rollback")
 	if [[ -n ${2-} ]]; then
-		"$CODE_DIR/Tools/Automation/intelligent_autofix.sh" rollback "$2"
+		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" rollback "$2"
 	else
 		echo "Usage: $0 rollback <project_name>"
 		exit 1
@@ -315,9 +324,9 @@ case "${1-}" in
 "enhance")
 	if [[ -n ${2-} ]]; then
 		if [[ ${2} == "analyze-all" || ${2} == "auto-apply-all" || ${2} == "report" || ${2} == "status" ]]; then
-			"$CODE_DIR/Tools/Automation/ai_enhancement_system.sh" "$2"
+			"${CODE_DIR}/Tools/Automation/ai_enhancement_system.sh" "$2"
 		elif [[ -n ${3-} ]]; then
-			"$CODE_DIR/Tools/Automation/ai_enhancement_system.sh" "$2" "$3"
+			"${CODE_DIR}/Tools/Automation/ai_enhancement_system.sh" "$2" "$3"
 		else
 			echo "Usage: $0 enhance <command> [project_name]"
 			echo "Available commands: analyze, analyze-all, auto-apply, auto-apply-all, report, status"

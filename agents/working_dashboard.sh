@@ -703,10 +703,10 @@ while true; do
 	update_dashboard_data
 
 	# Generate periodic report (every hour)
-	local current_minute=$(date +%M)
-	if [[ $current_minute -eq 0 ]]; then
-		generate_dashboard_report
-	fi
+       current_minute=$(date +%M)
+       if [[ $current_minute -eq 0 ]]; then
+           generate_dashboard_report
+       fi
 
 	sleep $UPDATE_INTERVAL
 done

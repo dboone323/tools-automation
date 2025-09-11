@@ -1,0 +1,72 @@
+[
+  {
+    "id": "issue_1757549117125335000",
+    "file": "AvoidObstaclesGame/AvoidObstaclesGame/GameScene.swift",
+    "line": 42,
+    "text": "TODO: Refactor collision detection logic for better performance.",
+    "status": "open"
+  },
+  {
+    "id": "issue_1757549117400736000",
+    "file": "CodingReviewer/CodingReviewer/ReviewEngine.swift",
+    "line": 15,
+    "text": "TODO: Add support for multi-language code review.",
+    "status": "open"
+  },
+  {
+    "id": "issue_1757549117471342000",
+    "file": "HabitQuest/HabitQuest/QuestManager.swift",
+    "line": 88,
+    "text": "TODO: Implement streak freeze feature.",
+    "status": "open"
+  },
+  {
+    "id": "issue_1757549117549671000",
+    "file": "MomentumFinance/MomentumFinance/FinanceTracker.swift",
+    "line": 27,
+    "text": "TODO: Integrate with external budgeting APIs.",
+    "status": "open"
+  },
+  {
+    "id": "issue_1757549117621361000",
+    "file": "PlannerApp/PlannerApp/PlannerView.swift",
+    "line": 60,
+    "text": "TODO: Add drag-and-drop for tasks.",
+    "status": "open"
+  },
+  {
+    "id": "issue_1757549783055130000",
+    "file": "AvoidObstaclesGame/AvoidObstaclesGame/GameScene.swift",
+    "line": 42,
+    "text": "TODO: Refactor collision detection logic for better performance.",
+    "status": "open"
+  },
+  {
+    "id": "issue_1757549783310841000",
+    "file": "CodingReviewer/CodingReviewer/ReviewEngine.swift",
+    "line": 15,
+    "text": "TODO: Add support for multi-language code review.",
+    "status": "open"
+  },
+  {
+    "id": "issue_1757549783392562000",
+    "file": "HabitQuest/HabitQuest/QuestManager.swift",
+    "line": 88,
+    "text": "TODO: Implement streak freeze feature.",
+    "status": "open"
+  },
+  {
+    "id": "issue_1757549783490491000",
+    "file": "MomentumFinance/MomentumFinance/FinanceTracker.swift",
+    "line": 27,
+    "text": "TODO: Integrate with external budgeting APIs.",
+    "status": "open"
+  },
+  {
+    "id": "issue_1757549783566074000",
+    "file": "PlannerApp/PlannerApp/PlannerView.swift",
+    "line": 60,
+    "text": "TODO: Add drag-and-drop for tasks.",
+    "status": "open"
+  }
+]
