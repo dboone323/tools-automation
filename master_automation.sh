@@ -278,8 +278,43 @@ case "${1-}" in
 "dashboard")
 	"${CODE_DIR}/Tools/Automation/workflow_dashboard.sh"
 	;;
-"unified")
-	"${CODE_DIR}/Tools/Automation/unified_dashboard.sh"
+"docs")
+	if [[ -n ${2-} ]]; then
+		case "${2}" in
+			"api")
+				if [[ -n ${3-} ]]; then
+					"${CODE_DIR}/Tools/Automation/docs_automation.sh" api "$3"
+				else
+					echo "Usage: $0 docs api <project_name>"
+					exit 1
+				fi
+				;;
+			"tutorial")
+				if [[ -n ${3-} ]]; then
+					"${CODE_DIR}/Tools/Automation/docs_automation.sh" tutorial "$3"
+				else
+					echo "Usage: $0 docs tutorial <tutorial_name>"
+					exit 1
+				fi
+				;;
+			"examples")
+				"${CODE_DIR}/Tools/Automation/docs_automation.sh" examples
+				;;
+			"all")
+				"${CODE_DIR}/Tools/Automation/docs_automation.sh" all
+				;;
+			"index")
+				"${CODE_DIR}/Tools/Automation/docs_automation.sh" index
+				;;
+			*)
+				echo "Usage: $0 docs {api <project>|tutorial <name>|examples|all|index}"
+				exit 1
+				;;
+		esac
+	else
+		echo "Usage: $0 docs {api <project>|tutorial <name>|examples|all|index}"
+		exit 1
+	fi
 	;;
 "mcp")
 	if [[ -n ${2-} ]]; then
@@ -341,7 +376,7 @@ case "${1-}" in
 *)
 	echo "🏗️  Unified Code Architecture - Master Automation Controller"
 	echo ""
-	echo "Usage: $0 {list|run <project>|all|status|format [project]|lint [project]|pods <project>|fastlane <project>|workflow <command> <project>|mcp <command> <project>|autofix [project]|validate <project>|rollback <project>|enhance <command> [project]|dashboard|unified}"
+	echo "Usage: $0 {list|run <project>|all|status|format [project]|lint [project]|pods <project>|fastlane <project>|workflow <command> <project>|mcp <command> <project>|autofix [project]|validate <project>|rollback <project>|enhance <command> [project]|dashboard|unified|alert <command>|docs <command>}"
 	echo ""
 	echo "Commands:"
 	echo "  list                    # List all projects with status"
@@ -360,6 +395,8 @@ case "${1-}" in
 	echo "  enhance <cmd> [proj]   # AI-powered enhancement system (analyze, auto-apply, analyze-all, auto-apply-all, report, status)"
 	echo "  dashboard              # Show comprehensive workflow status dashboard"
 	echo "  unified                # Show unified workflow status across all projects"
+	echo "  alert {test|status|config}  # Email alerting system management"
+	echo "  docs {api|tutorial|examples|all|index}  # Documentation automation"
 	echo ""
 	exit 1
 	;;

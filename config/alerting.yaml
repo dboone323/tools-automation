@@ -1,0 +1,49 @@
+# Email Alerting Configuration for Quantum Workspace
+
+alerting:
+  enabled: true
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+  smtp_username: ""  # Set your email
+  smtp_password: ""  # Set your app password
+  from_email: ""     # Set sender email
+  to_emails:
+    - ""            # Set recipient email
+
+alert_types:
+  critical_error:
+    enabled: true
+    subject: "🚨 CRITICAL: Quantum Workspace Automation Error"
+    priority: high
+
+  performance_degradation:
+    enabled: true
+    subject: "⚠️  WARNING: Performance Degradation Detected"
+    priority: normal
+
+  security_alert:
+    enabled: true
+    subject: "🔒 SECURITY: Potential Security Issue"
+    priority: high
+
+  build_failure:
+    enabled: true
+    subject: "❌ BUILD: Build Failure Detected"
+    priority: normal
+
+  system_health:
+    enabled: false
+    subject: "💊 HEALTH: System Health Report"
+    priority: low
+
+thresholds:
+  performance_critical_ms: 300000  # 5 minutes
+  performance_warning_ms: 120000   # 2 minutes
+  error_rate_threshold: 0.05       # 5% error rate
+  disk_space_warning_gb: 5         # 5GB free space warning
+
+notification_settings:
+  max_alerts_per_hour: 10
+  cooldown_period_minutes: 15
+  include_system_info: true
+  include_logs: true
