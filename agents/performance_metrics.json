@@ -1,0 +1,28 @@
+{
+  "metrics": [
+    {
+      "timestamp": "1757975487",
+      "cpu_usage": "234.1",
+      "memory_usage": "56.2",
+      "disk_usage": "31",
+      "process_count": "     732",
+      "agent_count": "      17"
+    },
+    {
+      "timestamp": "1757975650",
+      "cpu_usage": "233.2",
+      "memory_usage": "62.8",
+      "disk_usage": "31",
+      "process_count": "     744",
+      "agent_count": "      17"
+    },
+    {
+      "timestamp": "1757975951",
+      "cpu_usage": "153.7",
+      "memory_usage": "51.4",
+      "disk_usage": "31",
+      "process_count": "     744",
+      "agent_count": "      17"
+    }
+  ]
+}

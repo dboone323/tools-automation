@@ -16,6 +16,7 @@ declare -A AGENT_LOGS
 AGENT_LOGS[agent_build.sh]="${AGENTS_DIR}/build_agent.log"
 AGENT_LOGS[agent_debug.sh]="${AGENTS_DIR}/debug_agent.log"
 AGENT_LOGS[agent_codegen.sh]="${AGENTS_DIR}/codegen_agent.log"
+AGENT_LOGS[agent_todo.sh]="${AGENTS_DIR}/todo_agent.log"
 AGENT_LOGS[uiux_agent.sh]="${AGENTS_DIR}/uiux_agent.log"
 AGENT_LOGS[apple_pro_agent.sh]="${AGENTS_DIR}/apple_pro_agent.log"
 AGENT_LOGS[collab_agent.sh]="${AGENTS_DIR}/collab_agent.log"
@@ -34,7 +35,8 @@ rotate_log() {
 	local log_file="$1"
 	local max_size=10485760 # 10MB
 	if [[ -f ${log_file} ]]; then
-		local size=$(stat -f%z "${log_file}")
+		local size
+		size=$(stat -f%z "${log_file}")
 		if ((size > max_size)); then
 			mv "${log_file}" "${log_file}.old"
 			echo "[$(date)] Log rotated: ${log_file}" >"${log_file}"
@@ -57,7 +59,8 @@ restart_agent() {
 		echo "${agent_script} (PID ${pid}) killed for restart." >>"${LOG_FILE}"
 	fi
 	# Throttle and limit restarts
-	local now=$(date +%s)
+	local now
+	now=$(date +%s)
 	local last_restart=${AGENT_LAST_RESTART["${agent_script}"]:-0}
 	local count=${AGENT_RESTART_COUNT["${agent_script}"]:-0}
 	if ((now - last_restart < RESTART_THROTTLE)); then
@@ -80,11 +83,12 @@ echo "[$(date)] Supervisor: Starting all agents..." >>"${LOG_FILE}"
 start_agent agent_build.sh
 start_agent agent_debug.sh
 start_agent agent_codegen.sh
+start_agent agent_todo.sh
 echo "[$(date)] Supervisor: All agents running." >>"${LOG_FILE}"
 
 # Supervisor main loop: monitor logs and restart agents on error/rollback
 while true; do
-	for agent in "agent_build.sh" "agent_debug.sh" "agent_codegen.sh" "uiux_agent.sh" "apple_pro_agent.sh" "collab_agent.sh" "updater_agent.sh" "search_agent.sh"; do
+	for agent in "agent_build.sh" "agent_debug.sh" "agent_codegen.sh" "agent_todo.sh" "uiux_agent.sh" "apple_pro_agent.sh" "collab_agent.sh" "updater_agent.sh" "search_agent.sh"; do
 		log_file="${AGENT_LOGS["${agent}"]}"
 		rotate_log "${log_file}"
 		if [[ -f ${log_file} ]]; then

@@ -3,7 +3,7 @@
 # Usage: backup_manager.sh backup <project> | restore <project> | list
 
 BACKUP_DIR="$(dirname "$0")/backups"
-PROJECTS_DIR="/Users/danielstevens/Desktop/Code/Projects"
+PROJECTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Projects"
 AUDIT_LOG="$(dirname "$0")/audit.log"
 
 mkdir -p "$BACKUP_DIR"

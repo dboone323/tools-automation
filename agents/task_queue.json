@@ -15,7 +15,7 @@
       "type": "ui",
       "description": "Review CodingReviewer UI components for accessibility and user experience improvements",
       "priority": 6,
-      "assigned_agent": "uiux_agent.sh",
+      "assigned_agent": "agent_uiux.sh",
       "status": "queued",
       "created": 1756505576,
       "dependencies": []
@@ -65,19 +65,129 @@
       "type": "ux",
       "description": "Analyze MomentumFinance transaction views for better data visualization",
       "priority": 5,
-      "assigned_agent": "uiux_agent.sh",
+      "assigned_agent": "agent_uiux.sh",
       "status": "queued",
       "created": 1756505576,
       "dependencies": []
     },
     {
-      "id": "apple_pro_task_002",
-      "type": "ios",
-      "description": "Review all projects for proper iOS 18 and macOS 15 compatibility",
-      "priority": 8,
-      "assigned_agent": "apple_pro_agent.sh",
+      "id": "uiux_task_003",
+      "type": "ui",
+      "description": "Enhance PlannerApp calendar interface with drag-and-drop task scheduling",
+      "priority": 7,
+      "assigned_agent": "agent_uiux.sh",
       "status": "queued",
       "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "uiux_task_004",
+      "type": "ux",
+      "description": "Improve HabitQuest progress visualization with interactive charts",
+      "priority": 6,
+      "assigned_agent": "agent_uiux.sh",
+      "status": "queued",
+      "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "uiux_task_005",
+      "type": "ui",
+      "description": "Add accessibility features to AvoidObstaclesGame touch controls",
+      "priority": 8,
+      "assigned_agent": "agent_uiux.sh",
+      "status": "queued",
+      "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "debug_task_003",
+      "type": "debug",
+      "description": "Profile CodingReviewer performance bottlenecks in code analysis",
+      "priority": 7,
+      "assigned_agent": "agent_debug.sh",
+      "status": "queued",
+      "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "codegen_task_002",
+      "type": "generate",
+      "description": "Implement new feature: Smart task prioritization in PlannerApp",
+      "priority": 8,
+      "assigned_agent": "agent_codegen.sh",
+      "status": "queued",
+      "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "build_task_001",
+      "type": "build",
+      "description": "Integrate payment API for MomentumFinance transaction processing",
+      "priority": 9,
+      "assigned_agent": "agent_build.sh",
+      "status": "queued",
+      "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "debug_task_004",
+      "type": "debug",
+      "description": "Debug memory leaks in HabitQuest habit tracking system",
+      "priority": 6,
+      "assigned_agent": "agent_debug.sh",
+      "status": "queued",
+      "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "codegen_task_003",
+      "type": "generate",
+      "description": "Add offline sync capabilities to AvoidObstaclesGame",
+      "priority": 7,
+      "assigned_agent": "agent_codegen.sh",
+      "status": "queued",
+      "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "uiux_task_006",
+      "type": "ux",
+      "description": "Redesign CodingReviewer code review interface for better readability",
+      "priority": 6,
+      "assigned_agent": "agent_uiux.sh",
+      "status": "queued",
+      "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "build_task_002",
+      "type": "build",
+      "description": "Implement REST API integration for HabitQuest social features",
+      "priority": 8,
+      "assigned_agent": "agent_build.sh",
+      "status": "queued",
+      "created": 1756505576,
+      "dependencies": []
+    },
+    {
+      "id": "security_task_001",
+      "type": "security",
+      "description": "Perform comprehensive security analysis on CodingReviewer project",
+      "priority": 9,
+      "assigned_agent": "agent_security.sh",
+      "status": "completed",
+      "created": 1757975491,
+      "dependencies": []
+    },
+    {
+      "id": "testing_task_001",
+      "type": "testing",
+      "description": "Generate and run unit tests for HabitQuest data models",
+      "priority": 8,
+      "assigned_agent": "agent_testing.sh",
+      "status": "queued",
+      "created": 1757975491,
       "dependencies": []
     }
   ],
