@@ -6,11 +6,11 @@
     },
     "debug_agent": {
       "status": "running",
-      "pid": 455
+      "pid": 31832
     },
     "codegen_agent": {
       "status": "running",
-      "pid": 25825
+      "pid": 68071
     },
     "uiux_agent": {
       "status": "running",
@@ -29,5 +29,5 @@
       "pid": 31493
     }
   },
-  "last_update": 1757983486
+  "last_update": 1757983530
 }
