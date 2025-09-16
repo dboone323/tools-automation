@@ -263,6 +263,518 @@
       "disk_usage": "40",
       "process_count": "     643",
       "agent_count": "      20"
+    },
+    {
+      "timestamp": "1757989263",
+      "cpu_usage": "333",
+      "memory_usage": "68.2",
+      "disk_usage": "43",
+      "process_count": "     597",
+      "agent_count": "      18"
+    },
+    {
+      "timestamp": "1757989563",
+      "cpu_usage": "423.5",
+      "memory_usage": "65",
+      "disk_usage": "43",
+      "process_count": "     599",
+      "agent_count": "      18"
+    },
+    {
+      "timestamp": "1757989864",
+      "cpu_usage": "271.7",
+      "memory_usage": "66.6",
+      "disk_usage": "44",
+      "process_count": "     598",
+      "agent_count": "      17"
+    },
+    {
+      "timestamp": "1757990164",
+      "cpu_usage": "251.6",
+      "memory_usage": "67.9",
+      "disk_usage": "45",
+      "process_count": "     609",
+      "agent_count": "      17"
+    },
+    {
+      "timestamp": "1757990465",
+      "cpu_usage": "257.3",
+      "memory_usage": "32.9",
+      "disk_usage": "42",
+      "process_count": "     541",
+      "agent_count": "      20"
+    },
+    {
+      "timestamp": "1757990765",
+      "cpu_usage": "302.6",
+      "memory_usage": "43.2",
+      "disk_usage": "44",
+      "process_count": "     573",
+      "agent_count": "      20"
+    },
+    {
+      "timestamp": "1757991065",
+      "cpu_usage": "230.8",
+      "memory_usage": "54.6",
+      "disk_usage": "49",
+      "process_count": "     597",
+      "agent_count": "      22"
+    },
+    {
+      "timestamp": "1757991366",
+      "cpu_usage": "432.4",
+      "memory_usage": "55.3",
+      "disk_usage": "23",
+      "process_count": "     582",
+      "agent_count": "      23"
+    },
+    {
+      "timestamp": "1757991666",
+      "cpu_usage": "463.4",
+      "memory_usage": "77.6",
+      "disk_usage": "24",
+      "process_count": "     545",
+      "agent_count": "      19"
+    },
+    {
+      "timestamp": "1757991967",
+      "cpu_usage": "431.4",
+      "memory_usage": "75.1",
+      "disk_usage": "25",
+      "process_count": "     574",
+      "agent_count": "      18"
+    },
+    {
+      "timestamp": "1757992267",
+      "cpu_usage": "261.6",
+      "memory_usage": "75.4",
+      "disk_usage": "26",
+      "process_count": "     587",
+      "agent_count": "      20"
+    },
+    {
+      "timestamp": "1757992568",
+      "cpu_usage": "768.6",
+      "memory_usage": "73.4",
+      "disk_usage": "28",
+      "process_count": "     566",
+      "agent_count": "      21"
+    },
+    {
+      "timestamp": "1757992868",
+      "cpu_usage": "396",
+      "memory_usage": "83.4",
+      "disk_usage": "32",
+      "process_count": "     576",
+      "agent_count": "      22"
+    },
+    {
+      "timestamp": "1757993168",
+      "cpu_usage": "602.5",
+      "memory_usage": "76.3",
+      "disk_usage": "36",
+      "process_count": "     584",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757993469",
+      "cpu_usage": "257.4",
+      "memory_usage": "67.1",
+      "disk_usage": "42",
+      "process_count": "     596",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757993769",
+      "cpu_usage": "415.7",
+      "memory_usage": "71.8",
+      "disk_usage": "51",
+      "process_count": "     629",
+      "agent_count": "      28"
+    },
+    {
+      "timestamp": "1757994070",
+      "cpu_usage": "438.8",
+      "memory_usage": "70.8",
+      "disk_usage": "63",
+      "process_count": "     628",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757994370",
+      "cpu_usage": "389",
+      "memory_usage": "71.6",
+      "disk_usage": "86",
+      "process_count": "     628",
+      "agent_count": "      28"
+    },
+    {
+      "timestamp": "1757994671",
+      "cpu_usage": "107.6",
+      "memory_usage": "75.2",
+      "disk_usage": "93",
+      "process_count": "     620",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757994971",
+      "cpu_usage": "81.8",
+      "memory_usage": "73.8",
+      "disk_usage": "94",
+      "process_count": "     604",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757995271",
+      "cpu_usage": "105.3",
+      "memory_usage": "74.5",
+      "disk_usage": "94",
+      "process_count": "     602",
+      "agent_count": "      25"
+    },
+    {
+      "timestamp": "1757995572",
+      "cpu_usage": "92.3",
+      "memory_usage": "75.9",
+      "disk_usage": "94",
+      "process_count": "     608",
+      "agent_count": "      25"
+    },
+    {
+      "timestamp": "1757995872",
+      "cpu_usage": "92.7",
+      "memory_usage": "75.9",
+      "disk_usage": "95",
+      "process_count": "     605",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757996172",
+      "cpu_usage": "163.3",
+      "memory_usage": "74.9",
+      "disk_usage": "90",
+      "process_count": "     612",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757996473",
+      "cpu_usage": "259.7",
+      "memory_usage": "73.8",
+      "disk_usage": "90",
+      "process_count": "     614",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757996773",
+      "cpu_usage": "179.3",
+      "memory_usage": "71.1",
+      "disk_usage": "91",
+      "process_count": "     613",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757997074",
+      "cpu_usage": "89.6",
+      "memory_usage": "70.2",
+      "disk_usage": "91",
+      "process_count": "     609",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757997374",
+      "cpu_usage": "93.4",
+      "memory_usage": "71",
+      "disk_usage": "91",
+      "process_count": "     610",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757997674",
+      "cpu_usage": "120.7",
+      "memory_usage": "72.2",
+      "disk_usage": "92",
+      "process_count": "     615",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757997975",
+      "cpu_usage": "96.6",
+      "memory_usage": "71.8",
+      "disk_usage": "92",
+      "process_count": "     610",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757998275",
+      "cpu_usage": "86.4",
+      "memory_usage": "72.6",
+      "disk_usage": "92",
+      "process_count": "     616",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757998576",
+      "cpu_usage": "88.6",
+      "memory_usage": "72.5",
+      "disk_usage": "93",
+      "process_count": "     614",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757998876",
+      "cpu_usage": "186.4",
+      "memory_usage": "74.1",
+      "disk_usage": "93",
+      "process_count": "     637",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757999176",
+      "cpu_usage": "91.3",
+      "memory_usage": "73.5",
+      "disk_usage": "93",
+      "process_count": "     635",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757999477",
+      "cpu_usage": "126.7",
+      "memory_usage": "73.6",
+      "disk_usage": "93",
+      "process_count": "     632",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1757999777",
+      "cpu_usage": "103.8",
+      "memory_usage": "72.5",
+      "disk_usage": "94",
+      "process_count": "     616",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758000077",
+      "cpu_usage": "105.1",
+      "memory_usage": "72.7",
+      "disk_usage": "94",
+      "process_count": "     614",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758000378",
+      "cpu_usage": "193.9",
+      "memory_usage": "72.9",
+      "disk_usage": "95",
+      "process_count": "     617",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758000678",
+      "cpu_usage": "92.2",
+      "memory_usage": "73.4",
+      "disk_usage": "95",
+      "process_count": "     621",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758000979",
+      "cpu_usage": "47.2",
+      "memory_usage": "72.8",
+      "disk_usage": "95",
+      "process_count": "     618",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758001279",
+      "cpu_usage": "95",
+      "memory_usage": "71.9",
+      "disk_usage": "95",
+      "process_count": "     616",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758001579",
+      "cpu_usage": "93.4",
+      "memory_usage": "72.2",
+      "disk_usage": "96",
+      "process_count": "     618",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758001880",
+      "cpu_usage": "77.9",
+      "memory_usage": "72.3",
+      "disk_usage": "96",
+      "process_count": "     617",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758002180",
+      "cpu_usage": "104",
+      "memory_usage": "72.2",
+      "disk_usage": "96",
+      "process_count": "     618",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758002481",
+      "cpu_usage": "79.4",
+      "memory_usage": "72.5",
+      "disk_usage": "97",
+      "process_count": "     619",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758002781",
+      "cpu_usage": "87.1",
+      "memory_usage": "73.5",
+      "disk_usage": "97",
+      "process_count": "     627",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758003081",
+      "cpu_usage": "186.4",
+      "memory_usage": "74",
+      "disk_usage": "98",
+      "process_count": "     622",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758003382",
+      "cpu_usage": "97.1",
+      "memory_usage": "75.5",
+      "disk_usage": "98",
+      "process_count": "     639",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758003682",
+      "cpu_usage": "33",
+      "memory_usage": "75.4",
+      "disk_usage": "98",
+      "process_count": "     634",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758003983",
+      "cpu_usage": "252.9",
+      "memory_usage": "75.3",
+      "disk_usage": "99",
+      "process_count": "     635",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758004283",
+      "cpu_usage": "89",
+      "memory_usage": "73.9",
+      "disk_usage": "99",
+      "process_count": "     616",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758004583",
+      "cpu_usage": "95.9",
+      "memory_usage": "73.9",
+      "disk_usage": "99",
+      "process_count": "     618",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758004884",
+      "cpu_usage": "45.8",
+      "memory_usage": "74",
+      "disk_usage": "99",
+      "process_count": "     616",
+      "agent_count": "      26"
+    },
+    {
+      "timestamp": "1758005484",
+      "cpu_usage": "231.8",
+      "memory_usage": "75.4",
+      "disk_usage": "99",
+      "process_count": "     621",
+      "agent_count": "      25"
+    },
+    {
+      "timestamp": "1758007888",
+      "cpu_usage": "146.2",
+      "memory_usage": "79.3",
+      "disk_usage": "99",
+      "process_count": "     645",
+      "agent_count": "      22"
+    },
+    {
+      "timestamp": "1758008489",
+      "cpu_usage": "204.2",
+      "memory_usage": "79",
+      "disk_usage": "99",
+      "process_count": "     665",
+      "agent_count": "      24"
+    },
+    {
+      "timestamp": "1758009090",
+      "cpu_usage": "197.5",
+      "memory_usage": "75.9",
+      "disk_usage": "99",
+      "process_count": "     653",
+      "agent_count": "      24"
+    },
+    {
+      "timestamp": "1758009691",
+      "cpu_usage": "96.3",
+      "memory_usage": "76.4",
+      "disk_usage": "99",
+      "process_count": "     643",
+      "agent_count": "      20"
+    },
+    {
+      "timestamp": "1758014499",
+      "cpu_usage": "297.9",
+      "memory_usage": "76.6",
+      "disk_usage": "99",
+      "process_count": "     644",
+      "agent_count": "      17"
+    },
+    {
+      "timestamp": "1758014799",
+      "cpu_usage": "286",
+      "memory_usage": "77.1",
+      "disk_usage": "99",
+      "process_count": "     647",
+      "agent_count": "      19"
+    },
+    {
+      "timestamp": "1758016001",
+      "cpu_usage": "377.8",
+      "memory_usage": "77.4",
+      "disk_usage": "99",
+      "process_count": "     652",
+      "agent_count": "      19"
+    },
+    {
+      "timestamp": "1758016301",
+      "cpu_usage": "107.1",
+      "memory_usage": "76.5",
+      "disk_usage": "99",
+      "process_count": "     649",
+      "agent_count": "      17"
+    },
+    {
+      "timestamp": "1758024415",
+      "cpu_usage": "299.7",
+      "memory_usage": "73.8",
+      "disk_usage": "88",
+      "process_count": "     677",
+      "agent_count": "      17"
+    },
+    {
+      "timestamp": "1758024715",
+      "cpu_usage": "764.1",
+      "memory_usage": "61.9",
+      "disk_usage": "70",
+      "process_count": "     690",
+      "agent_count": "      15"
     }
   ]
 }
