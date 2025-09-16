@@ -186,8 +186,28 @@
       "description": "Generate and run unit tests for HabitQuest data models",
       "priority": 8,
       "assigned_agent": "agent_testing.sh",
-      "status": "queued",
+      "status": "completed",
       "created": 1757975491,
+      "dependencies": []
+    },
+    {
+      "id": "security_task_002",
+      "type": "security",
+      "description": "Perform security audit on all projects",
+      "priority": 8,
+      "assigned_agent": "agent_security.sh",
+      "status": "completed",
+      "created": 1757982375,
+      "dependencies": []
+    },
+    {
+      "id": "performance_task_001",
+      "type": "performance",
+      "description": "Monitor system performance and generate report",
+      "priority": 7,
+      "assigned_agent": "agent_performance_monitor.sh",
+      "status": "queued",
+      "created": 1757982385,
       "dependencies": []
     }
   ],

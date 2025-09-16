@@ -1,0 +1,182 @@
+{
+  "alerts": {
+    "active_alerts": [
+      {
+        "id": "alert_001",
+        "type": "critical",
+        "category": "agent_failure",
+        "title": "Security Agent Failed",
+        "description": "Security agent has stopped responding. Last seen 5 minutes ago.",
+        "timestamp": 1757976000,
+        "severity": "critical",
+        "status": "active",
+        "affected_components": ["security_agent"],
+        "recommended_action": "Restart security agent service",
+        "auto_resolve": false
+      },
+      {
+        "id": "alert_002",
+        "type": "warning",
+        "category": "system_resource",
+        "title": "High Memory Usage",
+        "description": "System memory usage is at 85%, approaching critical threshold.",
+        "timestamp": 1757975700,
+        "severity": "warning",
+        "status": "active",
+        "affected_components": ["system_memory"],
+        "recommended_action": "Monitor memory usage and consider freeing resources",
+        "auto_resolve": true
+      },
+      {
+        "id": "alert_003",
+        "type": "info",
+        "category": "task_priority",
+        "title": "High Priority Task Queued",
+        "description": "New high priority task 'MomentumFinance API Integration' has been queued.",
+        "timestamp": 1757975400,
+        "severity": "info",
+        "status": "active",
+        "affected_components": ["task_orchestrator"],
+        "recommended_action": "Monitor task execution progress",
+        "auto_resolve": true
+      },
+      {
+        "id": "alert_004",
+        "type": "warning",
+        "category": "disk_space",
+        "title": "Low Disk Space Warning",
+        "description": "Disk usage on /Users partition is at 78%, consider cleanup.",
+        "timestamp": 1757974800,
+        "severity": "warning",
+        "status": "active",
+        "affected_components": ["disk_storage"],
+        "recommended_action": "Clean up temporary files and unused data",
+        "auto_resolve": false
+      }
+    ],
+    "alert_history": [
+      {
+        "id": "alert_hist_001",
+        "original_id": "alert_005",
+        "type": "critical",
+        "category": "network_failure",
+        "title": "Network Connectivity Issue",
+        "description": "Lost network connectivity for 2 minutes. Service automatically recovered.",
+        "timestamp": 1757973000,
+        "resolved_timestamp": 1757973120,
+        "severity": "critical",
+        "status": "resolved",
+        "resolution": "auto_recovered",
+        "affected_components": ["network_interface"],
+        "duration_seconds": 120
+      },
+      {
+        "id": "alert_hist_002",
+        "original_id": "alert_006",
+        "type": "warning",
+        "category": "agent_performance",
+        "title": "Build Agent High CPU Usage",
+        "description": "Build agent CPU usage exceeded 90% for 5 minutes.",
+        "timestamp": 1757972400,
+        "resolved_timestamp": 1757972700,
+        "severity": "warning",
+        "status": "resolved",
+        "resolution": "auto_recovered",
+        "affected_components": ["build_agent"],
+        "duration_seconds": 300
+      },
+      {
+        "id": "alert_hist_003",
+        "original_id": "alert_007",
+        "type": "info",
+        "category": "task_completion",
+        "title": "Task Completed Successfully",
+        "description": "High priority task 'Security audit for CodingReviewer' completed successfully.",
+        "timestamp": 1757971800,
+        "resolved_timestamp": 1757971800,
+        "severity": "info",
+        "status": "resolved",
+        "resolution": "completed",
+        "affected_components": ["security_agent", "task_orchestrator"],
+        "duration_seconds": 0
+      },
+      {
+        "id": "alert_hist_004",
+        "original_id": "alert_008",
+        "type": "critical",
+        "category": "service_failure",
+        "title": "Database Connection Lost",
+        "description": "Lost connection to project database. Manual intervention required.",
+        "timestamp": 1757971200,
+        "resolved_timestamp": 1757971500,
+        "severity": "critical",
+        "status": "resolved",
+        "resolution": "manual_fix",
+        "affected_components": ["database_service"],
+        "duration_seconds": 300
+      },
+      {
+        "id": "alert_hist_005",
+        "original_id": "alert_009",
+        "type": "warning",
+        "category": "security_alert",
+        "title": "Unusual Login Attempt",
+        "description": "Detected unusual login pattern from IP 192.168.1.150.",
+        "timestamp": 1757970600,
+        "resolved_timestamp": 1757970660,
+        "severity": "warning",
+        "status": "resolved",
+        "resolution": "auto_blocked",
+        "affected_components": ["security_system"],
+        "duration_seconds": 60
+      }
+    ],
+    "alert_summary": {
+      "total_active": 4,
+      "critical_count": 1,
+      "warning_count": 2,
+      "info_count": 1,
+      "total_resolved_today": 5,
+      "average_resolution_time": 156,
+      "most_common_category": "agent_failure"
+    },
+    "alert_rules": [
+      {
+        "id": "rule_001",
+        "name": "Agent Health Check",
+        "description": "Monitor agent responsiveness and restart failed agents",
+        "enabled": true,
+        "check_interval": 60,
+        "threshold": 300,
+        "action": "restart_service"
+      },
+      {
+        "id": "rule_002",
+        "name": "Memory Usage Alert",
+        "description": "Alert when memory usage exceeds 80%",
+        "enabled": true,
+        "check_interval": 30,
+        "threshold": 80,
+        "action": "send_notification"
+      },
+      {
+        "id": "rule_003",
+        "name": "Disk Space Monitor",
+        "description": "Alert when disk usage exceeds 75%",
+        "enabled": true,
+        "check_interval": 300,
+        "threshold": 75,
+        "action": "send_notification"
+      },
+      {
+        "id": "rule_004",
+        "name": "High Priority Task Alert",
+        "description": "Notify when high priority tasks are queued",
+        "enabled": true,
+        "check_interval": 10,
+        "threshold": 8,
+        "action": "send_notification"
+      }
+    ]
+  }
+}

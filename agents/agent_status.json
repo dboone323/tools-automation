@@ -2,7 +2,7 @@
   "agents": {
     "build_agent": {
       "status": "running",
-      "pid": 58983
+      "pid": 67965
     },
     "debug_agent": {
       "status": "running",
@@ -10,24 +10,24 @@
     },
     "codegen_agent": {
       "status": "running",
-      "pid": 4229
+      "pid": 25825
     },
     "uiux_agent": {
       "status": "running",
       "pid": 34122
     },
     "testing_agent": {
-      "status": "stopped",
-      "pid": 37744
+      "status": "idle",
+      "pid": 73750
     },
     "security_agent": {
       "status": "stopped",
-      "pid": 90524
+      "pid": 91844
     },
     "performance_monitor": {
       "status": "idle",
       "pid": 31493
     }
   },
-  "last_update": 1757975828
+  "last_update": 1757983486
 }
