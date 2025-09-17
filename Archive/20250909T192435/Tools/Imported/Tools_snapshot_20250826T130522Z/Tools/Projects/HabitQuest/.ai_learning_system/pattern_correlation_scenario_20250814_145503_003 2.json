@@ -1,9 +1,0 @@
-{
-  "pattern_id": "pattern_scenario_20250814_145503_003",
-  "timestamp": "2025-08-12T10:55:03.817740",
-  "error_fingerprint": "deployment_failure_1",
-  "solution_fingerprint": "tool_upgrade_76",
-  "correlation_strength": 0.8863513144845686,
-  "occurrence_count": 7,
-  "cross_project_applicability": true
-}

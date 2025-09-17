@@ -1,1 +1,0 @@
-Auto-fix tools architecture branch: contains low-risk fixes (workflow splits, action pin bumps).\nLogs: Automation/logs/auto_fix_selected_run.log and Automation/logs/auto_fix_full_run.log\nBackups stored as .bak files.

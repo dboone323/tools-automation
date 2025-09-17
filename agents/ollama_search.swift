@@ -38,7 +38,7 @@ class OllamaSearchAnalyzer {
         Focus on being specific and actionable.
         """
 
-        return try await generateWithOllama(prompt: prompt, model: "llama2")
+        return try await self.generateWithOllama(prompt: prompt, model: "llama2")
     }
 
     func findIssues(projectPath: String) async throws -> String {
@@ -72,7 +72,7 @@ class OllamaSearchAnalyzer {
         Provide specific recommendations with severity levels (Critical/High/Medium/Low) and file locations.
         """
 
-        return try await generateWithOllama(prompt: prompt, model: "codellama")
+        return try await self.generateWithOllama(prompt: prompt, model: "codellama")
     }
 
     func searchForPattern(query: String, projectPath: String) async throws -> String {
@@ -103,7 +103,7 @@ class OllamaSearchAnalyzer {
         Provide specific file locations and code snippets.
         """
 
-        return try await generateWithOllama(prompt: prompt, model: "codellama")
+        return try await self.generateWithOllama(prompt: prompt, model: "codellama")
     }
 
     func generateCodeInsights(projectPath: String) async throws -> String {
@@ -138,7 +138,7 @@ class OllamaSearchAnalyzer {
         Be specific and provide actionable recommendations.
         """
 
-        return try await generateWithOllama(prompt: prompt, model: "llama2")
+        return try await self.generateWithOllama(prompt: prompt, model: "llama2")
     }
 
     private func findKeyFiles(in projectPath: String) throws -> [(path: String, content: String)] {
@@ -157,7 +157,7 @@ class OllamaSearchAnalyzer {
         for pattern in keyFilePatterns {
             let enumerator = fileManager.enumerator(atPath: projectPath)
             while let file = enumerator?.nextObject() as? String {
-                if fileMatchesPattern(file, pattern: pattern) {
+                if self.fileMatchesPattern(file, pattern: pattern) {
                     let fullPath = "\(projectPath)/\(file)"
                     if let content = try? String(contentsOfFile: fullPath, encoding: .utf8) {
                         keyFiles.append((file, content))
@@ -210,7 +210,11 @@ class OllamaSearchAnalyzer {
         }
 
         guard httpResponse.statusCode == 200 else {
-            throw NSError(domain: "OllamaSearchAnalyzer", code: 3, userInfo: [NSLocalizedDescriptionKey: "HTTP error: \(httpResponse.statusCode)"])
+            throw NSError(
+                domain: "OllamaSearchAnalyzer",
+                code: 3,
+                userInfo: [NSLocalizedDescriptionKey: "HTTP error: \(httpResponse.statusCode)"]
+            )
         }
 
         guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],

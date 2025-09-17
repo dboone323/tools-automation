@@ -1,5 +1,0 @@
-# Local Projects-level SwiftFormat overrides to avoid deprecated rules
---swiftversion 6.0
---disable sortedImports
---enable sortImports
---exclude .build

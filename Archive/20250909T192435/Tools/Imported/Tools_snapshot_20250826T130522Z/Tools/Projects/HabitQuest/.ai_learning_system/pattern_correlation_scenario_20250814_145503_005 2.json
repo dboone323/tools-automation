@@ -1,9 +1,0 @@
-{
-  "pattern_id": "pattern_scenario_20250814_145503_005",
-  "timestamp": "2025-08-12T21:55:03.817752",
-  "error_fingerprint": "resource_conflict_1",
-  "solution_fingerprint": "syntax_fix_70",
-  "correlation_strength": 0.32252521924988414,
-  "occurrence_count": 2,
-  "cross_project_applicability": true
-}

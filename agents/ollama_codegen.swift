@@ -36,7 +36,7 @@ class OllamaCodeGenerator {
         Generate the complete code file:
         """
 
-        return try await generateWithOllama(prompt: prompt, model: "codellama")
+        return try await self.generateWithOllama(prompt: prompt, model: "codellama")
     }
 
     func analyzeCode(code: String, language: String = "Swift") async throws -> String {
@@ -54,7 +54,7 @@ class OllamaCodeGenerator {
         Provide specific recommendations with severity levels:
         """
 
-        return try await generateWithOllama(prompt: prompt, model: "codellama")
+        return try await self.generateWithOllama(prompt: prompt, model: "codellama")
     }
 
     func generateTests(code: String, language: String = "Swift", testFramework: String = "XCTest") async throws -> String {
@@ -74,7 +74,7 @@ class OllamaCodeGenerator {
         Generate the complete test file:
         """
 
-        return try await generateWithOllama(prompt: prompt, model: "codellama")
+        return try await self.generateWithOllama(prompt: prompt, model: "codellama")
     }
 
     private func generateWithOllama(prompt: String, model: String = "codellama") async throws -> String {
@@ -104,7 +104,11 @@ class OllamaCodeGenerator {
         }
 
         guard httpResponse.statusCode == 200 else {
-            throw NSError(domain: "OllamaCodeGenerator", code: 3, userInfo: [NSLocalizedDescriptionKey: "HTTP error: \(httpResponse.statusCode)"])
+            throw NSError(
+                domain: "OllamaCodeGenerator",
+                code: 3,
+                userInfo: [NSLocalizedDescriptionKey: "HTTP error: \(httpResponse.statusCode)"]
+            )
         }
 
         guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
