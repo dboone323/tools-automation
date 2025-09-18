@@ -34,35 +34,32 @@ mkdir -p "$(dirname "${LOG_FILE}")"
 
 echo "🔎 Exporting TODOs from ${WORKSPACE_DIR} → ${OUTPUT_FILE}" | tee -a "${LOG_FILE}"
 
-# Build find with prunes to skip heavy dirs
-read -r -d '' PRUNE_EXPR <<'EOF'
-\( \
-	-path "*/.git" -o \
-	-path "*/.build" -o \
-	-path "*/DerivedData" -o \
-	-path "*/Pods" -o \
-	-path "*/Carthage" -o \
-	-path "*/node_modules" -o \
-	-path "*/.venv" -o \
-	-path "*/env" -o \
-	-path "*/__pycache__" -o \
-	-path "*/.pytest_cache" -o \
-	-path "*/.autofix_backups" -o \
-	-path "*/Tools/Automation/Archive" -o \
-	-path "*/Tools/Automation/Imported_Tools_snapshot-*" -o \
-	-path "*/Tools/Automation/.venv" -o \
-	-path "*/logs" -o \
-	-path "*/dist" -o \
-	-path "*/build" \
-\) -prune -false -o
-EOF
-
 # Start JSON array
 echo "[" >"${OUTPUT_FILE}"
 first=1
 
-# shellcheck disable=SC2086
-eval find "\"${WORKSPACE_DIR}\"" ${PRUNE_EXPR} -type f \
+# Find files while avoiding heavy directories
+find "${WORKSPACE_DIR}" \
+	\( \
+		-path "*/.git" -o \
+		-path "*/.build" -o \
+		-path "*/DerivedData" -o \
+		-path "*/Pods" -o \
+		-path "*/Carthage" -o \
+		-path "*/node_modules" -o \
+		-path "*/.venv" -o \
+		-path "*/env" -o \
+		-path "*/__pycache__" -o \
+		-path "*/.pytest_cache" -o \
+		-path "*/.autofix_backups" -o \
+		-path "*/Tools/Automation/Archive" -o \
+		-path "*/Tools/Automation/Imported_Tools_snapshot-*" -o \
+		-path "*/Tools/Automation/.venv" -o \
+		-path "*/logs" -o \
+		-path "*/dist" -o \
+		-path "*/build" \
+	\) -prune -o \
+	-type f \
 	\( -name "*.swift" -o -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.sh" -o -name "*.md" \) \
 	-size -1M \
 	-print0 | while IFS= read -r -d '' file; do

@@ -5,7 +5,7 @@ CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PROJECTS_DIR="${CODE_DIR}/Projects"
 
 # Export TODOs as JSON for agent/automation integration
-"${CODE_DIR}/Tools/Automation/export_todos_json.sh"
+bash "${CODE_DIR}/Tools/Automation/export_todos_json.sh"
 
 # Colors
 GREEN='\033[0;32m'
@@ -198,6 +198,12 @@ run_all_automation() {
 		if [[ -d ${project} ]]; then
 			local project_name
 			project_name=$(basename "${project}")
+			
+			# Skip non-project directories
+			if [[ "$project_name" == "Tools" || "$project_name" == "scripts" ]]; then
+				continue
+			fi
+			
 			print_status "Attempting automation for ${project_name}"
 			# Call project-specific automation if available, otherwise run lint/format as fallback
 			if [[ -f "${project}/automation/run_automation.sh" ]]; then
