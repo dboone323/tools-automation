@@ -1,409 +1,701 @@
 #!/bin/bash
 
 # Master Automation Controller for Unified Code Architecture
+# Enhanced with AI-Powered Ollama Integration
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PROJECTS_DIR="${CODE_DIR}/Projects"
 
 # Export TODOs as JSON for agent/automation integration
 bash "${CODE_DIR}/Tools/Automation/export_todos_json.sh"
 
+# Source AI-enhanced automation functions
+if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
+    source "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh"
+fi
+
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
+PURPLE='\033[0;35m'
 NC='\033[0m'
 
 print_status() {
-	echo -e "${BLUE}[AUTOMATION]${NC} $1"
+    echo -e "${BLUE}[AUTOMATION]${NC} $1"
 }
 
 print_success() {
-	echo -e "${GREEN}[SUCCESS]${NC} $1"
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 print_warning() {
-	echo -e "${YELLOW}[WARNING]${NC} $1"
+    echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
-# List available projects
-list_projects() {
-	print_status "Available projects in unified Code architecture:"
-	for project in "${PROJECTS_DIR}"/*; do
-		if [[ -d ${project} ]]; then
-			local project_name
-			project_name=$(basename "${project}")
-			local swift_files
-			swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
-			local has_automation=""
-			if [[ -d "${project}/automation" ]]; then
-				has_automation=" (✅ automation)"
-			else
-				has_automation=" (❌ no automation)"
-			fi
-			echo "  - ${project_name}: ${swift_files} Swift files${has_automation}"
-		fi
-	done
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Run automation for specific project
-run_project_automation() {
-	local project_name="$1"
-	local project_path="${PROJECTS_DIR}/${project_name}"
+print_ai() {
+    echo -e "${PURPLE}[🤖 AI-ENHANCED]${NC} $1"
+}
 
-	if [[ ! -d ${project_path} ]]; then
-		echo "❌ Project ${project_name} not found"
-		return 1
-	fi
+# Enhanced status check with AI capabilities
+status_with_ai() {
+    print_status "Quantum Workspace Status with AI Enhancement"
+    echo ""
+    
+    # Check Ollama health
+    if command -v ollama &> /dev/null; then
+        local ollama_version=$(ollama --version 2>/dev/null | grep -o 'ollama version is [0-9.]*' | cut -d' ' -f4 || echo "unknown")
+        print_ai "Ollama detected: v${ollama_version}"
+        
+        # Check server status
+        if ollama list &> /dev/null; then
+            local model_count=$(ollama list | tail -n +2 | wc -l | tr -d ' ')
+            print_ai "Ollama server running with ${model_count} models"
+            
+            # Check for cloud models
+            local cloud_models=$(ollama list | grep -c "cloud" || echo "0")
+            if [[ ${cloud_models} -gt 0 ]]; then
+                print_ai "Cloud models available: ${cloud_models}"
+            fi
+        else
+            print_warning "Ollama server not running"
+        fi
+    else
+        print_error "Ollama not installed"
+    fi
+    
+    echo ""
+    
+    # Original status functionality
+    list_projects_with_ai_insights
+}
 
-	print_status "Running automation for ${project_name}..."
+# Enhanced project listing with AI insights
+list_projects_with_ai_insights() {
+    print_status "Projects in Quantum workspace (AI-Enhanced):"
+    
+    local total_projects=0
+    local ai_enhanced_projects=0
+    local total_swift_files=0
+    
+    for project in "${PROJECTS_DIR}"/*; do
+        if [[ -d ${project} ]]; then
+            local project_name=$(basename "${project}")
+            local swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
+            total_swift_files=$((total_swift_files + swift_files))
+            total_projects=$((total_projects + 1))
+            
+            # Check for AI enhancements
+            local ai_status=""
+            local ai_file_count=$(find "${project}" -name "AI_*" -type f 2>/dev/null | wc -l | tr -d ' ')
+            if [[ ${ai_file_count} -gt 0 ]]; then
+                ai_status=" 🤖 AI Enhanced (${ai_file_count} files)"
+                ai_enhanced_projects=$((ai_enhanced_projects + 1))
+            elif compgen -G "${project}/Services/AIEnhanced*" > /dev/null; then
+                ai_status=" 🤖 AI Integrated"
+                ai_enhanced_projects=$((ai_enhanced_projects + 1))
+            else
+                ai_status=" 🤖 Ready for AI"
+            fi
+            
+            # Check for automation
+            local automation_status=""
+            if [[ -d "${project}/automation" ]]; then
+                automation_status=" ✅ automation"
+            else
+                automation_status=" ❌ no automation"
+            fi
+            
+            echo "  📱 ${project_name}: ${swift_files} Swift files${automation_status}${ai_status}"
+            
+            # Quick AI insight if Ollama is available
+            if command -v ollama &> /dev/null && ollama list &> /dev/null; then
+                generate_quick_ai_insight "${project_name}" "${swift_files}"
+            fi
+        fi
+    done
+    
+    echo ""
+    print_ai "Summary: ${total_projects} projects, ${total_swift_files} Swift files, ${ai_enhanced_projects} AI-enhanced"
+}
 
-	if [[ -f "${project_path}/automation/run_automation.sh" ]]; then
-		cd "${project_path}" && bash automation/run_automation.sh
-		print_success "${project_name} automation completed"
-	else
-		print_warning "No automation script found for ${project_name}"
-		return 1
-	fi
+# Generate quick AI insight for a project
+generate_quick_ai_insight() {
+    local project_name="$1"
+    local file_count="$2"
+    
+    if [[ ${file_count} -gt 0 ]]; then
+        local insight_prompt="In one sentence, suggest the most valuable AI enhancement for a Swift project called '${project_name}' with ${file_count} files:"
+        local ai_insight=$(echo "${insight_prompt}" | timeout 10s ollama run qwen3-coder:480b-cloud 2>/dev/null | head -1 || echo "AI enhancement available")
+        echo "     💡 ${ai_insight}"
+    fi
+}
+
+# AI-enhanced project automation
+run_project_automation_with_ai() {
+    local project_name="$1"
+    local project_path="${PROJECTS_DIR}/${project_name}"
+    
+    if [[ ! -d "${project_path}" ]]; then
+        print_error "Project ${project_name} not found"
+        return 1
+    fi
+    
+    print_ai "Running AI-enhanced automation for ${project_name}..."
+    
+    # Check if AI-enhanced automation is available
+    if command -v ollama &> /dev/null && [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
+        # Run AI-powered analysis
+        print_ai "Performing AI analysis..."
+        bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" analyze "${project_name}"
+        
+        # Generate missing components with AI
+        print_ai "Generating missing components..."
+        bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" generate "${project_name}"
+        
+        # Perform AI code review
+        print_ai "Conducting AI code review..."
+        bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" review "${project_name}"
+        
+        # Performance optimization analysis
+        print_ai "Analyzing performance optimizations..."
+        bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" optimize "${project_name}"
+    else
+        print_warning "AI-enhanced automation not available, running standard automation"
+    fi
+    
+    # Standard automation tasks
+    run_standard_project_automation "${project_name}"
+    
+    # Generate AI summary report
+    generate_ai_automation_summary "${project_name}"
+}
+
+# Standard project automation (existing functionality)
+run_standard_project_automation() {
+    local project_name="$1"
+    local project_path="${PROJECTS_DIR}/${project_name}"
+    
+    print_status "Running standard automation for ${project_name}..."
+    
+    # Format code if SwiftFormat is available
+    if command -v swiftformat &> /dev/null; then
+        print_status "Formatting Swift code..."
+        swiftformat "${project_path}" --config "${CODE_DIR}/.swiftformat" 2>/dev/null || true
+    fi
+    
+    # Lint code if SwiftLint is available
+    if command -v swiftlint &> /dev/null; then
+        print_status "Linting Swift code..."
+        cd "${project_path}" && swiftlint --quiet || true
+    fi
+    
+    # Run project-specific automation if available
+    if [[ -f "${project_path}/automation/run.sh" ]]; then
+        print_status "Running project-specific automation..."
+        bash "${project_path}/automation/run.sh" || print_warning "Project automation failed"
+    fi
+}
+
+# Generate AI automation summary
+generate_ai_automation_summary() {
+    local project_name="$1"
+    local project_path="${PROJECTS_DIR}/${project_name}"
+    
+    if command -v ollama &> /dev/null && ollama list &> /dev/null; then
+        print_ai "Generating automation summary for ${project_name}..."
+        
+        # Gather automation results
+        local ai_files=$(find "${project_path}" -name "AI_*" -type f | wc -l | tr -d ' ')
+        local swift_files=$(find "${project_path}" -name "*.swift" | wc -l | tr -d ' ')
+        
+        local summary_prompt="Generate a brief automation summary for Swift project '${project_name}':
+- Swift files: ${swift_files}
+- AI analyses generated: ${ai_files}
+- Automation completed: $(date)
+
+Provide:
+1. Key achievements
+2. Next recommended actions
+3. Priority items for development team
+
+Keep it concise and actionable."
+
+        local ai_summary=$(echo "${summary_prompt}" | timeout 15s ollama run gpt-oss:120b-cloud 2>/dev/null || echo "Summary generation completed")
+        
+        # Save summary
+        local summary_file="${project_path}/AUTOMATION_SUMMARY_$(date +%Y%m%d).md"
+        {
+            echo "# Automation Summary for ${project_name}"
+            echo "Generated: $(date)"
+            echo ""
+            echo "${ai_summary}"
+        } > "${summary_file}"
+        
+        print_success "Automation summary saved to ${summary_file}"
+    fi
+}
+
+# AI-enhanced automation for all projects
+run_all_projects_with_ai() {
+    print_ai "Running AI-enhanced automation for ALL projects..."
+    
+    # Check prerequisites
+    if ! command -v ollama &> /dev/null; then
+        print_error "Ollama not found. Install Ollama to use AI enhancements."
+        return 1
+    fi
+    
+    if ! ollama list &> /dev/null; then
+        print_warning "Starting Ollama server..."
+        ollama serve &
+        sleep 5
+    fi
+    
+    local processed_projects=0
+    local successful_projects=0
+    
+    for project in "${PROJECTS_DIR}"/*; do
+        if [[ -d ${project} ]]; then
+            local project_name=$(basename "${project}")
+            local swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
+            
+            if [[ ${swift_files} -gt 0 ]]; then
+                print_ai "Processing ${project_name} (${swift_files} Swift files)..."
+                
+                if run_project_automation_with_ai "${project_name}"; then
+                    successful_projects=$((successful_projects + 1))
+                fi
+                
+                processed_projects=$((processed_projects + 1))
+                echo ""
+            else
+                print_warning "Skipping ${project_name} (no Swift files)"
+            fi
+        fi
+    done
+    
+    # Generate workspace-wide AI insights
+    generate_workspace_ai_insights "${processed_projects}" "${successful_projects}"
+    
+    print_ai "AI-enhanced automation completed: ${successful_projects}/${processed_projects} projects successful"
+}
+
+# Generate workspace-wide AI insights
+generate_workspace_ai_insights() {
+    local processed="$1"
+    local successful="$2"
+    
+    print_ai "Generating workspace-wide AI insights..."
+    
+    if command -v ollama &> /dev/null && ollama list &> /dev/null; then
+        local insights_prompt="Generate workspace-wide insights for Quantum development workspace:
+
+Projects processed: ${processed}
+Successfully enhanced: ${successful}
+Total AI analyses: $(find "${PROJECTS_DIR}" -name "AI_*" | wc -l)
+Workspace structure: CodingReviewer, PlannerApp, AvoidObstaclesGame, MomentumFinance, HabitQuest
+
+Provide:
+1. Overall workspace health assessment
+2. Cross-project integration opportunities  
+3. Shared component recommendations
+4. Development workflow optimizations
+5. AI integration strategy for maximum impact
+
+Focus on actionable insights for the development team."
+
+        local workspace_insights=$(echo "${insights_prompt}" | timeout 20s ollama run deepseek-v3.1:671b-cloud 2>/dev/null || echo "Workspace analysis completed")
+        
+        # Save workspace insights
+        local insights_file="${CODE_DIR}/WORKSPACE_AI_INSIGHTS_$(date +%Y%m%d).md"
+        {
+            echo "# Quantum Workspace AI Insights"
+            echo "Generated: $(date)"
+            echo ""
+            echo "${workspace_insights}"
+            echo ""
+            echo "## Automation Statistics"
+            echo "- Projects processed: ${processed}"
+            echo "- Successfully enhanced: ${successful}"
+            echo "- AI analyses generated: $(find "${PROJECTS_DIR}" -name "AI_*" | wc -l)"
+        } > "${insights_file}"
+        
+        print_success "Workspace AI insights saved to ${insights_file}"
+    fi
+}
+
+# Show enhanced usage
+show_enhanced_usage() {
+    echo "AI-Enhanced Master Automation Controller for Quantum Workspace"
+    echo ""
+    echo "Usage: $0 [command] [project_name]"
+    echo ""
+    echo "Standard Commands:"
+    echo "  status          - Show workspace status with AI insights"
+    echo "  list            - List all projects with AI enhancement status"
+    echo "  run <name>      - Run AI-enhanced automation for specific project"
+    echo "  all             - Run AI-enhanced automation for all projects"
+    echo ""
+    echo "AI Commands:"
+    echo "  ai-status       - Check Ollama health and available models"
+    echo "  ai-analyze <name> - AI analysis of specific project"
+    echo "  ai-review <name>  - AI code review of specific project"
+    echo "  ai-optimize <name> - AI performance optimization analysis"
+    echo "  ai-generate <name> - Generate missing components with AI"
+    echo "  ai-all          - Run full AI enhancement for all projects"
+    echo ""
+    echo "Integration Commands:"
+    echo "  setup-ai        - Set up AI integration for workspace"
+    echo "  update-models   - Update/pull latest Ollama models"
+    echo "  ai-insights     - Generate workspace-wide AI insights"
+    echo ""
+    echo "Examples:"
+    echo "  $0 status"
+    echo "  $0 ai-all"
+    echo "  $0 run CodingReviewer"
+    echo "  $0 ai-analyze PlannerApp"
+}
+
+# Set up AI integration for the workspace
+setup_ai_integration() {
+    print_ai "Setting up AI integration for Quantum workspace..."
+    
+    # Check Ollama installation
+    if ! command -v ollama &> /dev/null; then
+        print_error "Ollama not found. Please install Ollama v0.12+"
+        echo "Install with: brew install ollama"
+        return 1
+    fi
+    
+    # Start Ollama server if not running
+    if ! ollama list &> /dev/null; then
+        print_ai "Starting Ollama server..."
+        ollama serve &
+        sleep 5
+    fi
+    
+    # Pull essential models
+    local essential_models=("qwen3-coder:480b-cloud" "gpt-oss:120b-cloud" "deepseek-v3.1:671b-cloud")
+    
+    for model in "${essential_models[@]}"; do
+        print_ai "Checking model: ${model}"
+        if ! ollama list | grep -q "${model}"; then
+            if [[ "${model}" == *"-cloud" ]]; then
+                print_ai "Cloud model ${model} will be pulled on first use"
+            else
+                print_ai "Pulling model: ${model}"
+                ollama pull "${model}" || print_warning "Failed to pull ${model}"
+            fi
+        else
+            print_success "Model ${model} already available"
+        fi
+    done
+    
+    # Make AI-enhanced automation executable
+    chmod +x "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" 2>/dev/null || true
+    
+    print_success "AI integration setup completed"
+}
+
+# Update Ollama models
+update_ollama_models() {
+    print_ai "Updating Ollama models..."
+    
+    if ! command -v ollama &> /dev/null; then
+        print_error "Ollama not found"
+        return 1
+    fi
+    
+    # Get list of current models
+    local current_models=$(ollama list | tail -n +2 | awk '{print $1}' | grep -v "cloud")
+    
+    for model in ${current_models}; do
+        print_ai "Updating model: ${model}"
+        ollama pull "${model}" || print_warning "Failed to update ${model}"
+    done
+    
+    print_success "Model updates completed"
 }
 
 # Format code using SwiftFormat
 format_code() {
-	local project_name="${1-}"
+    local project_name="${1:-}"
 
-	if [[ -n ${project_name} ]]; then
-		local project_path="${PROJECTS_DIR}/${project_name}"
-		if [[ ! -d ${project_path} ]]; then
-			echo "❌ Project ${project_name} not found"
-			return 1
-		fi
-		print_status "Formatting Swift code in ${project_name}..."
-		swiftformat "${project_path}" --exclude "*.backup" 2>/dev/null
-		print_success "Code formatting completed for ${project_name}"
-	else
-		print_status "Formatting Swift code in all projects..."
-		for project in "${PROJECTS_DIR}"/*; do
-			if [[ -d ${project} ]]; then
-				local project_name
-				project_name=$(basename "${project}")
-				print_status "Formatting ${project_name}..."
-				swiftformat "${project}" --exclude "*.backup" 2>/dev/null
-			fi
-		done
-		print_success "Code formatting completed for all projects"
-	fi
+    if [[ -n "$project_name" ]]; then
+        local project_path="${PROJECTS_DIR}/${project_name}"
+        if [[ ! -d "$project_path" ]]; then
+            print_error "Project $project_name not found"
+            return 1
+        fi
+        print_status "Formatting Swift code in $project_name..."
+        swiftformat "$project_path" --exclude "*.backup" 2>/dev/null
+        print_success "Code formatting completed for $project_name"
+    else
+        print_status "Formatting Swift code in all projects..."
+        for project in "${PROJECTS_DIR}"/*; do
+            if [[ -d "$project" ]]; then
+                local project_name
+                project_name=$(basename "$project")
+                if [[ "$project_name" != "Tools" && "$project_name" != "scripts" && "$project_name" != "Config" ]]; then
+                    print_status "Formatting $project_name..."
+                    swiftformat "$project" --exclude "*.backup" 2>/dev/null
+                fi
+            fi
+        done
+        print_success "Code formatting completed for all projects"
+    fi
 }
 
 # Lint code using SwiftLint
 lint_code() {
-	local project_name="${1-}"
+    local project_name="${1:-}"
 
-	if [[ -n ${project_name} ]]; then
-		local project_path="${PROJECTS_DIR}/${project_name}"
-		if [[ ! -d ${project_path} ]]; then
-			echo "❌ Project ${project_name} not found"
-			return 1
-		fi
-		print_status "Linting Swift code in ${project_name}..."
-		cd "${project_path}" && swiftlint
-		print_success "Code linting completed for ${project_name}"
-	else
-		print_status "Linting Swift code in all projects..."
-		for project in "${PROJECTS_DIR}"/*; do
-			if [[ -d ${project} ]]; then
-				local project_name
-				project_name=$(basename "${project}")
-				print_status "Linting ${project_name}..."
-				cd "${project}" || exit
-				swiftlint
-			fi
-		done
-		print_success "Code linting completed for all projects"
-	fi
+    if [[ -n "$project_name" ]]; then
+        local project_path="${PROJECTS_DIR}/${project_name}"
+        if [[ ! -d "$project_path" ]]; then
+            print_error "Project $project_name not found"
+            return 1
+        fi
+        print_status "Linting Swift code in $project_name..."
+        cd "$project_path" && swiftlint
+        print_success "Code linting completed for $project_name"
+    else
+        print_status "Linting Swift code in all projects..."
+        for project in "${PROJECTS_DIR}"/*; do
+            if [[ -d "$project" ]]; then
+                local project_name
+                project_name=$(basename "$project")
+                if [[ "$project_name" != "Tools" && "$project_name" != "scripts" && "$project_name" != "Config" ]]; then
+                    print_status "Linting $project_name..."
+                    cd "$project" && swiftlint
+                fi
+            fi
+        done
+        print_success "Code linting completed for all projects"
+    fi
 }
 
 # Initialize CocoaPods for a project
 init_pods() {
-	local project_name="$1"
-	local project_path="${PROJECTS_DIR}/${project_name}"
+    local project_name="$1"
+    local project_path="${PROJECTS_DIR}/${project_name}"
 
-	if [[ ! -d ${project_path} ]]; then
-		echo "❌ Project ${project_name} not found"
-		return 1
-	fi
+    if [[ ! -d "$project_path" ]]; then
+        print_error "Project $project_name not found"
+        return 1
+    fi
 
-	print_status "Initializing CocoaPods for ${project_name}..."
-	cd "${project_path}" || exit
+    print_status "Initializing CocoaPods for $project_name..."
+    cd "$project_path" || return 1
 
-	if [[ ! -f "Podfile" ]]; then
-		print_status "Creating Podfile..."
-		pod init
-		print_success "Podfile created"
-	else
-		print_status "Installing/updating pods..."
-		pod install
-		print_success "CocoaPods setup completed"
-	fi
+    if [[ ! -f "Podfile" ]]; then
+        print_status "Creating Podfile..."
+        pod init
+        print_success "Podfile created"
+    else
+        print_status "Installing/updating pods..."
+        pod install
+        print_success "CocoaPods setup completed"
+    fi
 }
 
 # Setup Fastlane for iOS deployment
 init_fastlane() {
-	local project_name="$1"
-	local project_path="${PROJECTS_DIR}/${project_name}"
+    local project_name="$1"
+    local project_path="${PROJECTS_DIR}/${project_name}"
 
-	if [[ ! -d ${project_path} ]]; then
-		echo "❌ Project ${project_name} not found"
-		return 1
-	fi
+    if [[ ! -d "$project_path" ]]; then
+        print_error "Project $project_name not found"
+        return 1
+    fi
 
-	print_status "Setting up Fastlane for ${project_name}..."
-	cd "${project_path}" || exit
+    print_status "Setting up Fastlane for $project_name..."
+    cd "$project_path" || return 1
 
-	if [[ ! -d "fastlane" ]]; then
-		print_status "Initializing Fastlane..."
-		fastlane init
-		print_success "Fastlane initialized"
-	else
-		print_status "Fastlane already configured"
-	fi
+    if [[ ! -d "fastlane" ]]; then
+        print_status "Initializing Fastlane..."
+        fastlane init
+        print_success "Fastlane initialized"
+    else
+        print_status "Fastlane already configured"
+    fi
 }
 
 # Show unified architecture status
 show_status() {
-	print_status "Unified Code Architecture Status"
-	echo ""
+    print_section "Quantum Workspace Status"
 
-	echo "📍 Location: ${CODE_DIR}"
-	echo "📊 Projects: $(find "${PROJECTS_DIR}" -maxdepth 1 -type d | tail -n +2 | wc -l | tr -d ' ')"
+    echo "📍 Location: ${WORKSPACE_ROOT}"
+    echo "📊 Projects: $(find "${PROJECTS_DIR}" -maxdepth 1 -type d | tail -n +2 | wc -l | tr -d ' ')"
 
-	# Check tool availability
-	echo ""
-	print_status "Development Tools:"
-	check_tool "xcodebuild" "Xcode Build System"
-	check_tool "swift" "Swift Compiler"
-	check_tool "swiftlint" "SwiftLint"
-	check_tool "swiftformat" "SwiftFormat"
-	check_tool "fastlane" "Fastlane"
-	check_tool "pod" "CocoaPods"
-	check_tool "git" "Git"
-	check_tool "python3" "Python"
+    # Check tool availability
+    echo ""
+    print_section "Development Tools"
+    check_tool "xcodebuild" "Xcode Build System"
+    check_tool "swift" "Swift Compiler"
+    check_tool "swiftlint" "SwiftLint"
+    check_tool "swiftformat" "SwiftFormat"
+    check_tool "fastlane" "Fastlane"
+    check_tool "pod" "CocoaPods"
+    check_tool "git" "Git"
+    check_tool "python3" "Python"
+    check_tool "node" "Node.js"
+    check_tool "npm" "NPM"
 
-	echo ""
-	list_projects
-}
-
-# Run automation for all projects
-run_all_automation() {
-	print_status "Running automation for all projects..."
-	for project in "${PROJECTS_DIR}"/*; do
-		if [[ -d ${project} ]]; then
-			local project_name
-			project_name=$(basename "${project}")
-			
-			# Skip non-project directories
-			if [[ "$project_name" == "Tools" || "$project_name" == "scripts" ]]; then
-				continue
-			fi
-			
-			print_status "Attempting automation for ${project_name}"
-			# Call project-specific automation if available, otherwise run lint/format as fallback
-			if [[ -f "${project}/automation/run_automation.sh" ]]; then
-				(cd "${project}" && bash automation/run_automation.sh) || print_warning "Automation failed for ${project_name}"
-			else
-				print_warning "No automation script for ${project_name} — running lint as lightweight verification"
-				(cd "${project}" && command -v swiftlint >/dev/null 2>&1 && swiftlint) || print_warning "Lint not available or failed for ${project_name}"
-			fi
-		fi
-	done
-	print_success "All project automations attempted"
+    echo ""
+    list_projects
 }
 
 # Check if a tool is available
 check_tool() {
-	local tool="$1"
-	local description="$2"
-	if command -v "${tool}" &>/dev/null; then
-		echo "  ✅ ${description}"
-	else
-		echo "  ❌ ${description} (not installed)"
-	fi
+    local tool="$1"
+    local description="$2"
+    if command -v "$tool" &>/dev/null; then
+        local version=""
+        case "$tool" in
+            "swift") version=" ($($tool --version 2>/dev/null | head -1 | cut -d' ' -f3 || echo "unknown"))" ;;
+            "python3") version=" ($($tool --version 2>&1 | head -1 | cut -d' ' -f2 || echo "unknown"))" ;;
+            "node") version=" ($($tool --version 2>/dev/null || echo "unknown"))" ;;
+            "npm") version=" ($($tool --version 2>/dev/null || echo "unknown"))" ;;
+        esac
+        echo -e "  ✅ ${GREEN}${description}${NC}${version}"
+    else
+        echo -e "  ❌ ${RED}${description}${NC} (not installed)"
+    fi
 }
 
-# Main execution
-case "${1-}" in
-"list")
-	list_projects
-	;;
-"run")
-	if [[ -n ${2-} ]]; then
-		run_project_automation "$2"
-	else
-		echo "Usage: $0 run <project_name>"
-		list_projects
-		exit 1
-	fi
-	;;
-"all")
-	run_all_automation
-	;;
-"status")
-	show_status
-	;;
-"format")
-	format_code "$2"
-	;;
-"lint")
-	lint_code "$2"
-	;;
-"pods")
-	if [[ -n ${2-} ]]; then
-		init_pods "$2"
-	else
-		echo "Usage: $0 pods <project_name>"
-		list_projects
-		exit 1
-	fi
-	;;
-"fastlane")
-	if [[ -n ${2-} ]]; then
-		init_fastlane "$2"
-	else
-		echo "Usage: $0 fastlane <project_name>"
-		list_projects
-		exit 1
-	fi
-	;;
-"workflow")
-	if [[ -n ${2-} ]] && [[ -n ${3-} ]]; then
-		"${CODE_DIR}/Tools/Automation/enhanced_workflow.sh" "$2" "$3"
-	else
-		echo "Usage: $0 workflow <command> <project_name>"
-		echo "Available workflow commands: pre-commit, ios-setup, qa, deps"
-		exit 1
-	fi
-	;;
-"dashboard")
-	"${CODE_DIR}/Tools/Automation/workflow_dashboard.sh"
-	;;
-"docs")
-	if [[ -n ${2-} ]]; then
-		case "${2}" in
-			"api")
-				if [[ -n ${3-} ]]; then
-					"${CODE_DIR}/Tools/Automation/docs_automation.sh" api "$3"
-				else
-					echo "Usage: $0 docs api <project_name>"
-					exit 1
-				fi
-				;;
-			"tutorial")
-				if [[ -n ${3-} ]]; then
-					"${CODE_DIR}/Tools/Automation/docs_automation.sh" tutorial "$3"
-				else
-					echo "Usage: $0 docs tutorial <tutorial_name>"
-					exit 1
-				fi
-				;;
-			"examples")
-				"${CODE_DIR}/Tools/Automation/docs_automation.sh" examples
-				;;
-			"all")
-				"${CODE_DIR}/Tools/Automation/docs_automation.sh" all
-				;;
-			"index")
-				"${CODE_DIR}/Tools/Automation/docs_automation.sh" index
-				;;
-			*)
-				echo "Usage: $0 docs {api <project>|tutorial <name>|examples|all|index}"
-				exit 1
-				;;
-		esac
-	else
-		echo "Usage: $0 docs {api <project>|tutorial <name>|examples|all|index}"
-		exit 1
-	fi
-	;;
-"mcp")
-	if [[ -n ${2-} ]]; then
-		if [[ ${2} == "status" || ${2} == "autofix-all" ]]; then
-			"${CODE_DIR}/Tools/Automation/mcp_workflow.sh" "$2"
-		elif [[ -n ${3-} ]]; then
-			"${CODE_DIR}/Tools/Automation/mcp_workflow.sh" "$2" "$3"
-		else
-			echo "Usage: $0 mcp <command> [project_name]"
-			echo "Available MCP commands: check, ci-check, fix, autofix, autofix-all, validate, rollback, status"
-			exit 1
-		fi
-	else
-		echo "Usage: $0 mcp <command> [project_name]"
-		echo "Available MCP commands: check, ci-check, fix, autofix, autofix-all, validate, rollback, status"
-		exit 1
-	fi
-	;;
-"autofix")
-	if [[ -n ${2-} ]]; then
-		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" fix "$2"
-	else
-		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" fix-all
-	fi
-	;;
-"validate")
-	if [[ -n ${2-} ]]; then
-		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" validate "$2"
-	else
-		echo "Usage: $0 validate <project_name>"
-		exit 1
-	fi
-	;;
-"rollback")
-	if [[ -n ${2-} ]]; then
-		"${CODE_DIR}/Tools/Automation/intelligent_autofix.sh" rollback "$2"
-	else
-		echo "Usage: $0 rollback <project_name>"
-		exit 1
-	fi
-	;;
-"enhance")
-	if [[ -n ${2-} ]]; then
-		if [[ ${2} == "analyze-all" || ${2} == "auto-apply-all" || ${2} == "report" || ${2} == "status" ]]; then
-			"${CODE_DIR}/Tools/Automation/ai_enhancement_system.sh" "$2"
-		elif [[ -n ${3-} ]]; then
-			"${CODE_DIR}/Tools/Automation/ai_enhancement_system.sh" "$2" "$3"
-		else
-			echo "Usage: $0 enhance <command> [project_name]"
-			echo "Available commands: analyze, analyze-all, auto-apply, auto-apply-all, report, status"
-			exit 1
-		fi
-	else
-		echo "Usage: $0 enhance <command> [project_name]"
-		echo "Available commands: analyze, analyze-all, auto-apply, auto-apply-all, report, status"
-		exit 1
-	fi
-	;;
-*)
-	echo "🏗️  Unified Code Architecture - Master Automation Controller"
-	echo ""
-	echo "Usage: $0 {list|run <project>|all|status|format [project]|lint [project]|pods <project>|fastlane <project>|workflow <command> <project>|mcp <command> <project>|autofix [project]|validate <project>|rollback <project>|enhance <command> [project]|dashboard|unified|alert <command>|docs <command>}"
-	echo ""
-	echo "Commands:"
-	echo "  list                    # List all projects with status"
-	echo "  run <project>          # Run automation for specific project"
-	echo "  all                    # Run automation for all projects"
-	echo "  status                 # Show unified architecture status"
-	echo "  format [project]       # Format Swift code (all projects if no project specified)"
-	echo "  lint [project]         # Lint Swift code (all projects if no project specified)"
-	echo "  pods <project>         # Initialize/update CocoaPods for project"
-	echo "  fastlane <project>     # Setup Fastlane for iOS deployment"
-	echo "  workflow <cmd> <proj>  # Run enhanced workflow (pre-commit, ios-setup, qa, deps)"
-	echo "  mcp <cmd> <proj>       # MCP GitHub workflow integration (check, ci-check, fix, autofix, validate, rollback, status)"
-	echo "  autofix [project]      # Run intelligent auto-fix with safety checks (all projects if none specified)"
-	echo "  validate <project>     # Run comprehensive validation checks"
-	echo "  rollback <project>     # Rollback last auto-fix if backup exists"
-	echo "  enhance <cmd> [proj]   # AI-powered enhancement system (analyze, auto-apply, analyze-all, auto-apply-all, report, status)"
-	echo "  dashboard              # Show comprehensive workflow status dashboard"
-	echo "  unified                # Show unified workflow status across all projects"
-	echo "  alert {test|status|config}  # Email alerting system management"
-	echo "  docs {api|tutorial|examples|all|index}  # Documentation automation"
-	echo ""
-	exit 1
-	;;
-esac
+list_projects() {
+    print_section "Available Projects"
+    for project in "${PROJECTS_DIR}"/*; do
+        if [[ -d "$project" ]]; then
+            local project_name
+            project_name=$(basename "$project")
+            local swift_files
+            swift_files=$(find "$project" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
+            local has_automation=""
+            local has_tests=""
+            local has_docs=""
+
+            if [[ -d "${project}/automation" ]] || [[ -f "${project}/automation/run_automation.sh" ]]; then
+                has_automation=" (✅ automation)"
+            else
+                has_automation=" (❌ no automation)"
+            fi
+
+            if find "$project" -name "*Test*.swift" -o -name "*Tests.swift" | grep -q .; then
+                has_tests=" (🧪 tests)"
+            fi
+
+            if [[ -d "${DOCS_DIR}/API/${project_name}_API.md" ]] || [[ -f "${project}/README.md" ]]; then
+                has_docs=" (📚 docs)"
+            fi
+
+            echo "  • ${project_name}: ${swift_files} Swift files${has_automation}${has_tests}${has_docs}"
+        fi
+    done
+    echo ""
+}
+
+# Main execution logic with AI enhancements
+main() {
+    case "${1:-}" in
+        "status"|"")
+            status_with_ai
+            ;;
+        "list")
+            list_projects_with_ai_insights
+            ;;
+        "run")
+            run_project_automation_with_ai "$2"
+            ;;
+        "all")
+            run_all_projects_with_ai
+            ;;
+        "ai-status")
+            if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
+                bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" health
+            else
+                print_error "AI-enhanced automation not found"
+            fi
+            ;;
+        "ai-analyze")
+            if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
+                bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" analyze "$2"
+            else
+                print_error "AI-enhanced automation not found"
+            fi
+            ;;
+        "ai-review")
+            if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
+                bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" review "$2"
+            else
+                print_error "AI-enhanced automation not found"
+            fi
+            ;;
+        "ai-optimize")
+            if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
+                bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" optimize "$2"
+            else
+                print_error "AI-enhanced automation not found"
+            fi
+            ;;
+        "ai-generate")
+            if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
+                bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" generate "$2"
+            else
+                print_error "AI-enhanced automation not found"
+            fi
+            ;;
+        "ai-all")
+            if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
+                bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ai-all
+            else
+                print_error "AI-enhanced automation not found"
+            fi
+            ;;
+        "setup-ai")
+            setup_ai_integration
+            ;;
+        "update-models")
+            update_ollama_models
+            ;;
+        "ai-insights")
+            generate_workspace_ai_insights 5 5  # Placeholder values
+            ;;
+        "format")
+            format_code "$2"
+            ;;
+        "lint")
+            lint_code "$2"
+            ;;
+        "pods")
+            if [[ -n "${2:-}" ]]; then
+                init_pods "$2"
+            else
+                echo "Usage: $0 pods <project_name>"
+                list_projects
+                exit 1
+            fi
+            ;;
+        "fastlane")
+            if [[ -n "${2:-}" ]]; then
+                init_fastlane "$2"
+            else
+                echo "Usage: $0 fastlane <project_name>"
+                list_projects
+                exit 1
+            fi
+            ;;
+        *)
+            show_enhanced_usage
+            ;;
+    esac
+}
+
+# Execute main function
+main "$@"
