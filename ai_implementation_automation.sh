@@ -20,86 +20,86 @@ NC='\033[0m' # No Color
 
 # Logging functions
 log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+  echo -e "${BLUE}[INFO]${NC} $1"
 }
 
 log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
+  echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
+  echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
 log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
+  echo -e "${RED}[ERROR]${NC} $1"
 }
 
 # Check if Ollama is available for AI assistance
 check_ollama() {
-    if command -v ollama &> /dev/null && ollama list &> /dev/null; then
-        log_success "Ollama available for AI assistance"
-        return 0
-    else
-        log_warning "Ollama not available - proceeding with rule-based improvements"
-        return 1
-    fi
+  if command -v ollama &>/dev/null && ollama list &>/dev/null; then
+    log_success "Ollama available for AI assistance"
+    return 0
+  else
+    log_warning "Ollama not available - proceeding with rule-based improvements"
+    return 1
+  fi
 }
 
 # Apply common Swift improvements
 apply_swift_improvements() {
-    local project_name="$1"
-    local project_path="${PROJECTS_DIR}/${project_name}"
+  local project_name="$1"
+  local project_path="${PROJECTS_DIR}/${project_name}"
 
-    log_info "Applying Swift improvements to ${project_name}..."
+  log_info "Applying Swift improvements to ${project_name}..."
 
-    # Find all Swift files
-    local swift_files
-    swift_files=$(find "${project_path}" -name "*.swift" -type f)
+  # Find all Swift files
+  local swift_files
+  swift_files=$(find "${project_path}" -name "*.swift" -type f)
 
-    for file in ${swift_files}; do
-        if [[ -f "$file" ]]; then
-            log_info "Processing ${file}"
+  for file in ${swift_files}; do
+    if [[ -f "$file" ]]; then
+      log_info "Processing ${file}"
 
-            # Apply common improvements using sed/awk
-            # Add missing access control
-            sed -i '' 's/^class \([A-Z][a-zA-Z0-9_]*\):/public class \1:/g' "$file"
-            sed -i '' 's/^struct \([A-Z][a-zA-Z0-9_]*\):/public struct \1:/g' "$file"
-            sed -i '' 's/^enum \([A-Z][a-zA-Z0-9_]*\):/public enum \1:/g' "$file"
+      # Apply common improvements using sed/awk
+      # Add missing access control
+      sed -i '' 's/^class \([A-Z][a-zA-Z0-9_]*\):/public class \1:/g' "$file"
+      sed -i '' 's/^struct \([A-Z][a-zA-Z0-9_]*\):/public struct \1:/g' "$file"
+      sed -i '' 's/^enum \([A-Z][a-zA-Z0-9_]*\):/public enum \1:/g' "$file"
 
-            # Fix common protocol issues
-            sed -i '' 's/protocol \([A-Z][a-zA-Z0-9_]*\): AnyObject {/protocol \1: AnyObject {/g' "$file"
+      # Fix common protocol issues
+      sed -i '' 's/protocol \([A-Z][a-zA-Z0-9_]*\): AnyObject {/protocol \1: AnyObject {/g' "$file"
 
-            log_success "Applied improvements to $(basename "$file")"
-        fi
-    done
+      log_success "Applied improvements to $(basename "$file")"
+    fi
+  done
 }
 
 # Implement object pooling pattern
 implement_object_pooling() {
-    local project_name="$1"
-    local project_path="${PROJECTS_DIR}/${project_name}"
+  local project_name="$1"
+  local project_path="${PROJECTS_DIR}/${project_name}"
 
-    log_info "Checking for object pooling opportunities in ${project_name}..."
+  log_info "Checking for object pooling opportunities in ${project_name}..."
 
-    # Look for manager classes that might benefit from pooling
-    local manager_files
-    manager_files=$(find "${project_path}" -name "*Manager.swift" -type f)
+  # Look for manager classes that might benefit from pooling
+  local manager_files
+  manager_files=$(find "${project_path}" -name "*Manager.swift" -type f)
 
-    for manager_file in ${manager_files}; do
-        if [[ -f "$manager_file" ]]; then
-            local filename
-            filename=$(basename "$manager_file" .swift)
+  for manager_file in ${manager_files}; do
+    if [[ -f "$manager_file" ]]; then
+      local filename
+      filename=$(basename "$manager_file" .swift)
 
-            # Check if it already has pooling
-            if ! grep -q "private var.*Pool" "$manager_file"; then
-                log_info "Adding object pooling to ${filename}"
+      # Check if it already has pooling
+      if ! grep -q "private var.*Pool" "$manager_file"; then
+        log_info "Adding object pooling to ${filename}"
 
-                # Create backup
-                cp "$manager_file" "${manager_file}.backup"
+        # Create backup
+        cp "$manager_file" "${manager_file}.backup"
 
-                # Add pooling implementation (this is a simplified example)
-                cat >> "$manager_file" << 'EOF'
+        # Add pooling implementation (this is a simplified example)
+        cat >>"$manager_file" <<'EOF'
 
     // MARK: - Object Pooling
 
@@ -123,22 +123,22 @@ implement_object_pooling() {
     }
 EOF
 
-                log_success "Added object pooling to ${filename}"
-            fi
-        fi
-    done
+        log_success "Added object pooling to ${filename}"
+      fi
+    fi
+  done
 }
 
 # Add performance monitoring
 add_performance_monitoring() {
-    local project_name="$1"
-    local project_path="${PROJECTS_DIR}/${project_name}"
+  local project_name="$1"
+  local project_path="${PROJECTS_DIR}/${project_name}"
 
-    log_info "Adding performance monitoring to ${project_name}..."
+  log_info "Adding performance monitoring to ${project_name}..."
 
-    # Check if PerformanceManager already exists
-    if [[ ! -f "${project_path}/PerformanceManager.swift" ]]; then
-        cat > "${project_path}/PerformanceManager.swift" << 'EOF'
+  # Check if PerformanceManager already exists
+  if [[ ! -f "${project_path}/PerformanceManager.swift" ]]; then
+    cat >"${project_path}/PerformanceManager.swift" <<'EOF'
 //
 // PerformanceManager.swift
 // AI-generated performance monitoring
@@ -209,22 +209,22 @@ public class PerformanceManager {
 }
 EOF
 
-        log_success "Created PerformanceManager for ${project_name}"
-    else
-        log_info "PerformanceManager already exists in ${project_name}"
-    fi
+    log_success "Created PerformanceManager for ${project_name}"
+  else
+    log_info "PerformanceManager already exists in ${project_name}"
+  fi
 }
 
 # Add dependency injection pattern
 add_dependency_injection() {
-    local project_name="$1"
-    local project_path="${PROJECTS_DIR}/${project_name}"
+  local project_name="$1"
+  local project_path="${PROJECTS_DIR}/${project_name}"
 
-    log_info "Adding dependency injection pattern to ${project_name}..."
+  log_info "Adding dependency injection pattern to ${project_name}..."
 
-    # Create a Dependencies struct if it doesn't exist
-    if [[ ! -f "${project_path}/Dependencies.swift" ]]; then
-        cat > "${project_path}/Dependencies.swift" << 'EOF'
+  # Create a Dependencies struct if it doesn't exist
+  if [[ ! -f "${project_path}/Dependencies.swift" ]]; then
+    cat >"${project_path}/Dependencies.swift" <<'EOF'
 //
 // Dependencies.swift
 // AI-generated dependency injection container
@@ -278,44 +278,44 @@ public enum LogLevel: String {
 }
 EOF
 
-        log_success "Created dependency injection container for ${project_name}"
-    fi
+    log_success "Created dependency injection container for ${project_name}"
+  fi
 }
 
 # Generate missing tests
 generate_missing_tests() {
-    local project_name="$1"
-    local project_path="${PROJECTS_DIR}/${project_name}"
+  local project_name="$1"
+  local project_path="${PROJECTS_DIR}/${project_name}"
 
-    log_info "Analyzing test coverage for ${project_name}..."
+  log_info "Analyzing test coverage for ${project_name}..."
 
-    # Find Swift files
-    local swift_files
-    swift_files=$(find "${project_path}" -name "*.swift" -type f | grep -v "/Tests/")
+  # Find Swift files
+  local swift_files
+  swift_files=$(find "${project_path}" -name "*.swift" -type f | grep -v "/Tests/")
 
-    # Find existing test files
-    local test_files
-    test_files=$(find "${project_path}" -name "*Test*.swift" -o -name "*Tests.swift" -type f)
+  # Find existing test files
+  local test_files
+  test_files=$(find "${project_path}" -name "*Test*.swift" -o -name "*Tests.swift" -type f)
 
-    local swift_count
-    swift_count=$(echo "$swift_files" | wc -l | tr -d ' ')
+  local swift_count
+  swift_count=$(echo "$swift_files" | wc -l | tr -d ' ')
 
-    local test_count
-    test_count=$(echo "$test_files" | wc -l | tr -d ' ')
+  local test_count
+  test_count=$(echo "$test_files" | wc -l | tr -d ' ')
 
-    log_info "Found ${swift_count} Swift files, ${test_count} test files"
+  log_info "Found ${swift_count} Swift files, ${test_count} test files"
 
-    # Generate basic test templates for classes without tests
-    for swift_file in ${swift_files}; do
-        local filename
-        filename=$(basename "$swift_file" .swift)
+  # Generate basic test templates for classes without tests
+  for swift_file in ${swift_files}; do
+    local filename
+    filename=$(basename "$swift_file" .swift)
 
-        # Check if test file exists
-        local test_file="${project_path}/Tests/${filename}Tests.swift"
-        if [[ ! -f "$test_file" ]]; then
-            log_info "Creating test file for ${filename}"
+    # Check if test file exists
+    local test_file="${project_path}/Tests/${filename}Tests.swift"
+    if [[ ! -f "$test_file" ]]; then
+      log_info "Creating test file for ${filename}"
 
-            cat > "$test_file" << EOF
+      cat >"$test_file" <<EOF
 //
 // ${filename}Tests.swift
 // AI-generated test template
@@ -345,85 +345,85 @@ class ${filename}Tests: XCTestCase {
 }
 EOF
 
-            log_success "Created test template for ${filename}"
-        fi
-    done
+      log_success "Created test template for ${filename}"
+    fi
+  done
 }
 
 # Main implementation function
 implement_ai_recommendations() {
-    local project_name="$1"
+  local project_name="$1"
 
-    log_info "🚀 Implementing AI recommendations for ${project_name}"
+  log_info "🚀 Implementing AI recommendations for ${project_name}"
 
-    # Apply improvements in order
-    apply_swift_improvements "$project_name"
-    implement_object_pooling "$project_name"
-    add_performance_monitoring "$project_name"
-    add_dependency_injection "$project_name"
-    generate_missing_tests "$project_name"
+  # Apply improvements in order
+  apply_swift_improvements "$project_name"
+  implement_object_pooling "$project_name"
+  add_performance_monitoring "$project_name"
+  add_dependency_injection "$project_name"
+  generate_missing_tests "$project_name"
 
-    log_success "✅ Completed AI implementation for ${project_name}"
+  log_success "✅ Completed AI implementation for ${project_name}"
 }
 
 # Process all projects
 process_all_projects() {
-    log_info "🔍 Discovering projects..."
+  log_info "🔍 Discovering projects..."
 
-    # Get list of project directories
-    local projects=()
-    while IFS= read -r -d '' dir; do
-        projects+=("$(basename "$dir")")
-    done < <(find "${PROJECTS_DIR}" -maxdepth 1 -type d -not -path "${PROJECTS_DIR}" -print0)
+  # Get list of project directories
+  local projects=()
+  while IFS= read -r -d '' dir; do
+    projects+=("$(basename "$dir")")
+  done < <(find "${PROJECTS_DIR}" -maxdepth 1 -type d -not -path "${PROJECTS_DIR}" -print0)
 
-    for project in "${projects[@]}"; do
-        if [[ -d "${PROJECTS_DIR}/${project}" ]]; then
-            # Check if it has Swift files
-            local swift_count
-            swift_count=$(find "${PROJECTS_DIR}/${project}" -name "*.swift" -type f | wc -l | tr -d ' ')
+  for project in "${projects[@]}"; do
+    if [[ -d "${PROJECTS_DIR}/${project}" ]]; then
+      # Check if it has Swift files
+      local swift_count
+      swift_count=$(find "${PROJECTS_DIR}/${project}" -name "*.swift" -type f | wc -l | tr -d ' ')
 
-            if [[ $swift_count -gt 0 ]]; then
-                log_info "📱 Processing project: ${project} (${swift_count} Swift files)"
-                implement_ai_recommendations "$project"
-                echo ""
-            else
-                log_info "⏭️  Skipping ${project} (no Swift files)"
-            fi
-        fi
-    done
+      if [[ $swift_count -gt 0 ]]; then
+        log_info "📱 Processing project: ${project} (${swift_count} Swift files)"
+        implement_ai_recommendations "$project"
+        echo ""
+      else
+        log_info "⏭️  Skipping ${project} (no Swift files)"
+      fi
+    fi
+  done
 }
 
 # Main execution
 main() {
-    echo "🤖 AI Implementation Automation Script"
-    echo "====================================="
+  echo "🤖 AI Implementation Automation Script"
+  echo "====================================="
+  echo ""
+
+  check_ollama
+
+  case "${1:-all}" in
+  "all")
+    process_all_projects
+    ;;
+  "project")
+    if [[ -n "${2:-}" ]]; then
+      implement_ai_recommendations "$2"
+    else
+      log_error "Usage: $0 project <project_name>"
+      exit 1
+    fi
+    ;;
+  *)
+    echo "Usage: $0 [all|project <name>]"
     echo ""
+    echo "Commands:"
+    echo "  all              - Process all projects"
+    echo "  project <name>   - Process specific project"
+    exit 1
+    ;;
+  esac
 
-    check_ollama
-
-    case "${1:-all}" in
-        "all")
-            process_all_projects
-            ;;
-        "project")
-            if [[ -n "${2:-}" ]]; then
-                implement_ai_recommendations "$2"
-            else
-                log_error "Usage: $0 project <project_name>"
-                exit 1
-            fi
-            ;;
-        *)
-            echo "Usage: $0 [all|project <name>]"
-            echo ""
-            echo "Commands:"
-            echo "  all              - Process all projects"
-            echo "  project <name>   - Process specific project"
-            exit 1
-            ;;
-    esac
-
-    log_success "🎉 AI implementation automation completed!"
+  log_success "🎉 AI implementation automation completed!"
 }
 
 # Execute main function

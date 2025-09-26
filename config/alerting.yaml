@@ -4,11 +4,11 @@ alerting:
   enabled: true
   smtp_server: "smtp.gmail.com"
   smtp_port: 587
-  smtp_username: ""  # Set your email
-  smtp_password: ""  # Set your app password
-  from_email: ""     # Set sender email
+  smtp_username: "" # Set your email
+  smtp_password: "" # Set your app password
+  from_email: "" # Set sender email
   to_emails:
-    - ""            # Set recipient email
+    - "" # Set recipient email
 
 alert_types:
   critical_error:
@@ -37,10 +37,10 @@ alert_types:
     priority: low
 
 thresholds:
-  performance_critical_ms: 300000  # 5 minutes
-  performance_warning_ms: 120000   # 2 minutes
-  error_rate_threshold: 0.05       # 5% error rate
-  disk_space_warning_gb: 5         # 5GB free space warning
+  performance_critical_ms: 300000 # 5 minutes
+  performance_warning_ms: 120000 # 2 minutes
+  error_rate_threshold: 0.05 # 5% error rate
+  disk_space_warning_gb: 5 # 5GB free space warning
 
 notification_settings:
   max_alerts_per_hour: 10

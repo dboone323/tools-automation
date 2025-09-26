@@ -16,7 +16,8 @@ run() {
   if $EXECUTE; then
     "$@"
   else
-    printf 'DRY-RUN: %q ' "$@"; echo
+    printf 'DRY-RUN: %q ' "$@"
+    echo
   fi
 }
 
@@ -32,9 +33,19 @@ USG
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --execute) EXECUTE=true; shift ;;
-    -h|--help) usage; exit 0 ;;
-    *) echo "Unknown arg: $1"; usage; exit 1 ;;
+  --execute)
+    EXECUTE=true
+    shift
+    ;;
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown arg: $1"
+    usage
+    exit 1
+    ;;
   esac
 done
 
@@ -47,8 +58,9 @@ quarantine_dir() {
 }
 
 # 1) Quarantine snapshot-like directories
-mapfile -t SNAP_DIRS < <(\
-  find Tools -type d \( -path '*/IMPORTS/*' -o -path '*/Imported/*' -o -path '*/_merge_backups/*' \) -prune | sort || true)
+mapfile -t SNAP_DIRS < <(
+  find Tools -type d \( -path '*/IMPORTS/*' -o -path '*/Imported/*' -o -path '*/_merge_backups/*' \) -prune | sort || true
+)
 
 for d in "${SNAP_DIRS[@]}"; do
   log "Quarantining: $d"

@@ -16,108 +16,108 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 print_status() {
-	echo -e "${BLUE}[SETUP]${NC} $1"
+  echo -e "${BLUE}[SETUP]${NC} $1"
 }
 
 print_success() {
-	echo -e "${GREEN}[SUCCESS]${NC} $1"
+  echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 print_warning() {
-	echo -e "${YELLOW}[WARNING]${NC} $1"
+  echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
 print_error() {
-	echo -e "${RED}[ERROR]${NC} $1"
+  echo -e "${RED}[ERROR]${NC} $1"
 }
 
 # Check if running on macOS
 if [[ $OSTYPE != "darwin"* ]]; then
-	print_error "This script is designed for macOS. For Linux/Windows, please install Ollama manually."
-	exit 1
+  print_error "This script is designed for macOS. For Linux/Windows, please install Ollama manually."
+  exit 1
 fi
 
 # Install Ollama
 install_ollama() {
-	print_status "Installing Ollama..."
+  print_status "Installing Ollama..."
 
-	if command -v ollama >/dev/null 2>&1; then
-		print_success "Ollama is already installed"
-		return 0
-	fi
+  if command -v ollama >/dev/null 2>&1; then
+    print_success "Ollama is already installed"
+    return 0
+  fi
 
-	# Install Ollama using Homebrew
-	if command -v brew >/dev/null 2>&1; then
-		print_status "Installing Ollama via Homebrew..."
-		brew install ollama
-	else
-		print_error "Homebrew not found. Please install Homebrew first: https://brew.sh/"
-		print_status "Or install Ollama manually from: https://ollama.ai/download"
-		exit 1
-	fi
+  # Install Ollama using Homebrew
+  if command -v brew >/dev/null 2>&1; then
+    print_status "Installing Ollama via Homebrew..."
+    brew install ollama
+  else
+    print_error "Homebrew not found. Please install Homebrew first: https://brew.sh/"
+    print_status "Or install Ollama manually from: https://ollama.ai/download"
+    exit 1
+  fi
 
-	print_success "Ollama installed successfully"
+  print_success "Ollama installed successfully"
 }
 
 # Start Ollama service
 start_ollama() {
-	print_status "Starting Ollama service..."
+  print_status "Starting Ollama service..."
 
-	# Start Ollama in the background
-	nohup ollama serve >ollama.log 2>&1 &
-	OLLAMA_PID=$!
+  # Start Ollama in the background
+  nohup ollama serve >ollama.log 2>&1 &
+  OLLAMA_PID=$!
 
-	# Wait for Ollama to start
-	print_status "Waiting for Ollama to start..."
-	sleep 5
+  # Wait for Ollama to start
+  print_status "Waiting for Ollama to start..."
+  sleep 5
 
-	# Check if Ollama is running
-	if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
-		print_success "Ollama is running on http://localhost:11434"
-	else
-		print_warning "Ollama may not have started properly. Check ollama.log for details."
-	fi
+  # Check if Ollama is running
+  if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
+    print_success "Ollama is running on http://localhost:11434"
+  else
+    print_warning "Ollama may not have started properly. Check ollama.log for details."
+  fi
 
-	echo $OLLAMA_PID >ollama.pid
-	print_success "Ollama PID saved to ollama.pid"
+  echo $OLLAMA_PID >ollama.pid
+  print_success "Ollama PID saved to ollama.pid"
 }
 
 # Pull recommended models
 pull_models() {
-	print_status "Pulling recommended AI models..."
+  print_status "Pulling recommended AI models..."
 
-	# Pull a good general-purpose model (free)
-	print_status "Pulling llama2 model..."
-	ollama pull llama2
+  # Pull a good general-purpose model (free)
+  print_status "Pulling llama2 model..."
+  ollama pull llama2
 
-	# Pull a code-specialized model
-	print_status "Pulling codellama model..."
-	ollama pull codellama
+  # Pull a code-specialized model
+  print_status "Pulling codellama model..."
+  ollama pull codellama
 
-	print_success "Models downloaded successfully"
+  print_success "Models downloaded successfully"
 }
 
 # Setup Hugging Face (free tier)
 setup_huggingface() {
-	print_status "Setting up Hugging Face free inference API..."
+  print_status "Setting up Hugging Face free inference API..."
 
-	# Check if HF_TOKEN is set
-	if [[ -z ${HF_TOKEN} ]]; then
-		print_warning "Hugging Face token not found. Get one at: https://huggingface.co/settings/tokens"
-		print_status "Set HF_TOKEN environment variable for better rate limits"
-		echo "export HF_TOKEN='your_token_here'" >>~/.zshrc
-	else
-		print_success "Hugging Face token found"
-	fi
+  # Check if HF_TOKEN is set
+  if [[ -z ${HF_TOKEN} ]]; then
+    print_warning "Hugging Face token not found. Get one at: https://huggingface.co/settings/tokens"
+    print_status "Set HF_TOKEN environment variable for better rate limits"
+    echo "export HF_TOKEN='your_token_here'" >>~/.zshrc
+  else
+    print_success "Hugging Face token found"
+  fi
 
-	print_success "Hugging Face setup complete"
+  print_success "Hugging Face setup complete"
 }
 
 # Create configuration file
 create_config() {
-	print_status "Creating AI service configuration..."
+  print_status "Creating AI service configuration..."
 
-	cat >free_ai_config.json <<'EOF'
+  cat >free_ai_config.json <<'EOF'
 {
   "primary_service": "ollama",
   "services": {
@@ -146,51 +146,51 @@ create_config() {
 }
 EOF
 
-	print_success "Configuration created: free_ai_config.json"
+  print_success "Configuration created: free_ai_config.json"
 }
 
 # Test the setup
 test_setup() {
-	print_status "Testing AI services..."
+  print_status "Testing AI services..."
 
-	# Test Ollama
-	if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
-		print_success "Ollama API is accessible"
+  # Test Ollama
+  if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
+    print_success "Ollama API is accessible"
 
-		# Test a simple prompt
-		response=$(curl -s -X POST http://localhost:11434/api/generate \
-			-H "Content-Type: application/json" \
-			-d '{"model": "llama2", "prompt": "Hello, test message", "stream": false}' | jq -r '.response // empty')
+    # Test a simple prompt
+    response=$(curl -s -X POST http://localhost:11434/api/generate \
+      -H "Content-Type: application/json" \
+      -d '{"model": "llama2", "prompt": "Hello, test message", "stream": false}' | jq -r '.response // empty')
 
-		if [[ -n $response ]]; then
-			print_success "Ollama model test successful"
-		else
-			print_warning "Ollama model test failed - model may need more time to load"
-		fi
-	else
-		print_error "Ollama API is not accessible"
-	fi
+    if [[ -n $response ]]; then
+      print_success "Ollama model test successful"
+    else
+      print_warning "Ollama model test failed - model may need more time to load"
+    fi
+  else
+    print_error "Ollama API is not accessible"
+  fi
 
-	# Test Hugging Face (if token available)
-	if [[ -n ${HF_TOKEN} ]]; then
-		response=$(curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" \
-			-H "Authorization: Bearer ${HF_TOKEN}" \
-			-H "Content-Type: application/json" \
-			-d '{"inputs": "Hello, test message"}')
+  # Test Hugging Face (if token available)
+  if [[ -n ${HF_TOKEN} ]]; then
+    response=$(curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" \
+      -H "Authorization: Bearer ${HF_TOKEN}" \
+      -H "Content-Type: application/json" \
+      -d '{"inputs": "Hello, test message"}')
 
-		if [[ $response != *"error"* ]]; then
-			print_success "Hugging Face API test successful"
-		else
-			print_warning "Hugging Face API test failed - check token and rate limits"
-		fi
-	fi
+    if [[ $response != *"error"* ]]; then
+      print_success "Hugging Face API test successful"
+    else
+      print_warning "Hugging Face API test failed - check token and rate limits"
+    fi
+  fi
 }
 
 # Create usage instructions
 create_instructions() {
-	print_status "Creating usage instructions..."
+  print_status "Creating usage instructions..."
 
-	cat >FREE_AI_SETUP.md <<'EOF'
+  cat >FREE_AI_SETUP.md <<'EOF'
 # Free AI Services Setup Complete! 🎉
 
 ## What's Been Set Up
@@ -288,30 +288,30 @@ export HF_TOKEN=your_token_here
 Enjoy your FREE AI services! 🚀
 EOF
 
-	print_success "Instructions created: FREE_AI_SETUP.md"
+  print_success "Instructions created: FREE_AI_SETUP.md"
 }
 
 # Main setup
 main() {
-	echo ""
-	print_status "Starting Free AI Services Setup..."
-	echo ""
+  echo ""
+  print_status "Starting Free AI Services Setup..."
+  echo ""
 
-	install_ollama
-	start_ollama
-	pull_models
-	setup_huggingface
-	create_config
-	test_setup
-	create_instructions
+  install_ollama
+  start_ollama
+  pull_models
+  setup_huggingface
+  create_config
+  test_setup
+  create_instructions
 
-	echo ""
-	print_success "🎉 Free AI Services Setup Complete!"
-	echo ""
-	echo "📖 Read FREE_AI_SETUP.md for usage instructions"
-	echo "🔧 Ollama is running at: http://localhost:11434"
-	echo "💰 You just saved on AI API costs!"
-	echo ""
+  echo ""
+  print_success "🎉 Free AI Services Setup Complete!"
+  echo ""
+  echo "📖 Read FREE_AI_SETUP.md for usage instructions"
+  echo "🔧 Ollama is running at: http://localhost:11434"
+  echo "💰 You just saved on AI API costs!"
+  echo ""
 }
 
 # Run main function

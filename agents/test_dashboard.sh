@@ -59,20 +59,20 @@ echo "[$(date)] Created test dashboard HTML" >>"$LOG_FILE"
 
 # Start simple Python server
 if command -v python3 &>/dev/null; then
-	echo "[$(date)] Starting Python HTTP server on port 8080" >>"$LOG_FILE"
-	cd "$(dirname "$DASHBOARD_HTML_FILE")"
-	python3 -m http.server 8080 >>"$LOG_FILE" 2>&1 &
-	server_pid=$!
-	echo $server_pid >"$SCRIPT_DIR/test_server.pid"
-	echo "[$(date)] Server started with PID $server_pid" >>"$LOG_FILE"
+  echo "[$(date)] Starting Python HTTP server on port 8080" >>"$LOG_FILE"
+  cd "$(dirname "$DASHBOARD_HTML_FILE")"
+  python3 -m http.server 8080 >>"$LOG_FILE" 2>&1 &
+  server_pid=$!
+  echo $server_pid >"$SCRIPT_DIR/test_server.pid"
+  echo "[$(date)] Server started with PID $server_pid" >>"$LOG_FILE"
 
-	# Keep running for a short time
-	sleep 30
+  # Keep running for a short time
+  sleep 30
 
-	# Cleanup
-	kill $server_pid 2>/dev/null
-	rm -f "$SCRIPT_DIR/test_server.pid"
-	echo "[$(date)] Test completed" >>"$LOG_FILE"
+  # Cleanup
+  kill $server_pid 2>/dev/null
+  rm -f "$SCRIPT_DIR/test_server.pid"
+  echo "[$(date)] Test completed" >>"$LOG_FILE"
 else
-	echo "[$(date)] ERROR: Python3 not available" >>"$LOG_FILE"
+  echo "[$(date)] ERROR: Python3 not available" >>"$LOG_FILE"
 fi

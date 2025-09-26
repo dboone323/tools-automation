@@ -1,11 +1,13 @@
 # Agent System Documentation
 
 ## Overview
+
 The Quantum Workspace Agent System is a comprehensive automation framework designed to enhance development productivity through specialized AI-powered agents. This system provides automated testing, security analysis, performance monitoring, and various development assistance capabilities.
 
 ## Architecture
 
 ### Core Components
+
 - **MCP Server**: Python-based coordination server (`mcp_server.py`) running on port 5005
 - **Agent Supervisor**: Bash-based supervisor managing agent lifecycle (`agent_supervisor.sh`)
 - **Task Queue**: JSON-based task management system (`task_queue.json`)
@@ -15,9 +17,11 @@ The Quantum Workspace Agent System is a comprehensive automation framework desig
 ### Agent Types
 
 #### 1. Testing Agent (`agent_testing.sh`)
+
 **Purpose**: Automated test generation, execution, and coverage analysis for Swift projects
 
 **Capabilities**:
+
 - Unit test generation for Swift classes and structs
 - Test suite execution using Xcode
 - Test coverage analysis and reporting
@@ -25,14 +29,17 @@ The Quantum Workspace Agent System is a comprehensive automation framework desig
 - Integration with backup system for safe modifications
 
 **Configuration**:
+
 - Sleep interval: 15 minutes (900 seconds)
 - Log file: `testing_agent.log`
 - Project directory: `/Users/danielstevens/Desktop/Quantum-workspace/Projects`
 
 #### 2. Security Agent (`agent_security.sh`)
+
 **Purpose**: Comprehensive security vulnerability scanning and compliance checking
 
 **Capabilities**:
+
 - Static security analysis of Swift source code
 - Hardcoded secrets detection
 - Insecure networking identification
@@ -44,6 +51,7 @@ The Quantum Workspace Agent System is a comprehensive automation framework desig
 - Automated security report generation
 
 **Security Checks**:
+
 - **Hardcoded Secrets**: API keys, passwords, tokens
 - **Insecure Networking**: HTTP URLs, missing certificate validation
 - **Weak Cryptography**: MD5/SHA1 usage, proper CryptoKit validation
@@ -52,9 +60,11 @@ The Quantum Workspace Agent System is a comprehensive automation framework desig
 - **Compliance**: Data privacy, storage security
 
 #### 3. Performance Monitor (`agent_performance_monitor.sh`)
+
 **Purpose**: System resource monitoring and agent efficiency tracking
 
 **Capabilities**:
+
 - Real-time system metrics collection (CPU, memory, disk, processes)
 - Agent status monitoring and reporting
 - Task queue analysis and completion rate tracking
@@ -63,6 +73,7 @@ The Quantum Workspace Agent System is a comprehensive automation framework desig
 - Resource usage warnings and critical alerts
 
 **Monitoring Metrics**:
+
 - CPU usage percentage
 - Memory usage percentage
 - Disk usage percentage
@@ -73,6 +84,7 @@ The Quantum Workspace Agent System is a comprehensive automation framework desig
 ## Integration and Workflow
 
 ### Task Processing Flow
+
 1. **Task Creation**: Tasks are added to `task_queue.json` with specific agent assignment
 2. **Agent Discovery**: Agents continuously poll the task queue for assigned tasks
 3. **Task Execution**: Assigned agent processes the task and updates status
@@ -80,6 +92,7 @@ The Quantum Workspace Agent System is a comprehensive automation framework desig
 5. **Performance Tracking**: Performance monitor tracks all agent activities
 
 ### Agent Communication
+
 - **Status Updates**: Agents update `agent_status.json` with current status and PID
 - **Task Updates**: Agents update `task_queue.json` with task progress
 - **Logging**: All agents maintain individual log files for debugging
@@ -88,7 +101,9 @@ The Quantum Workspace Agent System is a comprehensive automation framework desig
 ## Configuration Files
 
 ### agent_status.json
+
 Tracks the current status of all agents:
+
 ```json
 {
   "agents": {
@@ -102,7 +117,9 @@ Tracks the current status of all agents:
 ```
 
 ### task_queue.json
+
 Manages pending and completed tasks:
+
 ```json
 {
   "tasks": [
@@ -123,7 +140,9 @@ Manages pending and completed tasks:
 ```
 
 ### performance_metrics.json
+
 Stores historical performance data:
+
 ```json
 {
   "metrics": [
@@ -142,6 +161,7 @@ Stores historical performance data:
 ## Usage Examples
 
 ### Running Security Analysis
+
 ```bash
 # Add security task to queue
 jq '.tasks += [{
@@ -157,6 +177,7 @@ jq '.tasks += [{
 ```
 
 ### Running Test Generation
+
 ```bash
 # Add testing task to queue
 jq '.tasks += [{
@@ -172,6 +193,7 @@ jq '.tasks += [{
 ```
 
 ### Monitoring Performance
+
 ```bash
 # Check current performance metrics
 tail -20 performance_monitor.log
@@ -183,6 +205,7 @@ ls -la PERFORMANCE_REPORT_*.md | tail -1 | xargs cat
 ## Best Practices
 
 ### Agent Development
+
 1. **Error Handling**: Always include proper error handling and logging
 2. **Resource Management**: Monitor resource usage and implement cleanup
 3. **Status Updates**: Regularly update agent status for monitoring
@@ -190,12 +213,14 @@ ls -la PERFORMANCE_REPORT_*.md | tail -1 | xargs cat
 5. **Lint Compliance**: Ensure all scripts pass shellcheck validation
 
 ### Task Management
+
 1. **Priority Assignment**: Use priority levels 1-10 for task scheduling
 2. **Dependency Management**: Specify task dependencies when required
 3. **Status Tracking**: Update task status throughout execution
 4. **Error Reporting**: Provide detailed error information for failed tasks
 
 ### Performance Optimization
+
 1. **Sleep Intervals**: Adjust sleep intervals based on task frequency
 2. **Resource Limits**: Monitor and limit resource usage per agent
 3. **Concurrent Processing**: Design agents for concurrent task processing
@@ -206,21 +231,25 @@ ls -la PERFORMANCE_REPORT_*.md | tail -1 | xargs cat
 ### Common Issues
 
 #### Agent Not Starting
+
 - Check file permissions: `chmod +x agent_name.sh`
 - Verify bash path and dependencies
 - Check log files for error messages
 
 #### Tasks Not Processing
+
 - Verify task assignment matches agent name
 - Check agent status in `agent_status.json`
 - Review agent logs for processing errors
 
 #### Performance Issues
+
 - Monitor CPU/memory usage with performance monitor
 - Adjust agent sleep intervals
 - Review task queue for bottlenecks
 
 #### Integration Problems
+
 - Verify MCP server is running on port 5005
 - Check JSON file syntax and permissions
 - Review agent communication logs
@@ -228,6 +257,7 @@ ls -la PERFORMANCE_REPORT_*.md | tail -1 | xargs cat
 ## Future Enhancements
 
 ### Planned Features
+
 - **Web Dashboard**: Real-time agent monitoring interface
 - **Advanced Analytics**: Detailed performance analytics and reporting
 - **Agent Auto-scaling**: Dynamic agent spawning based on workload
@@ -236,6 +266,7 @@ ls -la PERFORMANCE_REPORT_*.md | tail -1 | xargs cat
 - **Historical Analysis**: Long-term trend analysis and forecasting
 
 ### Agent Extensions
+
 - **Documentation Agent**: Automated documentation generation
 - **Deployment Agent**: CI/CD pipeline integration
 - **Code Review Agent**: Automated code review and suggestions
@@ -245,22 +276,25 @@ ls -la PERFORMANCE_REPORT_*.md | tail -1 | xargs cat
 ## Support and Maintenance
 
 ### Log Files
+
 - `security_agent.log`: Security analysis activities
 - `testing_agent.log`: Test generation and execution
 - `performance_monitor.log`: System performance data
 - `agent_supervisor.log`: Agent lifecycle management
 
 ### Backup and Recovery
+
 - Automatic backups before file modifications
 - Recovery procedures documented in backup logs
 - Configuration snapshots for system restoration
 
 ### Monitoring and Alerts
+
 - Performance thresholds with automatic alerts
 - Agent health checks with restart capabilities
 - Task failure notifications and retry mechanisms
 
 ---
 
-*Documentation generated: September 15, 2025*
-*Agent System Version: 2.0*
+_Documentation generated: September 15, 2025_
+_Agent System Version: 2.0_

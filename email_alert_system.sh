@@ -25,11 +25,11 @@ print_warning() { echo -e "${YELLOW}⚠️  $1${NC}"; }
 
 # Load alerting configuration
 load_alert_config() {
-    if [[ ! -f $ALERT_CONFIG ]]; then
-        print_warning "Alert configuration not found: $ALERT_CONFIG"
-        print_status "Creating default alert configuration..."
+  if [[ ! -f $ALERT_CONFIG ]]; then
+    print_warning "Alert configuration not found: $ALERT_CONFIG"
+    print_status "Creating default alert configuration..."
 
-        cat > "$ALERT_CONFIG" << 'EOF'
+    cat >"$ALERT_CONFIG" <<'EOF'
 # Email Alerting Configuration for Quantum Workspace
 
 alerting:
@@ -81,99 +81,99 @@ notification_settings:
   include_logs: true
 EOF
 
-        print_success "Default alert configuration created at: $ALERT_CONFIG"
-        print_warning "Please configure SMTP settings in: $ALERT_CONFIG"
-        return 1
-    fi
+    print_success "Default alert configuration created at: $ALERT_CONFIG"
+    print_warning "Please configure SMTP settings in: $ALERT_CONFIG"
+    return 1
+  fi
 
-    # Load configuration values
-    SMTP_SERVER=$(yq eval '.alerting.smtp_server' "$ALERT_CONFIG" 2>/dev/null || echo "")
-    SMTP_PORT=$(yq eval '.alerting.smtp_port' "$ALERT_CONFIG" 2>/dev/null || echo "587")
-    SMTP_USERNAME=$(yq eval '.alerting.smtp_username' "$ALERT_CONFIG" 2>/dev/null || echo "")
-    SMTP_PASSWORD=$(yq eval '.alerting.smtp_password' "$ALERT_CONFIG" 2>/dev/null || echo "")
-    FROM_EMAIL=$(yq eval '.alerting.from_email' "$ALERT_CONFIG" 2>/dev/null || echo "")
-    TO_EMAILS=$(yq eval '.alerting.to_emails[]' "$ALERT_CONFIG" 2>/dev/null || echo "")
+  # Load configuration values
+  SMTP_SERVER=$(yq eval '.alerting.smtp_server' "$ALERT_CONFIG" 2>/dev/null || echo "")
+  SMTP_PORT=$(yq eval '.alerting.smtp_port' "$ALERT_CONFIG" 2>/dev/null || echo "587")
+  SMTP_USERNAME=$(yq eval '.alerting.smtp_username' "$ALERT_CONFIG" 2>/dev/null || echo "")
+  SMTP_PASSWORD=$(yq eval '.alerting.smtp_password' "$ALERT_CONFIG" 2>/dev/null || echo "")
+  FROM_EMAIL=$(yq eval '.alerting.from_email' "$ALERT_CONFIG" 2>/dev/null || echo "")
+  TO_EMAILS=$(yq eval '.alerting.to_emails[]' "$ALERT_CONFIG" 2>/dev/null || echo "")
 
-    return 0
+  return 0
 }
 
 # Send email alert
 send_email_alert() {
-    local subject="$1"
-    local message="$2"
-    local priority="${3:-normal}"
+  local subject="$1"
+  local message="$2"
+  local priority="${3:-normal}"
 
-    # Check if alerting is enabled
-    local enabled
-    enabled=$(yq eval '.alerting.enabled' "$ALERT_CONFIG" 2>/dev/null || echo "false")
+  # Check if alerting is enabled
+  local enabled
+  enabled=$(yq eval '.alerting.enabled' "$ALERT_CONFIG" 2>/dev/null || echo "false")
 
-    if [[ "$enabled" != "true" ]]; then
-        print_status "Email alerting is disabled"
-        return 0
-    fi
+  if [[ "$enabled" != "true" ]]; then
+    print_status "Email alerting is disabled"
+    return 0
+  fi
 
-    # Check SMTP configuration
-    if [[ -z "$SMTP_SERVER" || -z "$SMTP_USERNAME" || -z "$SMTP_PASSWORD" || -z "$FROM_EMAIL" ]]; then
-        print_warning "SMTP configuration incomplete. Please configure SMTP settings in: $ALERT_CONFIG"
-        return 1
-    fi
+  # Check SMTP configuration
+  if [[ -z "$SMTP_SERVER" || -z "$SMTP_USERNAME" || -z "$SMTP_PASSWORD" || -z "$FROM_EMAIL" ]]; then
+    print_warning "SMTP configuration incomplete. Please configure SMTP settings in: $ALERT_CONFIG"
+    return 1
+  fi
 
-    # Check rate limiting
-    check_rate_limit
-    if [[ $? -eq 1 ]]; then
-        print_warning "Alert rate limit exceeded. Skipping email alert."
-        return 1
-    fi
+  # Check rate limiting
+  check_rate_limit
+  if [[ $? -eq 1 ]]; then
+    print_warning "Alert rate limit exceeded. Skipping email alert."
+    return 1
+  fi
 
-    print_status "Sending email alert: $subject"
+  print_status "Sending email alert: $subject"
 
-    # Create email content
-    local email_content
-    email_content=$(create_email_content "$subject" "$message" "$priority")
+  # Create email content
+  local email_content
+  email_content=$(create_email_content "$subject" "$message" "$priority")
 
-    # Send email using curl (works with most SMTP servers)
-    local curl_result
-    curl_result=$(curl --silent --show-error \
-        --url "smtp://$SMTP_SERVER:$SMTP_PORT" \
-        --mail-from "$FROM_EMAIL" \
-        --mail-rcpt "$TO_EMAILS" \
-        --user "$SMTP_USERNAME:$SMTP_PASSWORD" \
-        --insecure \
-        --upload-file <(echo "$email_content") \
-        2>&1)
+  # Send email using curl (works with most SMTP servers)
+  local curl_result
+  curl_result=$(curl --silent --show-error \
+    --url "smtp://$SMTP_SERVER:$SMTP_PORT" \
+    --mail-from "$FROM_EMAIL" \
+    --mail-rcpt "$TO_EMAILS" \
+    --user "$SMTP_USERNAME:$SMTP_PASSWORD" \
+    --insecure \
+    --upload-file <(echo "$email_content") \
+    2>&1)
 
-    if [[ $? -eq 0 ]]; then
-        print_success "Email alert sent successfully"
-        log_alert "$subject" "sent"
-        return 0
-    else
-        print_error "Failed to send email alert: $curl_result"
-        log_alert "$subject" "failed"
-        return 1
-    fi
+  if [[ $? -eq 0 ]]; then
+    print_success "Email alert sent successfully"
+    log_alert "$subject" "sent"
+    return 0
+  else
+    print_error "Failed to send email alert: $curl_result"
+    log_alert "$subject" "failed"
+    return 1
+  fi
 }
 
 # Create email content with proper MIME formatting
 create_email_content() {
-    local subject="$1"
-    local message="$2"
-    local priority="$3"
+  local subject="$1"
+  local message="$2"
+  local priority="$3"
 
-    local date_part
-    date_part=$(date +%s)
-    local rand_part
-    rand_part=$(openssl rand -hex 16)
-    local boundary="----=_NextPart_${date_part}_${rand_part}"
-    local priority_header
+  local date_part
+  date_part=$(date +%s)
+  local rand_part
+  rand_part=$(openssl rand -hex 16)
+  local boundary="----=_NextPart_${date_part}_${rand_part}"
+  local priority_header
 
-    case "$priority" in
-        high) priority_header="1" ;;
-        normal) priority_header="3" ;;
-        low) priority_header="5" ;;
-        *) priority_header="3" ;;
-    esac
+  case "$priority" in
+  high) priority_header="1" ;;
+  normal) priority_header="3" ;;
+  low) priority_header="5" ;;
+  *) priority_header="3" ;;
+  esac
 
-    cat << EOF
+  cat <<EOF
 From: $FROM_EMAIL
 To: $TO_EMAILS
 Subject: $subject
@@ -199,43 +199,44 @@ EOF
 
 # Check rate limiting to prevent alert spam
 check_rate_limit() {
-    local max_alerts_per_hour
-    max_alerts_per_hour=$(yq eval '.notification_settings.max_alerts_per_hour' "$ALERT_CONFIG" 2>/dev/null || echo "10")
+  local max_alerts_per_hour
+  max_alerts_per_hour=$(yq eval '.notification_settings.max_alerts_per_hour' "$ALERT_CONFIG" 2>/dev/null || echo "10")
 
-    local recent_alerts
-    recent_alerts=$(grep "sent" "$ALERT_LOG" 2>/dev/null | grep "$(date +%Y-%m-%dT%H)" | wc -l || echo "0")
+  local recent_alerts
+  recent_alerts=$(grep "sent" "$ALERT_LOG" 2>/dev/null | grep "$(date +%Y-%m-%dT%H)" | wc -l || echo "0")
 
-    if [[ $recent_alerts -ge $max_alerts_per_hour ]]; then
-        return 1
-    fi
+  if [[ $recent_alerts -ge $max_alerts_per_hour ]]; then
+    return 1
+  fi
 
-    return 0
+  return 0
 }
 
 # Log alert activity
 log_alert() {
-    local subject="$1"
-    local status="$2"
+  local subject="$1"
+  local status="$2"
 
-    echo "$(date '+%Y-%m-%d %H:%M:%S')|$status|$subject" >> "$ALERT_LOG"
+  echo "$(date '+%Y-%m-%d %H:%M:%S')|$status|$subject" >>"$ALERT_LOG"
 }
 
 # Send performance alert
 send_performance_alert() {
-    local operation="$1"
-    local duration_ms="$2"
-    local threshold_ms="$3"
+  local operation="$1"
+  local duration_ms="$2"
+  local threshold_ms="$3"
 
-    local subject="⚠️  PERFORMANCE: $operation exceeded threshold"
-    local message
-    message=$(cat << EOF
+  local subject="⚠️  PERFORMANCE: $operation exceeded threshold"
+  local message
+  message=$(
+    cat <<EOF
 Performance Alert Details:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Operation: $operation
 Duration: $(($duration_ms / 1000))s
 Threshold: $(($threshold_ms / 1000))s
-Exceeded by: $(( ($duration_ms - $threshold_ms) / 1000 ))s
+Exceeded by: $((($duration_ms - $threshold_ms) / 1000))s
 
 System Information:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -251,24 +252,25 @@ Recommendations:
 • Consider optimizing the operation or increasing thresholds
 • Monitor for recurring issues
 EOF
-)
+  )
 
-    send_email_alert "$subject" "$message" "normal"
+  send_email_alert "$subject" "$message" "normal"
 }
 
 # Send error alert
 send_error_alert() {
-    local error_type="$1"
-    local error_message="$2"
-    local project="${3:-}"
+  local error_type="$1"
+  local error_message="$2"
+  local project="${3:-}"
 
-    local subject="🚨 $error_type Error Detected"
-    if [[ -n "$project" ]]; then
-        subject="$subject - $project"
-    fi
+  local subject="🚨 $error_type Error Detected"
+  if [[ -n "$project" ]]; then
+    subject="$subject - $project"
+  fi
 
-    local message
-    message=$(cat << EOF
+  local message
+  message=$(
+    cat <<EOF
 Critical Error Alert:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -298,19 +300,20 @@ Immediate Actions Required:
 4. Consider rollback if system is unstable
 5. Contact system administrator if needed
 EOF
-)
+  )
 
-    send_email_alert "$subject" "$message" "high"
+  send_email_alert "$subject" "$message" "high"
 }
 
 # Send security alert
 send_security_alert() {
-    local issue_type="$1"
-    local details="$2"
+  local issue_type="$1"
+  local details="$2"
 
-    local subject="🔒 SECURITY ALERT: $issue_type"
-    local message
-    message=$(cat << EOF
+  local subject="🔒 SECURITY ALERT: $issue_type"
+  local message
+  message=$(
+    cat <<EOF
 Security Alert - Immediate Attention Required:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -339,20 +342,21 @@ Recommended Actions:
 
 This alert has been logged for audit purposes.
 EOF
-)
+  )
 
-    send_email_alert "$subject" "$message" "high"
+  send_email_alert "$subject" "$message" "high"
 }
 
 # Send build failure alert
 send_build_alert() {
-    local project="$1"
-    local build_type="$2"
-    local error_details="$3"
+  local project="$1"
+  local build_type="$2"
+  local error_details="$3"
 
-    local subject="❌ BUILD FAILURE: $project - $build_type"
-    local message
-    message=$(cat << EOF
+  local subject="❌ BUILD FAILURE: $project - $build_type"
+  local message
+  message=$(
+    cat <<EOF
 Build Failure Alert:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -382,18 +386,19 @@ Troubleshooting Steps:
 4. Verify all dependencies are properly installed
 5. Review recent code changes for syntax errors
 EOF
-)
+  )
 
-    send_email_alert "$subject" "$message" "normal"
+  send_email_alert "$subject" "$message" "normal"
 }
 
 # Test email configuration
 test_email_config() {
-    print_status "Testing email configuration..."
+  print_status "Testing email configuration..."
 
-    local test_subject="🧪 TEST: Quantum Workspace Alert System"
-    local test_message
-    test_message=$(cat << 'EOF'
+  local test_subject="🧪 TEST: Quantum Workspace Alert System"
+  local test_message
+  test_message=$(
+    cat <<'EOF'
 This is a test email from the Quantum Workspace Alert System.
 
 If you received this email, the alerting system is properly configured!
@@ -415,125 +420,125 @@ $CODE_DIR/Tools/Automation/config/alerting.yaml
 
 Test completed successfully at: $(date)
 EOF
-)
+  )
 
-    if send_email_alert "$test_subject" "$test_message" "low"; then
-        print_success "Email test sent successfully!"
-        print_status "Check your inbox for the test email."
-        return 0
-    else
-        print_error "Email test failed. Please check your configuration."
-        return 1
-    fi
+  if send_email_alert "$test_subject" "$test_message" "low"; then
+    print_success "Email test sent successfully!"
+    print_status "Check your inbox for the test email."
+    return 0
+  else
+    print_error "Email test failed. Please check your configuration."
+    return 1
+  fi
 }
 
 # Show alert status and recent alerts
 show_alert_status() {
-    print_status "Email Alerting System Status"
-    echo
+  print_status "Email Alerting System Status"
+  echo
 
-    if [[ ! -f $ALERT_CONFIG ]]; then
-        print_error "Alert configuration not found"
-        return 1
-    fi
+  if [[ ! -f $ALERT_CONFIG ]]; then
+    print_error "Alert configuration not found"
+    return 1
+  fi
 
-    local enabled
-    enabled=$(yq eval '.alerting.enabled' "$ALERT_CONFIG" 2>/dev/null || echo "false")
+  local enabled
+  enabled=$(yq eval '.alerting.enabled' "$ALERT_CONFIG" 2>/dev/null || echo "false")
 
-    if [[ "$enabled" == "true" ]]; then
-        print_success "Email alerting is ENABLED"
+  if [[ "$enabled" == "true" ]]; then
+    print_success "Email alerting is ENABLED"
+  else
+    print_warning "Email alerting is DISABLED"
+  fi
+
+  echo
+  print_status "SMTP Configuration:"
+  echo "  Server: ${SMTP_SERVER:-NOT SET}"
+  echo "  Port: ${SMTP_PORT:-587}"
+  echo "  Username: ${SMTP_USERNAME:-NOT SET}"
+  echo "  From: ${FROM_EMAIL:-NOT SET}"
+
+  local recipient_count
+  recipient_count=$(yq eval '.alerting.to_emails | length' "$ALERT_CONFIG" 2>/dev/null || echo "0")
+  echo "  Recipients: $recipient_count configured"
+
+  echo
+  print_status "Alert Types:"
+  local alert_types=("critical_error" "performance_degradation" "security_alert" "build_failure" "system_health")
+
+  for alert_type in "${alert_types[@]}"; do
+    local enabled_status
+    enabled_status=$(yq eval ".alert_types.${alert_type}.enabled" "$ALERT_CONFIG" 2>/dev/null || echo "false")
+
+    if [[ "$enabled_status" == "true" ]]; then
+      echo -e "  ✅ $alert_type"
     else
-        print_warning "Email alerting is DISABLED"
+      echo -e "  ❌ $alert_type"
     fi
+  done
 
-    echo
-    print_status "SMTP Configuration:"
-    echo "  Server: ${SMTP_SERVER:-NOT SET}"
-    echo "  Port: ${SMTP_PORT:-587}"
-    echo "  Username: ${SMTP_USERNAME:-NOT SET}"
-    echo "  From: ${FROM_EMAIL:-NOT SET}"
-
-    local recipient_count
-    recipient_count=$(yq eval '.alerting.to_emails | length' "$ALERT_CONFIG" 2>/dev/null || echo "0")
-    echo "  Recipients: $recipient_count configured"
-
-    echo
-    print_status "Alert Types:"
-    local alert_types=("critical_error" "performance_degradation" "security_alert" "build_failure" "system_health")
-
-    for alert_type in "${alert_types[@]}"; do
-        local enabled_status
-        enabled_status=$(yq eval ".alert_types.${alert_type}.enabled" "$ALERT_CONFIG" 2>/dev/null || echo "false")
-
-        if [[ "$enabled_status" == "true" ]]; then
-            echo -e "  ✅ $alert_type"
-        else
-            echo -e "  ❌ $alert_type"
-        fi
+  echo
+  print_status "Recent Alerts (last 10):"
+  if [[ -f $ALERT_LOG ]]; then
+    tail -10 "$ALERT_LOG" | while IFS='|' read -r timestamp status subject; do
+      if [[ "$status" == "sent" ]]; then
+        echo -e "  ${GREEN}✅${NC} $timestamp - $subject"
+      else
+        echo -e "  ${RED}❌${NC} $timestamp - $subject"
+      fi
     done
-
-    echo
-    print_status "Recent Alerts (last 10):"
-    if [[ -f $ALERT_LOG ]]; then
-        tail -10 "$ALERT_LOG" | while IFS='|' read -r timestamp status subject; do
-            if [[ "$status" == "sent" ]]; then
-                echo -e "  ${GREEN}✅${NC} $timestamp - $subject"
-            else
-                echo -e "  ${RED}❌${NC} $timestamp - $subject"
-            fi
-        done
-    else
-        echo "  No alerts logged yet"
-    fi
+  else
+    echo "  No alerts logged yet"
+  fi
 }
 
 # Main function
 main() {
-    case "${1:-help}" in
-        "test")
-            load_alert_config && test_email_config
-            ;;
-        "status")
-            load_alert_config && show_alert_status
-            ;;
-        "performance")
-            if [[ $# -lt 4 ]]; then
-                print_error "Usage: $0 performance <operation> <duration_ms> <threshold_ms>"
-                exit 1
-            fi
-            load_alert_config && send_performance_alert "$2" "$3" "$4"
-            ;;
-        "error")
-            if [[ $# -lt 3 ]]; then
-                print_error "Usage: $0 error <error_type> <error_message> [project]"
-                exit 1
-            fi
-            load_alert_config && send_error_alert "$2" "$3" "${4:-}"
-            ;;
-        "security")
-            if [[ $# -lt 3 ]]; then
-                print_error "Usage: $0 security <issue_type> <details>"
-                exit 1
-            fi
-            load_alert_config && send_security_alert "$2" "$3"
-            ;;
-        "build")
-            if [[ $# -lt 4 ]]; then
-                print_error "Usage: $0 build <project> <build_type> <error_details>"
-                exit 1
-            fi
-            load_alert_config && send_build_alert "$2" "$3" "$4"
-            ;;
-        "config")
-            if [[ ! -f $ALERT_CONFIG ]]; then
-                load_alert_config
-            else
-                print_status "Alert configuration: $ALERT_CONFIG"
-                echo "Edit this file to configure SMTP settings and alert preferences."
-            fi
-            ;;
-        "help"|"-h"|"--help")
-            cat << 'EOF'
+  case "${1:-help}" in
+  "test")
+    load_alert_config && test_email_config
+    ;;
+  "status")
+    load_alert_config && show_alert_status
+    ;;
+  "performance")
+    if [[ $# -lt 4 ]]; then
+      print_error "Usage: $0 performance <operation> <duration_ms> <threshold_ms>"
+      exit 1
+    fi
+    load_alert_config && send_performance_alert "$2" "$3" "$4"
+    ;;
+  "error")
+    if [[ $# -lt 3 ]]; then
+      print_error "Usage: $0 error <error_type> <error_message> [project]"
+      exit 1
+    fi
+    load_alert_config && send_error_alert "$2" "$3" "${4:-}"
+    ;;
+  "security")
+    if [[ $# -lt 3 ]]; then
+      print_error "Usage: $0 security <issue_type> <details>"
+      exit 1
+    fi
+    load_alert_config && send_security_alert "$2" "$3"
+    ;;
+  "build")
+    if [[ $# -lt 4 ]]; then
+      print_error "Usage: $0 build <project> <build_type> <error_details>"
+      exit 1
+    fi
+    load_alert_config && send_build_alert "$2" "$3" "$4"
+    ;;
+  "config")
+    if [[ ! -f $ALERT_CONFIG ]]; then
+      load_alert_config
+    else
+      print_status "Alert configuration: $ALERT_CONFIG"
+      echo "Edit this file to configure SMTP settings and alert preferences."
+    fi
+    ;;
+  "help" | "-h" | "--help")
+    cat <<'EOF'
 Quantum Workspace Email Alerting System
 
 Usage: alert_system.sh <command> [options]
@@ -560,13 +565,13 @@ Configuration:
   Required: SMTP server, credentials, and recipient emails
 
 EOF
-            ;;
-        *)
-            print_error "Unknown command: ${1:-}"
-            echo "Use '$0 help' for usage information"
-            exit 1
-            ;;
-    esac
+    ;;
+  *)
+    print_error "Unknown command: ${1:-}"
+    echo "Use '$0 help' for usage information"
+    exit 1
+    ;;
+  esac
 }
 
 # Load configuration and run main function

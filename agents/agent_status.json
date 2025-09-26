@@ -27,6 +27,10 @@
     "performance_monitor": {
       "status": "idle",
       "pid": 52977
+    },
+    "performance_agent.sh": {
+      "status": "available",
+      "last_seen": 1758740889
     }
   },
   "last_update": 1758024972

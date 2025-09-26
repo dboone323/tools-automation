@@ -1,0 +1,17 @@
+{
+  "incident_id": "ALERTS_20250925_201402",
+  "severity": "HIGH",
+  "severity_level": 0,
+  "title": "Multiple Security Alerts",
+  "description": "8 high/critical security alerts detected recently",
+  "source": "alert_monitor",
+  "status": "OPEN",
+  "created_at": "2025-09-25 20:14:02",
+  "updated_at": "2025-09-25 20:14:02",
+  "assigned_to": null,
+  "tags": [],
+  "evidence": [],
+  "response_actions": [],
+  "resolution": null,
+  "resolved_at": null
+}

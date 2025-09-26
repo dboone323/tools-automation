@@ -34,7 +34,7 @@ print_error() {
 # Check for exposed secrets
 check_exposed_secrets() {
     print_status "Checking for exposed secrets..."
-    
+
     local secret_patterns=(
         "password.*="
         "secret.*="
@@ -46,9 +46,9 @@ check_exposed_secrets() {
         "credential.*="
         "auth_token.*="
     )
-    
+
     local found_secrets=0
-    
+
     for pattern in "${secret_patterns[@]}"; do
         if grep -r -i "$pattern" "$REPO_ROOT" \
             --exclude-dir=".git" \
@@ -63,85 +63,85 @@ check_exposed_secrets() {
             found_secrets=1
         fi
     done
-    
+
     if [[ $found_secrets -eq 0 ]]; then
         print_success "No exposed secrets detected"
     fi
-    
+
     return $found_secrets
 }
 
 # Check file permissions
 check_file_permissions() {
     print_status "Checking file permissions..."
-    
+
     local insecure_files=0
-    
+
     # Check for world-writable files
     if find "$REPO_ROOT" -type f -perm -002 -not -path "*/.git/*" -not -path "*/node_modules/*" | grep -v ".DS_Store"; then
         print_warning "Found world-writable files"
         insecure_files=1
     fi
-    
+
     # Check for executable scripts without proper permissions
     if find "$REPO_ROOT" -name "*.sh" -type f -exec sh -c 'file "$1" | grep -q "shell script"' _ {} \; -print | xargs ls -la | grep -v "rwx"; then
         print_warning "Found shell scripts with incorrect permissions"
         insecure_files=1
     fi
-    
+
     if [[ $insecure_files -eq 0 ]]; then
         print_success "File permissions are secure"
     fi
-    
+
     return $insecure_files
 }
 
 # Check for insecure git configurations
 check_git_security() {
     print_status "Checking git security configuration..."
-    
+
     local git_issues=0
-    
+
     # Check if we're in a git repository
     if [[ ! -d "$REPO_ROOT/.git" ]]; then
         print_warning "Not in a git repository"
         return 1
     fi
-    
+
     # Check for sensitive files in git history
     if git log --all --full-history -- "$REPO_ROOT" | grep -i "password\|secret\|token\|key" | head -5; then
         print_warning "Found sensitive data in git history"
         git_issues=1
     fi
-    
+
     # Check git configuration
     if git config --get user.email | grep -q "noreply"; then
         print_warning "Using noreply email - consider using a real email for commits"
     fi
-    
+
     if [[ $git_issues -eq 0 ]]; then
         print_success "Git configuration appears secure"
     fi
-    
+
     return $git_issues
 }
 
 # Validate YAML files for security issues
 check_yaml_security() {
     print_status "Checking YAML files for security issues..."
-    
+
     if ! command -v python3 >/dev/null 2>&1; then
         print_warning "Python3 not available for YAML validation"
         return 1
     fi
-    
+
     if ! python3 -c "import yaml" >/dev/null 2>&1; then
         print_warning "PyYAML not installed"
         return 1
     fi
-    
+
     local yaml_issues=0
-    
+
     # Check workflow files
     for yaml_file in "$REPO_ROOT/.github/workflows"/*.yml 2>/dev/null; do
         if [[ -f "$yaml_file" ]]; then
@@ -220,31 +220,31 @@ check_yaml_security() {
     done
         fi
     done
-    
+
     if [[ $yaml_issues -eq 0 ]]; then
         print_success "YAML files are valid"
     fi
-    
+
     return $yaml_issues
 }
 
 # Check for dependency vulnerabilities
 check_dependencies() {
     print_status "Checking for dependency files..."
-    
+
     local dep_files=(
         "requirements.txt"
         "package.json"
         "Podfile"
         "Cartfile"
     )
-    
+
     for dep_file in "${dep_files[@]}"; do
         if [[ -f "$REPO_ROOT/$dep_file" ]]; then
             print_status "Found dependency file: $dep_file"
         fi
     done
-    
+
     print_success "Dependency check completed"
 }
 
@@ -252,27 +252,27 @@ check_dependencies() {
 main() {
     print_status "Starting comprehensive security check..."
     echo
-    
+
     local total_issues=0
-    
+
     check_exposed_secrets
     total_issues=$((total_issues + $?))
-    
+
     echo
     check_file_permissions
     total_issues=$((total_issues + $?))
-    
+
     echo
     check_git_security
     total_issues=$((total_issues + $?))
-    
+
     echo
     check_yaml_security
     total_issues=$((total_issues + $?))
-    
+
     echo
     check_dependencies
-    
+
     echo
     if [[ $total_issues -eq 0 ]]; then
         print_success "🎉 Security check passed! No issues found."

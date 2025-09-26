@@ -9,16 +9,16 @@ echo "================================"
 
 # Check recent performance
 if [[ -f $MONITOR_LOG ]]; then
-	echo "Recent operations:"
-	tail -10 "$MONITOR_LOG" | while IFS='|' read -r timestamp operation duration epoch; do
-		if [[ $duration -gt $ALERT_THRESHOLD ]]; then
-			echo "⚠️  SLOW: $operation took ${duration}s"
-		else
-			echo "✅ $operation: ${duration}s"
-		fi
-	done
+  echo "Recent operations:"
+  tail -10 "$MONITOR_LOG" | while IFS='|' read -r timestamp operation duration epoch; do
+    if [[ $duration -gt $ALERT_THRESHOLD ]]; then
+      echo "⚠️  SLOW: $operation took ${duration}s"
+    else
+      echo "✅ $operation: ${duration}s"
+    fi
+  done
 else
-	echo "No performance data available yet"
+  echo "No performance data available yet"
 fi
 
 echo ""
