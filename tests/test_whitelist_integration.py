@@ -1,3 +1,4 @@
+import importlib
 import os
 import socket
 import sys
@@ -5,13 +6,11 @@ import threading
 import time
 
 import pytest
-import requests
+
+requests = pytest.importorskip("requests")
 
 # make repository root importable so Tools.Automation can be imported
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-# Import the server runner
-import importlib
-
 try:
     mcp_server = importlib.import_module("Tools.Automation.mcp_server")
 except Exception:
@@ -71,8 +70,8 @@ def test_whitelist_bypasses_rate_limit():
     # make requests without header until we get a 429
     ok = 0
     got_429 = False
-    for i in range(6):
-        r = requests.get(base + "/status")
+    for _ in range(6):
+        r = requests.get(base + "/status", timeout=5)
         if r.status_code == 200:
             ok += 1
         if r.status_code == 429:
@@ -83,10 +82,10 @@ def test_whitelist_bypasses_rate_limit():
 
     # Now call with whitelisted header; should succeed even after quota reached
     headers = {"X-Client-Id": "test-dashboard"}
-    r2 = requests.get(base + "/status", headers=headers)
+    r2 = requests.get(base + "/status", headers=headers, timeout=5)
     assert r2.status_code == 200
 
     # Also test a whitelisted controller id
     ctrl_headers = {"X-Client-Id": "local-controller-TesterProject"}
-    r3 = requests.get(base + "/status", headers=ctrl_headers)
+    r3 = requests.get(base + "/status", headers=ctrl_headers, timeout=5)
     assert r3.status_code == 200

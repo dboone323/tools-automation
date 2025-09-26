@@ -19,18 +19,18 @@ EOF
 
 # Start each agent in the background and record PID
 for AGENT in "${AGENTS[@]}"; do
-  AGENT_PATH="$(dirname "$0")/${AGENT}"
-  if [[ -x ${AGENT_PATH} ]]; then
-    bash "${AGENT_PATH}" &
-    PID=$!
-    AGENT_NAME=$(basename "${AGENT}" .sh | sed 's/agent_//')
-    # Update status file with running PID
-    jq ".agents.${AGENT_NAME}_agent.status = \"running\" | .agents.${AGENT_NAME}_agent.pid = ${PID} | .last_update = $(date +%s)" "${STATUS_FILE}" >"${STATUS_FILE}.tmp" && mv "${STATUS_FILE}.tmp" "${STATUS_FILE}"
-    AGENT_PIDS+=("${PID}")
-    echo "Started ${AGENT} as PID ${PID}"
-  else
-    echo "Agent script ${AGENT_PATH} not found or not executable."
-  fi
+	AGENT_PATH="$(dirname "$0")/${AGENT}"
+	if [[ -x ${AGENT_PATH} ]]; then
+		bash "${AGENT_PATH}" &
+		PID=$!
+		AGENT_NAME=$(basename "${AGENT}" .sh | sed 's/agent_//')
+		# Update status file with running PID
+		jq ".agents.${AGENT_NAME}_agent.status = \"running\" | .agents.${AGENT_NAME}_agent.pid = ${PID} | .last_update = $(date +%s)" "${STATUS_FILE}" >"${STATUS_FILE}.tmp" && mv "${STATUS_FILE}.tmp" "${STATUS_FILE}"
+		AGENT_PIDS+=("${PID}")
+		echo "Started ${AGENT} as PID ${PID}"
+	else
+		echo "Agent script ${AGENT_PATH} not found or not executable."
+	fi
 done
 
 echo "All agents started. To stop, run ./stop_agents.sh"

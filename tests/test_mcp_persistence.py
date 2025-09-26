@@ -1,12 +1,8 @@
-import importlib
 import json
 import os
-import tempfile
 import threading
-import time
 
 import mcp_server as server
-import pytest
 
 
 def test_execute_task_writes_json(tmp_path, monkeypatch):
@@ -17,8 +13,6 @@ def test_execute_task_writes_json(tmp_path, monkeypatch):
     # Monkeypatch server paths to use tmp dir
     monkeypatch.setenv("TASK_TTL_DAYS", "1")
     monkeypatch.setattr(server, "CODE_DIR", str(tmp_path))
-
-    handler = server.MCPHandler
 
     # Create a dummy instance context for calling _execute_task
     class Dummy:

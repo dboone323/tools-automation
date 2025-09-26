@@ -20,17 +20,14 @@ This folder contains helper scripts and service templates to run the MCP coordin
 Quick start (run under your user account):
 
 - Create venv (if not present):
-
   - python3 -m venv Automation/.venv
   - Automation/.venv/bin/pip install -r Automation/requirements.txt # or install 'requests'
 
 - Start services (nohup mode):
-
   - Automation/monitoring/start_mcp.sh
   - Automation/monitoring/start_monitor.sh
 
 - Stop services:
-
   - Automation/monitoring/stop_monitor.sh
   - Automation/monitoring/stop_mcp.sh
 

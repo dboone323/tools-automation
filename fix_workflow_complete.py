@@ -2,7 +2,6 @@
 """
 Final comprehensive GitHub workflow YAML fixer
 """
-import os
 import re
 import sys
 from pathlib import Path
@@ -21,7 +20,6 @@ def fix_workflow_completely(file_path):
     i = 0
     while i < len(lines):
         line = lines[i].rstrip()  # Remove trailing whitespace
-        original_line = line
 
         # Skip existing document separators and empty lines at start
         if not line or line == "---":

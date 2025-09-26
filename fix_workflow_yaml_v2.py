@@ -2,7 +2,6 @@
 """
 More comprehensive YAML workflow fixing script
 """
-import os
 import re
 import sys
 from pathlib import Path
@@ -23,7 +22,6 @@ def fix_yaml_workflow(file_path):
     i = 0
     while i < len(lines):
         line = lines[i]
-        original_line = line
 
         # Remove trailing spaces
         line = line.rstrip()

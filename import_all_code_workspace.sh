@@ -6,16 +6,16 @@ IMPORT_BRANCH=import/code-workspace/snapshot-${TS}
 
 # Create import branch
 if git show-ref --verify --quiet refs/heads/"${IMPORT_BRANCH}"; then
-  git checkout "${IMPORT_BRANCH}"
+	git checkout "${IMPORT_BRANCH}"
 else
-  git checkout -b "${IMPORT_BRANCH}"
+	git checkout -b "${IMPORT_BRANCH}"
 fi
 
 mkdir -p Tools/Projects Tools/SharedComponents Tools/Imported Documentation Automation/IMPORTS
 
 # Copy Projects
 rsync -a --exclude='.git' --exclude='BuildData_*' --exclude='*.xcuserdata' --exclude='DerivedData' --prune-empty-dirs \
-  /Users/danielstevens/Desktop/Code/Projects/ Tools/Projects/
+	/Users/danielstevens/Desktop/Code/Projects/ Tools/Projects/
 
 # Copy Shared
 rsync -a --exclude='.git' /Users/danielstevens/Desktop/Code/Shared/ Tools/SharedComponents/

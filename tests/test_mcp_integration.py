@@ -1,11 +1,10 @@
-import json
-import os
 import threading
 import time
 
 import mcp_server as server
 import pytest
-import requests
+
+requests = pytest.importorskip("requests")
 
 
 def run_server_in_thread(host="127.0.0.1", port=55123):
@@ -25,7 +24,7 @@ def test_server_executes_allowed_command(tmp_path, monkeypatch):
     # start server on a non-standard port
     host = "127.0.0.1"
     port = 55123
-    t = run_server_in_thread(host, port)
+    _ = run_server_in_thread(host, port)
 
     url = f"http://{host}:{port}"
 

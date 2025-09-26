@@ -2,11 +2,12 @@ import importlib.util
 import os
 import signal
 import subprocess
-import tempfile
 import time
 from pathlib import Path
 
-import requests
+import pytest
+
+requests = pytest.importorskip("requests")
 
 # Load mcp_server module by path
 here = Path(__file__).resolve().parents[1]

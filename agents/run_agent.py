@@ -7,24 +7,29 @@ It will register with MCP at http://127.0.0.1:5005/register and send periodic he
 import argparse
 import json
 import os
-import sys
 import time
 
 try:
-    import requests
-except Exception:
-    print(
-        "requests library required. Install into Automation/.venv: pip install requests",
-        file=sys.stderr,
-    )
-    raise
+    import requests  # type: ignore[import-not-found]
+except ImportError:
+    requests = None
+
+
+def _require_requests():
+    if requests is None:
+        raise RuntimeError(
+            "requests library required. Install into Automation/.venv:"
+            " pip install requests"
+        )
+    return requests
 
 
 def register(mcp_url, name, capabilities):
+    req = _require_requests()
     url = mcp_url.rstrip("/") + "/register"
     payload = {"agent": name, "capabilities": capabilities}
     try:
-        r = requests.post(url, json=payload, timeout=5)
+        r = req.post(url, json=payload, timeout=5)
         r.raise_for_status()
         return r.json()
     except Exception as e:
@@ -33,9 +38,10 @@ def register(mcp_url, name, capabilities):
 
 
 def heartbeat(mcp_url, name):
+    req = _require_requests()
     url = mcp_url.rstrip("/") + "/heartbeat"
     try:
-        r = requests.post(url, json={"agent": name}, timeout=5)
+        r = req.post(url, json={"agent": name}, timeout=5)
         return r.status_code == 200
     except Exception:
         return False
@@ -70,7 +76,7 @@ def _with_file_lock(path, func, *a, **kw):
     # Prefer portalocker if available (cross-platform); otherwise try POSIX fcntl or Windows msvcrt
     locker = None
     try:
-        import portalocker
+        import portalocker  # type: ignore[import-not-found]
 
         locker = "portalocker"
     except Exception:
@@ -258,7 +264,13 @@ def main():
             # if this agent can execute, poll /status tasks for queued tasks and exec them
             if "execute" in caps:
                 try:
-                    r = requests.get(args.mcp.rstrip("/") + "/status", timeout=3)
+                    req = _require_requests()
+                except RuntimeError as err:
+                    print(f"requests dependency missing: {err}")
+                    time.sleep(5)
+                    continue
+                try:
+                    r = req.get(args.mcp.rstrip("/") + "/status", timeout=3)
                     st = r.json()
                     for t in st.get("tasks", []):
                         tid = t.get("id")
@@ -276,10 +288,12 @@ def main():
                                     marker
                                 ):
                                     # create backup file and marker under a file lock; best-effort
-                                    def _do_backup():
-                                        bak = perform_backup(target)
+                                    def _do_backup(
+                                        target_path=target, marker_path=marker
+                                    ):
+                                        bak = perform_backup(target_path)
                                         try:
-                                            _atomic_write(marker, str(bak or ""))
+                                            _atomic_write(marker_path, str(bak or ""))
                                         except Exception:
                                             pass
                                         return bak
@@ -306,10 +320,12 @@ def main():
                                     and not os.path.exists(marker)
                                 ):
 
-                                    def _do_backup_marker():
-                                        bak = perform_backup(target)
+                                    def _do_backup_marker(
+                                        target_path=target, marker_path=marker
+                                    ):
+                                        bak = perform_backup(target_path)
                                         try:
-                                            _atomic_write(marker, str(bak or ""))
+                                            _atomic_write(marker_path, str(bak or ""))
                                         except Exception:
                                             pass
                                         return bak
@@ -317,7 +333,7 @@ def main():
                                     bak = _with_file_lock(target, _do_backup_marker)
                                     print(f"backup created and marker written: {bak}")
 
-                                er = requests.post(
+                                er = req.post(
                                     args.mcp.rstrip("/") + "/execute_task",
                                     json={"task_id": tid},
                                     timeout=5,
@@ -330,7 +346,7 @@ def main():
                                     poll_start = time.time()
                                     while time.time() - poll_start < 30:
                                         try:
-                                            st = requests.get(
+                                            st = req.get(
                                                 args.mcp.rstrip("/") + "/status",
                                                 timeout=3,
                                             ).json()

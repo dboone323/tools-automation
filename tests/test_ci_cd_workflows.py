@@ -6,7 +6,6 @@ Tests for GitHub Actions workflows and deployment processes.
 
 import os
 import subprocess
-import tempfile
 from pathlib import Path
 
 import pytest

@@ -1,5 +1,4 @@
 import http.server
-import os
 import socketserver
 import time
 from pathlib import Path

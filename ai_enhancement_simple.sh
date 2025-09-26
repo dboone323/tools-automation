@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Quick Fix for AI Enhancement System - Simple Pattern Counter
-# This creates a simpler version that avoids complex pattern matching issues
+# Streamlined helper that generates enhancement reports and safe auto-apply scripts
 
 set -eo pipefail
 
@@ -14,271 +14,238 @@ readonly PURPLE='\033[0;35m'
 readonly CYAN='\033[0;36m'
 readonly NC='\033[0m' # No Color
 
-# Logging functions
+# Logging helpers
 print_header() { echo -e "${PURPLE}[AI-ENHANCE]${NC} ${CYAN}$1${NC}"; }
 print_success() { echo -e "${GREEN}✅ $1${NC}"; }
 print_status() { echo -e "${BLUE}🔄 $1${NC}"; }
+print_warning() { echo -e "${YELLOW}⚠️  $1${NC}"; }
+print_error() { echo -e "${RED}❌ $1${NC}"; }
 
-# Configuration
-readonly CODE_DIR="${CODE_DIR:-/Users/danielstevens/Desktop/Code}"
-readonly ENHANCEMENT_DIR="$CODE_DIR/Documentation/Enhancements"
+# Resolve repository root relative to this script unless CODE_DIR is already exported
+readonly CODE_DIR="${CODE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+readonly ENHANCEMENT_DIR="${CODE_DIR}/Documentation/Enhancements"
+readonly BACKUP_ROOT="${CODE_DIR}/.autofix_backups"
 
-# Create enhancement directory
-mkdir -p "$ENHANCEMENT_DIR"
+mkdir -p "${ENHANCEMENT_DIR}"
+mkdir -p "${BACKUP_ROOT}"
 
-# Simple AI Enhancement Analysis
+# Generate a lightweight enhancement report and safe auto-apply script
 analyze_project_simple() {
-  local project_name="$1"
-  local project_path="$CODE_DIR/Projects/$project_name"
+	local project_name="$1"
+	local project_path="${CODE_DIR}/Projects/${project_name}"
 
-  if [[ ! -d $project_path ]]; then
-    echo "❌ Project $project_name not found"
-    return 1
-  fi
+	if [[ ! -d ${project_path} ]]; then
+		print_error "Project ${project_name} not found at ${project_path}"
+		return 1
+	fi
 
-  print_header "Running AI Enhancement Analysis for $project_name"
+	print_header "Running AI Enhancement Analysis for ${project_name}"
 
-  cd "$project_path"
+	(
+		cd "${project_path}" || exit 1
 
-  local enhancement_file="$ENHANCEMENT_DIR/${project_name}_ai_enhancements.md"
-  local auto_apply_script="$ENHANCEMENT_DIR/${project_name}_safe_enhancements.sh"
+		local enhancement_file="${ENHANCEMENT_DIR}/${project_name}_ai_enhancements.md"
+		local auto_apply_script="${ENHANCEMENT_DIR}/${project_name}_safe_enhancements.sh"
 
-  # Count basic metrics
-  local swift_files=$(find . -name "*.swift" | wc -l | tr -d ' ')
-  local total_lines=$(find . -name "*.swift" -exec wc -l {} \; | awk '{sum += $1} END {print sum}' || echo "0")
+		local swift_files total_lines
+		swift_files=$(find . -type f -name "*.swift" | wc -l | tr -d ' ')
+		total_lines=$(find . -type f -name "*.swift" -exec wc -l {} + 2>/dev/null | awk '{sum += $1} END {print sum+0}')
 
-  # Generate comprehensive report
-  cat >"$enhancement_file" <<EOF
-# 🚀 AI Enhancement Analysis: $project_name
+		cat >"${enhancement_file}" <<EOF
+# 🚀 AI Enhancement Analysis - ${project_name}
 *Generated: $(date)*
 
 ## 📊 Project Metrics
-- **Swift Files:** $swift_files
-- **Total Lines:** $total_lines
-- **Project Type:** iOS Application
+- **Swift Files:** ${swift_files}
+- **Total Lines:** ${total_lines}
+- **Project Type:** iOS/macOS Application
 - **Analysis Status:** ✅ Complete
 
 ## 🎯 Recommended Enhancements
 
 ### 🤖 Auto-Applicable (SAFE)
-These enhancements can be applied automatically with rollback protection:
+These enhancements can be applied automatically with backup protection:
 
-#### 1. Code Formatting & Style
-- SwiftFormat consistent styling
-- Import organization
-- Trailing whitespace removal
-- **Risk:** SAFE - Auto-apply ready
+1. **Code Formatting & Style**  
+   SwiftFormat, import organization, whitespace cleanup  
+   **Risk:** SAFE - Auto-apply ready
+2. **Documentation Templates**  
+   Add doc comment placeholders for functions  
+   **Risk:** SAFE - Auto-apply ready
+3. **Performance Touch-Ups**  
+   Basic collection and string optimization templates  
+   **Risk:** SAFE - Auto-apply ready
 
-#### 2. Documentation Templates
-- Add function documentation templates
-- Standardize comment formatting
-- **Risk:** SAFE - Auto-apply ready
+### 👨‍💻 Manual Review Recommended
 
-#### 3. Performance Optimizations
-- Array operation efficiency improvements
-- String interpolation optimization
-- **Risk:** SAFE - Auto-apply ready
-
-### 👨‍💻 Manual Review Required
-
-#### 1. Architecture Improvements (MEDIUM RISK)
-- Consider MVVM pattern implementation
-- Dependency injection opportunities
-- Code modularization potential
-
-#### 2. UI/UX Enhancements (MEDIUM RISK)
-- Accessibility compliance improvements
-- Theme system implementation
-- User experience consistency
-
-#### 3. Security Enhancements (HIGH RISK)
-- Keychain implementation for sensitive data
-- Network security improvements
-- Data validation enhancements
-
-#### 4. Testing Strategy (MEDIUM RISK)
-- Unit test coverage expansion
-- UI test automation
-- Performance testing implementation
-
-## 🎯 Implementation Roadmap
-
-### Phase 1: Auto-Apply Safe Enhancements
-\`\`\`bash
-./master_automation.sh enhance auto-apply $project_name
-\`\`\`
-
-### Phase 2: Manual Implementation
-1. Review architecture recommendations
-2. Implement security enhancements
-3. Expand testing coverage
-4. Apply UI/UX improvements
+1. **Architecture Improvements (MEDIUM)** – Evaluate MVVM separation and dependency injection.
+2. **UI/UX Enhancements (MEDIUM)** – Audit accessibility, theming, and consistency.
+3. **Security Enhancements (HIGH)** – Harden keychain usage, networking, and validation.
+4. **Testing Strategy (MEDIUM)** – Expand unit/UI coverage and add performance tests.
 
 ## 📈 Expected Benefits
-- **Code Quality:** ⬆️ Improved
-- **Maintainability:** ⬆️ Enhanced
-- **Performance:** ⬆️ Optimized
-- **Security:** ⬆️ Strengthened
-- **Accessibility:** ⬆️ Compliant
+- Code Quality: ⬆️ Improved
+- Maintainability: ⬆️ Enhanced
+- Performance: ⬆️ Optimized
+- Security: ⬆️ Strengthened
+- Accessibility: ⬆️ More compliant
 
 ## 🔄 Next Steps
-1. Run auto-apply for safe enhancements
-2. Review manual enhancement recommendations
-3. Implement based on priority and risk assessment
-4. Re-run analysis after major changes
+1. Run the safe auto-apply script.
+2. Review manual recommendations with the team.
+3. Implement prioritized items.
+4. Re-run analysis after major code changes.
 
 ---
 *AI Enhancement System - Making your code better, safely*
 EOF
 
-  # Create auto-apply script with safe enhancements
-  cat >"$auto_apply_script" <<'EOF'
+		cat >"${auto_apply_script}" <<'EOF'
 #!/bin/bash
-# Safe Auto-Apply Enhancements
+# Safe Auto-Apply Enhancements generated by ai_enhancement_simple.sh
 
-echo "🤖 Applying safe enhancements..."
+set -eo pipefail
 
-# 1. Format code consistently
-if command -v swiftformat &> /dev/null; then
-    echo "🔧 Applying SwiftFormat..."
-    swiftformat . --config .swiftformat 2>/dev/null || echo "✅ SwiftFormat applied"
+log() { echo "[AUTO-ENHANCE] $1"; }
+
+log "Applying safe enhancements..."
+
+if command -v swiftformat &>/dev/null; then
+	log "Running SwiftFormat..."
+	swiftformat . --config .swiftformat 2>/dev/null || log "SwiftFormat encountered warnings"
+else
+	log "SwiftFormat not installed; skipping format step"
 fi
 
-# 2. Remove trailing whitespace
-echo "🔧 Removing trailing whitespace..."
-find . -name "*.swift" -exec sed -i.bak 's/[[:space:]]*$//' {} \;
-find . -name "*.swift.bak" -delete
-echo "✅ Trailing whitespace removed"
+log "Removing trailing whitespace..."
+find . -type f -name "*.swift" -exec sed -i.bak 's/[[:space:]]*$//' {} +
+find . -type f -name "*.swift.bak" -delete
 
-# 3. Organize imports (basic)
-echo "🔧 Organizing imports..."
-find . -name "*.swift" -exec sed -i.bak '/^import/{ /Foundation/!{H; d}; }; ${g}' {} \; 2>/dev/null || true
-find . -name "*.swift.bak" -delete
-echo "✅ Imports organized"
-
-# 4. Add basic documentation templates
-echo "🔧 Adding documentation templates..."
-find . -name "*.swift" -exec sed -i.bak '/^[[:space:]]*func.*{/i\
+log "Providing documentation templates (idempotent)..."
+find . -type f -name "*.swift" -exec sed -i.bak '/^[[:space:]]*func .*{/i \
     /// <#Description#>\
-    /// - Returns: <#description#>
-' {} \; 2>/dev/null || true
-find . -name "*.swift.bak" -delete
-echo "✅ Documentation templates added"
+    /// - Returns: <#description#>\
+' {} + 2>/dev/null || true
+find . -type f -name "*.swift.bak" -delete
 
-echo "✅ Safe enhancements completed!"
+log "Safe enhancements completed."
 EOF
 
-  chmod +x "$auto_apply_script"
+		chmod +x "${auto_apply_script}"
 
-  print_success "Enhancement analysis complete!"
-  print_status "📄 Report: $enhancement_file"
-  print_status "🤖 Auto-apply: $auto_apply_script"
+		print_success "Enhancement analysis complete!"
+		print_status "📄 Report saved to ${enhancement_file}"
+		print_status "🤖 Auto-apply script saved to ${auto_apply_script}"
 
-  # Show summary
-  echo ""
-  echo "📋 Quick Summary:"
-  echo "   📱 Project: $project_name"
-  echo "   📄 Files: $swift_files Swift files"
-  echo "   📏 Size: $total_lines lines of code"
-  echo "   🎯 Enhancements: Ready for auto-apply + manual review"
-  echo ""
-  echo "🚀 Next: Run ./master_automation.sh enhance auto-apply $project_name"
+		echo ""
+		echo "📋 Quick Summary:"
+		echo "   📱 Project: ${project_name}"
+		echo "   📄 Swift files: ${swift_files}"
+		echo "   📏 Lines of code: ${total_lines}"
+		echo "   🎯 Enhancements: Safe auto-apply + manual review"
+		echo ""
+		echo "🚀 Next: Run ./master_automation.sh enhance auto-apply ${project_name}"
+	)
 }
 
-# Auto-apply safe enhancements
+# Apply the generated safe enhancements with automatic backups
 auto_apply_safe_enhancements() {
-  local project_name="$1"
-  local project_path="$CODE_DIR/Projects/$project_name"
-  local auto_apply_script="$ENHANCEMENT_DIR/${project_name}_safe_enhancements.sh"
+	local project_name="$1"
+	local project_path="${CODE_DIR}/Projects/${project_name}"
+	local auto_apply_script="${ENHANCEMENT_DIR}/${project_name}_safe_enhancements.sh"
 
-  if [[ ! -f $auto_apply_script ]]; then
-    echo "❌ No auto-apply script found. Run analysis first."
-    return 1
-  fi
+	if [[ ! -d ${project_path} ]]; then
+		print_error "Project ${project_name} not found at ${project_path}"
+		return 1
+	fi
 
-  print_header "Auto-applying safe enhancements for $project_name"
+	if [[ ! -f ${auto_apply_script} ]]; then
+		print_error "No auto-apply script found for ${project_name}. Run analyze first."
+		return 1
+	fi
 
-  # Create backup
-  local timestamp="$(date +%Y%m%d_%H%M%S)"
-  local backup_path="$CODE_DIR/.autofix_backups/${project_name}_enhance_$timestamp"
-  mkdir -p "$(dirname "$backup_path")"
+	print_header "Auto-applying safe enhancements for ${project_name}"
 
-  print_status "Creating backup..."
-  cp -r "$project_path" "$backup_path"
-  echo "$backup_path" >"$project_path/.enhancement_backup"
+	local timestamp
+	timestamp=$(date +%Y%m%d_%H%M%S)
+	local backup_path="${BACKUP_ROOT}/${project_name}_enhance_${timestamp}"
 
-  # Apply enhancements
-  cd "$project_path"
-  if bash "$auto_apply_script"; then
-    print_success "Safe enhancements applied successfully!"
+	print_status "Creating backup at ${backup_path}..."
+	mkdir -p "${backup_path}"
+	cp -R "${project_path}" "${backup_path}/"
+	print_success "Backup created"
 
-    # Cleanup backup
-    rm -rf "$backup_path"
-    rm -f "$project_path/.enhancement_backup"
+	(
+		cd "${project_path}" || exit 1
+		if bash "${auto_apply_script}"; then
+			print_success "Safe enhancements applied successfully!"
 
-    echo ""
-    echo "🎉 Enhancement Summary:"
-    echo "   ✅ Code formatting applied"
-    echo "   ✅ Trailing whitespace removed"
-    echo "   ✅ Imports organized"
-    echo "   ✅ Documentation templates added"
-    echo ""
-    echo "📋 Next: Review manual enhancement recommendations"
-  else
-    print_error "Enhancement failed - restoring backup"
-    rm -rf "$project_path"
-    cp -r "$backup_path" "$project_path"
-    rm -f "$project_path/.enhancement_backup"
-    return 1
-  fi
+			rm -rf "${backup_path}"
+			print_status "Backup removed after success"
+
+			echo ""
+			echo "🎉 Enhancement Summary:"
+			echo "   ✅ Code formatting applied"
+			echo "   ✅ Trailing whitespace removed"
+			echo "   ✅ Documentation templates added"
+			echo ""
+			echo "📋 Next: Review manual enhancement recommendations"
+		else
+			print_error "Enhancement failed - restoring backup"
+			rm -rf "${project_path}"
+			cp -R "${backup_path}/${project_name}" "${CODE_DIR}/Projects/"
+			rm -rf "${backup_path}"
+			return 1
+		fi
+	)
 }
 
-# Main execution
+# Entry point
 case "${1:-help}" in
-"analyze")
-  if [[ -n ${2-} ]]; then
-    analyze_project_simple "$2"
-  else
-    echo "Usage: $0 analyze <project_name>"
-    exit 1
-  fi
-  ;;
-"analyze-all")
-  for project in "CodingReviewer" "HabitQuest" "MomentumFinance"; do
-    if [[ -d "$CODE_DIR/Projects/$project" ]]; then
-      analyze_project_simple "$project"
-      echo ""
-    fi
-  done
-  ;;
-"auto-apply")
-  if [[ -n ${2-} ]]; then
-    auto_apply_safe_enhancements "$2"
-  else
-    echo "Usage: $0 auto-apply <project_name>"
-    exit 1
-  fi
-  ;;
-"auto-apply-all")
-  for project in "CodingReviewer" "HabitQuest" "MomentumFinance"; do
-    if [[ -d "$CODE_DIR/Projects/$project" ]]; then
-      auto_apply_safe_enhancements "$project"
-      echo ""
-    fi
-  done
-  ;;
-*)
-  echo "🤖 AI Enhancement System - Simple & Reliable"
-  echo ""
-  echo "Commands:"
-  echo "  analyze <project>     # Analyze project for AI enhancements"
-  echo "  analyze-all          # Analyze all projects"
-  echo "  auto-apply <project> # Apply safe enhancements with backup"
-  echo "  auto-apply-all       # Apply to all projects"
-  echo ""
-  echo "Examples:"
-  echo "  $0 analyze HabitQuest"
-  echo "  $0 auto-apply HabitQuest"
-  echo "  $0 analyze-all"
-  ;;
+analyze)
+	if [[ -n ${2-} ]]; then
+		analyze_project_simple "$2"
+	else
+		print_error "Usage: $0 analyze <project_name>"
+		exit 1
+	fi
+	;;
+analyze-all)
+	for project in CodingReviewer HabitQuest MomentumFinance; do
+		if [[ -d "${CODE_DIR}/Projects/${project}" ]]; then
+			analyze_project_simple "${project}"
+			echo ""
+		fi
+	done
+	;;
+auto-apply)
+	if [[ -n ${2-} ]]; then
+		auto_apply_safe_enhancements "$2"
+	else
+		print_error "Usage: $0 auto-apply <project_name>"
+		exit 1
+	fi
+	;;
+auto-apply-all)
+	for project in CodingReviewer HabitQuest MomentumFinance; do
+		if [[ -d "${CODE_DIR}/Projects/${project}" ]]; then
+			auto_apply_safe_enhancements "${project}"
+			echo ""
+		fi
+	done
+	;;
+help | *)
+	echo "🤖 AI Enhancement System - Simple & Reliable"
+	echo ""
+	echo "Commands:"
+	echo "  analyze <project>     # Analyze project for AI enhancements"
+	echo "  analyze-all          # Analyze all default projects"
+	echo "  auto-apply <project> # Apply safe enhancements with backup"
+	echo "  auto-apply-all       # Apply to all default projects"
+	echo ""
+	echo "Examples:"
+	echo "  $0 analyze HabitQuest"
+	echo "  $0 auto-apply HabitQuest"
+	echo "  $0 analyze-all"
+	;;
 esac

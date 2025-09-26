@@ -8,7 +8,6 @@ Usage: python build_assets.py
 """
 import hashlib
 import json
-import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -24,7 +23,7 @@ FILES = {
 
 
 def hash_file(path: Path) -> str:
-    h = hashlib.sha1()
+    h = hashlib.sha256()
     with path.open("rb") as f:
         while True:
             chunk = f.read(8192)

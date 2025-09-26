@@ -3,23 +3,23 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 AGENT_NAME="UnifiedDashboard"
-LOG_FILE="$SCRIPT_DIR/simple_dashboard.log"
-DASHBOARD_HTML_FILE="$SCRIPT_DIR/simple_dashboard.html"
-DASHBOARD_DATA_FILE="$SCRIPT_DIR/simple_dashboard_data.json"
+LOG_FILE="${SCRIPT_DIR}/simple_dashboard.log"
+DASHBOARD_HTML_FILE="${SCRIPT_DIR}/simple_dashboard.html"
+DASHBOARD_DATA_FILE="${SCRIPT_DIR}/simple_dashboard_data.json"
 
 # Simple configuration
 DASHBOARD_PORT=8080
 UPDATE_INTERVAL=30
 
 log_message() {
-  local level="$1"
-  local message="$2"
-  echo "[$(date)] [$level] $message" >>"$LOG_FILE"
+	local level="$1"
+	local message="$2"
+	echo "[$(date)] [${level}] ${message}" >>"${LOG_FILE}"
 }
 
 # Create basic dashboard data
 create_basic_data() {
-  cat >"$DASHBOARD_DATA_FILE" <<'EOF'
+	cat >"${DASHBOARD_DATA_FILE}" <<'EOF'
 {
   "agents": {
     "task_orchestrator_agent": {"status": "available", "last_seen": "2025-08-29T12:00:00Z", "tasks_completed": 0},
@@ -49,7 +49,7 @@ EOF
 
 # Generate simple dashboard HTML
 generate_simple_html() {
-  cat >"$DASHBOARD_HTML_FILE" <<'EOF'
+	cat >"${DASHBOARD_HTML_FILE}" <<'EOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -186,23 +186,23 @@ EOF
 
 # Start simple web server
 start_server() {
-  log_message "INFO" "Starting dashboard server on port $DASHBOARD_PORT"
+	log_message "INFO" "Starting dashboard server on port ${DASHBOARD_PORT}"
 
-  cd "$SCRIPT_DIR"
-  python3 -m http.server $DASHBOARD_PORT >>"$LOG_FILE" 2>&1 &
-  server_pid=$!
-  echo $server_pid >"$SCRIPT_DIR/simple_server.pid"
-  log_message "INFO" "Server started with PID $server_pid"
+	cd "${SCRIPT_DIR}" || exit
+	python3 -m http.server "${DASHBOARD_PORT}" >>"${LOG_FILE}" 2>&1 &
+	server_pid=$!
+	echo "${server_pid}" >"${SCRIPT_DIR}/simple_server.pid"
+	log_message "INFO" "Server started with PID ${server_pid}"
 }
 
 # Stop server
 stop_server() {
-  if [[ -f "$SCRIPT_DIR/simple_server.pid" ]]; then
-    local pid=$(cat "$SCRIPT_DIR/simple_server.pid")
-    kill $pid 2>/dev/null
-    rm -f "$SCRIPT_DIR/simple_server.pid"
-    log_message "INFO" "Server stopped"
-  fi
+	if [[ -f "${SCRIPT_DIR}/simple_server.pid" ]]; then
+		local pid=$(cat "${SCRIPT_DIR}/simple_server.pid")
+		kill "${pid}" 2>/dev/null
+		rm -f "${SCRIPT_DIR}/simple_server.pid"
+		log_message "INFO" "Server stopped"
+	fi
 }
 
 # Main execution
@@ -217,8 +217,8 @@ start_server
 
 # Keep running and update data periodically
 while true; do
-  # Update timestamp in data
-  sed -i '' 's/"last_update": [0-9]*/"last_update": '$(date +%s)'/' "$DASHBOARD_DATA_FILE"
+	# Update timestamp in data
+	sed -i '' 's/"last_update": [0-9]*/"last_update": '$(date +%s)'/' "${DASHBOARD_DATA_FILE}"
 
-  sleep $UPDATE_INTERVAL
+	sleep "${UPDATE_INTERVAL}"
 done

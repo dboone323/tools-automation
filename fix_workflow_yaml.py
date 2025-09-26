@@ -2,7 +2,6 @@
 """
 Fix YAML formatting issues in GitHub workflow files
 """
-import os
 import re
 import sys
 from pathlib import Path
@@ -18,7 +17,7 @@ def fix_yaml_file(file_path):
     lines = content.split("\n")
     fixed_lines = []
 
-    for i, line in enumerate(lines):
+    for line in lines:
         # Remove trailing spaces
         line = line.rstrip()
 
@@ -75,8 +74,10 @@ def fix_yaml_file(file_path):
         fixed_lines.append(line)
 
     # Add document start if missing
-    if not fixed_lines[0].startswith("---"):
+    if fixed_lines and not fixed_lines[0].startswith("---"):
         fixed_lines.insert(0, "---")
+    elif not fixed_lines:
+        fixed_lines = ["---"]
 
     # Remove excessive blank lines at end
     while fixed_lines and fixed_lines[-1] == "":

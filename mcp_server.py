@@ -47,9 +47,18 @@ ALLOWED_COMMANDS = {
     "status": ["./Tools/Automation/master_automation.sh", "status"],
     "validate": ["./Tools/Automation/intelligent_autofix.sh", "validate"],
     # TODO-related commands
-    "optimize-performance": ["./Tools/Automation/agents/agent_debug.sh", "optimize-performance"],
-    "enhance-review-engine": ["./Tools/Automation/agents/agent_codegen.sh", "enhance-review-engine"],
-    "implement-feature": ["./Tools/Automation/agents/agent_codegen.sh", "implement-feature"],
+    "optimize-performance": [
+        "./Tools/Automation/agents/agent_debug.sh",
+        "optimize-performance",
+    ],
+    "enhance-review-engine": [
+        "./Tools/Automation/agents/agent_codegen.sh",
+        "enhance-review-engine",
+    ],
+    "implement-feature": [
+        "./Tools/Automation/agents/agent_codegen.sh",
+        "implement-feature",
+    ],
     "integrate-api": ["./Tools/Automation/agents/agent_build.sh", "integrate-api"],
     "enhance-ui": ["./Tools/Automation/agents/agent_uiux.sh", "enhance-ui"],
     "implement-todo": ["./Tools/Automation/agents/agent_codegen.sh", "implement-todo"],

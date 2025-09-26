@@ -5,7 +5,6 @@ Generates comprehensive test reports for the entire workspace.
 """
 
 import json
-import os
 import subprocess
 from datetime import datetime
 from pathlib import Path

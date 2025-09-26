@@ -3,6 +3,7 @@
 import os
 import re
 from datetime import datetime
+from itertools import islice
 
 AGENTS_DIR = os.path.dirname(__file__)
 DOC_FILE = os.path.join(AGENTS_DIR, "KNOWLEDGE_BASE.md")
@@ -28,12 +29,12 @@ for fname in sorted(os.listdir(AGENTS_DIR)):
     ):
         path = os.path.join(AGENTS_DIR, fname)
         with open(path) as f:
-            first_lines = [next(f) for _ in range(5)]
+            first_lines = list(islice(f, 5))
         desc = next(
             (
-                re.sub(r"^# ?", "", l).strip()
-                for l in first_lines
-                if l.strip().startswith("#")
+                re.sub(r"^# ?", "", line).strip()
+                for line in first_lines
+                if line.strip().startswith("#")
             ),
             fname,
         )

@@ -7,9 +7,9 @@ set -euo pipefail
 
 # Configuration
 readonly CODE_DIR="${CODE_DIR:-/Users/danielstevens/Desktop/Quantum-workspace}"
-readonly DOCS_DIR="$CODE_DIR/Documentation"
-readonly API_DOCS_DIR="$DOCS_DIR/API"
-readonly TUTORIALS_DIR="$DOCS_DIR/Tutorials"
+readonly DOCS_DIR="${CODE_DIR}/Documentation"
+readonly API_DOCS_DIR="${DOCS_DIR}/API"
+readonly TUTORIALS_DIR="${DOCS_DIR}/Tutorials"
 
 # Color codes
 readonly RED='\033[0;31m'
@@ -29,155 +29,155 @@ print_status() { echo -e "${BLUE}🔄 $1${NC}"; }
 
 # Create documentation directories
 setup_directories() {
-  print_status "Setting up documentation directories..."
+	print_status "Setting up documentation directories..."
 
-  mkdir -p "$API_DOCS_DIR"
-  mkdir -p "$TUTORIALS_DIR"
-  mkdir -p "$DOCS_DIR/Guides"
-  mkdir -p "$DOCS_DIR/Examples"
+	mkdir -p "${API_DOCS_DIR}"
+	mkdir -p "${TUTORIALS_DIR}"
+	mkdir -p "${DOCS_DIR}/Guides"
+	mkdir -p "${DOCS_DIR}/Examples"
 
-  print_success "Documentation directories created"
+	print_success "Documentation directories created"
 }
 
 # Generate API documentation from Swift code
 generate_api_docs() {
-  local project_name="$1"
-  local project_path="$CODE_DIR/Projects/$project_name"
+	local project_name="$1"
+	local project_path="${CODE_DIR}/Projects/${project_name}"
 
-  if [[ ! -d $project_path ]]; then
-    print_error "Project $project_name not found"
-    return 1
-  fi
+	if [[ ! -d ${project_path} ]]; then
+		print_error "Project ${project_name} not found"
+		return 1
+	fi
 
-  print_header "Generating API documentation for $project_name"
+	print_header "Generating API documentation for ${project_name}"
 
-  local api_doc_file="$API_DOCS_DIR/${project_name}_API.md"
+	local api_doc_file="${API_DOCS_DIR}/${project_name}_API.md"
 
-  # Extract public APIs from Swift files
-  {
-    echo "# $project_name API Documentation"
-    echo ""
-    echo "Generated: $(date)"
-    echo "Project: $project_name"
-    echo "Location: $project_path"
-    echo ""
+	# Extract public APIs from Swift files
+	{
+		echo "# ${project_name} API Documentation"
+		echo ""
+		echo "Generated: $(date)"
+		echo "Project: ${project_name}"
+		echo "Location: ${project_path}"
+		echo ""
 
-    echo "## Overview"
-    echo ""
-    echo "This document contains the public API reference for $project_name."
-    echo ""
+		echo "## Overview"
+		echo ""
+		echo "This document contains the public API reference for ${project_name}."
+		echo ""
 
-    # Find all Swift files
-    local swift_files
-    swift_files=$(find "$project_path" -name "*.swift" -type f)
+		# Find all Swift files
+		local swift_files
+		swift_files=$(find "${project_path}" -name "*.swift" -type f)
 
-    if [[ -z $swift_files ]]; then
-      echo "No Swift files found in project."
-      return 1
-    fi
+		if [[ -z ${swift_files} ]]; then
+			echo "No Swift files found in project."
+			return 1
+		fi
 
-    echo "## Classes and Structs"
-    echo ""
+		echo "## Classes and Structs"
+		echo ""
 
-    # Extract classes, structs, and their public members
-    for file in $swift_files; do
-      local filename
-      filename=$(basename "$file" .swift)
+		# Extract classes, structs, and their public members
+		for file in ${swift_files}; do
+			local filename
+			filename=$(basename "${file}" .swift)
 
-      echo "### $filename"
-      echo ""
-      echo "File: \`$file\`"
-      echo ""
+			echo "### ${filename}"
+			echo ""
+			echo "File: \`${file}\`"
+			echo ""
 
-      # Extract public classes/structs
-      local public_types
-      public_types=$(grep -n "^public \(class\|struct\|enum\)" "$file" || true)
+			# Extract public classes/structs
+			local public_types
+			public_types=$(grep -n "^public \(class\|struct\|enum\)" "${file}" || true)
 
-      if [[ -n $public_types ]]; then
-        echo "#### Public Types"
-        echo ""
-        while IFS=: read -r line_num line; do
-          local type_name
-          type_name=$(echo "$line" | sed 's/.*\(class\|struct\|enum\) \([^{]*\).*/\2/' | xargs)
-          echo "- **$type_name** (line $line_num)"
-        done <<<"$public_types"
-        echo ""
-      fi
+			if [[ -n ${public_types} ]]; then
+				echo "#### Public Types"
+				echo ""
+				while IFS=: read -r line_num line; do
+					local type_name
+					type_name=$(echo "${line}" | sed 's/.*\(class\|struct\|enum\) \([^{]*\).*/\2/' | xargs)
+					echo "- **${type_name}** (line ${line_num})"
+				done <<<"${public_types}"
+				echo ""
+			fi
 
-      # Extract public functions
-      local public_funcs
-      public_funcs=$(grep -n "^[[:space:]]*public func" "$file" || true)
+			# Extract public functions
+			local public_funcs
+			public_funcs=$(grep -n "^[[:space:]]*public func" "${file}" || true)
 
-      if [[ -n $public_funcs ]]; then
-        echo "#### Public Functions"
-        echo ""
-        while IFS=: read -r line_num line; do
-          local func_signature
-          func_signature=$(echo "$line" | sed 's/^[[:space:]]*public func //' | xargs)
-          echo "- \`$func_signature\` (line $line_num)"
-        done <<<"$public_funcs"
-        echo ""
-      fi
+			if [[ -n ${public_funcs} ]]; then
+				echo "#### Public Functions"
+				echo ""
+				while IFS=: read -r line_num line; do
+					local func_signature
+					func_signature=$(echo "${line}" | sed 's/^[[:space:]]*public func //' | xargs)
+					echo "- \`${func_signature}\` (line ${line_num})"
+				done <<<"${public_funcs}"
+				echo ""
+			fi
 
-      # Extract public properties
-      local public_props
-      public_props=$(grep -n "^[[:space:]]*public \(var\|let\)" "$file" || true)
+			# Extract public properties
+			local public_props
+			public_props=$(grep -n "^[[:space:]]*public \(var\|let\)" "${file}" || true)
 
-      if [[ -n $public_props ]]; then
-        echo "#### Public Properties"
-        echo ""
-        while IFS=: read -r line_num line; do
-          local prop_declaration
-          prop_declaration=$(echo "$line" | sed 's/^[[:space:]]*public //' | xargs)
-          echo "- \`$prop_declaration\` (line $line_num)"
-        done <<<"$public_props"
-        echo ""
-      fi
-    done
+			if [[ -n ${public_props} ]]; then
+				echo "#### Public Properties"
+				echo ""
+				while IFS=: read -r line_num line; do
+					local prop_declaration
+					prop_declaration=$(echo "${line}" | sed 's/^[[:space:]]*public //' | xargs)
+					echo "- \`${prop_declaration}\` (line ${line_num})"
+				done <<<"${public_props}"
+				echo ""
+			fi
+		done
 
-    echo "## Dependencies"
-    echo ""
+		echo "## Dependencies"
+		echo ""
 
-    # Check for Package.swift
-    if [[ -f "$project_path/Package.swift" ]]; then
-      echo "### Swift Package Manager Dependencies"
-      echo ""
-      echo "Package.swift location: \`$project_path/Package.swift\`"
-      echo ""
+		# Check for Package.swift
+		if [[ -f "${project_path}/Package.swift" ]]; then
+			echo "### Swift Package Manager Dependencies"
+			echo ""
+			echo "Package.swift location: \`${project_path}/Package.swift\`"
+			echo ""
 
-      # Extract dependencies (simplified)
-      if grep -q "dependencies:" "$project_path/Package.swift"; then
-        echo "#### External Dependencies"
-        grep -A 10 "dependencies:" "$project_path/Package.swift" | grep -E "\.package\(|url:" | head -10 || true
-      fi
-    fi
+			# Extract dependencies (simplified)
+			if grep -q "dependencies:" "${project_path}/Package.swift"; then
+				echo "#### External Dependencies"
+				grep -A 10 "dependencies:" "${project_path}/Package.swift" | grep -E "\.package\(|url:" | head -10 || true
+			fi
+		fi
 
-    # Check for Podfile
-    if [[ -f "$project_path/Podfile" ]]; then
-      echo "### CocoaPods Dependencies"
-      echo ""
-      echo "Podfile location: \`$project_path/Podfile\`"
-      echo ""
+		# Check for Podfile
+		if [[ -f "${project_path}/Podfile" ]]; then
+			echo "### CocoaPods Dependencies"
+			echo ""
+			echo "Podfile location: \`${project_path}/Podfile\`"
+			echo ""
 
-      echo "#### Pods"
-      grep "^pod " "$project_path/Podfile" | sed 's/^pod /- /' || true
-    fi
+			echo "#### Pods"
+			grep "^pod " "${project_path}/Podfile" | sed 's/^pod /- /' || true
+		fi
 
-  } >"$api_doc_file"
+	} >"${api_doc_file}"
 
-  print_success "API documentation generated: $api_doc_file"
+	print_success "API documentation generated: ${api_doc_file}"
 }
 
 # Generate tutorial documentation
 generate_tutorial() {
-  local tutorial_name="$1"
-  local tutorial_file="$TUTORIALS_DIR/${tutorial_name}.md"
+	local tutorial_name="$1"
+	local tutorial_file="${TUTORIALS_DIR}/${tutorial_name}.md"
 
-  print_header "Generating tutorial: $tutorial_name"
+	print_header "Generating tutorial: ${tutorial_name}"
 
-  case "$tutorial_name" in
-  "getting_started")
-    cat >"$tutorial_file" <<'EOF'
+	case "${tutorial_name}" in
+	"getting_started")
+		cat >"${tutorial_file}" <<'EOF'
 # Getting Started with Quantum Workspace
 
 This tutorial will guide you through setting up and using the Quantum workspace automation system.
@@ -244,10 +244,10 @@ If you encounter issues:
 - Issues: Create an issue in the repository
 - Discussions: Use GitHub Discussions for questions
 EOF
-    ;;
+		;;
 
-  "ci_cd_setup")
-    cat >"$tutorial_file" <<'EOF'
+	"ci_cd_setup")
+		cat >"${tutorial_file}" <<'EOF'
 # CI/CD Setup Tutorial
 
 Learn how to set up continuous integration and deployment for Quantum workspace projects.
@@ -344,10 +344,10 @@ View test results in:
 - Review workflow logs in GitHub Actions
 - Create an issue for persistent problems
 EOF
-    ;;
+		;;
 
-  "developer_tools")
-    cat >"$tutorial_file" <<'EOF'
+	"developer_tools")
+		cat >"${tutorial_file}" <<'EOF'
 # Developer Tools Tutorial
 
 Master the development tools available in the Quantum workspace.
@@ -522,24 +522,24 @@ Automated security checks:
 - [Automation Documentation](./../README.md)
 - GitHub Issues for bugs and feature requests
 EOF
-    ;;
+		;;
 
-  *)
-    print_error "Unknown tutorial: $tutorial_name"
-    return 1
-    ;;
-  esac
+	*)
+		print_error "Unknown tutorial: ${tutorial_name}"
+		return 1
+		;;
+	esac
 
-  print_success "Tutorial generated: $tutorial_file"
+	print_success "Tutorial generated: ${tutorial_file}"
 }
 
 # Generate interactive documentation index
 generate_docs_index() {
-  local index_file="$DOCS_DIR/README.md"
+	local index_file="${DOCS_DIR}/README.md"
 
-  print_header "Generating documentation index"
+	print_header "Generating documentation index"
 
-  cat >"$index_file" <<'EOF'
+	cat >"${index_file}" <<'EOF'
 # Quantum Workspace Documentation
 
 Welcome to the comprehensive documentation for the Quantum workspace automation system.
@@ -564,16 +564,16 @@ This workspace provides a complete development environment with automated tools 
 ### Projects
 EOF
 
-  # Add project-specific documentation
-  for project_dir in "$CODE_DIR/Projects"/*; do
-    if [[ -d $project_dir ]]; then
-      local project_name
-      project_name=$(basename "$project_dir")
-      echo "- **$project_name** - [API Reference](./API/${project_name}_API.md)" >>"$index_file"
-    fi
-  done
+	# Add project-specific documentation
+	for project_dir in "${CODE_DIR}/Projects"/*; do
+		if [[ -d ${project_dir} ]]; then
+			local project_name
+			project_name=$(basename "${project_dir}")
+			echo "- **${project_name}** - [API Reference](./API/${project_name}_API.md)" >>"${index_file}"
+		fi
+	done
 
-  cat >>"$index_file" <<'EOF'
+	cat >>"${index_file}" <<'EOF'
 
 ## 🛠️ Automation System
 
@@ -704,19 +704,19 @@ The workspace includes comprehensive CI/CD pipelines with:
 *Quantum Workspace Automation System v2.0*
 EOF
 
-  print_success "Documentation index generated: $index_file"
+	print_success "Documentation index generated: ${index_file}"
 }
 
 # Generate example code documentation
 generate_examples() {
-  local examples_dir="$DOCS_DIR/Examples"
-  local examples_index="$examples_dir/README.md"
+	local examples_dir="${DOCS_DIR}/Examples"
+	local examples_index="${examples_dir}/README.md"
 
-  print_header "Generating code examples documentation"
+	print_header "Generating code examples documentation"
 
-  mkdir -p "$examples_dir"
+	mkdir -p "${examples_dir}"
 
-  cat >"$examples_index" <<'EOF'
+	cat >"${examples_index}" <<'EOF'
 # Code Examples
 
 This directory contains practical code examples for common development tasks in the Quantum workspace.
@@ -1074,64 +1074,64 @@ jobs:
 *Examples are automatically generated and may need adaptation for your specific use case.*
 EOF
 
-  print_success "Examples documentation generated: $examples_index"
+	print_success "Examples documentation generated: ${examples_index}"
 }
 
 # Main function
 main() {
-  case "${1:-help}" in
-  "api")
-    if [[ -n ${2-} ]]; then
-      setup_directories
-      generate_api_docs "$2"
-    else
-      echo "Usage: $0 api <project_name>"
-      exit 1
-    fi
-    ;;
-  "tutorial")
-    if [[ -n ${2-} ]]; then
-      setup_directories
-      generate_tutorial "$2"
-    else
-      echo "Available tutorials: getting_started, ci_cd_setup, developer_tools"
-      echo "Usage: $0 tutorial <tutorial_name>"
-      exit 1
-    fi
-    ;;
-  "examples")
-    setup_directories
-    generate_examples
-    ;;
-  "all")
-    setup_directories
-    generate_docs_index
+	case "${1:-help}" in
+	"api")
+		if [[ -n ${2-} ]]; then
+			setup_directories
+			generate_api_docs "$2"
+		else
+			echo "Usage: $0 api <project_name>"
+			exit 1
+		fi
+		;;
+	"tutorial")
+		if [[ -n ${2-} ]]; then
+			setup_directories
+			generate_tutorial "$2"
+		else
+			echo "Available tutorials: getting_started, ci_cd_setup, developer_tools"
+			echo "Usage: $0 tutorial <tutorial_name>"
+			exit 1
+		fi
+		;;
+	"examples")
+		setup_directories
+		generate_examples
+		;;
+	"all")
+		setup_directories
+		generate_docs_index
 
-    # Generate API docs for all projects
-    for project_dir in "$CODE_DIR/Projects"/*; do
-      if [[ -d $project_dir ]]; then
-        local project_name
-        project_name=$(basename "$project_dir")
-        generate_api_docs "$project_name" || true
-      fi
-    done
+		# Generate API docs for all projects
+		for project_dir in "${CODE_DIR}/Projects"/*; do
+			if [[ -d ${project_dir} ]]; then
+				local project_name
+				project_name=$(basename "${project_dir}")
+				generate_api_docs "${project_name}" || true
+			fi
+		done
 
-    # Generate tutorials
-    generate_tutorial "getting_started"
-    generate_tutorial "ci_cd_setup"
-    generate_tutorial "developer_tools"
+		# Generate tutorials
+		generate_tutorial "getting_started"
+		generate_tutorial "ci_cd_setup"
+		generate_tutorial "developer_tools"
 
-    # Generate examples
-    generate_examples
+		# Generate examples
+		generate_examples
 
-    print_success "Complete documentation suite generated"
-    ;;
-  "index")
-    setup_directories
-    generate_docs_index
-    ;;
-  "help" | "-h" | "--help")
-    cat <<'EOF'
+		print_success "Complete documentation suite generated"
+		;;
+	"index")
+		setup_directories
+		generate_docs_index
+		;;
+	"help" | "-h" | "--help")
+		cat <<'EOF'
 Enhanced Documentation Automation System
 
 Usage: docs_automation.sh <command> [options]
@@ -1161,13 +1161,13 @@ Output:
   - Examples/      - Code examples and templates
 
 EOF
-    ;;
-  *)
-    print_error "Unknown command: ${1:-}"
-    echo "Use '$0 help' for usage information"
-    exit 1
-    ;;
-  esac
+		;;
+	*)
+		print_error "Unknown command: ${1-}"
+		echo "Use '$0 help' for usage information"
+		exit 1
+		;;
+	esac
 }
 
 # Execute main function

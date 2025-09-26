@@ -1,13 +1,12 @@
 import importlib.util
-import json
 import os
-import subprocess
 import threading
 import time
 from pathlib import Path
 
 import pytest
-import requests
+
+requests = pytest.importorskip("requests")
 
 # Load mcp_server module from the Automation directory by file path so tests don't
 # depend on PYTHONPATH or the current working directory.

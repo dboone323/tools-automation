@@ -1,11 +1,11 @@
 import os
-import signal
 import subprocess
 import sys
-import tempfile
 import time
 
-import requests
+import pytest
+
+requests = pytest.importorskip("requests")
 
 MCP_PY = os.path.join(os.path.dirname(__file__), "..", "mcp_server.py")
 

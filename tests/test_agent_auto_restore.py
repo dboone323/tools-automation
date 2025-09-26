@@ -3,9 +3,10 @@ import signal
 import subprocess
 import sys
 import time
-from pathlib import Path
 
-import requests
+import pytest
+
+requests = pytest.importorskip("requests")
 
 MCP_PY = os.path.join(os.path.dirname(__file__), "..", "mcp_server.py")
 AGENT_PY = os.path.join(os.path.dirname(__file__), "..", "agents", "run_agent.py")
@@ -90,7 +91,6 @@ def test_agent_auto_restore(tmp_path):
             timeout=3,
         )
         assert r2.ok
-        tid = r2.json().get("task_id")
 
         # wait until a backup marker appears (written by agent)
         marker = f"{target}.bak_marker"

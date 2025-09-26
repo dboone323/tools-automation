@@ -131,12 +131,10 @@ gh auth login
    ```
 
 2. **Homebrew Path Issues**
-
    - Restart terminal after Homebrew installation
    - Or run: `eval "$(/opt/homebrew/bin/brew shellenv)"`
 
 3. **Ollama Model Download Failures**
-
    - Check internet connection
    - Models can be downloaded later with: `ollama pull <model-name>`
 

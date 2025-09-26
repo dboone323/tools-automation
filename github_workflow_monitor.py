@@ -8,12 +8,13 @@ Usage:
   export MCP_URL=http://127.0.0.1:5005
   python Automation/github_workflow_monitor.py
 """
-import json
 import os
-import threading
 import time
 
-import requests
+try:
+    import requests  # type: ignore[import-not-found]
+except ImportError:  # pragma: no cover - runtime dependency check
+    requests = None
 
 DEFAULT_POLL = int(os.getenv("MONITOR_POLL_INTERVAL", "60"))
 DEBOUNCE_SECONDS = int(os.getenv("MONITOR_DEBOUNCE_SECONDS", "120"))
@@ -35,16 +36,27 @@ HEADERS = (
 )
 
 
+def _require_requests():
+    if requests is None:
+        raise RuntimeError(
+            "requests library is required for GitHub workflow monitoring."
+            " Install it with 'pip install requests'."
+        )
+    return requests
+
+
 def fetch_recent_workflow_runs(status="failure"):
+    req = _require_requests()
     url = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/runs"
     params = {"per_page": 10}
-    r = requests.get(url, headers=HEADERS, params=params, timeout=15)
+    r = req.get(url, headers=HEADERS, params=params, timeout=15)
     r.raise_for_status()
     runs = r.json().get("workflow_runs", [])
     return [r for r in runs if r.get("conclusion") != "success"]
 
 
 def notify_mcp(run):
+    req = _require_requests()
     payload = {
         "workflow": run.get("name"),
         "conclusion": run.get("conclusion"),
@@ -54,7 +66,7 @@ def notify_mcp(run):
     }
     for attempt in range(MAX_RETRIES):
         try:
-            r = requests.post(f"{MCP_URL}/workflow_alert", json=payload, timeout=10)
+            r = req.post(f"{MCP_URL}/workflow_alert", json=payload, timeout=10)
             print("notified mcp:", r.status_code)
             return True
         except Exception as e:
@@ -64,6 +76,7 @@ def notify_mcp(run):
 
 
 def open_issue_for_run(run, title=None, body=None):
+    req = _require_requests()
     if not GITHUB_TOKEN:
         print("no GITHUB_TOKEN; cannot open issue")
         return None
@@ -72,7 +85,7 @@ def open_issue_for_run(run, title=None, body=None):
         "title": title or f"CI failure: {run.get('name')} on {run.get('head_branch')}",
         "body": body or f"Workflow failed: {run.get('html_url')}",
     }
-    r = requests.post(url, headers=HEADERS, json=payload, timeout=10)
+    r = req.post(url, headers=HEADERS, json=payload, timeout=10)
     if r.status_code in (200, 201):
         return r.json().get("html_url")
     print("open_issue failed:", r.status_code, r.text)
@@ -80,6 +93,7 @@ def open_issue_for_run(run, title=None, body=None):
 
 
 def rerun_workflow(run):
+    req = _require_requests()
     # Use the Actions API to re-run a workflow run
     if not GITHUB_TOKEN:
         print("no GITHUB_TOKEN; cannot rerun")
@@ -88,7 +102,7 @@ def rerun_workflow(run):
     if not run_id:
         return False
     url = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/runs/{run_id}/rerun"
-    r = requests.post(url, headers=HEADERS, timeout=10)
+    r = req.post(url, headers=HEADERS, timeout=10)
     if r.status_code in (201, 202):
         print("rerun requested")
         return True
@@ -97,6 +111,7 @@ def rerun_workflow(run):
 
 
 def trigger_mcp_debug_run(run):
+    req = _require_requests()
     # Ask MCP to enqueue a debug task (e.g., run 'analyze' or 'ci-check')
     payload = {
         "workflow": run.get("name"),
@@ -107,7 +122,7 @@ def trigger_mcp_debug_run(run):
         "action": "debug-run",
     }
     try:
-        r = requests.post(f"{MCP_URL}/workflow_alert", json=payload, timeout=10)
+        r = req.post(f"{MCP_URL}/workflow_alert", json=payload, timeout=10)
         print("triggered mcp debug run:", r.status_code)
         return True
     except Exception as e:
@@ -115,7 +130,7 @@ def trigger_mcp_debug_run(run):
         return False
 
 
-def main(poll_interval=60):
+def main(poll_interval=DEFAULT_POLL):
     seen = {}
     while True:
         try:
@@ -129,7 +144,9 @@ def main(poll_interval=60):
                 seen[rid] = now
                 print("found failed run:", run.get("name"), run.get("html_url"))
                 # notify MCP (with retries)
-                ok = notify_mcp(run)
+                notified = notify_mcp(run)
+                if not notified:
+                    print("failed to notify MCP after retries")
                 # perform action templates when configured via env or payload
                 action = run.get("action") or os.getenv("MONITOR_DEFAULT_ACTION")
                 if action == "open-issue":
@@ -144,5 +161,5 @@ def main(poll_interval=60):
 
 
 if __name__ == "__main__":
-    interval = int(os.getenv("MONITOR_POLL_INTERVAL", "60"))
+    interval = int(os.getenv("MONITOR_POLL_INTERVAL", str(DEFAULT_POLL)))
     main(interval)
