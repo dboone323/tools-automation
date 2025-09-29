@@ -27,10 +27,10 @@ echo "Path fixes completed. Creating missing project config files..."
 
 # Create missing project config files
 for project in CodingReviewer MomentumFinance HabitQuest AvoidObstaclesGame PlannerApp; do
-	PROJECT_DIR="${WORKSPACE_DIR}/Projects/${project}"
-	if [[ -d ${PROJECT_DIR} ]]; then
-		mkdir -p "${PROJECT_DIR}/Tools/Automation"
-		cat >"${PROJECT_DIR}/Tools/Automation/project_config.sh" <<EOF
+  PROJECT_DIR="${WORKSPACE_DIR}/Projects/${project}"
+  if [[ -d ${PROJECT_DIR} ]]; then
+    mkdir -p "${PROJECT_DIR}/Tools/Automation"
+    cat >"${PROJECT_DIR}/Tools/Automation/project_config.sh" <<EOF
 #!/bin/bash
 # Project configuration for ${project}
 
@@ -40,9 +40,9 @@ export ENABLE_AUTO_TEST=true
 export PROJECT_NAME="${project}"
 export PROJECT_DIR="${PROJECT_DIR}"
 EOF
-		chmod +x "${PROJECT_DIR}/Tools/Automation/project_config.sh"
-		echo "Created config for ${project}"
-	fi
+    chmod +x "${PROJECT_DIR}/Tools/Automation/project_config.sh"
+    echo "Created config for ${project}"
+  fi
 done
 
 echo "All fixes applied successfully!"

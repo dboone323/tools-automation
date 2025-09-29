@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Workspace Optimization Script
 # Comprehensive cleanup and performance optimization for Quantum-workspace
 
-set -e
+set -euo pipefail
 
 echo "🚀 Quantum-workspace Optimization"
 echo "=================================="
@@ -16,19 +16,19 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 print_status() {
-	echo -e "${BLUE}[OPTIMIZE]${NC} $1"
+  printf '%b\n' "${BLUE}[OPTIMIZE]${NC} $1"
 }
 
 print_success() {
-	echo -e "${GREEN}[SUCCESS]${NC} $1"
+  printf '%b\n' "${GREEN}[SUCCESS]${NC} $1"
 }
 
 print_warning() {
-	echo -e "${YELLOW}[WARNING]${NC} $1"
+  printf '%b\n' "${YELLOW}[WARNING]${NC} $1"
 }
 
 print_error() {
-	echo -e "${RED}[ERROR]${NC} $1"
+  printf '%b\n' "${RED}[ERROR]${NC} $1"
 }
 
 # Configuration
@@ -38,92 +38,103 @@ OPTIMIZATION_LOG="${WORKSPACE_DIR}/optimization_report.md"
 
 # Create backup directory
 create_backup() {
-	print_status "Creating backup directory..."
-	mkdir -p "${BACKUP_DIR}"
-	print_success "Backup directory created: ${BACKUP_DIR}"
+  print_status "Creating backup directory..."
+  mkdir -p "${BACKUP_DIR}"
+  print_success "Backup directory created: ${BACKUP_DIR}"
 }
 
 # Analyze current workspace
 analyze_workspace() {
-	print_status "Analyzing workspace structure..."
+  print_status "Analyzing workspace structure..."
 
-	echo "# Workspace Optimization Report" >"${OPTIMIZATION_LOG}"
-	echo "Generated: $(date)" >>"${OPTIMIZATION_LOG}"
-	echo "" >>"${OPTIMIZATION_LOG}"
+  local swift_count
+  swift_count=$(find "${WORKSPACE_DIR}" -name "*.swift" -type f | wc -l)
+  local xcode_count
+  xcode_count=$(find "${WORKSPACE_DIR}" -name "*.xcodeproj" -type d | wc -l)
+  local package_count
+  package_count=$(find "${WORKSPACE_DIR}" -name "Package.swift" -type f | wc -l)
+  local total_files
+  total_files=$(find "${WORKSPACE_DIR}" -type f | wc -l)
+  local total_dirs
+  total_dirs=$(find "${WORKSPACE_DIR}" -type d | wc -l)
+  local disk_usage
+  disk_usage=$(du -sh "${WORKSPACE_DIR}" | cut -f1)
 
-	# Count files by type
-	echo "## File Statistics" >>"${OPTIMIZATION_LOG}"
-	echo "- Swift files: $(find "${WORKSPACE_DIR}" -name "*.swift" -type f | wc -l)" >>"${OPTIMIZATION_LOG}"
-	echo "- Xcode projects: $(find "${WORKSPACE_DIR}" -name "*.xcodeproj" -type d | wc -l)" >>"${OPTIMIZATION_LOG}"
-	echo "- Package.swift files: $(find "${WORKSPACE_DIR}" -name "Package.swift" -type f | wc -l)" >>"${OPTIMIZATION_LOG}"
-	echo "- Total files: $(find "${WORKSPACE_DIR}" -type f | wc -l)" >>"${OPTIMIZATION_LOG}"
-	echo "- Total directories: $(find "${WORKSPACE_DIR}" -type d | wc -l)" >>"${OPTIMIZATION_LOG}"
-	echo "" >>"${OPTIMIZATION_LOG}"
-
-	# Calculate disk usage
-	DISK_USAGE=$(du -sh "${WORKSPACE_DIR}" | cut -f1)
-	echo "## Disk Usage" >>"${OPTIMIZATION_LOG}"
-	echo "- Current workspace size: ${DISK_USAGE}" >>"${OPTIMIZATION_LOG}"
-	echo "" >>"${OPTIMIZATION_LOG}"
+  {
+    printf '# Workspace Optimization Report\n'
+    printf 'Generated: %s\n\n' "$(date)"
+    printf '## File Statistics\n'
+    printf '- Swift files: %s\n' "${swift_count}"
+    printf '- Xcode projects: %s\n' "${xcode_count}"
+    printf '- Package.swift files: %s\n' "${package_count}"
+    printf '- Total files: %s\n' "${total_files}"
+    printf '- Total directories: %s\n\n' "${total_dirs}"
+    printf '## Disk Usage\n'
+    printf '- Current workspace size: %s\n\n' "${disk_usage}"
+  } >"${OPTIMIZATION_LOG}"
 }
 
 # Clean up duplicate and unnecessary files
 cleanup_duplicates() {
-	print_status "Cleaning up duplicate and unnecessary files..."
+  print_status "Cleaning up duplicate and unnecessary files..."
 
-	echo "## Cleanup Actions" >>"${OPTIMIZATION_LOG}"
+  echo "## Cleanup Actions" >>"${OPTIMIZATION_LOG}"
 
-	# Remove old backup directories
-	local backup_count=$(find "${WORKSPACE_DIR}" -name "*backup*" -type d | wc -l)
-	if [[ ${backup_count} -gt 5 ]]; then
-		print_status "Removing old backup directories..."
-		find "${WORKSPACE_DIR}" -name "*backup*" -type d -mtime +30 -exec rm -rf {} \; 2>/dev/null || true
-		echo "- Removed old backup directories (older than 30 days)" >>"${OPTIMIZATION_LOG}"
-	fi
+  # Remove old backup directories
+  local backup_count
+  backup_count=$(find "${WORKSPACE_DIR}" -name "*backup*" -type d | wc -l)
+  if [[ ${backup_count} -gt 5 ]]; then
+    print_status "Removing old backup directories..."
+    find "${WORKSPACE_DIR}" -name "*backup*" -type d -mtime +30 -exec rm -rf {} \; 2>/dev/null || true
+    echo "- Removed old backup directories (older than 30 days)" >>"${OPTIMIZATION_LOG}"
+  fi
 
-	# Remove duplicate files in Tools directory
-	if [[ -d "${WORKSPACE_DIR}/Tools/Tools" ]]; then
-		print_status "Removing duplicate Tools directories..."
-		rm -rf "${WORKSPACE_DIR}/Tools/Tools"
-		echo "- Removed duplicate Tools/Tools directory" >>"${OPTIMIZATION_LOG}"
-	fi
+  # Remove duplicate files in Tools directory
+  if [[ -d "${WORKSPACE_DIR}/Tools/Tools" ]]; then
+    print_status "Removing duplicate Tools directories..."
+    rm -rf "${WORKSPACE_DIR}/Tools/Tools"
+    echo "- Removed duplicate Tools/Tools directory" >>"${OPTIMIZATION_LOG}"
+  fi
 
-	# Remove old import snapshots
-	local import_count=$(find "${WORKSPACE_DIR}" -name "*snapshot*" -type d | wc -l)
-	if [[ ${import_count} -gt 2 ]]; then
-		print_status "Removing old import snapshots..."
-		find "${WORKSPACE_DIR}" -name "*snapshot*" -type d -mtime +7 -exec rm -rf {} \; 2>/dev/null || true
-		echo "- Removed old import snapshots (older than 7 days)" >>"${OPTIMIZATION_LOG}"
-	fi
+  # Remove old import snapshots
+  local import_count
+  import_count=$(find "${WORKSPACE_DIR}" -name "*snapshot*" -type d | wc -l)
+  if [[ ${import_count} -gt 2 ]]; then
+    print_status "Removing old import snapshots..."
+    find "${WORKSPACE_DIR}" -name "*snapshot*" -type d -mtime +7 -exec rm -rf {} \; 2>/dev/null || true
+    echo "- Removed old import snapshots (older than 7 days)" >>"${OPTIMIZATION_LOG}"
+  fi
 
-	# Clean up .DS_Store files
-	local ds_store_count=$(find "${WORKSPACE_DIR}" -name ".DS_Store" -type f | wc -l)
-	if [[ ${ds_store_count} -gt 0 ]]; then
-		print_status "Removing .DS_Store files..."
-		find "${WORKSPACE_DIR}" -name ".DS_Store" -type f -delete
-		echo "- Removed ${ds_store_count} .DS_Store files" >>"${OPTIMIZATION_LOG}"
-	fi
+  # Clean up .DS_Store files
+  local ds_store_count
+  ds_store_count=$(find "${WORKSPACE_DIR}" -name ".DS_Store" -type f | wc -l)
+  if [[ ${ds_store_count} -gt 0 ]]; then
+    print_status "Removing .DS_Store files..."
+    find "${WORKSPACE_DIR}" -name ".DS_Store" -type f -delete
+    echo "- Removed ${ds_store_count} .DS_Store files" >>"${OPTIMIZATION_LOG}"
+  fi
 
-	# Clean up temporary files
-	local temp_count=$(find "${WORKSPACE_DIR}" -name "*.tmp" -o -name "*.temp" -o -name "*~" -type f | wc -l)
-	if [[ ${temp_count} -gt 0 ]]; then
-		print_status "Removing temporary files..."
-		find "${WORKSPACE_DIR}" -name "*.tmp" -o -name "*.temp" -o -name "*~" -type f -delete
-		echo "- Removed ${temp_count} temporary files" >>"${OPTIMIZATION_LOG}"
-	fi
+  # Clean up temporary files
+  local temp_count
+  temp_count=$(find "${WORKSPACE_DIR}" -type f \( -name "*.tmp" -o -name "*.temp" -o -name "*~" \) | wc -l)
+  if [[ ${temp_count} -gt 0 ]]; then
+    print_status "Removing temporary files..."
+    find "${WORKSPACE_DIR}" -type f \( -name "*.tmp" -o -name "*.temp" -o -name "*~" \) -delete
+    echo "- Removed ${temp_count} temporary files" >>"${OPTIMIZATION_LOG}"
+  fi
 
-	print_success "Cleanup completed"
+  print_success "Cleanup completed"
 }
 
 # Optimize build performance
 optimize_build_performance() {
-	print_status "Optimizing build performance..."
+  print_status "Optimizing build performance..."
 
-	echo "## Build Optimizations" >>"${OPTIMIZATION_LOG}"
+  echo "## Build Optimizations" >>"${OPTIMIZATION_LOG}"
 
-	# Create optimized Xcode workspace settings
-	local workspace_settings="${WORKSPACE_DIR}/workspace_settings.json"
-	cat >"${workspace_settings}" <<'EOF'
+  # Create optimized Xcode workspace settings
+  local workspace_settings="${WORKSPACE_DIR}/workspace_settings.json"
+  cat >"${workspace_settings}" <<'EOF'
 {
   "build_system": "new",
   "parallelize_builds": true,
@@ -136,12 +147,12 @@ optimize_build_performance() {
 }
 EOF
 
-	echo "- Created optimized workspace settings" >>"${OPTIMIZATION_LOG}"
+  echo "- Created optimized workspace settings" >>"${OPTIMIZATION_LOG}"
 
-	# Create .swiftlint.yml for consistent code style
-	local swiftlint_config="${WORKSPACE_DIR}/.swiftlint.yml"
-	if [[ ! -f ${swiftlint_config} ]]; then
-		cat >"${swiftlint_config}" <<'EOF'
+  # Create .swiftlint.yml for consistent code style
+  local swiftlint_config="${WORKSPACE_DIR}/.swiftlint.yml"
+  if [[ ! -f ${swiftlint_config} ]]; then
+    cat >"${swiftlint_config}" <<'EOF'
 disabled_rules:
   - trailing_whitespace
   - line_length
@@ -156,25 +167,25 @@ excluded:
   - Tools/Imported
   - *.generated.swift
 EOF
-		echo "- Created SwiftLint configuration" >>"${OPTIMIZATION_LOG}"
-	fi
+    echo "- Created SwiftLint configuration" >>"${OPTIMIZATION_LOG}"
+  fi
 
-	print_success "Build performance optimized"
+  print_success "Build performance optimized"
 }
 
 # Optimize AI services
 optimize_ai_services() {
-	print_status "Optimizing AI services..."
+  print_status "Optimizing AI services..."
 
-	echo "## AI Optimizations" >>"${OPTIMIZATION_LOG}"
+  echo "## AI Optimizations" >>"${OPTIMIZATION_LOG}"
 
-	# Create AI cache directory
-	local ai_cache_dir="${WORKSPACE_DIR}/Tools/AI/cache"
-	mkdir -p "${ai_cache_dir}"
+  # Create AI cache directory
+  local ai_cache_dir="${WORKSPACE_DIR}/Tools/AI/cache"
+  mkdir -p "${ai_cache_dir}"
 
-	# Create AI optimization config
-	local ai_config="${WORKSPACE_DIR}/Tools/AI/optimization_config.json"
-	cat >"${ai_config}" <<'EOF'
+  # Create AI optimization config
+  local ai_config="${WORKSPACE_DIR}/Tools/AI/optimization_config.json"
+  cat >"${ai_config}" <<'EOF'
 {
   "ollama": {
     "cache_enabled": true,
@@ -196,157 +207,181 @@ optimize_ai_services() {
 }
 EOF
 
-	echo "- Created AI optimization configuration" >>"${OPTIMIZATION_LOG}"
-	echo "- Set up AI response caching" >>"${OPTIMIZATION_LOG}"
+  echo "- Created AI optimization configuration" >>"${OPTIMIZATION_LOG}"
+  echo "- Set up AI response caching" >>"${OPTIMIZATION_LOG}"
 
-	print_success "AI services optimized"
+  print_success "AI services optimized"
 }
 
 # Create performance monitoring
 setup_performance_monitoring() {
-	print_status "Setting up performance monitoring..."
+  print_status "Setting up performance monitoring..."
 
-	echo "## Performance Monitoring" >>"${OPTIMIZATION_LOG}"
+  echo "## Performance Monitoring" >>"${OPTIMIZATION_LOG}"
 
-	# Create performance monitoring script
-	local perf_script="${WORKSPACE_DIR}/Tools/Automation/performance_monitor.sh"
-	cat >"${perf_script}" <<'EOF'
-#!/bin/bash
+  # Create performance monitoring script
+  local automation_dir="${WORKSPACE_DIR}/Tools/Automation"
+  local logs_dir="${automation_dir}/logs"
+  mkdir -p "${logs_dir}"
+  local perf_script="${automation_dir}/performance_monitor.sh"
+  cat >"${perf_script}" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Performance Monitoring Script
-MONITOR_LOG="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/logs/performance.log"
-ALERT_THRESHOLD=300
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOG_DIR="${SCRIPT_DIR}/logs"
+MONITOR_LOG="${LOG_DIR}/performance.log"
+: "${ALERT_THRESHOLD:=300}"
 
-echo "📊 Performance Report - $(date)"
-echo "================================"
+mkdir -p "$LOG_DIR"
 
-# Check recent performance
+printf '📊 Performance Report - %s\n' "$(date)"
+printf '================================\n'
+
 if [[ -f "$MONITOR_LOG" ]]; then
-    echo "Recent operations:"
-    tail -10 "$MONITOR_LOG" | while IFS='|' read -r timestamp operation duration epoch; do
-        if [[ $duration -gt $ALERT_THRESHOLD ]]; then
-            echo "⚠️  SLOW: $operation took ${duration}s"
-        else
-            echo "✅ $operation: ${duration}s"
-        fi
-    done
+  printf 'Recent operations:\n'
+  tail -10 "$MONITOR_LOG" | while IFS='|' read -r timestamp operation duration epoch; do
+    if [[ -z "$timestamp" ]]; then
+      continue
+    fi
+    if [[ "${duration:-0}" -gt "$ALERT_THRESHOLD" ]]; then
+      printf '⚠️  SLOW: %s took %ss\n' "$operation" "$duration"
+    else
+      printf '✅ %s: %ss\n' "$operation" "$duration"
+    fi
+  done
 else
-    echo "No performance data available yet"
+  printf 'No performance data available yet\n'
 fi
 
-echo ""
-echo "💡 Optimization Tips:"
-echo "   - Use 'make clean' before major builds"
-echo "   - Enable Xcode's new build system"
-echo "   - Use Swift Package Manager for dependencies"
-echo "   - Enable build caching in Xcode"
+printf '\n'
+printf '💡 Optimization Tips:\n'
+printf "   - Use 'make clean' before major builds\n"
+printf "   - Enable Xcode's new build system\n"
+printf "   - Use Swift Package Manager for dependencies\n"
+printf "   - Enable build caching in Xcode\n"
 EOF
 
-	chmod +x "${perf_script}"
-	echo "- Created performance monitoring script" >>"${OPTIMIZATION_LOG}"
+  chmod +x "${perf_script}"
+  echo "- Created performance monitoring script" >>"${OPTIMIZATION_LOG}"
 
-	print_success "Performance monitoring set up"
+  print_success "Performance monitoring set up"
 }
 
 # Optimize automation scripts
 optimize_automation() {
-	print_status "Optimizing automation scripts..."
+  print_status "Optimizing automation scripts..."
 
-	echo "## Automation Optimizations" >>"${OPTIMIZATION_LOG}"
+  echo "## Automation Optimizations" >>"${OPTIMIZATION_LOG}"
 
-	# Create optimized automation config
-	local auto_config="${WORKSPACE_DIR}/Tools/Automation/optimization_config.sh"
-	cat >"${auto_config}" <<'EOF'
-#!/bin/bash
+  # Create optimized automation config
+  local auto_config="${WORKSPACE_DIR}/Tools/Automation/optimization_config.sh"
+  cat >"${auto_config}" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Automation Optimization Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CODE_DIR="${CODE_DIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
 
-# Parallel processing settings
-export MAX_PARALLEL_JOBS=4
-export BUILD_PARALLEL=8
+export CODE_DIR
+export MAX_PARALLEL_JOBS="${MAX_PARALLEL_JOBS:-4}"
+export BUILD_PARALLEL="${BUILD_PARALLEL:-8}"
 
-# Cache settings
-export USE_BUILD_CACHE=true
-export CACHE_DIR="${CODE_DIR}/Tools/Automation/cache"
+export USE_BUILD_CACHE="${USE_BUILD_CACHE:-true}"
+export CACHE_DIR="${CACHE_DIR:-${CODE_DIR}/Tools/Automation/cache}"
 
-# Performance monitoring
-export ENABLE_PERFORMANCE_LOGGING=true
-export PERFORMANCE_LOG="${CODE_DIR}/Tools/Automation/logs/performance.log"
+export ENABLE_PERFORMANCE_LOGGING="${ENABLE_PERFORMANCE_LOGGING:-true}"
+export PERFORMANCE_LOG="${PERFORMANCE_LOG:-${CODE_DIR}/Tools/Automation/logs/performance.log}"
 
-# AI optimization
-export AI_CACHE_ENABLED=true
-export AI_CACHE_DIR="${CODE_DIR}/Tools/AI/cache"
+export AI_CACHE_ENABLED="${AI_CACHE_ENABLED:-true}"
+export AI_CACHE_DIR="${AI_CACHE_DIR:-${CODE_DIR}/Tools/AI/cache}"
 
-# Swift optimization
-export SWIFT_OPTIMIZATION_LEVEL="-O"
-export SWIFT_ENABLE_INDEXING=true
+export SWIFT_OPTIMIZATION_LEVEL="${SWIFT_OPTIMIZATION_LEVEL:--O}"
+export SWIFT_ENABLE_INDEXING="${SWIFT_ENABLE_INDEXING:-true}"
+
+mkdir -p "${CACHE_DIR}"
+mkdir -p "$(dirname "${PERFORMANCE_LOG}")"
+mkdir -p "${AI_CACHE_DIR}"
 EOF
 
-	echo "- Created automation optimization config" >>"${OPTIMIZATION_LOG}"
+  echo "- Created automation optimization config" >>"${OPTIMIZATION_LOG}"
 
-	print_success "Automation scripts optimized"
+  print_success "Automation scripts optimized"
 }
 
 # Create optimization summary
 create_summary() {
-	print_status "Creating optimization summary..."
+  print_status "Creating optimization summary..."
 
-	echo "" >>"${OPTIMIZATION_LOG}"
-	echo "## Optimization Summary" >>"${OPTIMIZATION_LOG}"
-	echo "" >>"${OPTIMIZATION_LOG}"
+  local new_disk_usage
+  if ! new_disk_usage=$(du -sh "${WORKSPACE_DIR}" 2>/dev/null | cut -f1); then
+    new_disk_usage="Unavailable"
+  fi
 
-	# Calculate new disk usage
-	NEW_DISK_USAGE=$(du -sh "${WORKSPACE_DIR}" | cut -f1)
-	echo "- Optimized workspace size: ${NEW_DISK_USAGE}" >>"${OPTIMIZATION_LOG}"
+  local performance_output
+  if performance_output=$("${WORKSPACE_DIR}/Tools/Automation/performance_monitor.sh" 2>&1); then
+    :
+  else
+    performance_output="Performance monitor not available"
+  fi
 
-	echo "- ✅ Duplicate files cleaned up" >>"${OPTIMIZATION_LOG}"
-	echo "- ✅ Build performance optimized" >>"${OPTIMIZATION_LOG}"
-	echo "- ✅ AI services optimized" >>"${OPTIMIZATION_LOG}"
-	echo "- ✅ Performance monitoring enabled" >>"${OPTIMIZATION_LOG}"
-	echo "- ✅ Automation scripts enhanced" >>"${OPTIMIZATION_LOG}"
-	echo "" >>"${OPTIMIZATION_LOG}"
+  local build_command="make clean && make build"
 
-	echo "## Next Steps" >>"${OPTIMIZATION_LOG}"
-	echo "1. Review the optimization report: ${OPTIMIZATION_LOG}" >>"${OPTIMIZATION_LOG}"
-	echo "2. Run performance monitoring: ./Tools/Automation/performance_monitor.sh" >>"${OPTIMIZATION_LOG}"
-	echo "3. Test build performance improvements" >>"${OPTIMIZATION_LOG}"
-	echo "4. Monitor AI service usage and caching" >>"${OPTIMIZATION_LOG}"
-	echo "" >>"${OPTIMIZATION_LOG}"
+  local ai_status
+  if ai_status=$(curl --fail --silent http://localhost:11434/api/tags 2>/dev/null); then
+    :
+  else
+    ai_status="AI service not reachable"
+  fi
 
-	echo "## Quick Commands" >>"${OPTIMIZATION_LOG}"
-	echo "- Check performance: $(./Tools/Automation/performance_monitor.sh)" >>"${OPTIMIZATION_LOG}"
-	echo "- Clean build: $(make clean && make build)" >>"${OPTIMIZATION_LOG}"
-	echo "- AI status: $(curl http://localhost:11434/api/tags)" >>"${OPTIMIZATION_LOG}"
+  {
+    printf '\n## Optimization Summary\n\n'
+    printf '- Optimized workspace size: %s\n' "${new_disk_usage}"
+    printf '- ✅ Duplicate files cleaned up\n'
+    printf '- ✅ Build performance optimized\n'
+    printf '- ✅ AI services optimized\n'
+    printf '- ✅ Performance monitoring enabled\n'
+    printf '- ✅ Automation scripts enhanced\n\n'
+    printf '## Next Steps\n'
+    printf '1. Review the optimization report: %s\n' "${OPTIMIZATION_LOG}"
+    printf '2. Run performance monitoring: ./Tools/Automation/performance_monitor.sh\n'
+    printf '3. Test build performance improvements\n'
+    printf '4. Monitor AI service usage and caching\n\n'
+    printf '## Quick Commands\n'
+    printf '- Check performance: %s\n' "${performance_output}"
+    printf '- Suggested build command: %s\n' "${build_command}"
+    printf '- AI status: %s\n' "${ai_status}"
+  } >>"${OPTIMIZATION_LOG}"
 
-	print_success "Optimization summary created: ${OPTIMIZATION_LOG}"
+  print_success "Optimization summary created: ${OPTIMIZATION_LOG}"
 }
 
 # Main optimization function
 main() {
-	echo ""
+  echo ""
 
-	create_backup
-	analyze_workspace
-	cleanup_duplicates
-	optimize_build_performance
-	optimize_ai_services
-	setup_performance_monitoring
-	optimize_automation
-	create_summary
+  create_backup
+  analyze_workspace
+  cleanup_duplicates
+  optimize_build_performance
+  optimize_ai_services
+  setup_performance_monitoring
+  optimize_automation
+  create_summary
 
-	echo ""
-	print_success "🎉 Workspace optimization completed!"
-	echo ""
-	echo "📊 Report: ${OPTIMIZATION_LOG}"
-	echo "💾 Backup: ${BACKUP_DIR}"
-	echo ""
-	echo "🚀 Your workspace is now optimized for:"
-	echo "   • Faster builds and compilation"
-	echo "   • Reduced disk usage"
-	echo "   • Better AI performance"
-	echo "   • Enhanced automation"
-	echo "   • Performance monitoring"
-	echo ""
+  echo ""
+  print_success "🎉 Workspace optimization completed!"
+  echo ""
+  echo "📊 Report: ${OPTIMIZATION_LOG}"
+  echo "💾 Backup: ${BACKUP_DIR}"
+  echo ""
+  echo "🚀 Your workspace is now optimized for:"
+  echo "   • Faster builds and compilation"
+  echo "   • Reduced disk usage"
+  echo "   • Better AI performance"
+  echo "   • Enhanced automation"
+  echo "   • Performance monitoring"
+  echo ""
 }
 
 # Run main function

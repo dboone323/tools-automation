@@ -32,33 +32,33 @@ log_quantum() { echo -e "${WHITE}⚛️  $1${NC}"; }
 # Resolve project list (respect QUANTUM_PROJECTS override if provided)
 PROJECTS=()
 load_projects() {
-	if [[ -n ${QUANTUM_PROJECTS-} ]]; then
-		IFS=',' read -r -a PROJECTS <<<"${QUANTUM_PROJECTS}"
-		for idx in "${!PROJECTS[@]}"; do
-			PROJECTS[idx]="$(echo "${PROJECTS[idx]}" | xargs)"
-		done
-	else
-		if [[ -d ${PROJECTS_DIR} ]]; then
-			mapfile -t PROJECTS < <(find "${PROJECTS_DIR}" -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort)
-		fi
-	fi
+  if [[ -n ${QUANTUM_PROJECTS-} ]]; then
+    IFS=',' read -r -a PROJECTS <<<"${QUANTUM_PROJECTS}"
+    for idx in "${!PROJECTS[@]}"; do
+      PROJECTS[idx]="$(echo "${PROJECTS[idx]}" | xargs)"
+    done
+  else
+    if [[ -d ${PROJECTS_DIR} ]]; then
+      mapfile -t PROJECTS < <(find "${PROJECTS_DIR}" -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort)
+    fi
+  fi
 
-	if [[ ${#PROJECTS[@]} -eq 0 ]]; then
-		log_warn "No projects detected under ${PROJECTS_DIR}."
-	fi
+  if [[ ${#PROJECTS[@]} -eq 0 ]]; then
+    log_warn "No projects detected under ${PROJECTS_DIR}."
+  fi
 }
 
 ensure_directories() {
-	log_status "Preparing quantum enhancement directories"
-	mkdir -p "${ENHANCEMENT_DIR}" "${ENHANCEMENT_DIR}/.quantum_models" "${BACKUP_ROOT}"
-	log_success "Directory structure ready"
+  log_status "Preparing quantum enhancement directories"
+  mkdir -p "${ENHANCEMENT_DIR}" "${ENHANCEMENT_DIR}/.quantum_models" "${BACKUP_ROOT}"
+  log_success "Directory structure ready"
 }
 
 write_wrapper_script() {
-	local target_path="$1"
-	local canonical_path="$2"
-	mkdir -p "$(dirname "${target_path}")"
-	cat >"${target_path}" <<EOF
+  local target_path="$1"
+  local canonical_path="$2"
+  mkdir -p "$(dirname "${target_path}")"
+  cat >"${target_path}" <<EOF
 #!/bin/bash
 
 set -euo pipefail
@@ -81,69 +81,69 @@ find_repo_root() {
 REPO_ROOT="\$(find_repo_root)"
 exec "\${REPO_ROOT}/${canonical_path}" "\$@"
 EOF
-	chmod +x "${target_path}"
+  chmod +x "${target_path}"
 }
 
 propagate_quantum_automation() {
-	log_header "Ensuring quantum automation wrappers"
+  log_header "Ensuring quantum automation wrappers"
 
-	declare -A WRAPPERS=(
-		["quantum_enhancer.sh"]="Tools/Automation/quantum_enhancer.sh"
-		["master_automation.sh"]="Tools/Automation/master_automation.sh"
-		["unified_dashboard.sh"]="Tools/Automation/unified_dashboard.sh"
-		["workflow_dashboard.sh"]="Tools/Automation/workflow_dashboard.sh"
-		["universal_workflow_manager.sh"]="Tools/Automation/universal_workflow_manager.sh"
-		["ai_enhancement_system.sh"]="Tools/Automation/ai_enhancement_system.sh"
-		["ai_enhancement_simple.sh"]="Tools/Automation/ai_enhancement_simple.sh"
-		["intelligent_autofix.sh"]="Tools/Automation/intelligent_autofix.sh"
-		["simple_autofix.sh"]="Tools/Automation/simple_autofix.sh"
-		["process_todos.sh"]="Tools/Automation/process_todos.sh"
-		["mcp_workflow.sh"]="Tools/Automation/mcp_workflow.sh"
-		["git_workflow.sh"]="Tools/Automation/git_workflow.sh"
-		["completion_summary.sh"]="Tools/Automation/completion_summary.sh"
-		["automate.sh"]="Tools/Automation/automate.sh"
-		["ai_learning_validator.sh"]="Shared/Tools/Automation/ai_learning_validator.sh"
-		["assign_agent.sh"]="Tools/Automation/assign_agent.sh"
-		["create_issue.sh"]="Tools/Automation/create_issue.sh"
-	)
+  declare -A WRAPPERS=(
+    ["quantum_enhancer.sh"]="Tools/Automation/quantum_enhancer.sh"
+    ["master_automation.sh"]="Tools/Automation/master_automation.sh"
+    ["unified_dashboard.sh"]="Tools/Automation/unified_dashboard.sh"
+    ["workflow_dashboard.sh"]="Tools/Automation/workflow_dashboard.sh"
+    ["universal_workflow_manager.sh"]="Tools/Automation/universal_workflow_manager.sh"
+    ["ai_enhancement_system.sh"]="Tools/Automation/ai_enhancement_system.sh"
+    ["ai_enhancement_simple.sh"]="Tools/Automation/ai_enhancement_simple.sh"
+    ["intelligent_autofix.sh"]="Tools/Automation/intelligent_autofix.sh"
+    ["simple_autofix.sh"]="Tools/Automation/simple_autofix.sh"
+    ["process_todos.sh"]="Tools/Automation/process_todos.sh"
+    ["mcp_workflow.sh"]="Tools/Automation/mcp_workflow.sh"
+    ["git_workflow.sh"]="Tools/Automation/git_workflow.sh"
+    ["completion_summary.sh"]="Tools/Automation/completion_summary.sh"
+    ["automate.sh"]="Tools/Automation/automate.sh"
+    ["ai_learning_validator.sh"]="Shared/Tools/Automation/ai_learning_validator.sh"
+    ["assign_agent.sh"]="Tools/Automation/assign_agent.sh"
+    ["create_issue.sh"]="Tools/Automation/create_issue.sh"
+  )
 
-	for project in "${PROJECTS[@]}"; do
-		local project_root="${PROJECTS_DIR}/${project}"
-		if [[ ! -d ${project_root} ]]; then
-			log_warn "Skipping ${project} (directory missing)"
-			continue
-		fi
+  for project in "${PROJECTS[@]}"; do
+    local project_root="${PROJECTS_DIR}/${project}"
+    if [[ ! -d ${project_root} ]]; then
+      log_warn "Skipping ${project} (directory missing)"
+      continue
+    fi
 
-		local automation_dir="${project_root}/Tools/Automation"
-		mkdir -p "${automation_dir}"
+    local automation_dir="${project_root}/Tools/Automation"
+    mkdir -p "${automation_dir}"
 
-		for script in "${!WRAPPERS[@]}"; do
-			local canonical="${WRAPPERS[${script}]}"
-			local target="${automation_dir}/${script}"
-			write_wrapper_script "${target}" "${canonical}"
-		done
+    for script in "${!WRAPPERS[@]}"; do
+      local canonical="${WRAPPERS[${script}]}"
+      local target="${automation_dir}/${script}"
+      write_wrapper_script "${target}" "${canonical}"
+    done
 
-		create_project_runner "${project}" "${project_root}"
-		log_success "${project} automation wrappers refreshed"
-	done
+    create_project_runner "${project}" "${project_root}"
+    log_success "${project} automation wrappers refreshed"
+  done
 
-	# Shared wrappers mirror project layout for external tooling
-	local shared_dir="${SHARED_DIR}/Tools/Automation"
-	mkdir -p "${shared_dir}"
-	for script in "${!WRAPPERS[@]}"; do
-		write_wrapper_script "${shared_dir}/${script}" "${WRAPPERS[${script}]}"
-	done
+  # Shared wrappers mirror project layout for external tooling
+  local shared_dir="${SHARED_DIR}/Tools/Automation"
+  mkdir -p "${shared_dir}"
+  for script in "${!WRAPPERS[@]}"; do
+    write_wrapper_script "${shared_dir}/${script}" "${WRAPPERS[${script}]}"
+  done
 
-	log_success "Wrapper propagation complete"
+  log_success "Wrapper propagation complete"
 }
 
 create_project_runner() {
-	local project_name="$1"
-	local project_root="$2"
-	local runner_dir="${project_root}/automation"
-	mkdir -p "${runner_dir}"
+  local project_name="$1"
+  local project_root="$2"
+  local runner_dir="${project_root}/automation"
+  mkdir -p "${runner_dir}"
 
-	cat >"${runner_dir}/run_automation.sh" <<EOF
+  cat >"${runner_dir}/run_automation.sh" <<EOF
 #!/bin/bash
 
 set -euo pipefail
@@ -176,14 +176,14 @@ fi
 
 log "Quantum automation sequence complete"
 EOF
-	chmod +x "${runner_dir}/run_automation.sh"
+  chmod +x "${runner_dir}/run_automation.sh"
 }
 
 initialize_quantum_models() {
-	log_quantum "Initialising quantum model configuration"
-	local models_dir="${ENHANCEMENT_DIR}/.quantum_models"
-	mkdir -p "${models_dir}"
-	cat >"${models_dir}/quantum_config.json" <<'EOF'
+  log_quantum "Initialising quantum model configuration"
+  local models_dir="${ENHANCEMENT_DIR}/.quantum_models"
+  mkdir -p "${models_dir}"
+  cat >"${models_dir}/quantum_config.json" <<'EOF'
 {
   "version": "1.0",
   "quantum_mode": true,
@@ -225,14 +225,14 @@ initialize_quantum_models() {
   }
 }
 EOF
-	log_success "Quantum model configuration ready"
+  log_success "Quantum model configuration ready"
 }
 
 create_quantum_dashboard() {
-	log_header "Refreshing quantum dashboard"
-	local dashboard_path="${SHARED_DIR}/Tools/Automation/quantum_dashboard.sh"
-	mkdir -p "$(dirname "${dashboard_path}")"
-	cat >"${dashboard_path}" <<'EOF'
+  log_header "Refreshing quantum dashboard"
+  local dashboard_path="${SHARED_DIR}/Tools/Automation/quantum_dashboard.sh"
+  mkdir -p "$(dirname "${dashboard_path}")"
+  cat >"${dashboard_path}" <<'EOF'
 #!/bin/bash
 
 set -euo pipefail
@@ -383,98 +383,98 @@ main() {
 
 main "${@}"
 EOF
-	chmod +x "${dashboard_path}"
-	log_success "Quantum dashboard refreshed"
+  chmod +x "${dashboard_path}"
+  log_success "Quantum dashboard refreshed"
 }
 
 run_ai_enhancement_all() {
-	log_header "Running AI enhancement analysis for all projects"
-	for project in "${PROJECTS[@]}"; do
-		local automation_dir="${PROJECTS_DIR}/${project}/Tools/Automation"
-		if [[ -x "${automation_dir}/ai_enhancement_system.sh" ]]; then
-			log_status "Analyzing ${project}"
-			"${automation_dir}/ai_enhancement_system.sh" analyze "${project}" || log_warn "Analysis reported issues for ${project}"
-		else
-			log_warn "Skipping ${project} (ai_enhancement_system.sh unavailable)"
-		fi
-		echo ""
-	done
-	log_success "AI enhancement pass complete"
+  log_header "Running AI enhancement analysis for all projects"
+  for project in "${PROJECTS[@]}"; do
+    local automation_dir="${PROJECTS_DIR}/${project}/Tools/Automation"
+    if [[ -x "${automation_dir}/ai_enhancement_system.sh" ]]; then
+      log_status "Analyzing ${project}"
+      "${automation_dir}/ai_enhancement_system.sh" analyze "${project}" || log_warn "Analysis reported issues for ${project}"
+    else
+      log_warn "Skipping ${project} (ai_enhancement_system.sh unavailable)"
+    fi
+    echo ""
+  done
+  log_success "AI enhancement pass complete"
 }
 
 run_autofix_all() {
-	log_header "Triggering intelligent auto-fix across projects"
-	for project in "${PROJECTS[@]}"; do
-		local automation_dir="${PROJECTS_DIR}/${project}/Tools/Automation"
-		if [[ -x "${automation_dir}/intelligent_autofix.sh" ]]; then
-			log_status "Applying safe fixes to ${project}"
-			"${automation_dir}/intelligent_autofix.sh" fix "${project}" || log_warn "Auto-fix encountered issues for ${project}"
-		else
-			log_warn "Skipping ${project} (intelligent_autofix.sh unavailable)"
-		fi
-		echo ""
-	done
-	log_success "Intelligent auto-fix pass complete"
+  log_header "Triggering intelligent auto-fix across projects"
+  for project in "${PROJECTS[@]}"; do
+    local automation_dir="${PROJECTS_DIR}/${project}/Tools/Automation"
+    if [[ -x "${automation_dir}/intelligent_autofix.sh" ]]; then
+      log_status "Applying safe fixes to ${project}"
+      "${automation_dir}/intelligent_autofix.sh" fix "${project}" || log_warn "Auto-fix encountered issues for ${project}"
+    else
+      log_warn "Skipping ${project} (intelligent_autofix.sh unavailable)"
+    fi
+    echo ""
+  done
+  log_success "Intelligent auto-fix pass complete"
 }
 
 show_quantum_metrics() {
-	log_header "Quantum automation metrics"
+  log_header "Quantum automation metrics"
 
-	local total=${#PROJECTS[@]}
-	local ai_ready=0
-	local autofix_ready=0
+  local total=${#PROJECTS[@]}
+  local ai_ready=0
+  local autofix_ready=0
 
-	for project in "${PROJECTS[@]}"; do
-		local automation_dir="${PROJECTS_DIR}/${project}/Tools/Automation"
-		[[ -x "${automation_dir}/ai_enhancement_system.sh" ]] && ai_ready=$((ai_ready + 1))
-		[[ -x "${automation_dir}/intelligent_autofix.sh" ]] && autofix_ready=$((autofix_ready + 1))
-	done
+  for project in "${PROJECTS[@]}"; do
+    local automation_dir="${PROJECTS_DIR}/${project}/Tools/Automation"
+    [[ -x "${automation_dir}/ai_enhancement_system.sh" ]] && ai_ready=$((ai_ready + 1))
+    [[ -x "${automation_dir}/intelligent_autofix.sh" ]] && autofix_ready=$((autofix_ready + 1))
+  done
 
-	echo "📱 Projects detected: ${total}"
-	echo "🧠 AI enhancement ready: ${ai_ready}/${total}"
-	echo "🔧 Intelligent auto-fix ready: ${autofix_ready}/${total}"
+  echo "📱 Projects detected: ${total}"
+  echo "🧠 AI enhancement ready: ${ai_ready}/${total}"
+  echo "🔧 Intelligent auto-fix ready: ${autofix_ready}/${total}"
 
-	local readiness=0
-	if [[ ${total} -gt 0 ]]; then
-		readiness=$(((ai_ready * 100) / total))
-	fi
+  local readiness=0
+  if [[ ${total} -gt 0 ]]; then
+    readiness=$(((ai_ready * 100) / total))
+  fi
 
-	if [[ ${readiness} -eq 100 ]]; then
-		log_success "🎉 100% quantum readiness achieved"
-	else
-		log_warn "Quantum readiness at ${readiness}%"
-	fi
+  if [[ ${readiness} -eq 100 ]]; then
+    log_success "🎉 100% quantum readiness achieved"
+  else
+    log_warn "Quantum readiness at ${readiness}%"
+  fi
 }
 
 run_cross_project_learning() {
-	log_quantum "Cross-project learning analysis"
-	local output_file
-	output_file="${ENHANCEMENT_DIR}/cross_project_learning_$(date +%Y%m%d_%H%M%S).md"
-	{
-		echo "# Cross-Project Learning Analysis"
-		echo "Generated: $(date)"
-		echo ""
-		for project in "${PROJECTS[@]}"; do
-			echo "## ${project}"
-			echo "- AI enhancements: $(find "${PROJECTS_DIR}/${project}" -name 'AI_*' -type f | wc -l | tr -d ' ')"
-			echo "- Swift files: $(find "${PROJECTS_DIR}/${project}" -name '*.swift' | wc -l | tr -d ' ')"
-			echo ""
-		done
-	} >"${output_file}"
-	log_success "Learning report saved to ${output_file}"
+  log_quantum "Cross-project learning analysis"
+  local output_file
+  output_file="${ENHANCEMENT_DIR}/cross_project_learning_$(date +%Y%m%d_%H%M%S).md"
+  {
+    echo "# Cross-Project Learning Analysis"
+    echo "Generated: $(date)"
+    echo ""
+    for project in "${PROJECTS[@]}"; do
+      echo "## ${project}"
+      echo "- AI enhancements: $(find "${PROJECTS_DIR}/${project}" -name 'AI_*' -type f | wc -l | tr -d ' ')"
+      echo "- Swift files: $(find "${PROJECTS_DIR}/${project}" -name '*.swift' | wc -l | tr -d ' ')"
+      echo ""
+    done
+  } >"${output_file}"
+  log_success "Learning report saved to ${output_file}"
 }
 
 show_status() {
-	log_header "Quantum Enhancement System Status"
-	echo "📍 Workspace: ${CODE_DIR}"
-	echo "📁 Enhancements: ${ENHANCEMENT_DIR}"
-	echo "📊 Projects scanned: ${#PROJECTS[@]}"
-	echo ""
-	show_quantum_metrics
+  log_header "Quantum Enhancement System Status"
+  echo "📍 Workspace: ${CODE_DIR}"
+  echo "📁 Enhancements: ${ENHANCEMENT_DIR}"
+  echo "📊 Projects scanned: ${#PROJECTS[@]}"
+  echo ""
+  show_quantum_metrics
 }
 
 usage() {
-	cat <<EOF
+  cat <<EOF
 Quantum-Level Automation Enhancement System
 
 Usage: $0 <command> [arguments]
@@ -492,44 +492,44 @@ EOF
 }
 
 main() {
-	local command="${1:-help}"
-	load_projects
+  local command="${1:-help}"
+  load_projects
 
-	case "${command}" in
-	setup)
-		ensure_directories
-		propagate_quantum_automation
-		initialize_quantum_models
-		create_quantum_dashboard
-		log_success "Quantum enhancement system initialised"
-		;;
-	enhance-all)
-		run_ai_enhancement_all
-		;;
-	fix-all)
-		run_autofix_all
-		;;
-	dashboard)
-		"${SHARED_DIR}/Tools/Automation/quantum_dashboard.sh"
-		;;
-	metrics)
-		show_quantum_metrics
-		;;
-	learn)
-		run_cross_project_learning
-		;;
-	status)
-		show_status
-		;;
-	help | --help | -h)
-		usage
-		;;
-	*)
-		log_error "Unknown command: ${command}"
-		usage
-		exit 1
-		;;
-	esac
+  case "${command}" in
+  setup)
+    ensure_directories
+    propagate_quantum_automation
+    initialize_quantum_models
+    create_quantum_dashboard
+    log_success "Quantum enhancement system initialised"
+    ;;
+  enhance-all)
+    run_ai_enhancement_all
+    ;;
+  fix-all)
+    run_autofix_all
+    ;;
+  dashboard)
+    "${SHARED_DIR}/Tools/Automation/quantum_dashboard.sh"
+    ;;
+  metrics)
+    show_quantum_metrics
+    ;;
+  learn)
+    run_cross_project_learning
+    ;;
+  status)
+    show_status
+    ;;
+  help | --help | -h)
+    usage
+    ;;
+  *)
+    log_error "Unknown command: ${command}"
+    usage
+    exit 1
+    ;;
+  esac
 }
 
 main "$@"

@@ -11,60 +11,63 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 print_status() {
-	echo -e "${BLUE}[MCP-CHECK]${NC} $1"
+  echo -e "${BLUE}[MCP-CHECK]${NC} $1"
 }
 
 print_success() {
-	echo -e "${GREEN}[SUCCESS]${NC} $1"
+  echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 print_warning() {
-	echo -e "${YELLOW}[WARNING]${NC} $1"
+  echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
 print_error() {
-	echo -e "${RED}[ERROR]${NC} $1"
+  echo -e "${RED}[ERROR]${NC} $1"
 }
 
 # Get project name from current directory or parameter
 if [[ -n $1 ]]; then
-	PROJECT_NAME="$1"
+  PROJECT_NAME="$1"
 else
-	PROJECT_NAME="$(basename "$(pwd)")"
+  PROJECT_NAME="$(basename "$(pwd)")"
 fi
 
 print_status "Checking MCP integration for ${PROJECT_NAME}"
 print_status "Current directory: $(pwd)"
 
 # Check if we're in a project directory
-if [[ ! -f "Tools/Automation/project_config.sh" ]]; then
-	print_error "Not in a valid project directory (no Tools/Automation/project_config.sh found)"
-	exit 1
+PROJECT_CONFIG_PATH="Tools/Automation/project_config.sh"
+
+if [[ ! -f ${PROJECT_CONFIG_PATH} ]]; then
+  print_error "Not in a valid project directory (no Tools/Automation/project_config.sh found)"
+  exit 1
 fi
 
 # Load project configuration
-source Tools/Automation/project_config.sh
+# shellcheck source=/dev/null
+source "${PROJECT_CONFIG_PATH}"
 
 print_success "Project configuration loaded for ${PROJECT_NAME}"
 
 # Check for git repository
 if [[ ! -d ".git" ]]; then
-	print_warning "Not a git repository - initializing..."
-	git init
-	git add .
-	git commit -m "Initial commit" 2>/dev/null || true
-	print_success "Git repository initialized"
+  print_warning "Not a git repository - initializing..."
+  git init
+  git add .
+  git commit -m "Initial commit" 2>/dev/null || true
+  print_success "Git repository initialized"
 else
-	print_success "Git repository found"
+  print_success "Git repository found"
 fi
 
 # Check for GitHub workflows
 if [[ ! -d ".github/workflows" ]]; then
-	print_warning "No GitHub workflows found - creating basic CI workflow..."
+  print_warning "No GitHub workflows found - creating basic CI workflow..."
 
-	mkdir -p .github/workflows
+  mkdir -p .github/workflows
 
-	cat >.github/workflows/ios-ci.yml <<EOF
+  cat >.github/workflows/ios-ci.yml <<EOF
 name: ${PROJECT_NAME} CI
 
 on:
@@ -125,11 +128,11 @@ jobs:
           ~/Library/Developer/Xcode/DerivedData/**/Logs
 EOF
 
-	print_success "Created iOS CI workflow for ${PROJECT_NAME}"
+  print_success "Created iOS CI workflow for ${PROJECT_NAME}"
 else
-	print_success "GitHub workflows directory found"
-	echo "   Workflow files:"
-	find .github/workflows -name "*.yml" -o -name "*.yaml" | sed 's/^/   • /'
+  print_success "GitHub workflows directory found"
+  echo "   Workflow files:"
+  find .github/workflows -name "*.yml" -o -name "*.yaml" | sed 's/^/   • /'
 fi
 
 # Check MCP integration capabilities
@@ -137,29 +140,29 @@ print_status "Checking MCP integration capabilities..."
 
 # Check automation scripts
 if [[ -f "Tools/Automation/master_automation.sh" ]]; then
-	print_success "Master automation script available"
+  print_success "Master automation script available"
 else
-	print_warning "Master automation script missing"
+  print_warning "Master automation script missing"
 fi
 
 if [[ -f "Tools/Automation/ai_enhancement_system.sh" ]]; then
-	print_success "AI enhancement system available"
+  print_success "AI enhancement system available"
 else
-	print_warning "AI enhancement system missing"
+  print_warning "AI enhancement system missing"
 fi
 
 if [[ -f "Tools/Automation/automate.sh" ]]; then
-	print_success "Quick automation wrapper available"
+  print_success "Quick automation wrapper available"
 else
-	print_warning "Quick automation wrapper missing"
+  print_warning "Quick automation wrapper missing"
 fi
 
 # Test basic automation
 print_status "Testing basic automation functionality..."
 if ./Tools/Automation/automate.sh help >/dev/null 2>&1; then
-	print_success "Automation system functional"
+  print_success "Automation system functional"
 else
-	print_warning "Automation system may have issues"
+  print_warning "Automation system may have issues"
 fi
 
 print_status "MCP integration check complete for ${PROJECT_NAME}"
@@ -167,25 +170,25 @@ echo ""
 echo "Summary:"
 echo "  • Project: ${PROJECT_NAME}"
 if [[ -d .git ]]; then
-	echo "  • Git: ✅ Initialized"
+  echo "  • Git: ✅ Initialized"
 else
-	echo "  • Git: ❌ Missing"
+  echo "  • Git: ❌ Missing"
 fi
 
 if [[ -d .github/workflows ]]; then
-	echo "  • Workflows: ✅ Available"
+  echo "  • Workflows: ✅ Available"
 else
-	echo "  • Workflows: ❌ Missing"
+  echo "  • Workflows: ❌ Missing"
 fi
 
 if [[ -f Tools/Automation/automate.sh ]]; then
-	echo "  • Automation: ✅ Ready"
+  echo "  • Automation: ✅ Ready"
 else
-	echo "  • Automation: ❌ Missing"
+  echo "  • Automation: ❌ Missing"
 fi
 
 if [[ -d .github/workflows && -f Tools/Automation/automate.sh ]]; then
-	echo "  • MCP Ready: ✅ Yes"
+  echo "  • MCP Ready: ✅ Yes"
 else
-	echo "  • MCP Ready: ❌ No"
+  echo "  • MCP Ready: ❌ No"
 fi

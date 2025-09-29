@@ -12,16 +12,22 @@ MAX_INTERVAL=3600
 mkdir -p "${PLANS_DIR}"
 
 while true; do
-	echo "[$(date)] ${AGENT_NAME}: Aggregating agent plans and results..." >>"${LOG_FILE}"
-	# Aggregate plans and suggestions from all agents
-	cat "${PLANS_DIR}"/*.plan 2>/dev/null >>"${LOG_FILE}"
-	# Analyze for conflicts, redundancies, and learning opportunities
-	/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/plugins/collab_analyze.sh >>"${LOG_FILE}" 2>&1
-	# Update shared knowledge base if needed
-	/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/auto_generate_knowledge_base.py >>"${LOG_FILE}" 2>&1
-	echo "[$(date)] ${AGENT_NAME}: Collaboration and learning cycle complete." >>"${LOG_FILE}"
-	SLEEP_INTERVAL=$((SLEEP_INTERVAL + 300))
-	if [[ ${SLEEP_INTERVAL} -gt ${MAX_INTERVAL} ]]; then SLEEP_INTERVAL=${MAX_INTERVAL}; fi
-	echo "[$(date)] ${AGENT_NAME}: Sleeping for ${SLEEP_INTERVAL} seconds." >>"${LOG_FILE}"
-	sleep "${SLEEP_INTERVAL}"
+  next_sleep=$((SLEEP_INTERVAL + 300))
+  if [[ ${next_sleep} -gt ${MAX_INTERVAL} ]]; then
+    next_sleep=${MAX_INTERVAL}
+  elif [[ ${next_sleep} -lt ${MIN_INTERVAL} ]]; then
+    next_sleep=${MIN_INTERVAL}
+  fi
+
+  {
+    echo "[$(date)] ${AGENT_NAME}: Aggregating agent plans and results..."
+    cat "${PLANS_DIR}"/*.plan 2>/dev/null
+    /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/plugins/collab_analyze.sh
+    /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/auto_generate_knowledge_base.py
+    echo "[$(date)] ${AGENT_NAME}: Collaboration and learning cycle complete."
+    printf '[%s] %s: Sleeping for %s seconds.\n' "$(date)" "${AGENT_NAME}" "${next_sleep}"
+  } >>"${LOG_FILE}" 2>&1
+
+  SLEEP_INTERVAL=${next_sleep}
+  sleep "${SLEEP_INTERVAL}"
 done

@@ -8,8 +8,13 @@ AGENT_SCRIPT="agent_supervisor.sh"
 AGENTS_DIR="$(dirname "$0")"
 
 for host in "${REMOTE_HOSTS[@]}"; do
-	echo "Launching agent supervisor on ${host}..."
-	ssh "${host}" "cd ${AGENTS_DIR} && nohup ./${AGENT_SCRIPT} > logs/supervisor_remote.log 2>&1 &"
+  echo "Launching agent supervisor on ${host}..."
+  ssh "${host}" bash -s -- "${AGENTS_DIR}" "${AGENT_SCRIPT}" <<'REMOTE_CMD'
+dir="$1"
+script="$2"
+cd "${dir}" || exit 1
+nohup "./${script}" > logs/supervisor_remote.log 2>&1 &
+REMOTE_CMD
 done
 
 echo "Distributed agent supervisors launched. Check remote logs for status."
