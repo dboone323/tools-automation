@@ -22,10 +22,36 @@ log() {
 # Status update function
 update_status() {
   local status="$1"
-  if command -v jq &>/dev/null; then
-    jq ".agents[\"${AGENT_NAME}\"].status = \"${status}\" | .agents[\"${AGENT_NAME}\"].last_seen = $(date +%s)" "${AGENT_STATUS_FILE}" >"${AGENT_STATUS_FILE}.tmp" && mv "${AGENT_STATUS_FILE}.tmp" "${AGENT_STATUS_FILE}"
+    local now
+    now=$(date +%s)
+    local STATUS_UTIL="${WORKSPACE}/Tools/Automation/agents/status_utils.py"
+    if [[ -f ${STATUS_UTIL} ]]; then
+      python3 "${STATUS_UTIL}" update-agent \
+        --status-file "${AGENT_STATUS_FILE}" \
+        --agent "${AGENT_NAME}" \
+        --status "${status}" \
+        --last-seen "${now}" >/dev/null 2>&1 || true
+    elif command -v jq &>/dev/null; then
+      # Fallback: ensure numeric fields are coerced and entry exists
+      local tmp="${AGENT_STATUS_FILE}.tmp.$$"
+      jq --arg agent "${AGENT_NAME}" --arg status "${status}" --argjson now "${now}" '
+        def to_num:
+          if type == "string" then
+            (gsub("^[\\s]+"; "") | gsub("[\\s]+$"; "") |
+              if test("^-?[0-9]+$") then tonumber else . end)
+          elif type == "number" then . else . end;
+        .agents[$agent] = (.agents[$agent] // {})
+        | .agents[$agent].status = $status
+        | .agents[$agent].last_seen = $now
+        | .agents[$agent] |= (
+            to_entries
+            | map(if (["pid","last_seen","tasks_completed","restart_count"] | index(.key)) != null
+                  then .value = (.value | to_num) else . end)
+            | from_entries)
+        | .last_update = $now
+      ' "${AGENT_STATUS_FILE}" >"${tmp}" 2>/dev/null && mv "${tmp}" "${AGENT_STATUS_FILE}"
   fi
-  log "${AGENT_NAME}: Status updated to ${status}"
+    log "${AGENT_NAME}: Status updated to ${status}"
 }
 
 # Process a specific task
