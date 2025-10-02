@@ -5,7 +5,9 @@
 
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 MASTER_AUTOMATION="${CODE_DIR}/Tools/Automation/master_automation.sh"
-ENHANCEMENT_PLAN="${CODE_DIR}/Tools/Automation/ENHANCEMENT_PLAN.md"
+# Enhanced Implementation Script with AI Integration
+CODE_DIR="/Users/danielstevens/Desktop/Quantum-workspace"
+LOG_FILE="${CODE_DIR}/Tools/Automation/implementation.log"
 
 # Colors
 GREEN='\033[0;32m'
@@ -66,7 +68,9 @@ implement_performance_monitoring() {
 
   # Create performance baseline
   print_status "Creating performance baseline..."
-  local baseline_file="${CODE_DIR}/Tools/Automation/metrics/performance/baseline_$(date +%Y%m%d).log"
+  # Create performance baseline
+  local baseline_file
+  baseline_file="${CODE_DIR}/Tools/Automation/metrics/performance/baseline_$(date +%Y%m%d).log"
 
   {
     echo "# Performance Baseline - $(date)"
@@ -122,7 +126,9 @@ implement_error_recovery() {
 
   # Test error handling across projects
   print_status "Testing error handling across projects..."
-  local error_test_results="${CODE_DIR}/Tools/Automation/metrics/errors/error_handling_test_$(date +%Y%m%d).log"
+  # Run error handling tests
+  local error_test_results
+  error_test_results="${CODE_DIR}/Tools/Automation/metrics/errors/error_handling_test_$(date +%Y%m%d).log"
 
   {
     echo "# Error Handling Test Results - $(date)"
@@ -178,17 +184,16 @@ implement_security_enhancements() {
     echo ""
   } >"${security_results}"
 
-  # Scan each project
-  for project in "${CODE_DIR}/Projects"/*; do
-    if [[ -d ${project} ]]; then
-      local project_name=$(basename "${project}")
-      print_status "Scanning ${project_name}..."
+  # Process each project
+  for project in "${CODE_DIR}/Projects/"*/; do
+    local project_name
+    project_name=$(basename "${project}")
+    print_status "Scanning ${project_name}..."
 
-      if bash "${MASTER_AUTOMATION}" security "${project_name}" >/dev/null 2>&1; then
-        echo "- ✅ ${project_name}: Security scan completed" >>"${security_results}"
-      else
-        echo "- ⚠️  ${project_name}: Security scan had issues" >>"${security_results}"
-      fi
+    if bash "${MASTER_AUTOMATION}" security "${project_name}" >/dev/null 2>&1; then
+      echo "- ✅ ${project_name}: Security scan completed" >>"${security_results}"
+    else
+      echo "- ⚠️  ${project_name}: Security scan had issues" >>"${security_results}"
     fi
   done
 
@@ -392,7 +397,9 @@ implement_all_enhancements() {
   print_status "This will implement all features from ENHANCEMENT_PLAN.md"
   echo ""
 
-  local start_time=$(date +%s)
+  # Start implementation
+  local start_time
+  start_time=$(date +%s)
   local phases_completed=0
   local total_phases=6
 

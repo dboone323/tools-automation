@@ -1,0 +1,6 @@
+github_api:https://api.github.com
+swift_evolution:https://data.swift.org/swift-evolution
+apple_developer:https://developer.apple.com
+cocoapods_specs:https://cdn.cocoapods.org
+swift_package_index:https://swiftpackageindex.com
+ios_dev_docs:https://developer.apple.com/documentation

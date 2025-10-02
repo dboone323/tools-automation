@@ -22,19 +22,19 @@ log() {
 # Status update function
 update_status() {
   local status="$1"
-    local now
-    now=$(date +%s)
-    local STATUS_UTIL="${WORKSPACE}/Tools/Automation/agents/status_utils.py"
-    if [[ -f ${STATUS_UTIL} ]]; then
-      python3 "${STATUS_UTIL}" update-agent \
-        --status-file "${AGENT_STATUS_FILE}" \
-        --agent "${AGENT_NAME}" \
-        --status "${status}" \
-        --last-seen "${now}" >/dev/null 2>&1 || true
-    elif command -v jq &>/dev/null; then
-      # Fallback: ensure numeric fields are coerced and entry exists
-      local tmp="${AGENT_STATUS_FILE}.tmp.$$"
-      jq --arg agent "${AGENT_NAME}" --arg status "${status}" --argjson now "${now}" '
+  local now
+  now=$(date +%s)
+  local STATUS_UTIL="${WORKSPACE}/Tools/Automation/agents/status_utils.py"
+  if [[ -f ${STATUS_UTIL} ]]; then
+    python3 "${STATUS_UTIL}" update-agent \
+      --status-file "${AGENT_STATUS_FILE}" \
+      --agent "${AGENT_NAME}" \
+      --status "${status}" \
+      --last-seen "${now}" >/dev/null 2>&1 || true
+  elif command -v jq &>/dev/null; then
+    # Fallback: ensure numeric fields are coerced and entry exists
+    local tmp="${AGENT_STATUS_FILE}.tmp.$$"
+    jq --arg agent "${AGENT_NAME}" --arg status "${status}" --argjson now "${now}" '
         def to_num:
           if type == "string" then
             (gsub("^[\\s]+"; "") | gsub("[\\s]+$"; "") |
@@ -51,7 +51,7 @@ update_status() {
         | .last_update = $now
       ' "${AGENT_STATUS_FILE}" >"${tmp}" 2>/dev/null && mv "${tmp}" "${AGENT_STATUS_FILE}"
   fi
-    log "${AGENT_NAME}: Status updated to ${status}"
+  log "${AGENT_NAME}: Status updated to ${status}"
 }
 
 # Process a specific task

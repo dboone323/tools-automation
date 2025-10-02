@@ -1,0 +1,211 @@
+{
+  "agents": {
+    "agent_build": {
+      "last_seen": 1759448634,
+      "pid": 49812,
+      "restart_count": 1,
+      "status": "restarting"
+    },
+    "agent_build.sh": {
+      "last_seen": 1759449377,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "agent_codegen": {
+      "last_seen": 1759448634,
+      "pid": 49813,
+      "restart_count": 1,
+      "status": "restarting"
+    },
+    "agent_codegen.sh": {
+      "last_seen": 1759449379,
+      "restart_count": 1,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "agent_debug": {
+      "last_seen": 1759448634,
+      "pid": 49814,
+      "restart_count": 1,
+      "status": "restarting"
+    },
+    "agent_debug.sh": {
+      "last_seen": 1759449378,
+      "restart_count": 1,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "agent_performance_monitor.sh": {
+      "last_seen": 1759449397,
+      "status": "stopped"
+    },
+    "agent_security.sh": {
+      "last_seen": 1759449395,
+      "status": "stopped"
+    },
+    "agent_testing.sh": {
+      "last_seen": 1759449404,
+      "status": "stopped"
+    },
+    "agent_todo.sh": {
+      "last_seen": 1759449380,
+      "status": "stopped"
+    },
+    "agent_uiux.sh": {
+      "last_seen": 1759449403,
+      "status": "stopped"
+    },
+    "apple_pro_agent.sh": {
+      "last_seen": 1759449383,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "auto_update_agent.sh": {
+      "last_seen": 1759449389,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "build": {
+      "last_seen": 1759448634,
+      "pid": 49812,
+      "restart_count": 1,
+      "status": "restarting"
+    },
+    "build_agent": {
+      "last_seen": 1759449377,
+      "status": "stopped"
+    },
+    "code_review_agent.sh": {
+      "last_seen": 1759449390,
+      "status": "stopped"
+    },
+    "codegen": {
+      "last_seen": 1759448634,
+      "pid": 49813,
+      "restart_count": 1,
+      "status": "restarting"
+    },
+    "codegen_agent": {
+      "last_seen": 1759449379,
+      "status": "stopped"
+    },
+    "collab_agent.sh": {
+      "last_seen": 1759449385,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "debug": {
+      "last_seen": 1759448634,
+      "pid": 49814,
+      "restart_count": 1,
+      "status": "restarting"
+    },
+    "debug_agent": {
+      "last_seen": 1759449378,
+      "status": "stopped"
+    },
+    "deployment_agent.sh": {
+      "last_seen": 1759449402,
+      "status": "stopped"
+    },
+    "documentation_agent.sh": {
+      "last_seen": 1759449391,
+      "status": "stopped"
+    },
+    "knowledge_base_agent.sh": {
+      "last_seen": 1759449389,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "learning_agent.sh": {
+      "last_seen": 1759449401,
+      "status": "stopped"
+    },
+    "monitoring_agent.sh": {
+      "last_seen": 1759449398,
+      "status": "stopped"
+    },
+    "performance_agent.sh": {
+      "last_seen": 1759449396,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "performance_monitor": {
+      "last_seen": 1759449396,
+      "status": "stopped"
+    },
+    "public_api_agent": {
+      "last_seen": 1759449393,
+      "status": "stopped"
+    },
+    "public_api_agent.sh": {
+      "last_seen": 1759449393,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "pull_request_agent.sh": {
+      "last_seen": 1759449388,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "quality_agent.sh": {
+      "last_seen": 1759449399,
+      "status": "stopped"
+    },
+    "search_agent": {
+      "last_seen": 1759449387,
+      "status": "stopped"
+    },
+    "search_agent.sh": {
+      "last_seen": 1759449387,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "security_agent": {
+      "last_seen": 1759449394,
+      "status": "stopped"
+    },
+    "security_agent.sh": {
+      "last_seen": 1759449394,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "task_orchestrator": {
+      "last_seen": 1759449405,
+      "restart_count": 2,
+      "status": "stopped"
+    },
+    "task_orchestrator.sh": {
+      "last_seen": 1759449405,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "testing_agent": {
+      "last_seen": 1759449381,
+      "status": "stopped"
+    },
+    "testing_agent.sh": {
+      "last_seen": 1759449381,
+      "status": "stopped"
+    },
+    "uiux_agent": {
+      "last_seen": 1759449382,
+      "status": "stopped"
+    },
+    "uiux_agent.sh": {
+      "last_seen": 1759449382,
+      "status": "stopped",
+      "tasks_completed": 0
+    },
+    "unified_dashboard_agent.sh": {
+      "last_seen": 1759449406,
+      "status": "stopped"
+    },
+    "updater_agent.sh": {
+      "last_seen": 1759449386,
+      "status": "stopped",
+      "tasks_completed": 0
+    }
+  },
+  "last_update": 1759449406
+}

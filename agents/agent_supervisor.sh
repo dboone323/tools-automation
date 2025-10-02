@@ -67,6 +67,41 @@ if [[ ! -f ${STATUS_FILE} ]]; then
   echo '{"agents":{},"last_update":0}' >"${STATUS_FILE}"
 fi
 
+# --- Utility functions ---
+# Return 1 if the string is an integer (optionally negative), else 0
+is_int() {
+  local v="$1"
+  [[ ${v} =~ ^-?[0-9]+$ ]]
+}
+
+# Sanitize a value to an integer or default to 0
+sanitize_int() {
+  local v="$1"
+  if is_int "${v}"; then
+    echo "${v}"
+  else
+    echo 0
+  fi
+}
+
+# Read exact key value (key:val format) from a KV file; prints first match
+kv_read_value() {
+  local file="$1" key="$2"
+  [[ -f ${file} ]] || return 1
+  awk -F: -v a="${key}" '($1==a){print $2; exit}' "${file}"
+}
+
+# Delete exact key (key:val) lines from a KV file in-place (portable on macOS/Linux)
+kv_delete_key() {
+  local file="$1" key="$2"
+  [[ -f ${file} ]] || {
+    : >"${file}"
+    return 0
+  }
+  local tmp="${file}.tmp.$$"
+  awk -F: -v a="${key}" '($1!=a){print $0}' "${file}" >"${tmp}" && mv "${tmp}" "${file}"
+}
+
 status_keys_for() {
   local agent_script="$1"
   local -a keys
@@ -180,6 +215,16 @@ RESTART_LIMIT=5
 RESTART_WINDOW=600  # 10 minutes
 RESTART_THROTTLE=60 # 1 minute between restarts
 
+# Ensure a value is a non-negative integer; otherwise fallback to 0
+to_int_or_zero() {
+  local v="$1"
+  if [[ "$v" =~ ^-?[0-9]+$ ]]; then
+    echo "$v"
+  else
+    echo 0
+  fi
+}
+
 # Log rotation function (keep logs <10MB)
 rotate_log() {
   local log_file="$1"
@@ -217,7 +262,7 @@ record_agent_pid() {
   local agent_script pid
   agent_script="$1"
   pid="$2"
-  sed -i '' "/^${agent_script}:/d" "${AGENT_PIDS_FILE}" 2>/dev/null || sed -i "/^${agent_script}:/d" "${AGENT_PIDS_FILE}"
+  kv_delete_key "${AGENT_PIDS_FILE}" "${agent_script}"
   echo "${agent_script}:${pid}" >>"${AGENT_PIDS_FILE}"
 
   if ! update_agent_entry_python "${agent_script}" --set-field "pid=${pid}" >/dev/null 2>&1; then
@@ -324,7 +369,7 @@ stop_agent() {
   done
   update_agent_entry_python "${agent_script}" --status stopped --clear-pid >/dev/null 2>&1 || legacy_set_agent_status "${agent_script}" stopped
   # Remove from PIDs file
-  sed -i '' "/^${agent_script}:/d" "${AGENT_PIDS_FILE}" 2>/dev/null || sed -i "/^${agent_script}:/d" "${AGENT_PIDS_FILE}"
+  kv_delete_key "${AGENT_PIDS_FILE}" "${agent_script}"
 }
 
 start_all_agents() {
@@ -346,43 +391,35 @@ stop_all_agents() {
 restart_agent() {
   local agent_script="$1"
   local pid
-  pid=$(grep "^${agent_script}:" "${AGENT_PIDS_FILE}" | cut -d: -f2)
+  pid=$(kv_read_value "${AGENT_PIDS_FILE}" "${agent_script}")
   if [[ -n ${pid} ]]; then
-    kill "${pid}" 2>/dev/null
+    kill "${pid}" 2>/dev/null || true
     echo "${agent_script} (PID ${pid}) killed for restart." >>"${LOG_FILE}"
-    # Remove from PIDs file
-    sed -i '' "/^${agent_script}:/d" "${AGENT_PIDS_FILE}" 2>/dev/null || sed -i "/^${agent_script}:/d" "${AGENT_PIDS_FILE}"
+    kv_delete_key "${AGENT_PIDS_FILE}" "${agent_script}"
   fi
   set_agent_status "${agent_script}" "restarting"
   # Throttle and limit restarts
-  local now
+  local now last_restart count
   now=$(date +%s)
-  local last_restart
-  last_restart=$(grep "^${agent_script}:" "${AGENT_LAST_RESTART_FILE}" | cut -d: -f2)
-  last_restart=${last_restart:-0}
-  local count
-  count=$(grep "^${agent_script}:" "${AGENT_RESTART_COUNT_FILE}" | cut -d: -f2)
-  count=${count:-0}
+  last_restart=$(sanitize_int "$(kv_read_value "${AGENT_LAST_RESTART_FILE}" "${agent_script}" || echo 0)")
+  count=$(sanitize_int "$(kv_read_value "${AGENT_RESTART_COUNT_FILE}" "${agent_script}" || echo 0)")
+
   if ((now - last_restart < RESTART_THROTTLE)); then
     echo "[$(date)] Supervisor: Throttling restart of ${agent_script} (too soon)." >>"${LOG_FILE}"
     return
   fi
   if ((count >= RESTART_LIMIT)); then
-    if ((now - last_restart < RESTART_WINDOW)); then
-      echo "[$(date)] Supervisor: Restart limit reached for ${agent_script}. Not restarting." >>"${LOG_FILE}"
-      return
-    else
-      # Reset count
-      sed -i '' "/^${agent_script}:/d" "${AGENT_RESTART_COUNT_FILE}" 2>/dev/null || sed -i "/^${agent_script}:/d" "${AGENT_RESTART_COUNT_FILE}"
-      echo "${agent_script}:0" >>"${AGENT_RESTART_COUNT_FILE}"
-    fi
+    echo "[$(date)] Supervisor: Restart limit reached for ${agent_script}. Not restarting." >>"${LOG_FILE}"
+    return
   fi
+
+  # Proceed restart
   start_agent "${agent_script}"
   # Update restart tracking
-  sed -i '' "/^${agent_script}:/d" "${AGENT_LAST_RESTART_FILE}" 2>/dev/null || sed -i "/^${agent_script}:/d" "${AGENT_LAST_RESTART_FILE}"
+  kv_delete_key "${AGENT_LAST_RESTART_FILE}" "${agent_script}"
   echo "${agent_script}:${now}" >>"${AGENT_LAST_RESTART_FILE}"
   local new_count=$((count + 1))
-  sed -i '' "/^${agent_script}:/d" "${AGENT_RESTART_COUNT_FILE}" 2>/dev/null || sed -i "/^${agent_script}:/d" "${AGENT_RESTART_COUNT_FILE}"
+  kv_delete_key "${AGENT_RESTART_COUNT_FILE}" "${agent_script}"
   echo "${agent_script}:${new_count}" >>"${AGENT_RESTART_COUNT_FILE}"
   echo "${agent_script} restarted." >>"${LOG_FILE}"
 }
@@ -420,7 +457,7 @@ run_supervisor_loop() {
 
     # Periodically run AI log analyzer and report findings
     now_epoch=$(date +%s)
-    if [[ $((now_epoch % 300)) -lt 5 ]]; then # every ~5 minutes
+    if ((now_epoch % 300 < 5)); then # every ~5 minutes
       ANALYZER="$(dirname "$0")/ai_log_analyzer.py"
       if [[ -x ${ANALYZER} || -f ${ANALYZER} ]]; then
         python3 "${ANALYZER}" >>"${LOG_FILE}" 2>&1

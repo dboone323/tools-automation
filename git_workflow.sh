@@ -242,11 +242,11 @@ git_status_all() {
           echo "   Status: ✅ Clean"
         else
           local modified
-          modified=$(echo "${status}" | grep "^ M" | wc -l | tr -d ' ')
+          modified=$(echo "${status}" | grep -c "^ M" || echo 0)
           local added
-          added=$(echo "${status}" | grep "^A" | wc -l | tr -d ' ')
+          added=$(echo "${status}" | grep -c "^A" || echo 0)
           local untracked
-          untracked=$(echo "${status}" | grep "^??" | wc -l | tr -d ' ')
+          untracked=$(echo "${status}" | grep -c "^??" || echo 0)
           echo "   Status: ⚠️  ${modified} modified | ${added} staged | ${untracked} untracked"
         fi
 

@@ -142,7 +142,7 @@ send_email_alert() {
     --upload-file <(echo "${email_content}") \
     2>&1)
 
-  if [[ $? -eq 0 ]]; then
+  if send_email "${recipient}" "${subject}" "${message}"; then
     print_success "Email alert sent successfully"
     log_alert "${subject}" "sent"
     return 0
@@ -203,7 +203,7 @@ check_rate_limit() {
   max_alerts_per_hour=$(yq eval '.notification_settings.max_alerts_per_hour' "${ALERT_CONFIG}" 2>/dev/null || echo "10")
 
   local recent_alerts
-  recent_alerts=$(grep "sent" "${ALERT_LOG}" 2>/dev/null | grep "$(date +%Y-%m-%dT%H)" | wc -l || echo "0")
+  recent_alerts=$(grep "sent" "${ALERT_LOG}" 2>/dev/null | grep -c "$(date +%Y-%m-%dT%H)" || echo "0")
 
   if [[ ${recent_alerts} -ge ${max_alerts_per_hour} ]]; then
     return 1

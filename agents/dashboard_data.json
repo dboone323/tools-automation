@@ -1,48 +1,124 @@
 {
   "agents": {
-    "task_orchestrator_agent": {
-      "status": "available",
-      "last_seen": "1757560716",
+    "build_agent": {
+      "status": "offline",
+      "last_seen": 0,
       "tasks_completed": 0,
-      "description": "Central task coordination and agent health monitoring"
+      "description": "build agent agent",
+      "is_online": false
+    },
+    "debug_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "debug agent agent",
+      "is_online": false
+    },
+    "codegen_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "codegen agent agent",
+      "is_online": false
+    },
+    "uiux_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "uiux agent agent",
+      "is_online": false
+    },
+    "apple_pro_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "apple pro agent agent",
+      "is_online": false
+    },
+    "collab_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "collab agent agent",
+      "is_online": false
+    },
+    "updater_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "updater agent agent",
+      "is_online": false
+    },
+    "search_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "search agent agent",
+      "is_online": false
+    },
+    "quality_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "quality agent agent",
+      "is_online": false
+    },
+    "testing_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "testing agent agent",
+      "is_online": false
+    },
+    "documentation_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "documentation agent agent",
+      "is_online": false
+    },
+    "performance_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "performance agent agent",
+      "is_online": false
+    },
+    "security_agent": {
+      "status": "offline",
+      "last_seen": 0,
+      "tasks_completed": 0,
+      "description": "security agent agent",
+      "is_online": false
     },
     "pull_request_agent": {
-      "status": "available",
-      "last_seen": "1757560716",
+      "status": "offline",
+      "last_seen": 0,
       "tasks_completed": 0,
-      "description": "Automated PR creation and risk assessment"
+      "description": "pull request agent agent",
+      "is_online": false
     },
     "auto_update_agent": {
-      "status": "available",
-      "last_seen": "1757560716",
+      "status": "offline",
+      "last_seen": 0,
       "tasks_completed": 0,
-      "description": "Code enhancement and best practices updates"
+      "description": "auto update agent agent",
+      "is_online": false
     },
     "knowledge_base_agent": {
-      "status": "available",
-      "last_seen": "1757560716",
+      "status": "offline",
+      "last_seen": 0,
       "tasks_completed": 0,
-      "description": "Learning from operations and sharing insights"
-    },
-    "public_api_agent": {
-      "status": "available",
-      "last_seen": "1757560716",
-      "tasks_completed": 0,
-      "description": "Rate-limited API management and caching"
-    },
-    "unified_dashboard_agent": {
-      "status": "running",
-      "last_seen": "1757560716",
-      "tasks_completed": 0,
-      "description": "Real-time monitoring and visualization"
+      "description": "knowledge base agent agent",
+      "is_online": false
     }
   },
   "system": {
-    "cpu_usage": "22.88%",
-    "memory_usage": "15G",
-    "disk_usage": "89%",
+    "cpu_usage": "15.13%%",
+    "memory_usage": "60.0%",
+    "disk_usage": "10%",
     "network_connections": "42",
-    "process_count": "570"
+    "process_count": 650
   },
   "tasks": {
     "active": [],
@@ -50,5 +126,6 @@
     "failed": [],
     "queued": []
   },
-  "last_update": 1757560716
+  "last_update": 1759422769,
+  "projects": {}
 }

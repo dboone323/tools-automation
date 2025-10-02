@@ -35,8 +35,11 @@ mkdir -p "${BACKUP_DIR}"
 # Backup and restore functions
 create_backup() {
   local project_path="$1"
-  local timestamp="$(date +%Y%m%d_%H%M%S)"
-  local backup_path="${BACKUP_DIR}/$(basename "${project_path}")_${timestamp}"
+  # Create backup with timestamp
+  local timestamp
+  local backup_path
+  timestamp="$(date +%Y%m%d_%H%M%S)"
+  backup_path="${BACKUP_DIR}/$(basename "${project_path}")_${timestamp}"
 
   print_status "Creating backup: ${backup_path}"
   cp -r "${project_path}" "${backup_path}"
@@ -48,9 +51,10 @@ restore_backup() {
   local project_path="$1"
   local backup_file="${project_path}/.autofix_backup"
 
-  if [[ -f ${backup_file} ]]; then
-    local backup_path="$(cat "${backup_file}")"
-    if [[ -d ${backup_path} ]]; then
+  if [[ -f "${backup_file}" ]]; then
+    local backup_path
+    backup_path="$(cat "${backup_file}")"
+    if [[ -d "${backup_path}" ]]; then
       print_rollback "Restoring from backup: ${backup_path}"
       rm -rf "${project_path}"
       cp -r "${backup_path}" "${project_path}"
@@ -98,12 +102,14 @@ run_pre_build_checks() {
     fi
   elif find . -name "*.xcodeproj" -type d | head -1 | grep -q "xcodeproj"; then
     # For Xcode projects
-    local scheme_name=$(basename "${project_path}")
-    if xcodebuild -list -project "$(find . -name "*.xcodeproj" -type d | head -1)" &>/dev/null; then
-      print_success "Swift compilation check passed"
-      ((checks_passed++))
-    else
-      print_error "Swift compilation check failed"
+    if [[ -f "${project_path}/${PROJECT_CONFIG}" ]]; then
+      # Use existing scheme from project config
+      if xcodebuild -list -project "$(find . -name "*.xcodeproj" -type d | head -1)" &>/dev/null; then
+        print_success "Swift compilation check passed"
+        ((checks_passed++))
+      else
+        print_error "Swift compilation check failed"
+      fi
     fi
   else
     print_warning "No recognizable Swift project structure"

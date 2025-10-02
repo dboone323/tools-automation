@@ -168,7 +168,9 @@ create_maintenance_schedule() {
 execute_incremental_cleanup() {
   print_status "Executing incremental cleanup..."
 
-  local cleanup_report="${SCHEDULES_DIR}/cleanup_report_$(date +%Y%m%d_%H%M%S).md"
+  # Create cleanup report
+  local cleanup_report
+  cleanup_report="${SCHEDULES_DIR}/cleanup_report_$(date +%Y%m%d_%H%M%S).md"
 
   {
     echo "# Incremental Cleanup Report"

@@ -1,1 +1,94 @@
-{ "updates": [], "applied": [], "rejected": [] }
+{
+  "updates": [
+    {
+      "id": "swift_update_null",
+      "type": "swift_version",
+      "description": "Update Swift from 6.2 to null",
+      "risk_level": "medium",
+      "status": "queued",
+      "created": 1759359652
+    },
+    {
+      "id": "swift_update_null",
+      "type": "swift_version",
+      "description": "Update Swift from 6.2 to null",
+      "risk_level": "medium",
+      "status": "queued",
+      "created": 1759413630
+    },
+    {
+      "id": "format_fix_20251002",
+      "type": "swiftformat",
+      "description": "Apply SwiftFormat code formatting",
+      "risk_level": "low",
+      "status": "queued",
+      "created": 1759413637
+    },
+    {
+      "id": "security_fix_20251002",
+      "type": "security",
+      "description": "Address unsafe code patterns",
+      "risk_level": "medium",
+      "status": "queued",
+      "created": 1759413637
+    },
+    {
+      "id": "api_update_20251002",
+      "type": "deprecated_api",
+      "description": "Update deprecated API usage",
+      "risk_level": "low",
+      "status": "queued",
+      "created": 1759413638
+    },
+    {
+      "id": "perf_opt_20251002",
+      "type": "performance",
+      "description": "Optimize collection iterations",
+      "risk_level": "low",
+      "status": "queued",
+      "created": 1759413641
+    },
+    {
+      "id": "swift_update_null",
+      "type": "swift_version",
+      "description": "Update Swift from 6.2 to null",
+      "risk_level": "medium",
+      "status": "queued",
+      "created": 1759420857
+    },
+    {
+      "id": "format_fix_20251002",
+      "type": "swiftformat",
+      "description": "Apply SwiftFormat code formatting",
+      "risk_level": "low",
+      "status": "queued",
+      "created": 1759420864
+    },
+    {
+      "id": "security_fix_20251002",
+      "type": "security",
+      "description": "Address unsafe code patterns",
+      "risk_level": "medium",
+      "status": "queued",
+      "created": 1759420864
+    },
+    {
+      "id": "api_update_20251002",
+      "type": "deprecated_api",
+      "description": "Update deprecated API usage",
+      "risk_level": "low",
+      "status": "queued",
+      "created": 1759420864
+    },
+    {
+      "id": "perf_opt_20251002",
+      "type": "performance",
+      "description": "Optimize collection iterations",
+      "risk_level": "low",
+      "status": "queued",
+      "created": 1759420868
+    }
+  ],
+  "applied": [],
+  "rejected": []
+}

@@ -1189,13 +1189,22 @@
 
       async function loadDashboard() {
         try {
-          await Promise.all([
-            loadAgentData(),
-            loadTaskData(),
-            loadPerformanceData(),
-            loadExecutionHistoryData(),
-            loadSystemHealthData(),
-          ]);
+          // Load all data from the API endpoint
+          const response = await fetch("/api/dashboard-data");
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          
+          const dashboardData = await response.json();
+          
+          // Assign data from API response
+          agentData = { agents: dashboardData.agents || {} };
+          taskData = { tasks: dashboardData.tasks || [] };
+          systemHealthData = dashboardData.system || {};
+          performanceData = dashboardData.performance || {};
+          executionHistoryData = { executions: dashboardData.executions || [] };
+          
+          // Update all dashboard sections
           updateStats();
           updateAgentsDisplay();
           updateTasksDisplay();
@@ -1203,6 +1212,8 @@
           updateExecutionHistoryDisplay();
           updateSystemHealthDisplay();
           hideError();
+          
+          console.log("Dashboard loaded successfully");
         } catch (error) {
           console.error("Failed to load dashboard:", error);
           showError(
@@ -1211,60 +1222,37 @@
         }
       }
 
-      async function loadAgentData() {
-        try {
-          const response = await fetch("./Automation/agents/agent_status.json");
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-          agentData = await response.json();
-        } catch (error) {
-          console.error("Failed to load agent data:", error);
-          throw error;
-        }
-      }
-
+      // Data loading functions - now integrated into loadDashboard() using API endpoint
+      
       async function loadTaskData() {
-        try {
-          const response = await fetch("./Automation/agents/task_queue.json");
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-          taskData = await response.json();
-        } catch (error) {
-          console.error("Failed to load task data:", error);
-          throw error;
-        }
+        // Data now loaded via API in loadDashboard()
+        return;
       }
 
       async function loadPerformanceData() {
-        try {
-          const response = await fetch(
-            "./Automation/agents/performance_metrics.json",
-          );
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-          performanceData = await response.json();
-        } catch (error) {
-          console.error("Failed to load performance data:", error);
-          throw error;
-        }
+        // Data now loaded via API in loadDashboard()
+        return;
+      }
+
+      // Data loading functions - now integrated into loadDashboard() using API endpoint
+      async function loadTaskData() {
+        // Data now loaded via API in loadDashboard()
+        return;
+      }
+
+      async function loadPerformanceData() {
+        // Data now loaded via API in loadDashboard()
+        return;
       }
 
       async function loadExecutionHistoryData() {
-        try {
-          const response = await fetch(
-            "./Automation/agents/task_execution_history.json",
-          );
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-          executionHistoryData = await response.json();
-        } catch (error) {
-          console.error("Failed to load execution history data:", error);
-          throw error;
-        }
+        // Data now loaded via API in loadDashboard()
+        return;
+      }
+
+      async function loadSystemHealthData() {
+        // Data now loaded via API in loadDashboard()
+        return;
       }
 
       function updateStats() {

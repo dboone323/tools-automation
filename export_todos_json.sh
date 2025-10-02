@@ -32,7 +32,11 @@ fi
 mkdir -p "$(dirname "${OUTPUT_FILE}")"
 mkdir -p "$(dirname "${LOG_FILE}")"
 
-echo "🔎 Exporting TODOs from ${WORKSPACE_DIR} → ${OUTPUT_FILE}" | tee -a "${LOG_FILE}"
+if [[ -n ${TODO_EXPORT_FAST-} ]]; then
+  echo "🔎 Exporting TODOs (limited) from ${WORKSPACE_DIR} → ${OUTPUT_FILE}" | tee -a "${LOG_FILE}"
+else
+  echo "🔎 Exporting TODOs from ${WORKSPACE_DIR} → ${OUTPUT_FILE}" | tee -a "${LOG_FILE}"
+fi
 
 # Start JSON array
 echo "[" >"${OUTPUT_FILE}"
@@ -55,6 +59,9 @@ find "${WORKSPACE_DIR}" \
   -path "*/Tools/Automation/Archive" -o \
   -path "*/Tools/Automation/Imported_Tools_snapshot-*" -o \
   -path "*/Tools/Automation/.venv" -o \
+  -path "*/Tools/agents/*" -o \
+  -path "*/Tools/Automation/agents/orchestrator_status_*" -o \
+  -path "*/Documentation/*" -o \
   -path "*/logs" -o \
   -path "*/dist" -o \
   -path "*/build" \
@@ -63,6 +70,14 @@ find "${WORKSPACE_DIR}" \
   \( -name "*.swift" -o -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.sh" -o -name "*.md" \) \
   -size -1M \
   -print0 | while IFS= read -r -d '' file; do
+  # Skip backup/temp artifacts in limited mode
+  if [[ -n ${TODO_EXPORT_FAST-} ]]; then
+    case "${file}" in
+    *.backup* | *.bak | *.orig | *.tmp | *.temp)
+      continue
+      ;;
+    esac
+  fi
   # Use --text to avoid binary issues; ignore files without matches quickly
   if grep -Iq . "${file}" 2>/dev/null; then
     grep -nE --text "TODO|FIXME" "${file}" 2>/dev/null | while IFS=: read -r line_num line; do

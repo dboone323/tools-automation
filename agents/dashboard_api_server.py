@@ -9,13 +9,19 @@ import json
 import socketserver
 import subprocess
 import time
+import os
+import signal
+import sys
 from pathlib import Path
 
-PORT = 8003
+PORT = 8004
 AGENTS_DIR = Path(__file__).parent
+# Point to the actual agent files location
+ACTIVE_AGENTS_DIR = Path("/Users/danielstevens/Desktop/Quantum-workspace/Tools/agents")
 DASHBOARD_DATA_FILE = AGENTS_DIR / "dashboard_data.json"
-AGENT_STATUS_FILE = AGENTS_DIR / "agent_status.json"
-TASK_QUEUE_FILE = AGENTS_DIR / "task_queue.json"
+AGENT_STATUS_FILE = ACTIVE_AGENTS_DIR / "agent_status.json"
+TASK_QUEUE_FILE = ACTIVE_AGENTS_DIR / "task_queue.json"
+PID_FILE = AGENTS_DIR / "dashboard_server.pid"
 
 
 class DashboardAPIHandler(http.server.SimpleHTTPRequestHandler):
@@ -45,6 +51,20 @@ class DashboardAPIHandler(http.server.SimpleHTTPRequestHandler):
             else:
                 self.wfile.write(
                     b"<html><body><h1>Dashboard not found</h1></body></html>"
+                )
+        elif self.path == "/test":
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+
+            # Serve the test dashboard HTML
+            test_path = Path(__file__).parent.parent / "test_dashboard.html"
+            if test_path.exists():
+                with open(test_path, "r") as f:
+                    self.wfile.write(f.read().encode())
+            else:
+                self.wfile.write(
+                    b"<html><body><h1>Test page not found</h1></body></html>"
                 )
         else:
             self.send_response(404)
@@ -289,17 +309,55 @@ class DashboardAPIHandler(http.server.SimpleHTTPRequestHandler):
             print(f"Error saving dashboard data: {e}")
 
 
+def cleanup_handler(signum, frame):
+    """Handle cleanup when server is terminated"""
+    print(f"\nReceived signal {signum}, shutting down...")
+    if PID_FILE.exists():
+        PID_FILE.unlink()
+    sys.exit(0)
+
+
 def main():
+    # Check if server is already running
+    if PID_FILE.exists():
+        try:
+            with open(PID_FILE, 'r') as f:
+                old_pid = int(f.read().strip())
+            # Check if process is still running
+            os.kill(old_pid, 0)
+            print(f"Dashboard server already running on PID {old_pid}")
+            print(f"Dashboard: http://localhost:{PORT}/dashboard")
+            return
+        except (OSError, ValueError):
+            # Process doesn't exist or PID file is invalid
+            PID_FILE.unlink()
+    
+    # Write current PID to file
+    with open(PID_FILE, 'w') as f:
+        f.write(str(os.getpid()))
+    
+    # Set up signal handlers
+    signal.signal(signal.SIGTERM, cleanup_handler)
+    signal.signal(signal.SIGINT, cleanup_handler)
+    
     print(f"Starting Dashboard API Server on port {PORT}")
     print(f"Dashboard: http://localhost:{PORT}/dashboard")
     print(f"API endpoint: http://localhost:{PORT}/api/dashboard-data")
+    print(f"PID: {os.getpid()}")
 
-    with socketserver.TCPServer(("", PORT), DashboardAPIHandler) as httpd:
-        try:
+    try:
+        with socketserver.TCPServer(("", PORT), DashboardAPIHandler) as httpd:
             httpd.serve_forever()
-        except KeyboardInterrupt:
-            print("\nShutting down server...")
-            httpd.shutdown()
+    except KeyboardInterrupt:
+        print("\nShutting down server...")
+    except OSError as e:
+        if e.errno == 48:  # Address already in use
+            print(f"Port {PORT} is already in use. Server may already be running.")
+        else:
+            print(f"Error starting server: {e}")
+    finally:
+        if PID_FILE.exists():
+            PID_FILE.unlink()
 
 
 if __name__ == "__main__":

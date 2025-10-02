@@ -28,7 +28,7 @@ artifacts)
   list)
     if [[ -d ${ART_DIR} ]]; then
       echo "Artifacts in ${ART_DIR}:"
-      ls -1 "${ART_DIR}" | sed -n '1,200p'
+      find "${ART_DIR}" -maxdepth 1 -type f | head -200
     else
       echo "No artifacts dir yet (${ART_DIR})"
     fi

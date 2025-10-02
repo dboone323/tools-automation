@@ -1,0 +1,6 @@
+github_api:60|3600
+swift_evolution:100|3600
+apple_developer:30|3600
+cocoapods_specs:200|3600
+swift_package_index:50|3600
+ios_dev_docs:100|3600

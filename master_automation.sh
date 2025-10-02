@@ -5,9 +5,6 @@
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PROJECTS_DIR="${CODE_DIR}/Projects"
 
-# Export TODOs as JSON for agent/automation integration
-bash "${CODE_DIR}/Tools/Automation/export_todos_json.sh"
-
 # Source AI-enhanced automation functions
 if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
   source "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh"
@@ -45,6 +42,19 @@ print_ai() {
 status_with_ai() {
   print_status "Quantum Workspace Status with AI Enhancement"
   echo ""
+
+  # Limited TODO export only during status (configurable)
+  # STATUS_TODO_MODE values: off | limited | full (default: limited)
+  case "${STATUS_TODO_MODE:-limited}" in
+  off) ;;
+  limited)
+    export TODO_EXPORT_FAST=1
+    bash "${CODE_DIR}/Tools/Automation/export_todos_json.sh" || true
+    ;;
+  full)
+    bash "${CODE_DIR}/Tools/Automation/export_todos_json.sh" || true
+    ;;
+  esac
 
   # Check Ollama health
   if command -v ollama &>/dev/null; then
@@ -198,7 +208,9 @@ run_standard_project_automation() {
   # Lint code if SwiftLint is available
   if command -v swiftlint &>/dev/null; then
     print_status "Linting Swift code..."
-    cd "${project_path}" && swiftlint --quiet || true
+    if cd "${project_path}"; then
+      swiftlint --quiet || true
+    fi
   fi
 
   # Run project-specific automation if available
