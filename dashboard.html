@@ -176,7 +176,7 @@
             }
         }
         function updateDashboard(data) {
-            document.getElementById('lastUpdate').textContent = \`Last updated: \${data.last_update_relative || 'just now'}\`;
+            document.getElementById('lastUpdate').textContent = `Last updated: ${data.last_update_relative || 'just now'}`;
             if (data.orchestrator) {
                 const orc = data.orchestrator;
                 document.getElementById('tasksQueued').textContent = orc.tasks_queued || 0;
@@ -195,7 +195,7 @@
                 document.getElementById('failedTasks').textContent = stats.failed || 0;
                 const completionsDiv = document.getElementById('recentCompletions');
                 if (stats.recent_completions && stats.recent_completions.length > 0) {
-                    completionsDiv.innerHTML = stats.recent_completions.map(task => \`<div class="task-item"><strong>\${task.type || 'Unknown'}</strong> - Completed \${task.completed_relative || 'recently'}</div>\`).join('');
+                    completionsDiv.innerHTML = stats.recent_completions.map(task => `<div class="task-item"><strong>${task.type || 'Unknown'}</strong> - Completed ${task.completed_relative || 'recently'}</div>`).join('');
                 } else {
                     completionsDiv.innerHTML = '<div class="empty-state">No recent completions</div>';
                 }
@@ -203,7 +203,7 @@
             if (data.orchestrator && data.orchestrator.recent_assignments) {
                 const assignmentsDiv = document.getElementById('recentAssignments');
                 if (data.orchestrator.recent_assignments.length > 0) {
-                    assignmentsDiv.innerHTML = data.orchestrator.recent_assignments.map(task => \`<div class="task-item"><strong>\${task.type || 'Unknown'}</strong> → \${task.assigned_to || 'Unknown agent'}</div>\`).join('');
+                    assignmentsDiv.innerHTML = data.orchestrator.recent_assignments.map(task => `<div class="task-item"><strong>${task.type || 'Unknown'}</strong> → ${task.assigned_to || 'Unknown agent'}</div>`).join('');
                 } else {
                     assignmentsDiv.innerHTML = '<div class="empty-state">No recent assignments</div>';
                 }
@@ -212,20 +212,20 @@
                 const agentGrid = document.getElementById('agentGrid');
                 const agents = Object.entries(data.agents).sort((a, b) => a[0].localeCompare(b[0]));
                 if (agents.length > 0) {
-                    agentGrid.innerHTML = agents.map(([name, agent]) => \`
+                    agentGrid.innerHTML = agents.map(([name, agent]) => `
                         <div class="agent-card">
                             <div class="agent-header">
-                                <div class="agent-name">\${name}</div>
-                                <div class="health-badge health-\${agent.health || 'offline'}">\${agent.health || 'offline'}</div>
+                                <div class="agent-name">${name}</div>
+                                <div class="health-badge health-${agent.health || 'offline'}">${agent.health || 'offline'}</div>
                             </div>
                             <div class="agent-details">
-                                <div class="agent-detail"><span>PID:</span><strong>\${agent.pid || 'N/A'}</strong></div>
-                                <div class="agent-detail"><span>Last Seen:</span><strong>\${agent.last_seen_relative || 'unknown'}</strong></div>
-                                <div class="agent-detail"><span>Tasks:</span><strong>\${agent.tasks_completed || 0} / \${agent.total_tasks || 0}</strong></div>
-                                <div class="agent-detail"><span>Success Rate:</span><strong>\${agent.success_rate || 0}%</strong></div>
+                                <div class="agent-detail"><span>PID:</span><strong>${agent.pid || 'N/A'}</strong></div>
+                                <div class="agent-detail"><span>Last Seen:</span><strong>${agent.last_seen_relative || 'unknown'}</strong></div>
+                                <div class="agent-detail"><span>Tasks:</span><strong>${agent.tasks_completed || 0} / ${agent.total_tasks || 0}</strong></div>
+                                <div class="agent-detail"><span>Success Rate:</span><strong>${agent.success_rate || 0}%</strong></div>
                             </div>
                         </div>
-                    \`).join('');
+                    `).join('');
                 } else {
                     agentGrid.innerHTML = '<div class="empty-state">No agents available</div>';
                 }
