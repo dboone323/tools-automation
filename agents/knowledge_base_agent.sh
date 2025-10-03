@@ -181,9 +181,10 @@ learn_from_project_analysis() {
 
   # Analyze project structure and patterns
   local project_count
-  project_count=$(find "/Users/danielstevens/Desktop/Code/Projects" -maxdepth 1 -type d | wc -l)
+  local projects_root="/Users/danielstevens/Desktop/Quantum-workspace/Projects"
+  project_count=$(find "${projects_root}" -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
   local swift_files
-  swift_files=$(find "/Users/danielstevens/Desktop/Code/Projects" -name "*.swift" | wc -l)
+  swift_files=$(find "${projects_root}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
 
   # Extract architectural patterns
   if [[ ${project_count} -gt 5 ]]; then
@@ -191,8 +192,10 @@ learn_from_project_analysis() {
   fi
 
   # Analyze code quality patterns
-  local avg_files_per_project
-  avg_files_per_project=$((swift_files / project_count))
+  local avg_files_per_project=0
+  if [[ ${project_count} -gt 0 ]]; then
+    avg_files_per_project=$((swift_files / project_count))
+  fi
   if [[ ${avg_files_per_project} -gt 50 ]]; then
     add_knowledge_entry "architecture_patterns" "large_codebase" "Implement modular architecture for large codebases" "high"
   fi

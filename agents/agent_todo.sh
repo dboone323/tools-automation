@@ -144,7 +144,7 @@ while true; do
   log "Checking for new TODOs..."
 
   # Read current TODOs
-  todos=$(read_todos)
+  todos=$(read_todos 2>>"${LOG_FILE}")
 
   if [[ $? -ne 0 ]]; then
     log "Error reading TODOs: ${todos}"

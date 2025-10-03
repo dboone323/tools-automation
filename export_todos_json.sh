@@ -38,9 +38,13 @@ else
   echo "🔎 Exporting TODOs from ${WORKSPACE_DIR} → ${OUTPUT_FILE}" | tee -a "${LOG_FILE}"
 fi
 
-# Start JSON array
-echo "[" >"${OUTPUT_FILE}"
-first=1
+TMP_FILE="${OUTPUT_FILE}.tmp.$$"
+TMP_ITEMS="${OUTPUT_FILE}.items.$$"
+>"${TMP_ITEMS}"
+
+# Set item limit to prevent memory issues (default 5000, override with TODO_ITEM_LIMIT)
+ITEM_LIMIT="${TODO_ITEM_LIMIT:-5000}"
+ITEM_COUNT=0
 
 # Find files while avoiding heavy directories
 find "${WORKSPACE_DIR}" \
@@ -80,17 +84,29 @@ find "${WORKSPACE_DIR}" \
   fi
   # Use --text to avoid binary issues; ignore files without matches quickly
   if grep -Iq . "${file}" 2>/dev/null; then
-    grep -nE --text "TODO|FIXME" "${file}" 2>/dev/null | while IFS=: read -r line_num line; do
+    # Use process substitution to keep 'first' state in current shell
+    while IFS=: read -r line_num line; do
       if [[ -n ${line_num} ]]; then
-        if [[ ${first} -eq 0 ]]; then echo "," >>"${OUTPUT_FILE}"; fi
-        first=0
+        # Check limit before writing
+        if [[ ${ITEM_COUNT} -ge ${ITEM_LIMIT} ]]; then
+          echo "⚠️ Reached item limit (${ITEM_LIMIT}); stopping collection" | tee -a "${LOG_FILE}"
+          break 2  # Break out of both while and find loop
+        fi
         jq -n --arg file "${file#"${WORKSPACE_DIR}"/}" --arg line "${line_num}" --arg text "${line}" \
-          '{file: $file, line: ($line|tonumber), text: $text}' >>"${OUTPUT_FILE}"
+          '{file: $file, line: ($line|tonumber), text: $text}' >>"${TMP_ITEMS}"
+        ((ITEM_COUNT++)) || true
       fi
-    done || true
+    done < <(grep -nE --text "TODO|FIXME" "${file}" 2>/dev/null)
   fi
 done
 
-echo "]" >>"${OUTPUT_FILE}"
+# Convert NDJSON to JSON array atomically
+echo "📊 Collected ${ITEM_COUNT} TODO items; assembling JSON array..." | tee -a "${LOG_FILE}"
+jq -s '.' "${TMP_ITEMS}" >"${TMP_FILE}" 2>>"${LOG_FILE}" || {
+  echo "❌ Failed to assemble JSON array; leaving items file for debugging: ${TMP_ITEMS}" | tee -a "${LOG_FILE}"
+  exit 1
+}
+rm -f "${TMP_ITEMS}"
+mv "${TMP_FILE}" "${OUTPUT_FILE}"
 
-echo "✅ TODOs exported to ${OUTPUT_FILE}" | tee -a "${LOG_FILE}"
+echo "✅ TODOs exported to ${OUTPUT_FILE} (${ITEM_COUNT} items)" | tee -a "${LOG_FILE}"

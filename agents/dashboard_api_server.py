@@ -15,18 +15,38 @@ import sys
 from pathlib import Path
 
 PORT = 8004
-AGENTS_DIR = Path(__file__).parent
-# Point to the actual agent files location
-ACTIVE_AGENTS_DIR = Path("/Users/danielstevens/Desktop/Quantum-workspace/Tools/agents")
+AGENTS_DIR = Path(__file__).parent  # This is Tools/Automation/agents
+# Prefer Automation agents directory for live state, with a fallback to legacy Tools/agents if needed
 DASHBOARD_DATA_FILE = AGENTS_DIR / "dashboard_data.json"
-AGENT_STATUS_FILE = ACTIVE_AGENTS_DIR / "agent_status.json"
-TASK_QUEUE_FILE = ACTIVE_AGENTS_DIR / "task_queue.json"
+PRIMARY_STATUS_FILE = AGENTS_DIR / "agent_status.json"
+PRIMARY_TASK_QUEUE_FILE = AGENTS_DIR / "task_queue.json"
+LEGACY_AGENTS_DIR = Path("/Users/danielstevens/Desktop/Quantum-workspace/Tools/agents")
+LEGACY_STATUS_FILE = LEGACY_AGENTS_DIR / "agent_status.json"
+LEGACY_TASK_QUEUE_FILE = LEGACY_AGENTS_DIR / "task_queue.json"
+
+def resolve_path(primary: Path, legacy: Path) -> Path:
+    try:
+        if primary.exists():
+            return primary
+    except Exception:
+        pass
+    return legacy
+
+AGENT_STATUS_FILE = resolve_path(PRIMARY_STATUS_FILE, LEGACY_STATUS_FILE)
+TASK_QUEUE_FILE = resolve_path(PRIMARY_TASK_QUEUE_FILE, LEGACY_TASK_QUEUE_FILE)
 PID_FILE = AGENTS_DIR / "dashboard_server.pid"
 
 
 class DashboardAPIHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        if self.path == "/api/dashboard-data":
+        if self.path == "/api/health":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            payload = {"status": "ok", "time": int(time.time())}
+            self.wfile.write(json.dumps(payload).encode())
+        elif self.path == "/api/dashboard-data":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.send_header("Access-Control-Allow-Origin", "*")
@@ -201,11 +221,39 @@ class DashboardAPIHandler(http.server.SimpleHTTPRequestHandler):
             "auto_update_agent",
             "knowledge_base_agent",
         ]
+        # Map simplified names to their script-name counterparts in status files
+        alias_to_script = {
+            "build_agent": "agent_build.sh",
+            "debug_agent": "agent_debug.sh",
+            "codegen_agent": "agent_codegen.sh",
+            "uiux_agent": "uiux_agent.sh",
+            "apple_pro_agent": "apple_pro_agent.sh",
+            "collab_agent": "collab_agent.sh",
+            "updater_agent": "updater_agent.sh",
+            "search_agent": "search_agent.sh",
+            "quality_agent": "quality_agent.sh",
+            "testing_agent": "testing_agent.sh",
+            "documentation_agent": "documentation_agent.sh",
+            "performance_agent": "performance_agent.sh",
+            "security_agent": "security_agent.sh",
+            "pull_request_agent": "pull_request_agent.sh",
+            "auto_update_agent": "auto_update_agent.sh",
+            "knowledge_base_agent": "knowledge_base_agent.sh",
+        }
         status_agents = agent_status.get("agents", {})
         for agent_name in known_agents:
-            agent_info = status_agents.get(agent_name, {})
-            status = agent_info.get("status", "offline")
-            last_seen = agent_info.get("last_seen", 0)
+            # Prefer the alias entry, but fall back to script-name entry; if both exist pick the freshest
+            script_key = alias_to_script.get(agent_name)
+            alias_info = status_agents.get(agent_name, {})
+            script_info = status_agents.get(script_key, {}) if script_key else {}
+            def last_seen_of(info):
+                try:
+                    return int(info.get("last_seen", 0) or 0)
+                except (TypeError, ValueError):
+                    return 0
+            chosen = alias_info if last_seen_of(alias_info) >= last_seen_of(script_info) else script_info
+            status = chosen.get("status", "offline")
+            last_seen = last_seen_of(chosen)
             # Determine if agent is running based on recent activity
             is_running = False
             if last_seen:
@@ -236,7 +284,7 @@ class DashboardAPIHandler(http.server.SimpleHTTPRequestHandler):
             agents[agent_name] = {
                 "status": display_status,
                 "last_seen": last_seen,
-                "tasks_completed": agent_info.get("tasks_completed", 0),
+                "tasks_completed": chosen.get("tasks_completed", 0),
                 "description": self.get_agent_description(agent_name),
                 "is_online": is_running,
             }
@@ -286,7 +334,8 @@ class DashboardAPIHandler(http.server.SimpleHTTPRequestHandler):
 
     def get_project_status(self):
         """Get project status information"""
-        projects_dir = Path("/Users/danielstevens/Desktop/Code/Projects")
+        # Use the workspace Projects folder
+        projects_dir = Path("/Users/danielstevens/Desktop/Quantum-workspace/Projects")
         projects = {}
 
         if projects_dir.exists():

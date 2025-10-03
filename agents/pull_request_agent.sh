@@ -528,7 +528,13 @@ while true; do
   # Generate periodic status report (every 10 minutes)
   current_minute=$(date +%M)
   if [[ $((current_minute % 10)) -eq 0 ]]; then
-    generate_status_report
+    if declare -F generate_status_report >/dev/null 2>&1; then
+      generate_status_report
+    else
+      # Fallback minimal status log
+  pr_count=$(jq -r '.prs | length' "${PR_QUEUE_FILE}" 2>/dev/null || echo 0)
+  log_message "INFO" "Status heartbeat: pending PRs=${pr_count}"
+    fi
   fi
 
   sleep 60 # Check every minute
