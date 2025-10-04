@@ -86,6 +86,19 @@ if [[ ! -f ${AGENT_STATUS_FILE} ]]; then
   echo '{"agents": {}}' >"${AGENT_STATUS_FILE}"
 fi
 
+# Ensure status file is valid JSON; if corrupt, back it up and recreate.
+ensure_status_file_valid() {
+  if [[ -f ${AGENT_STATUS_FILE} ]] && command -v jq &>/dev/null; then
+    if ! jq empty "${AGENT_STATUS_FILE}" >/dev/null 2>&1; then
+      local ts
+      ts=$(date +%Y%m%d_%H%M%S)
+      cp "${AGENT_STATUS_FILE}" "${AGENT_STATUS_FILE}.corrupt_${ts}" 2>/dev/null || true
+      echo '{"agents": {}}' >"${AGENT_STATUS_FILE}"
+      log_message "WARNING" "agent_status.json was corrupt; backed up and recreated clean (${AGENT_STATUS_FILE}.corrupt_${ts})"
+    fi
+  fi
+}
+
 log_message() {
   local level="$1"
   local message="$2"
@@ -156,6 +169,78 @@ update_agent_status() {
 
   log_message "INFO" "Updated status for ${agent} (${status_key}): ${status}"
 }
+
+# Update orchestrator's own status in agent_status.json
+update_orchestrator_status() {
+  ensure_status_file_valid
+  local status="${1:-available}"
+  local last_seen
+  last_seen=$(date +%s)
+  local pid=$$
+  
+  # Count tasks by status
+  local tasks_queued=0
+  local tasks_in_progress=0
+  local tasks_completed=0
+  
+  if [[ -f ${TASK_QUEUE_FILE} ]]; then
+    if command -v jq &>/dev/null; then
+      tasks_queued=$(jq '[.tasks[] | select(.status == "queued")] | length' "${TASK_QUEUE_FILE}" 2>/dev/null || echo 0)
+      tasks_in_progress=$(jq '[.tasks[] | select(.status == "in_progress")] | length' "${TASK_QUEUE_FILE}" 2>/dev/null || echo 0)
+      tasks_completed=$(jq '[.tasks[] | select(.status == "completed")] | length' "${TASK_QUEUE_FILE}" 2>/dev/null || echo 0)
+    fi
+  fi
+  
+  # Read current status file
+  local current_status
+  if [[ -f ${AGENT_STATUS_FILE} ]]; then
+    current_status=$(cat "${AGENT_STATUS_FILE}")
+  else
+    current_status='{"agents": {}}'
+  fi
+  
+  # Update orchestrator status (atomic)
+  if command -v jq &>/dev/null; then
+    if echo "${current_status}" | jq \
+      --arg status "${status}" \
+      --argjson last_seen "${last_seen}" \
+      --argjson pid "${pid}" \
+      --argjson queued "${tasks_queued}" \
+      --argjson in_progress "${tasks_in_progress}" \
+      --argjson completed "${tasks_completed}" \
+      '.orchestrator = {
+        "status": $status,
+        "last_seen": $last_seen,
+        "pid": $pid,
+        "is_running": true,
+        "tasks_queued": $queued,
+        "tasks_in_progress": $in_progress,
+        "tasks_completed": $completed
+      }
+      | .agents["task_orchestrator.sh"] = {
+         "status": $status,
+         "last_seen": $last_seen,
+         "pid": $pid,
+         "is_running": true,
+         "tasks_queued": $queued,
+         "tasks_in_progress": $in_progress,
+         "tasks_completed": $completed
+      }
+      | .last_update = $last_seen' >"${AGENT_STATUS_FILE}.tmp"; then
+        mv "${AGENT_STATUS_FILE}.tmp" "${AGENT_STATUS_FILE}"
+    else
+      log_message "ERROR" "Failed to write orchestrator status (jq pipeline failed)"
+    fi
+  else
+    log_message "WARNING" "jq not available; cannot update orchestrator status"
+  fi
+}
+
+# One-shot mode for scripted status update without starting loop
+if [[ "${TASK_ORCHESTRATOR_MODE}" == "oneshot" ]]; then
+  update_orchestrator_status "available"
+  exit 0
+fi
 
 # Add task to queue
 add_task() {
@@ -531,6 +616,7 @@ log_message "INFO" "Task Orchestrator starting..."
 
 while true; do
   # Update orchestrator status
+  update_orchestrator_status "available"
   update_agent_status "task_orchestrator.sh" "active"
 
   # Process completed tasks
