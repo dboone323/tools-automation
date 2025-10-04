@@ -1,76 +1,146 @@
 {
   "agents": {
     "agent_build.sh": {
-      "last_seen": 1759529569,
-      "status": "busy"
+      "current_task_id": null,
+      "last_seen": 1759583000,
+      "status": "idle",
+      "tasks_completed": 3
     },
     "agent_codegen.sh": {
-      "last_seen": 1759529567,
-      "status": "restarting"
+      "current_task_id": null,
+      "last_seen": 1759583000,
+      "status": "idle",
+      "tasks_completed": 2
     },
     "agent_debug.sh": {
-      "last_seen": 1759529567,
-      "status": "restarting"
+      "status": "busy",
+      "last_seen": 1759583046,
+      "tasks_completed": 9,
+      "current_task_id": "todo_assign_1757549117513780000"
     },
     "agent_todo.sh": {
       "last_seen": 1759529568,
       "status": "restarting"
     },
+    "apple_pro_agent.sh": {
+      "last_seen": 1759582803,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
+    "auto_update_agent.sh": {
+      "last_seen": 1759582803,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
     "build_agent": {
-      "last_seen": 1759529569,
-      "status": "busy"
+      "last_seen": 1759540620,
+      "status": "idle"
     },
     "codegen_agent": {
       "last_seen": 1759529567,
       "status": "restarting"
     },
+    "collab_agent.sh": {
+      "last_seen": 1759582804,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
     "debug_agent": {
       "last_seen": 1759529567,
-      "status": "restarting"
+      "pid": 41123,
+      "status": "running"
+    },
+    "documentation_agent.sh": {
+      "current_task_id": null,
+      "last_seen": 1759583019,
+      "status": "available",
+      "tasks_completed": 0
+    },
+    "knowledge_base_agent.sh": {
+      "last_seen": 1759582804,
+      "status": "restarting",
+      "tasks_completed": 0
     },
     "monitoring_agent.sh": {
-      "last_seen": 1759529568,
-      "status": "available"
+      "last_seen": 1759540428,
+      "status": "idle"
     },
     "performance_agent.sh": {
-      "last_seen": 1759529569,
-      "status": "available"
+      "status": "busy",
+      "last_seen": 1759583046,
+      "tasks_completed": 4,
+      "current_task_id": "todo_assign_1757549783273528000"
     },
     "performance_monitor": {
       "pid": 39375,
       "status": "idle"
     },
+    "public_api_agent.sh": {
+      "last_seen": 1759582803,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
     "pull_request_agent.sh": {
-      "last_seen": 1759529569,
-      "pid": 24700,
+      "last_seen": 1759582803,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
+    "quality_agent.sh": {
+      "current_task_id": null,
+      "last_seen": 1759582973,
+      "status": "idle",
+      "tasks_completed": 0
+    },
+    "search_agent": {
+      "last_seen": 1759582870,
+      "pid": 3948,
       "status": "available"
+    },
+    "search_agent.sh": {
+      "last_seen": 1759582870,
+      "status": "available",
+      "tasks_completed": 0
+    },
+    "security_agent.sh": {
+      "current_task_id": null,
+      "last_seen": 1759583034,
+      "status": "available",
+      "tasks_completed": 1
+    },
+    "task_orchestrator.sh": {
+      "status": "active",
+      "last_seen": 1759583046,
+      "tasks_completed": 0
+    },
+    "testing_agent.sh": {
+      "current_task_id": null,
+      "last_seen": 1759583018,
+      "status": "available",
+      "tasks_completed": 0
     },
     "uiux_agent": {
       "last_seen": 1759529568,
       "status": "restarting"
     },
     "uiux_agent.sh": {
-      "last_seen": 1759529568,
-      "status": "restarting"
+      "last_seen": 1759582803,
+      "status": "restarting",
+      "tasks_completed": 0
     },
-    "task_orchestrator.sh": {
-      "status": "available",
-      "last_seen": 1759540102,
-      "pid": 98582,
-      "is_running": true,
-      "tasks_queued": 10,
-      "tasks_in_progress": 0,
+    "updater_agent.sh": {
+      "last_seen": 1759582803,
+      "status": "restarting",
       "tasks_completed": 0
     }
   },
-  "last_update": 1759540102,
+  "last_update": 1759583046,
   "orchestrator": {
     "status": "available",
-    "last_seen": 1759540102,
-    "pid": 98582,
+    "last_seen": 1759583046,
+    "pid": 99372,
     "is_running": true,
-    "tasks_queued": 10,
-    "tasks_in_progress": 0,
+    "tasks_queued": 8,
+    "tasks_in_progress": 2,
     "tasks_completed": 0
   }
 }

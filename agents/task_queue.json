@@ -7,8 +7,13 @@
       "description": "TODO: Refactor collision detection logic for better performance. (File: AvoidObstaclesGame/AvoidObstaclesGame/GameScene.swift:42)",
       "id": "todo_assign_1757549117368084000",
       "priority": 5,
-      "status": "queued",
-      "type": "performance"
+      "status": "completed",
+      "type": "performance",
+      "assigned_at": 1759583034,
+      "assigned_to": "performance_agent.sh",
+      "started_at": 1759583038.597072,
+      "completed_at": 1759583046.352826,
+      "success": "true"
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -17,8 +22,13 @@
       "description": "TODO: Add support for multi-language code review. (File: CodingReviewer/CodingReviewer/ReviewEngine.swift:15)",
       "id": "todo_assign_1757549117440261000",
       "priority": 5,
-      "status": "queued",
-      "type": "debug"
+      "status": "completed",
+      "type": "debug",
+      "assigned_at": 1759583034,
+      "assigned_to": "agent_debug.sh",
+      "started_at": 1759583038.59708,
+      "completed_at": 1759583046.372555,
+      "success": "true"
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -27,8 +37,10 @@
       "description": "TODO: Implement streak freeze feature. (File: HabitQuest/HabitQuest/QuestManager.swift:88)",
       "id": "todo_assign_1757549117513780000",
       "priority": 5,
-      "status": "queued",
-      "type": "debug"
+      "status": "assigned",
+      "type": "debug",
+      "assigned_at": 1759583046,
+      "assigned_to": "agent_debug.sh"
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -57,8 +69,10 @@
       "description": "TODO: Refactor collision detection logic for better performance. (File: AvoidObstaclesGame/AvoidObstaclesGame/GameScene.swift:42)",
       "id": "todo_assign_1757549783273528000",
       "priority": 5,
-      "status": "queued",
-      "type": "performance"
+      "status": "assigned",
+      "type": "performance",
+      "assigned_at": 1759583046,
+      "assigned_to": "performance_agent.sh"
     },
     {
       "assigned_agent": "code_review_agent.sh",
@@ -99,6 +113,38 @@
       "priority": 5,
       "status": "queued",
       "type": "debug"
+    }
+  ],
+  "completed": [
+    {
+      "assigned_agent": "performance_agent.sh",
+      "created": 1759526666,
+      "dependencies": [],
+      "description": "TODO: Refactor collision detection logic for better performance. (File: AvoidObstaclesGame/AvoidObstaclesGame/GameScene.swift:42)",
+      "id": "todo_assign_1757549117368084000",
+      "priority": 5,
+      "status": "completed",
+      "type": "performance",
+      "assigned_at": 1759583034,
+      "assigned_to": "performance_agent.sh",
+      "started_at": 1759583038.597072,
+      "completed_at": 1759583046.352826,
+      "success": "true"
+    },
+    {
+      "assigned_agent": "agent_debug.sh",
+      "created": 1759526666,
+      "dependencies": [],
+      "description": "TODO: Add support for multi-language code review. (File: CodingReviewer/CodingReviewer/ReviewEngine.swift:15)",
+      "id": "todo_assign_1757549117440261000",
+      "priority": 5,
+      "status": "completed",
+      "type": "debug",
+      "assigned_at": 1759583034,
+      "assigned_to": "agent_debug.sh",
+      "started_at": 1759583038.59708,
+      "completed_at": 1759583046.372555,
+      "success": "true"
     }
   ]
 }

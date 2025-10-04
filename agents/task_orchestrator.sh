@@ -26,6 +26,9 @@ AGENT_CAPABILITIES=(
   ["performance_agent.sh"]="performance,optimize,monitor,metrics"
   ["auto_update_agent.sh"]="auto_update,enhancement,best_practices"
   ["knowledge_base_agent.sh"]="knowledge,learn,share,best_practices"
+  ["documentation_agent.sh"]="documentation,docs,readme,guide,manual"
+  ["quality_agent.sh"]="quality,lint,format,style,standards"
+  ["testing_agent.sh"]="testing,test,unit,integration,validation"
 )
 
 # Agent priority levels (higher number = higher priority)
@@ -45,6 +48,9 @@ AGENT_PRIORITY=(
   ["updater_agent.sh"]="3"
   ["search_agent.sh"]="2"
   ["knowledge_base_agent.sh"]="1"
+  ["documentation_agent.sh"]="6"
+  ["quality_agent.sh"]="7"
+  ["testing_agent.sh"]="8"
 )
 
 # Task types and their requirements
@@ -72,6 +78,12 @@ TASK_REQUIREMENTS=(
   ["performance"]="performance_agent.sh"
   ["auto_update"]="auto_update_agent.sh"
   ["knowledge"]="knowledge_base_agent.sh"
+  ["documentation"]="documentation_agent.sh"
+  ["docs"]="documentation_agent.sh"
+  ["quality"]="quality_agent.sh"
+  ["lint"]="quality_agent.sh"
+  ["testing"]="testing_agent.sh"
+  ["validation"]="testing_agent.sh"
 )
 
 # Initialize directories and files
@@ -414,10 +426,20 @@ update_task_status() {
   fi
 }
 
+# Release stale busy agents without a current_task_id so they can take work again
 release_stale_busy_agents() {
   if ! command -v jq &>/dev/null || [[ ! -f ${AGENT_STATUS_FILE} ]]; then return; fi
   local tmp="${AGENT_STATUS_FILE}.tmp$$"
+  local released_count=0
+  
+  # Count agents that will be released for logging
+  released_count=$(jq -r '.agents | to_entries | map(select(.value.status=="busy" and (.value.current_task_id==null or .value.current_task_id==""))) | length' "${AGENT_STATUS_FILE}" 2>/dev/null || echo 0)
+  
   jq '(.agents |= with_entries( if (.value.status=="busy" and (.value.current_task_id==null or .value.current_task_id=="")) then .value.status="available" else . end ))' "${AGENT_STATUS_FILE}" >"${tmp}" 2>/dev/null && mv "${tmp}" "${AGENT_STATUS_FILE}"
+  
+  if [[ ${released_count} -gt 0 ]]; then
+    log_message "INFO" "Released ${released_count} stale busy agents to available status"
+  fi
 }
 
 # Monitor agent health and restart if needed
@@ -518,7 +540,9 @@ distribute_tasks() {
     if [[ ${agent_status} == "available" || ${agent_status} == "idle" ]]; then
       notify_agent "${assigned_agent}" "execute_task" "${task_id}"
       mark_task_assigned "${task_id}" "${assigned_agent}"
-      log_message "INFO" "Assigned (dynamic) task ${task_id} -> ${assigned_agent}"
+      log_message "INFO" "Assigned (dynamic) task ${task_id} -> ${assigned_agent} (status: ${agent_status})"
+    else
+      log_message "DEBUG" "Agent ${assigned_agent} not available for task ${task_id} (status: ${agent_status})"
     fi
   done
 }
