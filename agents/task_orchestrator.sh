@@ -7,6 +7,7 @@ LOG_FILE="${SCRIPT_DIR}/task_orchestrator.log"
 TASK_QUEUE_FILE="${SCRIPT_DIR}/task_queue.json"
 AGENT_STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
 COMMUNICATION_DIR="${SCRIPT_DIR}/communication"
+LOOP_INTERVAL="${LOOP_INTERVAL:-30}" # Configurable main loop sleep
 
 # Agent capabilities and priorities
 declare -A AGENT_CAPABILITIES
@@ -399,11 +400,24 @@ update_task_status() {
   if command -v jq &>/dev/null; then
     # Move task from tasks to completed/failed
     if [[ ${status} == "completed" ]]; then
-      jq --arg task_id "${task_id}" --arg success "${success}" \
-        '(.tasks[] | select(.id == $task_id)) as $task | .tasks = (.tasks - [$task]) | .completed += [$task + {"completed_at": now, "success": $success}]' \
-        "${TASK_QUEUE_FILE}" >"${TASK_QUEUE_FILE}.tmp" && mv "${TASK_QUEUE_FILE}.tmp" "${TASK_QUEUE_FILE}"
+      local tq_tmp="${TASK_QUEUE_FILE}.tmp$$"
+      jq --arg task_id "${task_id}" --arg success "${success}" '(.tasks[] | select(.id==$task_id)) |= (.status="completed" | .completed_at=now | .success=$success | (if .assigned_agent==null and .assigned_to!=null then .assigned_agent=.assigned_to else . end)) | (.completed += [.tasks[] | select(.id==$task_id)])' "${TASK_QUEUE_FILE}" >"${tq_tmp}" 2>/dev/null && mv "${tq_tmp}" "${TASK_QUEUE_FILE}"
+      if [[ -f ${AGENT_STATUS_FILE} ]]; then
+        local agent
+        agent=$(jq -r --arg id "${task_id}" '.tasks[]? | select(.id==$id) | (.assigned_agent // .assigned_to // "")' "${TASK_QUEUE_FILE}" 2>/dev/null)
+        if [[ -n ${agent} ]]; then
+          local as_tmp="${AGENT_STATUS_FILE}.tmp$$"
+          jq --arg a "${agent}" '(.agents[$a].current_task_id=null) | (.agents[$a].status="available") | (.agents[$a].tasks_completed = ((.agents[$a].tasks_completed // 0)+1))' "${AGENT_STATUS_FILE}" >"${as_tmp}" 2>/dev/null && mv "${as_tmp}" "${AGENT_STATUS_FILE}"
+        fi
+      fi
     fi
   fi
+}
+
+release_stale_busy_agents() {
+  if ! command -v jq &>/dev/null || [[ ! -f ${AGENT_STATUS_FILE} ]]; then return; fi
+  local tmp="${AGENT_STATUS_FILE}.tmp$$"
+  jq '(.agents |= with_entries( if (.value.status=="busy" and (.value.current_task_id==null or .value.current_task_id=="")) then .value.status="available" else . end ))' "${AGENT_STATUS_FILE}" >"${tmp}" 2>/dev/null && mv "${tmp}" "${AGENT_STATUS_FILE}"
 }
 
 # Monitor agent health and restart if needed
@@ -490,15 +504,72 @@ distribute_tasks() {
     local task_type
     task_type=$(echo "${task_info}" | cut -d'|' -f2)
 
-    # Check if agent is available
+    if [[ -z ${task_type} || ${task_type} == "unknown" ]]; then
+      continue
+    fi
+
+    if [[ -z ${assigned_agent} ]]; then
+      assigned_agent=$(select_best_agent "${task_type}")
+      [[ -z ${assigned_agent} ]] && continue
+    fi
+
     local agent_status
     agent_status=$(get_agent_status "${assigned_agent}")
-    if [[ ${agent_status} == "available" ]]; then
+    if [[ ${agent_status} == "available" || ${agent_status} == "idle" ]]; then
       notify_agent "${assigned_agent}" "execute_task" "${task_id}"
-      update_task_status "${task_id}" "assigned" ""
-      log_message "INFO" "Assigned task ${task_id} to ${assigned_agent}"
+      mark_task_assigned "${task_id}" "${assigned_agent}"
+      log_message "INFO" "Assigned (dynamic) task ${task_id} -> ${assigned_agent}"
     fi
   done
+}
+
+# Mark task as assigned (transition to in_progress soon)
+mark_task_assigned() {
+  local task_id="$1";
+  local agent="$2";
+  if command -v jq &>/dev/null; then
+    tmp_file="${TASK_QUEUE_FILE}.tmp$$"
+    if jq --arg id "${task_id}" --arg agent "${agent}" '(.tasks[] | select(.id==$id)) |= (.status="assigned" | .assigned_at=(now|floor) | .assigned_to=$agent | .assigned_agent=$agent)' "${TASK_QUEUE_FILE}" >"${tmp_file}" 2>/dev/null; then
+      mv "${tmp_file}" "${TASK_QUEUE_FILE}"; update_agent_status "${agent}" "busy"
+      if [[ -f ${AGENT_STATUS_FILE} ]]; then
+        local a_tmp="${AGENT_STATUS_FILE}.tmp$$"
+        jq --arg a "${agent}" --arg t "${task_id}" '(.agents[$a].current_task_id=$t)' "${AGENT_STATUS_FILE}" >"${a_tmp}" 2>/dev/null && mv "${a_tmp}" "${AGENT_STATUS_FILE}"
+      fi
+    fi
+  fi
+}
+
+# Advance assigned/in_progress tasks automatically for demo metrics
+advance_task_progress() {
+  local now
+  now=$(date +%s)
+  if ! command -v jq &>/dev/null; then return; fi
+  # 1) Move tasks from assigned -> in_progress after 3s (faster demo)
+  tmp_file="${TASK_QUEUE_FILE}.tmp$$"
+  if jq '(.tasks[] | select(.status=="assigned" and ((now - (.assigned_at // now)) > 3))) |= (.status="in_progress" | .started_at=now)' "${TASK_QUEUE_FILE}" >"${tmp_file}" 2>/dev/null; then
+    mv "${tmp_file}" "${TASK_QUEUE_FILE}"; fi
+  # 2) Complete tasks in_progress after 5s from started_at (faster demo)
+  local to_complete
+  to_complete=$(jq -r '.tasks[] | select(.status=="in_progress" and ((now - (.started_at // now)) > 5)) | .id' "${TASK_QUEUE_FILE}" 2>/dev/null)
+  for tid in ${to_complete}; do
+    update_task_status "${tid}" "completed" "true"
+  done
+}
+
+# Refresh agent heartbeats: mark idle if busy without tasks > 120s; bump last_seen
+refresh_agent_heartbeats() {
+  local now
+  now=$(date +%s)
+  if ! command -v jq &>/dev/null; then return; fi
+  # For each agent, if status busy but no active task recorded in queue and last_seen >120s mark available
+  local tmp_file="${AGENT_STATUS_FILE}.tmp$$"
+  if jq --argjson now "${now}" '(.agents |= with_entries(
+      if (.value.status=="busy" and (.value.last_seen // 0) < ($now-120)) then
+        .value.status="available" | .value.last_seen=$now
+      elif (.value.status=="available" and (.value.last_seen // 0) < ($now-180)) then
+        .value.status="idle" | .value.last_seen=$now
+      else . end))' "${AGENT_STATUS_FILE}" >"${tmp_file}" 2>/dev/null; then
+    mv "${tmp_file}" "${AGENT_STATUS_FILE}"; fi
 }
 
 # Get task information
@@ -507,7 +578,7 @@ get_task_info() {
 
   if command -v jq &>/dev/null; then
     local task_data
-    task_data=$(jq -r ".tasks[] | select(.id == \"${task_id}\") | .assigned_agent + \"|\" + .type" "${TASK_QUEUE_FILE}")
+    task_data=$(jq -r ".tasks[] | select(.id == \"${task_id}\") | (.assigned_agent // .assigned_to // \"\") + \"|\" + .type" "${TASK_QUEUE_FILE}")
     echo "${task_data}"
   else
     echo "unknown|unknown"
@@ -619,6 +690,11 @@ while true; do
   update_orchestrator_status "available"
   update_agent_status "task_orchestrator.sh" "active"
 
+  # Advance synthetic task progress (demo metrics) & refresh heartbeats
+  advance_task_progress
+  refresh_agent_heartbeats
+  release_stale_busy_agents
+
   # Process completed tasks
   process_completed_tasks
 
@@ -637,5 +713,5 @@ while true; do
   # Check for new tasks from external sources
   check_external_tasks
 
-  sleep 30 # Check every 30 seconds
+  sleep "${LOOP_INTERVAL}" # Configurable interval
 done
