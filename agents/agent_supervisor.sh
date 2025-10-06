@@ -24,6 +24,8 @@ MANAGED_AGENTS=(
   "agent_debug.sh"
   "agent_codegen.sh"
   "agent_todo.sh"
+  "agent_analytics.sh"
+  "agent_validation.sh"
   "testing_agent.sh"
   "uiux_agent.sh"
   "apple_pro_agent.sh"
@@ -181,6 +183,8 @@ agent_build.sh:${AGENTS_DIR}/build_agent.log
 agent_debug.sh:${AGENTS_DIR}/debug_agent.log
 agent_codegen.sh:${AGENTS_DIR}/codegen_agent.log
 agent_todo.sh:${AGENTS_DIR}/todo_agent.log
+agent_analytics.sh:${AGENTS_DIR}/agent_analytics.log
+agent_validation.sh:${AGENTS_DIR}/agent_validation.log
 testing_agent.sh:${AGENTS_DIR}/testing_agent.log
 uiux_agent.sh:${AGENTS_DIR}/uiux_agent.log
 apple_pro_agent.sh:${AGENTS_DIR}/apple_pro_agent.log
