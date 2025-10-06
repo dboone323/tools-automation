@@ -14,7 +14,8 @@ NC='\033[0m' # No Color
 
 # Configuration
 OLLAMA_URL="${OLLAMA_URL:-http://localhost:11434}"
-OLLAMA_MODEL="${OLLAMA_MODEL:-codellama}"
+OLLAMA_MODEL="${OLLAMA_MODEL:-qwen3-coder:480b-cloud}"  # Primary: cloud model for efficiency
+OLLAMA_FALLBACK_MODELS=("codellama:7b" "qwen:7b" "deepseek-coder:6.7b")  # Fallback local models
 MCP_SERVER="${MCP_SERVER:-http://localhost:5005}"
 REVIEW_DIR="${REVIEW_DIR:-./ai_reviews}"
 MAX_DIFF_SIZE=50000  # Max characters to send to Ollama
@@ -36,7 +37,7 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if Ollama server is running
+# Check if Ollama server is running and select available model
 check_ollama_health() {
     log_info "Checking Ollama server health at ${OLLAMA_URL}..."
     
@@ -46,16 +47,53 @@ check_ollama_health() {
         return 1
     fi
     
-    # Check if model is available
-    if ! curl -sf "${OLLAMA_URL}/api/tags" | grep -q "${OLLAMA_MODEL}"; then
-        log_warning "Model ${OLLAMA_MODEL} not found, pulling it now..."
-        curl -sf -X POST "${OLLAMA_URL}/api/pull" \
-            -H "Content-Type: application/json" \
-            -d "{\"name\": \"${OLLAMA_MODEL}\", \"stream\": false}" > /dev/null
+    # Try primary cloud model first
+    if curl -sf "${OLLAMA_URL}/api/tags" | jq -r '.models[]?.name' 2>/dev/null | grep -qx "${OLLAMA_MODEL}"; then
+        log_success "Primary model ${OLLAMA_MODEL} is available"
+        return 0
     fi
     
-    log_success "Ollama server healthy, model ${OLLAMA_MODEL} available"
-    return 0
+    # Attempt to pull cloud model with error handling
+    log_warning "Model ${OLLAMA_MODEL} not found, attempting to pull..."
+    if curl -sf -X POST "${OLLAMA_URL}/api/pull" \
+        -H "Content-Type: application/json" \
+        -d "{\"name\": \"${OLLAMA_MODEL}\", \"stream\": false}" \
+        --max-time 60 > /dev/null 2>&1; then
+        log_success "Successfully pulled ${OLLAMA_MODEL}"
+        return 0
+    fi
+    
+    # Cloud model pull failed, try fallback models
+    log_warning "Cloud model ${OLLAMA_MODEL} unavailable, checking fallback models..."
+    local available_models
+    if command -v jq >/dev/null 2>&1; then
+        available_models=$(curl -sf "${OLLAMA_URL}/api/tags" | jq -r '.models[]?.name' 2>/dev/null || echo "")
+    else
+        # Fallback if jq not available - use grep on raw JSON
+        available_models=$(curl -sf "${OLLAMA_URL}/api/tags" 2>/dev/null || echo "")
+    fi
+    
+    for fallback_model in "${OLLAMA_FALLBACK_MODELS[@]}"; do
+        if echo "$available_models" | grep -q "$fallback_model"; then
+            log_warning "Using fallback model: $fallback_model"
+            export OLLAMA_MODEL="$fallback_model"
+            return 0
+        fi
+    done
+    
+    # Try to pull first fallback model
+    log_warning "No fallback models available, attempting to pull ${OLLAMA_FALLBACK_MODELS[0]}..."
+    if curl -sf -X POST "${OLLAMA_URL}/api/pull" \
+        -H "Content-Type: application/json" \
+        -d "{\"name\": \"${OLLAMA_FALLBACK_MODELS[0]}\", \"stream\": false}" \
+        --max-time 300 > /dev/null 2>&1; then
+        export OLLAMA_MODEL="${OLLAMA_FALLBACK_MODELS[0]}"
+        log_success "Successfully pulled fallback model ${OLLAMA_MODEL}"
+        return 0
+    fi
+    
+    log_error "No models available and pull operations failed"
+    return 1
 }
 
 # Generate AI review using Ollama
@@ -65,6 +103,22 @@ generate_ai_review() {
     local head_ref="${3:-HEAD}"
     
     log_info "Generating AI review for diff (${#diff_content} chars)..."
+    
+    # Dynamic token allocation based on diff size
+    local num_tokens=1500  # Default for small diffs
+    local diff_size=${#diff_content}
+    
+    if [ $diff_size -lt 2000 ]; then
+        num_tokens=1500   # Small diff: <2KB
+    elif [ $diff_size -lt 10000 ]; then
+        num_tokens=2500   # Medium diff: 2-10KB
+    elif [ $diff_size -lt 30000 ]; then
+        num_tokens=4000   # Large diff: 10-30KB
+    else
+        num_tokens=6000   # Very large diff: >30KB
+    fi
+    
+    log_info "Using $num_tokens tokens for ${diff_size} char diff"
     
     # Truncate diff if too large
     if [ ${#diff_content} -gt $MAX_DIFF_SIZE ]; then
@@ -118,14 +172,15 @@ ${diff_content}
 
 Provide the structured review now:"
     
-    # Call Ollama API
+    # Call Ollama API with dynamic token allocation
     local review_json
     review_json=$(curl -sf -X POST "${OLLAMA_URL}/api/generate" \
         -H "Content-Type: application/json" \
         -d "$(jq -n \
             --arg model "${OLLAMA_MODEL}" \
             --arg prompt "${prompt}" \
-            '{model: $model, prompt: $prompt, stream: false, temperature: 0.3, num_predict: 2000}')" \
+            --argjson num_tokens "$num_tokens" \
+            '{model: $model, prompt: $prompt, stream: false, temperature: 0.2, num_predict: $num_tokens}')" \
         2>/dev/null)
     
     if [ $? -ne 0 ] || [ -z "$review_json" ]; then
