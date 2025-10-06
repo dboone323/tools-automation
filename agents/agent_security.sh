@@ -1,17 +1,31 @@
 #!/bin/bash
 # Security Agent: Security vulnerability scanning, secure coding analysis, and compliance checking
 # Handles static security analysis, dependency scanning, and security best practices
+# Phase 4 Enhanced: NPM audit, secrets scanning, and comprehensive reporting
 
 AGENT_NAME="SecurityAgent"
-LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/security_agent.log"
-PROJECTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Projects"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+ENHANCEMENTS_DIR="${SCRIPT_DIR}/enhancements"
+LOG_FILE="${SCRIPT_DIR}/security_agent.log"
+PROJECTS_DIR="${WORKSPACE_ROOT}/Projects"
 
 SLEEP_INTERVAL=1200 # Start with 20 minutes for security analysis
 MAX_INTERVAL=7200
 
-STATUS_FILE="$(dirname "$0")/agent_status.json"
-TASK_QUEUE="$(dirname "$0")/task_queue.json"
+STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
+TASK_QUEUE="${SCRIPT_DIR}/task_queue.json"
 PID=$$
+
+# Source Phase 4 enhancement modules if available
+if [[ -f "${ENHANCEMENTS_DIR}/security_npm_audit.sh" ]]; then
+  # shellcheck source=/dev/null
+  source "${ENHANCEMENTS_DIR}/security_npm_audit.sh"
+fi
+if [[ -f "${ENHANCEMENTS_DIR}/security_secrets_scan.sh" ]]; then
+  # shellcheck source=/dev/null
+  source "${ENHANCEMENTS_DIR}/security_secrets_scan.sh"
+fi
 
 function update_status() {
   local status="$1"
@@ -301,6 +315,18 @@ perform_security_analysis() {
   perform_static_analysis "${project}"
   scan_dependencies "${project}"
   check_compliance "${project}"
+  
+  # Phase 4: Run enhanced security scans if available
+  if command -v run_npm_audit &>/dev/null; then
+    echo "[$(date)] ${AGENT_NAME}: Running NPM audit..." >>"${LOG_FILE}"
+    run_npm_audit "${project_path}" >>"${LOG_FILE}" 2>&1 || true
+  fi
+  
+  if command -v scan_for_secrets &>/dev/null; then
+    echo "[$(date)] ${AGENT_NAME}: Running secrets scan..." >>"${LOG_FILE}"
+    scan_for_secrets "${project_path}" >>"${LOG_FILE}" 2>&1 || true
+  fi
+  
   generate_security_report "${project}"
 
   echo "[$(date)] ${AGENT_NAME}: Security analysis completed for ${project}" >>"${LOG_FILE}"
