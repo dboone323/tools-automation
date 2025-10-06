@@ -77,13 +77,13 @@ validate_architecture_rule_1() {
   
   info "Validating Rule 1: Data models NEVER import SwiftUI"
   
-  # Find files in SharedTypes or Models directories
+  # Find files in SharedTypes or Models directories (exclude backups)
   while IFS= read -r file; do
     if grep -q "import SwiftUI" "$file"; then
       error "Architecture violation in $file: Data model imports SwiftUI"
       violations=$((violations + 1))
     fi
-  done < <(find "${project_path}" \( -path "*/SharedTypes/*" -o -path "*/Models/*" \) -name "*.swift" 2>/dev/null)
+  done < <(find "${project_path}" \( -path "*/SharedTypes/*" -o -path "*/Models/*" \) -name "*.swift" -not -path "*/.backups/*" 2>/dev/null)
   
   if [[ ${violations} -eq 0 ]]; then
     success "Rule 1 passed: No SwiftUI imports in data models"
@@ -159,7 +159,7 @@ validate_quality_gates() {
   
   # Check file size limits (500 lines max per file)
   local oversized_files
-  oversized_files=$(find "${project_path}" -name "*.swift" -exec wc -l {} + 2>/dev/null | \
+  oversized_files=$(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" -exec wc -l {} + 2>/dev/null | \
     awk '$1 > 500 {print $2}' | wc -l | tr -d ' ')
   
   if [[ ${oversized_files} -gt 0 ]]; then
@@ -213,7 +213,7 @@ validate_dependencies() {
         issues=$((issues + 1))
       fi
     done <<< "$file_imports"
-  done < <(find "${project_path}" -name "*.swift" 2>/dev/null | head -10)  # Limit for performance
+  done < <(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" 2>/dev/null | head -10)  # Limit for performance
   
   if [[ ${issues} -eq 0 ]]; then
     success "Dependency validation passed"
@@ -244,7 +244,8 @@ run_validation() {
     
     local pname
     pname=$(basename "$project")
-    [[ "$pname" == "Tools" || "$pname" == "scripts" || "$pname" == "Config" ]] && continue
+    # Skip non-code directories and backups
+    [[ "$pname" == "Tools" || "$pname" == "scripts" || "$pname" == "Config" || "$pname" == ".backups" ]] && continue
     
     info "=== Validating ${pname} ==="
     
@@ -391,8 +392,14 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
       run_validation "${2:-}"
       ;;
     validate-staged)
-      # Validate only staged files
+      # Validate only staged files (exclude backups)
       info "Validating staged files..."
+      # Check if there are staged Swift files outside backups
+      staged_swift_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.swift$' | grep -v '\.backups/' || true)
+      if [[ -z "${staged_swift_files}" ]]; then
+        success "No Swift files to validate (or only backup files changed)"
+        exit 0
+      fi
       run_validation "${WORKSPACE_ROOT}"
       ;;
     install-hook)
