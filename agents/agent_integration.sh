@@ -7,6 +7,14 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 AGENTS_DIR="${SCRIPT_DIR}"
+
+# Source AI enhancement modules
+ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"
+if [[ -f "${ENHANCEMENTS_DIR}/ai_integration_optimizer.sh" ]]; then
+  # shellcheck source=../enhancements/ai_integration_optimizer.sh
+  source "${ENHANCEMENTS_DIR}/ai_integration_optimizer.sh"
+fi
+
 AGENT_NAME="agent_integration"
 MCP_URL="${MCP_URL:-http://127.0.0.1:5005}"
 LOG_FILE="${AGENTS_DIR}/${AGENT_NAME}.log"

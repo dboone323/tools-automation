@@ -4,6 +4,14 @@ echo "[$(date)] codegen_agent: Script started, PID=$$" >>"/Users/danielstevens/D
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 WORKSPACE="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+
+# Source AI enhancement modules
+ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"
+if [[ -f "${ENHANCEMENTS_DIR}/ai_codegen_optimizer.sh" ]]; then
+  # shellcheck source=../enhancements/ai_codegen_optimizer.sh
+  source "${ENHANCEMENTS_DIR}/ai_codegen_optimizer.sh"
+fi
+
 AGENT_NAME="codegen_agent"
 AGENT_LABEL="CodeGenAgent"
 LOG_FILE="${SCRIPT_DIR}/codegen_agent.log"
