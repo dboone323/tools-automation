@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantum Workspace - Unified Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .header h1 {
+        color: #2c3e50;
+        font-size: 2.5em;
+        margin-bottom: 5px;
+        text-align: center;
+      }
+
+      .header .subtitle {
+        color: #7f8c8d;
+        text-align: center;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+      }
+
+      .header-actions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 0.95em;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+
+      .btn:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      }
+
+      .btn-success { background: #27ae60; }
+      .btn-success:hover { background: #229954; }
+
+      /* System Status Bar */
+      .status-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .status-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease;
+        border-left: 4px solid #3498db;
+      }
+
+      .status-card:hover {
+        transform: translateY(-3px);
+      }
+
+      .status-card.healthy { border-left-color: #27ae60; }
+      .status-card.warning { border-left-color: #f39c12; }
+      .status-card.critical { border-left-color: #e74c3c; }
+      .status-card.offline { border-left-color: #95a5a6; }
+
+      .status-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .status-card h4 {
+        color: #2c3e50;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      .status-indicator.healthy { background: #27ae60; }
+      .status-indicator.warning { background: #f39c12; }
+      .status-indicator.critical { background: #e74c3c; }
+      .status-indicator.offline { background: #95a5a6; }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .status-card-value {
+        font-size: 2em;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 5px 0;
+      }
+
+      .status-card-label {
+        color: #7f8c8d;
+        font-size: 0.85em;
+      }
+
+      /* Main Grid */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .grid-wide {
+        grid-column: 1 / -1;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card h3 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 1.3em;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-badge {
+        background: #3498db;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.75em;
+        font-weight: 600;
+      }
+
+      /* Agent List */
+      .agent-list {
+        list-style: none;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .agent-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 10px;
+        background: #f8f9fa;
+        border-left: 4px solid #3498db;
+        transition: all 0.3s ease;
+      }
+
+      .agent-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+      }
+
+      .agent-item.running { border-left-color: #27ae60; }
+      .agent-item.idle { border-left-color: #3498db; }
+      .agent-item.stopped { border-left-color: #95a5a6; }
+      .agent-item.unresponsive { border-left-color: #e74c3c; }
+
+      .agent-info {
+        flex: 1;
+      }
+
+      .agent-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1em;
+        margin-bottom: 3px;
+      }
+
+      .agent-meta {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 5px;
+      }
+
+      .agent-meta-item {
+        color: #6c757d;
+        font-size: 0.85em;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .agent-status {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8em;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+
+      .status-running { background-color: #27ae60; color: white; }
+      .status-idle { background-color: #3498db; color: white; }
+      .status-stopped { background-color: #95a5a6; color: white; }
+      .status-unresponsive { background-color: #e74c3c; color: white; }
+
+      /* Workflows */
+      .workflow-list {
+        max-height: 350px;
+        overflow-y: auto;
+      }
+
+      .workflow-item {
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 10px;
+        background: #f8f9fa;
+        border-left: 4px solid #3498db;
+      }
+
+      .workflow-item.success { border-left-color: #27ae60; }
+      .workflow-item.failure { border-left-color: #e74c3c; }
+      .workflow-item.in_progress { border-left-color: #f39c12; }
+
+      .workflow-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .workflow-name {
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .workflow-badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75em;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .workflow-badge.success { background: #d4edda; color: #155724; }
+      .workflow-badge.failure { background: #f8d7da; color: #721c24; }
+      .workflow-badge.in_progress { background: #fff3cd; color: #856404; }
+
+      .workflow-stats {
+        display: flex;
+        gap: 15px;
+        font-size: 0.85em;
+        color: #6c757d;
+      }
+
+      /* Metrics */
+      .metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #ecf0f1;
+      }
+
+      .metric:last-child {
+        border-bottom: none;
+      }
+
+      .metric-name {
+        color: #7f8c8d;
+        font-weight: 500;
+        font-size: 0.95em;
+      }
+
+      .metric-value {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1.1em;
+      }
+
+      /* Progress Bar */
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #ecf0f1;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 10px 0;
+      }
+
+      .progress-fill {
+        height: 100%;
+        transition: width 0.3s ease;
+        border-radius: 4px;
+      }
+
+      .progress-fill.healthy { background: linear-gradient(90deg, #27ae60, #229954); }
+      .progress-fill.warning { background: linear-gradient(90deg, #f39c12, #e67e22); }
+      .progress-fill.critical { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+
+      /* Table */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      .data-table th {
+        background: #f8f9fa;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #2c3e50;
+        border-bottom: 2px solid #dee2e6;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .data-table td {
+        padding: 12px;
+        border-bottom: 1px solid #ecf0f1;
+        color: #495057;
+      }
+
+      .data-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.9);
+        margin-top: 30px;
+        font-size: 0.9em;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+      }
+
+      .footer-links {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .footer-link {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer-link:hover {
+        color: white;
+        text-decoration: underline;
+      }
+
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      /* Loading State */
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #7f8c8d;
+      }
+
+      .loading::after {
+        content: "...";
+        animation: dots 1.5s infinite;
+      }
+
+      @keyframes dots {
+        0%, 20% { content: "."; }
+        40% { content: ".."; }
+        60%, 100% { content: "..."; }
+      }
+
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #95a5a6;
+        font-size: 0.95em;
+      }
+
+      .empty-state-icon {
+        font-size: 3em;
+        margin-bottom: 10px;
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>🚀 Quantum Workspace Dashboard</h1>
+        <p class="subtitle">Unified monitoring for agents, workflows, and automation</p>
+        <div class="header-actions">
+          <button class="btn" onclick="refreshDashboard()">🔄 Refresh</button>
+          <button class="btn btn-success" onclick="generateNewData()">📊 Update Metrics</button>
+          <button class="btn" onclick="window.open('./dashboard_data.json', '_blank')">📄 View Raw Data</button>
+        </div>
+      </div>
+
+      <!-- System Status Bar -->
+      <div class="status-bar" id="statusBar">
+        <div class="status-card">
+          <div class="status-card-header">
+            <h4>Agents</h4>
+            <div class="status-indicator"></div>
+          </div>
+          <div class="status-card-value">--</div>
+          <div class="status-card-label">Loading...</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-header">
+            <h4>Workflows</h4>
+            <div class="status-indicator"></div>
+          </div>
+          <div class="status-card-value">--</div>
+          <div class="status-card-label">Loading...</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-header">
+            <h4>MCP Server</h4>
+            <div class="status-indicator"></div>
+          </div>
+          <div class="status-card-value">--</div>
+          <div class="status-card-label">Loading...</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-header">
+            <h4>Ollama</h4>
+            <div class="status-indicator"></div>
+          </div>
+          <div class="status-card-value">--</div>
+          <div class="status-card-label">Loading...</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-header">
+            <h4>Disk Usage</h4>
+            <div class="status-indicator"></div>
+          </div>
+          <div class="status-card-value">--</div>
+          <div class="status-card-label">Loading...</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-header">
+            <h4>Tasks</h4>
+            <div class="status-indicator"></div>
+          </div>
+          <div class="status-card-value">--</div>
+          <div class="status-card-label">Loading...</div>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="grid">
+        <!-- Agent Status -->
+        <div class="card">
+          <h3>
+            🤖 Agents
+            <span class="card-badge" id="agentCount">0</span>
+          </h3>
+          <ul class="agent-list" id="agentList">
+            <li class="loading">Loading agents</li>
+          </ul>
+        </div>
+
+        <!-- Workflows -->
+        <div class="card">
+          <h3>
+            ⚙️ GitHub Workflows
+            <span class="card-badge" id="workflowCount">0</span>
+          </h3>
+          <div class="workflow-list" id="workflowList">
+            <div class="loading">Loading workflows</div>
+          </div>
+        </div>
+
+        <!-- MCP Alerts -->
+        <div class="card">
+          <h3>
+            🔔 MCP Alerts (24h)
+            <span class="card-badge" id="alertCount">0</span>
+          </h3>
+          <div id="mcpAlerts">
+            <div class="loading">Loading alerts</div>
+          </div>
+        </div>
+
+        <!-- System Health -->
+        <div class="card">
+          <h3>💚 System Health</h3>
+          <div id="systemHealth">
+            <div class="loading">Loading health data</div>
+          </div>
+        </div>
+
+        <!-- Latest Metrics -->
+        <div class="card">
+          <h3>📈 Daily Metrics</h3>
+          <div id="latestMetrics">
+            <div class="loading">Loading metrics</div>
+          </div>
+        </div>
+
+        <!-- Task Summary -->
+        <div class="card">
+          <h3>📋 Task Summary</h3>
+          <div id="taskSummary">
+            <div class="loading">Loading tasks</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>Dashboard last updated: <strong id="lastUpdate">Loading...</strong></p>
+        <p>Data generated: <strong id="dataGenerated">--</strong></p>
+        <div class="footer-links">
+          <a href="./metrics/snapshots/" class="footer-link">View Metrics History</a>
+          <a href="./Automation/observability/" class="footer-link">Observability Scripts</a>
+          <a href="./agents/" class="footer-link">Agent Management</a>
+        </div>
+        <p style="margin-top: 15px; opacity: 0.8;">Quantum Workspace v2.1 • OA-06 Enhanced Dashboard</p>
+      </div>
+    </div>
+
+    <script>
+      let dashboardData = null;
+
+      // Load dashboard data
+      async function loadDashboardData() {
+        try {
+          const response = await fetch('./dashboard_data.json?t=' + Date.now());
+          if (!response.ok) throw new Error('Failed to fetch');
+          dashboardData = await response.json();
+          return true;
+        } catch (error) {
+          console.error('Error loading dashboard data:', error);
+          return false;
+        }
+      }
+
+      // Update status bar
+      function updateStatusBar() {
+        if (!dashboardData) return;
+
+        const cards = [
+          {
+            selector: 0,
+            title: 'Agents',
+            value: dashboardData.agent_summary?.running || 0,
+            label: `${dashboardData.agent_summary?.total || 0} total, ${dashboardData.agent_summary?.unresponsive || 0} unresponsive`,
+            status: (dashboardData.agent_summary?.health_percent || 0) > 70 ? 'healthy' : 
+                    (dashboardData.agent_summary?.health_percent || 0) > 40 ? 'warning' : 'critical'
+          },
+          {
+            selector: 1,
+            title: 'Workflows',
+            value: (dashboardData.workflows || []).length,
+            label: `${(dashboardData.workflows || []).filter(w => w.conclusion === 'failure').length} recent failures`,
+            status: (dashboardData.workflows || []).some(w => w.conclusion === 'failure') ? 'warning' : 'healthy'
+          },
+          {
+            selector: 2,
+            title: 'MCP Server',
+            value: dashboardData.mcp?.available ? 'ONLINE' : 'OFFLINE',
+            label: `${dashboardData.mcp?.alerts_24h?.total || 0} alerts (24h)`,
+            status: dashboardData.mcp?.available ? 'healthy' : 'offline'
+          },
+          {
+            selector: 3,
+            title: 'Ollama',
+            value: dashboardData.ollama?.available ? 'READY' : 'DOWN',
+            label: `${dashboardData.ollama?.models_count || 0} models loaded`,
+            status: dashboardData.ollama?.available ? 'healthy' : 'critical'
+          },
+          {
+            selector: 4,
+            title: 'Disk Usage',
+            value: `${dashboardData.system?.disk_usage?.percent || 0}%`,
+            label: dashboardData.system?.disk_usage?.status || 'unknown',
+            status: dashboardData.system?.disk_usage?.status || 'unknown'
+          },
+          {
+            selector: 5,
+            title: 'Tasks',
+            value: (dashboardData.tasks?.total_pending || 0) + (dashboardData.tasks?.total_active || 0),
+            label: `${dashboardData.tasks?.total_pending || 0} pending, ${dashboardData.tasks?.total_active || 0} active`,
+            status: 'healthy'
+          }
+        ];
+
+        const statusBar = document.getElementById('statusBar');
+        const cardElements = statusBar.querySelectorAll('.status-card');
+
+        cards.forEach(card => {
+          const element = cardElements[card.selector];
+          if (element) {
+            element.className = `status-card ${card.status}`;
+            element.querySelector('h4').textContent = card.title;
+            element.querySelector('.status-card-value').textContent = card.value;
+            element.querySelector('.status-card-label').textContent = card.label;
+            element.querySelector('.status-indicator').className = `status-indicator ${card.status}`;
+          }
+        });
+      }
+
+      // Update agent list
+      function updateAgentList() {
+        const agentList = document.getElementById('agentList');
+        const agentCount = document.getElementById('agentCount');
+
+        if (!dashboardData?.agents || Object.keys(dashboardData.agents).length === 0) {
+          agentList.innerHTML = '<li class="empty-state"><div class="empty-state-icon">🤖</div>No agents found</li>';
+          agentCount.textContent = '0';
+          return;
+        }
+
+        const agents = Object.entries(dashboardData.agents).sort((a, b) => {
+          const statusOrder = { running: 0, idle: 1, stopped: 2, unresponsive: 3 };
+          return (statusOrder[a[1].status] || 9) - (statusOrder[b[1].status] || 9);
+        });
+
+        agentCount.textContent = agents.length;
+
+        agentList.innerHTML = agents.map(([name, data]) => {
+          const displayName = name.replace(/_/g, ' ').replace(/\.sh$/, '').replace(/\b\w/g, l => l.toUpperCase());
+          const statusClass = data.status || 'unknown';
+          
+          return `
+            <li class="agent-item ${statusClass}">
+              <div class="agent-info">
+                <div class="agent-name">${displayName}</div>
+                <div class="agent-meta">
+                  <span class="agent-meta-item">⏰ ${data.last_seen_human || 'never'}</span>
+                  <span class="agent-meta-item">✅ ${data.tasks_completed || 0} tasks</span>
+                  ${data.pid ? `<span class="agent-meta-item">🔢 PID ${data.pid}</span>` : ''}
+                </div>
+              </div>
+              <span class="agent-status status-${statusClass}">${statusClass}</span>
+            </li>
+          `;
+        }).join('');
+      }
+
+      // Update workflow list
+      function updateWorkflows() {
+        const workflowList = document.getElementById('workflowList');
+        const workflowCount = document.getElementById('workflowCount');
+
+        if (!dashboardData?.workflows || dashboardData.workflows.length === 0) {
+          workflowList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚙️</div>No workflow data available</div>';
+          workflowCount.textContent = '0';
+          return;
+        }
+
+        workflowCount.textContent = dashboardData.workflows.length;
+
+        workflowList.innerHTML = dashboardData.workflows.map(workflow => {
+          const conclusion = workflow.conclusion || workflow.status;
+          const statusClass = conclusion === 'success' ? 'success' : 
+                             conclusion === 'failure' ? 'failure' : 'in_progress';
+          
+          return `
+            <div class="workflow-item ${statusClass}">
+              <div class="workflow-header">
+                <span class="workflow-name">${workflow.name}</span>
+                <span class="workflow-badge ${statusClass}">${conclusion}</span>
+              </div>
+              <div class="workflow-stats">
+                <span>📊 ${workflow.total_runs || 0} runs</span>
+                <span>❌ ${workflow.recent_failures || 0} failures</span>
+                <span>⏰ ${new Date(workflow.last_run).toLocaleDateString()}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Update MCP alerts
+      function updateMCPAlerts() {
+        const alertsDiv = document.getElementById('mcpAlerts');
+        const alertCount = document.getElementById('alertCount');
+
+        if (!dashboardData?.mcp) {
+          alertsDiv.innerHTML = '<div class="empty-state">No MCP data</div>';
+          alertCount.textContent = '0';
+          return;
+        }
+
+        const alerts = dashboardData.mcp.alerts_24h || {};
+        const total = alerts.total || 0;
+        alertCount.textContent = total;
+
+        alertsDiv.innerHTML = `
+          <div class="metric">
+            <span class="metric-name">🔴 Critical</span>
+            <span class="metric-value">${alerts.critical || 0}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">❌ Errors</span>
+            <span class="metric-value">${alerts.error || 0}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">⚠️ Warnings</span>
+            <span class="metric-value">${alerts.warning || 0}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">ℹ️ Info</span>
+            <span class="metric-value">${alerts.info || 0}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">Server Status</span>
+            <span class="metric-value">${dashboardData.mcp.available ? '🟢 Online' : '🔴 Offline'}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">Last Alert</span>
+            <span class="metric-value" style="font-size: 0.8em;">${dashboardData.mcp.last_alert_time || 'never'}</span>
+          </div>
+        `;
+      }
+
+      // Update system health
+      function updateSystemHealth() {
+        const healthDiv = document.getElementById('systemHealth');
+
+        if (!dashboardData?.agent_summary) {
+          healthDiv.innerHTML = '<div class="empty-state">No health data</div>';
+          return;
+        }
+
+        const healthPercent = dashboardData.agent_summary.health_percent || 0;
+        const progressClass = healthPercent > 70 ? 'healthy' : healthPercent > 40 ? 'warning' : 'critical';
+
+        healthDiv.innerHTML = `
+          <div class="metric">
+            <span class="metric-name">Overall Health</span>
+            <span class="metric-value">${healthPercent}%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill ${progressClass}" style="width: ${healthPercent}%"></div>
+          </div>
+          <div class="metric">
+            <span class="metric-name">System Load</span>
+            <span class="metric-value">${dashboardData.system?.load_average || 'N/A'}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">Uptime</span>
+            <span class="metric-value">${dashboardData.system?.uptime || 'N/A'}</span>
+          </div>
+        `;
+      }
+
+      // Update latest metrics
+      function updateLatestMetrics() {
+        const metricsDiv = document.getElementById('latestMetrics');
+
+        if (!dashboardData?.metrics || Object.keys(dashboardData.metrics).length === 0) {
+          metricsDiv.innerHTML = '<div class="empty-state">No metrics available</div>';
+          return;
+        }
+
+        const m = dashboardData.metrics;
+        const validations = m.validations || {};
+        const aiReviews = m.ai_reviews || {};
+
+        metricsDiv.innerHTML = `
+          <div class="metric">
+            <span class="metric-name">Validation Success Rate</span>
+            <span class="metric-value">${validations.success_rate || 0}%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">Total Validations</span>
+            <span class="metric-value">${validations.total || 0}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">AI Reviews (Approved)</span>
+            <span class="metric-value">${aiReviews.approved || 0}/${aiReviews.total || 0}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">Needs Changes</span>
+            <span class="metric-value">${aiReviews.needs_changes || 0}</span>
+          </div>
+        `;
+      }
+
+      // Update task summary
+      function updateTaskSummary() {
+        const taskDiv = document.getElementById('taskSummary');
+
+        if (!dashboardData?.tasks) {
+          taskDiv.innerHTML = '<div class="empty-state">No task data</div>';
+          return;
+        }
+
+        const total = (dashboardData.tasks.total_pending || 0) + (dashboardData.tasks.total_active || 0);
+
+        taskDiv.innerHTML = `
+          <div class="metric">
+            <span class="metric-name">Total Tasks</span>
+            <span class="metric-value">${total}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">⏳ Pending</span>
+            <span class="metric-value">${dashboardData.tasks.total_pending || 0}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-name">▶️ Active</span>
+            <span class="metric-value">${dashboardData.tasks.total_active || 0}</span>
+          </div>
+          ${Object.keys(dashboardData.tasks.by_agent || {}).length > 0 ? `
+            <hr style="border: none; border-top: 1px solid #ecf0f1; margin: 15px 0;">
+            <div style="font-weight: 600; margin-bottom: 10px;">By Agent:</div>
+            ${Object.entries(dashboardData.tasks.by_agent).map(([agent, count]) => `
+              <div class="metric">
+                <span class="metric-name">${agent}</span>
+                <span class="metric-value">${count}</span>
+              </div>
+            `).join('')}
+          ` : ''}
+        `;
+      }
+
+      // Update timestamps
+      function updateTimestamps() {
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+        if (dashboardData?.generated_at) {
+          document.getElementById('dataGenerated').textContent = new Date(dashboardData.generated_at).toLocaleString();
+        }
+      }
+
+      // Refresh dashboard
+      async function refreshDashboard() {
+        console.log('Refreshing dashboard...');
+        const loaded = await loadDashboardData();
+        if (loaded) {
+          updateStatusBar();
+          updateAgentList();
+          updateWorkflows();
+          updateMCPAlerts();
+          updateSystemHealth();
+          updateLatestMetrics();
+          updateTaskSummary();
+        }
+        updateTimestamps();
+      }
+
+      // Generate new data
+      async function generateNewData() {
+        alert('Running dashboard data generator...\n\nThis will execute:\n./Tools/Automation/dashboard/generate_dashboard_data.sh\n\nCheck the console for output.');
+        // In production, this would trigger the script via an API call
+        setTimeout(refreshDashboard, 2000);
+      }
+
+      // Initialize dashboard
+      document.addEventListener('DOMContentLoaded', async function() {
+        await refreshDashboard();
+      });
+
+      // Auto-refresh every 30 seconds
+      setInterval(refreshDashboard, 30000);
+    </script>
+  </body>
+</html>
