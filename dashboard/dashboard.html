@@ -611,15 +611,69 @@
 
       // Load dashboard data
       async function loadDashboardData() {
-        try {
-          const response = await fetch('./dashboard_data.json?t=' + Date.now());
-          if (!response.ok) throw new Error('Failed to fetch');
-          dashboardData = await response.json();
-          return true;
-        } catch (error) {
-          console.error('Error loading dashboard data:', error);
-          return false;
+        // Try multiple paths to find the data file
+        const paths = [
+          '../../dashboard_data.json', // From Tools/Automation/dashboard/ to Tools/
+          '../../../Tools/dashboard_data.json', // Absolute from root
+          './dashboard_data.json' // Same directory (fallback)
+        ];
+
+        for (const path of paths) {
+          try {
+            console.log('Attempting to load from:', path);
+            // Strong cache-busting with timestamp and random value
+            const cacheBuster = '?v=' + Date.now() + '&r=' + Math.random();
+            const response = await fetch(path + cacheBuster, {
+              cache: 'no-store',
+              headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+              }
+            });
+            if (response.ok) {
+              dashboardData = await response.json();
+              console.log('✅ Successfully loaded dashboard data from:', path);
+              console.log('📊 Data summary:', {
+                generated: dashboardData.generated_at,
+                workflows: dashboardData.workflows?.length || 0,
+                disk: (dashboardData.system?.disk_usage?.percent || 0) + '%',
+                ollama: dashboardData.ollama?.available ? 'available' : 'unavailable',
+                mcp: dashboardData.mcp?.available ? 'online' : 'offline',
+                agents: Object.keys(dashboardData.agents || {}).length
+              });
+              return true;
+            }
+          } catch (error) {
+            console.warn('Failed to load from', path, ':', error.message);
+          }
         }
+        
+        console.error('Failed to load dashboard data from all paths');
+        console.error('💡 CORS Issue Detected: Browsers block fetch() on file:// URLs');
+        console.error('📋 Solution Options:');
+        console.error('  1. Run: ./Tools/Automation/dashboard/serve_dashboard.sh');
+        console.error('  2. Or use: python3 -m http.server 8080 (from workspace root)');
+        console.error('  3. Then open: http://localhost:8080/Tools/Automation/dashboard/dashboard.html');
+        showError('⚠️ CORS Error: Dashboard must be served over HTTP. Run: ./Tools/Automation/dashboard/serve_dashboard.sh');
+        return false;
+      }
+
+      // Show error message
+      function showError(message) {
+        const statusCards = document.querySelectorAll('.status-card');
+        statusCards.forEach(card => {
+          const loading = card.querySelector('.loading');
+          if (loading) {
+            loading.innerHTML = '<div style="font-size: 0.9em;">❌ CORS Error</div><div style="font-size: 0.7em; margin-top: 5px;">Run serve_dashboard.sh</div>';
+            loading.style.color = '#e74c3c';
+          }
+        });
+        
+        document.querySelectorAll('.loading').forEach(el => {
+          el.innerHTML = '<div>❌ Data unavailable</div><div style="font-size: 0.8em; margin-top: 5px;">Serve over HTTP</div>';
+          el.style.color = '#e74c3c';
+        });
       }
 
       // Update status bar
@@ -693,7 +747,15 @@
         const agentCount = document.getElementById('agentCount');
 
         if (!dashboardData?.agents || Object.keys(dashboardData.agents).length === 0) {
-          agentList.innerHTML = '<li class="empty-state"><div class="empty-state-icon">🤖</div>No agents found</li>';
+          agentList.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">🤖</div>
+              <div>No agents currently tracked</div>
+              <div style="font-size: 0.9em; color: #7f8c8d; margin-top: 10px;">
+                Agents will appear here once agent_status.json is populated
+              </div>
+            </div>
+          `;
           agentCount.textContent = '0';
           return;
         }
@@ -913,9 +975,17 @@
 
       // Refresh dashboard
       async function refreshDashboard() {
-        console.log('Refreshing dashboard...');
+        console.log('=== Refreshing dashboard at', new Date().toLocaleString(), '===');
+        const refreshBtn = document.querySelector('.btn-success');
+        if (refreshBtn) {
+          refreshBtn.textContent = '🔄 Refreshing...';
+          refreshBtn.disabled = true;
+        }
+        
         const loaded = await loadDashboardData();
-        if (loaded) {
+        
+        if (loaded && dashboardData) {
+          console.log('Dashboard data loaded successfully');
           updateStatusBar();
           updateAgentList();
           updateWorkflows();
@@ -923,8 +993,15 @@
           updateSystemHealth();
           updateLatestMetrics();
           updateTaskSummary();
+          updateTimestamps();
+        } else {
+          console.error('Failed to load dashboard data');
         }
-        updateTimestamps();
+        
+        if (refreshBtn) {
+          refreshBtn.textContent = '🔄 Refresh';
+          refreshBtn.disabled = false;
+        }
       }
 
       // Generate new data
@@ -936,11 +1013,28 @@
 
       // Initialize dashboard
       document.addEventListener('DOMContentLoaded', async function() {
+        console.log('Dashboard initializing...');
+        console.log('Current location:', window.location.href);
+        console.log('Base path:', window.location.pathname);
+        
         await refreshDashboard();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(async () => {
+          console.log('Auto-refresh triggered');
+          await refreshDashboard();
+        }, 30000);
+        
+        console.log('Dashboard initialized. Auto-refresh enabled (30s interval)');
       });
 
-      // Auto-refresh every 30 seconds
-      setInterval(refreshDashboard, 30000);
+      // Handle manual refresh button
+      window.addEventListener('load', function() {
+        const refreshBtn = document.querySelector('.btn-success');
+        if (refreshBtn) {
+          refreshBtn.addEventListener('click', refreshDashboard);
+        }
+      });
     </script>
   </body>
 </html>
