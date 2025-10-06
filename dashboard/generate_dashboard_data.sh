@@ -19,7 +19,7 @@ readonly DISK_CRITICAL_THRESHOLD="${DISK_CRITICAL_THRESHOLD:-95}"
 get_agent_status() {
     local agent_file="${ROOT_DIR}/Tools/agents/agent_status.json"
     
-    if [[ ! -f "$agent_file" ]]; then
+    if [[ ! -f "$agent_file" ]] || [[ ! -s "$agent_file" ]]; then
         echo '{}'
         return
     fi
@@ -195,22 +195,26 @@ generate_dashboard_data() {
     
     # Calculate agent summary from agent_status
     local total_agents
-    total_agents=$(echo "$agent_status" | jq 'length')
+    total_agents=$(echo "$agent_status" | jq 'length // 0')
     
     local running_agents
-    running_agents=$(echo "$agent_status" | jq '[.[] | select(.status == "running")] | length')
+    running_agents=$(echo "$agent_status" | jq '[.[] | select(.status == "running")] | length // 0')
     
     local idle_agents
-    idle_agents=$(echo "$agent_status" | jq '[.[] | select(.status == "idle")] | length')
+    idle_agents=$(echo "$agent_status" | jq '[.[] | select(.status == "idle")] | length // 0')
     
     local stopped_agents
-    stopped_agents=$(echo "$agent_status" | jq '[.[] | select(.status == "stopped")] | length')
+    stopped_agents=$(echo "$agent_status" | jq '[.[] | select(.status == "stopped")] | length // 0')
     
     local unresponsive_agents
-    unresponsive_agents=$(echo "$agent_status" | jq '[.[] | select(.status == "unresponsive")] | length')
+    unresponsive_agents=$(echo "$agent_status" | jq '[.[] | select(.status == "unresponsive")] | length // 0')
     
     local health_percent
-    health_percent=$(awk "BEGIN {if(${total_agents}>0) printf \"%.0f\", (${running_agents}+${idle_agents})/${total_agents}*100; else print 0}")
+    if [[ ${total_agents:-0} -gt 0 ]]; then
+        health_percent=$(awk "BEGIN {printf \"%.0f\", (${running_agents}+${idle_agents})/${total_agents}*100}")
+    else
+        health_percent=0
+    fi
     
     local uptime_value
     uptime_value=$(uptime | awk '{print $3,$4}' | sed 's/,//')
