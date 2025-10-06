@@ -5,6 +5,13 @@ echo "[$(date)] build_agent: Auto-debug task creation enabled (max consecutive f
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 WORKSPACE="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+
+# Source AI enhancement modules
+ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"
+if [[ -f "${ENHANCEMENTS_DIR}/ai_build_optimizer.sh" ]]; then
+  # shellcheck source=../enhancements/ai_build_optimizer.sh
+  source "${ENHANCEMENTS_DIR}/ai_build_optimizer.sh"
+fi
 AGENT_NAME="build_agent"
 AGENT_LABEL="BuildAgent"
 LOG_FILE="${SCRIPT_DIR}/build_agent.log"

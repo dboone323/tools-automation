@@ -2,9 +2,18 @@
 # Testing Agent: Automated test generation, execution, and coverage analysis
 # Handles Swift unit tests, integration tests, and test coverage reporting
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 AGENT_NAME="TestingAgent"
 LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/testing_agent.log"
 PROJECTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Projects"
+
+# Source AI enhancement modules
+ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"
+if [[ -f "${ENHANCEMENTS_DIR}/ai_testing_optimizer.sh" ]]; then
+  # shellcheck source=../enhancements/ai_testing_optimizer.sh
+  source "${ENHANCEMENTS_DIR}/ai_testing_optimizer.sh"
+fi
 
 SLEEP_INTERVAL=900 # Start with 15 minutes for testing work
 MIN_INTERVAL=300

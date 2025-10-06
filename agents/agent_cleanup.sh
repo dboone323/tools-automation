@@ -13,6 +13,13 @@ LOG_FILE="${AGENTS_DIR}/${AGENT_NAME}.log"
 STATUS_FILE="${AGENTS_DIR}/agent_status.json"
 CLEANUP_REPORT_DIR="${WORKSPACE_ROOT}/.metrics/cleanup"
 
+# Source AI enhancement modules
+ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"
+if [[ -f "${ENHANCEMENTS_DIR}/ai_cleanup_optimizer.sh" ]]; then
+  # shellcheck source=../enhancements/ai_cleanup_optimizer.sh
+  source "${ENHANCEMENTS_DIR}/ai_cleanup_optimizer.sh"
+fi
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'

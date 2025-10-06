@@ -14,6 +14,13 @@ STATUS_FILE="${AGENTS_DIR}/agent_status.json"
 BACKUP_DIR="${BACKUP_DIR:-${WORKSPACE_ROOT}/.backups}"
 BACKUP_MANIFEST="${BACKUP_DIR}/manifest.json"
 
+# Source AI enhancement modules
+ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"
+if [[ -f "${ENHANCEMENTS_DIR}/ai_backup_optimizer.sh" ]]; then
+  # shellcheck source=../enhancements/ai_backup_optimizer.sh
+  source "${ENHANCEMENTS_DIR}/ai_backup_optimizer.sh"
+fi
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
