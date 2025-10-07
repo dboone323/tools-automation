@@ -14,12 +14,12 @@ check_ollama() {
 ai_optimize_build_strategy() {
   local project_metadata="$1"
   local build_history="$2"
-  
+
   if ! check_ollama; then
-    echo "incremental"  # Safe default
+    echo "incremental" # Safe default
     return
   fi
-  
+
   local prompt="Based on this project metadata and build history, recommend the optimal build strategy:
 
 Project Metadata:
@@ -38,14 +38,14 @@ Respond with: clean, incremental, or cached"
 
   local strategy
   strategy=$(ollama run llama2 "${prompt}" 2>/dev/null | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
-  
+
   case "${strategy}" in
-    clean|incremental|cached)
-      echo "${strategy}"
-      ;;
-    *)
-      echo "incremental"  # Safe default
-      ;;
+  clean | incremental | cached)
+    echo "${strategy}"
+    ;;
+  *)
+    echo "incremental" # Safe default
+    ;;
   esac
 }
 
@@ -53,12 +53,12 @@ Respond with: clean, incremental, or cached"
 ai_predict_build_time() {
   local changed_files="$1"
   local historical_builds="$2"
-  
+
   if ! check_ollama; then
-    echo "300"  # Default: 5 minutes
+    echo "300" # Default: 5 minutes
     return
   fi
-  
+
   local prompt="Based on changed files and historical build data, predict build time (seconds):
 
 Changed Files:
@@ -77,7 +77,7 @@ Respond with just the number of seconds (30-7200)."
 
   local predicted_time
   predicted_time=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
-  
+
   # Ensure reasonable bounds: 30s-7200s (2 hours)
   if [[ -n "${predicted_time}" ]]; then
     if [[ ${predicted_time} -lt 30 ]]; then
@@ -88,19 +88,19 @@ Respond with just the number of seconds (30-7200)."
       echo "${predicted_time}"
     fi
   else
-    echo "300"  # Safe default
+    echo "300" # Safe default
   fi
 }
 
 # Intelligent cache management
 ai_optimize_build_cache() {
   local cache_stats="$1"
-  
+
   if ! check_ollama; then
-    echo "keep"  # Conservative default
+    echo "keep" # Conservative default
     return
   fi
-  
+
   local prompt="Based on these build cache statistics, recommend cache action:
 ${cache_stats}
 
@@ -114,14 +114,14 @@ Respond with: keep, prune, or clear"
 
   local action
   action=$(ollama run llama2 "${prompt}" 2>/dev/null | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
-  
+
   case "${action}" in
-    keep|prune|clear)
-      echo "${action}"
-      ;;
-    *)
-      echo "keep"  # Safe default
-      ;;
+  keep | prune | clear)
+    echo "${action}"
+    ;;
+  *)
+    echo "keep" # Safe default
+    ;;
   esac
 }
 
@@ -129,12 +129,12 @@ Respond with: keep, prune, or clear"
 ai_analyze_build_dependencies() {
   local dependency_graph="$1"
   local changed_files="$2"
-  
+
   if ! check_ollama; then
-    echo "rebuild-all"  # Conservative approach
+    echo "rebuild-all" # Conservative approach
     return
   fi
-  
+
   local prompt="Analyze this dependency graph and changed files to determine minimal rebuild scope:
 
 Dependency Graph:
@@ -157,11 +157,11 @@ Respond with: rebuild-all, rebuild-affected, or module-list (comma-separated)"
 ai_predict_build_failures() {
   local code_changes="$1"
   local build_config="$2"
-  
+
   if ! check_ollama; then
-    return 0  # No prediction available
+    return 0 # No prediction available
   fi
-  
+
   local prompt="Analyze these code changes and build configuration to predict potential build failures:
 
 Code Changes:
@@ -180,12 +180,12 @@ Respond with: OK if no issues expected, or list specific risks."
 
   local analysis
   analysis=$(ollama run llama2 "${prompt}" 2>/dev/null)
-  
+
   if echo "${analysis}" | grep -iq "^OK"; then
-    return 0  # No failures predicted
+    return 0 # No failures predicted
   else
     echo "${analysis}" >&2
-    return 1  # Potential failures identified
+    return 1 # Potential failures identified
   fi
 }
 
@@ -193,12 +193,12 @@ Respond with: OK if no issues expected, or list specific risks."
 ai_recommend_parallelization() {
   local system_resources="$1"
   local build_profile="$2"
-  
+
   if ! check_ollama; then
-    echo "4"  # Safe default for parallel jobs
+    echo "4" # Safe default for parallel jobs
     return
   fi
-  
+
   local prompt="Based on system resources and build profile, recommend optimal parallel job count:
 
 System Resources:
@@ -217,7 +217,7 @@ Respond with just the number of parallel jobs (1-32)."
 
   local jobs
   jobs=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
-  
+
   # Ensure reasonable bounds: 1-32 jobs
   if [[ -n "${jobs}" ]]; then
     if [[ ${jobs} -lt 1 ]]; then
@@ -228,7 +228,7 @@ Respond with just the number of parallel jobs (1-32)."
       echo "${jobs}"
     fi
   else
-    echo "4"  # Safe default
+    echo "4" # Safe default
   fi
 }
 
@@ -236,12 +236,12 @@ Respond with just the number of parallel jobs (1-32)."
 ai_generate_build_insights() {
   local build_history="$1"
   local output_file="$2"
-  
+
   if ! check_ollama; then
-    echo "AI insights unavailable (Ollama not installed)" > "${output_file}"
+    echo "AI insights unavailable (Ollama not installed)" >"${output_file}"
     return
   fi
-  
+
   local prompt="Analyze this build history and provide actionable insights:
 ${build_history}
 
@@ -254,19 +254,19 @@ Generate a report covering:
 
 Format as markdown with clear sections."
 
-  ollama run llama2 "${prompt}" 2>/dev/null > "${output_file}"
+  ollama run llama2 "${prompt}" 2>/dev/null >"${output_file}"
 }
 
 # Smart build target selection
 ai_select_build_targets() {
   local changed_files="$1"
   local available_targets="$2"
-  
+
   if ! check_ollama; then
-    echo "${available_targets}"  # Build all targets
+    echo "${available_targets}" # Build all targets
     return
   fi
-  
+
   local prompt="Based on these changed files, select the minimal set of build targets needed:
 
 Changed Files:

@@ -2,7 +2,6 @@
 # Seed a set of demo tasks into the orchestrator task queue for dashboard metrics
 # Usage: ./seed_demo_tasks.sh [COUNT]
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
@@ -26,15 +25,33 @@ echo "Seeding ${COUNT} demo tasks..."
 for i in $(seq 1 ${COUNT}); do
   id=$(date +%s%N | cut -b1-13)$RANDOM
   # Rotate through a few task types to exercise agent selection
-  case $(( i % 6 )) in
-    0) type="build"; desc="Build pipeline";;
-    1) type="test"; desc="Run unit tests";;
-    2) type="generate"; desc="Scaffold feature";;
-    3) type="debug"; desc="Investigate issue";;
-    4) type="performance"; desc="Profile hotspot";;
-    5) type="security"; desc="Security scan";;
+  case $((i % 6)) in
+  0)
+    type="build"
+    desc="Build pipeline"
+    ;;
+  1)
+    type="test"
+    desc="Run unit tests"
+    ;;
+  2)
+    type="generate"
+    desc="Scaffold feature"
+    ;;
+  3)
+    type="debug"
+    desc="Investigate issue"
+    ;;
+  4)
+    type="performance"
+    desc="Profile hotspot"
+    ;;
+  5)
+    type="security"
+    desc="Security scan"
+    ;;
   esac
-  priority=$(( (RANDOM % 5) + 1 ))
+  priority=$(((RANDOM % 5) + 1))
   # Minimal task object; orchestrator will enrich
   tmp="${TASK_QUEUE_FILE}.tmp$$"
   if jq --arg id "$id" --arg type "$type" --arg desc "$desc" --argjson prio "$priority" '.tasks += [{"id":$id, "type":$type, "description":$desc, "priority":$prio, "status":"queued", "created_at": (now|floor)}]' "${TASK_QUEUE_FILE}" >"${tmp}"; then

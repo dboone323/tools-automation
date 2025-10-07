@@ -2,7 +2,6 @@
 # Multi-level backup/restore manager for agents
 # Usage: backup_manager.sh backup <project> | restore <project> | list
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"

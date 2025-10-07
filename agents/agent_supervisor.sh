@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Agent Supervisor: Starts and monitors all agents
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
@@ -21,8 +20,6 @@ AGENT_LOGS_FILE="$(dirname "$0")/agent_logs.txt"
 AGENT_RESTART_COUNT_FILE="$(dirname "$0")/agent_restart_count.txt"
 AGENT_LAST_RESTART_FILE="$(dirname "$0")/agent_last_restart.txt"
 SUPERVISOR_PID_FILE="$(dirname "$0")/agent_supervisor.pid"
-STATUS_FILE="${AGENTS_DIR}/agent_status.json"
-STATUS_UTIL="${AGENTS_DIR}/status_utils.py"
 
 MANAGED_AGENTS=(
   "agent_build.sh"
@@ -445,7 +442,7 @@ restart_agent() {
 cleanup_task_queue() {
   local queue_file="${AGENTS_DIR}/task_queue.json"
   [[ -f ${queue_file} ]] || return 0
-  
+
   # Use Python to clean old tasks (keep only recent/active)
   python3 - <<'PYCLEAN' >"${LOG_FILE}" 2>&1
 import json
@@ -454,15 +451,15 @@ from datetime import datetime, timedelta
 try:
     with open('${AGENTS_DIR}/task_queue.json') as f:
         data = json.load(f)
-    
+
     original_count = len(data.get("tasks", []))
     if original_count < 1000:  # Skip if not bloated
         exit(0)
-    
+
     now = datetime.now()
     cutoff_queued = now - timedelta(hours=24)
     cutoff_completed = now - timedelta(hours=6)
-    
+
     kept_tasks = []
     for task in data.get("tasks", []):
         status = task.get("status", "unknown")
@@ -470,19 +467,19 @@ try:
             task_time = datetime.fromtimestamp(float(task.get("created_at", 0)))
         except:
             task_time = datetime.min
-        
+
         if status == "in_progress":
             kept_tasks.append(task)
         elif status == "queued" and task_time > cutoff_queued:
             kept_tasks.append(task)
         elif status in ["completed", "failed"] and task_time > cutoff_completed:
             kept_tasks.append(task)
-    
+
     data["tasks"] = kept_tasks
-    
+
     with open('${AGENTS_DIR}/task_queue.json', 'w') as f:
         json.dump(data, f, indent=2)
-    
+
     print(f"[{datetime.now()}] Cleaned task_queue: {original_count} -> {len(kept_tasks)} tasks")
 except Exception as e:
     print(f"[{datetime.now()}] Task queue cleanup failed: {e}")
@@ -492,6 +489,8 @@ PYCLEAN
 
 run_supervisor_loop() {
   echo "$$" >"${SUPERVISOR_PID_FILE}"
+  # Update status when loop starts
+  update_agent_status "agent_supervisor.sh" "active" $$ ""
   # Supervisor main loop: monitor logs and restart agents on error/rollback
   while true; do
     for agent in "${MANAGED_AGENTS[@]}"; do
@@ -534,12 +533,15 @@ run_supervisor_loop() {
         fi
       fi
     fi
-    
+
     # Periodically clean task queue to prevent bloat
     if ((now_epoch % 3600 < 5)); then # every ~1 hour
       cleanup_task_queue
     fi
-    
+
+    # Update supervisor status periodically
+    update_agent_status "agent_supervisor.sh" "active" $$ ""
+
     sleep 120 # Check every 2 minutes
   done
 }
@@ -578,7 +580,9 @@ stop_dashboard() {
 # Command dispatch
 cmd=${1:-start}
 case "${cmd}" in
-start)
+start | daemon)
+  # Update status when starting
+  update_agent_status "agent_supervisor.sh" "active" $$ ""
   start_all_agents
   start_dashboard || true
   run_supervisor_loop

@@ -2,7 +2,6 @@
 # Distributed Agent Health Check
 # Checks health/status of agent supervisors on all remote hosts.
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"

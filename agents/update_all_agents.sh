@@ -32,40 +32,40 @@ log "Backup directory: $BACKUP_DIR"
 # ============================================================================
 
 update_agents_to_use_shared_functions() {
-    log "Task 1 & 5: Updating agents to use enhanced shared functions..."
-    
-    local agents_updated=0
-    local agents_skipped=0
-    
-    # Replace old shared_functions.sh with enhanced version
-    if [[ -f "$AGENTS_DIR/shared_functions.sh" ]]; then
-        cp "$AGENTS_DIR/shared_functions.sh" "$BACKUP_DIR/shared_functions.sh.backup"
-        cp "$AGENTS_DIR/enhanced_shared_functions.sh" "$AGENTS_DIR/shared_functions.sh"
-        success "Replaced shared_functions.sh with enhanced version"
+  log "Task 1 & 5: Updating agents to use enhanced shared functions..."
+
+  local agents_updated=0
+  local agents_skipped=0
+
+  # Replace old shared_functions.sh with enhanced version
+  if [[ -f "$AGENTS_DIR/shared_functions.sh" ]]; then
+    cp "$AGENTS_DIR/shared_functions.sh" "$BACKUP_DIR/shared_functions.sh.backup"
+    cp "$AGENTS_DIR/enhanced_shared_functions.sh" "$AGENTS_DIR/shared_functions.sh"
+    success "Replaced shared_functions.sh with enhanced version"
+  fi
+
+  # Find all agent scripts
+  for agent_file in "$AGENTS_DIR"/*.sh; do
+    [[ ! -f "$agent_file" ]] && continue
+    [[ "$agent_file" == *"shared_functions"* ]] && continue
+    [[ "$agent_file" == *"update_all_agents"* ]] && continue
+    [[ "$agent_file" == *"start_"* ]] && continue
+    [[ "$agent_file" == *"monitor_"* ]] && continue
+
+    local agent_name=$(basename "$agent_file")
+
+    # Check if already using shared functions
+    if grep -q "shared_functions.sh" "$agent_file"; then
+      warning "$agent_name already sources shared_functions.sh - skipping"
+      agents_skipped=$((agents_skipped + 1))
+      continue
     fi
-    
-    # Find all agent scripts
-    for agent_file in "$AGENTS_DIR"/*.sh; do
-        [[ ! -f "$agent_file" ]] && continue
-        [[ "$agent_file" == *"shared_functions"* ]] && continue
-        [[ "$agent_file" == *"update_all_agents"* ]] && continue
-        [[ "$agent_file" == *"start_"* ]] && continue
-        [[ "$agent_file" == *"monitor_"* ]] && continue
-        
-        local agent_name=$(basename "$agent_file")
-        
-        # Check if already using shared functions
-        if grep -q "shared_functions.sh" "$agent_file"; then
-            warning "$agent_name already sources shared_functions.sh - skipping"
-            agents_skipped=$((agents_skipped + 1))
-            continue
-        fi
-        
-        # Backup original
-        cp "$agent_file" "$BACKUP_DIR/$agent_name.backup"
-        
-        # Add shared functions sourcing at the top (after shebang and initial comments)
-        python3 << PYEOF
+
+    # Backup original
+    cp "$agent_file" "$BACKUP_DIR/$agent_name.backup"
+
+    # Add shared functions sourcing at the top (after shebang and initial comments)
+    python3 <<PYEOF
 import re
 
 with open("$agent_file", "r") as f:
@@ -101,16 +101,16 @@ with open("$agent_file", "w") as f:
 
 print("Updated $agent_name")
 PYEOF
-        
-        if [[ $? -eq 0 ]]; then
-            success "Updated $agent_name to use shared functions"
-            agents_updated=$((agents_updated + 1))
-        else
-            error "Failed to update $agent_name"
-        fi
-    done
-    
-    success "Updated $agents_updated agents, skipped $agents_skipped agents"
+
+    if [[ $? -eq 0 ]]; then
+      success "Updated $agent_name to use shared functions"
+      agents_updated=$((agents_updated + 1))
+    else
+      error "Failed to update $agent_name"
+    fi
+  done
+
+  success "Updated $agents_updated agents, skipped $agents_skipped agents"
 }
 
 # ============================================================================
@@ -118,31 +118,31 @@ PYEOF
 # ============================================================================
 
 check_jq_errors() {
-    log "Task 2: Monitoring logs for jq errors..."
-    
-    local log_files=$(find "$AGENTS_DIR" -name "*.log" -type f 2>/dev/null)
-    local error_count=0
-    
-    if [[ -z "$log_files" ]]; then
-        warning "No log files found"
-        return
+  log "Task 2: Monitoring logs for jq errors..."
+
+  local log_files=$(find "$AGENTS_DIR" -name "*.log" -type f 2>/dev/null)
+  local error_count=0
+
+  if [[ -z "$log_files" ]]; then
+    warning "No log files found"
+    return
+  fi
+
+  while IFS= read -r log_file; do
+    local errors=$(grep -c "jq.*parse error" "$log_file" 2>/dev/null || echo "0")
+    if [[ $errors -gt 0 ]]; then
+      warning "Found $errors jq errors in $(basename "$log_file")"
+      error_count=$((error_count + errors))
     fi
-    
-    while IFS= read -r log_file; do
-        local errors=$(grep -c "jq.*parse error" "$log_file" 2>/dev/null || echo "0")
-        if [[ $errors -gt 0 ]]; then
-            warning "Found $errors jq errors in $(basename "$log_file")"
-            error_count=$((error_count + errors))
-        fi
-    done <<< "$log_files"
-    
-    if [[ $error_count -eq 0 ]]; then
-        success "No jq errors found in logs"
-    else
-        warning "Total jq errors found: $error_count"
-        log "Creating monitoring report..."
-        
-        cat > "$AGENTS_DIR/jq_errors_report.txt" << EOF
+  done <<<"$log_files"
+
+  if [[ $error_count -eq 0 ]]; then
+    success "No jq errors found in logs"
+  else
+    warning "Total jq errors found: $error_count"
+    log "Creating monitoring report..."
+
+    cat >"$AGENTS_DIR/jq_errors_report.txt" <<EOF
 JQ Errors Report - $(date)
 =====================================
 
@@ -150,11 +150,11 @@ Total errors found: $error_count
 
 Recent errors (last 20):
 EOF
-        
-        grep -h "jq.*parse error" "$AGENTS_DIR"/*.log 2>/dev/null | tail -20 >> "$AGENTS_DIR/jq_errors_report.txt" || true
-        
-        success "Report saved to jq_errors_report.txt"
-    fi
+
+    grep -h "jq.*parse error" "$AGENTS_DIR"/*.log 2>/dev/null | tail -20 >>"$AGENTS_DIR/jq_errors_report.txt" || true
+
+    success "Report saved to jq_errors_report.txt"
+  fi
 }
 
 # ============================================================================
@@ -162,46 +162,46 @@ EOF
 # ============================================================================
 
 verify_analytics_json() {
-    log "Task 3: Verifying analytics files are clean JSON..."
-    
-    local metrics_dir="$WORKSPACE_ROOT/.metrics"
-    local valid_count=0
-    local invalid_count=0
-    
-    if [[ ! -d "$metrics_dir" ]]; then
-        warning "Metrics directory not found: $metrics_dir"
-        return
-    fi
-    
-    local json_files=$(find "$metrics_dir" -name "*.json" -type f 2>/dev/null)
-    
-    if [[ -z "$json_files" ]]; then
-        warning "No JSON files found in metrics directory"
-        return
-    fi
-    
-    while IFS= read -r json_file; do
-        if jq empty "$json_file" 2>/dev/null; then
-            valid_count=$((valid_count + 1))
-            success "Valid: $(basename "$json_file")"
-        else
-            invalid_count=$((invalid_count + 1))
-            error "Invalid: $(basename "$json_file")"
-            
-            # Check for ANSI codes
-            if grep -q $'\033\[' "$json_file"; then
-                warning "  → Contains ANSI color codes"
-            fi
-        fi
-    done <<< "$json_files"
-    
-    log "Analytics JSON Validation Results:"
-    success "  Valid files: $valid_count"
-    if [[ $invalid_count -gt 0 ]]; then
-        error "  Invalid files: $invalid_count"
+  log "Task 3: Verifying analytics files are clean JSON..."
+
+  local metrics_dir="$WORKSPACE_ROOT/.metrics"
+  local valid_count=0
+  local invalid_count=0
+
+  if [[ ! -d "$metrics_dir" ]]; then
+    warning "Metrics directory not found: $metrics_dir"
+    return
+  fi
+
+  local json_files=$(find "$metrics_dir" -name "*.json" -type f 2>/dev/null)
+
+  if [[ -z "$json_files" ]]; then
+    warning "No JSON files found in metrics directory"
+    return
+  fi
+
+  while IFS= read -r json_file; do
+    if jq empty "$json_file" 2>/dev/null; then
+      valid_count=$((valid_count + 1))
+      success "Valid: $(basename "$json_file")"
     else
-        success "  Invalid files: 0"
+      invalid_count=$((invalid_count + 1))
+      error "Invalid: $(basename "$json_file")"
+
+      # Check for ANSI codes
+      if grep -q $'\033\[' "$json_file"; then
+        warning "  → Contains ANSI color codes"
+      fi
     fi
+  done <<<"$json_files"
+
+  log "Analytics JSON Validation Results:"
+  success "  Valid files: $valid_count"
+  if [[ $invalid_count -gt 0 ]]; then
+    error "  Invalid files: $invalid_count"
+  else
+    success "  Invalid files: 0"
+  fi
 }
 
 # ============================================================================
@@ -209,16 +209,16 @@ verify_analytics_json() {
 # ============================================================================
 
 check_agent_availability() {
-    log "Task 4: Checking agent availability..."
-    
-    local status_file="$AGENTS_DIR/agent_status.json"
-    
-    if [[ ! -f "$status_file" ]]; then
-        error "Status file not found: $status_file"
-        return
-    fi
-    
-    python3 << PYEOF
+  log "Task 4: Checking agent availability..."
+
+  local status_file="$AGENTS_DIR/agent_status.json"
+
+  if [[ ! -f "$status_file" ]]; then
+    error "Status file not found: $status_file"
+    return
+  fi
+
+  python3 <<PYEOF
 import json
 from datetime import datetime
 import time
@@ -242,11 +242,11 @@ stale_threshold = 300  # 5 minutes
 for agent_name, agent_data in agents.items():
     status = agent_data.get("status", "unknown")
     last_seen = agent_data.get("last_seen", 0)
-    
+
     # Check if stale
     if current_time - last_seen > stale_threshold:
         stale += 1
-    
+
     if status == "available":
         available += 1
     elif status == "running" or status == "active":
@@ -297,10 +297,10 @@ PYEOF
 # ============================================================================
 
 setup_lock_monitoring() {
-    log "Task 7: Setting up lock timeout monitoring..."
-    
-    # Create monitoring script
-    cat > "$AGENTS_DIR/monitor_lock_timeouts.sh" << 'MONITOR_EOF'
+  log "Task 7: Setting up lock timeout monitoring..."
+
+  # Create monitoring script
+  cat >"$AGENTS_DIR/monitor_lock_timeouts.sh" <<'MONITOR_EOF'
 #!/bin/bash
 # Monitor file lock timeouts
 
@@ -320,7 +320,7 @@ if [[ $total_timeouts -gt 0 ]]; then
     echo "-------------------------"
     get_recent_lock_timeouts 10
     echo ""
-    
+
     if [[ $total_timeouts -gt 100 ]]; then
         echo "WARNING: High number of lock timeouts detected!"
         echo "Consider investigating agent concurrency issues."
@@ -331,12 +331,12 @@ fi
 clear_old_lock_logs 7
 echo "✓ Cleaned old lock timeout logs (>7 days)"
 MONITOR_EOF
-    
-    chmod +x "$AGENTS_DIR/monitor_lock_timeouts.sh"
-    success "Created lock timeout monitoring script"
-    
-    # Run initial check
-    bash "$AGENTS_DIR/monitor_lock_timeouts.sh"
+
+  chmod +x "$AGENTS_DIR/monitor_lock_timeouts.sh"
+  success "Created lock timeout monitoring script"
+
+  # Run initial check
+  bash "$AGENTS_DIR/monitor_lock_timeouts.sh"
 }
 
 # ============================================================================
@@ -344,10 +344,10 @@ MONITOR_EOF
 # ============================================================================
 
 setup_auto_restart() {
-    log "Task 8: Setting up agent auto-restart capability..."
-    
-    # Create auto-restart configuration script
-    cat > "$AGENTS_DIR/configure_auto_restart.sh" << 'RESTART_EOF'
+  log "Task 8: Setting up agent auto-restart capability..."
+
+  # Create auto-restart configuration script
+  cat >"$AGENTS_DIR/configure_auto_restart.sh" <<'RESTART_EOF'
 #!/bin/bash
 # Configure agent auto-restart
 
@@ -387,7 +387,7 @@ case "$command" in
         enable_auto_restart "$agent_name"
         echo "✓ Auto-restart enabled for $agent_name"
         ;;
-    
+
     disable)
         if [[ $# -lt 2 ]]; then
             echo "ERROR: Agent name required"
@@ -397,7 +397,7 @@ case "$command" in
         disable_auto_restart "$agent_name"
         echo "✓ Auto-restart disabled for $agent_name"
         ;;
-    
+
     status)
         echo "Auto-Restart Status"
         echo "==================="
@@ -406,7 +406,7 @@ case "$command" in
             agent_name=$(basename "$agent_file")
             [[ "$agent_name" == "shared_functions.sh" ]] && continue
             [[ "$agent_name" == "configure_auto_restart.sh" ]] && continue
-            
+
             if should_auto_restart "$agent_name"; then
                 echo "✓ $agent_name - ENABLED"
             else
@@ -414,32 +414,32 @@ case "$command" in
             fi
         done
         ;;
-    
+
     *)
         echo "ERROR: Unknown command: $command"
         usage
         ;;
 esac
 RESTART_EOF
-    
-    chmod +x "$AGENTS_DIR/configure_auto_restart.sh"
-    success "Created auto-restart configuration script"
-    
-    # Enable auto-restart for critical agents
-    log "Enabling auto-restart for critical agents..."
-    local critical_agents=(
-        "task_orchestrator.sh"
-        "agent_build.sh"
-        "agent_testing.sh"
-        "quality_agent.sh"
-    )
-    
-    for agent in "${critical_agents[@]}"; do
-        if [[ -f "$AGENTS_DIR/$agent" ]]; then
-            bash "$AGENTS_DIR/configure_auto_restart.sh" enable "$agent" 2>/dev/null
-            success "  Enabled: $agent"
-        fi
-    done
+
+  chmod +x "$AGENTS_DIR/configure_auto_restart.sh"
+  success "Created auto-restart configuration script"
+
+  # Enable auto-restart for critical agents
+  log "Enabling auto-restart for critical agents..."
+  local critical_agents=(
+    "task_orchestrator.sh"
+    "agent_build.sh"
+    "agent_testing.sh"
+    "quality_agent.sh"
+  )
+
+  for agent in "${critical_agents[@]}"; do
+    if [[ -f "$AGENTS_DIR/$agent" ]]; then
+      bash "$AGENTS_DIR/configure_auto_restart.sh" enable "$agent" 2>/dev/null
+      success "  Enabled: $agent"
+    fi
+  done
 }
 
 # ============================================================================
@@ -447,9 +447,9 @@ RESTART_EOF
 # ============================================================================
 
 create_final_report() {
-    log "Creating comprehensive update report..."
-    
-    cat > "$AGENTS_DIR/UPDATE_REPORT_$(date +%Y%m%d_%H%M%S).md" << EOF
+  log "Creating comprehensive update report..."
+
+  cat >"$AGENTS_DIR/UPDATE_REPORT_$(date +%Y%m%d_%H%M%S).md" <<EOF
 # Agent Enhancement Report
 Generated: $(date)
 
@@ -577,8 +577,8 @@ All modified files backed up to: $BACKUP_DIR
 - Status file: \`agent_status.json\`
 - Lock timeout log: \`/tmp/agent_lock_timeouts.log\`
 EOF
-    
-    success "Report created: UPDATE_REPORT_$(date +%Y%m%d_%H%M%S).md"
+
+  success "Report created: UPDATE_REPORT_$(date +%Y%m%d_%H%M%S).md"
 }
 
 # ============================================================================
@@ -586,44 +586,44 @@ EOF
 # ============================================================================
 
 main() {
-    echo ""
-    log "╔═══════════════════════════════════════════════════════════╗"
-    log "║                                                           ║"
-    log "║     Agent Enhancement Script - 8 Improvements             ║"
-    log "║                                                           ║"
-    log "╚═══════════════════════════════════════════════════════════╝"
-    echo ""
-    
-    update_agents_to_use_shared_functions
-    echo ""
-    
-    check_jq_errors
-    echo ""
-    
-    verify_analytics_json
-    echo ""
-    
-    check_agent_availability
-    echo ""
-    
-    setup_lock_monitoring
-    echo ""
-    
-    setup_auto_restart
-    echo ""
-    
-    create_final_report
-    echo ""
-    
-    success "╔═══════════════════════════════════════════════════════════╗"
-    success "║                                                           ║"
-    success "║     ✅ All 8 Enhancements Completed Successfully! ✅      ║"
-    success "║                                                           ║"
-    success "╚═══════════════════════════════════════════════════════════╝"
-    echo ""
-    log "Backups: $BACKUP_DIR"
-    log "Report: $AGENTS_DIR/UPDATE_REPORT_$(date +%Y%m%d_%H%M%S).md"
-    echo ""
+  echo ""
+  log "╔═══════════════════════════════════════════════════════════╗"
+  log "║                                                           ║"
+  log "║     Agent Enhancement Script - 8 Improvements             ║"
+  log "║                                                           ║"
+  log "╚═══════════════════════════════════════════════════════════╝"
+  echo ""
+
+  update_agents_to_use_shared_functions
+  echo ""
+
+  check_jq_errors
+  echo ""
+
+  verify_analytics_json
+  echo ""
+
+  check_agent_availability
+  echo ""
+
+  setup_lock_monitoring
+  echo ""
+
+  setup_auto_restart
+  echo ""
+
+  create_final_report
+  echo ""
+
+  success "╔═══════════════════════════════════════════════════════════╗"
+  success "║                                                           ║"
+  success "║     ✅ All 8 Enhancements Completed Successfully! ✅      ║"
+  success "║                                                           ║"
+  success "╚═══════════════════════════════════════════════════════════╝"
+  echo ""
+  log "Backups: $BACKUP_DIR"
+  log "Report: $AGENTS_DIR/UPDATE_REPORT_$(date +%Y%m%d_%H%M%S).md"
+  echo ""
 }
 
 main "$@"

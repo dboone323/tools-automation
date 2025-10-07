@@ -1,7 +1,6 @@
 #!/bin/bash
 # Updater Agent: Checks for and applies updates to tools, packages, and dependencies
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"

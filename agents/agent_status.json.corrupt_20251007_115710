@@ -1,0 +1,44 @@
+{
+  "agents": {
+    "agent_codegen.sh": {
+      "last_seen": 1759856221,
+      "status": "stopped"
+    },
+    "codegen_agent": {
+      "last_seen": 1759856221,
+      "status": "stopped"
+    },
+    "deployment_agent.sh": {
+      "last_seen": 1759856221,
+      "status": "available"
+    },
+    "quality_agent.sh": {
+      "last_seen": 1759856225,
+      "status": "available"
+    },
+    "agent_notification.sh": {
+      "status": "available",
+      "last_seen": 1759856228,
+      "pid": 40395
+    },
+    "performance_agent.sh": {
+      "status": "available",
+      "last_seen": 1759856229
+    },
+    "security_agent.sh": {
+      "status": "available",
+      "last_seen": 1759856229
+    },
+    "testing_agent.sh": {
+      "status": "available",
+      "last_seen": 1759856230
+    }
+  },
+  "last_update": 1759856225
+}
+    "status": "available",
+      "last_seen": 1759856230
+    }
+  },
+  "last_update": 1759856225
+}

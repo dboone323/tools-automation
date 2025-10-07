@@ -16,7 +16,7 @@ echo "📊 Test 1: Analyzing Code Complexity"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Create test file
-cat > /tmp/test_code.swift << 'EOF'
+cat >/tmp/test_code.swift <<'EOF'
 func calculateFactorial(_ n: Int) -> Int {
     if n <= 1 { return 1 }
     return n * calculateFactorial(n - 1)
@@ -49,7 +49,7 @@ echo "Simulating deployment readiness check..."
 echo ""
 
 # Create test metrics
-cat > /tmp/test_metrics.txt << 'EOF'
+cat >/tmp/test_metrics.txt <<'EOF'
 Build Status: Passed
 Test Coverage: 85%
 Failed Tests: 0
@@ -83,7 +83,7 @@ echo "⚡ Test 5: GitHub Actions Workflow Optimization"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Create sample workflow
-cat > /tmp/test_workflow.yml << 'EOF'
+cat >/tmp/test_workflow.yml <<'EOF'
 name: CI
 on: [push]
 jobs:

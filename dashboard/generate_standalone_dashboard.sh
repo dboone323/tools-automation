@@ -19,15 +19,15 @@ echo -e "${BLUE}📊 Generating standalone dashboard with embedded data...${NC}"
 
 # Check if data file exists
 if [[ ! -f "$DATA_FILE" ]]; then
-    echo -e "${YELLOW}⚠️  Data file not found, generating...${NC}"
-    "$SCRIPT_DIR/generate_dashboard_data.sh"
+  echo -e "${YELLOW}⚠️  Data file not found, generating...${NC}"
+  "$SCRIPT_DIR/generate_dashboard_data.sh"
 fi
 
 # Read the data file and escape it for JavaScript
 DATA_JSON=$(cat "$DATA_FILE" | jq -c '.')
 
 # Create standalone HTML with embedded data
-cat > "$OUTPUT_FILE" <<'EOF_START'
+cat >"$OUTPUT_FILE" <<'EOF_START'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,9 +39,9 @@ cat > "$OUTPUT_FILE" <<'EOF_START'
 EOF_START
 
 # Extract and include styles from main dashboard
-sed -n '/<style>/,/<\/style>/p' "$DASHBOARD_TEMPLATE" | sed '1d;$d' >> "$OUTPUT_FILE"
+sed -n '/<style>/,/<\/style>/p' "$DASHBOARD_TEMPLATE" | sed '1d;$d' >>"$OUTPUT_FILE"
 
-cat >> "$OUTPUT_FILE" <<'EOF_STYLE'
+cat >>"$OUTPUT_FILE" <<'EOF_STYLE'
     </style>
 </head>
 <body>
@@ -144,17 +144,17 @@ cat >> "$OUTPUT_FILE" <<'EOF_STYLE'
 EOF_STYLE
 
 # Embed the data
-echo "      // Embedded dashboard data (no CORS issues)" >> "$OUTPUT_FILE"
-echo "      const dashboardData = $DATA_JSON;" >> "$OUTPUT_FILE"
-echo "" >> "$OUTPUT_FILE"
+echo "      // Embedded dashboard data (no CORS issues)" >>"$OUTPUT_FILE"
+echo "      const dashboardData = $DATA_JSON;" >>"$OUTPUT_FILE"
+echo "" >>"$OUTPUT_FILE"
 
 # Extract JavaScript functions - get everything between "// Update status bar" and "// Initialize dashboard"
-echo "      // Update Functions" >> "$OUTPUT_FILE"
-sed -n '/\/\/ Update status bar/,/\/\/ Initialize dashboard/p' "$DASHBOARD_TEMPLATE" | \
-    sed '$d' >> "$OUTPUT_FILE"  # Remove the last line (// Initialize dashboard)
-echo "" >> "$OUTPUT_FILE"
+echo "      // Update Functions" >>"$OUTPUT_FILE"
+sed -n '/\/\/ Update status bar/,/\/\/ Initialize dashboard/p' "$DASHBOARD_TEMPLATE" |
+  sed '$d' >>"$OUTPUT_FILE" # Remove the last line (// Initialize dashboard)
+echo "" >>"$OUTPUT_FILE"
 
-cat >> "$OUTPUT_FILE" <<'EOF_END'
+cat >>"$OUTPUT_FILE" <<'EOF_END'
 
       // Initialize dashboard with embedded data
       document.addEventListener('DOMContentLoaded', function() {
@@ -167,7 +167,7 @@ cat >> "$OUTPUT_FILE" <<'EOF_END'
           mcp: dashboardData.mcp?.available ? 'online' : 'offline',
           agents: Object.keys(dashboardData.agents || {}).length
         });
-        
+
         // Update all cards
         updateStatusBar();
         updateAgentList();
@@ -177,7 +177,7 @@ cat >> "$OUTPUT_FILE" <<'EOF_END'
         updateLatestMetrics();
         updateTaskSummary();
         updateTimestamps();
-        
+
         console.log('✅ Dashboard initialized successfully');
         console.log('ℹ️  To refresh data: run generate_standalone_dashboard.sh and reload page');
       });
@@ -192,6 +192,6 @@ echo -e "${YELLOW}ℹ️  Note: To refresh data, regenerate this file${NC}"
 
 # Open in browser
 if [[ "${1:-}" == "--open" ]]; then
-    open "$OUTPUT_FILE"
-    echo -e "${GREEN}✅ Opened in browser${NC}"
+  open "$OUTPUT_FILE"
+  echo -e "${GREEN}✅ Opened in browser${NC}"
 fi

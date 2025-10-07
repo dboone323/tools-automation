@@ -15,12 +15,12 @@ ai_generate_code() {
   local spec="$1"
   local language="${2:-swift}"
   local output_file="$3"
-  
+
   if ! check_ollama; then
-    echo "# AI code generation unavailable - manual implementation required" > "${output_file}"
+    echo "# AI code generation unavailable - manual implementation required" >"${output_file}"
     return 1
   fi
-  
+
   local prompt="Generate production-ready ${language} code based on this specification:
 ${spec}
 
@@ -33,12 +33,12 @@ Requirements:
 
 Provide only the code, no explanations."
 
-  ollama run codellama "${prompt}" 2>/dev/null > "${output_file}"
-  
+  ollama run codellama "${prompt}" 2>/dev/null >"${output_file}"
+
   if [[ -s "${output_file}" ]]; then
     return 0
   else
-    echo "# AI code generation failed" > "${output_file}"
+    echo "# AI code generation failed" >"${output_file}"
     return 1
   fi
 }
@@ -46,15 +46,15 @@ Provide only the code, no explanations."
 # AI-powered refactoring suggestions
 ai_suggest_refactoring() {
   local code_file="$1"
-  
+
   if ! check_ollama; then
     echo "No suggestions available (AI unavailable)"
     return
   fi
-  
+
   local code_content
   code_content=$(cat "${code_file}" 2>/dev/null)
-  
+
   local prompt="Analyze this code and suggest refactoring improvements:
 
 ${code_content}
@@ -74,15 +74,15 @@ Provide specific, actionable suggestions with code examples."
 # AI-powered code complexity analysis
 ai_analyze_complexity() {
   local code_file="$1"
-  
+
   if ! check_ollama; then
-    echo "medium"  # Default complexity
+    echo "medium" # Default complexity
     return
   fi
-  
+
   local code_content
   code_content=$(cat "${code_file}" 2>/dev/null)
-  
+
   local prompt="Analyze the complexity of this code and respond with one word: low, medium, or high
 
 ${code_content}
@@ -97,7 +97,7 @@ Respond with ONLY: low, medium, or high"
 
   local complexity
   complexity=$(ollama run codellama "${prompt}" 2>/dev/null | grep -oiE '(low|medium|high)' | head -1 | tr '[:upper:]' '[:lower:]')
-  
+
   echo "${complexity:-medium}"
 }
 
@@ -105,16 +105,16 @@ Respond with ONLY: low, medium, or high"
 ai_generate_api_docs() {
   local code_file="$1"
   local output_file="$2"
-  
+
   if ! check_ollama; then
-    echo "# API Documentation (auto-generated)" > "${output_file}"
-    echo "AI documentation unavailable - manual documentation required" >> "${output_file}"
+    echo "# API Documentation (auto-generated)" >"${output_file}"
+    echo "AI documentation unavailable - manual documentation required" >>"${output_file}"
     return
   fi
-  
+
   local code_content
   code_content=$(cat "${code_file}" 2>/dev/null)
-  
+
   local prompt="Generate comprehensive API documentation for this code:
 
 ${code_content}
@@ -128,22 +128,22 @@ Include:
 
 Format as Markdown."
 
-  ollama run codellama "${prompt}" 2>/dev/null > "${output_file}"
+  ollama run codellama "${prompt}" 2>/dev/null >"${output_file}"
 }
 
 # AI-powered test case generation
 ai_generate_test_cases() {
   local code_file="$1"
   local test_framework="${2:-XCTest}"
-  
+
   if ! check_ollama; then
     echo "// AI test generation unavailable"
     return
   fi
-  
+
   local code_content
   code_content=$(cat "${code_file}" 2>/dev/null)
-  
+
   local prompt="Generate comprehensive test cases using ${test_framework} for this code:
 
 ${code_content}
@@ -163,15 +163,15 @@ Provide complete, runnable test code."
 # AI-powered code review
 ai_code_review() {
   local code_file="$1"
-  
+
   if ! check_ollama; then
     echo "✅ Manual review required (AI unavailable)"
     return 0
   fi
-  
+
   local code_content
   code_content=$(cat "${code_file}" 2>/dev/null)
-  
+
   local prompt="Perform a thorough code review of this code:
 
 ${code_content}
@@ -193,9 +193,9 @@ Start your response with either 'APPROVE:' or 'REQUEST_CHANGES:'"
 
   local review
   review=$(ollama run codellama "${prompt}" 2>/dev/null)
-  
+
   echo "${review}"
-  
+
   if echo "${review}" | grep -q "^REQUEST_CHANGES:"; then
     return 1
   else
@@ -206,13 +206,13 @@ Start your response with either 'APPROVE:' or 'REQUEST_CHANGES:'"
 # AI-powered naming suggestions
 ai_suggest_names() {
   local purpose="$1"
-  local type="${2:-function}"  # function, class, variable, etc.
-  
+  local type="${2:-function}" # function, class, variable, etc.
+
   if ! check_ollama; then
     echo "suggestedName"
     return
   fi
-  
+
   local prompt="Suggest 3 clear, descriptive ${type} names for: ${purpose}
 
 Follow naming conventions:
@@ -230,12 +230,12 @@ Provide ONLY 3 names, one per line, no explanations."
 ai_suggest_bug_fix() {
   local error_message="$1"
   local code_context="$2"
-  
+
   if ! check_ollama; then
     echo "Manual debugging required (AI unavailable)"
     return
   fi
-  
+
   local prompt="Suggest a fix for this error:
 
 Error: ${error_message}
@@ -256,15 +256,15 @@ Be concise and actionable."
 # AI-powered code optimization
 ai_optimize_code() {
   local code_file="$1"
-  local optimization_goal="${2:-performance}"  # performance, memory, readability
-  
+  local optimization_goal="${2:-performance}" # performance, memory, readability
+
   if ! check_ollama; then
     return 1
   fi
-  
+
   local code_content
   code_content=$(cat "${code_file}" 2>/dev/null)
-  
+
   local prompt="Optimize this code for ${optimization_goal}:
 
 ${code_content}
@@ -283,18 +283,18 @@ Focus on ${optimization_goal} while maintaining correctness."
 ai_generate_code_insights() {
   local project_path="$1"
   local output_file="$2"
-  
+
   if ! check_ollama; then
-    echo "# Code Quality Insights (AI unavailable)" > "${output_file}"
+    echo "# Code Quality Insights (AI unavailable)" >"${output_file}"
     return
   fi
-  
+
   # Gather code statistics
   local file_count
   file_count=$(find "${project_path}" -name "*.swift" 2>/dev/null | wc -l)
   local line_count
   line_count=$(find "${project_path}" -name "*.swift" -exec wc -l {} + 2>/dev/null | tail -1 | awk '{print $1}')
-  
+
   local prompt="Analyze this codebase summary and provide insights:
 
 Files: ${file_count}
@@ -310,7 +310,7 @@ Provide insights on:
 
 Format as Markdown."
 
-  ollama run codellama "${prompt}" 2>/dev/null > "${output_file}"
+  ollama run codellama "${prompt}" 2>/dev/null >"${output_file}"
 }
 
 # Export functions for sourcing

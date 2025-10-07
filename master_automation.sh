@@ -652,9 +652,7 @@ run_retention_policy() {
   fi
 
   print_status "Executing retention policy cleanup..."
-  bash "${retention_script}"
-
-  if [[ $? -eq 0 ]]; then
+  if bash "${retention_script}"; then
     print_success "Retention policy cleanup completed successfully"
   else
     print_error "Retention policy cleanup failed"

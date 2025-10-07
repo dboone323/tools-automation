@@ -90,7 +90,7 @@ find "${WORKSPACE_DIR}" \
         # Check limit before writing
         if [[ ${ITEM_COUNT} -ge ${ITEM_LIMIT} ]]; then
           echo "⚠️ Reached item limit (${ITEM_LIMIT}); stopping collection" | tee -a "${LOG_FILE}"
-          break 2  # Break out of both while and find loop
+          break 2 # Break out of both while and find loop
         fi
         jq -n --arg file "${file#"${WORKSPACE_DIR}"/}" --arg line "${line_num}" --arg text "${line}" \
           '{file: $file, line: ($line|tonumber), text: $text}' >>"${TMP_ITEMS}"

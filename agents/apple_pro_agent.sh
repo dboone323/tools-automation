@@ -1,7 +1,6 @@
 #!/bin/bash
 # Apple Pro Engineer Agent: Ensures code and project follow Apple best practices and advanced engineering standards
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"

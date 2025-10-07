@@ -1,1 +1,10 @@
-{"id": "test_task_001", "type": "search", "description": "Test search functionality across codebase", "priority": 5, "assigned_agent": "", "status": "queued", "created": 1735689600, "dependencies": []}
+{
+  "id": "test_task_001",
+  "type": "search",
+  "description": "Test search functionality across codebase",
+  "priority": 5,
+  "assigned_agent": "",
+  "status": "queued",
+  "created": 1735689600,
+  "dependencies": []
+}

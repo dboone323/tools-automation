@@ -1,7 +1,6 @@
 #!/bin/bash
 # Pull Request Agent: Creates, reviews, and auto-merges low-risk pull requests
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
@@ -537,8 +536,8 @@ while true; do
       generate_status_report
     else
       # Fallback minimal status log
-  pr_count=$(jq -r '.prs | length' "${PR_QUEUE_FILE}" 2>/dev/null || echo 0)
-  log_message "INFO" "Status heartbeat: pending PRs=${pr_count}"
+      pr_count=$(jq -r '.prs | length' "${PR_QUEUE_FILE}" 2>/dev/null || echo 0)
+      log_message "INFO" "Status heartbeat: pending PRs=${pr_count}"
     fi
   fi
 

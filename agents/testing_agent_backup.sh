@@ -1,7 +1,6 @@
 #!/bin/bash
 # Testing Agent: Manages and improves test coverage and quality
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
@@ -121,7 +120,7 @@ update_status() {
     updated_content=$(echo "${current_content}" | jq ".agents[\"${AGENT_NAME}\"] = (.agents[\"${AGENT_NAME}\"] // {}) | .agents[\"${AGENT_NAME}\"].status = \"${status}\" | .agents[\"${AGENT_NAME}\"].last_seen = $(date +%s) | .last_update = $(date +%s)" 2>/dev/null)
 
     if [[ -n "${updated_content}" ]]; then
-      echo "${updated_content}" > "${temp_file}" && mv "${temp_file}" "${AGENT_STATUS_FILE}"
+      echo "${updated_content}" >"${temp_file}" && mv "${temp_file}" "${AGENT_STATUS_FILE}"
     fi
   fi
 
@@ -174,7 +173,7 @@ update_task_status() {
     updated_content=$(echo "${current_content}" | jq "(.tasks[] | select(.id == \"${task_id}\") | .status) = \"${status}\"" 2>/dev/null)
 
     if [[ -n "${updated_content}" ]]; then
-      echo "${updated_content}" > "${temp_file}" && mv "${temp_file}" "${TASK_QUEUE_FILE}"
+      echo "${updated_content}" >"${temp_file}" && mv "${temp_file}" "${TASK_QUEUE_FILE}"
     fi
   fi
 

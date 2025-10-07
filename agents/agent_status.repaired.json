@@ -2,44 +2,57 @@
   "agents": {
     "agent_build.sh": {
       "last_seen": 1759529569,
-      "status": "busy"    },
+      "status": "busy"
+    },
     "agent_codegen.sh": {
       "last_seen": 1759529567,
-      "status": "restarting"    },
+      "status": "restarting"
+    },
     "agent_debug.sh": {
       "last_seen": 1759529567,
-      "status": "restarting"    },
+      "status": "restarting"
+    },
     "agent_todo.sh": {
       "last_seen": 1759529568,
-      "status": "restarting"    },
+      "status": "restarting"
+    },
     "build_agent": {
       "last_seen": 1759529569,
-      "status": "busy"    },
+      "status": "busy"
+    },
     "codegen_agent": {
       "last_seen": 1759529567,
-      "status": "restarting"    },
+      "status": "restarting"
+    },
     "debug_agent": {
       "last_seen": 1759529567,
-      "status": "restarting"    },
+      "status": "restarting"
+    },
     "monitoring_agent.sh": {
       "last_seen": 1759529568,
-      "status": "available"    },
+      "status": "available"
+    },
     "performance_agent.sh": {
       "last_seen": 1759529569,
-      "status": "available"    },
+      "status": "available"
+    },
     "performance_monitor": {
       "pid": 39375,
-      "status": "idle"    },
+      "status": "idle"
+    },
     "pull_request_agent.sh": {
       "last_seen": 1759529569,
       "pid": 24700,
-      "status": "available"    },
+      "status": "available"
+    },
     "uiux_agent": {
       "last_seen": 1759529568,
-      "status": "restarting"    },
+      "status": "restarting"
+    },
     "uiux_agent.sh": {
       "last_seen": 1759529568,
-      "status": "restarting"    }
+      "status": "restarting"
+    }
   },
   "last_update": 1759529569
 }

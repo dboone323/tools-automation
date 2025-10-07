@@ -2,7 +2,6 @@
 # Agent Analytics - Project metrics collection & analysis
 # Tracks code complexity, build times, test coverage, and agent performance
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
@@ -53,69 +52,40 @@ mkdir -p "${METRICS_DIR}/history"
 mkdir -p "${METRICS_DIR}/reports"
 
 # Update agent status
-update_status() {
-  local status="$1"
-  local task_id="${2:-}"
-  
-  if [[ ! -f ${STATUS_FILE} ]]; then
-    echo '{"agents":{}}' > "${STATUS_FILE}"
-  fi
-  
-  python3 -c "
-import json
-import sys
-try:
-    with open('${STATUS_FILE}', 'r') as f:
-        data = json.load(f)
-    if 'agents' not in data:
-        data['agents'] = {}
-    data['agents']['${AGENT_NAME}.sh'] = {
-        'status': '${status}',
-        'last_seen': $(date +%s),
-        'pid': $$
-    }
-    if '${task_id}':
-        data['agents']['${AGENT_NAME}.sh']['current_task_id'] = '${task_id}'
-    with open('${STATUS_FILE}', 'w') as f:
-        json.dump(data, f, indent=2)
-except Exception as e:
-    sys.stderr.write(f'Failed to update status: {e}\n')
-" || error "Failed to update agent status"
-}
 
 # Collect code metrics for a project
 collect_code_metrics() {
   local project_path="$1"
   local project_name=$(basename "${project_path}")
-  
+
   local swift_files=0
   local total_lines=0
   local code_lines=0
   local comment_lines=0
   local blank_lines=0
-  
+
   # Count Swift files
   if [[ -d "${project_path}" ]]; then
     swift_files=$(find "${project_path}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
-    
+
     # Analyze file content
     while IFS= read -r file; do
       [[ ! -f "$file" ]] && continue
-      
-      local lines=$(wc -l < "$file" 2>/dev/null | tr -d ' \n')
+
+      local lines=$(wc -l <"$file" 2>/dev/null | tr -d ' \n')
       total_lines=$((total_lines + lines))
-      
+
       # Count comment and blank lines
       local comments=$(grep -c '^\s*//' "$file" 2>/dev/null | tr -d '\n' || echo 0)
       local blanks=$(grep -c '^\s*$' "$file" 2>/dev/null | tr -d '\n' || echo 0)
-      
+
       comment_lines=$((comment_lines + comments))
       blank_lines=$((blank_lines + blanks))
     done < <(find "${project_path}" -name "*.swift" 2>/dev/null)
-    
+
     code_lines=$((total_lines - comment_lines - blank_lines))
   fi
-  
+
   # Return JSON
   cat <<EOF
 {
@@ -132,19 +102,19 @@ EOF
 
 # Collect build metrics
 collect_build_metrics() {
-  
+
   local build_logs=()
   local avg_build_time=0
   local total_builds=0
-  
+
   # Find recent build logs
   while IFS= read -r log; do
     build_logs+=("$log")
   done < <(find "${WORKSPACE_ROOT}" -name "*build*.log" -mtime -7 2>/dev/null | head -20)
-  
+
   # Analyze build times (simplified - would need actual timing data)
   total_builds=${#build_logs[@]}
-  
+
   cat <<EOF
 {
   "total_builds_7d": ${total_builds},
@@ -158,16 +128,16 @@ EOF
 collect_coverage_metrics() {
   local project_path="$1"
   local project_name=$(basename "${project_path}")
-  
+
   # Look for coverage reports
   local coverage_file="${project_path}/.build/debug/codecov/*.json"
   local coverage_pct=0
-  
-  if compgen -G "${coverage_file}" > /dev/null 2>&1; then
+
+  if compgen -G "${coverage_file}" >/dev/null 2>&1; then
     # Parse coverage from file (simplified)
     coverage_pct=$(grep -o '"coverage":[0-9.]*' "${coverage_file}" 2>/dev/null | head -1 | cut -d: -f2 || echo 0)
   fi
-  
+
   cat <<EOF
 {
   "project": "${project_name}",
@@ -179,11 +149,11 @@ EOF
 
 # Collect agent performance metrics
 collect_agent_metrics() {
-  
+
   local agent_count=0
   local active_agents=0
   local tasks_completed=0
-  
+
   if [[ -f "${STATUS_FILE}" ]]; then
     agent_count=$(python3 -c "
 import json
@@ -194,20 +164,20 @@ try:
 except:
     print(0)
 " 2>/dev/null || echo 0)
-    
+
     active_agents=$(python3 -c "
 import json, time
 try:
     with open('${STATUS_FILE}', 'r') as f:
         data = json.load(f)
-    active = sum(1 for a in data.get('agents', {}).values() 
-                if a.get('status') in ['available', 'running', 'busy'] 
+    active = sum(1 for a in data.get('agents', {}).values()
+                if a.get('status') in ['available', 'running', 'busy']
                 and time.time() - a.get('last_seen', 0) < 300)
     print(active)
 except:
     print(0)
 " 2>/dev/null || echo 0)
-    
+
     tasks_completed=$(python3 -c "
 import json
 try:
@@ -219,7 +189,7 @@ except:
     print(0)
 " 2>/dev/null || echo 0)
   fi
-  
+
   cat <<EOF
 {
   "total_agents": ${agent_count},
@@ -234,16 +204,16 @@ EOF
 collect_complexity_metrics() {
   local project_path="$1"
   local project_name=$(basename "${project_path}")
-  
+
   # Use SwiftLint if available
   local complexity_violations=0
   local avg_file_complexity=0
-  
+
   if command -v swiftlint &>/dev/null && [[ -d "${project_path}" ]]; then
     # Count complexity warnings
     complexity_violations=$(cd "${project_path}" && swiftlint lint --quiet 2>/dev/null | grep -c "Cyclomatic Complexity" | tr -d '\n' || echo 0)
   fi
-  
+
   cat <<EOF
 {
   "project": "${project_name}",
@@ -256,35 +226,35 @@ EOF
 # Generate analytics report
 generate_report() {
   info "Generating analytics report..."
-  
+
   local timestamp=$(date +%s)
   local report_file="${METRICS_DIR}/reports/analytics_$(date +%Y%m%d_%H%M%S).json"
-  
+
   # Collect all metrics
   local projects=("${WORKSPACE_ROOT}/Projects/"*)
   local code_metrics="[]"
   local coverage_metrics="[]"
   local complexity_metrics="[]"
-  
+
   for project in "${projects[@]}"; do
     [[ ! -d "$project" ]] && continue
-    
+
     local pname=$(basename "$project")
     [[ "$pname" == "Tools" || "$pname" == "scripts" || "$pname" == "Config" ]] && continue
-    
+
     # Collect metrics
     local code_m=$(collect_code_metrics "$project")
     local cov_m=$(collect_coverage_metrics "$project")
     local comp_m=$(collect_complexity_metrics "$project")
-    
+
     # Append to arrays (simplified - would use jq in production)
     code_metrics="${code_m}"
     coverage_metrics="${cov_m}"
     complexity_metrics="${comp_m}"
   done
-  
+
   # Build full report
-  cat > "${report_file}" <<EOF
+  cat >"${report_file}" <<EOF
 {
   "timestamp": ${timestamp},
   "date": "$(date -Iseconds)",
@@ -296,33 +266,33 @@ generate_report() {
   "agent_metrics": $(collect_agent_metrics)
 }
 EOF
-  
+
   success "Report generated: ${report_file}"
-  
+
   # Save to monthly analytics
   cp "${report_file}" "${ANALYTICS_DATA}"
-  
+
   # Publish to MCP
   if command -v curl &>/dev/null; then
     curl -s -X POST "${MCP_URL}/metrics" \
       -H "Content-Type: application/json" \
       -d "@${report_file}" &>/dev/null || warning "Failed to publish metrics to MCP"
   fi
-  
+
   echo "${report_file}"
 }
 
 # Generate dashboard-friendly summary
 generate_dashboard_summary() {
   local report_file="$1"
-  
+
   if [[ ! -f "${report_file}" ]]; then
     error "Report file not found: ${report_file}"
     return 1
   fi
-  
+
   info "Generating dashboard summary..."
-  
+
   # Extract key metrics for dashboard
   python3 <<PYTHON
 import json
@@ -331,7 +301,7 @@ import sys
 try:
     with open('${report_file}', 'r') as f:
         data = json.load(f)
-    
+
     summary = {
         "timestamp": data.get("timestamp"),
         "date": data.get("date"),
@@ -352,10 +322,10 @@ try:
             "has_tests": data.get("coverage_metrics", {}).get("has_tests", False)
         }
     }
-    
+
     with open('${METRICS_DIR}/dashboard_summary.json', 'w') as f:
         json.dump(summary, f, indent=2)
-    
+
     print(json.dumps(summary, indent=2))
 
 except Exception as e:
@@ -369,11 +339,11 @@ PYTHON
 # Main agent loop
 main() {
   log "Analytics Agent starting..."
-  update_status "starting"
-  
+  update_agent_status "agent_analytics.sh" "starting" $$ ""
+
   # Create PID file
-  echo $$ > "${AGENTS_DIR}/${AGENT_NAME}.pid"
-  
+  echo $$ >"${AGENTS_DIR}/${AGENT_NAME}.pid"
+
   # Register with MCP
   if command -v curl &>/dev/null; then
     curl -s -X POST "${MCP_URL}/register" \
@@ -381,28 +351,28 @@ main() {
       -d "{\"agent\": \"${AGENT_NAME}\", \"capabilities\": [\"analytics\", \"metrics\", \"reporting\"]}" \
       &>/dev/null || warning "Failed to register with MCP"
   fi
-  
-  update_status "available"
+
+  update_agent_status "agent_analytics.sh" "available" $$ ""
   success "Analytics Agent ready"
-  
+
   # Main loop - collect metrics every 5 minutes
   while true; do
-    update_status "running"
-    
+    update_agent_status "agent_analytics.sh" "running" $$ ""
+
     # Generate full analytics report
     local report_file=$(generate_report)
-    
+
     # Generate dashboard summary
     if [[ -f "${report_file}" ]]; then
       generate_dashboard_summary "${report_file}"
     fi
-    
+
     # Archive old reports (keep last 30 days)
     find "${METRICS_DIR}/reports" -name "analytics_*.json" -mtime +30 -delete 2>/dev/null || true
-    
-    update_status "available"
+
+    update_agent_status "agent_analytics.sh" "available" $$ ""
     success "Analytics cycle complete. Next run in 5 minutes."
-    
+
     # Send heartbeat to MCP
     if command -v curl &>/dev/null; then
       curl -s -X POST "${MCP_URL}/heartbeat" \
@@ -410,14 +380,14 @@ main() {
         -d "{\"agent\": \"${AGENT_NAME}\", \"status\": \"available\"}" \
         &>/dev/null || true
     fi
-    
+
     # Sleep for 5 minutes
     sleep 300
   done
 }
 
 # Trap signals for graceful shutdown
-trap 'update_status "stopped"; log "Analytics Agent stopping..."; exit 0' SIGTERM SIGINT
+trap 'update_agent_status "agent_analytics.sh" "stopped" $$ ""; log "Analytics Agent stopping..."; exit 0' SIGTERM SIGINT
 
 # Run main loop
 main "$@"

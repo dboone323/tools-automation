@@ -4,6 +4,14 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
 
+# Source project configuration
+if [[ -f "${SCRIPT_DIR}/../project_config.sh" ]]; then
+  source "${SCRIPT_DIR}/../project_config.sh"
+fi
+
+# Ensure PROJECT_NAME is set for subprocess calls
+export PROJECT_NAME="${PROJECT_NAME:-CodingReviewer}"
+
 echo "[$(date)] build_agent: Script started, PID=$$" >>"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/build_agent.log"
 echo "[$(date)] build_agent: Auto-debug task creation enabled (max consecutive failures: ${MAX_CONSECUTIVE_FAILURES})" >>"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/build_agent.log"
 # Build Agent: Watches for changes and triggers builds automatically
@@ -60,78 +68,6 @@ log_message() {
   echo "[$(date)] [${AGENT_LABEL}] [${level}] ${message}" >>"${LOG_FILE}"
 }
 
-legacy_update_status() {
-  local status="$1"
-
-  if command -v jq &>/dev/null; then
-    local current_content
-    current_content=$(cat "${AGENT_STATUS_FILE}" 2>/dev/null)
-    if [[ -z ${current_content} ]]; then
-      current_content='{"agents":{},"last_update":0}'
-    fi
-
-    local now
-    now=$(date +%s)
-    local temp_file
-    temp_file="${AGENT_STATUS_FILE}.tmp.$$"
-    local key
-    for key in "${STATUS_KEYS[@]}"; do
-      current_content=$(echo "${current_content}" | jq \
-        --arg agent "${key}" \
-        --arg status "${status}" \
-        --argjson now "${now}" \
-        'def to_num:
-          if type == "string" then
-            (gsub("^[\\s]+"; "") | gsub("[\\s]+$"; "") |
-              if test("^-?[0-9]+$") then tonumber else . end)
-          elif type == "number" then .
-          else . end;
-         .agents[$agent] = (.agents[$agent] // {})
-         | .agents[$agent].status = $status
-         | .agents[$agent].last_seen = $now
-         | .agents[$agent] |= (
-             to_entries
-             | map(if (["pid","last_seen","tasks_completed","restart_count"] | index(.key)) != null
-                   then .value = (.value | to_num) else . end)
-             | from_entries)
-         | .last_update = $now' 2>/dev/null) || return
-    done
-
-    if [[ -n ${current_content} ]]; then
-      echo "${current_content}" >"${temp_file}" && mv "${temp_file}" "${AGENT_STATUS_FILE}"
-    fi
-  fi
-}
-
-update_status() {
-  local status="$1"
-  local key
-  local now
-  now=$(date +%s)
-
-  if [[ -f ${STATUS_UTIL} ]]; then
-    local python_ok=true
-    for key in "${STATUS_KEYS[@]}"; do
-      if ! python3 "${STATUS_UTIL}" update-agent \
-        --status-file "${AGENT_STATUS_FILE}" \
-        --agent "${key}" \
-        --status "${status}" \
-        --last-seen "${now}" >/dev/null 2>&1; then
-        python_ok=false
-        break
-      fi
-    done
-
-    if [[ ${python_ok} != true ]]; then
-      legacy_update_status "${status}"
-    fi
-  else
-    legacy_update_status "${status}"
-  fi
-
-  LAST_STATUS_UPDATE=${now}
-  log_message "INFO" "Status updated to ${status}"
-}
 
 maybe_update_status() {
   local status
@@ -139,7 +75,7 @@ maybe_update_status() {
   local now
   now=$(date +%s)
   if ((now - LAST_STATUS_UPDATE >= STATUS_UPDATE_INTERVAL)); then
-    update_status "${status}"
+    update_agent_status "agent_build.sh" "${status}" $$ ""
   fi
 }
 
@@ -323,10 +259,10 @@ process_assigned_tasks() {
       continue
     fi
 
-    update_status "busy"
+    update_agent_status "agent_build.sh" "busy" $$ ""
     update_task_status "${task_id}" "in_progress"
     process_task "${task_id}" || log_message "ERROR" "Task ${task_id} failed"
-    update_status "available"
+    update_agent_status "agent_build.sh" "available" $$ ""
   done
 }
 
@@ -336,17 +272,17 @@ process_notifications() {
       case "${notification_type}" in
       "execute_task")
         if [[ -n ${task_id} ]] && ! has_processed_task "${task_id}"; then
-          update_status "busy"
+          update_agent_status "agent_build.sh" "busy" $$ ""
           update_task_status "${task_id}" "in_progress"
           process_task "${task_id}" || log_message "ERROR" "Notification task ${task_id} failed"
-          update_status "available"
+          update_agent_status "agent_build.sh" "available" $$ ""
         fi
         ;;
       "build_now")
-        update_status "busy"
+        update_agent_status "agent_build.sh" "busy" $$ ""
         log_message "INFO" "Manual build triggered"
         # Run build logic here
-        update_status "available"
+        update_agent_status "agent_build.sh" "available" $$ ""
         ;;
       esac
     done <"${NOTIFICATION_FILE}"
@@ -356,17 +292,106 @@ process_notifications() {
   fi
 }
 
-trap 'update_status stopped; exit 0' SIGTERM SIGINT
+trap 'update_agent_status "agent_build.sh" "stopped" $$ ""; exit 0' SIGTERM SIGINT
 while true; do
   maybe_update_status "available"
 
   process_notifications
-  process_assigned_tasks
 
-  # Legacy check for queued build tasks (fallback)
-  HAS_TASK=$(jq '.tasks[] | select(.assigned_agent=="agent_build.sh" and .status=="queued")' "${TASK_QUEUE_FILE}" 2>/dev/null)
-  if [[ -n ${HAS_TASK} ]] || grep -q 'ENABLE_AUTO_BUILD=true' "/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/project_config.sh" 2>/dev/null; then
-    update_status "busy"
+  # Get next task for this agent
+  TASK_ID=$(get_next_task "agent_build.sh")
+
+  if [[ -n "${TASK_ID}" ]]; then
+    echo "[$(date)] ${AGENT_NAME}: Processing task ${TASK_ID}" >>"${LOG_FILE}"
+
+    # Mark task as in progress
+    update_task_status "${TASK_ID}" "in_progress"
+    update_agent_status "agent_build.sh" "busy" $$ "${TASK_ID}"
+
+    # Get task details
+    TASK_DETAILS=$(get_task_details "${TASK_ID}")
+    TASK_TYPE=$(echo "${TASK_DETAILS}" | jq -r '.type // "build"')
+    TASK_DESCRIPTION=$(echo "${TASK_DETAILS}" | jq -r '.description // "Unknown task"')
+
+    echo "[$(date)] ${AGENT_NAME}: Task type: ${TASK_TYPE}, Description: ${TASK_DESCRIPTION}" >>"${LOG_FILE}"
+
+    # Process the task based on type
+    TASK_SUCCESS=true
+
+    case "${TASK_TYPE}" in
+      "build")
+        # Run build operations
+        echo "[$(date)] ${AGENT_NAME}: Creating multi-level backup before build..." >>"${LOG_FILE}"
+        /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup CodingReviewer >>"${LOG_FILE}" 2>&1 || true
+        echo "[$(date)] ${AGENT_NAME}: Running build..." >>"${LOG_FILE}"
+        /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh build >>"${LOG_FILE}" 2>&1
+        echo "[$(date)] ${AGENT_NAME}: Running AI enhancement analysis..." >>"${LOG_FILE}"
+        /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh analyze CodingReviewer >>"${LOG_FILE}" 2>&1
+        echo "[$(date)] ${AGENT_NAME}: Auto-applying safe AI enhancements..." >>"${LOG_FILE}"
+        /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh auto-apply CodingReviewer >>"${LOG_FILE}" 2>&1
+        echo "[$(date)] ${AGENT_NAME}: Validating build and enhancements..." >>"${LOG_FILE}"
+        /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/intelligent_autofix.sh validate CodingReviewer >>"${LOG_FILE}" 2>&1
+        echo "[$(date)] ${AGENT_NAME}: Running automated tests after build and enhancements..." >>"${LOG_FILE}"
+        /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1
+
+        if tail -40 "${LOG_FILE}" | grep -q 'ROLLBACK'; then
+          echo "[$(date)] ${AGENT_NAME}: Rollback detected after validation. Task failed." >>"${LOG_FILE}"
+          CONSECUTIVE_FAILURES=$((CONSECUTIVE_FAILURES + 1))
+          echo "[$(date)] ${AGENT_NAME}: Consecutive failures: ${CONSECUTIVE_FAILURES}" >>"${LOG_FILE}"
+          TASK_SUCCESS=false
+          SLEEP_INTERVAL=$((SLEEP_INTERVAL / 2))
+          if [[ ${SLEEP_INTERVAL} -lt ${MIN_INTERVAL} ]]; then SLEEP_INTERVAL=${MIN_INTERVAL}; fi
+
+          # Create debug task if failures are persistent
+          if [[ ${CONSECUTIVE_FAILURES} -ge ${MAX_CONSECUTIVE_FAILURES} ]]; then
+            create_debug_task "${PROJECT}" "Multiple rollbacks detected after validation failures"
+            CONSECUTIVE_FAILURES=0 # Reset counter after creating task
+          fi
+        elif tail -40 "${LOG_FILE}" | grep -q 'error'; then
+          echo "[$(date)] ${AGENT_NAME}: Test failure detected, restoring last backup..." >>"${LOG_FILE}"
+          /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh restore CodingReviewer >>"${LOG_FILE}" 2>&1
+          CONSECUTIVE_FAILURES=$((CONSECUTIVE_FAILURES + 1))
+          echo "[$(date)] ${AGENT_NAME}: Consecutive failures: ${CONSECUTIVE_FAILURES}" >>"${LOG_FILE}"
+          TASK_SUCCESS=false
+          SLEEP_INTERVAL=$((SLEEP_INTERVAL / 2))
+          if [[ ${SLEEP_INTERVAL} -lt ${MIN_INTERVAL} ]]; then SLEEP_INTERVAL=${MIN_INTERVAL}; fi
+
+          # Create debug task if failures are persistent
+          if [[ ${CONSECUTIVE_FAILURES} -ge ${MAX_CONSECUTIVE_FAILURES} ]]; then
+            create_debug_task "${PROJECT}" "Persistent test failures detected after multiple build attempts"
+            CONSECUTIVE_FAILURES=0 # Reset counter after creating task
+          fi
+        else
+          echo "[$(date)] ${AGENT_NAME}: Build, AI enhancement, validation, and tests completed successfully." >>"${LOG_FILE}"
+          if [[ ${CONSECUTIVE_FAILURES} -gt 0 ]]; then
+            echo "[$(date)] ${AGENT_NAME}: Reset consecutive failures counter (was: ${CONSECUTIVE_FAILURES})" >>"${LOG_FILE}"
+          fi
+          CONSECUTIVE_FAILURES=0 # Reset counter on success
+          SLEEP_INTERVAL=$((SLEEP_INTERVAL + 60))
+          if [[ ${SLEEP_INTERVAL} -gt ${MAX_INTERVAL} ]]; then SLEEP_INTERVAL=${MAX_INTERVAL}; fi
+        fi
+        ;;
+      *)
+        echo "[$(date)] ${AGENT_NAME}: Unknown task type: ${TASK_TYPE}" >>"${LOG_FILE}"
+        TASK_SUCCESS=false
+        ;;
+    esac
+
+    # Complete the task
+    complete_task "${TASK_ID}" "${TASK_SUCCESS}"
+    increment_task_count "agent_build.sh"
+
+    if [[ "${TASK_SUCCESS}" == "true" ]]; then
+      echo "[$(date)] ${AGENT_NAME}: Task ${TASK_ID} completed successfully" >>"${LOG_FILE}"
+    else
+      echo "[$(date)] ${AGENT_NAME}: Task ${TASK_ID} failed" >>"${LOG_FILE}"
+    fi
+
+  fi
+    # Legacy check for queued build tasks (fallback)
+    HAS_TASK=$(jq '.tasks[] | select(.assigned_agent=="agent_build.sh" and .status=="queued")' "${TASK_QUEUE_FILE}" 2>/dev/null)
+    if [[ -n ${HAS_TASK} ]] || grep -q 'ENABLE_AUTO_BUILD=true' "/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/project_config.sh" 2>/dev/null; then
+    update_agent_status "agent_build.sh" "busy" $$ ""
     echo "[$(date)] ${AGENT_NAME}: Creating multi-level backup before build..." >>"${LOG_FILE}"
     /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup CodingReviewer >>"${LOG_FILE}" 2>&1 || true
     echo "[$(date)] ${AGENT_NAME}: Running build..." >>"${LOG_FILE}"
@@ -413,9 +438,9 @@ while true; do
       SLEEP_INTERVAL=$((SLEEP_INTERVAL + 60))
       if [[ ${SLEEP_INTERVAL} -gt ${MAX_INTERVAL} ]]; then SLEEP_INTERVAL=${MAX_INTERVAL}; fi
     fi
-    update_status "available"
+    update_agent_status "agent_build.sh" "available" $$ ""
   else
-    update_status "idle"
+    update_agent_status "agent_build.sh" "idle" $$ ""
     echo "[$(date)] ${AGENT_NAME}: No build tasks found. Sleeping as idle." >>"${LOG_FILE}"
     sleep 60
     continue

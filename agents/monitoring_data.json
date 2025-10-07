@@ -2,7 +2,7 @@
   "metrics": [
     {
       "timestamp": 1759356279,
-      "cpu_usage": 32.30,
+      "cpu_usage": 32.3,
       "memory_usage": 346029,
       "disk_usage": 91,
       "network_activity": 28,
@@ -65,7 +65,7 @@
     },
     {
       "timestamp": 1759358674,
-      "cpu_usage": 34.30,
+      "cpu_usage": 34.3,
       "memory_usage": 189907,
       "disk_usage": 72,
       "network_activity": 28,
@@ -110,7 +110,7 @@
     },
     {
       "timestamp": 1759358988,
-      "cpu_usage": 26.40,
+      "cpu_usage": 26.4,
       "memory_usage": 287870,
       "disk_usage": 72,
       "network_activity": 28,
@@ -119,7 +119,7 @@
     },
     {
       "timestamp": 1759359062,
-      "cpu_usage": 34.50,
+      "cpu_usage": 34.5,
       "memory_usage": 288668,
       "disk_usage": 72,
       "network_activity": 28,
@@ -173,7 +173,7 @@
     },
     {
       "timestamp": 1759359426,
-      "cpu_usage": 12.70,
+      "cpu_usage": 12.7,
       "memory_usage": 292630,
       "disk_usage": 72,
       "network_activity": 28,
@@ -191,7 +191,7 @@
     },
     {
       "timestamp": 1759359547,
-      "cpu_usage": 18.80,
+      "cpu_usage": 18.8,
       "memory_usage": 275655,
       "disk_usage": 72,
       "network_activity": 28,
@@ -218,7 +218,7 @@
     },
     {
       "timestamp": 1759359729,
-      "cpu_usage": 58.40,
+      "cpu_usage": 58.4,
       "memory_usage": 213454,
       "disk_usage": 72,
       "network_activity": 28,
@@ -317,7 +317,7 @@
     },
     {
       "timestamp": 1759360400,
-      "cpu_usage": 76.70,
+      "cpu_usage": 76.7,
       "memory_usage": 222189,
       "disk_usage": 73,
       "network_activity": 28,

@@ -1,10 +1,604 @@
 {
   "alerts": [
     {
-      "key": "agent_startup",
-      "message": "Agent is now monitoring for alerts",
-      "timestamp": 1759789326.547164,
-      "date": "2025-10-06 17:22:06"
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759856716.455437,
+      "date": "2025-10-07 12:05:16"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "14 agents haven't reported in 5+ minutes",
+      "timestamp": 1759856837.7885199,
+      "date": "2025-10-07 12:07:17"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759856838.934426,
+      "date": "2025-10-07 12:07:18"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "15 agents haven't reported in 5+ minutes",
+      "timestamp": 1759856960.505619,
+      "date": "2025-10-07 12:09:20"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759856961.386587,
+      "date": "2025-10-07 12:09:21"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "18 agents haven't reported in 5+ minutes",
+      "timestamp": 1759857082.5462148,
+      "date": "2025-10-07 12:11:22"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759857083.464061,
+      "date": "2025-10-07 12:11:23"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "17 agents haven't reported in 5+ minutes",
+      "timestamp": 1759857204.6362848,
+      "date": "2025-10-07 12:13:24"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759857205.531054,
+      "date": "2025-10-07 12:13:25"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "17 agents haven't reported in 5+ minutes",
+      "timestamp": 1759857326.8259,
+      "date": "2025-10-07 12:15:26"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759857327.8077419,
+      "date": "2025-10-07 12:15:27"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "17 agents haven't reported in 5+ minutes",
+      "timestamp": 1759857449.000715,
+      "date": "2025-10-07 12:17:29"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759857450.039093,
+      "date": "2025-10-07 12:17:30"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "19 agents haven't reported in 5+ minutes",
+      "timestamp": 1759857571.407847,
+      "date": "2025-10-07 12:19:31"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759857572.358189,
+      "date": "2025-10-07 12:19:32"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "19 agents haven't reported in 5+ minutes",
+      "timestamp": 1759857693.6073909,
+      "date": "2025-10-07 12:21:33"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759857694.8026109,
+      "date": "2025-10-07 12:21:34"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "19 agents haven't reported in 5+ minutes",
+      "timestamp": 1759857816.077339,
+      "date": "2025-10-07 12:23:36"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759857816.98795,
+      "date": "2025-10-07 12:23:36"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "19 agents haven't reported in 5+ minutes",
+      "timestamp": 1759857938.3637362,
+      "date": "2025-10-07 12:25:38"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759857939.3425028,
+      "date": "2025-10-07 12:25:39"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "20 agents haven't reported in 5+ minutes",
+      "timestamp": 1759858060.679283,
+      "date": "2025-10-07 12:27:40"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759858061.66255,
+      "date": "2025-10-07 12:27:41"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "20 agents haven't reported in 5+ minutes",
+      "timestamp": 1759858182.9770072,
+      "date": "2025-10-07 12:29:42"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759858183.935288,
+      "date": "2025-10-07 12:29:43"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "19 agents haven't reported in 5+ minutes",
+      "timestamp": 1759858305.15452,
+      "date": "2025-10-07 12:31:45"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759858306.053636,
+      "date": "2025-10-07 12:31:46"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "22 agents haven't reported in 5+ minutes",
+      "timestamp": 1759858427.291666,
+      "date": "2025-10-07 12:33:47"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759858428.198792,
+      "date": "2025-10-07 12:33:48"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "24 agents haven't reported in 5+ minutes",
+      "timestamp": 1759858549.191403,
+      "date": "2025-10-07 12:35:49"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759858550.1409972,
+      "date": "2025-10-07 12:35:50"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "23 agents haven't reported in 5+ minutes",
+      "timestamp": 1759858671.457043,
+      "date": "2025-10-07 12:37:51"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759858672.490119,
+      "date": "2025-10-07 12:37:52"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "21 agents haven't reported in 5+ minutes",
+      "timestamp": 1759858793.637223,
+      "date": "2025-10-07 12:39:53"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759858794.6824489,
+      "date": "2025-10-07 12:39:54"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "24 agents haven't reported in 5+ minutes",
+      "timestamp": 1759858915.801107,
+      "date": "2025-10-07 12:41:55"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759858916.909473,
+      "date": "2025-10-07 12:41:56"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "24 agents haven't reported in 5+ minutes",
+      "timestamp": 1759859038.219121,
+      "date": "2025-10-07 12:43:58"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759859039.226288,
+      "date": "2025-10-07 12:43:59"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "26 agents haven't reported in 5+ minutes",
+      "timestamp": 1759859160.728723,
+      "date": "2025-10-07 12:46:00"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759859161.882136,
+      "date": "2025-10-07 12:46:01"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "24 agents haven't reported in 5+ minutes",
+      "timestamp": 1759859283.1902459,
+      "date": "2025-10-07 12:48:03"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759859284.175637,
+      "date": "2025-10-07 12:48:04"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "21 agents haven't reported in 5+ minutes",
+      "timestamp": 1759859405.524199,
+      "date": "2025-10-07 12:50:05"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759859406.532293,
+      "date": "2025-10-07 12:50:06"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "20 agents haven't reported in 5+ minutes",
+      "timestamp": 1759859527.7950861,
+      "date": "2025-10-07 12:52:07"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759859528.7430432,
+      "date": "2025-10-07 12:52:08"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "23 agents haven't reported in 5+ minutes",
+      "timestamp": 1759859649.814964,
+      "date": "2025-10-07 12:54:09"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759859650.817738,
+      "date": "2025-10-07 12:54:10"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759859773.14883,
+      "date": "2025-10-07 12:56:13"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759859895.045538,
+      "date": "2025-10-07 12:58:15"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759860017.533046,
+      "date": "2025-10-07 13:00:17"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759860139.653951,
+      "date": "2025-10-07 13:02:19"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759860261.8364182,
+      "date": "2025-10-07 13:04:21"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759860383.969239,
+      "date": "2025-10-07 13:06:23"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759860506.086019,
+      "date": "2025-10-07 13:08:26"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759860627.8652658,
+      "date": "2025-10-07 13:10:27"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759860749.538176,
+      "date": "2025-10-07 13:12:29"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759860871.845216,
+      "date": "2025-10-07 13:14:31"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759860993.790603,
+      "date": "2025-10-07 13:16:33"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 81% - consider cleanup",
+      "timestamp": 1759861115.012667,
+      "date": "2025-10-07 13:18:35"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759861115.903525,
+      "date": "2025-10-07 13:18:35"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 81% - consider cleanup",
+      "timestamp": 1759861237.3185458,
+      "date": "2025-10-07 13:20:37"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759861238.301174,
+      "date": "2025-10-07 13:20:38"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 81% - consider cleanup",
+      "timestamp": 1759861359.722708,
+      "date": "2025-10-07 13:22:39"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759861361.024241,
+      "date": "2025-10-07 13:22:41"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 81% - consider cleanup",
+      "timestamp": 1759861482.236917,
+      "date": "2025-10-07 13:24:42"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759861483.184555,
+      "date": "2025-10-07 13:24:43"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 81% - consider cleanup",
+      "timestamp": 1759861604.2319171,
+      "date": "2025-10-07 13:26:44"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759861605.150555,
+      "date": "2025-10-07 13:26:45"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 81% - consider cleanup",
+      "timestamp": 1759861726.6191518,
+      "date": "2025-10-07 13:28:46"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759861727.6547651,
+      "date": "2025-10-07 13:28:47"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759861849.12564,
+      "date": "2025-10-07 13:30:49"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 81% - consider cleanup",
+      "timestamp": 1759861849.354056,
+      "date": "2025-10-07 13:30:49"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759861850.3511128,
+      "date": "2025-10-07 13:30:50"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759861971.4839501,
+      "date": "2025-10-07 13:32:51"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759861972.5306292,
+      "date": "2025-10-07 13:32:52"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759862093.798621,
+      "date": "2025-10-07 13:34:53"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "6 agents haven't reported in 5+ minutes",
+      "timestamp": 1759862094.0463428,
+      "date": "2025-10-07 13:34:54"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759862095.035222,
+      "date": "2025-10-07 13:34:55"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759862216.274326,
+      "date": "2025-10-07 13:36:56"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759862217.247461,
+      "date": "2025-10-07 13:36:57"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759862338.334365,
+      "date": "2025-10-07 13:38:58"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759862339.306494,
+      "date": "2025-10-07 13:38:59"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759862460.427043,
+      "date": "2025-10-07 13:41:00"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759862461.293117,
+      "date": "2025-10-07 13:41:01"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759862582.676911,
+      "date": "2025-10-07 13:43:02"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759862583.933764,
+      "date": "2025-10-07 13:43:03"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759862705.195335,
+      "date": "2025-10-07 13:45:05"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759862706.049206,
+      "date": "2025-10-07 13:45:06"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759862826.9807942,
+      "date": "2025-10-07 13:47:06"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759862827.905226,
+      "date": "2025-10-07 13:47:07"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759862949.08185,
+      "date": "2025-10-07 13:49:09"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759862949.9559731,
+      "date": "2025-10-07 13:49:09"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759863071.1232839,
+      "date": "2025-10-07 13:51:11"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759863071.927684,
+      "date": "2025-10-07 13:51:11"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759863193.004478,
+      "date": "2025-10-07 13:53:13"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759863193.8454258,
+      "date": "2025-10-07 13:53:13"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "1 workflow(s) failed in the last hour",
+      "timestamp": 1759863315.037506,
+      "date": "2025-10-07 13:55:15"
+    },
+    {
+      "key": "security_alerts",
+      "message": "1 open Dependabot alert(s) detected",
+      "timestamp": 1759863315.90434,
+      "date": "2025-10-07 13:55:15"
     }
   ]
 }

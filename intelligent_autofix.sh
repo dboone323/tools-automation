@@ -25,7 +25,7 @@ print_skip() { echo -e "${YELLOW}⏭️  SKIPPED:${NC} $1"; }
 print_rollback() { echo -e "${RED}🔄 ROLLBACK:${NC} $1"; }
 
 # Configuration
-readonly CODE_DIR="${CODE_DIR:-/Users/danielstevens/Desktop/Code}"
+readonly CODE_DIR="${CODE_DIR:-/Users/danielstevens/Desktop/Quantum-workspace}"
 readonly BACKUP_DIR="${CODE_DIR}/.autofix_backups"
 readonly LOG_FILE="${CODE_DIR}/.autofix.log"
 

@@ -101,12 +101,12 @@ for task_id in $queued_ids; do
 
   if [[ "$agent_status" == "available" ]]; then
     # Append notification
-    echo "$(date +%s)|execute_task|${task_id}" >> "$COMM_DIR/${normalized_agent}_notification.txt"
+    echo "$(date +%s)|execute_task|${task_id}" >>"$COMM_DIR/${normalized_agent}_notification.txt"
     # Update task status to assigned
-    jq --arg id "$task_id" '(.tasks[] | select(.id==$id) | .status) |= "assigned"' "$TASK_QUEUE_FILE" > "$TASK_QUEUE_FILE.tmp" && mv "$TASK_QUEUE_FILE.tmp" "$TASK_QUEUE_FILE"
-    assigned_count=$((assigned_count+1))
+    jq --arg id "$task_id" '(.tasks[] | select(.id==$id) | .status) |= "assigned"' "$TASK_QUEUE_FILE" >"$TASK_QUEUE_FILE.tmp" && mv "$TASK_QUEUE_FILE.tmp" "$TASK_QUEUE_FILE"
+    assigned_count=$((assigned_count + 1))
   else
-    skipped_count=$((skipped_count+1))
+    skipped_count=$((skipped_count + 1))
   fi
 
 done

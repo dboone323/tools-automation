@@ -1,7 +1,6 @@
 #!/bin/bash
 # Task Orchestrator Agent: Central coordinator for all agents with intelligent task distribution
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
@@ -195,12 +194,12 @@ update_orchestrator_status() {
   local last_seen
   last_seen=$(date +%s)
   local pid=$$
-  
+
   # Count tasks by status
   local tasks_queued=0
   local tasks_in_progress=0
   local tasks_completed=0
-  
+
   if [[ -f ${TASK_QUEUE_FILE} ]]; then
     if command -v jq &>/dev/null; then
       tasks_queued=$(jq '[.tasks[] | select(.status == "queued")] | length' "${TASK_QUEUE_FILE}" 2>/dev/null || echo 0)
@@ -208,7 +207,7 @@ update_orchestrator_status() {
       tasks_completed=$(jq '[.tasks[] | select(.status == "completed")] | length' "${TASK_QUEUE_FILE}" 2>/dev/null || echo 0)
     fi
   fi
-  
+
   # Read current status file
   local current_status
   if [[ -f ${AGENT_STATUS_FILE} ]]; then
@@ -216,7 +215,7 @@ update_orchestrator_status() {
   else
     current_status='{"agents": {}}'
   fi
-  
+
   # Update orchestrator status (atomic)
   if command -v jq &>/dev/null; then
     if echo "${current_status}" | jq \
@@ -245,7 +244,7 @@ update_orchestrator_status() {
          "tasks_completed": $completed
       }
       | .last_update = $last_seen' >"${AGENT_STATUS_FILE}.tmp"; then
-        mv "${AGENT_STATUS_FILE}.tmp" "${AGENT_STATUS_FILE}"
+      mv "${AGENT_STATUS_FILE}.tmp" "${AGENT_STATUS_FILE}"
     else
       log_message "ERROR" "Failed to write orchestrator status (jq pipeline failed)"
     fi
@@ -436,12 +435,12 @@ release_stale_busy_agents() {
   if ! command -v jq &>/dev/null || [[ ! -f ${AGENT_STATUS_FILE} ]]; then return; fi
   local tmp="${AGENT_STATUS_FILE}.tmp$$"
   local released_count=0
-  
+
   # Count agents that will be released for logging
   released_count=$(jq -r '.agents | to_entries | map(select(.value.status=="busy" and (.value.current_task_id==null or .value.current_task_id==""))) | length' "${AGENT_STATUS_FILE}" 2>/dev/null || echo 0)
-  
+
   jq '(.agents |= with_entries( if (.value.status=="busy" and (.value.current_task_id==null or .value.current_task_id=="")) then .value.status="available" else . end ))' "${AGENT_STATUS_FILE}" >"${tmp}" 2>/dev/null && mv "${tmp}" "${AGENT_STATUS_FILE}"
-  
+
   if [[ ${released_count} -gt 0 ]]; then
     log_message "INFO" "Released ${released_count} stale busy agents to available status"
   fi
@@ -554,12 +553,13 @@ distribute_tasks() {
 
 # Mark task as assigned (transition to in_progress soon)
 mark_task_assigned() {
-  local task_id="$1";
-  local agent="$2";
+  local task_id="$1"
+  local agent="$2"
   if command -v jq &>/dev/null; then
     tmp_file="${TASK_QUEUE_FILE}.tmp$$"
     if jq --arg id "${task_id}" --arg agent "${agent}" '(.tasks[] | select(.id==$id)) |= (.status="assigned" | .assigned_at=(now|floor) | .assigned_to=$agent | .assigned_agent=$agent)' "${TASK_QUEUE_FILE}" >"${tmp_file}" 2>/dev/null; then
-      mv "${tmp_file}" "${TASK_QUEUE_FILE}"; update_agent_status "${agent}" "busy"
+      mv "${tmp_file}" "${TASK_QUEUE_FILE}"
+      update_agent_status "${agent}" "busy"
       if [[ -f ${AGENT_STATUS_FILE} ]]; then
         local a_tmp="${AGENT_STATUS_FILE}.tmp$$"
         jq --arg a "${agent}" --arg t "${task_id}" '(.agents[$a].current_task_id=$t)' "${AGENT_STATUS_FILE}" >"${a_tmp}" 2>/dev/null && mv "${a_tmp}" "${AGENT_STATUS_FILE}"
@@ -576,7 +576,8 @@ advance_task_progress() {
   # 1) Move tasks from assigned -> in_progress after 3s (faster demo)
   tmp_file="${TASK_QUEUE_FILE}.tmp$$"
   if jq '(.tasks[] | select(.status=="assigned" and ((now - (.assigned_at // now)) > 3))) |= (.status="in_progress" | .started_at=now)' "${TASK_QUEUE_FILE}" >"${tmp_file}" 2>/dev/null; then
-    mv "${tmp_file}" "${TASK_QUEUE_FILE}"; fi
+    mv "${tmp_file}" "${TASK_QUEUE_FILE}"
+  fi
   # 2) Complete tasks in_progress after 5s from started_at (faster demo)
   local to_complete
   to_complete=$(jq -r '.tasks[] | select(.status=="in_progress" and ((now - (.started_at // now)) > 5)) | .id' "${TASK_QUEUE_FILE}" 2>/dev/null)
@@ -598,7 +599,8 @@ refresh_agent_heartbeats() {
       elif (.value.status=="available" and (.value.last_seen // 0) < ($now-180)) then
         .value.status="idle" | .value.last_seen=$now
       else . end))' "${AGENT_STATUS_FILE}" >"${tmp_file}" 2>/dev/null; then
-    mv "${tmp_file}" "${AGENT_STATUS_FILE}"; fi
+    mv "${tmp_file}" "${AGENT_STATUS_FILE}"
+  fi
 }
 
 # Get task information

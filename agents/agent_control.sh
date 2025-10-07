@@ -4,16 +4,13 @@
 # Author: Quantum Workspace AI Agent System
 # Created: 2025-10-06 (Phase 5)
 
-
-# Source shared functions for file locking and monitoring
+# Source shared functions for file locking and monitoring (functions available for future use)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
 
 # Core agents (Tier 1 & 2)
 CORE_AGENTS=(
@@ -36,24 +33,24 @@ log() {
 start_agent() {
   local agent="$1"
   local agent_path="${SCRIPT_DIR}/${agent}"
-  
+
   if [[ ! -f ${agent_path} ]]; then
     log "❌ Agent not found: ${agent}"
     return 1
   fi
-  
+
   # Check if already running
   if pgrep -f "${agent}" &>/dev/null; then
     log "⚠️  ${agent} is already running"
     return 0
   fi
-  
+
   log "▶️  Starting ${agent}..."
   "${agent_path}" daemon &>/dev/null &
   local pid=$!
-  
-  sleep 1
-  
+
+  sleep 3
+
   if ps -p "${pid}" &>/dev/null; then
     log "✅ ${agent} started (PID: ${pid})"
     return 0
@@ -65,16 +62,16 @@ start_agent() {
 
 stop_agent() {
   local agent="$1"
-  
+
   log "⏹️  Stopping ${agent}..."
-  
+
   pkill -f "${agent}" 2>/dev/null || {
     log "⚠️  ${agent} not running"
     return 0
   }
-  
+
   sleep 1
-  
+
   if ! pgrep -f "${agent}" &>/dev/null; then
     log "✅ ${agent} stopped"
     return 0
@@ -86,7 +83,7 @@ stop_agent() {
 
 restart_agent() {
   local agent="$1"
-  
+
   log "🔄 Restarting ${agent}..."
   stop_agent "${agent}"
   sleep 2
@@ -98,18 +95,18 @@ show_status() {
   echo ""
   printf "%-35s %-10s %-10s\n" "AGENT" "STATUS" "PID"
   printf "%-35s %-10s %-10s\n" "-----" "------" "---"
-  
+
   for agent in "${CORE_AGENTS[@]}"; do
     local pid
     pid=$(pgrep -f "${agent}" 2>/dev/null | head -1 || echo "N/A")
-    
+
     if [[ ${pid} != "N/A" ]]; then
       printf "%-35s %-10s %-10s\n" "${agent}" "🟢 Running" "${pid}"
     else
       printf "%-35s %-10s %-10s\n" "${agent}" "🔴 Stopped" "-"
     fi
   done
-  
+
   echo ""
   log "Total processes: $(pgrep -f 'agent.*\.sh' | wc -l | tr -d ' ')"
 }
@@ -136,10 +133,10 @@ list_agents() {
 
 start_all() {
   log "🚀 Starting all core agents..."
-  
+
   local success=0
   local failed=0
-  
+
   for agent in "${CORE_AGENTS[@]}"; do
     if start_agent "${agent}"; then
       ((success++))
@@ -147,68 +144,68 @@ start_all() {
       ((failed++))
     fi
   done
-  
+
   log "Summary: ${success} started, ${failed} failed"
 }
 
 stop_all() {
   log "⏹️  Stopping all agents..."
-  
+
   for agent in "${CORE_AGENTS[@]}"; do
     stop_agent "${agent}" || true
   done
-  
+
   log "All agents stopped"
 }
 
 # Main command handler
 case "${1:-}" in
-  start)
-    if [[ $# -eq 1 ]]; then
-      start_all
-    else
-      start_agent "$2"
-    fi
-    ;;
-  stop)
-    if [[ $# -eq 1 ]]; then
-      stop_all
-    else
-      stop_agent "$2"
-    fi
-    ;;
-  restart)
-    if [[ $# -eq 1 ]]; then
-      log "🔄 Restarting all agents..."
-      stop_all
-      sleep 2
-      start_all
-    else
-      restart_agent "$2"
-    fi
-    ;;
-  status)
-    show_status
-    ;;
-  list)
-    list_agents
-    ;;
-  *)
-    echo "Usage: $0 {start|stop|restart|status|list} [agent_name]"
-    echo ""
-    echo "Commands:"
-    echo "  start [agent]    - Start specific agent or all agents"
-    echo "  stop [agent]     - Stop specific agent or all agents"
-    echo "  restart [agent]  - Restart specific agent or all agents"
-    echo "  status           - Show status of all core agents"
-    echo "  list             - List available agents by tier"
-    echo ""
-    echo "Examples:"
-    echo "  $0 start                    # Start all core agents"
-    echo "  $0 start agent_security.sh  # Start specific agent"
-    echo "  $0 stop agent_backup.sh     # Stop specific agent"
-    echo "  $0 restart                  # Restart all agents"
-    echo "  $0 status                   # Show agent status"
-    exit 1
-    ;;
+start)
+  if [[ $# -eq 1 ]]; then
+    start_all
+  else
+    start_agent "$2"
+  fi
+  ;;
+stop)
+  if [[ $# -eq 1 ]]; then
+    stop_all
+  else
+    stop_agent "$2"
+  fi
+  ;;
+restart)
+  if [[ $# -eq 1 ]]; then
+    log "🔄 Restarting all agents..."
+    stop_all
+    sleep 2
+    start_all
+  else
+    restart_agent "$2"
+  fi
+  ;;
+status)
+  show_status
+  ;;
+list)
+  list_agents
+  ;;
+*)
+  echo "Usage: $0 {start|stop|restart|status|list} [agent_name]"
+  echo ""
+  echo "Commands:"
+  echo "  start [agent]    - Start specific agent or all agents"
+  echo "  stop [agent]     - Stop specific agent or all agents"
+  echo "  restart [agent]  - Restart specific agent or all agents"
+  echo "  status           - Show status of all core agents"
+  echo "  list             - List available agents by tier"
+  echo ""
+  echo "Examples:"
+  echo "  $0 start                    # Start all core agents"
+  echo "  $0 start agent_security.sh  # Start specific agent"
+  echo "  $0 stop agent_backup.sh     # Stop specific agent"
+  echo "  $0 restart                  # Restart all agents"
+  echo "  $0 status                   # Show agent status"
+  exit 1
+  ;;
 esac

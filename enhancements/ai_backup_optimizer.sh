@@ -13,12 +13,12 @@ check_ollama() {
 # AI-powered backup strategy optimization
 ai_optimize_backup_strategy() {
   local workspace_stats="$1"
-  
+
   if ! check_ollama; then
-    echo "manual"  # Fallback to manual strategy
+    echo "manual" # Fallback to manual strategy
     return
   fi
-  
+
   local prompt="Based on these workspace statistics, suggest the optimal backup strategy (incremental/full/differential):
 ${workspace_stats}
 
@@ -32,26 +32,26 @@ Respond with a single word: incremental, full, or differential"
 
   local strategy
   strategy=$(ollama run llama2 "${prompt}" 2>/dev/null | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
-  
+
   case "${strategy}" in
-    incremental|full|differential)
-      echo "${strategy}"
-      ;;
-    *)
-      echo "incremental"  # Safe default
-      ;;
+  incremental | full | differential)
+    echo "${strategy}"
+    ;;
+  *)
+    echo "incremental" # Safe default
+    ;;
   esac
 }
 
 # Predictive storage analysis
 ai_predict_storage_needs() {
   local historical_data="$1"
-  
+
   if ! check_ollama; then
     echo "0"
     return
   fi
-  
+
   local prompt="Analyze this backup history data and predict storage needs for the next 30 days (in GB):
 ${historical_data}
 
@@ -59,19 +59,19 @@ Provide only a number (integer GB needed)."
 
   local prediction
   prediction=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
-  
+
   echo "${prediction:-0}"
 }
 
 # Intelligent retention policy recommendations
 ai_recommend_retention() {
   local backup_metadata="$1"
-  
+
   if ! check_ollama; then
-    echo "14"  # Default: 14 days
+    echo "14" # Default: 14 days
     return
   fi
-  
+
   local prompt="Based on this backup metadata, recommend optimal retention period in days:
 ${backup_metadata}
 
@@ -85,7 +85,7 @@ Respond with just the number of days."
 
   local days
   days=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
-  
+
   # Ensure minimum 7 days, maximum 365 days
   if [[ -n "${days}" ]]; then
     if [[ ${days} -lt 7 ]]; then
@@ -96,19 +96,19 @@ Respond with just the number of days."
       echo "${days}"
     fi
   else
-    echo "14"  # Safe default
+    echo "14" # Safe default
   fi
 }
 
 # AI-powered backup prioritization
 ai_prioritize_backups() {
   local file_list="$1"
-  
+
   if ! check_ollama; then
-    echo "${file_list}"  # Return unchanged
+    echo "${file_list}" # Return unchanged
     return
   fi
-  
+
   local prompt="Prioritize these files/directories for backup (most critical first):
 ${file_list}
 
@@ -127,11 +127,11 @@ Return the list in priority order, one per line."
 ai_verify_backup_integrity() {
   local backup_path="$1"
   local checksum_data="$2"
-  
+
   if ! check_ollama; then
-    return 0  # Skip AI verification
+    return 0 # Skip AI verification
   fi
-  
+
   local prompt="Analyze this backup verification data and identify potential integrity issues:
 Backup: ${backup_path}
 Checksums: ${checksum_data}
@@ -146,7 +146,7 @@ Respond with: OK if no issues, or list specific concerns."
 
   local analysis
   analysis=$(ollama run llama2 "${prompt}" 2>/dev/null)
-  
+
   if echo "${analysis}" | grep -iq "^OK"; then
     return 0
   else
@@ -159,12 +159,12 @@ Respond with: OK if no issues, or list specific concerns."
 ai_generate_backup_insights() {
   local backup_history="$1"
   local output_file="$2"
-  
+
   if ! check_ollama; then
-    echo "AI insights unavailable (Ollama not installed)" > "${output_file}"
+    echo "AI insights unavailable (Ollama not installed)" >"${output_file}"
     return
   fi
-  
+
   local prompt="Analyze this backup history and provide actionable insights:
 ${backup_history}
 
@@ -176,7 +176,7 @@ Generate a concise report covering:
 
 Format as markdown with clear sections."
 
-  ollama run llama2 "${prompt}" 2>/dev/null > "${output_file}"
+  ollama run llama2 "${prompt}" 2>/dev/null >"${output_file}"
 }
 
 # Export functions for sourcing

@@ -119,6 +119,22 @@
       "risk_level": "medium",
       "status": "queued",
       "created": 1759798837
+    },
+    {
+      "id": "swift_update_null",
+      "type": "swift_version",
+      "description": "Update Swift from 6.2 to null",
+      "risk_level": "medium",
+      "status": "queued",
+      "created": 1759852815
+    },
+    {
+      "id": "swift_update_null",
+      "type": "swift_version",
+      "description": "Update Swift from 6.2 to null",
+      "risk_level": "medium",
+      "status": "queued",
+      "created": 1759852831
     }
   ],
   "applied": [],

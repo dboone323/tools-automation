@@ -2,7 +2,6 @@
 # Code Review Agent: AI-powered code analysis and improvement suggestions
 # Uses Ollama for intelligent code review, automated fixes, and quality assessment
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"

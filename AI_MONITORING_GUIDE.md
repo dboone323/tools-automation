@@ -10,11 +10,13 @@
 ## 📊 Quick Status Check
 
 ### Installed Models
+
 ```bash
 ollama list
 ```
 
 **Current Models:**
+
 - ✅ `codellama:latest` (3.8 GB) - Code generation, review, optimization
 - ✅ `llama2:latest` (3.8 GB) - CI/CD analysis, deployment decisions
 - ✅ `codellama:13b` (7.4 GB) - Advanced code analysis (optional)
@@ -22,6 +24,7 @@ ollama list
 - ⚡ Additional models available for specialized tasks
 
 ### Verify Ollama Service
+
 ```bash
 # Check if Ollama is running
 ps aux | grep ollama | grep -v grep
@@ -35,6 +38,7 @@ ollama run llama2 "Say hello"
 ## 🧪 AI Feature Testing
 
 ### Test 1: Code Complexity Analysis (CodeLlama)
+
 ```bash
 cd /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation
 source enhancements/ai_codegen_optimizer.sh
@@ -53,6 +57,7 @@ ai_analyze_complexity /tmp/test.swift
 ```
 
 ### Test 2: Function Naming Suggestions
+
 ```bash
 # Get AI-suggested function names
 ai_suggest_names "Validate user email address format" "function"
@@ -60,6 +65,7 @@ ai_suggest_names "Validate user email address format" "function"
 ```
 
 ### Test 3: Deployment Readiness (Llama2)
+
 ```bash
 source enhancements/ai_integration_optimizer.sh
 
@@ -78,6 +84,7 @@ ai_check_deployment_readiness /tmp/metrics.txt
 ```
 
 ### Test 4: Deployment Strategy Selection
+
 ```bash
 # Get AI recommendation for deployment strategy
 ai_select_deployment_strategy "production" "high" "critical"
@@ -91,6 +98,7 @@ ai_select_deployment_strategy "production" "high" "critical"
 ### 1. Track AI Response Times
 
 Create a monitoring script:
+
 ```bash
 cat > /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/monitor_ai_performance.sh << 'EOF'
 #!/bin/bash
@@ -127,6 +135,7 @@ chmod +x /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/monitor
 ```
 
 **Run monitoring:**
+
 ```bash
 cd /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation
 ./monitor_ai_performance.sh
@@ -135,6 +144,7 @@ cd /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation
 ### 2. Track AI Recommendation Accuracy
 
 Create tracking file:
+
 ```bash
 cat > /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_accuracy_log.json << 'EOF'
 {
@@ -150,6 +160,7 @@ EOF
 ```
 
 **Log AI recommendations:**
+
 ```bash
 # Example: Log a deployment decision
 cat >> ai_recommendations.log << EOF
@@ -169,6 +180,7 @@ grep -r "ai_" /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ag
 ```
 
 **Expected output:**
+
 - agent_backup.sh
 - agent_build.sh
 - agent_cleanup.sh
@@ -183,6 +195,7 @@ grep -r "ai_" /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ag
 ### Code Generation Agent (agent_codegen)
 
 #### 1. Generate Code
+
 ```bash
 source enhancements/ai_codegen_optimizer.sh
 ai_generate_code "Create a Swift struct for a User with name, email, and age" "swift" "/tmp/generated_code.swift"
@@ -190,6 +203,7 @@ cat /tmp/generated_code.swift
 ```
 
 #### 2. Get Refactoring Suggestions
+
 ```bash
 # Create sample code with issues
 cat > /tmp/code_to_refactor.swift << 'EOF'
@@ -212,18 +226,21 @@ ai_suggest_refactoring /tmp/code_to_refactor.swift
 ```
 
 #### 3. Automated Code Review
+
 ```bash
 ai_code_review /tmp/code_to_refactor.swift
 # Returns APPROVE or REQUEST_CHANGES with detailed feedback
 ```
 
 #### 4. Generate API Documentation
+
 ```bash
 ai_generate_api_docs /tmp/generated_code.swift /tmp/api_docs.md
 cat /tmp/api_docs.md
 ```
 
 #### 5. Generate Test Cases
+
 ```bash
 ai_generate_test_cases /tmp/generated_code.swift "XCTest"
 ```
@@ -231,6 +248,7 @@ ai_generate_test_cases /tmp/generated_code.swift "XCTest"
 ### CI/CD Integration Agent (agent_integration)
 
 #### 1. Optimize GitHub Workflow
+
 ```bash
 source enhancements/ai_integration_optimizer.sh
 
@@ -256,6 +274,7 @@ ai_optimize_workflow /tmp/workflow.yml
 ```
 
 #### 2. Analyze CI Failure
+
 ```bash
 # Simulate failure log
 cat > /tmp/ci_failure.log << 'EOF'
@@ -271,12 +290,14 @@ ai_analyze_ci_failure /tmp/ci_failure.log
 ```
 
 #### 3. Recommend Deployment Window
+
 ```bash
 ai_recommend_deployment_window "production" "2024-10-07" "high"
 # Returns optimal deployment time window
 ```
 
 #### 4. Assess Rollback Need
+
 ```bash
 # Simulate deployment metrics
 cat > /tmp/deployment_metrics.txt << 'EOF'
@@ -296,18 +317,22 @@ ai_assess_rollback_need /tmp/deployment_metrics.txt
 ## 📊 Performance Metrics to Track
 
 ### 1. Response Times
+
 - **CodeLlama:** 2-10 seconds (depends on prompt complexity)
 - **Llama2:** 2-8 seconds (general analysis)
 - **Target:** <5 seconds for most operations
 
 ### 2. Accuracy Metrics
+
 Track these for each AI function:
+
 - **Code Complexity:** Compare AI assessment vs manual review
 - **Naming Suggestions:** % of suggestions adopted
 - **Deployment Decisions:** GO/NO_GO accuracy rate
 - **Code Reviews:** % of issues correctly identified
 
 ### 3. Resource Usage
+
 ```bash
 # Monitor Ollama resource usage
 top -l 1 | grep ollama
@@ -317,6 +342,7 @@ du -sh ~/.ollama/models
 ```
 
 ### 4. Agent Performance
+
 ```bash
 # Check agent execution times (with vs without AI)
 time ./agents/agent_codegen.sh analyze /path/to/code
@@ -328,6 +354,7 @@ time ./agents/agent_integration.sh check-deployment
 ## 🔧 Troubleshooting
 
 ### Issue: Ollama Not Responding
+
 ```bash
 # Restart Ollama service
 pkill ollama
@@ -338,6 +365,7 @@ ollama list
 ```
 
 ### Issue: Slow AI Responses
+
 ```bash
 # Use smaller, faster models
 ollama pull codellama:7b  # Instead of codellama:13b
@@ -347,6 +375,7 @@ top -l 1 | grep -E "CPU|PhysMem"
 ```
 
 ### Issue: AI Functions Returning Defaults
+
 ```bash
 # Verify Ollama is running
 ps aux | grep ollama | grep -v grep
@@ -359,7 +388,9 @@ tail -f /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/*
 ```
 
 ### Issue: Inaccurate AI Recommendations
+
 **Solution:** Improve prompts in AI modules
+
 - Edit prompts in `enhancements/ai_*_optimizer.sh`
 - Add more context to prompts
 - Use more specific examples
@@ -370,6 +401,7 @@ tail -f /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/*
 ## 🚀 Advanced Features (Future)
 
 ### 1. Model Selection Per Agent
+
 ```bash
 # Allow agents to choose optimal model per task
 # Edit agent configuration:
@@ -388,6 +420,7 @@ EOF
 ```
 
 ### 2. Learning Loops with Feedback
+
 ```bash
 # Track AI recommendations and outcomes
 cat > ai_feedback_loop.sh << 'EOF'
@@ -401,6 +434,7 @@ EOF
 ```
 
 ### 3. Response Caching
+
 ```bash
 # Cache AI responses for common queries
 cat > ai_cache.sh << 'EOF'
@@ -421,6 +455,7 @@ EOF
 ```
 
 ### 4. A/B Testing AI Strategies
+
 ```bash
 # Compare AI recommendations vs manual decisions
 cat > ab_test_ai.sh << 'EOF'
@@ -436,6 +471,7 @@ EOF
 ## 📝 Performance Log Template
 
 Create weekly performance reports:
+
 ```bash
 cat > weekly_ai_performance_report.md << 'EOF'
 # AI Performance Report - Week of $(date +%Y-%m-%d)
@@ -469,6 +505,7 @@ EOF
 ## ✅ Success Criteria
 
 ### AI is Working Well When:
+
 - ✅ Response times < 5 seconds for most operations
 - ✅ Recommendation acceptance rate > 80%
 - ✅ No false positives in critical decisions (deployment GO/NO_GO)
@@ -477,6 +514,7 @@ EOF
 - ✅ Test case suggestions are relevant and comprehensive
 
 ### Review AI Performance:
+
 - **Daily:** Check response times and error rates
 - **Weekly:** Review recommendation accuracy
 - **Monthly:** Analyze trends and optimize prompts
@@ -487,17 +525,20 @@ EOF
 ## 🎯 Next Steps
 
 1. **Run Initial Tests** (20 minutes)
+
    ```bash
    cd /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation
    ./test_ai_features.sh
    ```
 
 2. **Monitor for 1 Week** (ongoing)
+
    - Track response times
    - Log recommendation outcomes
    - Collect user feedback
 
 3. **Optimize Prompts** (based on results)
+
    - Update prompts in `enhancements/ai_*_optimizer.sh`
    - A/B test different prompt strategies
    - Fine-tune for your specific use cases
@@ -510,6 +551,7 @@ EOF
 ---
 
 **For Questions or Issues:**
+
 - Check agent logs in `Tools/Automation/agents/*.log`
 - Review AI function implementations in `enhancements/ai_*_optimizer.sh`
 - Test Ollama directly: `ollama run codellama "test prompt"`

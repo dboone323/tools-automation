@@ -1,7 +1,6 @@
 #!/bin/bash
 # Search Agent: Finds and summarizes information from codebase, docs, or the web as needed
 
-
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
