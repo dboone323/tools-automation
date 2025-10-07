@@ -383,6 +383,10 @@ show_enhanced_usage() {
   echo "  update-models   - Update/pull latest Ollama models"
   echo "  ai-insights     - Generate workspace-wide AI insights"
   echo ""
+  echo "Maintenance Commands:"
+  echo "  cleanup         - Run retention policy cleanup (5-backup rule)"
+  echo "  retention       - Alias for cleanup command"
+  echo ""
   echo "Examples:"
   echo "  $0 status"
   echo "  $0 ai-all"
@@ -631,6 +635,33 @@ list_projects() {
   echo ""
 }
 
+# Run retention policy cleanup
+run_retention_policy() {
+  print_status "Running retention policy cleanup..."
+
+  local retention_script="${CODE_DIR}/retention_policy_manager.sh"
+
+  if [[ ! -f ${retention_script} ]]; then
+    print_error "Retention policy script not found at: ${retention_script}"
+    return 1
+  fi
+
+  if [[ ! -x ${retention_script} ]]; then
+    print_warning "Making retention policy script executable..."
+    chmod +x "${retention_script}"
+  fi
+
+  print_status "Executing retention policy cleanup..."
+  bash "${retention_script}"
+
+  if [[ $? -eq 0 ]]; then
+    print_success "Retention policy cleanup completed successfully"
+  else
+    print_error "Retention policy cleanup failed"
+    return 1
+  fi
+}
+
 # Main execution logic with AI enhancements
 main() {
   case "${1-}" in
@@ -720,6 +751,12 @@ main() {
       list_projects
       exit 1
     fi
+    ;;
+  "cleanup")
+    run_retention_policy
+    ;;
+  "retention")
+    run_retention_policy
     ;;
   *)
     show_enhanced_usage
