@@ -1,47 +1,21 @@
 {
   "agents": {
-    "agent_codegen.sh": {
-      "last_seen": 1759792137,
-      "status": "idle"
-    },
-    "codegen_agent": {
-      "last_seen": 1759792137,
-      "status": "idle"
-    },
-    "deployment_agent.sh": {
-      "last_seen": 1759792143,
+    "agent_build.sh": {
+      "last_seen": 1759798548,
       "status": "available"
     },
-    "documentation_agent.sh": {
-      "last_seen": 1759792146,
-      "status": "available"
-    },
-    "performance_agent.sh": {
-      "last_seen": 1759792150,
+    "build_agent": {
+      "last_seen": 1759798548,
       "status": "available"
     },
     "quality_agent.sh": {
-      "last_seen": 1759792146,
+      "last_seen": 1759798551,
       "status": "available"
     },
-    "security_agent.sh": {
-      "last_seen": 1759792154,
+    "unified_dashboard_agent.sh": {
+      "last_seen": 1759798557,
       "status": "available"
-    },
-    "testing_agent.sh": {
-      "last_seen": 1759792146,
-      "status": "available"
-    },
-    "monitoring_agent.sh": {
-      "status": "available",
-      "last_seen": 1759792167
-    },
-    "learning_agent.sh": {
-      "status": "available",
-      "last_seen": 1759792167
     }
   },
-  "last_update": 1759792146
-}
-
+  "last_update": 1759798557
 }

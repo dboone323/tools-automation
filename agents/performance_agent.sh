@@ -1,6 +1,11 @@
 #!/bin/bash
 # Performance Agent: Analyzes and optimizes code performance
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="performance_agent.sh"
 LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/performance_agent.log"
 NOTIFICATION_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"

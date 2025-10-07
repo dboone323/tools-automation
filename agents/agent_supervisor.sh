@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # Agent Supervisor: Starts and monitors all agents
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents"
 LOG_FILE="${AGENTS_DIR}/supervisor.log"
 

@@ -2,6 +2,11 @@
 # Seed a set of demo tasks into the orchestrator task queue for dashboard metrics
 # Usage: ./seed_demo_tasks.sh [COUNT]
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 set -euo pipefail
 SCRIPT_DIR="$(dirname "$0")"
 TASK_QUEUE_FILE="${SCRIPT_DIR}/task_queue.json"

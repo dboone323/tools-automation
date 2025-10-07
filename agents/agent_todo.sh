@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # TODO Processing Agent: Reads TODOs and delegates to appropriate agents
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents"
 TODO_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Projects/todo-tree-output.json"
 LOG_FILE="${AGENTS_DIR}/todo_agent.log"

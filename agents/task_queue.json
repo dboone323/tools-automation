@@ -119,6 +119,36 @@
       "status": "completed",
       "success": "true",
       "type": "performance"
+    },
+    {
+      "assigned_agent": "agent_debug.sh",
+      "created": 1759526666,
+      "dependencies": [],
+      "description": "TODO: Implement streak freeze feature. (File: HabitQuest/HabitQuest/QuestManager.swift:88)",
+      "id": "todo_assign_1757549783460151000",
+      "priority": 5,
+      "status": "completed",
+      "type": "debug",
+      "assigned_at": 1759796296,
+      "assigned_to": "agent_debug.sh",
+      "started_at": 1759796327.399668,
+      "completed_at": 1759796358.307986,
+      "success": "true"
+    },
+    {
+      "assigned_agent": "agent_debug.sh",
+      "created": 1759526667,
+      "dependencies": [],
+      "description": "TODO: Add drag-and-drop for tasks. (File: PlannerApp/PlannerApp/PlannerView.swift:60)",
+      "id": "todo_assign_1757549783636447000",
+      "priority": 5,
+      "status": "completed",
+      "type": "debug",
+      "assigned_at": 1759796358,
+      "assigned_to": "agent_debug.sh",
+      "started_at": 1759796389.193241,
+      "completed_at": 1759796419.979153,
+      "success": "true"
     }
   ],
   "tasks": [
@@ -231,8 +261,13 @@
       "description": "TODO: Implement streak freeze feature. (File: HabitQuest/HabitQuest/QuestManager.swift:88)",
       "id": "todo_assign_1757549783460151000",
       "priority": 5,
-      "status": "queued",
-      "type": "debug"
+      "status": "completed",
+      "type": "debug",
+      "assigned_at": 1759796296,
+      "assigned_to": "agent_debug.sh",
+      "started_at": 1759796327.399668,
+      "completed_at": 1759796358.307986,
+      "success": "true"
     },
     {
       "assigned_agent": "public_api_agent.sh",
@@ -256,8 +291,13 @@
       "description": "TODO: Add drag-and-drop for tasks. (File: PlannerApp/PlannerApp/PlannerView.swift:60)",
       "id": "todo_assign_1757549783636447000",
       "priority": 5,
-      "status": "queued",
-      "type": "debug"
+      "status": "completed",
+      "type": "debug",
+      "assigned_at": 1759796358,
+      "assigned_to": "agent_debug.sh",
+      "started_at": 1759796389.193241,
+      "completed_at": 1759796419.979153,
+      "success": "true"
     },
     {
       "assigned_agent": "performance_agent.sh",

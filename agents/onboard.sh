@@ -2,6 +2,11 @@
 # Agent System Onboarding Script
 # Sets up environment, permissions, and provides quickstart info for developers.
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 set -e
 
 AGENTS_DIR="$(dirname "$0")"

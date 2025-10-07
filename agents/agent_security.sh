@@ -3,6 +3,11 @@
 # Handles static security analysis, dependency scanning, and security best practices
 # Phase 4 Enhanced: NPM audit, secrets scanning, and comprehensive reporting
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="SecurityAgent"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"

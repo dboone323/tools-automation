@@ -1,6 +1,11 @@
 #!/bin/bash
 # Minimal Dashboard Agent Test
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_FILE="${SCRIPT_DIR}/minimal_dashboard.log"
 DASHBOARD_HTML_FILE="${SCRIPT_DIR}/minimal_dashboard.html"

@@ -1,6 +1,11 @@
 #!/bin/bash
 # Auto-Update Agent: Monitors and applies latest code enhancements and best practices
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="AutoUpdateAgent"
 LOG_FILE="$(dirname "$0")/auto_update_agent.log"
 NOTIFICATION_FILE="$(dirname "$0")/communication/${AGENT_NAME}_notification.txt"

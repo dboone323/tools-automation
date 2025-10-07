@@ -1,6 +1,11 @@
 #!/bin/bash
 # UI/UX Agent: Analyzes and suggests improvements for user interface and experience
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="UIUXAgent"
 LOG_FILE="$(dirname "$0")/uiux_agent.log"
 PROJECT="CodingReviewer"

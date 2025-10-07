@@ -1,6 +1,11 @@
 #!/bin/bash
 # stop_agents.sh: Gracefully stop all running agent processes and update agent_status.json
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 STATUS_FILE="$(dirname "$0")/agent_status.json"
 AGENT_NAMES=(build_agent debug_agent codegen_agent)
 

@@ -1,6 +1,11 @@
 #!/bin/bash
 # Apple Pro Engineer Agent: Ensures code and project follow Apple best practices and advanced engineering standards
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="AppleProAgent"
 LOG_FILE="$(dirname "$0")/apple_pro_agent.log"
 PROJECT="CodingReviewer"

@@ -1,6 +1,11 @@
 #!/bin/bash
 # Deployment Agent: Manages automated deployment workflows with Ollama integration
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="deployment_agent.sh"
 WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
 LOG_FILE="${WORKSPACE}/Tools/Automation/agents/deployment_agent.log"

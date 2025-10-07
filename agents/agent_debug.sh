@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 echo "[$(date)] debug_agent: Script started, PID=$$" >>"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/debug_agent.log"
 # Debug Agent: Runs diagnostics and auto-fix if issues are detected
 

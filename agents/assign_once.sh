@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 # One-shot assigner: normalize agent aliases, notify available agents, mark tasks assigned
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 set -eu
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 TASK_QUEUE_FILE="$ROOT_DIR/task_queue.json"

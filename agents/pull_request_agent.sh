@@ -1,6 +1,11 @@
 #!/bin/bash
 # Pull Request Agent: Creates, reviews, and auto-merges low-risk pull requests
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="PullRequestAgent"
 LOG_FILE="$(dirname "$0")/pull_request_agent.log"
 NOTIFICATION_FILE="$(dirname "$0")/communication/${AGENT_NAME}_notification.txt"

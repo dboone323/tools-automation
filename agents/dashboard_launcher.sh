@@ -1,6 +1,11 @@
 #!/bin/bash
 # Dashboard Launcher Script
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 DASHBOARD_AGENT="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/unified_dashboard_agent.sh"
 DASHBOARD_PID_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/dashboard_server.pid"
 LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/dashboard_launcher.log"

@@ -1,6 +1,11 @@
 #!/bin/bash
 # Collaboration Agent: Coordinates all agents, aggregates plans, and ensures best practice learning
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="CollabAgent"
 LOG_FILE="$(dirname "$0")/collab_agent.log"
 PLANS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/plans"

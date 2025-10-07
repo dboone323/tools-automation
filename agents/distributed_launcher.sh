@@ -3,6 +3,11 @@
 # Launches agents on remote hosts via SSH and coordinates health checks/logs.
 
 # List of remote hosts (edit as needed)
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 REMOTE_HOSTS=("host1.example.com" "host2.example.com")
 AGENT_SCRIPT="agent_supervisor.sh"
 AGENTS_DIR="$(dirname "$0")"

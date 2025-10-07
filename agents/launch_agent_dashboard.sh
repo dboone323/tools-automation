@@ -2,6 +2,11 @@
 # Agent Dashboard Launcher
 # Starts the dashboard API server and opens the dashboard
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
 AGENTS_DIR="${WORKSPACE}/Tools/Automation/agents"
 LOG_FILE="${AGENTS_DIR}/dashboard_launcher.log"

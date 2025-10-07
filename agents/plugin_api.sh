@@ -2,6 +2,11 @@
 # Simple plugin API for agent extensibility
 # Usage: ./plugin_api.sh run <plugin_name> [args...]
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 PLUGINS_DIR="$(dirname "$0")/plugins"
 AUDIT_LOG="$(dirname "$0")/audit.log"
 POLICY_CONF="$(dirname "$0")/policy.conf"

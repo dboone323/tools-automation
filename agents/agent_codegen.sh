@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 echo "[$(date)] codegen_agent: Script started, PID=$$" >>"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/codegen_agent.log"
 # CodeGen/Fix Agent: Triggers code generation and auto-fix routines
 

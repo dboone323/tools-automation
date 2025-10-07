@@ -1,6 +1,11 @@
 #!/bin/bash
 # Task Orchestrator Agent: Central coordinator for all agents with intelligent task distribution
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="TaskOrchestrator"
 SCRIPT_DIR="$(dirname "$0")"
 LOG_FILE="${SCRIPT_DIR}/task_orchestrator.log"

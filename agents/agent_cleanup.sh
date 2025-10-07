@@ -2,6 +2,11 @@
 # Agent Cleanup - Workspace hygiene automation
 # Handles log rotation, cache pruning, temp file cleanup, and workspace maintenance
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

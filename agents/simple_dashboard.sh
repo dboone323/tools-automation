@@ -1,6 +1,11 @@
 #!/bin/bash
 # Simplified Unified Dashboard Agent
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 AGENT_NAME="UnifiedDashboard"
 LOG_FILE="${SCRIPT_DIR}/simple_dashboard.log"

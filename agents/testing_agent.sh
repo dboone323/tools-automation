@@ -1,6 +1,11 @@
 #!/bin/bash
 # Testing Agent: Manages and improves test coverage and quality
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="testing_agent.sh"
 WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
 LOG_FILE="${WORKSPACE}/Tools/Automation/agents/testing_agent.log"

@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 set -euo pipefail
 
 # Agent: runs inventory and updates docs. Intended for cron/CI.

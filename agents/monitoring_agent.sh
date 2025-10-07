@@ -1,6 +1,11 @@
 #!/bin/bash
 # Monitoring Agent: Monitors system health, performance, and anomalies with Ollama analysis
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="monitoring_agent.sh"
 WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
 LOG_FILE="${WORKSPACE}/Tools/Automation/agents/monitoring_agent.log"

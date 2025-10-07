@@ -1,6 +1,11 @@
 #!/bin/bash
 # Public API Integration Agent: Manages API calls and avoids rate limits
 
+
+# Source shared functions for file locking and monitoring
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
+
 AGENT_NAME="PublicApiAgent"
 LOG_FILE="$(dirname "$0")/public_api_agent.log"
 NOTIFICATION_FILE="$(dirname "$0")/communication/${AGENT_NAME}_notification.txt"
