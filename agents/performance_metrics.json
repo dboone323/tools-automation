@@ -1463,6 +1463,22 @@
       "disk_usage": "22",
       "process_count": "     804",
       "agent_count": "      16"
+    },
+    {
+      "timestamp": "1759799550",
+      "cpu_usage": "502.9",
+      "memory_usage": "36.1",
+      "disk_usage": "23",
+      "process_count": "     768",
+      "agent_count": "      15"
+    },
+    {
+      "timestamp": "1759799850",
+      "cpu_usage": "601.7",
+      "memory_usage": "35.6",
+      "disk_usage": "23",
+      "process_count": "     786",
+      "agent_count": "      22"
     }
   ]
 }

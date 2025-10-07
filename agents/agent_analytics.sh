@@ -88,8 +88,6 @@ collect_code_metrics() {
   local project_path="$1"
   local project_name=$(basename "${project_path}")
   
-  info "Collecting code metrics for ${project_name}..."
-  
   local swift_files=0
   local total_lines=0
   local code_lines=0
@@ -134,7 +132,6 @@ EOF
 
 # Collect build metrics
 collect_build_metrics() {
-  info "Collecting build metrics..."
   
   local build_logs=()
   local avg_build_time=0
@@ -162,8 +159,6 @@ collect_coverage_metrics() {
   local project_path="$1"
   local project_name=$(basename "${project_path}")
   
-  info "Collecting coverage metrics for ${project_name}..."
-  
   # Look for coverage reports
   local coverage_file="${project_path}/.build/debug/codecov/*.json"
   local coverage_pct=0
@@ -184,7 +179,6 @@ EOF
 
 # Collect agent performance metrics
 collect_agent_metrics() {
-  info "Collecting agent performance metrics..."
   
   local agent_count=0
   local active_agents=0
@@ -240,8 +234,6 @@ EOF
 collect_complexity_metrics() {
   local project_path="$1"
   local project_name=$(basename "${project_path}")
-  
-  info "Collecting complexity metrics for ${project_name}..."
   
   # Use SwiftLint if available
   local complexity_violations=0
@@ -334,6 +326,7 @@ generate_dashboard_summary() {
   # Extract key metrics for dashboard
   python3 <<PYTHON
 import json
+import sys
 
 try:
     with open('${report_file}', 'r') as f:
