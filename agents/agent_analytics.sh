@@ -104,12 +104,12 @@ collect_code_metrics() {
     while IFS= read -r file; do
       [[ ! -f "$file" ]] && continue
       
-      local lines=$(wc -l < "$file" | tr -d ' ')
+      local lines=$(wc -l < "$file" 2>/dev/null | tr -d ' \n')
       total_lines=$((total_lines + lines))
       
       # Count comment and blank lines
-      local comments=$(grep -c '^\s*//' "$file" 2>/dev/null || echo 0)
-      local blanks=$(grep -c '^\s*$' "$file" 2>/dev/null || echo 0)
+      local comments=$(grep -c '^\s*//' "$file" 2>/dev/null | tr -d '\n' || echo 0)
+      local blanks=$(grep -c '^\s*$' "$file" 2>/dev/null | tr -d '\n' || echo 0)
       
       comment_lines=$((comment_lines + comments))
       blank_lines=$((blank_lines + blanks))
@@ -249,7 +249,7 @@ collect_complexity_metrics() {
   
   if command -v swiftlint &>/dev/null && [[ -d "${project_path}" ]]; then
     # Count complexity warnings
-    complexity_violations=$(cd "${project_path}" && swiftlint lint --quiet 2>/dev/null | grep -c "Cyclomatic Complexity" || echo 0)
+    complexity_violations=$(cd "${project_path}" && swiftlint lint --quiet 2>/dev/null | grep -c "Cyclomatic Complexity" | tr -d '\n' || echo 0)
   fi
   
   cat <<EOF

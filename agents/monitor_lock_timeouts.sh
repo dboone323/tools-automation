@@ -8,7 +8,7 @@ echo "Lock Timeout Monitoring"
 echo "======================="
 echo ""
 
-total_timeouts=$(get_lock_timeout_count)
+total_timeouts=$(get_lock_timeout_count | tr -d '\n')
 echo "Total lock timeouts: $total_timeouts"
 echo ""
 

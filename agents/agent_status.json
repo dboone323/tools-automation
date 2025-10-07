@@ -1,21 +1,153 @@
 {
   "agents": {
     "agent_build.sh": {
-      "last_seen": 1759798548,
+      "last_seen": 1759799300,
+      "status": "stopped"
+    },
+    "agent_codegen.sh": {
+      "last_seen": 1759799305,
+      "status": "idle",
+      "tasks_completed": 0
+    },
+    "agent_debug.sh": {
+      "last_seen": 1759799274,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
+    "agent_todo.sh": {
+      "last_seen": 1759799276,
+      "pid": 4473,
       "status": "available"
+    },
+    "apple_pro_agent.sh": {
+      "last_seen": 1759799136,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
+    "auto_update_agent.sh": {
+      "last_seen": 1759799170,
+      "status": "restarting",
+      "tasks_completed": 0
     },
     "build_agent": {
-      "last_seen": 1759798548,
+      "last_seen": 1759799300,
+      "status": "stopped"
+    },
+    "code_review_agent.sh": {
+      "last_seen": 1759799314,
       "status": "available"
+    },
+    "codegen_agent": {
+      "last_seen": 1759799305,
+      "status": "idle"
+    },
+    "collab_agent.sh": {
+      "last_seen": 1759799138,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
+    "debug_agent": {
+      "last_seen": 1759799274,
+      "pid": 97462,
+      "status": "restarting"
+    },
+    "deployment_agent.sh": {
+      "last_seen": 1759799290,
+      "status": "available"
+    },
+    "documentation_agent.sh": {
+      "last_seen": 1759799288,
+      "status": "available",
+      "tasks_completed": 0
+    },
+    "knowledge_base_agent.sh": {
+      "last_seen": 1759799137,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
+    "learning_agent.sh": {
+      "last_seen": 1759799314,
+      "status": "available"
+    },
+    "monitoring_agent.sh": {
+      "last_seen": 1759799301,
+      "status": "available"
+    },
+    "performance_agent.sh": {
+      "last_seen": 1759799316,
+      "status": "available"
+    },
+    "performance_monitor": {
+      "pid": 74795,
+      "status": "idle"
+    },
+    "public_api_agent.sh": {
+      "last_seen": 1759799171,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
+    "pull_request_agent.sh": {
+      "last_seen": 1759799137,
+      "status": "restarting",
+      "tasks_completed": 0
     },
     "quality_agent.sh": {
-      "last_seen": 1759798551,
+      "last_seen": 1759799303,
+      "status": "available",
+      "tasks_completed": 0
+    },
+    "search_agent": {
+      "last_seen": 1759799136,
       "status": "available"
     },
+    "search_agent.sh": {
+      "last_seen": 1759799136,
+      "pid": 97027,
+      "status": "available",
+      "tasks_completed": 0
+    },
+    "security_agent": {
+      "last_seen": 1759799277,
+      "status": "restarting"
+    },
+    "security_agent.sh": {
+      "last_seen": 1759799316,
+      "status": "available",
+      "tasks_completed": 0
+    },
+    "task_orchestrator.sh": {
+      "last_seen": 1759799294,
+      "status": "active",
+      "tasks_completed": 11
+    },
+    "testing_agent.sh": {
+      "last_seen": 1759799287,
+      "status": "available",
+      "tasks_completed": 0
+    },
+    "uiux_agent.sh": {
+      "last_seen": 1759799170,
+      "status": "restarting",
+      "tasks_completed": 0
+    },
     "unified_dashboard_agent.sh": {
-      "last_seen": 1759798557,
+      "last_seen": 1759799278,
       "status": "available"
+    },
+    "updater_agent.sh": {
+      "last_seen": 1759799137,
+      "status": "restarting",
+      "tasks_completed": 0
     }
   },
-  "last_update": 1759798557
+  "last_update": 1759799305,
+  "orchestrator": {
+    "is_running": true,
+    "last_seen": 1759799294,
+    "pid": 47096,
+    "status": "available",
+    "tasks_completed": 11,
+    "tasks_in_progress": 0,
+    "tasks_queued": 0
+  }
 }

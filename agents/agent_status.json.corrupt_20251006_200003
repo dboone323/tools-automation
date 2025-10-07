@@ -1,0 +1,75 @@
+{
+  "agents": {
+    "agent_build.sh": {
+      "last_seen": 1759798776,
+      "status": "restarting"
+    },
+    "agent_codegen.sh": {
+      "last_seen": 1759798794,
+      "status": "idle"
+    },
+    "agent_debug.sh": {
+      "last_seen": 1759798777,
+      "status": "restarting"
+    },
+    "agent_todo.sh": {
+      "last_seen": 1759798778,
+      "pid": 41606,
+      "status": "available"
+    },
+    "build_agent": {
+      "last_seen": 1759798776,
+      "status": "restarting"
+    },
+    "codegen_agent": {
+      "last_seen": 1759798794,
+      "status": "idle"
+    },
+    "debug_agent": {
+      "last_seen": 1759798777,
+      "status": "idle",
+      "pid": 38544
+    },
+    "deployment_agent.sh": {
+      "last_seen": 1759798779,
+      "status": "available"
+    },
+    "documentation_agent.sh": {
+      "last_seen": 1759798803,
+      "status": "available"
+    },
+    "knowledge_base_agent.sh": {
+      "last_seen": 1759798779,
+      "status": "restarting"
+    },
+    "performance_agent.sh": {
+      "last_seen": 1759798798,
+      "status": "available"
+    },
+    "quality_agent.sh": {
+      "last_seen": 1759798792,
+      "status": "available"
+    },
+    "unified_dashboard_agent.sh": {
+      "last_seen": 1759798797,
+      "status": "available"
+    },
+    "security_agent.sh": {
+      "status": "available",
+      "last_seen": 1759798798
+    },
+    "testing_agent.sh": {
+      "status": "available",
+      "last_seen": 1759798798
+    }
+  },
+  "last_update": 1759798801
+}
+status": "available",
+      "last_seen": 1759798803
+    }
+  },
+  "last_update": 1759798801
+}
+
+}
