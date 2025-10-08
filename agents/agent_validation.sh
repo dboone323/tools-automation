@@ -391,8 +391,16 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     run_validation "${2:-}"
     ;;
   validate-staged)
-    # Validate only staged files (exclude backups)
+    # Validate only staged files (exclude backups), or all files in CI
     info "Validating staged files..."
+    
+    # In CI, always validate all files regardless of staging
+    if [[ -n "${CI:-}" ]]; then
+      info "CI mode: Running full validation on all files"
+      run_validation "${WORKSPACE_ROOT}"
+      exit $?
+    fi
+    
     # Check if there are staged Swift files outside backups
     staged_swift_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.swift$' | grep -v '\.backups/' || true)
     if [[ -z "${staged_swift_files}" ]]; then
