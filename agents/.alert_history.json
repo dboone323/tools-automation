@@ -1,604 +1,604 @@
 {
   "alerts": [
     {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759857327.8077419,
-      "date": "2025-10-07 12:15:27"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "17 agents haven't reported in 5+ minutes",
-      "timestamp": 1759857449.000715,
-      "date": "2025-10-07 12:17:29"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759857450.039093,
-      "date": "2025-10-07 12:17:30"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "19 agents haven't reported in 5+ minutes",
-      "timestamp": 1759857571.407847,
-      "date": "2025-10-07 12:19:31"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759857572.358189,
-      "date": "2025-10-07 12:19:32"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "19 agents haven't reported in 5+ minutes",
-      "timestamp": 1759857693.6073909,
-      "date": "2025-10-07 12:21:33"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759857694.8026109,
-      "date": "2025-10-07 12:21:34"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "19 agents haven't reported in 5+ minutes",
-      "timestamp": 1759857816.077339,
-      "date": "2025-10-07 12:23:36"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759857816.98795,
-      "date": "2025-10-07 12:23:36"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "19 agents haven't reported in 5+ minutes",
-      "timestamp": 1759857938.3637362,
-      "date": "2025-10-07 12:25:38"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759857939.3425028,
-      "date": "2025-10-07 12:25:39"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "20 agents haven't reported in 5+ minutes",
-      "timestamp": 1759858060.679283,
-      "date": "2025-10-07 12:27:40"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759858061.66255,
-      "date": "2025-10-07 12:27:41"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "20 agents haven't reported in 5+ minutes",
-      "timestamp": 1759858182.9770072,
-      "date": "2025-10-07 12:29:42"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759858183.935288,
-      "date": "2025-10-07 12:29:43"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "19 agents haven't reported in 5+ minutes",
-      "timestamp": 1759858305.15452,
-      "date": "2025-10-07 12:31:45"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759858306.053636,
-      "date": "2025-10-07 12:31:46"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "22 agents haven't reported in 5+ minutes",
-      "timestamp": 1759858427.291666,
-      "date": "2025-10-07 12:33:47"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759858428.198792,
-      "date": "2025-10-07 12:33:48"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "24 agents haven't reported in 5+ minutes",
-      "timestamp": 1759858549.191403,
-      "date": "2025-10-07 12:35:49"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759858550.1409972,
-      "date": "2025-10-07 12:35:50"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "23 agents haven't reported in 5+ minutes",
-      "timestamp": 1759858671.457043,
-      "date": "2025-10-07 12:37:51"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759858672.490119,
-      "date": "2025-10-07 12:37:52"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "21 agents haven't reported in 5+ minutes",
-      "timestamp": 1759858793.637223,
-      "date": "2025-10-07 12:39:53"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759858794.6824489,
-      "date": "2025-10-07 12:39:54"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "24 agents haven't reported in 5+ minutes",
-      "timestamp": 1759858915.801107,
-      "date": "2025-10-07 12:41:55"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759858916.909473,
-      "date": "2025-10-07 12:41:56"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "24 agents haven't reported in 5+ minutes",
-      "timestamp": 1759859038.219121,
-      "date": "2025-10-07 12:43:58"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759859039.226288,
-      "date": "2025-10-07 12:43:59"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "26 agents haven't reported in 5+ minutes",
-      "timestamp": 1759859160.728723,
-      "date": "2025-10-07 12:46:00"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759859161.882136,
-      "date": "2025-10-07 12:46:01"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "24 agents haven't reported in 5+ minutes",
-      "timestamp": 1759859283.1902459,
-      "date": "2025-10-07 12:48:03"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759859284.175637,
-      "date": "2025-10-07 12:48:04"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "21 agents haven't reported in 5+ minutes",
-      "timestamp": 1759859405.524199,
-      "date": "2025-10-07 12:50:05"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759859406.532293,
-      "date": "2025-10-07 12:50:06"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "20 agents haven't reported in 5+ minutes",
-      "timestamp": 1759859527.7950861,
-      "date": "2025-10-07 12:52:07"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759859528.7430432,
-      "date": "2025-10-07 12:52:08"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "23 agents haven't reported in 5+ minutes",
-      "timestamp": 1759859649.814964,
-      "date": "2025-10-07 12:54:09"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759859650.817738,
-      "date": "2025-10-07 12:54:10"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759859773.14883,
-      "date": "2025-10-07 12:56:13"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759859895.045538,
-      "date": "2025-10-07 12:58:15"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759860017.533046,
-      "date": "2025-10-07 13:00:17"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759860139.653951,
-      "date": "2025-10-07 13:02:19"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759860261.8364182,
-      "date": "2025-10-07 13:04:21"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759860383.969239,
-      "date": "2025-10-07 13:06:23"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759860506.086019,
-      "date": "2025-10-07 13:08:26"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759860627.8652658,
-      "date": "2025-10-07 13:10:27"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759860749.538176,
-      "date": "2025-10-07 13:12:29"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759860871.845216,
-      "date": "2025-10-07 13:14:31"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759860993.790603,
-      "date": "2025-10-07 13:16:33"
+      "key": "disk_space_warning",
+      "message": "Disk usage at 81% - consider cleanup",
+      "timestamp": 1759915474.106285,
+      "date": "2025-10-08 04:24:34"
     },
     {
       "key": "disk_space_warning",
       "message": "Disk usage at 81% - consider cleanup",
-      "timestamp": 1759861115.012667,
-      "date": "2025-10-07 13:18:35"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759861115.903525,
-      "date": "2025-10-07 13:18:35"
+      "timestamp": 1759924850.506777,
+      "date": "2025-10-08 07:00:50"
     },
     {
       "key": "disk_space_warning",
       "message": "Disk usage at 81% - consider cleanup",
-      "timestamp": 1759861237.3185458,
-      "date": "2025-10-07 13:20:37"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759861238.301174,
-      "date": "2025-10-07 13:20:38"
+      "timestamp": 1759924973.836666,
+      "date": "2025-10-08 07:02:53"
     },
     {
       "key": "disk_space_warning",
-      "message": "Disk usage at 81% - consider cleanup",
-      "timestamp": 1759861359.722708,
-      "date": "2025-10-07 13:22:39"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759861361.024241,
-      "date": "2025-10-07 13:22:41"
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759927709.861044,
+      "date": "2025-10-08 07:48:29"
     },
     {
       "key": "disk_space_warning",
-      "message": "Disk usage at 81% - consider cleanup",
-      "timestamp": 1759861482.236917,
-      "date": "2025-10-07 13:24:42"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759861483.184555,
-      "date": "2025-10-07 13:24:43"
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759927831.937649,
+      "date": "2025-10-08 07:50:31"
     },
     {
       "key": "disk_space_warning",
-      "message": "Disk usage at 81% - consider cleanup",
-      "timestamp": 1759861604.2319171,
-      "date": "2025-10-07 13:26:44"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759861605.150555,
-      "date": "2025-10-07 13:26:45"
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759927954.172826,
+      "date": "2025-10-08 07:52:34"
     },
     {
       "key": "disk_space_warning",
-      "message": "Disk usage at 81% - consider cleanup",
-      "timestamp": 1759861726.6191518,
-      "date": "2025-10-07 13:28:46"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759861727.6547651,
-      "date": "2025-10-07 13:28:47"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759861849.12564,
-      "date": "2025-10-07 13:30:49"
-    },
-    {
-      "key": "disk_space_warning",
-      "message": "Disk usage at 81% - consider cleanup",
-      "timestamp": 1759861849.354056,
-      "date": "2025-10-07 13:30:49"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759861850.3511128,
-      "date": "2025-10-07 13:30:50"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759861971.4839501,
-      "date": "2025-10-07 13:32:51"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759861972.5306292,
-      "date": "2025-10-07 13:32:52"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759862093.798621,
-      "date": "2025-10-07 13:34:53"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "6 agents haven't reported in 5+ minutes",
-      "timestamp": 1759862094.0463428,
-      "date": "2025-10-07 13:34:54"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759862095.035222,
-      "date": "2025-10-07 13:34:55"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759862216.274326,
-      "date": "2025-10-07 13:36:56"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759862217.247461,
-      "date": "2025-10-07 13:36:57"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759862338.334365,
-      "date": "2025-10-07 13:38:58"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759862339.306494,
-      "date": "2025-10-07 13:38:59"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759862460.427043,
-      "date": "2025-10-07 13:41:00"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759862461.293117,
-      "date": "2025-10-07 13:41:01"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759862582.676911,
-      "date": "2025-10-07 13:43:02"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759862583.933764,
-      "date": "2025-10-07 13:43:03"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759862705.195335,
-      "date": "2025-10-07 13:45:05"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759862706.049206,
-      "date": "2025-10-07 13:45:06"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759862826.9807942,
-      "date": "2025-10-07 13:47:06"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759862827.905226,
-      "date": "2025-10-07 13:47:07"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759862949.08185,
-      "date": "2025-10-07 13:49:09"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759862949.9559731,
-      "date": "2025-10-07 13:49:09"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759863071.1232839,
-      "date": "2025-10-07 13:51:11"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759863071.927684,
-      "date": "2025-10-07 13:51:11"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759863193.004478,
-      "date": "2025-10-07 13:53:13"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759863193.8454258,
-      "date": "2025-10-07 13:53:13"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "1 workflow(s) failed in the last hour",
-      "timestamp": 1759863315.037506,
-      "date": "2025-10-07 13:55:15"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759863315.90434,
-      "date": "2025-10-07 13:55:15"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "3 workflow(s) failed in the last hour",
-      "timestamp": 1759885960.6296508,
-      "date": "2025-10-07 20:12:40"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "7 agents haven't reported in 5+ minutes",
-      "timestamp": 1759885960.845572,
-      "date": "2025-10-07 20:12:40"
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759928076.5747032,
+      "date": "2025-10-08 07:54:36"
     },
     {
       "key": "disk_space_warning",
       "message": "Disk usage at 83% - consider cleanup",
-      "timestamp": 1759885961.046245,
-      "date": "2025-10-07 20:12:41"
-    },
-    {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759885962.205533,
-      "date": "2025-10-07 20:12:42"
-    },
-    {
-      "key": "build_failure_hourly",
-      "message": "3 workflow(s) failed in the last hour",
-      "timestamp": 1759886083.635762,
-      "date": "2025-10-07 20:14:43"
+      "timestamp": 1759928200.044134,
+      "date": "2025-10-08 07:56:40"
     },
     {
       "key": "disk_space_warning",
       "message": "Disk usage at 84% - consider cleanup",
-      "timestamp": 1759886083.875411,
-      "date": "2025-10-07 20:14:43"
+      "timestamp": 1759928325.3768241,
+      "date": "2025-10-08 07:58:45"
     },
     {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759886085.176994,
-      "date": "2025-10-07 20:14:45"
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1759928448.621044,
+      "date": "2025-10-08 08:00:48"
     },
     {
-      "key": "build_failure_hourly",
-      "message": "3 workflow(s) failed in the last hour",
-      "timestamp": 1759886206.84304,
-      "date": "2025-10-07 20:16:46"
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1759928571.28026,
+      "date": "2025-10-08 08:02:51"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1759928694.000163,
+      "date": "2025-10-08 08:04:54"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1759928816.4305952,
+      "date": "2025-10-08 08:06:56"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759928938.882046,
+      "date": "2025-10-08 08:08:58"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759929061.437672,
+      "date": "2025-10-08 08:11:01"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759929184.8281212,
+      "date": "2025-10-08 08:13:04"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759929307.695041,
+      "date": "2025-10-08 08:15:07"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759929430.119272,
+      "date": "2025-10-08 08:17:10"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759929552.694159,
+      "date": "2025-10-08 08:19:12"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759929675.379297,
+      "date": "2025-10-08 08:21:15"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759929798.0059268,
+      "date": "2025-10-08 08:23:18"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759929920.302145,
+      "date": "2025-10-08 08:25:20"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759930043.3464582,
+      "date": "2025-10-08 08:27:23"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759930165.907258,
+      "date": "2025-10-08 08:29:25"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759930288.475762,
+      "date": "2025-10-08 08:31:28"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759930410.970759,
+      "date": "2025-10-08 08:33:30"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759930533.402184,
+      "date": "2025-10-08 08:35:33"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759930655.988409,
+      "date": "2025-10-08 08:37:35"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759930778.44644,
+      "date": "2025-10-08 08:39:38"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759930900.88565,
+      "date": "2025-10-08 08:41:40"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 82% - consider cleanup",
+      "timestamp": 1759931023.330231,
+      "date": "2025-10-08 08:43:43"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759931145.92022,
+      "date": "2025-10-08 08:45:45"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759931268.286643,
+      "date": "2025-10-08 08:47:48"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759931390.7523258,
+      "date": "2025-10-08 08:49:50"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759931513.480893,
+      "date": "2025-10-08 08:51:53"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759931636.3642502,
+      "date": "2025-10-08 08:53:56"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759931758.8209522,
+      "date": "2025-10-08 08:55:58"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759931881.275538,
+      "date": "2025-10-08 08:58:01"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759932003.894089,
+      "date": "2025-10-08 09:00:03"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759932126.8236532,
+      "date": "2025-10-08 09:02:06"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759932249.389087,
+      "date": "2025-10-08 09:04:09"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "4 agents haven't reported in 5+ minutes",
+      "timestamp": 1759932371.746859,
+      "date": "2025-10-08 09:06:11"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759932371.932246,
+      "date": "2025-10-08 09:06:11"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "5 agents haven't reported in 5+ minutes",
+      "timestamp": 1759932494.7617862,
+      "date": "2025-10-08 09:08:14"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759932495.1094809,
+      "date": "2025-10-08 09:08:15"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "5 agents haven't reported in 5+ minutes",
+      "timestamp": 1759932618.063801,
+      "date": "2025-10-08 09:10:18"
     },
     {
       "key": "disk_space_warning",
       "message": "Disk usage at 84% - consider cleanup",
-      "timestamp": 1759886207.0846238,
-      "date": "2025-10-07 20:16:47"
+      "timestamp": 1759932618.24032,
+      "date": "2025-10-08 09:10:18"
     },
     {
-      "key": "security_alerts",
-      "message": "1 open Dependabot alert(s) detected",
-      "timestamp": 1759886208.391816,
-      "date": "2025-10-07 20:16:48"
+      "key": "agent_health_check",
+      "message": "4 agents haven't reported in 5+ minutes",
+      "timestamp": 1759932740.7310011,
+      "date": "2025-10-08 09:12:20"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759932740.901221,
+      "date": "2025-10-08 09:12:20"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759932863.220145,
+      "date": "2025-10-08 09:14:23"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759932985.655587,
+      "date": "2025-10-08 09:16:25"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "4 agents haven't reported in 5+ minutes",
+      "timestamp": 1759933108.5541272,
+      "date": "2025-10-08 09:18:28"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759933108.7354949,
+      "date": "2025-10-08 09:18:28"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759933231.887546,
+      "date": "2025-10-08 09:20:31"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759933354.651516,
+      "date": "2025-10-08 09:22:34"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759933477.254621,
+      "date": "2025-10-08 09:24:37"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759933599.968043,
+      "date": "2025-10-08 09:26:39"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759933723.02481,
+      "date": "2025-10-08 09:28:43"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759933846.573208,
+      "date": "2025-10-08 09:30:46"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759933970.011028,
+      "date": "2025-10-08 09:32:50"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759934093.070567,
+      "date": "2025-10-08 09:34:53"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759934215.88563,
+      "date": "2025-10-08 09:36:55"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759934338.550484,
+      "date": "2025-10-08 09:38:58"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759934461.210589,
+      "date": "2025-10-08 09:41:01"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759934583.8279831,
+      "date": "2025-10-08 09:43:03"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759934706.647439,
+      "date": "2025-10-08 09:45:06"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1759934829.36002,
+      "date": "2025-10-08 09:47:09"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1759934951.958986,
+      "date": "2025-10-08 09:49:11"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759935074.300375,
+      "date": "2025-10-08 09:51:14"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759935197.020247,
+      "date": "2025-10-08 09:53:17"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759935319.469049,
+      "date": "2025-10-08 09:55:19"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759935442.0497532,
+      "date": "2025-10-08 09:57:22"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759935564.660866,
+      "date": "2025-10-08 09:59:24"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "4 agents haven't reported in 5+ minutes",
+      "timestamp": 1759935687.3734982,
+      "date": "2025-10-08 10:01:27"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759935687.55586,
+      "date": "2025-10-08 10:01:27"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759935809.669307,
+      "date": "2025-10-08 10:03:29"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759935931.824126,
+      "date": "2025-10-08 10:05:31"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759936054.367454,
+      "date": "2025-10-08 10:07:34"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759936177.326785,
+      "date": "2025-10-08 10:09:37"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759936300.73683,
+      "date": "2025-10-08 10:11:40"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759936425.624376,
+      "date": "2025-10-08 10:13:45"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759936549.116352,
+      "date": "2025-10-08 10:15:49"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759936671.917897,
+      "date": "2025-10-08 10:17:51"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759936794.723899,
+      "date": "2025-10-08 10:19:54"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1759936917.5147579,
+      "date": "2025-10-08 10:21:57"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759937041.212244,
+      "date": "2025-10-08 10:24:01"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759937165.088001,
+      "date": "2025-10-08 10:26:05"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759937287.4771829,
+      "date": "2025-10-08 10:28:07"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759937410.193165,
+      "date": "2025-10-08 10:30:10"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759937532.66272,
+      "date": "2025-10-08 10:32:12"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759937655.099066,
+      "date": "2025-10-08 10:34:15"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759937777.7407749,
+      "date": "2025-10-08 10:36:17"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759937900.0278258,
+      "date": "2025-10-08 10:38:20"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759938022.364408,
+      "date": "2025-10-08 10:40:22"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759938144.918062,
+      "date": "2025-10-08 10:42:24"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759938267.414769,
+      "date": "2025-10-08 10:44:27"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1759938389.953003,
+      "date": "2025-10-08 10:46:29"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759938512.564532,
+      "date": "2025-10-08 10:48:32"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759938634.963139,
+      "date": "2025-10-08 10:50:34"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 84% - consider cleanup",
+      "timestamp": 1759938757.552319,
+      "date": "2025-10-08 10:52:37"
     }
   ]
 }

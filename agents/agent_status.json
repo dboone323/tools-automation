@@ -1,29 +1,59 @@
 {
   "agents": {
+    "agent_integration.sh": {
+      "last_seen": 1759938789,
+      "pid": 40443,
+      "status": "available"
+    },
+    "agent_notification.sh": {
+      "last_seen": 1759938758,
+      "pid": 40395,
+      "status": "available"
+    },
+    "code_review_agent.sh": {
+      "last_seen": 1759938835,
+      "status": "available"
+    },
     "deployment_agent.sh": {
-      "last_seen": 1759886306,
-      "status": "available"
-    },
-    "learning_agent.sh": {
-      "last_seen": 1759886306,
-      "status": "available"
-    },
-    "quality_agent.sh": {
-      "last_seen": 1759886306,
-      "status": "available"
-    },
-    "search_agent": {
-      "last_seen": 1759886310,
-      "status": "available"
-    },
-    "search_agent.sh": {
-      "last_seen": 1759886310,
+      "last_seen": 1759938723,
       "status": "available"
     },
     "documentation_agent.sh": {
-      "status": "available",
-      "last_seen": 1759886317
+      "last_seen": 1759938865,
+      "status": "available"
+    },
+    "learning_agent.sh": {
+      "last_seen": 1759938874,
+      "status": "available"
+    },
+    "monitoring_agent.sh": {
+      "last_seen": 1759938855,
+      "status": "available"
+    },
+    "performance_agent.sh": {
+      "last_seen": 1759938703,
+      "status": "available"
+    },
+    "performance_monitor": {
+      "pid": 40243,
+      "status": "idle"
+    },
+    "quality_agent.sh": {
+      "last_seen": 1759938872,
+      "status": "available"
+    },
+    "security_agent.sh": {
+      "last_seen": 1759938613,
+      "status": "available"
+    },
+    "testing_agent.sh": {
+      "last_seen": 1759938853,
+      "status": "available"
+    },
+    "uiux_agent": {
+      "pid": 11294,
+      "status": "idle"
     }
   },
-  "last_update": 1759886310
+  "last_update": 1759938872
 }

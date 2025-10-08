@@ -52,13 +52,13 @@ validate_architecture_rule_1() {
 
   info "Validating Rule 1: Data models NEVER import SwiftUI"
 
-  # Find files in SharedTypes or Models directories (exclude backups)
+  # Find files in SharedTypes or Models directories (exclude backups and timestamped backups)
   while IFS= read -r file; do
     if grep -q "import SwiftUI" "$file"; then
       error "Architecture violation in $file: Data model imports SwiftUI"
       violations=$((violations + 1))
     fi
-  done < <(find "${project_path}" \( -path "*/SharedTypes/*" -o -path "*/Models/*" \) -name "*.swift" -not -path "*/.backups/*" 2>/dev/null)
+  done < <(find "${project_path}" \( -path "*/SharedTypes/*" -o -path "*/Models/*" \) -name "*.swift" -not -path "*/.backups/*" -not -regex ".*/[A-Za-z]+_[0-9]{8}_[0-9]{6}/.*" 2>/dev/null)
 
   if [[ ${violations} -eq 0 ]]; then
     success "Rule 1 passed: No SwiftUI imports in data models"
@@ -119,7 +119,7 @@ validate_architecture_rule_3() {
 
   for name in "${bad_names[@]}"; do
     local count
-    count=$(grep -r "class ${name}" "${project_path}" --include="*.swift" 2>/dev/null | wc -l | tr -d ' ')
+    count=$(grep -r "\\bclass ${name}\\b" "${project_path}" --include="*.swift" 2>/dev/null | wc -l | tr -d ' ')
     if [[ ${count} -gt 0 ]]; then
       warning "Found ${count} classes named '${name}' - consider more specific names"
       violations=$((violations + count))
@@ -146,7 +146,7 @@ validate_quality_gates() {
 
   # Check file size limits (warning only)
   local oversized_files
-  oversized_files=$(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" -exec wc -l {} + 2>/dev/null |
+  oversized_files=$(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" -not -regex ".*/[A-Za-z]+_[0-9]{8}_[0-9]{6}/.*" -exec wc -l {} + 2>/dev/null |
     awk '$1 > 500 {print $2}' | wc -l | tr -d ' ')
 
   if [[ ${oversized_files} -gt 0 ]]; then
@@ -165,11 +165,20 @@ validate_quality_gates() {
     if [[ -f "${config_path}" ]]; then
       swiftlint_cmd="${swiftlint_cmd} --config ${config_path}"
     fi
+    # Exclude backup directories from SwiftLint
+    swiftlint_cmd="${swiftlint_cmd} --exclude */*_????????_??????/**/*"
+    # Run SwiftLint but don't fail on warnings - just log them
     if ${swiftlint_cmd} 2>/dev/null; then
       success "SwiftLint validation passed"
     else
-      warning "SwiftLint validation failed (non-blocking)"
-      # Don't increment failures for SwiftLint - let CI handle it
+      # Check if it's just warnings, not errors
+      local swiftlint_output
+      swiftlint_output=$(${swiftlint_cmd} 2>/dev/null)
+      if echo "$swiftlint_output" | grep -q "error:"; then
+        warning "SwiftLint validation failed with errors (non-blocking)"
+      else
+        success "SwiftLint validation passed (warnings only)"
+      fi
     fi
     cd - >/dev/null || return 1
   fi
@@ -212,7 +221,7 @@ validate_dependencies() {
         issues=$((issues + 1))
       fi
     done <<<"$file_imports"
-  done < <(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" 2>/dev/null | head -10) # Limit for performance
+  done < <(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" -not -regex ".*/[A-Za-z]+_[0-9]{8}_[0-9]{6}/.*" 2>/dev/null | head -10) # Limit for performance
 
   if [[ ${issues} -eq 0 ]]; then
     success "Dependency validation passed"
@@ -243,8 +252,10 @@ run_validation() {
 
     local pname
     pname=$(basename "$project")
-    # Skip non-code directories and backups
+    # Skip non-code directories, backups, and timestamped backup directories
     [[ "$pname" == "Tools" || "$pname" == "scripts" || "$pname" == "Config" || "$pname" == ".backups" ]] && continue
+    # Skip timestamped backup directories (format: ProjectName_YYYYMMDD_HHMMSS)
+    [[ "$pname" =~ ^[A-Za-z]+_[0-9]{8}_[0-9]{6}$ ]] && continue
 
     info "=== Validating ${pname} ==="
 
@@ -393,14 +404,14 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   validate-staged)
     # Validate only staged files (exclude backups), or all files in CI
     info "Validating staged files..."
-    
+
     # In CI, always validate all files regardless of staging
     if [[ -n "${CI:-}" ]]; then
       info "CI mode: Running full validation on all files"
       run_validation "${WORKSPACE_ROOT}"
       exit $?
     fi
-    
+
     # Check if there are staged Swift files outside backups
     staged_swift_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.swift$' | grep -v '\.backups/' || true)
     if [[ -z "${staged_swift_files}" ]]; then
