@@ -1,34 +1,29 @@
 {
   "agents": {
-    "performance_monitor": {
-      "pid": 40243,
-      "status": "idle"
+    "deployment_agent.sh": {
+      "last_seen": 1759886306,
+      "status": "available"
+    },
+    "learning_agent.sh": {
+      "last_seen": 1759886306,
+      "status": "available"
     },
     "quality_agent.sh": {
-      "last_seen": 1759863388,
+      "last_seen": 1759886306,
+      "status": "available"
+    },
+    "search_agent": {
+      "last_seen": 1759886310,
+      "status": "available"
+    },
+    "search_agent.sh": {
+      "last_seen": 1759886310,
       "status": "available"
     },
     "documentation_agent.sh": {
       "status": "available",
-      "last_seen": 1759863389
-    },
-    "learning_agent.sh": {
-      "status": "available",
-      "last_seen": 1759863397
-    },
-    "deployment_agent.sh": {
-      "status": "available",
-      "last_seen": 1759863398
-    },
-    "monitoring_agent.sh": {
-      "status": "available",
-      "last_seen": 1759863400
-    },
-    "agent_integration.sh": {
-      "status": "available",
-      "last_seen": 1759863406,
-      "pid": 40443
+      "last_seen": 1759886317
     }
   },
-  "last_update": 1759863388
+  "last_update": 1759886310
 }
