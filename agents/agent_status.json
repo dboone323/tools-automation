@@ -11,11 +11,11 @@
       "status": "available"
     },
     "code_review_agent.sh": {
-      "last_seen": 1760114432,
+      "last_seen": 1760114462,
       "status": "available"
     },
     "deployment_agent.sh": {
-      "last_seen": 1760114380,
+      "last_seen": 1760114470,
       "status": "available"
     },
     "learning_agent.sh": {
@@ -31,7 +31,7 @@
       "status": "idle"
     },
     "quality_agent.sh": {
-      "last_seen": 1760114412,
+      "last_seen": 1760114472,
       "status": "available"
     },
     "testing_agent": {
@@ -43,5 +43,5 @@
       "status": "idle"
     }
   },
-  "last_update": 1760114412
+  "last_update": 1760114472
 }
