@@ -3967,6 +3967,14 @@
       "disk_usage": "15",
       "process_count": "     547",
       "agent_count": "       8"
+    },
+    {
+      "timestamp": "1760113892",
+      "cpu_usage": "107.8",
+      "memory_usage": "42.4",
+      "disk_usage": "15",
+      "process_count": "     551",
+      "agent_count": "      10"
     }
   ]
 }
