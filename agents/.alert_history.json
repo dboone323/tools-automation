@@ -3,54 +3,6 @@
     {
       "key": "disk_space_warning",
       "message": "Disk usage at 84% - consider cleanup",
-      "timestamp": 1760106183.586968,
-      "date": "2025-10-10 09:23:03"
-    },
-    {
-      "key": "disk_space_warning",
-      "message": "Disk usage at 84% - consider cleanup",
-      "timestamp": 1760106305.442518,
-      "date": "2025-10-10 09:25:05"
-    },
-    {
-      "key": "disk_space_warning",
-      "message": "Disk usage at 84% - consider cleanup",
-      "timestamp": 1760106427.495832,
-      "date": "2025-10-10 09:27:07"
-    },
-    {
-      "key": "disk_space_warning",
-      "message": "Disk usage at 84% - consider cleanup",
-      "timestamp": 1760106549.826998,
-      "date": "2025-10-10 09:29:09"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "4 agents haven't reported in 5+ minutes",
-      "timestamp": 1760106671.924821,
-      "date": "2025-10-10 09:31:11"
-    },
-    {
-      "key": "disk_space_warning",
-      "message": "Disk usage at 84% - consider cleanup",
-      "timestamp": 1760106672.086994,
-      "date": "2025-10-10 09:31:12"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "4 agents haven't reported in 5+ minutes",
-      "timestamp": 1760106794.6606138,
-      "date": "2025-10-10 09:33:14"
-    },
-    {
-      "key": "disk_space_warning",
-      "message": "Disk usage at 84% - consider cleanup",
-      "timestamp": 1760106794.82586,
-      "date": "2025-10-10 09:33:14"
-    },
-    {
-      "key": "disk_space_warning",
-      "message": "Disk usage at 84% - consider cleanup",
       "timestamp": 1760107147.803571,
       "date": "2025-10-10 09:39:07"
     },
@@ -599,6 +551,54 @@
       "message": "Disk usage at 85% - consider cleanup",
       "timestamp": 1760114021.991799,
       "date": "2025-10-10 11:33:41"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "5 workflow(s) failed in the last hour",
+      "timestamp": 1760114144.382006,
+      "date": "2025-10-10 11:35:44"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "4 agents haven't reported in 5+ minutes",
+      "timestamp": 1760114144.597996,
+      "date": "2025-10-10 11:35:44"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1760114144.788661,
+      "date": "2025-10-10 11:35:44"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "5 workflow(s) failed in the last hour",
+      "timestamp": 1760114267.248052,
+      "date": "2025-10-10 11:37:47"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "4 agents haven't reported in 5+ minutes",
+      "timestamp": 1760114267.46383,
+      "date": "2025-10-10 11:37:47"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1760114267.672006,
+      "date": "2025-10-10 11:37:47"
+    },
+    {
+      "key": "build_failure_hourly",
+      "message": "5 workflow(s) failed in the last hour",
+      "timestamp": 1760114389.746183,
+      "date": "2025-10-10 11:39:49"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 85% - consider cleanup",
+      "timestamp": 1760114389.967106,
+      "date": "2025-10-10 11:39:49"
     }
   ]
 }
