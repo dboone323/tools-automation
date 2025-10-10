@@ -3,16 +3,18 @@
     "active_alerts": [
       {
         "id": "alert_001",
-        "type": "critical",
+        "type": "resolved",
         "category": "agent_failure",
         "title": "Security Agent Failed",
-        "description": "Security agent has stopped responding. Last seen 5 minutes ago.",
+        "description": "Security agent has been restarted and is now responding normally.",
         "timestamp": 1757976000,
+        "resolved_timestamp": 1760054400,
         "severity": "critical",
-        "status": "active",
+        "status": "resolved",
         "affected_components": ["security_agent"],
         "recommended_action": "Restart security agent service",
-        "auto_resolve": false
+        "auto_resolve": false,
+        "resolution": "Agent restarted successfully via maintenance task"
       },
       {
         "id": "alert_002",
