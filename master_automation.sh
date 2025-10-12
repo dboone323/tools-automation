@@ -120,7 +120,7 @@ list_projects_with_ai_insights() {
 
       # Check for automation
       local automation_status=""
-      if [[ -d "${project}/automation" ]]; then
+      if [[ -d "${project}/automation" ]] || [[ -d "${project}/Tools/Automation" ]]; then
         automation_status=" ✅ automation"
       else
         automation_status=" ❌ no automation"
