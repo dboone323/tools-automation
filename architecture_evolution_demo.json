@@ -1,0 +1,130 @@
+{
+  "iterations": [
+    {
+      "iterationNumber": 1,
+      "appliedRefactorings": [
+        {
+          "suggestionId": "refactor-001",
+          "success": true,
+          "appliedChanges": [
+            {
+              "filePath": "Projects/CodingReviewer/Views/MainView.swift",
+              "changeType": "modified",
+              "linesChanged": "45-85",
+              "contentPreview": "// Extracted method 'validateAndSubmitReview'"
+            }
+          ],
+          "compilationErrors": [],
+          "testResults": {
+            "totalTests": 100,
+            "passedTests": 98,
+            "failedTests": 2,
+            "skippedTests": 0,
+            "executionTime": 45.0
+          },
+          "performanceImpact": {
+            "buildTimeChange": 0.02,
+            "memoryUsageChange": -0.01,
+            "executionTimeChange": 0.005,
+            "binarySizeChange": 0.0005
+          },
+          "timestamp": "2025-10-12T17:20:00Z"
+        }
+      ],
+      "architectureState": {
+        "timestamp": "2025-10-12T17:20:00Z",
+        "codebasePath": "/Users/danielstevens/Desktop/Quantum-workspace",
+        "files": [],
+        "dependencies": [],
+        "complexity": {
+          "averageCyclomaticComplexity": 1.95,
+          "maxCyclomaticComplexity": 2.1,
+          "averageLinesPerFunction": 22.0,
+          "maxLinesPerFunction": 45,
+          "totalLinesOfCode": 780,
+          "fileCount": 2
+        },
+        "coupling": {
+          "afferentCoupling": 1.0,
+          "efferentCoupling": 2.0,
+          "instability": 0.67,
+          "abstractness": 0.7,
+          "distanceFromMainSequence": 0.15
+        },
+        "cohesion": {
+          "lackOfCohesionInMethods": 1.1,
+          "tightClassCohesion": 0.82,
+          "semanticCohesion": 0.77
+        },
+        "patterns": [],
+        "smells": [],
+        "quality": {
+          "maintainabilityIndex": 77.0,
+          "technicalDebtRatio": 0.13,
+          "testCoverage": 86.0,
+          "documentationCoverage": 71.0,
+          "securityScore": 8.6
+        }
+      },
+      "effortSpent": 1800,
+      "qualityDelta": {
+        "maintainabilityChange": 2.0,
+        "complexityChange": -0.1,
+        "testCoverageChange": 1.0,
+        "performanceChange": 0.5
+      }
+    }
+  ],
+  "finalArchitecture": {
+    "timestamp": "2025-10-12T17:20:00Z",
+    "codebasePath": "/Users/danielstevens/Desktop/Quantum-workspace",
+    "files": [],
+    "dependencies": [],
+    "complexity": {
+      "averageCyclomaticComplexity": 1.95,
+      "maxCyclomaticComplexity": 2.1,
+      "averageLinesPerFunction": 22.0,
+      "maxLinesPerFunction": 45,
+      "totalLinesOfCode": 780,
+      "fileCount": 2
+    },
+    "coupling": {
+      "afferentCoupling": 1.0,
+      "efferentCoupling": 2.0,
+      "instability": 0.67,
+      "abstractness": 0.7,
+      "distanceFromMainSequence": 0.15
+    },
+    "cohesion": {
+      "lackOfCohesionInMethods": 1.1,
+      "tightClassCohesion": 0.82,
+      "semanticCohesion": 0.77
+    },
+    "patterns": [],
+    "smells": [],
+    "quality": {
+      "maintainabilityIndex": 77.0,
+      "technicalDebtRatio": 0.13,
+      "testCoverage": 86.0,
+      "documentationCoverage": 71.0,
+      "securityScore": 8.6
+    }
+  },
+  "totalEffort": 1800,
+  "qualityImprovement": {
+    "overallScore": 8.7,
+    "maintainabilityGain": 2.0,
+    "complexityReduction": 0.1,
+    "testCoverageGain": 1.0,
+    "performanceGain": 0.5
+  },
+  "risksEncountered": [],
+  "recommendations": [
+    {
+      "type": "adopt_pattern",
+      "priority": "medium",
+      "description": "Consider adopting more MVVM patterns for better separation of concerns",
+      "implementationEffort": "medium"
+    }
+  ]
+}

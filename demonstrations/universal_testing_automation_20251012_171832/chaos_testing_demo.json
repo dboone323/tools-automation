@@ -1,0 +1,34 @@
+{
+    "chaos_experiments": [
+        {
+            "experiment": "network_partition",
+            "duration": 120,
+            "blast_radius": "partial",
+            "steady_state_conditions": ["service_available", "data_consistent"],
+            "chaos_events": [
+                {
+                    "type": "network_delay",
+                    "intensity": "high",
+                    "duration": 30,
+                    "impact": "response_time_+200%"
+                },
+                {
+                    "type": "service_kill",
+                    "target": "database_connection",
+                    "recovery_time": 15,
+                    "impact": "temporary_outage"
+                }
+            ],
+            "recovery_metrics": {
+                "mttr": 45,
+                "data_loss": 0,
+                "consistency_violations": 0
+            }
+        }
+    ],
+    "quantum_chaos_engineering": {
+        "quantum_uncertainty": "Introduced controlled quantum uncertainty",
+        "entanglement_failures": "Created correlated failure scenarios",
+        "superposition_recovery": "Tested multiple recovery paths simultaneously"
+    }
+}

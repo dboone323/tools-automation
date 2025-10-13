@@ -60,7 +60,7 @@ check_ollama_health() {
   ollama list | grep -E "(NAME|cloud)" || true
 
   # Ensure key models are available
-  local required_models=("qwen3-coder:480b-cloud" "codellama:7b")
+  local required_models=("codellama:7b" "llama3.2:3b")
   for model in "${required_models[@]}"; do
     if ! ollama list | grep -q "${model}"; then
       print_warning "Model ${model} not found. Attempting to pull..."
@@ -112,7 +112,7 @@ Provide:
 
   # Generate AI analysis
   local ai_analysis
-  ai_analysis=$(echo "${analysis_prompt}" | ollama run qwen3-coder:480b-cloud 2>/dev/null || echo "AI analysis temporarily unavailable")
+  ai_analysis=$(echo "${analysis_prompt}" | ollama run codellama:7b 2>/dev/null || echo "${analysis_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${analysis_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 300}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "AI analysis temporarily unavailable")
 
   # Save analysis
   local analysis_file
@@ -136,7 +136,7 @@ Format as:
 3. [Action]: [Description]"
 
   local improvements
-  improvements=$(echo "${improvements_prompt}" | ollama run qwen3-coder:480b-cloud 2>/dev/null || echo "Improvements extraction unavailable")
+  improvements=$(echo "${improvements_prompt}" | ollama run codellama:7b 2>/dev/null || echo "${improvements_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${improvements_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 200}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Improvements extraction unavailable")
 
   {
     echo ""
@@ -232,7 +232,7 @@ Include:
 Use XCTest framework and Swift testing best practices."
 
       local generated_tests
-      generated_tests=$(echo "${test_prompt}" | ollama run qwen3-coder:480b-cloud 2>/dev/null || echo "// Test generation temporarily unavailable")
+      generated_tests=$(echo "${test_prompt}" | ollama run codellama:7b 2>/dev/null || echo "${test_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${test_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 300}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "// Test generation temporarily unavailable")
 
       # Create test directory and file
       local test_dir="${project_path}/Tests"
@@ -286,7 +286,7 @@ Include:
 Make it professional and comprehensive."
 
   local generated_docs
-  generated_docs=$(echo "${doc_prompt}" | ollama run gpt-oss:120b-cloud 2>/dev/null || echo "Documentation generation temporarily unavailable")
+  generated_docs=$(echo "${doc_prompt}" | ollama run llama3.2:3b 2>/dev/null || echo "${doc_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${doc_prompt}" | head -c 500)\", \"parameters\": {\"max_length\": 500}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Documentation generation temporarily unavailable")
 
   local readme_file="${project_path}/README.md"
   {
@@ -338,7 +338,7 @@ Include:
 Make it production-ready with proper error handling and notifications."
 
   local generated_workflow
-  generated_workflow=$(echo "${workflow_prompt}" | ollama run qwen3-coder:480b-cloud 2>/dev/null || echo "# CI/CD workflow generation temporarily unavailable
+  generated_workflow=$(echo "${workflow_prompt}" | ollama run codellama:7b 2>/dev/null || echo "${workflow_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${workflow_prompt}" | head -c 500)\", \"parameters\": {\"max_length\": 400}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "# CI/CD workflow generation temporarily unavailable
 name: CI/CD Pipeline
 on: [push, pull_request]
 jobs:
@@ -445,7 +445,7 @@ Analyze for:
 Provide specific, actionable feedback."
 
       local file_review
-      file_review=$(echo "${review_prompt}" | ollama run deepseek-v3.1:671b-cloud 2>/dev/null || echo "Review temporarily unavailable")
+      file_review=$(echo "${review_prompt}" | ollama run codellama:7b 2>/dev/null || echo "${review_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${review_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 200}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Review temporarily unavailable")
 
       review_results="${review_results}\n\n## ${filename}\n${file_review}"
     fi
@@ -500,7 +500,7 @@ Identify:
 Provide specific optimization suggestions with code examples."
 
       local optimizations
-      optimizations=$(echo "${optimization_prompt}" | ollama run qwen3-coder:480b-cloud 2>/dev/null || echo "Optimization analysis unavailable")
+      optimizations=$(echo "${optimization_prompt}" | ollama run codellama:7b 2>/dev/null || echo "${optimization_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${optimization_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 200}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Optimization analysis unavailable")
 
       optimization_report="${optimization_report}\n\n## ${filename}\n${optimizations}"
     fi
@@ -579,7 +579,7 @@ list_projects_with_ai() {
       if [[ ${swift_files} -gt 0 ]]; then
         local quick_prompt="In one sentence, suggest the most valuable AI enhancement for a Swift project called '${project_name}' with ${swift_files} files:"
         local ai_suggestion
-        ai_suggestion=$(echo "${quick_prompt}" | ollama run qwen3-coder:480b-cloud 2>/dev/null | head -1 || echo "AI suggestion unavailable")
+        ai_suggestion=$(echo "${quick_prompt}" | ollama run llama3.2:3b 2>/dev/null | head -1 || echo "${quick_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"${quick_prompt}\", \"parameters\": {\"max_length\": 50}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null | head -1 || echo "AI suggestion unavailable")
         echo "   💡 AI Suggestion: ${ai_suggestion}"
       fi
       echo ""

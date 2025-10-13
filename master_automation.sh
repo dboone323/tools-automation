@@ -147,7 +147,7 @@ generate_quick_ai_insight() {
   if [[ ${file_count} -gt 0 ]]; then
     local insight_prompt="In one sentence, suggest the most valuable AI enhancement for a Swift project called '${project_name}' with ${file_count} files:"
     local ai_insight
-    ai_insight=$(echo "${insight_prompt}" | timeout 10s ollama run qwen3-coder:480b-cloud 2>/dev/null | head -1 || echo "AI enhancement available")
+    ai_insight=$(echo "${insight_prompt}" | timeout 10s ollama run codellama:7b 2>/dev/null | head -1 || echo "${insight_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"${insight_prompt}\", \"parameters\": {\"max_length\": 50}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null | head -1 || echo "AI enhancement available")
     echo "     💡 ${ai_insight}"
   fi
 }
@@ -248,7 +248,7 @@ Provide:
 Keep it concise and actionable."
 
     local ai_summary
-    ai_summary=$(echo "${summary_prompt}" | timeout 15s ollama run gpt-oss:120b-cloud 2>/dev/null || echo "Summary generation completed")
+    ai_summary=$(echo "${summary_prompt}" | timeout 15s ollama run llama3.2:3b 2>/dev/null || echo "${summary_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${summary_prompt}" | head -c 500)\", \"parameters\": {\"max_length\": 200}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Summary generation completed")
 
     # Save summary
     local summary_file
@@ -337,7 +337,7 @@ Provide:
 Focus on actionable insights for the development team."
 
     local workspace_insights
-    workspace_insights=$(echo "${insights_prompt}" | timeout 20s ollama run deepseek-v3.1:671b-cloud 2>/dev/null || echo "Workspace analysis completed")
+    workspace_insights=$(echo "${insights_prompt}" | timeout 20s ollama run llama3.2:3b 2>/dev/null || echo "${insights_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${insights_prompt}" | head -c 500)\", \"parameters\": {\"max_length\": 300}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Workspace analysis completed")
 
     # Save workspace insights
     local insights_file
@@ -412,8 +412,8 @@ setup_ai_integration() {
     sleep 5
   fi
 
-  # Pull essential models
-  local essential_models=("qwen3-coder:480b-cloud" "gpt-oss:120b-cloud" "deepseek-v3.1:671b-cloud")
+  # Pull essential models (local models only)
+  local essential_models=("llama3.2:3b" "codellama:7b" "mistral:7b")
 
   for model in "${essential_models[@]}"; do
     print_ai "Checking model: ${model}"

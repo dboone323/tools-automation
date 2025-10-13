@@ -14,8 +14,8 @@ NC='\033[0m' # No Color
 
 # Configuration
 OLLAMA_URL="${OLLAMA_URL:-http://localhost:11434}"
-OLLAMA_MODEL="${OLLAMA_MODEL:-qwen3-coder:480b-cloud}"                  # Primary: cloud model for efficiency
-OLLAMA_FALLBACK_MODELS=("codellama:7b" "qwen:7b" "deepseek-coder:6.7b") # Fallback local models
+OLLAMA_MODEL="${OLLAMA_MODEL:-codellama:7b}"                    # Primary: local CodeLlama model
+OLLAMA_FALLBACK_MODELS=("llama3.2:3b" "mistral:7b" "phi3:3.8b") # Local fallback models
 MCP_SERVER="${MCP_SERVER:-http://localhost:5005}"
 REVIEW_DIR="${REVIEW_DIR:-./ai_reviews}"
 MAX_DIFF_SIZE=50000 # Max characters to send to Ollama
@@ -47,24 +47,21 @@ check_ollama_health() {
     return 1
   fi
 
-  # Try primary cloud model first
+  # Try primary local model first
   if curl -sf "${OLLAMA_URL}/api/tags" | jq -r '.models[]?.name' 2>/dev/null | grep -qx "${OLLAMA_MODEL}"; then
     log_success "Primary model ${OLLAMA_MODEL} is available"
     return 0
   fi
 
-  # Attempt to pull cloud model with error handling
+  # Attempt to pull primary local model
   log_warning "Model ${OLLAMA_MODEL} not found, attempting to pull..."
   if curl -sf -X POST "${OLLAMA_URL}/api/pull" \
     -H "Content-Type: application/json" \
     -d "{\"name\": \"${OLLAMA_MODEL}\", \"stream\": false}" \
-    --max-time 60 >/dev/null 2>&1; then
+    --max-time 300 >/dev/null 2>&1; then
     log_success "Successfully pulled ${OLLAMA_MODEL}"
     return 0
   fi
-
-  # Cloud model pull failed, try fallback models
-  log_warning "Cloud model ${OLLAMA_MODEL} unavailable, checking fallback models..."
   local available_models
   if command -v jq >/dev/null 2>&1; then
     available_models=$(curl -sf "${OLLAMA_URL}/api/tags" | jq -r '.models[]?.name' 2>/dev/null || echo "")
@@ -82,7 +79,7 @@ check_ollama_health() {
   done
 
   # Try to pull first fallback model
-  log_warning "No fallback models available, attempting to pull ${OLLAMA_FALLBACK_MODELS[0]}..."
+  log_warning "Primary model unavailable, attempting to pull ${OLLAMA_FALLBACK_MODELS[0]}..."
   if curl -sf -X POST "${OLLAMA_URL}/api/pull" \
     -H "Content-Type: application/json" \
     -d "{\"name\": \"${OLLAMA_FALLBACK_MODELS[0]}\", \"stream\": false}" \

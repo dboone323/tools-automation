@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 OLLAMA_URL="${OLLAMA_URL:-http://localhost:11434}"
-OLLAMA_MODEL="${OLLAMA_MODEL:-qwen3-coder:480b-cloud}"                  # Primary: cloud model for efficiency
+OLLAMA_MODEL="${OLLAMA_MODEL:-codellama:7b}"                            # Primary: local CodeLlama model
 OLLAMA_FALLBACK_MODELS=("codellama:7b" "qwen:7b" "deepseek-coder:6.7b") # Fallback local models
 WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
 REVIEW_DIR="${REVIEW_DIR:-${WORKSPACE}/ai_reviews}"
@@ -861,7 +861,7 @@ Uses Ollama with deep architectural context and quality standards
 
 OPTIONS:
     -h, --help          Show this help message
-    -m, --model MODEL   Ollama model to use (default: qwen3-coder:480b-cloud)
+    -m, --model MODEL   Ollama model to use (default: codellama:7b)
     -u, --url URL       Ollama server URL (default: http://localhost:11434)
     -d, --dir DIR       Review output directory (default: ./ai_reviews)
     -p, --project NAME  Project name (auto-detected if not specified)

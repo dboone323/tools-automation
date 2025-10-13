@@ -59,3 +59,13 @@ fi
 
 jq ". + [${assignment_json}]" "${ASSIGNMENTS_FILE}" >"${ASSIGNMENTS_FILE}.tmp" && mv "${ASSIGNMENTS_FILE}.tmp" "${ASSIGNMENTS_FILE}"
 echo "Assigned ${agent} to ${file}:${line} (${assignment_id})"
+
+# Quantum agent assignments
+elif echo "${text}" | grep -iqE 'quantum|chemistry|molecular|simulation|vqe|qmc|qpe|vqd'; then
+  agent="quantum_chemistry_agent.sh"
+elif echo "${text}" | grep -iqE 'finance|portfolio|optimization|risk|trading|market'; then
+  agent="quantum_finance_agent.sh"
+elif echo "${text}" | grep -iqE 'orchestrat|coordinat|resource|job|queue|schedul'; then
+  agent="quantum_orchestrator_agent.sh"
+elif echo "${text}" | grep -iqE 'learn|ml|machine learning|pattern|classif|cluster|ai|intelligence'; then
+  agent="quantum_learning_agent.sh"

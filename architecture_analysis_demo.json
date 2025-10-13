@@ -1,0 +1,85 @@
+{
+  "timestamp": "2025-10-12T17:15:00Z",
+  "codebasePath": "/Users/danielstevens/Desktop/Quantum-workspace",
+  "files": [
+    {
+      "path": "Shared/SharedArchitecture.swift",
+      "language": "swift",
+      "linesOfCode": 450,
+      "complexity": 2.3,
+      "dependencies": ["Foundation", "Combine"],
+      "interfaces": ["BaseViewModel"],
+      "classes": ["ObservableObject"],
+      "functions": ["handle", "updateState"]
+    },
+    {
+      "path": "Projects/CodingReviewer/Models/ReviewModel.swift",
+      "language": "swift",
+      "linesOfCode": 320,
+      "complexity": 1.8,
+      "dependencies": ["Foundation"],
+      "interfaces": ["Codable"],
+      "classes": ["ReviewModel"],
+      "functions": ["init", "encode"]
+    }
+  ],
+  "dependencies": [
+    {
+      "from": "Projects/CodingReviewer/Models/ReviewModel.swift",
+      "to": "Foundation",
+      "type": "import",
+      "strength": 0.8
+    }
+  ],
+  "complexity": {
+    "averageCyclomaticComplexity": 2.05,
+    "maxCyclomaticComplexity": 2.3,
+    "averageLinesPerFunction": 25.0,
+    "maxLinesPerFunction": 50,
+    "totalLinesOfCode": 770,
+    "fileCount": 2
+  },
+  "coupling": {
+    "afferentCoupling": 1.0,
+    "efferentCoupling": 2.0,
+    "instability": 0.67,
+    "abstractness": 0.7,
+    "distanceFromMainSequence": 0.15
+  },
+  "cohesion": {
+    "lackOfCohesionInMethods": 1.2,
+    "tightClassCohesion": 0.8,
+    "semanticCohesion": 0.75
+  },
+  "patterns": [
+    {
+      "type": "mvvm",
+      "confidence": 0.85,
+      "locations": ["Shared/SharedArchitecture.swift"],
+      "quality": "good",
+      "suggestions": ["Consider adding more view model protocols", "Implement state management patterns"]
+    }
+  ],
+  "smells": [
+    {
+      "type": "long_method",
+      "severity": "medium",
+      "location": "Projects/CodingReviewer/Views/MainView.swift:45",
+      "description": "Method 'handleReviewSubmission' is 85 lines long",
+      "impact": {
+        "maintainability": 0.6,
+        "testability": 0.4,
+        "reusability": 0.7,
+        "performance": 0.9
+      },
+      "refactoringEffort": "medium"
+    }
+  ],
+  "quality": {
+    "maintainabilityIndex": 75.0,
+    "technicalDebtRatio": 0.15,
+    "testCoverage": 85.0,
+    "documentationCoverage": 70.0,
+    "securityScore": 8.5
+  }
+}

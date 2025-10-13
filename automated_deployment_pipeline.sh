@@ -18,7 +18,7 @@ NC='\033[0m' # No Color
 # Configuration
 WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
 OLLAMA_URL="${OLLAMA_URL:-http://localhost:11434}"
-OLLAMA_MODEL="${OLLAMA_MODEL:-qwen3-coder:480b-cloud}"
+OLLAMA_MODEL="${OLLAMA_MODEL:-codellama:7b}"
 DEPLOYMENT_DIR="${WORKSPACE}/deployments"
 BUILD_CACHE_DIR="${WORKSPACE}/.build_cache"
 

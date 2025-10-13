@@ -139,7 +139,7 @@ Provide:
 Format as structured analysis with clear sections."
 
       local ai_analysis
-      ai_analysis=$(echo "${quality_prompt}" | timeout 30s ollama run deepseek-v3.1:671b-cloud 2>/dev/null || echo "Analysis timeout")
+      ai_analysis=$(echo "${quality_prompt}" | timeout 30s ollama run codellama:7b 2>/dev/null || echo "${quality_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${quality_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 200}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Analysis timeout")
 
       # Extract quality metrics
       local file_score
@@ -221,7 +221,7 @@ Provide:
 Make it actionable for development teams."
 
   local quality_summary
-  quality_summary=$(echo "${summary_prompt}" | timeout 30s ollama run gpt-oss:120b-cloud 2>/dev/null || echo "Quality summary generation completed")
+  quality_summary=$(echo "${summary_prompt}" | timeout 30s ollama run llama3.2:3b 2>/dev/null || echo "${summary_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${summary_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 200}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Quality summary generation completed")
 
   # Create comprehensive report
   local main_report
@@ -344,7 +344,7 @@ Requirements:
 Generate complete, runnable test class with proper imports and setup."
 
       local generated_tests
-      generated_tests=$(echo "${test_prompt}" | timeout 45s ollama run qwen3-coder:480b-cloud 2>/dev/null || echo "// Test generation timeout")
+      generated_tests=$(echo "${test_prompt}" | timeout 45s ollama run codellama:7b 2>/dev/null || echo "${test_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${test_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 300}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "// Test generation timeout")
 
       # Save generated tests
       local test_file="${tests_dir}/${filename}Tests.swift"
@@ -503,7 +503,7 @@ Make it professional, comprehensive, and developer-friendly.
 Use proper Markdown formatting."
 
   local documentation
-  documentation=$(echo "${doc_prompt}" | timeout 60s ollama run gpt-oss:120b-cloud 2>/dev/null || echo "Documentation generation completed")
+  documentation=$(echo "${doc_prompt}" | timeout 60s ollama run llama3.2:3b 2>/dev/null || echo "${doc_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${doc_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 400}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Documentation generation completed")
 
   # Save main documentation
   local main_doc="${docs_dir}/README.md"
@@ -551,7 +551,7 @@ Create comprehensive API docs with:
 Format as structured API reference."
 
     local api_docs
-    api_docs=$(echo "${api_prompt}" | timeout 30s ollama run qwen3-coder:480b-cloud 2>/dev/null || echo "API documentation generated")
+    api_docs=$(echo "${api_prompt}" | timeout 30s ollama run codellama:7b 2>/dev/null || echo "${api_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${api_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 300}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "API documentation generated")
 
     local api_doc="${docs_dir}/API_REFERENCE.md"
     {
