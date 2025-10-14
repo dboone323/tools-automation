@@ -62,6 +62,12 @@ ALLOWED_COMMANDS = {
     "integrate-api": ["./Tools/Automation/agents/agent_build.sh", "integrate-api"],
     "enhance-ui": ["./Tools/Automation/agents/agent_uiux.sh", "enhance-ui"],
     "implement-todo": ["./Tools/Automation/agents/agent_codegen.sh", "implement-todo"],
+    # GitHub integration commands
+    "mcp_github_list_workflows": ["./Tools/Automation/mcp_github_list_workflows.sh"],
+    "mcp_github_list_workflow_runs": [
+        "./Tools/Automation/mcp_github_list_workflow_runs.sh"
+    ],
+    "mcp_github_get_job_logs": ["./Tools/Automation/mcp_github_get_job_logs.sh"],
 }
 
 

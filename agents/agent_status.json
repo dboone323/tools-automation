@@ -1,5 +1,10 @@
 {
   "agents": {
+    "agent_codegen.sh": {
+      "last_seen": 1760380051,
+      "pid": 72409,
+      "status": "idle"
+    },
     "agent_integration.sh": {
       "last_seen": 1760135472,
       "pid": 40443,
@@ -31,7 +36,59 @@
       "status": "idle"
     },
     "quality_agent.sh": {
-      "last_seen": 1760136137,
+      "last_seen": 1760380053,
+      "status": "available"
+    },
+    "quantum_chemistry_agent.sh": {
+      "capabilities": [
+        "quantum-chemistry",
+        "molecular-simulation",
+        "hardware-integration"
+      ],
+      "last_seen": 1760304935,
+      "pid": 32838,
+      "status": "available",
+      "task": ""
+    },
+    "quantum_finance_agent.sh": {
+      "capabilities": [
+        "quantum-finance",
+        "portfolio-optimization",
+        "risk-analysis",
+        "market-modeling"
+      ],
+      "last_seen": 1760295149,
+      "pid": 32841,
+      "status": "running",
+      "task": "cycle_1"
+    },
+    "quantum_learning_agent.sh": {
+      "capabilities": [
+        "quantum-learning",
+        "pattern-recognition",
+        "classification",
+        "clustering",
+        "optimization"
+      ],
+      "last_seen": 1760304602,
+      "pid": 32021,
+      "status": "available",
+      "task": ""
+    },
+    "quantum_orchestrator_agent.sh": {
+      "capabilities": [
+        "quantum-orchestration",
+        "resource-management",
+        "job-scheduling",
+        "workflow-coordination"
+      ],
+      "last_seen": 1760304718,
+      "pid": 32010,
+      "status": "available",
+      "task": ""
+    },
+    "security_agent.sh": {
+      "last_seen": 1760380072,
       "status": "available"
     },
     "testing_agent": {
@@ -41,55 +98,7 @@
     "uiux_agent": {
       "pid": 11294,
       "status": "idle"
-    },
-    "quantum_finance_agent.sh": {
-      "status": "running",
-      "pid": 32841,
-      "last_seen": 1760295149,
-      "task": "cycle_1",
-      "capabilities": [
-        "quantum-finance",
-        "portfolio-optimization",
-        "risk-analysis",
-        "market-modeling"
-      ]
-    },
-    "quantum_orchestrator_agent.sh": {
-      "status": "available",
-      "pid": 32010,
-      "last_seen": 1760304718,
-      "task": "",
-      "capabilities": [
-        "quantum-orchestration",
-        "resource-management",
-        "job-scheduling",
-        "workflow-coordination"
-      ]
-    },
-    "quantum_learning_agent.sh": {
-      "status": "available",
-      "pid": 32021,
-      "last_seen": 1760304602,
-      "task": "",
-      "capabilities": [
-        "quantum-learning",
-        "pattern-recognition",
-        "classification",
-        "clustering",
-        "optimization"
-      ]
-    },
-    "quantum_chemistry_agent.sh": {
-      "status": "available",
-      "pid": 32838,
-      "last_seen": 1760304935,
-      "task": "",
-      "capabilities": [
-        "quantum-chemistry",
-        "molecular-simulation",
-        "hardware-integration"
-      ]
     }
   },
-  "last_update": 1760136137
+  "last_update": 1760380053
 }

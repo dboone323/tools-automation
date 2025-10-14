@@ -282,15 +282,17 @@ check_github_integration() {
   local mcp_tools=("mcp_github_list_workflows" "mcp_github_list_workflow_runs" "mcp_github_get_job_logs")
   local mcp_available=0
 
-  for _ in "${mcp_tools[@]}"; do
-    # This is a simplified check - in reality, we'd check if MCP tools are available
-    ((mcp_available++))
+  for tool in "${mcp_tools[@]}"; do
+    # Test if the MCP tool is available by checking if the script exists and is executable
+    if [[ -x "${tool}.sh" ]]; then
+      ((mcp_available++))
+    fi
   done
 
   if [[ ${mcp_available} -eq ${#mcp_tools[@]} ]]; then
     print_success "MCP GitHub tools available"
   else
-    print_warning "Some MCP GitHub tools may not be available"
+    print_warning "Some MCP GitHub tools may not be available (${mcp_available}/${#mcp_tools[@]} found)"
   fi
 }
 
