@@ -711,6 +711,14 @@ run_autofix_all_projects() {
   fi
 
   print_status "Detailed log available at: ${LOG_FILE}"
+
+  # Clean up processed MD files after successful fixes
+  if [[ ${successful_fixes} -gt 0 ]]; then
+    print_status "Cleaning up processed MD files..."
+    if [[ -f "${CODE_DIR}/Tools/Automation/cleanup_processed_md_files.sh" ]]; then
+      bash "${CODE_DIR}/Tools/Automation/cleanup_processed_md_files.sh" cleanup || print_warning "MD cleanup failed"
+    fi
+  fi
 }
 
 # Usage information

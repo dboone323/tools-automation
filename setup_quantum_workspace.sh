@@ -148,14 +148,9 @@ setup_python() {
   # shellcheck source=/dev/null
   source "${venv_dir}/bin/activate"
 
-  if [[ -f "${WORKSPACE_DIR}/Tools/Automation/requirements.txt" ]]; then
-    pip install -r "${WORKSPACE_DIR}/Tools/Automation/requirements.txt"
+  if [[ -f "${WORKSPACE_DIR}/requirements.txt" ]]; then
+    pip install -r "${WORKSPACE_DIR}/requirements.txt"
     print_success "Python requirements installed"
-  fi
-
-  if [[ -f "${WORKSPACE_DIR}/Tools/Automation/requirements-dev.txt" ]]; then
-    pip install -r "${WORKSPACE_DIR}/Tools/Automation/requirements-dev.txt"
-    print_success "Development requirements installed"
   fi
 }
 
@@ -248,34 +243,6 @@ setup_ollama() {
   done
 
   print_success "Ollama setup completed"
-}
-
-# Setup Trunk CI
-setup_trunk() {
-  print_step "Setting up Trunk CI..."
-
-  if ! command -v trunk &>/dev/null; then
-    print_info "Installing Trunk..."
-    curl https://get.trunk.io -fsSL | bash
-    print_success "Trunk installed"
-  else
-    print_success "Trunk already installed"
-  fi
-
-  # Initialize trunk in workspace
-  cd "${WORKSPACE_DIR}"
-  if [[ ! -f ".trunk/trunk.yaml" ]]; then
-    print_info "Initializing Trunk configuration..."
-    trunk init
-    print_success "Trunk initialized"
-  else
-    print_success "Trunk already configured"
-  fi
-
-  # Install trunk plugins
-  print_info "Installing Trunk plugins..."
-  trunk install
-  print_success "Trunk plugins installed"
 }
 
 # Setup Swift development environment
@@ -504,7 +471,6 @@ final_verification() {
     node
     npm
     brew
-    trunk
     ollama
     gh
     jq
@@ -569,7 +535,6 @@ main() {
   setup_python
   setup_nodejs
   setup_ollama
-  setup_trunk
   setup_swift
   setup_github_cli
   setup_vscode_extensions

@@ -313,6 +313,34 @@
       "status": "completed",
       "success": "true",
       "type": "performance"
+    },
+    {
+      "id": "fix_lint_warnings_1760548757",
+      "type": "code-review",
+      "description": "Fix all shellcheck lint warnings in agent scripts: unused variables, style improvements, and add missing components",
+      "assigned_agent": "agent_validation.sh",
+      "priority": "high",
+      "status": "queued",
+      "created_at": 1760548757,
+      "data": {
+        "files_to_check": [
+          "agent_search.sh",
+          "agent_documentation.sh",
+          "agent_deployment.sh",
+          "agent_monitoring.sh",
+          "agent_migration.sh"
+        ],
+        "warnings_to_fix": [
+          "SC2034",
+          "SC2009",
+          "SC2126"
+        ],
+        "missing_components": [
+          "variable_usage",
+          "error_handling",
+          "logging_improvements"
+        ]
+      }
     }
   ]
 }

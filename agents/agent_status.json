@@ -1,104 +1,86 @@
 {
   "agents": {
+    "agent_analytics.sh": {
+      "last_seen": 1760546883,
+      "pid": 73277,
+      "status": "running"
+    },
+    "agent_backup.sh": {
+      "last_seen": 1760546732,
+      "pid": 18411,
+      "status": "running"
+    },
+    "agent_build.sh": {
+      "last_seen": 1760560416,
+      "pid": 17570,
+      "status": "busy"
+    },
+    "agent_cleanup.sh": {
+      "last_seen": 1760546868,
+      "pid": 18429,
+      "status": "available"
+    },
     "agent_codegen.sh": {
-      "last_seen": 1760380051,
-      "pid": 72409,
-      "status": "idle"
+      "status": "idle",
+      "last_seen": 1760561153,
+      "pid": 17102
+    },
+    "agent_debug.sh": {
+      "current_task_id": "todo_1759861193402_82",
+      "last_seen": 1760560467,
+      "pid": 17582,
+      "status": "busy",
+      "tasks_completed": 12
     },
     "agent_integration.sh": {
-      "last_seen": 1760135472,
-      "pid": 40443,
-      "status": "available"
+      "status": "available",
+      "last_seen": 1760561125,
+      "pid": 18486
+    },
+    "agent_monitoring.sh": {
+      "last_seen": 1760548128,
+      "pid": 23040,
+      "status": "idle"
     },
     "agent_notification.sh": {
-      "last_seen": 1760136043,
-      "pid": 40395,
-      "status": "available"
+      "status": "available",
+      "last_seen": 1760561147,
+      "pid": 18457
     },
-    "code_review_agent.sh": {
-      "last_seen": 1760136155,
-      "status": "available"
+    "agent_optimization.sh": {
+      "last_seen": 1760546883,
+      "pid": 73260,
+      "status": "running"
     },
-    "deployment_agent.sh": {
-      "last_seen": 1760136134,
-      "status": "available"
-    },
-    "learning_agent.sh": {
-      "last_seen": 1760136044,
-      "status": "available"
-    },
-    "monitoring_agent.sh": {
-      "last_seen": 1760136113,
+    "agent_validation.sh": {
+      "last_seen": 1760546732,
+      "pid": 18509,
       "status": "available"
     },
     "performance_monitor": {
-      "pid": 40243,
+      "pid": 17704,
       "status": "idle"
     },
     "quality_agent.sh": {
-      "last_seen": 1760380053,
+      "last_seen": 1760561124,
       "status": "available"
     },
-    "quantum_chemistry_agent.sh": {
-      "capabilities": [
-        "quantum-chemistry",
-        "molecular-simulation",
-        "hardware-integration"
-      ],
-      "last_seen": 1760304935,
-      "pid": 32838,
-      "status": "available",
-      "task": ""
-    },
-    "quantum_finance_agent.sh": {
-      "capabilities": [
-        "quantum-finance",
-        "portfolio-optimization",
-        "risk-analysis",
-        "market-modeling"
-      ],
-      "last_seen": 1760295149,
-      "pid": 32841,
-      "status": "running",
-      "task": "cycle_1"
-    },
-    "quantum_learning_agent.sh": {
-      "capabilities": [
-        "quantum-learning",
-        "pattern-recognition",
-        "classification",
-        "clustering",
-        "optimization"
-      ],
-      "last_seen": 1760304602,
-      "pid": 32021,
-      "status": "available",
-      "task": ""
-    },
-    "quantum_orchestrator_agent.sh": {
-      "capabilities": [
-        "quantum-orchestration",
-        "resource-management",
-        "job-scheduling",
-        "workflow-coordination"
-      ],
-      "last_seen": 1760304718,
-      "pid": 32010,
-      "status": "available",
-      "task": ""
+    "security_agent": {
+      "pid": 18379,
+      "status": "idle"
     },
     "security_agent.sh": {
-      "last_seen": 1760380072,
+      "last_seen": 1760561128,
       "status": "available"
     },
     "testing_agent": {
-      "pid": 11358,
+      "pid": 17742,
       "status": "idle"
     },
     "uiux_agent": {
-      "pid": 11294,
+      "pid": 17649,
       "status": "idle"
     }
   },
-  "last_update": 1760380053
+  "last_update": 1760561153
 }

@@ -209,7 +209,7 @@ add_task_to_queue() {
   fi
 
   # Add task to tasks array
-  jq --argjson task "$task_json" '.tasks += [$task]' "${task_queue_file}" > "${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
+  jq --argjson task "$task_json" '.tasks += [$task]' "${task_queue_file}" >"${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
 }
 
 # Check if agent should auto-restart
@@ -328,7 +328,7 @@ update_task_status() {
         .
       end
     )
-  ' "${task_queue_file}" > "${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
+  ' "${task_queue_file}" >"${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
 }
 
 get_task_details() {
@@ -361,10 +361,56 @@ move_task_to_completed() {
 
   if [[ -n "$task_data" ]]; then
     # Add to completed array
-    jq --argjson task "$task_data" '.completed += [$task]' "${task_queue_file}" > "${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
+    jq --argjson task "$task_data" '.completed += [$task]' "${task_queue_file}" >"${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
 
     # Remove from tasks array
-    jq "del(.tasks[] | select(.id == \"${task_id}\"))" "${task_queue_file}" > "${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
+    jq "del(.tasks[] | select(.id == \"${task_id}\"))" "${task_queue_file}" >"${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
+  fi
+}
+
+# MCP Server Integration Functions
+
+# Register agent with MCP server
+register_with_mcp() {
+  local agent_name="$1"
+  local capabilities="$2"
+  local mcp_url="${MCP_URL:-http://localhost:5005}"
+
+  echo "Registering $agent_name with MCP server at $mcp_url..."
+
+  # Use heartbeat endpoint to register agent
+  local response
+  response=$(curl -s -X POST "${mcp_url}/heartbeat" \
+    -H "Content-Type: application/json" \
+    -d "{\"agent\": \"$agent_name\", \"project\": \"workspace\", \"capabilities\": \"$capabilities\"}" 2>/dev/null)
+
+  if [[ $? -eq 0 && -n "$response" ]]; then
+    echo "Successfully registered $agent_name with MCP server"
+    return 0
+  else
+    echo "Failed to register $agent_name with MCP server (server may not be running)"
+    return 1
+  fi
+}
+
+# Unregister agent from MCP server
+unregister_with_mcp() {
+  local agent_name="$1"
+  local mcp_url="${MCP_URL:-http://localhost:5005}"
+
+  echo "Unregistering $agent_name from MCP server..."
+
+  local response
+  response=$(curl -s -X POST "${mcp_url}/unregister" \
+    -H "Content-Type: application/json" \
+    -d "{\"agent_name\": \"$agent_name\"}" 2>/dev/null)
+
+  if [[ $? -eq 0 ]]; then
+    echo "Successfully unregistered $agent_name from MCP server"
+    return 0
+  else
+    echo "Failed to unregister $agent_name from MCP server"
+    return 1
   fi
 }
 
@@ -389,3 +435,5 @@ export -f update_task_status
 export -f get_task_details
 export -f complete_task
 export -f move_task_to_completed
+export -f register_with_mcp
+export -f unregister_with_mcp

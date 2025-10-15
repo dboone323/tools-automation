@@ -43,18 +43,18 @@ status_with_ai() {
   print_status "Quantum Workspace Status with AI Enhancement"
   echo ""
 
-  # Limited TODO export only during status (configurable)
-  # STATUS_TODO_MODE values: off | limited | full (default: limited)
-  case "${STATUS_TODO_MODE:-limited}" in
-  off) ;;
-  limited)
-    export TODO_EXPORT_FAST=1
-    bash "${CODE_DIR}/Tools/Automation/export_todos_json.sh" || true
-    ;;
-  full)
-    bash "${CODE_DIR}/Tools/Automation/export_todos_json.sh" || true
-    ;;
-  esac
+  # Skip TODO export during status check for faster performance
+  # TODO export can be run separately with: ./Tools/Automation/export_todos_json.sh
+  # case "${STATUS_TODO_MODE:-limited}" in
+  # off) ;;
+  # limited)
+  #   export TODO_EXPORT_FAST=1
+  #   bash "${CODE_DIR}/Tools/Automation/export_todos_json.sh" || true
+  #   ;;
+  # full)
+  #   bash "${CODE_DIR}/Tools/Automation/export_todos_json.sh" || true
+  #   ;;
+  # esac
 
   # Check Ollama health
   if command -v ollama &>/dev/null; then
