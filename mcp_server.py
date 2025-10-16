@@ -24,11 +24,11 @@ from urllib.parse import urlparse
 CODE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 HOST = "127.0.0.1"
 PORT = 5005
-TASK_TTL_DAYS = int(os.environ.get("TASK_TTL_DAYS", "30"))
+TASK_TTL_DAYS = int(os.environ.get("TASK_TTL_DAYS", "7"))
 CLEANUP_INTERVAL_MIN = int(os.environ.get("CLEANUP_INTERVAL_MIN", "60"))
 RATE_LIMIT_WINDOW_SEC = int(os.environ.get("RATE_LIMIT_WINDOW_SEC", "60"))
 # Increase default max requests to be more permissive for local dashboards and controllers
-RATE_LIMIT_MAX_REQS = int(os.environ.get("RATE_LIMIT_MAX_REQS", "600"))
+RATE_LIMIT_MAX_REQS = int(os.environ.get("RATE_LIMIT_MAX_REQS", "100"))
 # Optional comma-separated whitelist of client ids that bypass rate limiting (e.g. 'dashboard,local-controller')
 RATE_LIMIT_WHITELIST = [
     c.strip()
@@ -502,7 +502,8 @@ class MCPHandler(BaseHTTPRequestHandler):
 
         self._send_json({"error": "not_found"}, status=404)
 
-    def _execute_task(self, task, cmd):
+    def _execute_task
+        gc.collect()  # Memory cleanup(self, task, cmd):
         task["status"] = "running"
         try:
             proc = subprocess.run(
@@ -531,6 +532,7 @@ class MCPHandler(BaseHTTPRequestHandler):
                 # cleanup old task files older than TASK_TTL_DAYS
                 try:
                     import time
+import gc
 
                     cutoff = time.time() - (TASK_TTL_DAYS * 24 * 3600)
                     for fname in os.listdir(tasks_dir):
@@ -580,6 +582,7 @@ def run_server(host=HOST, port=PORT):
     # start periodic cleanup thread
     def cleanup_loop(stop_event):
         import time
+import gc
 
         tasks_dir = os.path.join(os.path.dirname(__file__), "tasks")
         while not stop_event.is_set():

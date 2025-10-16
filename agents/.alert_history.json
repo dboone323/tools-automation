@@ -2,42 +2,6 @@
   "alerts": [
     {
       "key": "agent_health_check",
-      "message": "10 agents haven't reported in 5+ minutes",
-      "timestamp": 1760555115.544566,
-      "date": "2025-10-15 14:05:15"
-    },
-    {
-      "key": "disk_space_critical",
-      "message": "Disk usage at 92% - cleanup required",
-      "timestamp": 1760555115.7491798,
-      "date": "2025-10-15 14:05:15"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "11 agents haven't reported in 5+ minutes",
-      "timestamp": 1760555237.8781362,
-      "date": "2025-10-15 14:07:17"
-    },
-    {
-      "key": "disk_space_critical",
-      "message": "Disk usage at 92% - cleanup required",
-      "timestamp": 1760555238.0934532,
-      "date": "2025-10-15 14:07:18"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "12 agents haven't reported in 5+ minutes",
-      "timestamp": 1760555360.297951,
-      "date": "2025-10-15 14:09:20"
-    },
-    {
-      "key": "disk_space_critical",
-      "message": "Disk usage at 92% - cleanup required",
-      "timestamp": 1760555360.504278,
-      "date": "2025-10-15 14:09:20"
-    },
-    {
-      "key": "agent_health_check",
       "message": "13 agents haven't reported in 5+ minutes",
       "timestamp": 1760555482.893273,
       "date": "2025-10-15 14:11:22"
@@ -599,6 +563,42 @@
       "message": "Disk usage at 98% - cleanup required",
       "timestamp": 1760561146.2631419,
       "date": "2025-10-15 15:45:46"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "12 agents haven't reported in 5+ minutes",
+      "timestamp": 1760561268.8911092,
+      "date": "2025-10-15 15:47:48"
+    },
+    {
+      "key": "disk_space_critical",
+      "message": "Disk usage at 98% - cleanup required",
+      "timestamp": 1760561269.11652,
+      "date": "2025-10-15 15:47:49"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "11 agents haven't reported in 5+ minutes",
+      "timestamp": 1760561391.606998,
+      "date": "2025-10-15 15:49:51"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "11 agents haven't reported in 5+ minutes",
+      "timestamp": 1760561514.144128,
+      "date": "2025-10-15 15:51:54"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "11 agents haven't reported in 5+ minutes",
+      "timestamp": 1760561636.666325,
+      "date": "2025-10-15 15:53:56"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "11 agents haven't reported in 5+ minutes",
+      "timestamp": 1760561758.739434,
+      "date": "2025-10-15 15:55:58"
     }
   ]
 }
