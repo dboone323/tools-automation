@@ -18,6 +18,8 @@ import json
 import os
 import subprocess
 import threading
+import time
+import gc
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 
@@ -502,8 +504,7 @@ class MCPHandler(BaseHTTPRequestHandler):
 
         self._send_json({"error": "not_found"}, status=404)
 
-    def _execute_task
-        gc.collect()  # Memory cleanup(self, task, cmd):
+    def _execute_task(self, task, cmd):
         task["status"] = "running"
         try:
             proc = subprocess.run(
@@ -531,9 +532,6 @@ class MCPHandler(BaseHTTPRequestHandler):
                     json.dump(task, f, indent=2)
                 # cleanup old task files older than TASK_TTL_DAYS
                 try:
-                    import time
-import gc
-
                     cutoff = time.time() - (TASK_TTL_DAYS * 24 * 3600)
                     for fname in os.listdir(tasks_dir):
                         if not fname.endswith(".json"):
@@ -581,9 +579,6 @@ def run_server(host=HOST, port=PORT):
 
     # start periodic cleanup thread
     def cleanup_loop(stop_event):
-        import time
-import gc
-
         tasks_dir = os.path.join(os.path.dirname(__file__), "tasks")
         while not stop_event.is_set():
             try:

@@ -1,24 +1,6 @@
 {
   "alerts": [
     {
-      "key": "agent_health_check",
-      "message": "13 agents haven't reported in 5+ minutes",
-      "timestamp": 1760555482.893273,
-      "date": "2025-10-15 14:11:22"
-    },
-    {
-      "key": "disk_space_critical",
-      "message": "Disk usage at 93% - cleanup required",
-      "timestamp": 1760555483.158947,
-      "date": "2025-10-15 14:11:23"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "12 agents haven't reported in 5+ minutes",
-      "timestamp": 1760555606.9129012,
-      "date": "2025-10-15 14:13:26"
-    },
-    {
       "key": "disk_space_critical",
       "message": "Disk usage at 93% - cleanup required",
       "timestamp": 1760555607.1229708,
@@ -599,6 +581,24 @@
       "message": "11 agents haven't reported in 5+ minutes",
       "timestamp": 1760561758.739434,
       "date": "2025-10-15 15:55:58"
+    },
+    {
+      "key": "agent_startup",
+      "message": "Agent is now monitoring for alerts",
+      "timestamp": 1760980133.326855,
+      "date": "2025-10-20 12:08:53"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "7 agents haven't reported in 5+ minutes",
+      "timestamp": 1760980135.314923,
+      "date": "2025-10-20 12:08:55"
+    },
+    {
+      "key": "disk_space_warning",
+      "message": "Disk usage at 83% - consider cleanup",
+      "timestamp": 1760980135.847769,
+      "date": "2025-10-20 12:08:55"
     }
   ]
 }
