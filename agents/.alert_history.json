@@ -1,36 +1,6 @@
 {
   "alerts": [
     {
-      "key": "agent_health_check",
-      "message": "13 agents haven't reported in 5+ minutes",
-      "timestamp": 1760560900.078431,
-      "date": "2025-10-15 15:41:40"
-    },
-    {
-      "key": "disk_space_critical",
-      "message": "Disk usage at 97% - cleanup required",
-      "timestamp": 1760560900.3501492,
-      "date": "2025-10-15 15:41:40"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "13 agents haven't reported in 5+ minutes",
-      "timestamp": 1760561023.125985,
-      "date": "2025-10-15 15:43:43"
-    },
-    {
-      "key": "disk_space_critical",
-      "message": "Disk usage at 98% - cleanup required",
-      "timestamp": 1760561023.3497548,
-      "date": "2025-10-15 15:43:43"
-    },
-    {
-      "key": "agent_health_check",
-      "message": "12 agents haven't reported in 5+ minutes",
-      "timestamp": 1760561145.9858181,
-      "date": "2025-10-15 15:45:45"
-    },
-    {
       "key": "disk_space_critical",
       "message": "Disk usage at 98% - cleanup required",
       "timestamp": 1760561146.2631419,
@@ -599,6 +569,36 @@
       "message": "44 agents haven't reported in 5+ minutes",
       "timestamp": 1760997372.153622,
       "date": "2025-10-20 16:56:12"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "44 agents haven't reported in 5+ minutes",
+      "timestamp": 1760997494.1542,
+      "date": "2025-10-20 16:58:14"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "36 agents haven't reported in 5+ minutes",
+      "timestamp": 1760997616.13058,
+      "date": "2025-10-20 17:00:16"
+    },
+    {
+      "key": "agent_startup",
+      "message": "Agent is now monitoring for alerts",
+      "timestamp": 1760997711.070438,
+      "date": "2025-10-20 17:01:51"
+    },
+    {
+      "key": "agent_health_check",
+      "message": "19 agents haven't reported in 5+ minutes",
+      "timestamp": 1760997712.2517529,
+      "date": "2025-10-20 17:01:52"
+    },
+    {
+      "key": "agent_startup",
+      "message": "Agent is now monitoring for alerts",
+      "timestamp": 1760997774.112283,
+      "date": "2025-10-20 17:02:54"
     }
   ]
 }

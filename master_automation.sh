@@ -930,6 +930,26 @@ main() {
     "retention")
         run_retention_policy
         ;;
+    "quantum-analysis")
+        echo "🌀 Running Quantum Analysis..."
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        "${SCRIPT_DIR}/quantum_tools_integration.sh" analysis
+        ;;
+    "quantum-build")
+        echo "⚡ Running Quantum Build Optimization..."
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        "${SCRIPT_DIR}/quantum_tools_integration.sh" build
+        ;;
+    "quantum-deploy")
+        echo "🌌 Running Quantum Deployment..."
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        "${SCRIPT_DIR}/quantum_tools_integration.sh" deploy
+        ;;
+    "quantum-monitor")
+        echo "👁️  Starting Quantum Monitoring..."
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        "${SCRIPT_DIR}/quantum_tools_integration.sh" monitor
+        ;;
     *)
         show_enhanced_usage
         ;;

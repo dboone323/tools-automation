@@ -1871,8 +1871,9 @@
       "id": "opt_avoidobstaclesgame_35. **\u2705 Implement save system optimization** - Fast save/load with incremental saving_1760979497",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760997527
     },
     {
       "assigned_agent": "agent_codegen.sh",
@@ -1882,8 +1883,9 @@
       "id": "opt_avoidobstaclesgame_36. **Add network optimization** - Efficient online features with minimal latency_1760979497",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760997660
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1904,8 +1906,9 @@
       "id": "opt_avoidobstaclesgame_38. **\u2705 Implement crash recovery** - Automatic crash detection and state recovery_1760979498",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760997793
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1981,8 +1984,9 @@
       "id": "opt_avoidobstaclesgame_45. **Implement heatmaps** - Visual analysis of player movement and interaction patterns_1760979498",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760997928
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -2014,8 +2018,9 @@
       "id": "opt_avoidobstaclesgame_48. **\u2705 Implement player segmentation** - Group players by behavior for targeted improvements_1760979498",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760998060
     },
     {
       "assigned_agent": "agent_performance.sh",
@@ -2047,8 +2052,9 @@
       "id": "opt_avoidobstaclesgame_1. **Task 23**: Implement advanced gesture controls for enhanced player interaction_1760979498",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760998193
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -2124,8 +2130,9 @@
       "id": "opt_avoidobstaclesgame_8. **Task 43**: Implement revenue optimization and dynamic pricing_1760979498",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760998327
     },
     {
       "assigned_agent": "uiux_agent.sh",
@@ -2168,8 +2175,9 @@
       "id": "opt_avoidobstaclesgame_18. **\u2705 Implement skill trees** - Player progression system with unlockable abilities and upgrades_1760979499",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760998459
     },
     {
       "assigned_agent": "agent_debug.sh",
