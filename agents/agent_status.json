@@ -11,8 +11,8 @@
       "pid": 25689
     },
     "agent_build.sh": {
-      "status": "busy",
-      "last_seen": 1760992492,
+      "status": "available",
+      "last_seen": 1760997343,
       "pid": 38056
     },
     "agent_cleanup.sh": {
@@ -22,25 +22,25 @@
     },
     "agent_codegen.sh": {
       "status": "available",
-      "last_seen": 1760992202,
+      "last_seen": 1760997401,
       "pid": 38246,
-      "tasks_completed": 7
+      "tasks_completed": 43
     },
     "agent_debug.sh": {
       "status": "busy",
-      "last_seen": 1760992503,
+      "last_seen": 1760997372,
       "pid": 38151,
-      "tasks_completed": 12,
-      "current_task_id": "todo_1759861199370_68"
+      "tasks_completed": 81,
+      "current_task_id": "todo_1759861966661_244"
     },
     "agent_integration.sh": {
       "status": "available",
-      "last_seen": 1760992230,
+      "last_seen": 1760997047,
       "pid": 39685
     },
     "agent_notification.sh": {
       "status": "available",
-      "last_seen": 1760992486,
+      "last_seen": 1760997373,
       "pid": 39899
     },
     "agent_optimization.sh": {
@@ -221,7 +221,7 @@
       "pid": 25999
     }
   },
-  "last_update": 1760992503,
+  "last_update": 1760997401,
   "orchestrator": {
     "is_running": true,
     "last_seen": 1760980156,

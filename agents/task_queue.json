@@ -614,8 +614,9 @@
       "id": "opt_momentumfinance_24. **Add offline functionality** - Implement offline data synchronization and conflict resolution_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760992530
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -636,8 +637,9 @@
       "id": "opt_momentumfinance_26. **Implement search functionality** - Advanced search with filters and sorting options_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760992771
     },
     {
       "assigned_agent": "agent_codegen.sh",
@@ -647,8 +649,9 @@
       "id": "opt_momentumfinance_27. **Add data export features** - Support multiple export formats (PDF, CSV, JSON)_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760992965
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -669,8 +672,9 @@
       "id": "opt_momentumfinance_29. **Implement push notifications** - Add intelligent notifications for budgets, goals, and subscriptions_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760993133
     },
     {
       "assigned_agent": "agent_codegen.sh",
@@ -680,8 +684,9 @@
       "id": "opt_momentumfinance_30. **Add biometric authentication** - Implement Face ID/Touch ID for sensitive operations_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760993283
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -702,8 +707,9 @@
       "id": "opt_momentumfinance_32. **Implement receipt scanning** - OCR integration for automatic transaction entry_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760993432
     },
     {
       "assigned_agent": "agent_performance.sh",
@@ -735,8 +741,9 @@
       "id": "opt_momentumfinance_35. **Implement recurring transaction detection** - Automatic detection and categorization_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760993583
     },
     {
       "assigned_agent": "uiux_agent.sh",
@@ -768,8 +775,9 @@
       "id": "opt_momentumfinance_38. **Implement tax preparation assistance** - Tax document organization and basic calculations_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760993731
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -790,8 +798,9 @@
       "id": "opt_momentumfinance_40. **Create family sharing features** - Multi-user account management and sharing_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760993880
     },
     {
       "assigned_agent": "agent_testing.sh",
@@ -911,8 +920,9 @@
       "id": "opt_quantumchemistry_1. **Implement advanced VQE variants** - Add UCCSD, k-UpCCGSD, and other variational ans\u00e4tze for improved accuracy_1760979494",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760994015
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -944,8 +954,9 @@
       "id": "opt_quantumchemistry_4. **Implement hybrid quantum-classical algorithms** - Advanced VQE-QPE combinations and quantum embedding methods_1760979494",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760994146
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -966,8 +977,9 @@
       "id": "opt_quantumchemistry_6. **Add topological quantum algorithms** - Implement topological quantum field theory for molecular systems_1760979494",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760994280
     },
     {
       "assigned_agent": "uiux_agent.sh",
@@ -988,8 +1000,9 @@
       "id": "opt_quantumchemistry_8. **Implement quantum phase estimation** - High-precision energy calculations using QPE algorithms_1760979494",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760994415
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1010,8 +1023,9 @@
       "id": "opt_quantumchemistry_10. **Add quantum approximate optimization** - QAOA implementations for molecular optimization problems_1760979494",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760994546
     },
     {
       "assigned_agent": "agent_codegen.sh",
@@ -1021,8 +1035,9 @@
       "id": "opt_quantumchemistry_11. **Expand basis set library** - Implement Pople, Dunning, and Karlsruhe basis sets for higher accuracy_1760979494",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760994673
     },
     {
       "assigned_agent": "agent_codegen.sh",
@@ -1032,8 +1047,9 @@
       "id": "opt_quantumchemistry_12. **Add correlation methods** - MP2, MP4, CCSD, CCSD(T) implementations for electron correlation_1760979494",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760994802
     },
     {
       "assigned_agent": "agent_codegen.sh",
@@ -1043,8 +1059,9 @@
       "id": "opt_quantumchemistry_13. **Implement density functional theory** - Hybrid DFT functionals (B3LYP, PBE0) and meta-GGA methods_1760979494",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760994929
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1076,8 +1093,9 @@
       "id": "opt_quantumchemistry_16. **Implement molecular dynamics** - Quantum molecular dynamics with BOMD and Ehrenfest dynamics_1760979494",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760995056
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1109,8 +1127,9 @@
       "id": "opt_quantumchemistry_19. **Implement vibrational analysis** - Harmonic and anharmonic frequency calculations_1760979495",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760995183
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1142,8 +1161,9 @@
       "id": "opt_quantumchemistry_22. **Implement parallel quantum algorithms** - Multi-qubit parallelization and distributed computing_1760979495",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760995311
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1175,8 +1195,9 @@
       "id": "opt_quantumchemistry_25. **Implement adaptive algorithms** - Dynamic basis set selection and method adaptation_1760979495",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760995438
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1208,8 +1229,9 @@
       "id": "opt_quantumchemistry_28. **Implement streaming calculations** - Real-time calculation progress and intermediate result access_1760979495",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760995566
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1241,8 +1263,9 @@
       "id": "opt_quantumchemistry_31. **Implement AI-assisted method selection** - ML models for optimal quantum method and basis set selection_1760979495",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760995693
     },
     {
       "assigned_agent": "agent_performance.sh",
@@ -1307,8 +1330,9 @@
       "id": "opt_quantumchemistry_37. **Implement AI workflow optimization** - Automated calculation workflow optimization_1760979495",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760995822
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1406,8 +1430,9 @@
       "id": "opt_quantumchemistry_46. **Implement astrochemistry** - Molecular spectroscopy for astronomical observations_1760979496",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760995952
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1439,8 +1464,9 @@
       "id": "opt_quantumchemistry_49. **Implement educational tools** - Interactive quantum chemistry learning platforms_1760979496",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/QuantumChemistry/quantumchemistry_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760996082
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1461,8 +1487,9 @@
       "id": "opt_avoidobstaclesgame_1. **\u2705 Enhanced adaptive difficulty algorithm** - Implement more sophisticated AI for real-time difficulty adjustment based on player skill_1760979496",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760996216
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1483,8 +1510,9 @@
       "id": "opt_avoidobstaclesgame_3. **\u2705 Implement personalized difficulty profiles** - Create individual player profiles that adapt over time_1760979496",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760996349
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1527,8 +1555,9 @@
       "id": "opt_avoidobstaclesgame_7. **\u2705 Player Behavior Prediction** - Implement player behavior prediction algorithms using machine learning_1760979496",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760996483
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1549,8 +1578,9 @@
       "id": "opt_avoidobstaclesgame_9. **\u2705 Adaptive Power-up System** - Implement adaptive power-up spawning based on player skill level_1760979496",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760996620
     },
     {
       "assigned_agent": "agent_performance.sh",
@@ -1582,8 +1612,9 @@
       "id": "opt_avoidobstaclesgame_12. **\u2705 Implement advanced physics** - Enhanced physics simulation with realistic collisions and movements_1760979496",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760996751
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1615,8 +1646,9 @@
       "id": "opt_avoidobstaclesgame_15. **\u2705 Implement power-up system** - Comprehensive power-up mechanics with strategic timing_1760979497",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760996878
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1648,8 +1680,9 @@
       "id": "opt_avoidobstaclesgame_18. **\u2705 Implement skill trees** - Player progression system with unlockable abilities and upgrades_1760979497",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760997006
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1703,8 +1736,9 @@
       "id": "opt_avoidobstaclesgame_23. **Implement gesture controls** - Advanced touch gestures for precise player control_1760979497",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760997133
     },
     {
       "assigned_agent": "agent_performance.sh",
@@ -1758,8 +1792,9 @@
       "id": "opt_avoidobstaclesgame_28. **Implement dark mode** - Full dark mode support with theme customization_1760979497",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760997262
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -1802,8 +1837,9 @@
       "id": "opt_avoidobstaclesgame_32. **\u2705 Implement object pooling** - Efficient memory management for obstacles and effects_1760979497",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/AvoidObstaclesGame/avoidobstaclesgame_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760997395
     },
     {
       "assigned_agent": "agent_debug.sh",
