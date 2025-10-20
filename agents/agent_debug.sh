@@ -61,7 +61,7 @@ while true; do
         if grep -q 'error:' "${LOG_FILE}"; then
           echo "[$(date)] ${AGENT_NAME}: Creating backup before auto-fix..." >>"${LOG_FILE}"
           echo "[$(date)] ${AGENT_NAME}: Creating multi-level backup before debug/fix..." >>"${LOG_FILE}"
-          /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup CodingReviewer >>"${LOG_FILE}" 2>&1 || true
+          /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed CodingReviewer >>"${LOG_FILE}" 2>&1 || true
           echo "[$(date)] ${AGENT_NAME}: Detected errors, running auto-fix..." >>"${LOG_FILE}"
           /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/mcp_workflow.sh autofix CodingReviewer >>"${LOG_FILE}" 2>&1
           echo "[$(date)] ${AGENT_NAME}: Running AI enhancement analysis..." >>"${LOG_FILE}"

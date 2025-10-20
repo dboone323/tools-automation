@@ -579,8 +579,9 @@
       "id": "opt_momentumfinance_21. **Add haptic feedback** - Implement appropriate haptic feedback for user interactions_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760991652
     },
     {
       "assigned_agent": "agent_debug.sh",
@@ -601,8 +602,9 @@
       "id": "opt_momentumfinance_23. **Implement dark mode optimization** - Enhance dark mode experience with better contrast_1760979493",
       "priority": 6,
       "source_file": "/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/momentumfinance_optimization_plan.md",
-      "status": "queued",
-      "type": "codegen"
+      "status": "failed",
+      "type": "codegen",
+      "updated": 1760992186
     },
     {
       "assigned_agent": "agent_codegen.sh",

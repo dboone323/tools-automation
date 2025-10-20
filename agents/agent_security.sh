@@ -313,7 +313,7 @@ perform_security_analysis() {
 
   # Create backup before making changes
   echo "[$(date)] ${AGENT_NAME}: Creating backup before security analysis..." >>"${LOG_FILE}"
-  /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup "${project}" >>"${LOG_FILE}" 2>&1 || true
+  /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed "${project}" >>"${LOG_FILE}" 2>&1 || true
 
   # Perform security checks
   perform_static_analysis "${project}"

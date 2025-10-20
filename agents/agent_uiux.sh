@@ -61,7 +61,7 @@ perform_ui_enhancements() {
 
   # Create backup before making changes
   echo "[$(date)] ${AGENT_NAME}: Creating backup before UI/UX enhancements..." >>"${LOG_FILE}"
-  /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup "${project}" >>"${LOG_FILE}" 2>&1 || true
+  /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed "${project}" >>"${LOG_FILE}" 2>&1 || true
 
   # Check if this is a drag-and-drop task
   local is_drag_drop
