@@ -1,5 +1,7 @@
 #!/bin/bash
 # start_agents.sh: Launch all automation agents and initialize agent_status.json
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
 
 AGENTS=(agent_build.sh agent_debug.sh agent_codegen.sh)
 AGENT_PIDS=()
@@ -25,7 +27,7 @@ for AGENT in "${AGENTS[@]}"; do
     PID=$!
     AGENT_NAME=$(basename "${AGENT}" .sh | sed 's/agent_//')
     # Update status file with running PID
-    jq ".agents.${AGENT_NAME}_agent.status = \"running\" | .agents.${AGENT_NAME}_agent.pid = ${PID} | .last_update = $(date +%s)" "${STATUS_FILE}" >"${STATUS_FILE}.tmp" && mv "${STATUS_FILE}.tmp" "${STATUS_FILE}"
+    update_agent_status "$AGENT_NAME" "running" "$$"\" | .agents.${AGENT_NAME}_agent.pid = ${PID} | .last_update = $(date +%s)" "${STATUS_FILE}" >"${STATUS_FILE}.tmp" && mv "${STATUS_FILE}.tmp" "${STATUS_FILE}"
     AGENT_PIDS+=("${PID}")
     echo "Started ${AGENT} as PID ${PID}"
   else

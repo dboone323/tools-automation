@@ -6,8 +6,6 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-FRAMEWORK_FILE="${SCRIPT_DIR}/AutonomousArchitectureEvolution.swift"
 
 echo "🤖 Autonomous Architecture Evolution Demonstration"
 echo "================================================"
@@ -294,7 +292,7 @@ create_mock_analysis "$ANALYSIS_FILE"
 run_demo_step \
     "Analysis Results" \
     "Display comprehensive architecture analysis results" \
-    "echo '📈 Analysis Results:' && echo '  Files Analyzed: 2' && echo '  Total Lines: 770' && echo '  Maintainability Index: 75.0' && echo '  Test Coverage: 85%' && echo '  Code Smells Found: 1' && echo '  Architectural Patterns: 1' && echo '' && echo '📄 Full results saved to: ${ANALYSIS_FILE}'"
+    "echo '📈 Analysis Results:' && echo '  Files Analyzed: 2' && echo '  Total Lines: 770' && echo '  Maintainability Index: 75.0' && echo '  Test Coverage: 85%' && echo '  Code Smells Found: 1' && echo '  Architectural Patterns: 1' && echo '' && echo \"📄 Full results saved to: ${ANALYSIS_FILE}\""
 
 # Demonstrate pattern recognition
 run_demo_step \
@@ -327,7 +325,7 @@ create_mock_evolution "$EVOLUTION_FILE"
 run_demo_step \
     "Evolution Results" \
     "Display architecture evolution outcomes" \
-    "echo '📊 Evolution Results:' && echo '  🔄 Iterations Completed: 1' && echo '  ⏱️  Total Effort: 30 minutes' && echo '  📈 Quality Improvement: +8.7%' && echo '  🧠 Maintainability Gain: +2.0' && echo '  🧪 Test Coverage Gain: +1.0%' && echo '  ⚡ Performance Gain: +0.5%' && echo '' && echo '📄 Full results saved to: ${EVOLUTION_FILE}'"
+    "echo '📊 Evolution Results:' && echo '  🔄 Iterations Completed: 1' && echo '  ⏱️  Total Effort: 30 minutes' && echo '  📈 Quality Improvement: +8.7%' && echo '  🧠 Maintainability Gain: +2.0' && echo '  🧪 Test Coverage Gain: +1.0%' && echo '  ⚡ Performance Gain: +0.5%' && echo '' && echo \"📄 Full results saved to: ${EVOLUTION_FILE}\""
 
 # Demonstrate future prediction
 run_demo_step \

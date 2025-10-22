@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
 # Cron Setup Script for Agent Health Monitoring
 # Generated: October 6, 2025
 # Purpose: Install cron jobs for automated health checks

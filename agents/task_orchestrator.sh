@@ -423,7 +423,7 @@ update_task_status() {
         agent=$(jq -r --arg id "${task_id}" '.tasks[]? | select(.id==$id) | (.assigned_agent // .assigned_to // "")' "${TASK_QUEUE_FILE}" 2>/dev/null)
         if [[ -n ${agent} ]]; then
           local as_tmp="${AGENT_STATUS_FILE}.tmp$$"
-          jq --arg a "${agent}" '(.agents[$a].current_task_id=null) | (.agents[$a].status="available") | (.agents[$a].tasks_completed = ((.agents[$a].tasks_completed // 0)+1))' "${AGENT_STATUS_FILE}" >"${as_tmp}" 2>/dev/null && mv "${as_tmp}" "${AGENT_STATUS_FILE}"
+          update_agent_status "$AGENT_NAME" "available" "$$"") | (.agents[$a].tasks_completed = ((.agents[$a].tasks_completed // 0)+1))' "${AGENT_STATUS_FILE}" >"${as_tmp}" 2>/dev/null && mv "${as_tmp}" "${AGENT_STATUS_FILE}"
         fi
       fi
     fi
@@ -437,9 +437,9 @@ release_stale_busy_agents() {
   local released_count=0
 
   # Count agents that will be released for logging
-  released_count=$(jq -r '.agents | to_entries | map(select(.value.status=="busy" and (.value.current_task_id==null or .value.current_task_id==""))) | length' "${AGENT_STATUS_FILE}" 2>/dev/null || echo 0)
+  released_count=$(update_agent_status "$AGENT_NAME" "busy" "$$"" and (.value.current_task_id==null or .value.current_task_id==""))) | length' "${AGENT_STATUS_FILE}" 2>/dev/null || echo 0)
 
-  jq '(.agents |= with_entries( if (.value.status=="busy" and (.value.current_task_id==null or .value.current_task_id=="")) then .value.status="available" else . end ))' "${AGENT_STATUS_FILE}" >"${tmp}" 2>/dev/null && mv "${tmp}" "${AGENT_STATUS_FILE}"
+  update_agent_status "$AGENT_NAME" "available" "$$"" else . end ))' "${AGENT_STATUS_FILE}" >"${tmp}" 2>/dev/null && mv "${tmp}" "${AGENT_STATUS_FILE}"
 
   if [[ ${released_count} -gt 0 ]]; then
     log_message "INFO" "Released ${released_count} stale busy agents to available status"

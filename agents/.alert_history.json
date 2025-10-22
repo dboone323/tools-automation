@@ -1,12 +1,6 @@
 {
   "alerts": [
     {
-      "key": "disk_space_critical",
-      "message": "Disk usage at 98% - cleanup required",
-      "timestamp": 1760561146.2631419,
-      "date": "2025-10-15 15:45:46"
-    },
-    {
       "key": "agent_health_check",
       "message": "12 agents haven't reported in 5+ minutes",
       "timestamp": 1760561268.8911092,
@@ -599,6 +593,12 @@
       "message": "Agent is now monitoring for alerts",
       "timestamp": 1760997774.112283,
       "date": "2025-10-20 17:02:54"
+    },
+    {
+      "key": "agent_startup",
+      "message": "Agent is now monitoring for alerts",
+      "timestamp": 1760999972.474178,
+      "date": "2025-10-20 17:39:32"
     }
   ]
 }

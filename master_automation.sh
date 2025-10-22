@@ -9,6 +9,7 @@ DOCS_DIR="${CODE_DIR}/Documentation"
 
 # Source AI-enhanced automation functions
 if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
+    # shellcheck disable=SC1091  # Expected when analyzing individual files that source others
     source "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh"
 fi
 
@@ -215,7 +216,17 @@ run_standard_project_automation() {
     if command -v swiftlint &>/dev/null; then
         print_status "Linting Swift code..."
         if cd "${project_path}"; then
-            swiftlint --quiet || true
+            # Run swiftlint with timeout to prevent hanging on problematic projects
+            (
+                swiftlint --quiet &
+                pid=$!
+                sleep 30
+                if kill -0 $pid 2>/dev/null; then
+                    kill $pid 2>/dev/null
+                    print_warning "SwiftLint timed out for ${project_name}"
+                fi
+            ) &
+            wait $!
         fi
     fi
 

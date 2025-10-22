@@ -21,8 +21,8 @@ find "${WORKSPACE_DIR}/Projects" -name "*_optimization_plan.md" | while read -r 
     # Look for numbered tasks in the format "1. Task description"
     grep -E "^[0-9]+\." "${plan_file}" | while read -r line; do
         # Extract task number and description
-        task_num=$(echo "${line}" | sed 's/^\([0-9]\+\)\..*/\1/')
-        task_desc=$(echo "${line}" | sed 's/^[0-9]\+\. //')
+        task_num="${line%%.*}"
+        task_desc="${line#*. }"
 
         # Skip if empty
         [[ -z "${task_desc}" ]] && continue

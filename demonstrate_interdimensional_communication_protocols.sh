@@ -296,9 +296,7 @@ extension Range where Element: Strideable, Element.Stride: SignedInteger {
 EOF
 
 echo "=== Compiling Interdimensional Communication Protocols ==="
-swiftc -o interdimensional_communication_demo interdimensional_communication_demo.swift InterdimensionalCommunicationProtocols.swift DimensionalComputingFrameworks.swift -framework Foundation
-
-if [ $? -ne 0 ]; then
+if ! swiftc -o interdimensional_communication_demo interdimensional_communication_demo.swift InterdimensionalCommunicationProtocols.swift DimensionalComputingFrameworks.swift -framework Foundation; then
     echo "[ERROR] Framework compilation failed"
     exit 1
 fi
@@ -307,9 +305,7 @@ echo "[SUCCESS] Framework compiled successfully"
 echo ""
 
 echo "=== Running Interdimensional Communication Protocols Demonstration ==="
-./interdimensional_communication_demo
-
-if [ $? -ne 0 ]; then
+if ! ./interdimensional_communication_demo; then
     echo "[ERROR] Demonstration execution failed"
     exit 1
 fi

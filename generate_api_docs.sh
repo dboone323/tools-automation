@@ -13,7 +13,6 @@ NC='\033[0m'
 
 WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 DOCS_OUTPUT="${WORKSPACE_ROOT}/Documentation/API"
-TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
 print_header() {
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -178,8 +177,10 @@ EOF
     print_success "Extracting public interfaces..."
 
     # Classes
-    echo "### Public Classes" >>"$output_file"
-    echo "" >>"$output_file"
+    {
+        echo "### Public Classes"
+        echo ""
+    } >>"$output_file"
     grep -rh "public class" "$project_dir" --include="*.swift" 2>/dev/null |
         sed 's/^[[:space:]]*//' |
         sed 's/{.*//' |
@@ -189,8 +190,10 @@ EOF
     echo "" >>"$output_file"
 
     # Structs
-    echo "### Public Structs" >>"$output_file"
-    echo "" >>"$output_file"
+    {
+        echo "### Public Structs"
+        echo ""
+    } >>"$output_file"
     grep -rh "public struct" "$project_dir" --include="*.swift" 2>/dev/null |
         sed 's/^[[:space:]]*//' |
         sed 's/{.*//' |
@@ -200,8 +203,10 @@ EOF
     echo "" >>"$output_file"
 
     # Enums
-    echo "### Public Enums" >>"$output_file"
-    echo "" >>"$output_file"
+    {
+        echo "### Public Enums"
+        echo ""
+    } >>"$output_file"
     grep -rh "public enum" "$project_dir" --include="*.swift" 2>/dev/null |
         sed 's/^[[:space:]]*//' |
         sed 's/{.*//' |
@@ -211,8 +216,10 @@ EOF
     echo "" >>"$output_file"
 
     # Protocols
-    echo "### Public Protocols" >>"$output_file"
-    echo "" >>"$output_file"
+    {
+        echo "### Public Protocols"
+        echo ""
+    } >>"$output_file"
     grep -rh "public protocol" "$project_dir" --include="*.swift" 2>/dev/null |
         sed 's/^[[:space:]]*//' |
         sed 's/{.*//' |

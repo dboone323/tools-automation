@@ -1,184 +1,23 @@
 {
   "agents": {
-    "agent_analytics.sh": {
-      "last_seen": 1760997576,
-      "pid": 18524,
-      "status": "running"
-    },
-    "agent_backup.sh": {
-      "last_seen": 1760997603,
-      "pid": 20311,
-      "status": "available"
-    },
-    "agent_build.sh": {
-      "status": "available",
-      "last_seen": 1760998502,
-      "pid": 38056
-    },
-    "agent_cleanup.sh": {
-      "last_seen": 1760997914,
-      "pid": 21497,
-      "status": "available"
-    },
-    "agent_codegen.sh": {
-      "status": "available",
-      "last_seen": 1760998466,
-      "pid": 38246,
-      "tasks_completed": 51
-    },
-    "agent_debug.sh": {
-      "status": "busy",
-      "last_seen": 1760998448,
-      "pid": 38151,
-      "tasks_completed": 91,
-      "current_task_id": "todo_1759861986315_52"
-    },
-    "agent_integration.sh": {
-      "last_seen": 1760998251,
-      "pid": 39685,
-      "status": "available"
-    },
-    "agent_notification.sh": {
-      "last_seen": 1760997896,
-      "pid": 48012,
-      "status": "stopped"
-    },
-    "agent_optimization.sh": {
-      "last_seen": 1760997577,
-      "pid": 19867,
-      "status": "running"
-    },
-    "agent_supervisor.sh": {
-      "last_seen": 1760997575,
-      "pid": 18356,
-      "status": "active"
-    },
-    "agent_validation.sh": {
-      "last_seen": 1760991624,
-      "pid": 39201,
-      "status": "available",
-      "tasks_completed": 0
-    },
-    "apple_pro_agent.sh": {
-      "last_seen": 1760980158,
-      "pid": 25553,
-      "status": "restarting",
-      "tasks_completed": 0
-    },
-    "auto_restart_monitor.sh": {
-      "last_seen": 1760980134,
-      "pid": 25567,
-      "status": "idle"
-    },
-    "auto_update_agent.sh": {
-      "last_seen": 1760980157,
-      "pid": 32070,
-      "status": "restarting",
-      "tasks_completed": 0
-    },
-    "code_review_agent.sh": {
-      "last_seen": 1760987306,
-      "pid": 32413,
-      "status": "available"
-    },
-    "collab_agent.sh": {
-      "last_seen": 1760980158,
-      "pid": 27124,
-      "status": "restarting",
-      "tasks_completed": 0
-    },
-    "deployment_agent.sh": {
-      "last_seen": 1760980155,
-      "status": "available"
-    },
-    "documentation_agent.sh": {
-      "last_seen": 1760987305,
-      "pid": 26903,
-      "status": "available"
-    },
-    "knowledge_base_agent.sh": {
-      "last_seen": 1760980158,
-      "status": "restarting",
-      "tasks_completed": 0
-    },
-    "learning_agent.sh": {
-      "last_seen": 1760980154,
-      "pid": 34580,
-      "status": "available"
-    },
-    "monitoring_agent.sh": {
-      "last_seen": 1760987279,
-      "pid": 34170,
-      "status": "available"
-    },
-    "performance_agent.sh": {
-      "last_seen": 1760980167,
-      "pid": 42852,
-      "status": "available"
-    },
-    "public_api_agent.sh": {
-      "last_seen": 1760980157,
-      "pid": 40973,
-      "status": "restarting",
-      "tasks_completed": 0
-    },
-    "pull_request_agent.sh": {
-      "last_seen": 1760980158,
-      "pid": 31119,
-      "status": "restarting",
-      "tasks_completed": 0
-    },
-    "quality_agent.sh": {
-      "last_seen": 1760987306,
-      "pid": 27247,
-      "status": "available"
-    },
     "search_agent": {
-      "last_seen": 1760998367,
-      "pid": 29874,
+      "last_seen": 1761101029,
       "status": "available"
     },
     "search_agent.sh": {
-      "last_seen": 1760998367,
-      "pid": 29874,
+      "last_seen": 1761101029,
       "status": "available"
     },
-    "security_agent.sh": {
-      "last_seen": 1760987306,
-      "pid": 41840,
-      "status": "available"
+    "documentation_agent.sh": {
+      "status": "available",
+      "last_seen": 1761101031
     },
-    "task_orchestrator.sh": {
-      "last_seen": 1760980157,
-      "status": "active",
-      "tasks_completed": 11
-    },
-    "testing_agent.sh": {
-      "last_seen": 1760998512,
-      "pid": 22458,
-      "status": "available"
-    },
-    "uiux_agent.sh": {
-      "last_seen": 1760980157,
-      "pid": 24008,
-      "status": "restarting",
-      "tasks_completed": 0
-    },
-    "updater_agent.sh": {
-      "last_seen": 1760980158,
-      "pid": 28449,
-      "status": "restarting",
-      "tasks_completed": 0
+    "learning_agent.sh": {
+      "status": "available",
+      "last_seen": 1761101034
     }
   },
-  "last_update": 1760998502,
-  "orchestrator": {
-    "is_running": true,
-    "last_seen": 1760980156,
-    "pid": 35546,
-    "status": "available",
-    "tasks_completed": 11,
-    "tasks_in_progress": 1,
-    "tasks_queued": 379
-  }
+  "last_update": 1761101029
 }
+}
+

@@ -13,15 +13,14 @@ EXECUTABLE="quantum_multiverse_navigation"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 REPORT_FILE="quantum_multiverse_navigation_report_${TIMESTAMP}.md"
 
-# Colors for output
-RED='\033[0;31m'
+# Colors
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
+YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
-WHITE='\033[1;37m'
-NC='\033[0m' # No Color
+RED='\033[0;31m'
+PURPLE='\033[0;35m'
+NC='\033[0m'
 
 # Helper functions
 print_header() {

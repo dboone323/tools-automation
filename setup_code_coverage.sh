@@ -43,7 +43,8 @@ mkdir -p "${REPORTS_DIR}"
 # Enable code coverage in Xcode schemes
 enable_coverage_for_project() {
     local project_dir=$1
-    local project_name=$(basename "$project_dir")
+    local project_name
+    project_name=$(basename "$project_dir")
 
     print_header "Configuring Coverage: ${project_name}"
 
@@ -67,7 +68,8 @@ enable_coverage_for_project() {
     # Enable coverage in all schemes
     for scheme_file in "$schemes_dir"/*.xcscheme; do
         if [ -f "$scheme_file" ]; then
-            local scheme_name=$(basename "$scheme_file" .xcscheme)
+            local scheme_name
+            scheme_name=$(basename "$scheme_file" .xcscheme)
 
             # Check if coverage is already enabled
             if grep -q 'codeCoverageEnabled = "YES"' "$scheme_file"; then
@@ -95,7 +97,8 @@ enable_coverage_for_project() {
 # Run tests with coverage for a project
 run_tests_with_coverage() {
     local project_dir=$1
-    local project_name=$(basename "$project_dir")
+    local project_name
+    project_name=$(basename "$project_dir")
 
     print_header "Running Tests: ${project_name}"
 
@@ -233,10 +236,12 @@ except:
 
                 ((total_projects++))
 
-                echo "### ${project_name}" >>"$summary_file"
-                echo "" >>"$summary_file"
-                echo "- **Coverage:** ${coverage}%" >>"$summary_file"
-                echo "- **Status:** ${status}" >>"$summary_file"
+                {
+                    echo "### ${project_name}"
+                    echo ""
+                    echo "- **Coverage:** ${coverage}%"
+                    echo "- **Status:** ${status}"
+                } >>"$summary_file"
                 echo "" >>"$summary_file"
             fi
         fi
@@ -280,9 +285,11 @@ EOF
 
 EOF
     else
-        echo "- ✅ All projects meeting or exceeding minimum coverage threshold" >>"$summary_file"
-        echo "- Continue maintaining high coverage standards" >>"$summary_file"
-        echo "- Focus on improving toward ${TARGET_COVERAGE}% target" >>"$summary_file"
+        {
+            echo "- ✅ All projects meeting or exceeding minimum coverage threshold"
+            echo "- Continue maintaining high coverage standards"
+            echo "- Focus on improving toward ${TARGET_COVERAGE}% target"
+        } >>"$summary_file"
     fi
 
     print_success "Coverage summary generated: $summary_file"

@@ -67,17 +67,6 @@ get_deployment_targets() {
     echo "TestFlight"
 }
 
-# Build optimization settings
-BUILD_OPTIMIZATIONS=(
-    "parallel_builds=4"
-    "incremental_builds=true"
-    "cache_dependencies=true"
-    "optimize_assets=true"
-    "strip_debug_symbols=true"
-    "enable_bitcode=false"
-    "compilation_mode=wholemodule"
-)
-
 # Logging functions
 log_info() {
     echo -e "${BLUE}[DEPLOYMENT]${NC} $1"
@@ -661,9 +650,7 @@ automated_deployment_pipeline() {
     # Step 1: Analyze deployment readiness
     log_deployment "Step 1: Analyzing deployment readiness..."
     local readiness_data
-    readiness_data=$(analyze_deployment_readiness "${project_name}")
-
-    if [[ $? -ne 0 ]]; then
+    if ! readiness_data=$(analyze_deployment_readiness "${project_name}"); then
         log_error "Deployment readiness analysis failed"
         exit 1
     fi
@@ -681,9 +668,7 @@ automated_deployment_pipeline() {
     # Step 3: Execute optimized build
     log_deployment "Step 3: Executing optimized build..."
     local build_artifacts
-    build_artifacts=$(execute_optimized_build "${project_name}" "${build_config}")
-
-    if [[ $? -ne 0 ]]; then
+    if ! build_artifacts=$(execute_optimized_build "${project_name}" "${build_config}"); then
         log_error "Build execution failed"
         exit 1
     fi

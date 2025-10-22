@@ -9,63 +9,53 @@ text="$3"
 
 # Expanded keyword-based agent assignment
 if echo "${text}" | grep -iqE 'ui|ux|accessib'; then
-  agent="uiux_agent.sh"
+    agent="uiux_agent.sh"
 elif echo "${text}" | grep -iqE 'apple|swift|concurr|ios|macos'; then
-  agent="apple_pro_agent.sh"
+    agent="apple_pro_agent.sh"
 elif echo "${text}" | grep -iqE 'test|unit|coverage|tdd|bdd|integration test|mock|stub'; then
-  agent="testing_agent.sh"
+    agent="testing_agent.sh"
 elif echo "${text}" | grep -iqE 'perf|speed|optimi|latency|throughput'; then
-  agent="performance_agent.sh"
+    agent="performance_agent.sh"
 elif echo "${text}" | grep -iqE 'security|vulnerab|auth|crypto|xss|csrf|injection|exploit'; then
-  agent="security_agent.sh"
+    agent="security_agent.sh"
 elif echo "${text}" | grep -iqE 'doc|comment|readme|docs|documentation'; then
-  agent="documentation_agent.sh"
+    agent="documentation_agent.sh"
 elif echo "${text}" | grep -iqE 'deploy|release|ci|cd|pipeline|devops'; then
-  agent="deployment_agent.sh"
+    agent="deployment_agent.sh"
 elif echo "${text}" | grep -iqE 'quality|lint|smell|static analysis|qa'; then
-  agent="quality_agent.sh"
+    agent="quality_agent.sh"
 elif echo "${text}" | grep -iqE 'learn|pattern|best practice|knowledge|insight'; then
-  agent="learning_agent.sh"
+    agent="learning_agent.sh"
 elif echo "${text}" | grep -iqE 'api|endpoint|public api|rate limit|github api|external service'; then
-  agent="public_api_agent.sh"
+    agent="public_api_agent.sh"
 elif echo "${text}" | grep -iqE 'monitor|health|anomaly|metrics|alert|uptime'; then
-  agent="monitoring_agent.sh"
+    agent="monitoring_agent.sh"
 elif echo "${text}" | grep -iqE 'collab|coordinate|aggregate|teamwork|plan aggregation'; then
-  agent="collab_agent.sh"
+    agent="collab_agent.sh"
 elif echo "${text}" | grep -iqE 'review|code review|pr review|pull request review'; then
-  agent="code_review_agent.sh"
+    agent="code_review_agent.sh"
 elif echo "${text}" | grep -iqE 'update|upgrade|dependency|patch|refresh'; then
-  agent="updater_agent.sh"
+    agent="updater_agent.sh"
 elif echo "${text}" | grep -iqE 'knowledge base|kb|best practices|learning history'; then
-  agent="knowledge_base_agent.sh"
+    agent="knowledge_base_agent.sh"
 elif echo "${text}" | grep -iqE 'search|find|lookup|query|summarize'; then
-  agent="search_agent.sh"
+    agent="search_agent.sh"
 elif echo "${text}" | grep -iqE 'pull request|pr|merge|auto-merge'; then
-  agent="pull_request_agent.sh"
+    agent="pull_request_agent.sh"
 elif echo "${text}" | grep -iqE 'auto-update|auto update|self-heal|self update'; then
-  agent="auto_update_agent.sh"
+    agent="auto_update_agent.sh"
 elif echo "${text}" | grep -iqE 'build|compile|make|build system'; then
-  agent="agent_build.sh"
+    agent="agent_build.sh"
 else
-  agent="agent_debug.sh"
+    agent="agent_debug.sh"
 fi
 
 assignment_id="assign_$(date +%s%N)"
 assignment_json="{\"id\": \"${assignment_id}\", \"file\": \"${file}\", \"line\": ${line}, \"text\": \"${text}\", \"agent\": \"${agent}\"}"
 
 if [[ ! -f ${ASSIGNMENTS_FILE} ]]; then
-  echo "[]" >"${ASSIGNMENTS_FILE}"
+    echo "[]" >"${ASSIGNMENTS_FILE}"
 fi
 
 jq ". + [${assignment_json}]" "${ASSIGNMENTS_FILE}" >"${ASSIGNMENTS_FILE}.tmp" && mv "${ASSIGNMENTS_FILE}.tmp" "${ASSIGNMENTS_FILE}"
 echo "Assigned ${agent} to ${file}:${line} (${assignment_id})"
-
-# Quantum agent assignments
-elif echo "${text}" | grep -iqE 'quantum|chemistry|molecular|simulation|vqe|qmc|qpe|vqd'; then
-  agent="quantum_chemistry_agent.sh"
-elif echo "${text}" | grep -iqE 'finance|portfolio|optimization|risk|trading|market'; then
-  agent="quantum_finance_agent.sh"
-elif echo "${text}" | grep -iqE 'orchestrat|coordinat|resource|job|queue|schedul'; then
-  agent="quantum_orchestrator_agent.sh"
-elif echo "${text}" | grep -iqE 'learn|ml|machine learning|pattern|classif|cluster|ai|intelligence'; then
-  agent="quantum_learning_agent.sh"

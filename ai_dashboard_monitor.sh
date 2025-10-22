@@ -13,7 +13,6 @@ PROJECTS_DIR="${WORKSPACE_ROOT}/Projects"
 
 # Colors for output
 GREEN='\033[0;32m'
-BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 PURPLE='\033[0;35m'
@@ -21,93 +20,93 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 print_dashboard() {
-  echo -e "${CYAN}[🤖 AI-DASHBOARD]${NC} $1"
+    echo -e "${CYAN}[🤖 AI-DASHBOARD]${NC} $1"
 }
 
 print_success() {
-  echo -e "${GREEN}[SUCCESS]${NC} $1"
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 print_warning() {
-  echo -e "${YELLOW}[WARNING]${NC} $1"
+    echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
 print_error() {
-  echo -e "${RED}[ERROR]${NC} $1"
+    echo -e "${RED}[ERROR]${NC} $1"
 }
 
 print_ai() {
-  echo -e "${PURPLE}[🤖 AI-MONITOR]${NC} $1"
+    echo -e "${PURPLE}[🤖 AI-MONITOR]${NC} $1"
 }
 
 # Initialize dashboard directories
 init_dashboard() {
-  print_dashboard "Initializing AI Dashboard and Monitoring System..."
+    print_dashboard "Initializing AI Dashboard and Monitoring System..."
 
-  mkdir -p "${DASHBOARD_DIR}"
-  mkdir -p "${MONITORING_DIR}"
-  mkdir -p "${MONITORING_DIR}/logs"
-  mkdir -p "${MONITORING_DIR}/metrics"
-  mkdir -p "${MONITORING_DIR}/reports"
+    mkdir -p "${DASHBOARD_DIR}"
+    mkdir -p "${MONITORING_DIR}"
+    mkdir -p "${MONITORING_DIR}/logs"
+    mkdir -p "${MONITORING_DIR}/metrics"
+    mkdir -p "${MONITORING_DIR}/reports"
 
-  print_success "Dashboard directories initialized"
+    print_success "Dashboard directories initialized"
 }
 
 # Generate comprehensive AI usage dashboard
 generate_ai_dashboard() {
-  print_dashboard "Generating comprehensive AI usage dashboard..."
+    print_dashboard "Generating comprehensive AI usage dashboard..."
 
-  local dashboard_file="${DASHBOARD_DIR}/ai_dashboard.html"
-  local timestamp
-  timestamp=$(date +%Y%m%d_%H%M%S)
+    local dashboard_file="${DASHBOARD_DIR}/ai_dashboard.html"
+    local timestamp
+    timestamp=$(date +%Y%m%d_%H%M%S)
 
-  # Collect workspace metrics
-  local workspace_metrics
-  workspace_metrics=$(collect_workspace_metrics)
+    # Collect workspace metrics
+    local workspace_metrics
+    workspace_metrics=$(collect_workspace_metrics)
 
-  # Collect AI usage statistics
-  local ai_metrics
-  ai_metrics=$(collect_ai_usage_metrics)
+    # Collect AI usage statistics
+    local ai_metrics
+    ai_metrics=$(collect_ai_usage_metrics)
 
-  # Collect project-specific AI data
-  local project_data
-  project_data=$(collect_project_ai_data)
+    # Collect project-specific AI data
+    local project_data
+    project_data=$(collect_project_ai_data)
 
-  # Generate HTML dashboard
-  generate_html_dashboard "${dashboard_file}" "${timestamp}" "${workspace_metrics}" "${ai_metrics}" "${project_data}"
+    # Generate HTML dashboard
+    generate_html_dashboard "${dashboard_file}" "${timestamp}" "${workspace_metrics}" "${ai_metrics}" "${project_data}"
 
-  print_success "AI dashboard generated: ${dashboard_file}"
+    print_success "AI dashboard generated: ${dashboard_file}"
 
-  # Open dashboard in browser if possible
-  if command -v open &>/dev/null; then
-    open "${dashboard_file}" || true
-  fi
+    # Open dashboard in browser if possible
+    if command -v open &>/dev/null; then
+        open "${dashboard_file}" || true
+    fi
 }
 
 # Collect workspace-wide metrics
 collect_workspace_metrics() {
-  print_ai "Collecting workspace metrics..."
+    print_ai "Collecting workspace metrics..."
 
-  local total_projects
-  total_projects=$(find "${PROJECTS_DIR}" -maxdepth 1 -type d | wc -l)
-  total_projects=$((total_projects - 1)) # Subtract the Projects directory itself
+    local total_projects
+    total_projects=$(find "${PROJECTS_DIR}" -maxdepth 1 -type d | wc -l)
+    total_projects=$((total_projects - 1)) # Subtract the Projects directory itself
 
-  local total_swift_files
-  total_swift_files=$(find "${PROJECTS_DIR}" -name "*.swift" | wc -l)
+    local total_swift_files
+    total_swift_files=$(find "${PROJECTS_DIR}" -name "*.swift" | wc -l)
 
-  local total_lines
-  total_lines=$(find "${PROJECTS_DIR}" -name "*.swift" -exec wc -l {} + 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
+    local total_lines
+    total_lines=$(find "${PROJECTS_DIR}" -name "*.swift" -exec wc -l {} + 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
 
-  local ai_enhanced_projects
-  ai_enhanced_projects=$(find "${PROJECTS_DIR}" -name "AI_*" -type f | wc -l)
+    local ai_enhanced_projects
+    ai_enhanced_projects=$(find "${PROJECTS_DIR}" -name "AI_*" -type f | wc -l)
 
-  local quality_reports
-  quality_reports=$(find "${PROJECTS_DIR}" -name "*QUALITY_REPORT*" -type f | wc -l)
+    local quality_reports
+    quality_reports=$(find "${PROJECTS_DIR}" -name "*QUALITY_REPORT*" -type f | wc -l)
 
-  local test_files
-  test_files=$(find "${PROJECTS_DIR}" -name "*Tests.swift" | wc -l)
+    local test_files
+    test_files=$(find "${PROJECTS_DIR}" -name "*Tests.swift" | wc -l)
 
-  echo "{
+    echo "{
         \"total_projects\": ${total_projects},
         \"total_swift_files\": ${total_swift_files},
         \"total_lines\": ${total_lines},
@@ -120,38 +119,38 @@ collect_workspace_metrics() {
 
 # Collect AI usage metrics
 collect_ai_usage_metrics() {
-  print_ai "Collecting AI usage metrics..."
+    print_ai "Collecting AI usage metrics..."
 
-  # Check Ollama status
-  local ollama_status="offline"
-  local model_count=0
-  local cloud_models=0
+    # Check Ollama status
+    local ollama_status="offline"
+    local model_count=0
+    local cloud_models=0
 
-  if command -v ollama &>/dev/null; then
-    if ollama list &>/dev/null; then
-      ollama_status="online"
-      model_count=$(ollama list | tail -n +2 | wc -l)
-      cloud_models=$(ollama list | grep -c "cloud" || echo "0")
+    if command -v ollama &>/dev/null; then
+        if ollama list &>/dev/null; then
+            ollama_status="online"
+            model_count=$(ollama list | tail -n +2 | wc -l)
+            cloud_models=$(ollama list | grep -c "cloud" || echo "0")
+        fi
     fi
-  fi
 
-  # Count AI-generated files
-  local ai_generated_files
-  ai_generated_files=$(find "${WORKSPACE_ROOT}" -name "AI_*" -o -name "*ai_*" | wc -l)
+    # Count AI-generated files
+    local ai_generated_files
+    ai_generated_files=$(find "${WORKSPACE_ROOT}" -name "AI_*" -o -name "*ai_*" | wc -l)
 
-  # Count automation runs
-  local automation_runs
-  automation_runs=$(find "${WORKSPACE_ROOT}" -name "*AUTOMATION_SUMMARY*" | wc -l)
+    # Count automation runs
+    local automation_runs
+    automation_runs=$(find "${WORKSPACE_ROOT}" -name "*AUTOMATION_SUMMARY*" | wc -l)
 
-  # Count quality reports
-  local quality_reports
-  quality_reports=$(find "${WORKSPACE_ROOT}" -name "*QUALITY_REPORT*" | wc -l)
+    # Count quality reports
+    local quality_reports
+    quality_reports=$(find "${WORKSPACE_ROOT}" -name "*QUALITY_REPORT*" | wc -l)
 
-  # Estimate AI processing time (rough calculation)
-  local estimated_ai_time
-  estimated_ai_time=$((automation_runs * 120 + quality_reports * 60)) # Rough estimate in seconds
+    # Estimate AI processing time (rough calculation)
+    local estimated_ai_time
+    estimated_ai_time=$((automation_runs * 120 + quality_reports * 60)) # Rough estimate in seconds
 
-  echo "{
+    echo "{
         \"ollama_status\": \"${ollama_status}\",
         \"model_count\": ${model_count},
         \"cloud_models\": ${cloud_models},
@@ -164,31 +163,31 @@ collect_ai_usage_metrics() {
 
 # Collect project-specific AI data
 collect_project_ai_data() {
-  print_ai "Collecting project-specific AI data..."
+    print_ai "Collecting project-specific AI data..."
 
-  local project_data="[]"
+    local project_data="[]"
 
-  for project in "${PROJECTS_DIR}"/*; do
-    if [[ -d ${project} ]]; then
-      local project_name
-      project_name=$(basename "${project}")
-      local swift_files
-      swift_files=$(find "${project}" -name "*.swift" | wc -l)
+    for project in "${PROJECTS_DIR}"/*; do
+        if [[ -d ${project} ]]; then
+            local project_name
+            project_name=$(basename "${project}")
+            local swift_files
+            swift_files=$(find "${project}" -name "*.swift" | wc -l)
 
-      if [[ ${swift_files} -gt 0 ]]; then
-        local ai_files
-        ai_files=$(find "${project}" -name "AI_*" -o -name "*ai_*" | wc -l)
+            if [[ ${swift_files} -gt 0 ]]; then
+                local ai_files
+                ai_files=$(find "${project}" -name "AI_*" -o -name "*ai_*" | wc -l)
 
-        local quality_reports
-        quality_reports=$(find "${project}" -name "*QUALITY*" | wc -l)
+                local quality_reports
+                quality_reports=$(find "${project}" -name "*QUALITY*" | wc -l)
 
-        local test_files
-        test_files=$(find "${project}" -name "*Tests.swift" | wc -l)
+                local test_files
+                test_files=$(find "${project}" -name "*Tests.swift" | wc -l)
 
-        local ai_enhanced
-        ai_enhanced=$(find "${project}" -name "*AIEnhanced*" | wc -l)
+                local ai_enhanced
+                ai_enhanced=$(find "${project}" -name "*AIEnhanced*" | wc -l)
 
-        local project_json="{
+                local project_json="{
                     \"name\": \"${project_name}\",
                     \"swift_files\": ${swift_files},
                     \"ai_files\": ${ai_files},
@@ -197,30 +196,30 @@ collect_project_ai_data() {
                     \"ai_enhanced\": ${ai_enhanced}
                 }"
 
-        if [[ ${project_data} == "[]" ]]; then
-          project_data="[${project_json}"
-        else
-          project_data="${project_data},${project_json}"
+                if [[ ${project_data} == "[]" ]]; then
+                    project_data="[${project_json}"
+                else
+                    project_data="${project_data},${project_json}"
+                fi
+            fi
         fi
-      fi
-    fi
-  done
+    done
 
-  project_data="${project_data}]"
-  echo "${project_data}"
+    project_data="${project_data}]"
+    echo "${project_data}"
 }
 
 # Generate HTML dashboard
 generate_html_dashboard() {
-  local dashboard_file="$1"
-  local timestamp="$2"
-  local workspace_metrics="$3"
-  local ai_metrics="$4"
-  local project_data="$5"
+    local dashboard_file="$1"
+    local timestamp="$2"
+    local workspace_metrics="$3"
+    local ai_metrics="$4"
+    local project_data="$5"
 
-  print_dashboard "Generating HTML dashboard..."
+    print_dashboard "Generating HTML dashboard..."
 
-  cat >"${dashboard_file}" <<EOF
+    cat >"${dashboard_file}" <<EOF
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -591,16 +590,16 @@ generate_html_dashboard() {
 </html>
 EOF
 
-  print_success "HTML dashboard generated successfully"
+    print_success "HTML dashboard generated successfully"
 }
 
 # Start real-time monitoring
 start_monitoring() {
-  print_dashboard "Starting real-time AI monitoring..."
+    print_dashboard "Starting real-time AI monitoring..."
 
-  local monitor_script="${MONITORING_DIR}/ai_monitor.sh"
+    local monitor_script="${MONITORING_DIR}/ai_monitor.sh"
 
-  cat >"${monitor_script}" <<'EOF'
+    cat >"${monitor_script}" <<'EOF'
 #!/bin/bash
 
 # Real-time AI monitoring script
@@ -678,49 +677,49 @@ trap 'log "Monitoring stopped by user"; exit 0' INT TERM
 main_monitoring_loop
 EOF
 
-  chmod +x "${monitor_script}"
+    chmod +x "${monitor_script}"
 
-  # Start monitoring in background
-  nohup "${monitor_script}" >"${MONITORING_DIR}/ai_monitor.out" 2>&1 &
-  local monitor_pid=$!
+    # Start monitoring in background
+    nohup "${monitor_script}" >"${MONITORING_DIR}/ai_monitor.out" 2>&1 &
+    local monitor_pid=$!
 
-  echo "${monitor_pid}" >"${MONITORING_DIR}/ai_monitor.pid"
+    echo "${monitor_pid}" >"${MONITORING_DIR}/ai_monitor.pid"
 
-  print_success "AI monitoring started (PID: ${monitor_pid})"
-  print_ai "Monitor logs: ${MONITORING_DIR}/logs/"
+    print_success "AI monitoring started (PID: ${monitor_pid})"
+    print_ai "Monitor logs: ${MONITORING_DIR}/logs/"
 }
 
 # Stop monitoring
 stop_monitoring() {
-  print_dashboard "Stopping AI monitoring..."
+    print_dashboard "Stopping AI monitoring..."
 
-  local pid_file="${MONITORING_DIR}/ai_monitor.pid"
+    local pid_file="${MONITORING_DIR}/ai_monitor.pid"
 
-  if [[ -f ${pid_file} ]]; then
-    local monitor_pid
-    monitor_pid=$(cat "${pid_file}")
+    if [[ -f ${pid_file} ]]; then
+        local monitor_pid
+        monitor_pid=$(cat "${pid_file}")
 
-    if kill "${monitor_pid}" 2>/dev/null; then
-      print_success "AI monitoring stopped (PID: ${monitor_pid})"
-      rm -f "${pid_file}"
+        if kill "${monitor_pid}" 2>/dev/null; then
+            print_success "AI monitoring stopped (PID: ${monitor_pid})"
+            rm -f "${pid_file}"
+        else
+            print_warning "Failed to stop monitoring process"
+        fi
     else
-      print_warning "Failed to stop monitoring process"
+        print_warning "No monitoring process found"
     fi
-  else
-    print_warning "No monitoring process found"
-  fi
 }
 
 # Generate monitoring reports
 generate_monitoring_report() {
-  print_dashboard "Generating AI monitoring report..."
+    print_dashboard "Generating AI monitoring report..."
 
-  local report_file
-  report_file="${MONITORING_DIR}/reports/ai_monitoring_report_$(date +%Y%m%d).md"
-  local log_files
-  log_files=$(find "${MONITORING_DIR}/logs" -name "*.log" -mtime -7 2>/dev/null || echo "")
+    local report_file
+    report_file="${MONITORING_DIR}/reports/ai_monitoring_report_$(date +%Y%m%d).md"
+    local log_files
+    log_files=$(find "${MONITORING_DIR}/logs" -name "*.log" -mtime -7 2>/dev/null || echo "")
 
-  cat >"${report_file}" <<EOF
+    cat >"${report_file}" <<EOF
 # AI Monitoring Report
 Generated: $(date)
 
@@ -748,187 +747,187 @@ $(generate_monitoring_recommendations)
 *Report generated by Quantum Workspace AI Monitoring System*
 EOF
 
-  print_success "Monitoring report generated: ${report_file}"
+    print_success "Monitoring report generated: ${report_file}"
 }
 
 # Helper functions for monitoring report
 check_ollama_health_status() {
-  if command -v ollama &>/dev/null && ollama list &>/dev/null; then
-    local model_count
-    model_count=$(ollama list | tail -n +2 | wc -l)
-    echo "- ✅ Ollama Online"
-    echo "- 📊 Models Available: ${model_count}"
-  else
-    echo "- ❌ Ollama Offline"
-  fi
+    if command -v ollama &>/dev/null && ollama list &>/dev/null; then
+        local model_count
+        model_count=$(ollama list | tail -n +2 | wc -l)
+        echo "- ✅ Ollama Online"
+        echo "- 📊 Models Available: ${model_count}"
+    else
+        echo "- ❌ Ollama Offline"
+    fi
 }
 
 summarize_ai_activity() {
-  local log_files="$1"
+    local log_files="$1"
 
-  if [[ -n ${log_files} ]]; then
-    local total_entries
-    total_entries=$(wc -l "${log_files}" 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
-    local ai_operations
-    ai_operations=$(grep -h "AI activity\|automation\|quality" "${log_files}" 2>/dev/null | wc -l || echo "0")
+    if [[ -n ${log_files} ]]; then
+        local total_entries
+        total_entries=$(wc -l "${log_files}" 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
+        local ai_operations
+        ai_operations=$(grep -c -h "AI activity\|automation\|quality" "${log_files}" 2>/dev/null || echo "0")
 
-    echo "- Total Log Entries: ${total_entries}"
-    echo "- AI Operations Detected: ${ai_operations}"
-  else
-    echo "- No recent log activity"
-  fi
+        echo "- Total Log Entries: ${total_entries}"
+        echo "- AI Operations Detected: ${ai_operations}"
+    else
+        echo "- No recent log activity"
+    fi
 }
 
 extract_recent_operations() {
-  local log_files="$1"
+    local log_files="$1"
 
-  if [[ -n ${log_files} ]]; then
-    echo "### Last 10 Operations"
-    tail -n 50 "${log_files}" 2>/dev/null | grep -E "(AI|automation|quality)" | tail -n 10 | while read -r line; do
-      echo "- ${line}"
-    done
-  else
-    echo "No recent operations found"
-  fi
+    if [[ -n ${log_files} ]]; then
+        echo "### Last 10 Operations"
+        tail -n 50 "${log_files}" 2>/dev/null | grep -E "(AI|automation|quality)" | tail -n 10 | while read -r line; do
+            echo "- ${line}"
+        done
+    else
+        echo "No recent operations found"
+    fi
 }
 
 generate_performance_metrics() {
-  local ai_files
-  ai_files=$(find "${WORKSPACE_ROOT}" -name "AI_*" -o -name "*ai_*" | wc -l)
-  local automation_runs
-  automation_runs=$(find "${WORKSPACE_ROOT}" -name "*AUTOMATION_SUMMARY*" | wc -l)
-  local quality_reports
-  quality_reports=$(find "${WORKSPACE_ROOT}" -name "*QUALITY_REPORT*" | wc -l)
+    local ai_files
+    ai_files=$(find "${WORKSPACE_ROOT}" -name "AI_*" -o -name "*ai_*" | wc -l)
+    local automation_runs
+    automation_runs=$(find "${WORKSPACE_ROOT}" -name "*AUTOMATION_SUMMARY*" | wc -l)
+    local quality_reports
+    quality_reports=$(find "${WORKSPACE_ROOT}" -name "*QUALITY_REPORT*" | wc -l)
 
-  echo "### File Metrics"
-  echo "- AI Generated Files: ${ai_files}"
-  echo "- Automation Summary Reports: ${automation_runs}"
-  echo "- Quality Analysis Reports: ${quality_reports}"
+    echo "### File Metrics"
+    echo "- AI Generated Files: ${ai_files}"
+    echo "- Automation Summary Reports: ${automation_runs}"
+    echo "- Quality Analysis Reports: ${quality_reports}"
 
-  echo "### Processing Estimates"
-  local estimated_time=$((automation_runs * 120 + quality_reports * 60))
-  echo "- Estimated AI Processing Time: $((estimated_time / 60)) minutes"
+    echo "### Processing Estimates"
+    local estimated_time=$((automation_runs * 120 + quality_reports * 60))
+    echo "- Estimated AI Processing Time: $((estimated_time / 60)) minutes"
 }
 
 generate_monitoring_recommendations() {
-  local recommendations=""
+    local recommendations=""
 
-  # Check Ollama status
-  if ! command -v ollama &>/dev/null || ! ollama list &>/dev/null; then
-    recommendations="${recommendations}- 🔧 Install and start Ollama server for full AI functionality\n"
-  fi
+    # Check Ollama status
+    if ! command -v ollama &>/dev/null || ! ollama list &>/dev/null; then
+        recommendations="${recommendations}- 🔧 Install and start Ollama server for full AI functionality\n"
+    fi
 
-  # Check AI activity
-  local recent_ai_files
-  recent_ai_files=$(find "${WORKSPACE_ROOT}" -name "AI_*" -mtime -1 2>/dev/null | wc -l || echo "0")
-  if [[ ${recent_ai_files} -eq 0 ]]; then
-    recommendations="${recommendations}- 📈 Run AI automation to enhance workspace projects\n"
-  fi
+    # Check AI activity
+    local recent_ai_files
+    recent_ai_files=$(find "${WORKSPACE_ROOT}" -name "AI_*" -mtime -1 2>/dev/null | wc -l || echo "0")
+    if [[ ${recent_ai_files} -eq 0 ]]; then
+        recommendations="${recommendations}- 📈 Run AI automation to enhance workspace projects\n"
+    fi
 
-  # Check monitoring
-  if [[ ! -f "${MONITORING_DIR}/ai_monitor.pid" ]] || ! kill -0 "$(cat "${MONITORING_DIR}/ai_monitor.pid" 2>/dev/null)" 2>/dev/null; then
-    recommendations="${recommendations}- 👁️ Start AI monitoring for real-time insights\n"
-  fi
+    # Check monitoring
+    if [[ ! -f "${MONITORING_DIR}/ai_monitor.pid" ]] || ! kill -0 "$(cat "${MONITORING_DIR}/ai_monitor.pid" 2>/dev/null)" 2>/dev/null; then
+        recommendations="${recommendations}- 👁️ Start AI monitoring for real-time insights\n"
+    fi
 
-  if [[ -z ${recommendations} ]]; then
-    recommendations="- ✅ All systems operating optimally"
-  fi
+    if [[ -z ${recommendations} ]]; then
+        recommendations="- ✅ All systems operating optimally"
+    fi
 
-  echo "${recommendations}"
+    echo "${recommendations}"
 }
 
 # Show dashboard status
 show_dashboard_status() {
-  print_dashboard "AI Dashboard Status"
-  echo ""
+    print_dashboard "AI Dashboard Status"
+    echo ""
 
-  # Check if dashboard exists
-  if [[ -f "${DASHBOARD_DIR}/ai_dashboard.html" ]]; then
-    local dashboard_age=$(($(date +%s) - $(stat -f %m "${DASHBOARD_DIR}/ai_dashboard.html" 2>/dev/null || date +%s)))
-    echo "📊 Dashboard: Available (${dashboard_age} seconds old)"
-  else
-    echo "📊 Dashboard: Not generated yet"
-  fi
+    # Check if dashboard exists
+    if [[ -f "${DASHBOARD_DIR}/ai_dashboard.html" ]]; then
+        local dashboard_age=$(($(date +%s) - $(stat -f %m "${DASHBOARD_DIR}/ai_dashboard.html" 2>/dev/null || date +%s)))
+        echo "📊 Dashboard: Available (${dashboard_age} seconds old)"
+    else
+        echo "📊 Dashboard: Not generated yet"
+    fi
 
-  # Check monitoring status
-  if [[ -f "${MONITORING_DIR}/ai_monitor.pid" ]] && kill -0 "$(cat "${MONITORING_DIR}/ai_monitor.pid" 2>/dev/null)" 2>/dev/null; then
-    echo "👁️ Monitoring: Active (PID: $(cat "${MONITORING_DIR}/ai_monitor.pid"))"
-  else
-    echo "👁️ Monitoring: Inactive"
-  fi
+    # Check monitoring status
+    if [[ -f "${MONITORING_DIR}/ai_monitor.pid" ]] && kill -0 "$(cat "${MONITORING_DIR}/ai_monitor.pid" 2>/dev/null)" 2>/dev/null; then
+        echo "👁️ Monitoring: Active (PID: $(cat "${MONITORING_DIR}/ai_monitor.pid"))"
+    else
+        echo "👁️ Monitoring: Inactive"
+    fi
 
-  # Show recent activity
-  local recent_logs
-  recent_logs=$(find "${MONITORING_DIR}/logs" -name "*.log" -mtime -1 2>/dev/null | wc -l || echo "0")
-  echo "📝 Recent Logs: ${recent_logs} files"
+    # Show recent activity
+    local recent_logs
+    recent_logs=$(find "${MONITORING_DIR}/logs" -name "*.log" -mtime -1 2>/dev/null | wc -l || echo "0")
+    echo "📝 Recent Logs: ${recent_logs} files"
 
-  local recent_reports
-  recent_reports=$(find "${MONITORING_DIR}/reports" -name "*.md" -mtime -7 2>/dev/null | wc -l || echo "0")
-  echo "📋 Recent Reports: ${recent_reports} files"
+    local recent_reports
+    recent_reports=$(find "${MONITORING_DIR}/reports" -name "*.md" -mtime -7 2>/dev/null | wc -l || echo "0")
+    echo "📋 Recent Reports: ${recent_reports} files"
 
-  echo ""
-  print_ai "Use 'generate' to update dashboard, 'start-monitor' to begin monitoring"
+    echo ""
+    print_ai "Use 'generate' to update dashboard, 'start-monitor' to begin monitoring"
 }
 
 # Show usage information
 show_usage() {
-  echo "AI Dashboard and Monitoring System"
-  echo ""
-  echo "Usage: $0 [command]"
-  echo ""
-  echo "Commands:"
-  echo "  init              - Initialize dashboard and monitoring directories"
-  echo "  generate          - Generate comprehensive AI dashboard"
-  echo "  start-monitor     - Start real-time AI monitoring"
-  echo "  stop-monitor      - Stop AI monitoring"
-  echo "  report            - Generate monitoring report"
-  echo "  status            - Show dashboard and monitoring status"
-  echo "  open              - Open dashboard in default browser"
-  echo ""
-  echo "Examples:"
-  echo "  $0 init"
-  echo "  $0 generate"
-  echo "  $0 start-monitor"
-  echo "  $0 status"
+    echo "AI Dashboard and Monitoring System"
+    echo ""
+    echo "Usage: $0 [command]"
+    echo ""
+    echo "Commands:"
+    echo "  init              - Initialize dashboard and monitoring directories"
+    echo "  generate          - Generate comprehensive AI dashboard"
+    echo "  start-monitor     - Start real-time AI monitoring"
+    echo "  stop-monitor      - Stop AI monitoring"
+    echo "  report            - Generate monitoring report"
+    echo "  status            - Show dashboard and monitoring status"
+    echo "  open              - Open dashboard in default browser"
+    echo ""
+    echo "Examples:"
+    echo "  $0 init"
+    echo "  $0 generate"
+    echo "  $0 start-monitor"
+    echo "  $0 status"
 }
 
 # Main execution
 main() {
-  case "${1-}" in
-  "init")
-    init_dashboard
-    ;;
-  "generate")
-    generate_ai_dashboard
-    ;;
-  "start-monitor")
-    start_monitoring
-    ;;
-  "stop-monitor")
-    stop_monitoring
-    ;;
-  "report")
-    generate_monitoring_report
-    ;;
-  "status")
-    show_dashboard_status
-    ;;
-  "open")
-    if [[ -f "${DASHBOARD_DIR}/ai_dashboard.html" ]]; then
-      if command -v open &>/dev/null; then
-        open "${DASHBOARD_DIR}/ai_dashboard.html"
-      else
-        print_error "Unable to open browser automatically"
-        print_ai "Dashboard location: ${DASHBOARD_DIR}/ai_dashboard.html"
-      fi
-    else
-      print_error "Dashboard not found. Run 'generate' first."
-    fi
-    ;;
-  *)
-    show_usage
-    ;;
-  esac
+    case "${1-}" in
+    "init")
+        init_dashboard
+        ;;
+    "generate")
+        generate_ai_dashboard
+        ;;
+    "start-monitor")
+        start_monitoring
+        ;;
+    "stop-monitor")
+        stop_monitoring
+        ;;
+    "report")
+        generate_monitoring_report
+        ;;
+    "status")
+        show_dashboard_status
+        ;;
+    "open")
+        if [[ -f "${DASHBOARD_DIR}/ai_dashboard.html" ]]; then
+            if command -v open &>/dev/null; then
+                open "${DASHBOARD_DIR}/ai_dashboard.html"
+            else
+                print_error "Unable to open browser automatically"
+                print_ai "Dashboard location: ${DASHBOARD_DIR}/ai_dashboard.html"
+            fi
+        else
+            print_error "Dashboard not found. Run 'generate' first."
+        fi
+        ;;
+    *)
+        show_usage
+        ;;
+    esac
 }
 
 # Execute main function

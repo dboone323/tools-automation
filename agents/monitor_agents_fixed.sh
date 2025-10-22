@@ -1,5 +1,7 @@
 #!/bin/bash
 # Monitor all agents and restart any that have stopped
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/shared_functions.sh"
 
 AGENTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents"
 STATUS_FILE="${AGENTS_DIR}/agent_status.json"

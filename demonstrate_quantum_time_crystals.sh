@@ -62,9 +62,7 @@ compile_framework() {
     fi
 
     print_status "Compiling QuantumTimeCrystals.swift..."
-    swiftc -o quantum_time_crystals QuantumTimeCrystals.swift
-
-    if [ $? -eq 0 ]; then
+    if swiftc -o quantum_time_crystals QuantumTimeCrystals.swift; then
         print_success "Framework compiled successfully"
     else
         print_error "Compilation failed"

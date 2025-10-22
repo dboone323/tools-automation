@@ -216,9 +216,7 @@ struct DimensionalDemoMain {
 EOF
 
 echo "=== Compiling Dimensional Computing Frameworks ==="
-swiftc -o dimensional_demo dimensional_demo.swift DimensionalComputingFrameworks.swift
-
-if [ $? -eq 0 ]; then
+if swiftc -o dimensional_demo dimensional_demo.swift DimensionalComputingFrameworks.swift; then
     echo "[SUCCESS] Framework compiled successfully"
     echo
     echo "=== Running Dimensional Computing Frameworks Demonstration ==="

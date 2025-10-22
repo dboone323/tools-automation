@@ -28,10 +28,10 @@ find "${REPO_ROOT}/Projects" -type f \( \
     -o -name "AUTOMATION_SUMMARY_*.md" \
     -o -name "AI_AUTOMATION_SUMMARY_*.md" \
     -o -name "AI_QUALITY_PIPELINE_SUMMARY.md" \
-\) -mtime +${KEEP_DAYS} 2>/dev/null | while read -r file; do
+    \) -mtime +${KEEP_DAYS} 2>/dev/null | while read -r file; do
     if [[ -f "$file" ]]; then
         # Get relative path for archive structure
-        rel_path="${file#${REPO_ROOT}/}"
+        rel_path="${file#"${REPO_ROOT}"/}"
         archive_path="${ARCHIVE_DIR}/${rel_path}"
 
         # Create archive subdirectory
@@ -56,9 +56,9 @@ ARCHIVE_INDEX="${ARCHIVE_DIR}/archive_index_$(date +%Y%m%d_%H%M%S).txt"
     echo ""
     echo "## Archived Files:"
     find "${ARCHIVE_DIR}" -type f -name "*.md" | sort | while read -r file; do
-        echo "- ${file#${ARCHIVE_DIR}/}"
+        echo "- ${file#"${ARCHIVE_DIR}"/}"
     done
-} > "${ARCHIVE_INDEX}"
+} >"${ARCHIVE_INDEX}"
 
 log_info "Cleanup completed. Archive index: ${ARCHIVE_INDEX}"
 

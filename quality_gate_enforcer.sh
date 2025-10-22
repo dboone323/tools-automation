@@ -13,7 +13,6 @@ NC='\033[0m' # No Color
 
 # Configuration
 WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
-QUALITY_CONFIG="${WORKSPACE_ROOT}/quality-config.yaml"
 OUTPUT_DIR="${WORKSPACE_ROOT}/Reports/QualityGates"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
@@ -64,15 +63,17 @@ analyze_file_sizes() {
 
         if [ "$line_count" -gt "$MAX_LINES_PER_FILE" ]; then
             local excess=$((line_count - MAX_LINES_PER_FILE))
-            echo "$(printf '%5d' $line_count) lines (+$(printf '%4d' $excess)) | ${file#$WORKSPACE_ROOT/}" >>"${report_file}"
+            echo "$(printf '%5d' "$line_count") lines (+$(printf '%4d' "$excess")) | ${file#"$WORKSPACE_ROOT"/}" >>"${report_file}"
             ((violation_count++))
             ((total_lines += line_count))
         fi
     done < <(find "${WORKSPACE_ROOT}/Projects" -name "*.swift" -type f ! -path "*/.*" ! -path "*/build/*" ! -path "*/DerivedData/*")
 
-    echo "" >>"${report_file}"
-    echo "Total violations: ${violation_count}" >>"${report_file}"
-    echo "Average lines per violating file: $((total_lines / violation_count))" >>"${report_file}"
+    {
+        echo ""
+        echo "Total violations: ${violation_count}"
+        echo "Average lines per violating file: $((total_lines / violation_count))"
+    } >>"${report_file}"
 
     if [ "$violation_count" -gt 0 ]; then
         print_warning "Found ${violation_count} files exceeding ${MAX_LINES_PER_FILE} lines"
@@ -143,9 +144,10 @@ EOF
 
     find "${WORKSPACE_ROOT}/Projects" -name "*.swift" -type f ! -path "*/.*" ! -path "*/build/*" |
         while IFS= read -r file; do
-            local lines=$(wc -l <"$file" 2>/dev/null || echo 0)
+            local lines
+            lines=$(wc -l <"$file" 2>/dev/null || echo 0)
             if [ "$lines" -gt "$MAX_LINES_PER_FILE" ]; then
-                echo "${lines}|${file#$WORKSPACE_ROOT/}"
+                echo "${lines}|${file#"$WORKSPACE_ROOT"/}"
             fi
         done | sort -rn -t'|' -k1 | head -20 |
         while IFS='|' read -r lines file; do
@@ -255,7 +257,8 @@ main() {
     echo ""
 
     # Run analyses
-    local violations=$(analyze_file_sizes)
+    local violations
+    violations=$(analyze_file_sizes)
     generate_refactoring_recommendations
     analyze_complexity
     generate_summary "${violations}"

@@ -15,7 +15,6 @@ set -euo pipefail
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 DEMO_NAME="Topological Quantum Computing"
 FRAMEWORK_FILE="${SCRIPT_DIR}/TopologicalQuantumComputing.swift"
 
@@ -25,7 +24,6 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Logging functions

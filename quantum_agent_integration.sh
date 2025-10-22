@@ -5,7 +5,6 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 AGENTS_DIR="${SCRIPT_DIR}/agents"
 QUANTUM_AGENTS=(
     "quantum_chemistry_agent.sh"
@@ -20,8 +19,6 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-WHITE='\033[1;37m'
 NC='\033[0m'
 
 log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] [QUANTUM INTEGRATION] $*" >&2; }
@@ -134,7 +131,6 @@ stop_quantum_agents() {
 get_quantum_agent_status() {
     quantum_log "Checking quantum agent status"
 
-    local status_file="${AGENTS_DIR}/agent_status.json"
     local running_count=0
     local total_count=0
 

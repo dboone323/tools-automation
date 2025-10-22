@@ -500,16 +500,14 @@ Provide your review in this structured format:
 
     # Get Ollama analysis with comprehensive context
     local review_json
-    review_json=$(curl -sf -X POST "${OLLAMA_URL}/api/generate" \
+    if ! review_json=$(curl -sf -X POST "${OLLAMA_URL}/api/generate" \
         -H "Content-Type: application/json" \
         -d "$(jq -n \
             --arg model "${OLLAMA_MODEL}" \
             --arg prompt "${review_prompt}" \
             --argjson num_tokens "$num_tokens" \
             '{model: $model, prompt: $prompt, stream: false, temperature: 0.2, num_predict: $num_tokens}')" \
-        2>/dev/null)
-
-    if [ $? -ne 0 ] || [ -z "$review_json" ]; then
+        2>/dev/null) || [ -z "$review_json" ]; then
         log_error "Failed to generate intelligent review"
         return 1
     fi
@@ -597,7 +595,7 @@ publish_intelligent_review() {
 
     # Publish to MCP with enhanced metadata
     local mcp_response
-    mcp_response=$(curl -sf -X POST "${OLLAMA_URL}/api/generate" \
+    if mcp_response=$(curl -sf -X POST "${OLLAMA_URL}/api/generate" \
         -H "Content-Type: application/json" \
         -d "$(jq -n \
             --arg msg "$message" \
@@ -614,9 +612,7 @@ publish_intelligent_review() {
             --arg base "$base_ref" \
             --arg head "$head_ref" \
             '{message: $msg, level: $level, component: $component, metadata: {project: $project, approval_status: $status, architecture_score: $arch_score, quality_score: $quality_score, critical_issues: $critical, high_issues: $high, medium_issues: $medium, low_issues: $low, base_ref: $base, head_ref: $head}}')" \
-        2>/dev/null)
-
-    if [ $? -eq 0 ] && [ -n "$mcp_response" ]; then
+        2>/dev/null) && [ -n "$mcp_response" ]; then
         log_success "Intelligent review published to MCP"
     else
         log_warning "Failed to publish to MCP (continuing anyway)"
@@ -747,10 +743,8 @@ intelligent_review_changes() {
     # Get git diff
     log_info "Extracting git diff..."
     local diff_content
-    diff_content=$(git diff "${base_ref}..${head_ref}" 2>&1)
-
-    if [ $? -ne 0 ]; then
-        log_error "Failed to get git diff"
+    if ! diff_content=$(git diff "${base_ref}..${head_ref}" 2>&1); then
+        log_error "Failed to get git diff for ${base_ref}..${head_ref}"
         log_error "$diff_content"
         exit 1
     fi
@@ -773,9 +767,7 @@ intelligent_review_changes() {
 
     # Generate comprehensive intelligent review
     local review_text
-    review_text=$(generate_intelligent_review "$diff_content" "$project_context" "$architecture_analysis" "$quality_analysis")
-
-    if [ $? -ne 0 ] || [ -z "$review_text" ]; then
+    if ! review_text=$(generate_intelligent_review "$diff_content" "$project_context" "$architecture_analysis" "$quality_analysis") || [ -z "$review_text" ]; then
         log_error "Intelligent review generation failed"
         exit 1
     fi

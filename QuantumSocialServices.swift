@@ -9,8 +9,8 @@
 // Framework for universal basic income algorithms, social welfare optimization, community support systems, and equality frameworks
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -24,73 +24,135 @@ protocol QuantumSocialServices {
     var socialJusticeAlgorithms: SocialJusticeAlgorithms { get set }
     var povertyAlleviation: PovertyAlleviation { get set }
 
-    func initializeQuantumSocialServices(for society: QuantumSociety) async throws -> QuantumSocialServicesFramework
-    func calculateUniversalBasicIncome(_ citizens: [Citizen], economic: EconomicData) async -> UniversalBasicIncomeCalculation
-    func optimizeSocialWelfare(_ policies: [SocialPolicy], resources: SocialResources) async -> SocialWelfareOptimization
-    func coordinateCommunitySupport(_ communities: [Community], needs: CommunityNeeds) async -> CommunitySupportCoordination
-    func enforceEqualityFrameworks(_ inequalities: [SocialInequality], interventions: [EqualityIntervention]) async -> EqualityEnforcement
-    func executeSocialJusticeAlgorithms(_ injustices: [SocialInjustice], remedies: [JusticeRemedy]) async -> SocialJusticeExecution
-    func alleviatePoverty(_ populations: [PovertyPopulation], programs: [PovertyProgram]) async -> PovertyAlleviation
+    func initializeQuantumSocialServices(for society: QuantumSociety) async throws
+        -> QuantumSocialServicesFramework
+    func calculateUniversalBasicIncome(_ citizens: [Citizen], economic: EconomicData) async
+        -> UniversalBasicIncomeCalculation
+    func optimizeSocialWelfare(_ policies: [SocialPolicy], resources: SocialResources) async
+        -> WelfareOptimization
+    func coordinateCommunitySupport(_ communities: [Community], needs: CommunityNeeds) async
+        -> CommunitySupportCoordination
+    func enforceEqualityFrameworks(
+        _ inequalities: [SocialInequality], interventions: [EqualityIntervention]
+    ) async -> EqualityEnforcement
+    func executeSocialJusticeAlgorithms(_ injustices: [SocialInjustice], remedies: [JusticeRemedy])
+        async -> SocialJusticeExecution
+    func alleviatePoverty(_ populations: [PovertyPopulation], programs: [PovertyProgram]) async
+        -> PovertyAlleviationResult
 }
 
 /// Protocol for universal basic income
 protocol UniversalBasicIncome {
-    func calculateBasicIncomeAmount(_ citizen: Citizen, context: EconomicContext) async -> BasicIncomeAmount
-    func distributeUniversalIncome(_ citizens: [Citizen], treasury: Treasury) async -> IncomeDistribution
-    func adjustIncomeLevels(_ economic: EconomicData, inflation: InflationRate) async -> IncomeAdjustment
-    func monitorIncomeEffectiveness(_ citizens: [Citizen], metrics: [SocialMetric]) async -> IncomeEffectiveness
-    func optimizeIncomeDistribution(_ allocations: [IncomeAllocation], goals: [SocialGoal]) async -> IncomeOptimization
-    func ensureIncomeSustainability(_ treasury: Treasury, projections: EconomicProjection) async -> IncomeSustainability
+    func calculateBasicIncomeAmount(_ citizen: Citizen, context: EconomicContext) async
+        -> BasicIncomeAmount
+    func distributeUniversalIncome(_ citizens: [Citizen], treasury: Treasury) async
+        -> IncomeDistributionResult
+    func adjustIncomeLevels(_ economic: EconomicData, inflation: InflationRate) async
+        -> IncomeAdjustment
+    func monitorIncomeEffectiveness(_ citizens: [Citizen], metrics: [SocialMetric]) async
+        -> IncomeEffectiveness
+    func optimizeIncomeDistribution(_ allocations: [IncomeAllocation], goals: [SocialGoal]) async
+        -> IncomeOptimization
+    func ensureIncomeSustainability(_ treasury: Treasury, projections: EconomicProjection) async
+        -> IncomeSustainability
 }
 
 /// Protocol for social welfare optimization
 protocol SocialWelfareOptimization {
-    func optimizeWelfarePrograms(_ programs: [WelfareProgram], beneficiaries: [Beneficiary]) async -> WelfareOptimization
-    func allocateSocialResources(_ resources: SocialResources, priorities: [SocialPriority]) async -> ResourceAllocation
-    func maximizeSocialUtility(_ policies: [SocialPolicy], outcomes: [SocialOutcome]) async -> UtilityMaximization
-    func balanceEquityEfficiency(_ equity: EquityMetrics, efficiency: EfficiencyMetrics) async -> EquityEfficiencyBalance
-    func coordinateSocialServices(_ services: [SocialService], coordination: ServiceCoordination) async -> ServiceCoordination
-    func evaluateSocialImpact(_ interventions: [SocialIntervention], baselines: [SocialBaseline]) async -> SocialImpactEvaluation
+    func optimizeWelfarePrograms(_ programs: [WelfareProgram], beneficiaries: [Beneficiary]) async
+        -> WelfareOptimization
+    func allocateSocialResources(_ resources: SocialResources, priorities: [SocialPriority]) async
+        -> ResourceAllocation
+    func maximizeSocialUtility(_ policies: [SocialPolicy], outcomes: [SocialOutcome]) async
+        -> UtilityMaximization
+    func balanceEquityEfficiency(_ equity: EquityMetrics, efficiency: EfficiencyMetrics) async
+        -> EquityEfficiencyBalance
+    func coordinateSocialServices(_ services: [SocialService], coordination: CoordinationLevel)
+        async -> ServiceCoordination
+    func evaluateSocialImpact(_ interventions: [SocialIntervention], baselines: [SocialBaseline])
+        async -> SocialImpactEvaluation
 }
 
 /// Protocol for community support systems
 protocol CommunitySupportSystems {
-    func assessCommunityNeeds(_ communities: [Community], indicators: [NeedIndicator]) async -> CommunityNeedsAssessment
-    func coordinateSupportPrograms(_ programs: [SupportProgram], communities: [Community]) async -> SupportCoordination
-    func mobilizeCommunityResources(_ resources: CommunityResources, initiatives: [CommunityInitiative]) async -> ResourceMobilization
-    func strengthenSocialNetworks(_ networks: [SocialNetwork], connections: [NetworkConnection]) async -> NetworkStrengthening
-    func facilitateCommunityEngagement(_ communities: [Community], platforms: [EngagementPlatform]) async -> CommunityEngagement
-    func monitorCommunityWellbeing(_ communities: [Community], metrics: [WellbeingMetric]) async -> CommunityMonitoring
+    func assessCommunityNeeds(_ communities: [Community], indicators: [NeedIndicator]) async
+        -> CommunityNeedsAssessment
+    func coordinateSupportPrograms(_ programs: [SupportProgram], communities: [Community]) async
+        -> SupportCoordination
+    func mobilizeCommunityResources(
+        _ resources: CommunityResources, initiatives: [CommunityInitiative]
+    ) async -> ResourceMobilization
+    func strengthenSocialNetworks(_ networks: [SocialNetwork], connections: [NetworkConnection])
+        async -> NetworkStrengthening
+    func facilitateCommunityEngagement(_ communities: [Community], platforms: [EngagementPlatform])
+        async -> CommunityEngagement
+    func monitorCommunityWellbeing(_ communities: [Community], metrics: [WellbeingMetric]) async
+        -> CommunityMonitoring
 }
 
 /// Protocol for equality frameworks
 protocol EqualityFrameworks {
-    func measureSocialInequality(_ populations: [Population], dimensions: [InequalityDimension]) async -> InequalityMeasurement
-    func designEqualityInterventions(_ inequalities: [SocialInequality], frameworks: [EqualityFramework]) async -> InterventionDesign
-    func implementEqualityPolicies(_ policies: [EqualityPolicy], enforcement: PolicyEnforcement) async -> PolicyImplementation
-    func monitorEqualityProgress(_ metrics: [EqualityMetric], targets: [EqualityTarget]) async -> ProgressMonitoring
-    func addressDiscrimination(_ incidents: [DiscriminationIncident], responses: [DiscriminationResponse]) async -> DiscriminationAddressing
-    func promoteInclusiveGrowth(_ growth: EconomicGrowth, inclusion: InclusionStrategy) async -> InclusiveGrowthPromotion
+    func measureSocialInequality(_ populations: [Population], dimensions: [InequalityDimension])
+        async -> InequalityMeasurement
+    func designEqualityInterventions(
+        _ inequalities: [SocialInequality], frameworks: [EqualityFramework]
+    ) async -> InterventionDesign
+    func implementEqualityPolicies(_ policies: [EqualityPolicy], enforcement: PolicyEnforcement)
+        async -> PolicyImplementation
+    func monitorEqualityProgress(_ metrics: [EqualityMetric], targets: [EqualityTarget]) async
+        -> ProgressMonitoring
+    func addressDiscrimination(
+        _ incidents: [DiscriminationIncident], responses: [DiscriminationResponse]
+    ) async -> DiscriminationAddressing
+    func promoteInclusiveGrowth(_ growth: EconomicGrowth, inclusion: InclusionStrategy) async
+        -> InclusiveGrowthPromotion
 }
 
 /// Protocol for social justice algorithms
 protocol SocialJusticeAlgorithms {
-    func identifySocialInjustices(_ data: SocialData, algorithms: [JusticeAlgorithm]) async -> InjusticeIdentification
-    func calculateJusticeRemedies(_ injustices: [SocialInjustice], frameworks: [JusticeFramework]) async -> RemedyCalculation
-    func executeJusticeInterventions(_ interventions: [JusticeIntervention], coordination: InterventionCoordination) async -> InterventionExecution
-    func monitorJusticeOutcomes(_ outcomes: [JusticeOutcome], metrics: [JusticeMetric]) async -> OutcomeMonitoring
-    func preventFutureInjustices(_ patterns: [InjusticePattern], prevention: PreventionStrategy) async -> InjusticePrevention
-    func ensureAccountability(_ actions: [AccountableAction], oversight: AccountabilityOversight) async -> AccountabilityEnsurance
+    func identifySocialInjustices(_ data: SocialData, algorithms: [JusticeAlgorithm]) async
+        -> InjusticeIdentification
+    func calculateJusticeRemedies(_ injustices: [SocialInjustice], frameworks: [JusticeFramework])
+        async -> RemedyCalculation
+    func executeJusticeInterventions(
+        _ interventions: [JusticeIntervention], coordination: InterventionCoordination
+    ) async -> InterventionExecution
+    func monitorJusticeOutcomes(_ outcomes: [JusticeOutcome], metrics: [JusticeMetric]) async
+        -> OutcomeMonitoring
+    func preventFutureInjustices(_ patterns: [InjusticePattern], prevention: PreventionStrategy)
+        async -> InjusticePrevention
+    func ensureAccountability(_ actions: [AccountableAction], oversight: AccountabilityOversight)
+        async -> AccountabilityEnsurance
 }
 
 /// Protocol for poverty alleviation
 protocol PovertyAlleviation {
-    func identifyPovertyPopulations(_ data: SocioeconomicData, thresholds: [PovertyThreshold]) async -> PovertyIdentification
-    func designPovertyPrograms(_ populations: [PovertyPopulation], resources: PovertyResources) async -> ProgramDesign
-    func implementPovertyInterventions(_ programs: [PovertyProgram], coordination: ProgramCoordination) async -> InterventionImplementation
-    func monitorPovertyReduction(_ metrics: [PovertyMetric], targets: [PovertyTarget]) async -> PovertyMonitoring
-    func evaluateProgramEffectiveness(_ programs: [PovertyProgram], outcomes: [ProgramOutcome]) async -> EffectivenessEvaluation
-    func scaleSuccessfulPrograms(_ successes: [SuccessfulProgram], scaling: ScalingStrategy) async -> ProgramScaling
+    func identifyPovertyPopulations(_ data: SocioeconomicData, thresholds: [PovertyThreshold]) async
+        -> PovertyIdentification
+    func designPovertyPrograms(_ populations: [PovertyPopulation], resources: PovertyResources)
+        async -> ProgramDesign
+    func implementPovertyInterventions(
+        _ programs: [PovertyProgram], coordination: ProgramCoordination
+    ) async -> InterventionImplementation
+    func monitorPovertyReduction(_ metrics: [PovertyMetric], targets: [PovertyTarget]) async
+        -> PovertyMonitoring
+    func evaluateProgramEffectiveness(_ programs: [PovertyProgram], outcomes: [ProgramOutcome])
+        async -> EffectivenessEvaluation
+    func scaleSuccessfulPrograms(_ successes: [SuccessfulProgram], scaling: ScalingStrategy) async
+        -> ProgramScaling
+}
+
+/// Poverty alleviation result
+struct PovertyAlleviationResult {
+    let alleviationId: String
+    let populations: [PovertyPopulation]
+    let programs: [PovertyProgram]
+    let identification: PovertyIdentificationResult
+    let design: ProgramDesignResult
+    let implementation: InterventionImplementationResult
+    let monitoring: PovertyMonitoringResult
+    let evaluation: EffectivenessEvaluationResult
+    let scaling: ProgramScalingResult
 }
 
 // MARK: - Core Data Structures
@@ -163,25 +225,7 @@ struct WelfareOptimizationSystems {
     }
 }
 
-/// Community support systems
-struct CommunitySupportSystems {
-    let systemsId: String
-    let needsAssessment: NeedsAssessmentEngine
-    let programCoordination: ProgramCoordinationSystem
-    let resourceMobilization: ResourceMobilizationEngine
-    let networkStrengthening: NetworkStrengtheningSystem
-    let engagementFacilitation: EngagementFacilitationSystem
-    let wellbeingMonitoring: WellbeingMonitoringSystem
-
-    struct NeedsAssessmentEngine {
-        let engineId: String
-        let indicators: [NeedIndicator]
-        let assessment: AssessmentMethodology
-        let frequency: TimeInterval
-    }
-}
-
-/// Equality enforcement systems
+/// Community support systems implementation
 struct EqualityEnforcementSystems {
     let systemsId: String
     let inequalityMeasurement: InequalityMeasurementSystem
@@ -298,9 +342,13 @@ struct SocialPolicy {
 
     enum PolicyStatus {
         case proposed
+        case approved
         case active
+        case implemented
         case suspended
+        case evaluated
         case completed
+        case discontinued
     }
 }
 
@@ -312,13 +360,7 @@ struct SocialResources {
     let facilities: Int
     let technology: [SocialTechnology]
     let partnerships: [SocialPartnership]
-    let allocation: ResourceAllocation
-
-    struct ResourceAllocation {
-        let priorities: [ResourcePriority]
-        let distribution: [ResourceCategory: Double]
-        let efficiency: Double
-    }
+    // Removed allocation field to avoid recursive type
 }
 
 /// Community
@@ -338,31 +380,6 @@ struct Community {
         case stable
         case challenged
         case crisis
-    }
-}
-
-/// Community needs
-struct CommunityNeeds {
-    let needsId: String
-    let basic: BasicNeeds
-    let social: SocialNeeds
-    let economic: EconomicNeeds
-    let health: HealthNeeds
-    let education: EducationNeeds
-    let priority: NeedPriority
-
-    struct BasicNeeds {
-        let food: Double
-        let shelter: Double
-        let water: Double
-        let sanitation: Double
-    }
-
-    struct SocialNeeds {
-        let connection: Double
-        let support: Double
-        let recreation: Double
-        let culture: Double
     }
 }
 
@@ -477,43 +494,19 @@ struct PovertyProgram {
 
     enum ProgramType {
         case cashTransfer
-        let programId: String
-        let name: String
-        let type: ProgramType
-        let beneficiaries: Int
-        let budget: Double
-        let duration: TimeInterval
-        let outcomes: [ProgramOutcome]
-        let status: ProgramStatus
-
-        enum ProgramType {
-            case cashTransfer
-            case foodAssistance
-            case housing
-            case education
-            case healthcare
-            case employment
-        }
+        case foodAssistance
+        case housingSupport
+        case educationAid
+        case healthcareAccess
+        case jobTraining
     }
 
     enum ProgramStatus {
         case planning
-        let programId: String
-        let name: String
-        let type: ProgramType
-        let beneficiaries: Int
-        let budget: Double
-        let duration: TimeInterval
-        let outcomes: [ProgramOutcome]
-        let status: ProgramStatus
-
-        enum ProgramStatus {
-            case planning
-            case active
-            case suspended
-            case completed
-            case evaluated
-        }
+        case active
+        case completed
+        case suspended
+        case cancelled
     }
 }
 
@@ -524,7 +517,7 @@ struct UniversalBasicIncomeCalculation {
     let economic: EconomicData
     let amounts: [String: Double]
     let total: Double
-    let distribution: IncomeDistribution
+    let distribution: EconomicData.IncomeDistribution
     let sustainability: SustainabilityAssessment
     let timestamp: Date
 
@@ -536,45 +529,23 @@ struct UniversalBasicIncomeCalculation {
     }
 }
 
-/// Social welfare optimization
-struct SocialWelfareOptimization {
-    let optimizationId: String
-    let policies: [SocialPolicy]
-    let resources: SocialResources
-    let optimization: WelfareOptimizationResult
-    let allocation: ResourceAllocationResult
-    let utility: UtilityMaximizationResult
-    let balance: EquityEfficiencyBalanceResult
-    let coordination: ServiceCoordinationResult
-    let impact: SocialImpactEvaluation
+/// Social welfare optimization implementation
+let coordinationId: String
+let communities: [Community]
+let needs: CommunityNeeds
+let assessment: CommunityNeedsAssessment
+let programs: [SupportProgram]
+let coordination: SupportCoordinationResult
+let mobilization: ResourceMobilizationResult
+let strengthening: NetworkStrengtheningResult
+let engagement: CommunityEngagementResult
+let monitoring: CommunityMonitoringResult
 
-    struct WelfareOptimizationResult {
-        let optimized: Bool
-        let improvement: Double
-        let tradeoffs: [OptimizationTradeoff]
-        let recommendations: [OptimizationRecommendation]
-    }
-}
-
-/// Community support coordination
-struct CommunitySupportCoordination {
-    let coordinationId: String
-    let communities: [Community]
-    let needs: CommunityNeeds
-    let assessment: CommunityNeedsAssessment
-    let programs: [SupportProgram]
-    let coordination: SupportCoordinationResult
-    let mobilization: ResourceMobilizationResult
-    let strengthening: NetworkStrengtheningResult
-    let engagement: CommunityEngagementResult
-    let monitoring: CommunityMonitoringResult
-
-    struct SupportCoordinationResult {
-        let coordinated: Bool
-        let coverage: Double
-        let efficiency: Double
-        let gaps: [SupportGap]
-    }
+struct SupportCoordinationResult {
+    let coordinated: Bool
+    let coverage: Double
+    let efficiency: Double
+    let gaps: [SupportGap]
 }
 
 /// Equality enforcement
@@ -617,26 +588,7 @@ struct SocialJusticeExecution {
     }
 }
 
-/// Poverty alleviation
-struct PovertyAlleviation {
-    let alleviationId: String
-    let populations: [PovertyPopulation]
-    let programs: [PovertyProgram]
-    let identification: PovertyIdentificationResult
-    let design: ProgramDesignResult
-    let implementation: InterventionImplementationResult
-    let monitoring: PovertyMonitoringResult
-    let evaluation: EffectivenessEvaluationResult
-    let scaling: ProgramScalingResult
-
-    struct PovertyIdentificationResult {
-        let identified: Int
-        let coverage: Double
-        let accuracy: Double
-        let segmentation: [PopulationSegment]
-    }
-}
-
+/// Poverty alleviation implementation
 // MARK: - Main Engine Implementation
 
 /// Main quantum social services engine
@@ -644,12 +596,12 @@ struct PovertyAlleviation {
 class QuantumSocialServicesEngine {
     // MARK: - Properties
 
-    private(set) var universalBasicIncome: UniversalBasicIncome
-    private(set) var socialWelfareOptimization: SocialWelfareOptimization
-    private(set) var communitySupportSystems: CommunitySupportSystems
-    private(set) var equalityFrameworks: EqualityFrameworks
-    private(set) var socialJusticeAlgorithms: SocialJusticeAlgorithms
-    private(set) var povertyAlleviation: PovertyAlleviation
+    internal(set) var universalBasicIncome: UniversalBasicIncome
+    internal(set) var socialWelfareOptimization: SocialWelfareOptimization
+    internal(set) var communitySupportSystems: CommunitySupportSystems
+    internal(set) var equalityFrameworks: EqualityFrameworks
+    internal(set) var socialJusticeAlgorithms: SocialJusticeAlgorithms
+    internal(set) var povertyAlleviation: PovertyAlleviation
     private(set) var activeFrameworks: [QuantumSocialServicesFramework] = []
 
     let quantumSocialServicesVersion = "QSS-1.0"
@@ -670,7 +622,9 @@ class QuantumSocialServicesEngine {
 
     // MARK: - Quantum Social Services Framework Initialization
 
-    func initializeQuantumSocialServices(for society: QuantumSociety) async throws -> QuantumSocialServicesFramework {
+    func initializeQuantumSocialServices(for society: QuantumSociety) async throws
+        -> QuantumSocialServicesFramework
+    {
         print("🤝 Initializing quantum social services for \(society.name)")
 
         let frameworkId = "qt_social_services_\(UUID().uuidString.prefix(8))"
@@ -692,7 +646,7 @@ class QuantumSocialServicesEngine {
             ),
             adjustment: IncomeAdjustmentSystem(
                 systemId: "income_adj_\(frameworkId)",
-                frequency: 2592000,
+                frequency: 2_592_000,
                 automation: true,
                 triggers: []
             ),
@@ -712,7 +666,7 @@ class QuantumSocialServicesEngine {
                 frameworkId: "income_sust_\(frameworkId)",
                 assessment: SustainabilityAssessment(
                     sustainable: true,
-                    duration: 31536000,
+                    duration: 31_536_000,
                     adjustments: [],
                     risks: []
                 ),
@@ -762,11 +716,7 @@ class QuantumSocialServicesEngine {
             serviceCoordination: ServiceCoordinationSystem(
                 systemId: "serv_coord_\(frameworkId)",
                 services: [],
-                coordination: ServiceCoordination(
-                    level: .high,
-                    automation: 0.9,
-                    integration: 0.85
-                )
+                coordination: .high
             ),
             impactEvaluation: ImpactEvaluationSystem(
                 systemId: "impact_eval_\(frameworkId)",
@@ -777,17 +727,17 @@ class QuantumSocialServicesEngine {
         )
 
         // Create community support systems
-        let communitySupport = CommunitySupportSystems(
+        let communitySupport = CommunitySupportSystemsImpl(
             systemsId: "community_support_\(frameworkId)",
-            needsAssessment: CommunitySupportSystems.NeedsAssessmentEngine(
+            needsAssessment: NeedsAssessmentEngine(
                 engineId: "needs_assess_\(frameworkId)",
                 indicators: [],
                 assessment: AssessmentMethodology(
                     type: .comprehensive,
-                    frequency: 2592000,
+                    frequency: 2_592_000,
                     coverage: 0.9
                 ),
-                frequency: 2592000
+                frequency: 2_592_000
             ),
             programCoordination: ProgramCoordinationSystem(
                 systemId: "prog_coord_\(frameworkId)",
@@ -803,7 +753,7 @@ class QuantumSocialServicesEngine {
                 resources: CommunityResources(
                     resourcesId: "comm_res_\(frameworkId)",
                     human: 1000,
-                    financial: 1000000,
+                    financial: 1_000_000,
                     physical: 500,
                     social: 200
                 ),
@@ -855,36 +805,70 @@ class QuantumSocialServicesEngine {
                 engineId: "intervene_design_\(frameworkId)",
                 interventions: [],
                 design: InterventionDesign(
-                    effectiveness: 0.8,
-                    feasibility: 0.75,
-                    scalability: 0.85
+                    designId: "intervene_design_\(frameworkId)",
+                    inequalities: [],
+                    frameworks: [],
+                    design: InterventionDesign.DesignResult(
+                        designed: true,
+                        interventions: 0,
+                        effectiveness: 0.8,
+                        feasibility: 0.75
+                    ),
+                    timestamp: Date()
                 )
             ),
             policyImplementation: PolicyImplementationSystem(
                 systemId: "policy_impl_\(frameworkId)",
                 policies: [],
                 implementation: PolicyImplementation(
-                    success: 0.85,
-                    compliance: 0.9,
-                    adaptation: 0.8
+                    implementationId: "policy_impl_\(frameworkId)",
+                    policies: [],
+                    enforcement: PolicyEnforcement(
+                        enforcementId: "enforce_\(frameworkId)",
+                        mechanisms: [],
+                        monitoring: [],
+                        sanctions: [],
+                        effectiveness: 0.9
+                    ),
+                    implementation: PolicyImplementation.ImplementationResult(
+                        implemented: true,
+                        success: 0.85,
+                        compliance: 0.9,
+                        adaptation: 0.8
+                    ),
+                    timestamp: Date()
                 )
             ),
             progressMonitoring: ProgressMonitoringSystem(
                 systemId: "prog_mon_\(frameworkId)",
                 metrics: [],
                 monitoring: ProgressMonitoring(
-                    frequency: 2592000,
-                    accuracy: 0.88,
-                    trends: []
+                    monitoringId: "prog_mon_\(frameworkId)",
+                    metrics: [],
+                    targets: [],
+                    monitoring: ProgressMonitoring.MonitoringResult(
+                        monitored: true,
+                        progress: 0.7,
+                        targets: 0.8,
+                        trends: []
+                    ),
+                    timestamp: Date()
                 )
             ),
             discriminationAddressing: DiscriminationAddressingSystem(
                 systemId: "disc_addr_\(frameworkId)",
                 incidents: [],
                 addressing: DiscriminationAddressing(
-                    response: 0.9,
-                    prevention: 0.8,
-                    education: 0.85
+                    addressingId: "disc_addr_\(frameworkId)",
+                    incidents: [],
+                    responses: [],
+                    addressing: DiscriminationAddressing.AddressingResult(
+                        addressed: true,
+                        response: 0.9,
+                        prevention: 0.8,
+                        education: 0.85
+                    ),
+                    timestamp: Date()
                 )
             ),
             inclusiveGrowth: InclusiveGrowthPromotionSystem(
@@ -892,12 +876,31 @@ class QuantumSocialServicesEngine {
                 growth: EconomicGrowth(
                     rate: 0.03,
                     inclusive: 0.75,
-                    sustainable: 0.8
+                    sustainable: 0.8,
+                    projections: []
                 ),
                 promotion: InclusiveGrowthPromotion(
-                    strategies: [],
-                    effectiveness: 0.82,
-                    equity: 0.78
+                    promotionId: "incl_growth_prom_\(frameworkId)",
+                    growth: EconomicGrowth(
+                        rate: 0.03,
+                        inclusive: 0.75,
+                        sustainable: 0.8,
+                        projections: []
+                    ),
+                    inclusion: InclusionStrategy(
+                        strategyId: "incl_strat_\(frameworkId)",
+                        name: "Inclusive Growth Strategy",
+                        approaches: [],
+                        targets: [],
+                        timeline: 31_536_000
+                    ),
+                    promotion: InclusiveGrowthPromotion.PromotionResult(
+                        promoted: true,
+                        growth: 0.03,
+                        inclusion: 0.75,
+                        equity: 0.78
+                    ),
+                    timestamp: Date()
                 )
             )
         )
@@ -915,45 +918,103 @@ class QuantumSocialServicesEngine {
                 systemId: "remedy_calc_\(frameworkId)",
                 remedies: [],
                 calculation: RemedyCalculation(
-                    accuracy: 0.85,
-                    fairness: 0.9,
-                    feasibility: 0.8
+                    calculationId: "remedy_calc_inner_\(frameworkId)",
+                    injustices: [],
+                    frameworks: [],
+                    calculation: RemedyCalculation.CalculationResult(
+                        calculated: true,
+                        remedies: 0,
+                        fairness: 0.9,
+                        adequacy: 0.85
+                    ),
+                    timestamp: Date()
                 )
             ),
             interventionExecution: InterventionExecutionEngine(
                 engineId: "intervene_exec_\(frameworkId)",
                 interventions: [],
                 execution: InterventionExecution(
-                    success: 0.88,
-                    timeliness: 0.85,
-                    impact: 0.82
+                    executionId: "intervene_exec_inner_\(frameworkId)",
+                    interventions: [],
+                    coordination: InterventionCoordination(
+                        coordinationId: "coord_\(frameworkId)",
+                        interventions: [],
+                        stakeholders: [],
+                        coordination: CoordinationResult(
+                            coordinated: true,
+                            coverage: 0.85,
+                            efficiency: 0.88,
+                            gaps: []
+                        ),
+                        timestamp: Date()
+                    ),
+                    execution: InterventionExecution.ExecutionResult(
+                        executed: true,
+                        success: 0.88,
+                        timeliness: 0.85,
+                        impact: 0.82
+                    ),
+                    timestamp: Date()
                 )
             ),
             outcomeMonitoring: OutcomeMonitoringSystem(
                 systemId: "outcome_mon_\(frameworkId)",
                 outcomes: [],
                 monitoring: OutcomeMonitoring(
-                    frequency: 2592000,
-                    accuracy: 0.87,
-                    trends: []
+                    monitoringId: "outcome_mon_inner_\(frameworkId)",
+                    outcomes: [],
+                    metrics: [],
+                    monitoring: OutcomeMonitoring.MonitoringResult(
+                        monitored: true,
+                        improvement: 0.75,
+                        sustainability: 0.8,
+                        trends: []
+                    ),
+                    timestamp: Date()
                 )
             ),
             injusticePrevention: InjusticePreventionSystem(
                 systemId: "injustice_prev_\(frameworkId)",
                 patterns: [],
                 prevention: InjusticePrevention(
-                    effectiveness: 0.8,
-                    coverage: 0.85,
-                    adaptation: 0.75
+                    preventionId: "injustice_prev_inner_\(frameworkId)",
+                    patterns: [],
+                    prevention: PreventionStrategy(
+                        strategyId: "prev_strat_\(frameworkId)",
+                        type: .proactive,
+                        target: .injustice,
+                        effectiveness: 0.8,
+                        cost: 50000
+                    ),
+                    result: InjusticePrevention.PreventionResult(
+                        prevented: true,
+                        effectiveness: 0.8,
+                        coverage: 0.85,
+                        adaptation: 0.75
+                    ),
+                    timestamp: Date()
                 )
             ),
             accountabilityEnsurance: AccountabilityEnsuranceSystem(
                 systemId: "account_ens_\(frameworkId)",
                 actions: [],
                 ensurance: AccountabilityEnsurance(
-                    transparency: 0.9,
-                    enforcement: 0.85,
-                    trust: 0.88
+                    ensuranceId: "account_ens_inner_\(frameworkId)",
+                    actions: [],
+                    oversight: AccountabilityOversight(
+                        oversightId: "oversight_\(frameworkId)",
+                        type: "independent",
+                        frequency: 604800,
+                        effectiveness: 0.9,
+                        independence: 0.85
+                    ),
+                    ensurance: AccountabilityEnsurance.EnsuranceResult(
+                        ensured: true,
+                        transparency: 0.9,
+                        enforcement: 0.85,
+                        trust: 0.88
+                    ),
+                    timestamp: Date()
                 )
             )
         )
@@ -975,45 +1036,96 @@ class QuantumSocialServicesEngine {
                 engineId: "prog_design_\(frameworkId)",
                 programs: [],
                 design: ProgramDesign(
-                    effectiveness: 0.85,
-                    costEfficiency: 0.8,
-                    scalability: 0.9
+                    designId: "prog_design_inner_\(frameworkId)",
+                    populations: [],
+                    resources: PovertyResources(
+                        resourcesId: "pov_res_\(frameworkId)",
+                        financial: 1_000_000,
+                        human: 100,
+                        infrastructure: 50,
+                        programs: 10
+                    ),
+                    design: ProgramDesign.DesignResult(
+                        designed: true,
+                        programs: 0,
+                        effectiveness: 0.85,
+                        costEfficiency: 0.8
+                    ),
+                    timestamp: Date()
                 )
             ),
             interventionImplementation: InterventionImplementationSystem(
                 systemId: "intervene_impl_\(frameworkId)",
                 interventions: [],
                 implementation: InterventionImplementation(
-                    success: 0.82,
-                    coverage: 0.88,
-                    sustainability: 0.85
+                    implementationId: "intervene_impl_inner_\(frameworkId)",
+                    programs: [],
+                    coordination: ProgramCoordination(
+                        level: .integrated,
+                        automation: 0.85,
+                        effectiveness: 0.88
+                    ),
+                    implementation: InterventionImplementation.ImplementationResult(
+                        implemented: true,
+                        success: 0.82,
+                        coverage: 0.88,
+                        sustainability: 0.85
+                    ),
+                    timestamp: Date()
                 )
             ),
             povertyMonitoring: PovertyMonitoringSystem(
                 systemId: "pov_mon_\(frameworkId)",
                 metrics: [],
                 monitoring: PovertyMonitoring(
-                    frequency: 2592000,
-                    accuracy: 0.87,
-                    trends: []
+                    monitoringId: "pov_mon_inner_\(frameworkId)",
+                    metrics: [],
+                    targets: [],
+                    monitoring: PovertyMonitoring.MonitoringResult(
+                        monitored: true,
+                        reduction: 0.25,
+                        targets: 0.3,
+                        trends: []
+                    ),
+                    timestamp: Date()
                 )
             ),
             effectivenessEvaluation: EffectivenessEvaluationEngine(
                 engineId: "eff_eval_\(frameworkId)",
                 evaluations: [],
                 evaluation: EffectivenessEvaluation(
-                    methodology: .impact,
-                    rigor: 0.9,
-                    validity: 0.85
+                    evaluationId: "eff_eval_inner_\(frameworkId)",
+                    programs: [],
+                    outcomes: [],
+                    evaluation: EffectivenessEvaluation.EvaluationResult(
+                        evaluated: true,
+                        effectiveness: 0.8,
+                        impact: 0.75,
+                        costBenefit: 2.5
+                    ),
+                    timestamp: Date()
                 )
             ),
             programScaling: ProgramScalingSystem(
                 systemId: "prog_scale_\(frameworkId)",
                 programs: [],
                 scaling: ProgramScaling(
-                    success: 0.8,
-                    coverage: 0.75,
-                    sustainability: 0.85
+                    scalingId: "prog_scale_inner_\(frameworkId)",
+                    successes: [],
+                    scaling: ScalingStrategy(
+                        strategyId: "scale_strat_\(frameworkId)",
+                        approach: "evidence-based",
+                        resources: 200000,
+                        timeline: 31_536_000,
+                        risk: 0.2
+                    ),
+                    result: ProgramScaling.ScalingResult(
+                        scaled: true,
+                        coverage: 0.75,
+                        sustainability: 0.85,
+                        impact: 0.8
+                    ),
+                    timestamp: Date()
                 )
             )
         )
@@ -1033,13 +1145,17 @@ class QuantumSocialServicesEngine {
 
         activeFrameworks.append(framework)
 
-        print("✅ Quantum social services framework initialized with universal basic income and welfare optimization")
+        print(
+            "✅ Quantum social services framework initialized with universal basic income and welfare optimization"
+        )
         return framework
     }
 
     // MARK: - Universal Basic Income Calculation
 
-    func calculateUniversalBasicIncome(_ citizens: [Citizen], economic: EconomicData) async -> UniversalBasicIncomeCalculation {
+    func calculateUniversalBasicIncome(_ citizens: [Citizen], economic: EconomicData) async
+        -> UniversalBasicIncomeCalculation
+    {
         print("💰 Calculating universal basic income for \(citizens.count) citizens")
 
         let universalBasicIncome = UniversalBasicIncomeImpl()
@@ -1047,26 +1163,28 @@ class QuantumSocialServicesEngine {
         var total = 0.0
 
         for citizen in citizens {
-            let amount = await universalBasicIncome.calculateBasicIncomeAmount(citizen, context: EconomicContext(
-                gdp: economic.gdp,
-                inflation: economic.inflation,
-                unemployment: economic.unemployment,
-                costOfLiving: 1500.0 // Monthly cost of living
-            ))
+            let amount = await universalBasicIncome.calculateBasicIncomeAmount(
+                citizen,
+                context: EconomicContext(
+                    gdp: economic.gdp,
+                    inflation: economic.inflation,
+                    unemployment: economic.unemployment,
+                    costOfLiving: 1500.0  // Monthly cost of living
+                ))
             amounts[citizen.citizenId] = amount.amount
             total += amount.amount
         }
 
         let distribution = IncomeDistribution(
             average: total / Double(citizens.count),
-            median: 1200.0, // Calculated median
-            gini: 0.15, // Low inequality
+            median: 1200.0,  // Calculated median
+            gini: 0.15,  // Low inequality
             percentiles: [
                 10: 1000.0,
                 25: 1100.0,
                 50: 1200.0,
                 75: 1300.0,
-                90: 1400.0
+                90: 1400.0,
             ]
         )
 
@@ -1079,92 +1197,57 @@ class QuantumSocialServicesEngine {
             distribution: distribution,
             sustainability: UniversalBasicIncomeCalculation.SustainabilityAssessment(
                 sustainable: true,
-                duration: 31536000,
+                duration: 31_536_000,
                 adjustments: [],
                 risks: []
             ),
             timestamp: Date()
         )
 
-        print("✅ Universal basic income calculated: $\(String(format: "%.0f", total)) total for \(citizens.count) citizens")
+        print(
+            "✅ Universal basic income calculated: $\(String(format: "%.0f", total)) total for \(citizens.count) citizens"
+        )
         return calculation
     }
 
     // MARK: - Social Welfare Optimization
 
-    func optimizeSocialWelfare(_ policies: [SocialPolicy], resources: SocialResources) async -> SocialWelfareOptimization {
+    func optimizeSocialWelfare(_ policies: [SocialPolicy], resources: SocialResources) async
+        -> WelfareOptimization
+    {
         print("⚖️ Optimizing social welfare for \(policies.count) policies")
 
         let socialWelfareOptimization = SocialWelfareOptimizationImpl()
-        let optimization = await socialWelfareOptimization.optimizeWelfarePrograms(policies.map { WelfareProgram(
-            programId: $0.policyId,
-            name: $0.name,
-            type: WelfareProgramType(rawValue: $0.type.rawValue) ?? .general,
-            beneficiaries: $0.beneficiaries.count,
-            budget: $0.budget,
-            duration: $0.duration,
-            outcomes: [],
-            status: WelfareProgramStatus(rawValue: $0.status.rawValue) ?? .active
-        ) }, beneficiaries: [])
-
-        let welfareOptimization = SocialWelfareOptimization(
-            optimizationId: "welfare_opt_\(UUID().uuidString.prefix(8))",
-            policies: policies,
-            resources: resources,
-            optimization: SocialWelfareOptimization.WelfareOptimizationResult(
-                optimized: true,
-                improvement: 0.15,
-                tradeoffs: [],
-                recommendations: []
-            ),
-            allocation: ResourceAllocationResult(
-                allocated: true,
-                efficiency: 0.88,
-                fairness: 0.85,
-                utilization: 0.92
-            ),
-            utility: UtilityMaximizationResult(
-                maximized: true,
-                utility: 0.82,
-                convergence: 0.95,
-                iterations: 100
-            ),
-            balance: EquityEfficiencyBalanceResult(
-                balanced: true,
-                equity: 0.78,
-                efficiency: 0.85,
-                tradeoffs: []
-            ),
-            coordination: ServiceCoordinationResult(
-                coordinated: true,
-                integration: 0.9,
-                conflicts: 0,
-                efficiency: 0.88
-            ),
-            impact: SocialImpactEvaluation(
-                evaluationId: "impact_eval",
-                interventions: [],
-                baselines: [],
-                evaluation: SocialImpactEvaluation.ImpactEvaluationResult(
-                    measured: true,
-                    impact: 0.75,
-                    significance: 0.9,
-                    attribution: 0.85
+        let welfareOptimization = await socialWelfareOptimization.optimizeWelfarePrograms(
+            policies.map {
+                WelfareProgram(
+                    programId: $0.policyId,
+                    name: $0.name,
+                    type: mapPolicyTypeToWelfareType($0.type),
+                    beneficiaries: $0.beneficiaries.count,
+                    budget: $0.budget,
+                    duration: $0.duration,
+                    outcomes: [],
+                    status: mapPolicyStatusToWelfareStatus($0.status)
                 )
-            )
-        )
+            }, beneficiaries: [])
 
-        print("✅ Social welfare optimized with \(String(format: "%.1f", welfareOptimization.optimization.improvement * 100))% improvement")
+        print(
+            "✅ Social welfare optimized with \(String(format: "%.1f", welfareOptimization.optimization.efficiency * 100))% efficiency"
+        )
         return welfareOptimization
     }
 
     // MARK: - Community Support Coordination
 
-    func coordinateCommunitySupport(_ communities: [Community], needs: CommunityNeeds) async -> CommunitySupportCoordination {
+    func coordinateCommunitySupport(_ communities: [Community], needs: CommunityNeeds) async
+        -> CommunitySupportCoordination
+    {
         print("🏘️ Coordinating community support for \(communities.count) communities")
 
         let communitySupportSystems = CommunitySupportSystemsImpl()
-        let assessment = await communitySupportSystems.assessCommunityNeeds(communities, indicators: [])
+        let assessment = await communitySupportSystems.assessCommunityNeeds(
+            communities, indicators: [])
 
         let coordination = CommunitySupportCoordination(
             coordinationId: "comm_coord_\(UUID().uuidString.prefix(8))",
@@ -1204,13 +1287,17 @@ class QuantumSocialServicesEngine {
             )
         )
 
-        print("✅ Community support coordinated with \(String(format: "%.1f", coordination.coordination.coverage * 100))% coverage")
+        print(
+            "✅ Community support coordinated with \(String(format: "%.1f", coordination.coordination.coverage * 100))% coverage"
+        )
         return coordination
     }
 
     // MARK: - Equality Frameworks Enforcement
 
-    func enforceEqualityFrameworks(_ inequalities: [SocialInequality], interventions: [EqualityIntervention]) async -> EqualityEnforcement {
+    func enforceEqualityFrameworks(
+        _ inequalities: [SocialInequality], interventions: [EqualityIntervention]
+    ) async -> EqualityEnforcement {
         print("⚖️ Enforcing equality frameworks for \(inequalities.count) inequalities")
 
         let equalityFrameworks = EqualityFrameworksImpl()
@@ -1258,23 +1345,28 @@ class QuantumSocialServicesEngine {
             )
         )
 
-        print("✅ Equality frameworks enforced with \(String(format: "%.1f", enforcement.monitoring.progress * 100))% progress")
+        print(
+            "✅ Equality frameworks enforced with \(String(format: "%.1f", enforcement.monitoring.progress * 100))% progress"
+        )
         return enforcement
     }
 
     // MARK: - Social Justice Algorithms Execution
 
-    func executeSocialJusticeAlgorithms(_ injustices: [SocialInjustice], remedies: [JusticeRemedy]) async -> SocialJusticeExecution {
+    func executeSocialJusticeAlgorithms(_ injustices: [SocialInjustice], remedies: [JusticeRemedy])
+        async -> SocialJusticeExecution
+    {
         print("⚖️ Executing social justice algorithms for \(injustices.count) injustices")
 
         let socialJusticeAlgorithms = SocialJusticeAlgorithmsImpl()
-        let identification = await socialJusticeAlgorithms.identifySocialInjustices(SocialData(
-            dataId: "social_data",
-            injustices: injustices,
-            demographics: [],
-            incidents: [],
-            timestamp: Date()
-        ), algorithms: [])
+        let identification = await socialJusticeAlgorithms.identifySocialInjustices(
+            SocialData(
+                dataId: "social_data",
+                injustices: injustices,
+                demographics: [:],
+                indicators: [],
+                timestamp: Date()
+            ), algorithms: [])
 
         let execution = SocialJusticeExecution(
             executionId: "justice_exec_\(UUID().uuidString.prefix(8))",
@@ -1306,41 +1398,46 @@ class QuantumSocialServicesEngine {
             ),
             prevention: InjusticePreventionResult(
                 prevented: true,
-                patterns: 0,
                 effectiveness: 0.8,
-                coverage: 0.85
+                coverage: 0.85,
+                adaptation: 0.75
             ),
             accountability: AccountabilityEnsuranceResult(
                 ensured: true,
-                actions: remedies.count,
                 transparency: 0.9,
+                enforcement: 0.85,
                 trust: 0.88
             )
         )
 
-        print("✅ Social justice algorithms executed with \(String(format: "%.1f", execution.monitoring.improvement * 100))% improvement")
+        print(
+            "✅ Social justice algorithms executed with \(String(format: "%.1f", execution.monitoring.improvement * 100))% improvement"
+        )
         return execution
     }
 
     // MARK: - Poverty Alleviation
 
-    func alleviatePoverty(_ populations: [PovertyPopulation], programs: [PovertyProgram]) async -> PovertyAlleviation {
+    func alleviatePoverty(_ populations: [PovertyPopulation], programs: [PovertyProgram]) async
+        -> PovertyAlleviationResult
+    {
         print("📈 Alleviating poverty for \(populations.count) populations")
 
         let povertyAlleviation = PovertyAlleviationImpl()
-        let identification = await povertyAlleviation.identifyPovertyPopulations(SocioeconomicData(
-            dataId: "socio_data",
-            populations: populations,
-            indicators: [],
-            trends: [],
-            timestamp: Date()
-        ), thresholds: [])
+        let identification = await povertyAlleviation.identifyPovertyPopulations(
+            SocioeconomicData(
+                dataId: "socio_data",
+                populations: populations,
+                indicators: [],
+                demographics: [:],
+                timestamp: Date()
+            ), thresholds: [])
 
-        let alleviation = PovertyAlleviation(
+        let alleviation = PovertyAlleviationResult(
             alleviationId: "poverty_allev_\(UUID().uuidString.prefix(8))",
             populations: populations,
             programs: programs,
-            identification: PovertyAlleviation.PovertyIdentificationResult(
+            identification: PovertyIdentificationResult(
                 identified: populations.count,
                 coverage: 0.95,
                 accuracy: 0.9,
@@ -1378,7 +1475,9 @@ class QuantumSocialServicesEngine {
             )
         )
 
-        print("✅ Poverty alleviation completed with \(String(format: "%.1f", alleviation.monitoring.reduction * 100))% reduction")
+        print(
+            "✅ Poverty alleviation completed with \(String(format: "%.1f", alleviation.monitoring.reduction * 100))% reduction"
+        )
         return alleviation
     }
 
@@ -1399,20 +1498,66 @@ class QuantumSocialServicesEngine {
     private func performSocialServicesHealthCheck() async {
         let totalFrameworks = activeFrameworks.count
         let operationalFrameworks = activeFrameworks.filter { $0.status == .operational }.count
-        let operationalRate = totalFrameworks > 0 ? Double(operationalFrameworks) / Double(totalFrameworks) : 0.0
+        let operationalRate =
+            totalFrameworks > 0 ? Double(operationalFrameworks) / Double(totalFrameworks) : 0.0
 
         if operationalRate < 0.9 {
-            print("⚠️ Social services framework operational rate degraded: \(String(format: "%.1f", operationalRate * 100))%")
+            print(
+                "⚠️ Social services framework operational rate degraded: \(String(format: "%.1f", operationalRate * 100))%"
+            )
         }
 
-        let averageEqualityIndex = 0.82 // Simulated
+        let averageEqualityIndex = 0.82  // Simulated
         if averageEqualityIndex < 0.75 {
-            print("⚠️ Equality index degraded: \(String(format: "%.1f", averageEqualityIndex * 100))%")
+            print(
+                "⚠️ Equality index degraded: \(String(format: "%.1f", averageEqualityIndex * 100))%")
         }
 
-        let povertyReductionRate = 0.25 // Simulated
+        let povertyReductionRate = 0.25  // Simulated
         if povertyReductionRate < 0.2 {
-            print("⚠️ Poverty reduction rate below target: \(String(format: "%.1f", povertyReductionRate * 100))%")
+            print(
+                "⚠️ Poverty reduction rate below target: \(String(format: "%.1f", povertyReductionRate * 100))%"
+            )
+        }
+    }
+
+    private func mapPolicyTypeToWelfareType(_ policyType: SocialPolicy.PolicyType)
+        -> WelfareProgramType
+    {
+        switch policyType {
+        case .welfare:
+            return .general
+        case .education:
+            return .education
+        case .healthcare:
+            return .healthcare
+        case .housing:
+            return .housing
+        case .employment:
+            return .employment
+        }
+    }
+
+    private func mapPolicyStatusToWelfareStatus(_ policyStatus: SocialPolicy.PolicyStatus)
+        -> WelfareProgramStatus
+    {
+        switch policyStatus {
+        case .proposed:
+            return .planning
+        case .approved:
+            return .planning
+        case .active:
+            return .active
+        case .implemented:
+            return .active
+        case .suspended:
+            return .suspended
+        case .evaluated:
+            return .completed
+        case .completed:
+            return .completed
+        case .discontinued:
+            return .cancelled
         }
     }
 }
@@ -1421,11 +1566,13 @@ class QuantumSocialServicesEngine {
 
 /// Universal basic income implementation
 class UniversalBasicIncomeImpl: UniversalBasicIncome {
-    func calculateBasicIncomeAmount(_ citizen: Citizen, context: EconomicContext) async -> BasicIncomeAmount {
+    func calculateBasicIncomeAmount(_ citizen: Citizen, context: EconomicContext) async
+        -> BasicIncomeAmount
+    {
         // Calculate based on cost of living, adjusted for economic conditions
-        let baseAmount = context.costOfLiving * 0.8 // 80% of cost of living
-        let adjustment = (context.gdp / 1000000) * 0.1 // GDP-based adjustment
-        let amount = max(baseAmount + adjustment, 500.0) // Minimum amount
+        let baseAmount = context.costOfLiving * 0.8  // 80% of cost of living
+        let adjustment = (context.gdp / 1_000_000) * 0.1  // GDP-based adjustment
+        let amount = max(baseAmount + adjustment, 500.0)  // Minimum amount
 
         return BasicIncomeAmount(
             citizenId: citizen.citizenId,
@@ -1440,17 +1587,19 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
         )
     }
 
-    func distributeUniversalIncome(_ citizens: [Citizen], treasury: Treasury) async -> IncomeDistribution {
+    func distributeUniversalIncome(_ citizens: [Citizen], treasury: Treasury) async
+        -> IncomeDistributionResult
+    {
         let totalAmount = citizens.reduce(0.0) { sum, citizen in
             sum + (treasury.amount / Double(citizens.count))
         }
 
-        return IncomeDistribution(
+        return IncomeDistributionResult(
             distributionId: "income_dist_\(UUID().uuidString.prefix(8))",
             citizens: citizens,
             treasury: treasury,
             totalDistributed: totalAmount,
-            distribution: IncomeDistribution.DistributionResult(
+            distribution: IncomeDistributionResult.DistributionResult(
                 success: true,
                 coverage: 1.0,
                 timeliness: 0.98,
@@ -1460,8 +1609,10 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
         )
     }
 
-    func adjustIncomeLevels(_ economic: EconomicData, inflation: InflationRate) async -> IncomeAdjustment {
-        let adjustment = inflation.rate * 0.5 // 50% inflation adjustment
+    func adjustIncomeLevels(_ economic: EconomicData, inflation: InflationRate) async
+        -> IncomeAdjustment
+    {
+        let adjustment = inflation.rate * 0.5  // 50% inflation adjustment
         let newLevels = economic.income.average * (1 + adjustment)
 
         return IncomeAdjustment(
@@ -1475,7 +1626,9 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
         )
     }
 
-    func monitorIncomeEffectiveness(_ citizens: [Citizen], metrics: [SocialMetric]) async -> IncomeEffectiveness {
+    func monitorIncomeEffectiveness(_ citizens: [Citizen], metrics: [SocialMetric]) async
+        -> IncomeEffectiveness
+    {
         return IncomeEffectiveness(
             monitoringId: "income_eff_\(UUID().uuidString.prefix(8))",
             citizens: citizens,
@@ -1491,7 +1644,9 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
         )
     }
 
-    func optimizeIncomeDistribution(_ allocations: [IncomeAllocation], goals: [SocialGoal]) async -> IncomeOptimization {
+    func optimizeIncomeDistribution(_ allocations: [IncomeAllocation], goals: [SocialGoal]) async
+        -> IncomeOptimization
+    {
         return IncomeOptimization(
             optimizationId: "income_opt_\(UUID().uuidString.prefix(8))",
             allocations: allocations,
@@ -1507,9 +1662,11 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
         )
     }
 
-    func ensureIncomeSustainability(_ treasury: Treasury, projections: EconomicProjection) async -> IncomeSustainability {
+    func ensureIncomeSustainability(_ treasury: Treasury, projections: EconomicProjection) async
+        -> IncomeSustainability
+    {
         let sustainable = treasury.amount >= projections.requiredAmount
-        let duration = sustainable ? 31536000 : 15768000 // 1 year or 6 months
+        let duration = sustainable ? 31_536_000.0 : 15_768_000.0  // 1 year or 6 months
 
         return IncomeSustainability(
             sustainabilityId: "income_sust_\(UUID().uuidString.prefix(8))",
@@ -1529,7 +1686,9 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
 
 /// Social welfare optimization implementation
 class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
-    func optimizeWelfarePrograms(_ programs: [WelfareProgram], beneficiaries: [Beneficiary]) async -> WelfareOptimization {
+    func optimizeWelfarePrograms(_ programs: [WelfareProgram], beneficiaries: [Beneficiary]) async
+        -> WelfareOptimization
+    {
         return WelfareOptimization(
             optimizationId: "welfare_opt_\(UUID().uuidString.prefix(8))",
             programs: programs,
@@ -1545,7 +1704,9 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
         )
     }
 
-    func allocateSocialResources(_ resources: SocialResources, priorities: [SocialPriority]) async -> ResourceAllocation {
+    func allocateSocialResources(_ resources: SocialResources, priorities: [SocialPriority]) async
+        -> ResourceAllocation
+    {
         return ResourceAllocation(
             allocationId: "res_alloc_\(UUID().uuidString.prefix(8))",
             resources: resources,
@@ -1553,14 +1714,16 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
             allocation: ResourceAllocation.AllocationResult(
                 allocated: true,
                 efficiency: 0.9,
-                fairness: 0.85,
-                utilization: 0.88
+                equity: 0.85,
+                constraints: []
             ),
             timestamp: Date()
         )
     }
 
-    func maximizeSocialUtility(_ policies: [SocialPolicy], outcomes: [SocialOutcome]) async -> UtilityMaximization {
+    func maximizeSocialUtility(_ policies: [SocialPolicy], outcomes: [SocialOutcome]) async
+        -> UtilityMaximization
+    {
         return UtilityMaximization(
             maximizationId: "util_max_\(UUID().uuidString.prefix(8))",
             policies: policies,
@@ -1568,14 +1731,16 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
             maximization: UtilityMaximization.MaximizationResult(
                 maximized: true,
                 utility: 0.82,
-                convergence: 0.95,
-                iterations: 100
+                tradeoffs: [],
+                convergence: true
             ),
             timestamp: Date()
         )
     }
 
-    func balanceEquityEfficiency(_ equity: EquityMetrics, efficiency: EfficiencyMetrics) async -> EquityEfficiencyBalance {
+    func balanceEquityEfficiency(_ equity: EquityMetrics, efficiency: EfficiencyMetrics) async
+        -> EquityEfficiencyBalance
+    {
         return EquityEfficiencyBalance(
             balanceId: "eq_eff_bal_\(UUID().uuidString.prefix(8))",
             equity: equity,
@@ -1590,7 +1755,9 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
         )
     }
 
-    func coordinateSocialServices(_ services: [SocialService], coordination: ServiceCoordination) async -> ServiceCoordination {
+    func coordinateSocialServices(_ services: [SocialService], coordination: CoordinationLevel)
+        async -> ServiceCoordination
+    {
         return ServiceCoordination(
             coordinationId: "serv_coord_\(UUID().uuidString.prefix(8))",
             services: services,
@@ -1605,7 +1772,9 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
         )
     }
 
-    func evaluateSocialImpact(_ interventions: [SocialIntervention], baselines: [SocialBaseline]) async -> SocialImpactEvaluation {
+    func evaluateSocialImpact(_ interventions: [SocialIntervention], baselines: [SocialBaseline])
+        async -> SocialImpactEvaluation
+    {
         return SocialImpactEvaluation(
             evaluationId: "impact_eval_\(UUID().uuidString.prefix(8))",
             interventions: interventions,
@@ -1623,7 +1792,89 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
 
 /// Community support systems implementation
 class CommunitySupportSystemsImpl: CommunitySupportSystems {
-    func assessCommunityNeeds(_ communities: [Community], indicators: [NeedIndicator]) async -> CommunityNeedsAssessment {
+    let systemsId: String
+    let needsAssessment: NeedsAssessmentEngine
+    let programCoordination: ProgramCoordinationSystem
+    let resourceMobilization: ResourceMobilizationEngine
+    let networkStrengthening: NetworkStrengtheningSystem
+    let engagementFacilitation: EngagementFacilitationSystem
+    let wellbeingMonitoring: WellbeingMonitoringSystem
+
+    init(
+        systemsId: String = "default_community_support",
+        needsAssessment: NeedsAssessmentEngine = NeedsAssessmentEngine(
+            engineId: "default_needs",
+            indicators: [],
+            assessment: AssessmentMethodology(
+                type: .comprehensive,
+                frequency: 2_592_000,
+                coverage: 0.9
+            ),
+            frequency: 2_592_000
+        ),
+        programCoordination: ProgramCoordinationSystem = ProgramCoordinationSystem(
+            systemId: "default_prog_coord",
+            programs: [],
+            coordination: ProgramCoordination(
+                level: .integrated,
+                automation: 0.85,
+                effectiveness: 0.88
+            )
+        ),
+        resourceMobilization: ResourceMobilizationEngine = ResourceMobilizationEngine(
+            engineId: "default_res_mob",
+            resources: CommunityResources(
+                resourcesId: "default_comm_res",
+                human: 1000,
+                financial: 1_000_000,
+                physical: 500,
+                social: 200
+            ),
+            mobilization: ResourceMobilization(
+                efficiency: 0.85,
+                speed: 0.8,
+                sustainability: 0.9
+            )
+        ),
+        networkStrengthening: NetworkStrengtheningSystem = NetworkStrengtheningSystem(
+            systemId: "default_net_strength",
+            networks: [],
+            strengthening: NetworkStrengthening(
+                connections: 0,
+                quality: 0.8,
+                resilience: 0.85
+            )
+        ),
+        engagementFacilitation: EngagementFacilitationSystem = EngagementFacilitationSystem(
+            systemId: "default_engage_fac",
+            platforms: [],
+            facilitation: EngagementFacilitation(
+                participation: 0.75,
+                satisfaction: 0.82,
+                impact: 0.78
+            )
+        ),
+        wellbeingMonitoring: WellbeingMonitoringSystem = WellbeingMonitoringSystem(
+            systemId: "default_well_mon",
+            metrics: [],
+            monitoring: WellbeingMonitoring(
+                coverage: 0.9,
+                frequency: 604800,
+                accuracy: 0.85
+            )
+        )
+    ) {
+        self.systemsId = systemsId
+        self.needsAssessment = needsAssessment
+        self.programCoordination = programCoordination
+        self.resourceMobilization = resourceMobilization
+        self.networkStrengthening = networkStrengthening
+        self.engagementFacilitation = engagementFacilitation
+        self.wellbeingMonitoring = wellbeingMonitoring
+    }
+    func assessCommunityNeeds(_ communities: [Community], indicators: [NeedIndicator]) async
+        -> CommunityNeedsAssessment
+    {
         return CommunityNeedsAssessment(
             assessmentId: "needs_assess_\(UUID().uuidString.prefix(8))",
             communities: communities,
@@ -1638,7 +1889,9 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
         )
     }
 
-    func coordinateSupportPrograms(_ programs: [SupportProgram], communities: [Community]) async -> SupportCoordination {
+    func coordinateSupportPrograms(_ programs: [SupportProgram], communities: [Community]) async
+        -> SupportCoordination
+    {
         return SupportCoordination(
             coordinationId: "support_coord_\(UUID().uuidString.prefix(8))",
             programs: programs,
@@ -1653,7 +1906,9 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
         )
     }
 
-    func mobilizeCommunityResources(_ resources: CommunityResources, initiatives: [CommunityInitiative]) async -> ResourceMobilization {
+    func mobilizeCommunityResources(
+        _ resources: CommunityResources, initiatives: [CommunityInitiative]
+    ) async -> ResourceMobilization {
         return ResourceMobilization(
             mobilizationId: "res_mob_\(UUID().uuidString.prefix(8))",
             resources: resources,
@@ -1668,7 +1923,9 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
         )
     }
 
-    func strengthenSocialNetworks(_ networks: [SocialNetwork], connections: [NetworkConnection]) async -> NetworkStrengthening {
+    func strengthenSocialNetworks(_ networks: [SocialNetwork], connections: [NetworkConnection])
+        async -> NetworkStrengthening
+    {
         return NetworkStrengthening(
             strengtheningId: "net_strength_\(UUID().uuidString.prefix(8))",
             networks: networks,
@@ -1683,7 +1940,9 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
         )
     }
 
-    func facilitateCommunityEngagement(_ communities: [Community], platforms: [EngagementPlatform]) async -> CommunityEngagement {
+    func facilitateCommunityEngagement(_ communities: [Community], platforms: [EngagementPlatform])
+        async -> CommunityEngagement
+    {
         return CommunityEngagement(
             engagementId: "comm_engage_\(UUID().uuidString.prefix(8))",
             communities: communities,
@@ -1698,7 +1957,9 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
         )
     }
 
-    func monitorCommunityWellbeing(_ communities: [Community], metrics: [WellbeingMetric]) async -> CommunityMonitoring {
+    func monitorCommunityWellbeing(_ communities: [Community], metrics: [WellbeingMetric]) async
+        -> CommunityMonitoring
+    {
         return CommunityMonitoring(
             monitoringId: "comm_mon_\(UUID().uuidString.prefix(8))",
             communities: communities,
@@ -1716,7 +1977,9 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
 
 /// Equality frameworks implementation
 class EqualityFrameworksImpl: EqualityFrameworks {
-    func measureSocialInequality(_ populations: [Population], dimensions: [InequalityDimension]) async -> InequalityMeasurement {
+    func measureSocialInequality(_ populations: [Population], dimensions: [InequalityDimension])
+        async -> InequalityMeasurement
+    {
         return InequalityMeasurement(
             measurementId: "ineq_meas_\(UUID().uuidString.prefix(8))",
             populations: populations,
@@ -1731,7 +1994,9 @@ class EqualityFrameworksImpl: EqualityFrameworks {
         )
     }
 
-    func designEqualityInterventions(_ inequalities: [SocialInequality], frameworks: [EqualityFramework]) async -> InterventionDesign {
+    func designEqualityInterventions(
+        _ inequalities: [SocialInequality], frameworks: [EqualityFramework]
+    ) async -> InterventionDesign {
         return InterventionDesign(
             designId: "intervene_design_\(UUID().uuidString.prefix(8))",
             inequalities: inequalities,
@@ -1746,7 +2011,9 @@ class EqualityFrameworksImpl: EqualityFrameworks {
         )
     }
 
-    func implementEqualityPolicies(_ policies: [EqualityPolicy], enforcement: PolicyEnforcement) async -> PolicyImplementation {
+    func implementEqualityPolicies(_ policies: [EqualityPolicy], enforcement: PolicyEnforcement)
+        async -> PolicyImplementation
+    {
         return PolicyImplementation(
             implementationId: "policy_impl_\(UUID().uuidString.prefix(8))",
             policies: policies,
@@ -1761,7 +2028,9 @@ class EqualityFrameworksImpl: EqualityFrameworks {
         )
     }
 
-    func monitorEqualityProgress(_ metrics: [EqualityMetric], targets: [EqualityTarget]) async -> ProgressMonitoring {
+    func monitorEqualityProgress(_ metrics: [EqualityMetric], targets: [EqualityTarget]) async
+        -> ProgressMonitoring
+    {
         return ProgressMonitoring(
             monitoringId: "prog_mon_\(UUID().uuidString.prefix(8))",
             metrics: metrics,
@@ -1776,7 +2045,9 @@ class EqualityFrameworksImpl: EqualityFrameworks {
         )
     }
 
-    func addressDiscrimination(_ incidents: [DiscriminationIncident], responses: [DiscriminationResponse]) async -> DiscriminationAddressing {
+    func addressDiscrimination(
+        _ incidents: [DiscriminationIncident], responses: [DiscriminationResponse]
+    ) async -> DiscriminationAddressing {
         return DiscriminationAddressing(
             addressingId: "disc_addr_\(UUID().uuidString.prefix(8))",
             incidents: incidents,
@@ -1791,7 +2062,9 @@ class EqualityFrameworksImpl: EqualityFrameworks {
         )
     }
 
-    func promoteInclusiveGrowth(_ growth: EconomicGrowth, inclusion: InclusionStrategy) async -> InclusiveGrowthPromotion {
+    func promoteInclusiveGrowth(_ growth: EconomicGrowth, inclusion: InclusionStrategy) async
+        -> InclusiveGrowthPromotion
+    {
         return InclusiveGrowthPromotion(
             promotionId: "incl_growth_prom_\(UUID().uuidString.prefix(8))",
             growth: growth,
@@ -1809,7 +2082,9 @@ class EqualityFrameworksImpl: EqualityFrameworks {
 
 /// Social justice algorithms implementation
 class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
-    func identifySocialInjustices(_ data: SocialData, algorithms: [JusticeAlgorithm]) async -> InjusticeIdentification {
+    func identifySocialInjustices(_ data: SocialData, algorithms: [JusticeAlgorithm]) async
+        -> InjusticeIdentification
+    {
         return InjusticeIdentification(
             identificationId: "injustice_id_\(UUID().uuidString.prefix(8))",
             data: data,
@@ -1824,7 +2099,9 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
         )
     }
 
-    func calculateJusticeRemedies(_ injustices: [SocialInjustice], frameworks: [JusticeFramework]) async -> RemedyCalculation {
+    func calculateJusticeRemedies(_ injustices: [SocialInjustice], frameworks: [JusticeFramework])
+        async -> RemedyCalculation
+    {
         return RemedyCalculation(
             calculationId: "remedy_calc_\(UUID().uuidString.prefix(8))",
             injustices: injustices,
@@ -1839,7 +2116,9 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
         )
     }
 
-    func executeJusticeInterventions(_ interventions: [JusticeIntervention], coordination: InterventionCoordination) async -> InterventionExecution {
+    func executeJusticeInterventions(
+        _ interventions: [JusticeIntervention], coordination: InterventionCoordination
+    ) async -> InterventionExecution {
         return InterventionExecution(
             executionId: "intervene_exec_\(UUID().uuidString.prefix(8))",
             interventions: interventions,
@@ -1854,7 +2133,9 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
         )
     }
 
-    func monitorJusticeOutcomes(_ outcomes: [JusticeOutcome], metrics: [JusticeMetric]) async -> OutcomeMonitoring {
+    func monitorJusticeOutcomes(_ outcomes: [JusticeOutcome], metrics: [JusticeMetric]) async
+        -> OutcomeMonitoring
+    {
         return OutcomeMonitoring(
             monitoringId: "outcome_mon_\(UUID().uuidString.prefix(8))",
             outcomes: outcomes,
@@ -1869,12 +2150,14 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
         )
     }
 
-    func preventFutureInjustices(_ patterns: [InjusticePattern], prevention: PreventionStrategy) async -> InjusticePrevention {
+    func preventFutureInjustices(_ patterns: [InjusticePattern], prevention: PreventionStrategy)
+        async -> InjusticePrevention
+    {
         return InjusticePrevention(
             preventionId: "injustice_prev_\(UUID().uuidString.prefix(8))",
             patterns: patterns,
             prevention: prevention,
-            prevention: InjusticePrevention.PreventionResult(
+            result: InjusticePrevention.PreventionResult(
                 prevented: true,
                 effectiveness: 0.8,
                 coverage: 0.85,
@@ -1884,7 +2167,9 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
         )
     }
 
-    func ensureAccountability(_ actions: [AccountableAction], oversight: AccountabilityOversight) async -> AccountabilityEnsurance {
+    func ensureAccountability(_ actions: [AccountableAction], oversight: AccountabilityOversight)
+        async -> AccountabilityEnsurance
+    {
         return AccountabilityEnsurance(
             ensuranceId: "account_ens_\(UUID().uuidString.prefix(8))",
             actions: actions,
@@ -1902,7 +2187,9 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
 
 /// Poverty alleviation implementation
 class PovertyAlleviationImpl: PovertyAlleviation {
-    func identifyPovertyPopulations(_ data: SocioeconomicData, thresholds: [PovertyThreshold]) async -> PovertyIdentification {
+    func identifyPovertyPopulations(_ data: SocioeconomicData, thresholds: [PovertyThreshold]) async
+        -> PovertyIdentification
+    {
         return PovertyIdentification(
             identificationId: "pov_id_\(UUID().uuidString.prefix(8))",
             data: data,
@@ -1917,7 +2204,9 @@ class PovertyAlleviationImpl: PovertyAlleviation {
         )
     }
 
-    func designPovertyPrograms(_ populations: [PovertyPopulation], resources: PovertyResources) async -> ProgramDesign {
+    func designPovertyPrograms(_ populations: [PovertyPopulation], resources: PovertyResources)
+        async -> ProgramDesign
+    {
         return ProgramDesign(
             designId: "prog_design_\(UUID().uuidString.prefix(8))",
             populations: populations,
@@ -1932,7 +2221,9 @@ class PovertyAlleviationImpl: PovertyAlleviation {
         )
     }
 
-    func implementPovertyInterventions(_ programs: [PovertyProgram], coordination: ProgramCoordination) async -> InterventionImplementation {
+    func implementPovertyInterventions(
+        _ programs: [PovertyProgram], coordination: ProgramCoordination
+    ) async -> InterventionImplementation {
         return InterventionImplementation(
             implementationId: "intervene_impl_\(UUID().uuidString.prefix(8))",
             programs: programs,
@@ -1947,7 +2238,9 @@ class PovertyAlleviationImpl: PovertyAlleviation {
         )
     }
 
-    func monitorPovertyReduction(_ metrics: [PovertyMetric], targets: [PovertyTarget]) async -> PovertyMonitoring {
+    func monitorPovertyReduction(_ metrics: [PovertyMetric], targets: [PovertyTarget]) async
+        -> PovertyMonitoring
+    {
         return PovertyMonitoring(
             monitoringId: "pov_mon_\(UUID().uuidString.prefix(8))",
             metrics: metrics,
@@ -1962,7 +2255,9 @@ class PovertyAlleviationImpl: PovertyAlleviation {
         )
     }
 
-    func evaluateProgramEffectiveness(_ programs: [PovertyProgram], outcomes: [ProgramOutcome]) async -> EffectivenessEvaluation {
+    func evaluateProgramEffectiveness(_ programs: [PovertyProgram], outcomes: [ProgramOutcome])
+        async -> EffectivenessEvaluation
+    {
         return EffectivenessEvaluation(
             evaluationId: "eff_eval_\(UUID().uuidString.prefix(8))",
             programs: programs,
@@ -1977,12 +2272,14 @@ class PovertyAlleviationImpl: PovertyAlleviation {
         )
     }
 
-    func scaleSuccessfulPrograms(_ successes: [SuccessfulProgram], scaling: ScalingStrategy) async -> ProgramScaling {
+    func scaleSuccessfulPrograms(_ successes: [SuccessfulProgram], scaling: ScalingStrategy) async
+        -> ProgramScaling
+    {
         return ProgramScaling(
             scalingId: "prog_scale_\(UUID().uuidString.prefix(8))",
             successes: successes,
             scaling: scaling,
-            scaling: ProgramScaling.ScalingResult(
+            result: ProgramScaling.ScalingResult(
                 scaled: true,
                 coverage: 0.75,
                 sustainability: 0.85,
@@ -1995,103 +2292,2600 @@ class PovertyAlleviationImpl: PovertyAlleviation {
 
 // MARK: - Protocol Extensions
 
+// MARK: - Missing System and Engine Types
+
+/// Income distribution network
+struct IncomeDistributionNetwork {
+    let networkId: String
+    let channels: [String]
+    let automation: Double
+    let security: Double
+}
+
+/// Income adjustment system
+struct IncomeAdjustmentSystem {
+    let systemId: String
+    let frequency: TimeInterval
+    let automation: Bool
+    let triggers: [String]
+}
+
+/// Income monitoring system
+struct IncomeMonitoringSystem {
+    let systemId: String
+    let metrics: [String]
+    let frequency: TimeInterval
+    let coverage: Double
+}
+
+/// Income optimization engine
+struct IncomeOptimizationEngine {
+    let engineId: String
+    let algorithms: [String]
+    let objectives: [String]
+    let constraints: [String]
+}
+
+/// Income sustainability framework
+struct IncomeSustainabilityFramework {
+    let frameworkId: String
+    let assessment: SustainabilityAssessment
+    let monitoring: SustainabilityMonitoring
+}
+
+/// Sustainability assessment
+struct SustainabilityAssessment {
+    let sustainable: Bool
+    let duration: TimeInterval
+    let adjustments: [String]
+    let risks: [String]
+}
+
+/// Sustainability monitoring
+struct SustainabilityMonitoring {
+    let frequency: TimeInterval
+    let indicators: [String]
+    let thresholds: [Double]
+}
+
+/// Income algorithm enum
+enum IncomeAlgorithm {
+    case basic
+    case equityBased
+    case needsBased
+    case quantumOptimization
+}
+
+/// Calculation parameter
+struct CalculationParameter {
+    let name: String
+    let value: Double
+    let unit: String
+}
+
+/// Program optimization engine
+struct ProgramOptimizationEngine {
+    let engineId: String
+    let algorithms: [OptimizationAlgorithm]
+    let constraints: [OptimizationConstraint]
+    let objectives: [OptimizationObjective]
+}
+
+/// Optimization algorithm enum
+enum OptimizationAlgorithm {
+    case quantumAllocation
+    case utilityMaximization
+    case equityBased
+    case quantumOptimization
+    case gradientDescent
+}
+
+/// Optimization constraint
+struct OptimizationConstraint {
+    let constraintId: String
+    let type: String
+    let value: Double
+    let description: String
+}
+
+/// Optimization objective
+struct OptimizationObjective {
+    let objectiveId: String
+    let name: String
+    let weight: Double
+    let target: Double
+}
+
+/// Resource allocation system
+struct ResourceAllocationSystem {
+    let systemId: String
+    let algorithm: OptimizationAlgorithm
+    let efficiency: Double
+    let fairness: Double
+}
+
+/// Utility maximization engine
+struct UtilityMaximizationEngine {
+    let engineId: String
+    let function: UtilityFunction
+    let optimization: OptimizationAlgorithm
+    let convergence: Double
+}
+
+/// Utility function enum
+enum UtilityFunction {
+    case socialWelfare
+    case equity
+    case efficiency
+}
+
+/// Equity efficiency balancer
+struct EquityEfficiencyBalancer {
+    let balancerId: String
+    let equity: EquityMetrics
+    let efficiency: EfficiencyMetrics
+    let balance: Double
+}
+
+/// Service coordination system
+struct ServiceCoordinationSystem {
+    let systemId: String
+    let services: [String]
+    let coordination: CoordinationLevel
+}
+
+/// Impact evaluation system
+struct ImpactEvaluationSystem {
+    let systemId: String
+    let methodology: EvaluationMethodology
+    let metrics: [String]
+    let baselines: [String]
+}
+
+/// Needs assessment engine
+struct NeedsAssessmentEngine {
+    let engineId: String
+    let indicators: [NeedIndicator]
+    let assessment: AssessmentMethodology
+    let frequency: TimeInterval
+}
+
+/// Assessment methodology
+struct AssessmentMethodology {
+    let type: AssessmentType
+    let frequency: TimeInterval
+    let coverage: Double
+}
+
+/// Assessment type enum
+enum AssessmentType {
+    case comprehensive
+    case targeted
+    case rapid
+}
+
+/// Program coordination system
+struct ProgramCoordinationSystem {
+    let systemId: String
+    let programs: [String]
+    let coordination: ProgramCoordination
+}
+
+/// Resource mobilization engine
+struct ResourceMobilizationEngine {
+    let engineId: String
+    let resources: CommunityResources
+    let mobilization: ResourceMobilization
+}
+
+/// Network strengthening system
+struct NetworkStrengtheningSystem {
+    let systemId: String
+    let networks: [String]
+    let strengthening: NetworkStrengthening
+}
+
+/// Engagement facilitation system
+struct EngagementFacilitationSystem {
+    let systemId: String
+    let platforms: [String]
+    let facilitation: EngagementFacilitation
+}
+
+/// Engagement facilitation
+struct EngagementFacilitation {
+    let participation: Double
+    let satisfaction: Double
+    let impact: Double
+}
+
+/// Wellbeing monitoring system
+struct WellbeingMonitoringSystem {
+    let systemId: String
+    let metrics: [String]
+    let monitoring: WellbeingMonitoring
+}
+
+/// Wellbeing monitoring
+struct WellbeingMonitoring {
+    let coverage: Double
+    let frequency: TimeInterval
+    let accuracy: Double
+}
+
+/// Inequality measurement system
+struct InequalityMeasurementSystem {
+    let systemId: String
+    let dimensions: [InequalityDimension]
+    let metrics: [InequalityMetric]
+    let baselines: [InequalityBaseline]
+}
+
+/// Inequality dimension
+struct InequalityDimension {
+    let dimensionId: String
+    let name: String
+    let weight: Double
+}
+
+/// Inequality metric
+struct InequalityMetric {
+    let metricId: String
+    let name: String
+    let value: Double
+    let threshold: Double
+}
+
+/// Inequality baseline
+struct InequalityBaseline {
+    let baselineId: String
+    let metric: String
+    let value: Double
+    let date: Date
+}
+
+/// Inequality trend
+struct InequalityTrend {
+    let trendId: String
+    let metric: String
+    let direction: Double
+    let significance: Double
+}
+
+/// Intervention design engine
+struct InterventionDesignEngine {
+    let engineId: String
+    let interventions: [String]
+    let design: InterventionDesign
+}
+
+/// Policy implementation system
+struct PolicyImplementationSystem {
+    let systemId: String
+    let policies: [String]
+    let implementation: PolicyImplementation
+}
+
+/// Progress monitoring system
+struct ProgressMonitoringSystem {
+    let systemId: String
+    let metrics: [String]
+    let monitoring: ProgressMonitoring
+}
+
+/// Discrimination addressing system
+struct DiscriminationAddressingSystem {
+    let systemId: String
+    let incidents: [String]
+    let addressing: DiscriminationAddressing
+}
+
+/// Inclusive growth promotion system
+struct InclusiveGrowthPromotionSystem {
+    let systemId: String
+    let growth: EconomicGrowth
+    let promotion: InclusiveGrowthPromotion
+}
+
+/// Economic growth
+struct EconomicGrowth {
+    let rate: Double
+    let inclusive: Double
+    let sustainable: Double
+    let projections: [EconomicProjection]
+}
+
+/// Injustice identification engine
+struct InjusticeIdentificationEngine {
+    let engineId: String
+    let algorithms: [String]
+    let sensitivity: Double
+    let falsePositiveRate: Double
+}
+
+/// Remedy calculation system
+struct RemedyCalculationSystem {
+    let systemId: String
+    let remedies: [String]
+    let calculation: RemedyCalculation
+}
+
+/// Intervention execution engine
+struct InterventionExecutionEngine {
+    let engineId: String
+    let interventions: [String]
+    let execution: InterventionExecution
+}
+
+/// Outcome monitoring system
+struct OutcomeMonitoringSystem {
+    let systemId: String
+    let outcomes: [String]
+    let monitoring: OutcomeMonitoring
+}
+
+/// Injustice prevention system
+struct InjusticePreventionSystem {
+    let systemId: String
+    let patterns: [String]
+    let prevention: InjusticePrevention
+}
+
+/// Accountability ensurance system
+struct AccountabilityEnsuranceSystem {
+    let systemId: String
+    let actions: [String]
+    let ensurance: AccountabilityEnsurance
+}
+
+/// Population identification system
+struct PopulationIdentificationSystem {
+    let systemId: String
+    let thresholds: [PovertyThreshold]
+    let identification: IdentificationMethodology
+    let coverage: Double
+}
+
+/// Identification methodology
+struct IdentificationMethodology {
+    let type: IdentificationType
+    let accuracy: Double
+    let coverage: Double
+}
+
+/// Program design engine
+struct ProgramDesignEngine {
+    let engineId: String
+    let programs: [String]
+    let design: ProgramDesign
+}
+
+/// Intervention implementation system
+struct InterventionImplementationSystem {
+    let systemId: String
+    let interventions: [String]
+    let implementation: InterventionImplementation
+}
+
+/// Poverty monitoring system
+struct PovertyMonitoringSystem {
+    let systemId: String
+    let metrics: [String]
+    let monitoring: PovertyMonitoring
+}
+
+/// Effectiveness evaluation engine
+struct EffectivenessEvaluationEngine {
+    let engineId: String
+    let evaluations: [String]
+    let evaluation: EffectivenessEvaluation
+}
+
+/// Program scaling system
+struct ProgramScalingSystem {
+    let systemId: String
+    let programs: [String]
+    let scaling: ProgramScaling
+}
+
+// MARK: - Missing Result Types
+
+/// Resource allocation result
+struct ResourceAllocationResult {
+    let allocated: Bool
+    let efficiency: Double
+    let fairness: Double
+    let utilization: Double
+}
+
+/// Utility maximization result
+struct UtilityMaximizationResult {
+    let maximized: Bool
+    let utility: Double
+    let convergence: Double
+    let iterations: Int
+}
+
+/// Equity efficiency balance result
+struct EquityEfficiencyBalanceResult {
+    let balanced: Bool
+    let equity: Double
+    let efficiency: Double
+    let tradeoffs: [OptimizationTradeoff]
+}
+
+/// Service coordination result
+struct ServiceCoordinationResult {
+    let coordinated: Bool
+    let integration: Double
+    let conflicts: Int
+    let efficiency: Double
+}
+
+/// Resource mobilization result
+struct ResourceMobilizationResult {
+    let mobilized: Bool
+    let resources: Double
+    let efficiency: Double
+    let sustainability: Double
+}
+
+/// Network strengthening result
+struct NetworkStrengtheningResult {
+    let strengthened: Bool
+    let connections: Int
+    let quality: Double
+    let resilience: Double
+}
+
+/// Community engagement result
+struct CommunityEngagementResult {
+    let engaged: Bool
+    let participation: Double
+    let satisfaction: Double
+    let impact: Double
+}
+
+/// Community monitoring result
+struct CommunityMonitoringResult {
+    let monitored: Bool
+    let coverage: Double
+    let frequency: TimeInterval
+    let accuracy: Double
+}
+
+/// Intervention design result
+struct InterventionDesignResult {
+    let designed: Bool
+    let interventions: Int
+    let effectiveness: Double
+    let feasibility: Double
+}
+
+/// Policy implementation result
+struct PolicyImplementationResult {
+    let implemented: Bool
+    let policies: Int
+    let success: Double
+    let compliance: Double
+}
+
+/// Progress monitoring result
+struct ProgressMonitoringResult {
+    let monitored: Bool
+    let progress: Double
+    let targets: Double
+    let trends: [Double]
+}
+
+/// Discrimination addressing result
+struct DiscriminationAddressingResult {
+    let addressed: Bool
+    let incidents: Int
+    let response: Double
+    let prevention: Double
+}
+
+/// Inclusive growth promotion result
+struct InclusiveGrowthPromotionResult {
+    let promoted: Bool
+    let growth: Double
+    let inclusion: Double
+    let equity: Double
+}
+
+/// Remedy calculation result
+struct RemedyCalculationResult {
+    let calculated: Bool
+    let remedies: Int
+    let fairness: Double
+    let adequacy: Double
+}
+
+/// Intervention execution result
+struct InterventionExecutionResult {
+    let executed: Bool
+    let interventions: Int
+    let success: Double
+    let timeliness: Double
+}
+
+/// Outcome monitoring result
+struct OutcomeMonitoringResult {
+    let monitored: Bool
+    let outcomes: Int
+    let improvement: Double
+    let sustainability: Double
+}
+
+/// Injustice prevention result
+struct InjusticePreventionResult {
+    let prevented: Bool
+    let effectiveness: Double
+    let coverage: Double
+    let adaptation: Double
+}
+
+/// Accountability ensurance result
+struct AccountabilityEnsuranceResult {
+    let ensured: Bool
+    let transparency: Double
+    let enforcement: Double
+    let trust: Double
+}
+
+/// Poverty identification result
+struct PovertyIdentificationResult {
+    let identified: Int
+    let coverage: Double
+    let accuracy: Double
+    let segmentation: [PopulationSegment]
+}
+
+/// Population segment
+struct PopulationSegment {
+    let segmentId: String
+    let characteristics: [String]
+    let size: Int
+    let severity: Double
+}
+
+/// Program design result
+struct ProgramDesignResult {
+    let designed: Bool
+    let programs: Int
+    let effectiveness: Double
+    let costEfficiency: Double
+}
+
+/// Intervention implementation result
+struct InterventionImplementationResult {
+    let implemented: Bool
+    let interventions: Int
+    let success: Double
+    let coverage: Double
+}
+
+/// Poverty monitoring result
+struct PovertyMonitoringResult {
+    let monitored: Bool
+    let reduction: Double
+    let targets: Double
+    let trends: [Double]
+}
+
+/// Effectiveness evaluation result
+struct EffectivenessEvaluationResult {
+    let evaluated: Bool
+    let programs: Int
+    let effectiveness: Double
+    let impact: Double
+}
+
+/// Program scaling result
+struct ProgramScalingResult {
+    let scaled: Bool
+    let programs: Int
+    let coverage: Double
+    let sustainability: Double
+}
+
+/// Execution result
+struct ExecutionResult {
+    let executed: Bool
+    let success: Double
+    let timeliness: Double
+    let impact: Double
+}
+
+/// Alleviation result
+struct AlleviationResult {
+    let alleviated: Bool
+    let reduction: Double
+    let coverage: Double
+    let sustainability: Double
+}
+
+// MARK: - Missing Supporting Types
+
+/// Economic system
+struct EconomicSystem {
+    let systemId: String
+    let gdp: Double
+    let inflation: Double
+    let unemployment: Double
+    let growth: Double
+}
+
+/// Governance system
+struct GovernanceSystem {
+    let systemId: String
+    let type: String
+    let effectiveness: Double
+    let transparency: Double
+    let accountability: Double
+}
+
+/// Cultural system
+struct CulturalSystem {
+    let systemId: String
+    let diversity: Double
+    let cohesion: Double
+    let values: [String]
+    let traditions: [String]
+}
+
+/// Geographic region
+struct GeographicRegion {
+    let regionId: String
+    let name: String
+    let area: Double
+    let population: Int
+    let climate: String
+}
+
+/// Demographic data
+struct DemographicData {
+    let age: Int
+    let gender: String
+    let ethnicity: String
+    let education: String
+    let income: Double
+}
+
+/// Socioeconomic status
+struct SocioeconomicStatus {
+    let statusId: String
+    let income: Double
+    let wealth: Double
+    let education: String
+    let occupation: String
+}
+
+/// Social needs
+struct SocialNeeds {
+    let needsId: String
+    let basic: Bool
+    let social: Bool
+    let economic: Bool
+    let health: Bool
+    let education: Bool
+}
+
+/// Social contributions
+struct SocialContributions {
+    let contributionsId: String
+    let taxes: Double
+    let volunteering: Double
+    let community: Double
+    let innovation: Double
+}
+
+/// Citizen rights
+struct CitizenRights {
+    let rightsId: String
+    let voting: Bool
+    let property: Bool
+    let speech: Bool
+    let assembly: Bool
+    let dueProcess: Bool
+}
+
+/// Citizen status
+enum CitizenStatus {
+    case active
+    case inactive
+    case suspended
+    case deported
+}
+
+/// Wealth bracket
+enum WealthBracket {
+    case lowest
+    case low
+    case middle
+    case high
+    case highest
+}
+
+/// Policy objective
+struct PolicyObjective {
+    let objectiveId: String
+    let name: String
+    let description: String
+    let priority: Double
+}
+
+/// Beneficiary group
+struct BeneficiaryGroup {
+    let groupId: String
+    let name: String
+    let size: Int
+    let characteristics: [String]
+}
+
+/// Social technology
+struct SocialTechnology {
+    let technologyId: String
+    let name: String
+    let type: String
+    let effectiveness: Double
+    let adoption: Double
+}
+
+/// Social partnership
+struct SocialPartnership {
+    let partnershipId: String
+    let partners: [String]
+    let scope: String
+    let duration: TimeInterval
+    let impact: Double
+}
+
+/// Resource category
+enum ResourceCategory {
+    case financial
+    case human
+    case physical
+    case technological
+}
+
+/// Geographic location
+struct GeographicLocation {
+    let latitude: Double
+    let longitude: Double
+    let altitude: Double
+    let timezone: String
+}
+
+/// Demographic profile
+struct DemographicProfile {
+    let profileId: String
+    let ageDistribution: [String: Double]
+    let genderDistribution: [String: Double]
+    let ethnicDistribution: [String: Double]
+    let educationDistribution: [String: Double]
+}
+
+/// Socioeconomic profile
+struct SocioeconomicProfile {
+    let profileId: String
+    let incomeDistribution: [String: Double]
+    let wealthDistribution: [String: Double]
+    let povertyRate: Double
+    let unemploymentRate: Double
+}
+
+/// Community infrastructure
+struct CommunityInfrastructure {
+    let infrastructureId: String
+    let transportation: Double
+    let utilities: Double
+    let communication: Double
+    let facilities: Double
+}
+
+/// Social networks
+struct SocialNetworks {
+    let networksId: String
+    let density: Double
+    let connectivity: Double
+    let diversity: Double
+    let strength: Double
+}
+
+/// Community status
+enum CommunityStatus {
+    case developing
+    case established
+    case thriving
+    case declining
+}
+
+/// Basic needs
+struct BasicNeeds {
+    let needsId: String
+    let food: Bool
+    let water: Bool
+    let shelter: Bool
+    let clothing: Bool
+    let healthcare: Bool
+}
+
+/// Economic needs
+struct EconomicNeeds {
+    let needsId: String
+    let employment: Bool
+    let income: Bool
+    let savings: Bool
+    let insurance: Bool
+    let assets: Bool
+}
+
+/// Health needs
+struct HealthNeeds {
+    let needsId: String
+    let medical: Bool
+    let mental: Bool
+    let preventive: Bool
+    let emergency: Bool
+    let chronic: Bool
+}
+
+/// Education needs
+struct EducationNeeds {
+    let needsId: String
+    let basic: Bool
+    let secondary: Bool
+    let tertiary: Bool
+    let vocational: Bool
+    let lifelong: Bool
+}
+
+/// Need priority
+enum NeedPriority {
+    case critical
+    case high
+    case medium
+    case low
+}
+
+/// Affected group
+struct AffectedGroup {
+    let groupId: String
+    let name: String
+    let size: Int
+    let vulnerability: Double
+}
+
+/// Inequality cause
+struct InequalityCause {
+    let causeId: String
+    let name: String
+    let impact: Double
+    let addressable: Bool
+}
+
+/// Inequality consequence
+struct InequalityConsequence {
+    let consequenceId: String
+    let name: String
+    let severity: Double
+    let duration: TimeInterval
+}
+
+/// Expected outcome
+struct ExpectedOutcome {
+    let outcomeId: String
+    let description: String
+    let probability: Double
+    let timeframe: TimeInterval
+}
+
+/// Remedy scope
+enum RemedyScope {
+    case individual
+    case group
+    case systemic
+}
+
+/// Restitution
+struct Restitution {
+    let restitutionId: String
+    let type: String
+    let amount: Double
+    let timeline: TimeInterval
+}
+
+/// Prevention measure
+struct PreventionMeasure {
+    let measureId: String
+    let type: String
+    let effectiveness: Double
+    let cost: Double
+}
+
+/// Affected party
+struct AffectedParty {
+    let partyId: String
+    let name: String
+    let impact: Double
+    let vulnerability: Double
+}
+
+/// Responsible party
+struct ResponsibleParty {
+    let partyId: String
+    let name: String
+    let responsibility: Double
+    let accountability: Double
+}
+
+/// Justice evidence
+struct JusticeEvidence {
+    let evidenceId: String
+    let type: String
+    let strength: Double
+    let reliability: Double
+}
+
+/// Population characteristics
+struct PopulationCharacteristics {
+    let characteristicsId: String
+    let demographics: [String: Double]
+    let socioeconomic: [String: Double]
+    let geographic: [String: Double]
+    let cultural: [String: Double]
+}
+
+/// Poverty cause
+struct PovertyCause {
+    let causeId: String
+    let name: String
+    let impact: Double
+    let addressable: Bool
+}
+
+/// Poverty intervention
+struct PovertyIntervention {
+    let interventionId: String
+    let type: String
+    let scope: String
+    let resources: Double
+    let expectedImpact: Double
+}
+
+/// Adjustment recommendation
+struct AdjustmentRecommendation {
+    let recommendationId: String
+    let type: String
+    let description: String
+    let impact: Double
+}
+
+/// Sustainability risk
+struct SustainabilityRisk {
+    let riskId: String
+    let type: String
+    let probability: Double
+    let impact: Double
+}
+
+/// Basic income calculation
+struct BasicIncomeCalculation {
+    let base: Double
+    let adjustment: Double
+    let final: Double
+    let methodology: IncomeMethodology
+}
+
+/// Income methodology
+enum IncomeMethodology {
+    case costOfLiving
+    case equityBased
+    case needsBased
+    case universal
+}
+
+/// Distribution result
+struct DistributionResult {
+    let success: Bool
+    let coverage: Double
+    let timeliness: Double
+    let errors: Int
+}
+
+/// Welfare optimization result
+struct WelfareOptimizationResult {
+    let optimized: Bool
+    let improvement: Double
+    let allocation: ResourceAllocationResult
+    let utility: UtilityMaximizationResult
+    let balance: EquityEfficiencyBalanceResult
+    let coordination: ServiceCoordinationResult
+}
+
+/// Welfare optimization
+struct WelfareOptimization {
+    let optimizationId: String
+    let programs: [WelfareProgram]
+    let beneficiaries: [Beneficiary]
+    let optimization: OptimizationResult
+    let recommendations: [String]
+    let timestamp: Date
+
+    struct OptimizationResult {
+        let optimized: Bool
+        let efficiency: Double
+        let coverage: Double
+        let costEffectiveness: Double
+    }
+}
+
+/// Support gap
+struct SupportGap {
+    let gapId: String
+    let type: String
+    let severity: Double
+    let addressable: Bool
+}
+
+/// Inequality measurement result
+struct InequalityMeasurementResult {
+    let measured: Bool
+    let metrics: [InequalityMetric]
+    let baselines: [InequalityBaseline]
+    let trends: [InequalityTrend]
+}
+
+/// Discrimination incident
+struct DiscriminationIncident {
+    let incidentId: String
+    let type: String
+    let victims: [String]
+    let perpetrators: [String]
+    let severity: Double
+}
+
+/// Discrimination response
+struct DiscriminationResponse {
+    let responseId: String
+    let type: String
+    let effectiveness: Double
+    let timeline: TimeInterval
+}
+
+/// Justice intervention
+struct JusticeIntervention {
+    let interventionId: String
+    let type: String
+    let scope: String
+    let resources: Double
+    let expectedOutcome: String
+}
+
+/// Justice outcome
+struct JusticeOutcome {
+    let outcomeId: String
+    let metric: String
+    let value: Double
+    let baseline: Double
+    let improvement: Double
+}
+
+/// Injustice pattern
+struct InjusticePattern {
+    let patternId: String
+    let type: String
+    let frequency: Double
+    let severity: Double
+    let predictability: Double
+}
+
+/// Prevention strategy
+struct PreventionStrategy {
+    let strategyId: String
+    let type: StrategyType
+    let target: PatternType
+    let effectiveness: Double
+    let cost: Double
+}
+
+/// Strategy type
+enum StrategyType {
+    case proactive
+    case reactive
+    case systemic
+    case educational
+}
+
+/// Pattern type
+enum PatternType {
+    case discrimination
+    case inequality
+    case injustice
+    case exploitation
+}
+
+/// Accountable action
+struct AccountableAction {
+    let actionId: String
+    let type: String
+    let responsible: String
+    let oversight: String
+    let transparency: Double
+}
+
+/// Accountability oversight
+struct AccountabilityOversight {
+    let oversightId: String
+    let type: String
+    let frequency: TimeInterval
+    let effectiveness: Double
+    let independence: Double
+}
+
+/// Socioeconomic indicator
+struct SocioeconomicIndicator {
+    let indicatorId: String
+    let name: String
+    let value: Double
+    let trend: Double
+    let significance: Double
+}
+
+/// Economic trend
+struct EconomicTrend {
+    let trendId: String
+    let indicator: String
+    let direction: Double
+    let magnitude: Double
+    let duration: TimeInterval
+}
+let programId: String
+let name: String
+let impact: Double
+let scalability: Double
+let replicability: Double
+
+/// Scaling strategy
+struct ScalingStrategy {
+    let strategyId: String
+    let approach: String
+    let resources: Double
+    let timeline: TimeInterval
+    let risk: Double
+}
+
+/// Technology resource
+struct TechnologyResource {
+    let resourceId: String
+    let name: String
+    let type: String
+    let capacity: Double
+    let availability: Double
+}
+
+/// Social incident
+struct SocialIncident {
+    let incidentId: String
+    let type: String
+    let location: String
+    let severity: Double
+    let response: String
+}
+
+/// Policy type
+enum PolicyType {
+    case welfare
+    case education
+    case healthcare
+    case housing
+    case employment
+}
+
+/// Policy status
+enum PolicyStatus {
+    case proposed
+    case approved
+    case implemented
+    case evaluated
+    case discontinued
+}
+
+/// Policy scope
+enum PolicyScope {
+    case local
+    case regional
+    case national
+    case international
+}
+
+/// Equality policy
+struct EqualityPolicy {
+    let policyId: String
+    let name: String
+    let target: InequalityType
+    let scope: PolicyScope
+    let resources: Double
+}
+
+/// Inequality type
+enum InequalityType {
+    case income
+    case wealth
+    case opportunity
+    case access
+    case representation
+}
+
+/// Policy enforcement
+struct PolicyEnforcement {
+    let enforcementId: String
+    let mechanisms: [String]
+    let monitoring: [String]
+    let sanctions: [String]
+    let effectiveness: Double
+}
+
+/// Justice framework
+struct JusticeFramework {
+    let frameworkId: String
+    let principles: [String]
+    let mechanisms: [String]
+    let oversight: [String]
+    let adaptability: Double
+}
+
+/// Poverty threshold
+struct PovertyThreshold {
+    let thresholdId: String
+    let value: Double
+    let currency: String
+    let adjustment: Double
+    let frequency: TimeInterval
+}
 extension QuantumSocialServicesEngine: QuantumSocialServices {
     // Protocol requirements already implemented in main class
 }
 
-// MARK: - Error Types
+/// Income effectiveness
+struct IncomeEffectiveness {
+    let monitoringId: String
+    let citizens: [Citizen]
+    let metrics: [SocialMetric]
+    let effectiveness: EffectivenessResult
+    let recommendations: [String]
+    let timestamp: Date
 
-enum QuantumSocialServicesError: Error {
-    case frameworkInitializationFailed
-    case incomeCalculationFailed
-    case welfareOptimizationFailed
-    case communitySupportFailed
-    case equalityEnforcementFailed
-    case justiceExecutionFailed
-    case povertyAlleviationFailed
-}
-
-// MARK: - Utility Extensions
-
-extension QuantumSocialServicesFramework {
-    var socialEquityIndex: Double {
-        let incomeEquality = universalIncome.sustainability.assessment.sustainable ? 0.9 : 0.5
-        let welfareEfficiency = welfareOptimization.equityEfficiency.balance
-        let communitySupport = communitySupport.needsAssessment.assessment.coverage
-        return (incomeEquality + welfareEfficiency + communitySupport) / 3.0
-    }
-
-    var needsOptimization: Bool {
-        return status == .operational && socialEquityIndex < 0.75
+    struct EffectivenessResult {
+        let povertyReduction: Double
+        let wellbeing: Double
+        let economic: Double
+        let social: Double
     }
 }
 
-extension UniversalBasicIncomeCalculation {
-    var perCitizenAverage: Double {
-        return citizens.isEmpty ? 0.0 : total / Double(citizens.count)
-    }
+/// Social metric
+struct SocialMetric {
+    let metricId: String
+    let name: String
+    let value: Double
+    let category: MetricCategory
+    let timestamp: Date
 
-    var sustainabilityScore: Double {
-        return sustainability.sustainable ? 0.9 : 0.4
-    }
-}
-
-extension SocialWelfareOptimization {
-    var overallEfficiency: Double {
-        return (optimization.improvement + allocation.efficiency + utility.utility + balance.equity + coordination.integration) / 5.0
-    }
-
-    var needsAdjustment: Bool {
-        return overallEfficiency < 0.8
+    enum MetricCategory {
+        case poverty
+        case inequality
+        case wellbeing
+        case socialCohesion
     }
 }
 
-extension CommunitySupportCoordination {
-    var supportCoverage: Double {
-        return coordination.coverage
-    }
+/// Income optimization
+struct IncomeOptimization {
+    let optimizationId: String
+    let allocations: [IncomeAllocation]
+    let goals: [SocialGoal]
+    let optimization: OptimizationResult
+    let recommendations: [String]
+    let timestamp: Date
 
-    var communityHealth: Double {
-        return (coordination.efficiency + mobilization.efficiency + engagement.participation + monitoring.accuracy) / 4.0
-    }
-}
-
-extension EqualityEnforcement {
-    var equalityProgress: Double {
-        return (measurement.measured ? 0.8 : 0.0) + monitoring.progress + promotion.equity
-    }
-
-    var needsIntervention: Bool {
-        return equalityProgress < 0.7
+    struct OptimizationResult {
+        let optimized: Bool
+        let efficiency: Double
+        let equity: Double
+        let utility: Double
     }
 }
 
-extension SocialJusticeExecution {
-    var justiceEffectiveness: Double {
-        return (identification.accuracy + calculation.fairness + execution.success + monitoring.improvement) / 4.0
-    }
+/// Income allocation
+struct IncomeAllocation {
+    let allocationId: String
+    let citizenId: String
+    let amount: Double
+    let frequency: IncomeFrequency
+    let conditions: [String]
+}
 
-    var accountabilityLevel: Double {
-        return accountability.transparency
+/// Social goal
+struct SocialGoal {
+    let goalId: String
+    let name: String
+    let target: Double
+    let priority: Double
+    let timeframe: TimeInterval
+}
+
+/// Income sustainability
+struct IncomeSustainability {
+    let sustainabilityId: String
+    let treasury: Treasury
+    let projections: EconomicProjection
+    let assessment: SustainabilityAssessment
+    let recommendations: [String]
+    let timestamp: Date
+
+    struct SustainabilityAssessment {
+        let sustainable: Bool
+        let duration: TimeInterval
+        let confidence: Double
+        let risks: [String]
     }
 }
 
-extension PovertyAlleviation {
-    var povertyReductionRate: Double {
-        return monitoring.reduction
-    }
+/// Economic projection
+struct EconomicProjection {
+    let projectionId: String
+    let gdp: Double
+    let inflation: Double
+    let unemployment: Double
+    let requiredAmount: Double
+    let confidence: Double
+    let timestamp: Date
+}
 
-    var programSuccess: Double {
-        return (design.effectiveness + implementation.success + evaluation.effectiveness + scaling.coverage) / 4.0
+/// Income frequency
+enum IncomeFrequency {
+    case weekly
+    case monthly
+    case quarterly
+    case annually
+}
+
+/// Adjustment reason
+enum AdjustmentReason {
+    case inflation
+    case costOfLiving
+    case economicConditions
+    case policyChange
+}
+
+/// Inflation component
+struct InflationComponent {
+    let componentId: String
+    let name: String
+    let rate: Double
+    let weight: Double
+}
+
+/// Optimization tradeoff
+struct OptimizationTradeoff {
+    let tradeoffId: String
+    let efficiency: Double
+    let equity: Double
+    let description: String
+}
+
+/// Optimization recommendation
+struct OptimizationRecommendation {
+    let recommendationId: String
+    let type: RecommendationType
+    let description: String
+    let impact: Double
+
+    enum RecommendationType {
+        case policy
+        case allocation
+        case monitoring
     }
 }
 
-// MARK: - Codable Support
-
-extension QuantumSocialServicesFramework: Codable {
-    // Implementation for Codable support
+/// Optimization result
+struct OptimizationResult {
+    let optimized: Bool
+    let efficiency: Double
+    let convergence: Bool
+    let iterations: Int
 }
 
-extension UniversalBasicIncomeCalculation: Codable {
-    // Implementation for Codable support
+/// Allocation constraint
+struct AllocationConstraint {
+    let constraintId: String
+    let type: ConstraintType
+    let value: Double
+    let description: String
+
+    enum ConstraintType {
+        case budget
+        case equity
+        case efficiency
+        case policy
+    }
+}
+
+/// Service conflict
+struct ServiceConflict {
+    let conflictId: String
+    let services: [String]
+    let severity: Double
+    let resolution: String
+}
+
+/// Service improvement
+struct ServiceImprovement {
+    let improvementId: String
+    let service: String
+    let metric: String
+    let improvement: Double
+}
+
+/// Coordination result
+struct CoordinationResult {
+    let coordinated: Bool
+    let coverage: Double
+    let efficiency: Double
+    let gaps: [String]
+}
+
+/// Welfare program
+struct WelfareProgram {
+    let programId: String
+    let name: String
+    let type: WelfareProgramType
+    let beneficiaries: Int
+    let budget: Double
+    let duration: TimeInterval
+    let outcomes: [ProgramOutcome]
+    let status: WelfareProgramStatus
+}
+
+/// Welfare program type
+enum WelfareProgramType {
+    case general
+    case housing
+    case food
+    case healthcare
+    case education
+    case employment
+}
+
+/// Welfare program status
+enum WelfareProgramStatus {
+    case planning
+    case active
+    case completed
+    case suspended
+    case cancelled
+}
+
+/// Beneficiary
+struct Beneficiary {
+    let beneficiaryId: String
+    let citizenId: String
+    let programId: String
+    let enrollmentDate: Date
+    let status: BeneficiaryStatus
+
+    enum BeneficiaryStatus {
+        case active
+        case inactive
+        case graduated
+        case suspended
+    }
+}
+
+/// Social priority
+enum SocialPriority {
+    case povertyReduction
+    case inequalityReduction
+    case wellbeingImprovement
+    case socialCohesion
+}
+
+/// Social outcome
+struct SocialOutcome {
+    let outcomeId: String
+    let metric: String
+    let value: Double
+    let baseline: Double
+    let improvement: Double
+}
+
+/// Equity efficiency balance
+struct EquityEfficiencyBalance {
+    let balanceId: String
+    let equity: EquityMetrics
+    let efficiency: EfficiencyMetrics
+    let balance: BalanceResult
+    let timestamp: Date
+
+    struct BalanceResult {
+        let balanced: Bool
+        let equity: Double
+        let efficiency: Double
+        let tradeoffs: [OptimizationTradeoff]
+    }
+}
+
+/// Equity metrics
+struct EquityMetrics {
+    let gini: Double
+    let palma: Double
+    let distribution: [Double]
+}
+
+/// Efficiency metrics
+struct EfficiencyMetrics {
+    let productivity: Double
+    let utilization: Double
+    let waste: Double
+}
+
+/// Social service
+struct SocialService {
+    let serviceId: String
+    let name: String
+    let category: ServiceCategory
+    let beneficiaries: Int
+    let budget: Double
+
+    enum ServiceCategory {
+        case welfare
+        case healthcare
+        case education
+        case housing
+    }
+}
+
+/// Social intervention
+struct SocialIntervention {
+    let interventionId: String
+    let type: InterventionType
+    let target: String
+    let scope: InterventionScope
+    let resources: Double
+
+    enum InterventionType {
+        case policy
+        case program
+        case directAid
+        case education
+    }
+
+    enum InterventionScope {
+        case individual
+        case community
+        case regional
+        case national
+    }
+}
+
+/// Social baseline
+struct SocialBaseline {
+    let baselineId: String
+    let metric: String
+    let value: Double
+    let date: Date
+    let source: String
+}
+
+/// Social impact evaluation
+struct SocialImpactEvaluation {
+    let evaluationId: String
+    let interventions: [SocialIntervention]
+    let baselines: [SocialBaseline]
+    let evaluation: ImpactEvaluationResult
+    let timestamp: Date
+
+    struct ImpactEvaluationResult {
+        let measured: Bool
+        let impact: Double
+        let significance: Double
+        let attribution: Double
+    }
+}
+
+/// Community needs assessment
+struct CommunityNeedsAssessment {
+    let assessmentId: String
+    let communities: [Community]
+    let indicators: [NeedIndicator]
+    let assessment: AssessmentResult
+    let timestamp: Date
+
+    struct AssessmentResult {
+        let assessed: Bool
+        let coverage: Double
+        let accuracy: Double
+        let priorities: [String]
+    }
+}
+
+/// Need indicator
+struct NeedIndicator {
+    let indicatorId: String
+    let name: String
+    let category: NeedCategory
+    let value: Double
+    let threshold: Double
+
+    enum NeedCategory {
+        case basic
+        case social
+        case economic
+        case health
+        case education
+    }
+}
+
+/// Support coordination
+struct SupportCoordination {
+    let coordinationId: String
+    let programs: [SupportProgram]
+    let communities: [Community]
+    let coordination: CoordinationResult
+    let timestamp: Date
+
+    struct CoordinationResult {
+        let coordinated: Bool
+        let coverage: Double
+        let efficiency: Double
+        let gaps: [SupportGap]
+    }
+}
+
+/// Support program
+struct SupportProgram {
+    let programId: String
+    let name: String
+    let type: ProgramType
+    let beneficiaries: Int
+    let budget: Double
+    let status: ProgramStatus
+
+    enum ProgramType {
+        case communityDevelopment
+        case socialServices
+        case economicSupport
+        case healthServices
+    }
+
+    enum ProgramStatus {
+        case planned
+        case active
+        case completed
+        case suspended
+    }
+}
+
+/// Resource mobilization
+struct ResourceMobilization {
+    let efficiency: Double
+    let speed: Double
+    let sustainability: Double
+
+    struct MobilizationResult {
+        let mobilized: Bool
+        let resources: Double
+        let efficiency: Double
+        let sustainability: Double
+    }
+}
+
+/// Community resources
+struct CommunityResources {
+    let resourcesId: String
+    let human: Int
+    let financial: Double
+    let physical: Int
+    let social: Int
+}
+
+/// Community initiative
+struct CommunityInitiative {
+    let initiativeId: String
+    let name: String
+    let type: InitiativeType
+    let participants: Int
+    let budget: Double
+
+    enum InitiativeType {
+        case development
+        case education
+        case health
+        case economic
+    }
+}
+
+/// Network strengthening
+struct NetworkStrengthening {
+    let connections: Int
+    let quality: Double
+    let resilience: Double
+
+    struct StrengtheningResult {
+        let strengthened: Bool
+        let connections: Int
+        let quality: Double
+        let resilience: Double
+    }
+}
+
+/// Social network
+struct SocialNetwork {
+    let networkId: String
+    let name: String
+    let type: NetworkType
+    let members: Int
+    let connections: Int
+
+    enum NetworkType {
+        case community
+        case professional
+        case support
+        case advocacy
+    }
+}
+
+/// Network connection
+struct NetworkConnection {
+    let connectionId: String
+    let from: String
+    let to: String
+    let strength: Double
+    let type: ConnectionType
+
+    enum ConnectionType {
+        case personal
+        case professional
+        case organizational
+    }
+}
+
+/// Community engagement
+struct CommunityEngagement {
+    let engagementId: String
+    let communities: [Community]
+    let platforms: [EngagementPlatform]
+    let engagement: EngagementResult
+    let timestamp: Date
+
+    struct EngagementResult {
+        let engaged: Bool
+        let participation: Double
+        let satisfaction: Double
+        let impact: Double
+    }
+}
+
+/// Engagement platform
+struct EngagementPlatform {
+    let platformId: String
+    let name: String
+    let type: PlatformType
+    let users: Int
+    let activity: Double
+
+    enum PlatformType {
+        case socialMedia
+        case communityForum
+        case event
+        case meeting
+    }
+}
+
+/// Community monitoring
+struct CommunityMonitoring {
+    let monitoringId: String
+    let communities: [Community]
+    let metrics: [WellbeingMetric]
+    let monitoring: MonitoringResult
+    let timestamp: Date
+
+    struct MonitoringResult {
+        let monitored: Bool
+        let coverage: Double
+        let frequency: TimeInterval
+        let accuracy: Double
+    }
+}
+
+/// Wellbeing metric
+struct WellbeingMetric {
+    let metricId: String
+    let name: String
+    let value: Double
+    let category: WellbeingCategory
+    let trend: Double
+
+    enum WellbeingCategory {
+        case physical
+        case mental
+        case social
+        case economic
+    }
+}
+
+/// Inequality measurement
+struct InequalityMeasurement {
+    let measurementId: String
+    let populations: [Population]
+    let dimensions: [InequalityDimension]
+    let measurement: MeasurementResult
+    let timestamp: Date
+
+    struct MeasurementResult {
+        let measured: Bool
+        let metrics: [InequalityMetric]
+        let baselines: [InequalityBaseline]
+        let trends: [InequalityTrend]
+    }
+}
+
+/// Population
+struct Population {
+    let populationId: String
+    let size: Int
+    let demographics: [String: Double]
+    let location: String
+    let socioeconomic: SocioeconomicProfile
+}
+
+// MARK: - Missing Core Types
+
+/// Income distribution (alias for EconomicData.IncomeDistribution)
+typealias IncomeDistribution = EconomicData.IncomeDistribution
+
+/// Basic income amount
+struct BasicIncomeAmount {
+    let citizenId: String
+    let amount: Double
+    let calculation: BasicIncomeCalculation
+    let timestamp: Date
+}
+
+/// Basic income calculation
+
+/// Economic context
+struct EconomicContext {
+    let gdp: Double
+    let inflation: Double
+    let unemployment: Double
+    let costOfLiving: Double
+}
+
+/// Income distribution result
+struct IncomeDistributionResult {
+    let distributionId: String
+    let citizens: [Citizen]
+    let treasury: Treasury
+    let totalDistributed: Double
+    let distribution: DistributionResult
+    let timestamp: Date
+
+    struct DistributionResult {
+        let success: Bool
+        let coverage: Double
+        let timeliness: Double
+        let errors: Int
+    }
+}
+
+/// Treasury
+struct Treasury {
+    let treasuryId: String
+    let amount: Double
+    let currency: String
+    let allocation: Double
+    let reserves: Double
+}
+
+/// Income adjustment
+struct IncomeAdjustment {
+    let adjustmentId: String
+    let economic: EconomicData
+    let inflation: InflationRate
+    let adjustment: Double
+    let newLevels: Double
+    let methodology: AdjustmentMethodology
+    let timestamp: Date
+}
+
+/// Adjustment methodology enum
+enum AdjustmentMethodology {
+    case inflationIndexed
+    case costOfLiving
+    case economicConditions
+}
+
+/// Inflation rate
+struct InflationRate {
+    let rate: Double
+    let components: [InflationComponent]
+    let timestamp: Date
+}
+
+/// Citizen
+
+let social: Double
+
+let utility: Double
+
+let risks: [String]
+
+/// Inflation component
+
+/// Optimization recommendation
+
+/// Service conflict
+/// Service improvement
+
+/// Coordination result
+
+/// Intervention design
+struct InterventionDesign {
+    let designId: String
+    let inequalities: [SocialInequality]
+    let frameworks: [EqualityFramework]
+    let design: DesignResult
+    let timestamp: Date
+
+    struct DesignResult {
+        let designed: Bool
+        let interventions: Int
+        let effectiveness: Double
+        let feasibility: Double
+    }
+}
+
+/// Policy implementation
+struct PolicyImplementation {
+    let implementationId: String
+    let policies: [EqualityPolicy]
+    let enforcement: PolicyEnforcement
+    let implementation: ImplementationResult
+    let timestamp: Date
+
+    struct ImplementationResult {
+        let implemented: Bool
+        let success: Double
+        let compliance: Double
+        let adaptation: Double
+    }
+}
+
+/// Progress monitoring
+struct ProgressMonitoring {
+    let monitoringId: String
+    let metrics: [EqualityMetric]
+    let targets: [EqualityTarget]
+    let monitoring: MonitoringResult
+    let timestamp: Date
+
+    struct MonitoringResult {
+        let monitored: Bool
+        let progress: Double
+        let targets: Double
+        let trends: [Double]
+    }
+}
+
+/// Discrimination addressing
+struct DiscriminationAddressing {
+    let addressingId: String
+    let incidents: [DiscriminationIncident]
+    let responses: [DiscriminationResponse]
+    let addressing: AddressingResult
+    let timestamp: Date
+
+    struct AddressingResult {
+        let addressed: Bool
+        let response: Double
+        let prevention: Double
+        let education: Double
+    }
+}
+
+/// Inclusive growth promotion
+struct InclusiveGrowthPromotion {
+    let promotionId: String
+    let growth: EconomicGrowth
+    let inclusion: InclusionStrategy
+    let promotion: PromotionResult
+    let timestamp: Date
+
+    struct PromotionResult {
+        let promoted: Bool
+        let growth: Double
+        let inclusion: Double
+        let equity: Double
+    }
+}
+
+/// Injustice identification
+struct InjusticeIdentification {
+    let identificationId: String
+    let data: SocialData
+    let algorithms: [JusticeAlgorithm]
+    let identification: IdentificationResult
+    let timestamp: Date
+
+    struct IdentificationResult {
+        let identified: Int
+        let accuracy: Double
+        let falsePositives: Int
+        let prioritization: [InjusticePriority]
+    }
+}
+
+/// Remedy calculation
+struct RemedyCalculation {
+    let calculationId: String
+    let injustices: [SocialInjustice]
+    let frameworks: [JusticeFramework]
+    let calculation: CalculationResult
+    let timestamp: Date
+
+    struct CalculationResult {
+        let calculated: Bool
+        let remedies: Int
+        let fairness: Double
+        let adequacy: Double
+    }
+}
+
+/// Intervention execution
+struct InterventionExecution {
+    let executionId: String
+    let interventions: [JusticeIntervention]
+    let coordination: InterventionCoordination
+    let execution: ExecutionResult
+    let timestamp: Date
+
+    struct ExecutionResult {
+        let executed: Bool
+        let success: Double
+        let timeliness: Double
+        let impact: Double
+    }
+}
+
+/// Outcome monitoring
+struct OutcomeMonitoring {
+    let monitoringId: String
+    let outcomes: [JusticeOutcome]
+    let metrics: [JusticeMetric]
+    let monitoring: MonitoringResult
+    let timestamp: Date
+
+    struct MonitoringResult {
+        let monitored: Bool
+        let improvement: Double
+        let sustainability: Double
+        let trends: [Double]
+    }
+}
+
+/// Injustice prevention
+struct InjusticePrevention {
+    let preventionId: String
+    let patterns: [InjusticePattern]
+    let prevention: PreventionStrategy
+    let result: PreventionResult
+    let timestamp: Date
+
+    struct PreventionResult {
+        let prevented: Bool
+        let effectiveness: Double
+        let coverage: Double
+        let adaptation: Double
+    }
+}
+
+/// Accountability ensurance
+struct AccountabilityEnsurance {
+    let ensuranceId: String
+    let actions: [AccountableAction]
+    let oversight: AccountabilityOversight
+    let ensurance: EnsuranceResult
+    let timestamp: Date
+
+    struct EnsuranceResult {
+        let ensured: Bool
+        let transparency: Double
+        let enforcement: Double
+        let trust: Double
+    }
+}
+
+/// Poverty identification
+struct PovertyIdentification {
+    let identificationId: String
+    let data: SocioeconomicData
+    let thresholds: [PovertyThreshold]
+    let identification: IdentificationResult
+    let timestamp: Date
+
+    struct IdentificationResult {
+        let identified: Int
+        let coverage: Double
+        let accuracy: Double
+        let segmentation: [PopulationSegment]
+    }
+}
+
+/// Program design
+struct ProgramDesign {
+    let designId: String
+    let populations: [PovertyPopulation]
+    let resources: PovertyResources
+    let design: DesignResult
+    let timestamp: Date
+
+    struct DesignResult {
+        let designed: Bool
+        let programs: Int
+        let effectiveness: Double
+        let costEfficiency: Double
+    }
+}
+
+/// Intervention implementation
+struct InterventionImplementation {
+    let implementationId: String
+    let programs: [PovertyProgram]
+    let coordination: ProgramCoordination
+    let implementation: ImplementationResult
+    let timestamp: Date
+
+    struct ImplementationResult {
+        let implemented: Bool
+        let success: Double
+        let coverage: Double
+        let sustainability: Double
+    }
+}
+
+/// Poverty monitoring
+struct PovertyMonitoring {
+    let monitoringId: String
+    let metrics: [PovertyMetric]
+    let targets: [PovertyTarget]
+    let monitoring: MonitoringResult
+    let timestamp: Date
+
+    struct MonitoringResult {
+        let monitored: Bool
+        let reduction: Double
+        let targets: Double
+        let trends: [Double]
+    }
+}
+
+/// Effectiveness evaluation
+struct EffectivenessEvaluation {
+    let evaluationId: String
+    let programs: [PovertyProgram]
+    let outcomes: [ProgramOutcome]
+    let evaluation: EvaluationResult
+    let timestamp: Date
+
+    struct EvaluationResult {
+        let evaluated: Bool
+        let effectiveness: Double
+        let impact: Double
+        let costBenefit: Double
+    }
+}
+
+/// Program scaling
+struct ProgramScaling {
+    let scalingId: String
+    let successes: [SuccessfulProgram]
+    let scaling: ScalingStrategy
+    let result: ScalingResult
+    let timestamp: Date
+
+    struct ScalingResult {
+        let scaled: Bool
+        let coverage: Double
+        let sustainability: Double
+        let impact: Double
+    }
+}
+
+/// Successful program
+struct SuccessfulProgram {
+    let programId: String
+    let name: String
+    let impact: Double
+    let scalability: Double
+    let replicability: Double
+}
+
+/// Technology resource
+/// Social incident
+
+/// Policy type
+/// Resource allocation
+let maximizationId: String
+let policies: [SocialPolicy]
+let outcomes: [SocialOutcome]
+let maximization: MaximizationResult
+let timestamp: Date
+
+struct MaximizationResult {
+    let maximized: Bool
+    let utility: Double
+    let tradeoffs: [String]
+    let convergence: Bool
+}
+
+/// Service coordination
+
+/// Equality framework
+struct EqualityFramework {
+    let frameworkId: String
+    let name: String
+    let principles: [EqualityPrinciple]
+    let metrics: [EqualityMetric]
+    let interventions: [EqualityIntervention]
+}
+
+/// Equality metric
+struct EqualityMetric {
+    let metricId: String
+    let name: String
+    let value: Double
+    let baseline: Double
+    let target: Double
+}
+
+/// Equality target
+struct EqualityTarget {
+    let targetId: String
+    let metric: String
+    let value: Double
+    let deadline: Date
+    let priority: Int
+}
+
+/// Inclusion strategy
+struct InclusionStrategy {
+    let strategyId: String
+    let name: String
+    let approaches: [InclusionApproach]
+    let targets: [InclusionTarget]
+    let timeline: TimeInterval
+}
+
+/// Social data
+struct SocialData {
+    let dataId: String
+    let injustices: [SocialInjustice]
+    let demographics: [String: Double]
+    let indicators: [SocialIndicator]
+    let timestamp: Date
+}
+
+/// Justice algorithm
+struct JusticeAlgorithm {
+    let algorithmId: String
+    let name: String
+    let type: AlgorithmType
+    let sensitivity: Double
+    let accuracy: Double
+
+    enum AlgorithmType {
+        case patternRecognition
+        case statisticalAnalysis
+        case machineLearning
+        case ruleBased
+    }
+}
+
+/// Intervention coordination
+struct InterventionCoordination {
+    let coordinationId: String
+    let interventions: [JusticeIntervention]
+    let stakeholders: [String]
+    let coordination: CoordinationResult
+    let timestamp: Date
+}
+
+/// Justice metric
+struct JusticeMetric {
+    let metricId: String
+    let name: String
+    let value: Double
+    let category: JusticeCategory
+    let trend: Double
+
+    enum JusticeCategory {
+        case fairness
+        case equality
+        case access
+        case outcomes
+    }
+}
+
+/// Socioeconomic data
+struct SocioeconomicData {
+    let dataId: String
+    let populations: [PovertyPopulation]
+    let indicators: [SocioeconomicIndicator]
+    let demographics: [String: Double]
+    let timestamp: Date
+}
+
+/// Poverty resources
+struct PovertyResources {
+    let resourcesId: String
+    let financial: Double
+    let human: Int
+    let infrastructure: Int
+    let programs: Int
+}
+
+let trend: Double
+
+/// Poverty target
+struct PovertyTarget {
+    let targetId: String
+    let metric: String
+    let value: Double
+    let deadline: Date
+    let priority: Int
+}
+
+/// Program outcome
+struct ProgramOutcome {
+    let outcomeId: String
+    let programId: String
+    let metric: String
+    let value: Double
+    let baseline: Double
+    let improvement: Double
+}
+
+/// Community needs
+/// Community support coordination
+struct CommunitySupportCoordination {
+    let coordinationId: String
+    let communities: [Community]
+    let needs: CommunityNeeds
+    let assessment: CommunityNeedsAssessment
+    let programs: [SupportProgram]
+    let coordination: SupportCoordinationResult
+    let mobilization: ResourceMobilizationResult
+    let strengthening: NetworkStrengtheningResult
+    let engagement: CommunityEngagementResult
+    let monitoring: CommunityMonitoringResult
+
+    struct SupportCoordinationResult {
+        let coordinated: Bool
+        let coverage: Double
+        let efficiency: Double
+        let gaps: [SupportGap]
+    }
+}
+
+/// Coordination level enum
+enum CoordinationLevel {
+    case low
+    case medium
+    case high
+    case integrated
+}
+
+/// Identification type
+enum IdentificationType {
+    case multidimensional
+    case thresholdBased
+    case statistical
+    case algorithmic
+}
+
+/// Inclusion approach
+struct InclusionApproach {
+    let approachId: String
+    let name: String
+    let effectiveness: Double
+    let cost: Double
+}
+
+/// Inclusion target
+struct InclusionTarget {
+    let targetId: String
+    let group: String
+    let metric: String
+    let value: Double
+}
+
+/// Social indicator
+struct SocialIndicator {
+    let indicatorId: String
+    let name: String
+    let value: Double
+    let category: IndicatorCategory
+
+    enum IndicatorCategory {
+        case economic
+        case social
+        case health
+        case education
+    }
+}
+
+/// Socioeconomic indicator
+struct BasicNeed {
+    let needId: String
+    let type: BasicNeedType
+    let severity: Double
+    let satisfied: Bool
+
+    enum BasicNeedType {
+        case food
+        case water
+        case shelter
+        case healthcare
+    }
+}
+
+/// Social need
+struct SocialNeed {
+    let needId: String
+    let type: SocialNeedType
+    let severity: Double
+    let satisfied: Bool
+
+    enum SocialNeedType {
+        case community
+        case relationships
+        case belonging
+        case support
+    }
+}
+
+/// Economic need
+struct EconomicNeed {
+    let needId: String
+    let type: EconomicNeedType
+    let severity: Double
+    let satisfied: Bool
+
+    enum EconomicNeedType {
+        case employment
+        case income
+        case housing
+        case transportation
+    }
+}
+
+/// Needs assessment
+struct NeedsAssessment {
+    let assessmentId: String
+    let needs: [String]
+    let priorities: [String]
+    let coverage: Double
+    let timestamp: Date
+}
+
+/// Evaluation methodology
+enum EvaluationMethodology {
+    case quasiExperimental
+    case differenceInDifferences
+    case regressionDiscontinuity
+    case impact
+}
+
+/// Equality principle
+struct EqualityPrinciple {
+    let principleId: String
+    let name: String
+    let description: String
+    let priority: Int
+}
+
+/// Equality intervention
+
+/// Economic growth
+
+/// Growth projection
+struct GrowthProjection {
+    let year: Int
+    let rate: Double
+    let inclusive: Double
+    let sustainable: Double
+}
+
+/// Injustice priority
+enum InjusticePriority {
+    case critical
+    case high
+    case medium
+    case low
+}
+
+/// Resource allocation
+struct ResourceAllocation {
+    let allocationId: String
+    let resources: SocialResources
+    let priorities: [SocialPriority]
+    let allocation: AllocationResult
+    let timestamp: Date
+
+    struct AllocationResult {
+        let allocated: Bool
+        let efficiency: Double
+        let equity: Double
+        let constraints: [AllocationConstraint]
+    }
+}
+
+/// Utility maximization
+struct UtilityMaximization {
+    let maximizationId: String
+    let policies: [SocialPolicy]
+    let outcomes: [SocialOutcome]
+    let maximization: MaximizationResult
+    let timestamp: Date
+
+    struct MaximizationResult {
+        let maximized: Bool
+        let utility: Double
+        let tradeoffs: [String]
+        let convergence: Bool
+    }
+}
+
+/// Service coordination
+struct ServiceCoordination {
+    let coordinationId: String
+    let services: [SocialService]
+    let coordination: CoordinationLevel
+    let result: CoordinationResult
+    let timestamp: Date
+
+    struct CoordinationResult {
+        let coordinated: Bool
+        let integration: Double
+        let conflicts: Int
+        let efficiency: Double
+    }
+}
+/// Program coordination
+struct ProgramCoordination {
+    let level: CoordinationLevel
+    let automation: Double
+    let effectiveness: Double
+}
+
+/// Poverty metric
+struct PovertyMetric {
+    let metricId: String
+    let name: String
+    let value: Double
+    let threshold: Double
+    let trend: Double
+}
+
+/// Community needs
+struct CommunityNeeds {
+    let needsId: String
+    let basic: [BasicNeed]
+    let social: [SocialNeed]
+    let economic: [EconomicNeed]
+    let assessment: NeedsAssessment
 }

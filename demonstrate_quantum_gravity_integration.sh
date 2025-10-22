@@ -53,7 +53,7 @@ echo "✅ Within acceptable limits"
 echo ""
 echo "📋 Generating demonstration report..."
 REPORT_FILE="quantum_gravity_integration_report_$(date +%Y%m%d_%H%M%S).md"
-cat > "$REPORT_FILE" << 'EOF'
+cat >"$REPORT_FILE" <<'EOF'
 # Quantum Gravity Integration Demonstration Report
 
 ## Executive Summary
@@ -81,5 +81,4 @@ echo "✅ Report generated: $REPORT_FILE"
 
 echo ""
 echo "🎉 DEMONSTRATION COMPLETE 🎉"
-echo "Quantum Gravity Integration Successfully Demonstrated"</content>
-<parameter name="filePath">/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/demonstrate_quantum_gravity_integration.sh
+echo "Quantum Gravity Integration Successfully Demonstrated"

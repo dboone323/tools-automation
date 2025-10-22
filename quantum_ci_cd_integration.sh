@@ -14,8 +14,6 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-WHITE='\033[1;37m'
 NC='\033[0m'
 
 log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] [QUANTUM CI/CD] $*" >&2; }
@@ -94,7 +92,8 @@ report_quantum_status() {
     quantum_log "Reporting quantum status: ${agent_name} -> ${status}"
 
     # Create status report
-    local status_file="${AGENTS_DIR}/quantum_ci_status_$(date +%Y%m%d_%H%M%S).json"
+    local status_file
+    status_file="${AGENTS_DIR}/quantum_ci_status_$(date +%Y%m%d_%H%M%S).json"
 
     cat >"${status_file}" <<EOF
 {
@@ -132,7 +131,8 @@ create_quantum_issue() {
     fi
 
     local issue_title="🚨 Quantum Agent Alert: ${agent_name} - ${status}"
-    local issue_body=$(
+    local issue_body
+    issue_body=$(
         cat <<EOF
 ## Quantum Agent Status Alert
 
@@ -144,7 +144,7 @@ create_quantum_issue() {
 ### Quantum System Status
 - **Chemistry Simulations:** $(find "${AGENTS_DIR}/.quantum_metrics/simulations" -name "*.json" 2>/dev/null | wc -l)
 - **Finance Optimizations:** $(find "${AGENTS_DIR}/.quantum_finance_metrics/portfolios" -name "*.json" 2>/dev/null | wc -l)
-- **Active Agents:** $(ps aux | grep "quantum_.*_agent.sh" | grep -v grep | wc -l)
+- **Active Agents:** $(pgrep -f "quantum_.*_agent.sh" | wc -l)
 
 ### Recommended Actions
 - [ ] Investigate ${agent_name} logs
@@ -173,18 +173,22 @@ EOF
 run_quantum_performance_tests() {
     quantum_log "Running quantum performance tests..."
 
-    local test_results="${AGENTS_DIR}/quantum_performance_test_$(date +%Y%m%d_%H%M%S).json"
+    local test_results
+    test_results="${AGENTS_DIR}/quantum_performance_test_$(date +%Y%m%d_%H%M%S).json"
 
     # Test quantum agent responsiveness
     local agent_tests=()
     for agent_script in "${AGENTS_DIR}"/quantum_*_agent.sh; do
         if [[ -f "${agent_script}" && -x "${agent_script}" ]]; then
-            local agent_name=$(basename "${agent_script}" .sh)
-            local start_time=$(date +%s)
+            local agent_name
+            agent_name=$(basename "${agent_script}" .sh)
+            local start_time
+            start_time=$(date +%s)
 
             # Quick syntax check (don't actually run the agent)
             if bash -n "${agent_script}" 2>/dev/null; then
-                local end_time=$(date +%s)
+                local end_time
+                end_time=$(date +%s)
                 local response_time=$((end_time - start_time))
                 agent_tests+=("{\"agent\":\"${agent_name}\",\"status\":\"ready\",\"response_time\":${response_time}}")
                 success "${agent_name} performance test passed (${response_time}s)"
@@ -215,7 +219,8 @@ run_quantum_performance_tests() {
 EOF
 
     # Test metrics collection
-    local metrics_count=$(find "${AGENTS_DIR}/.quantum_metrics/simulations" -name "*.json" 2>/dev/null | wc -l)
+    local metrics_count
+    metrics_count=$(find "${AGENTS_DIR}/.quantum_metrics/simulations" -name "*.json" 2>/dev/null | wc -l)
     if [[ ${metrics_count} -gt 0 ]]; then
         success "Quantum metrics collection test passed"
     else
@@ -251,7 +256,8 @@ EOF
 validate_quantum_integration() {
     quantum_log "Validating quantum CI/CD integration..."
 
-    local validation_results="${AGENTS_DIR}/quantum_integration_validation_$(date +%Y%m%d_%H%M%S).json"
+    local validation_results
+    validation_results="${AGENTS_DIR}/quantum_integration_validation_$(date +%Y%m%d_%H%M%S).json"
     local checks_passed=0
     local total_checks=0
 
@@ -299,7 +305,8 @@ validate_quantum_integration() {
 
     # Check 5: GitHub workflows exist
     total_checks=$((total_checks + 1))
-    local workflow_count=$(find "${WORKSPACE_ROOT}/.github/workflows" -name "*quantum*" | wc -l)
+    local workflow_count
+    workflow_count=$(find "${WORKSPACE_ROOT}/.github/workflows" -name "*quantum*" | wc -l)
     if [[ ${workflow_count} -gt 0 ]]; then
         success "Quantum CI/CD workflows configured (${workflow_count} found)"
         checks_passed=$((checks_passed + 1))
@@ -357,7 +364,8 @@ apply_quantum_optimization() {
     fi
 
     # Create optimization request
-    local optimization_request="${AGENTS_DIR}/quantum_optimization_request_$(date +%Y%m%d_%H%M%S).json"
+    local optimization_request
+    optimization_request="${AGENTS_DIR}/quantum_optimization_request_$(date +%Y%m%d_%H%M%S).json"
 
     cat >"${optimization_request}" <<EOF
 {
@@ -378,12 +386,10 @@ apply_quantum_optimization() {
 }
 EOF
 
-    # Run quantum optimization (if binary available)
+    # Run quantum optimization
     if [[ -x "${QUANTUM_OPTIMIZATION_BINARY}" ]]; then
         local optimization_result
-        optimization_result=$("${QUANTUM_OPTIMIZATION_BINARY}" optimize "${optimization_request}" 2>/dev/null)
-
-        if [[ $? -eq 0 ]]; then
+        if optimization_result=$("${QUANTUM_OPTIMIZATION_BINARY}" optimize "${optimization_request}" 2>/dev/null); then
             success "Quantum optimization applied successfully"
             echo "${optimization_result}"
             return 0
@@ -398,8 +404,8 @@ EOF
 
 # Apply standard optimization when quantum optimization unavailable
 apply_standard_optimization() {
-    local request_file="$1"
-    local result_file="${AGENTS_DIR}/standard_optimization_result_$(date +%Y%m%d_%H%M%S).json"
+    local result_file
+    result_file="${AGENTS_DIR}/standard_optimization_result_$(date +%Y%m%d_%H%M%S).json"
 
     quantum_log "Applying standard CI/CD optimization..."
 
@@ -454,10 +460,12 @@ predict_pipeline_failures() {
     fi
 
     # Analyze historical pipeline data
-    local failure_patterns=$(analyze_failure_patterns "${pipeline_history}")
+    local failure_patterns
+    failure_patterns=$(analyze_failure_patterns "${pipeline_history}")
 
     # Create prediction request
-    local prediction_request="${AGENTS_DIR}/quantum_failure_prediction_$(date +%Y%m%d_%H%M%S).json"
+    local prediction_request
+    prediction_request="${AGENTS_DIR}/quantum_failure_prediction_$(date +%Y%m%d_%H%M%S).json"
 
     cat >"${prediction_request}" <<EOF
 {
@@ -480,9 +488,7 @@ EOF
     # Run quantum prediction
     if [[ -x "${QUANTUM_OPTIMIZATION_BINARY}" ]]; then
         local prediction_result
-        prediction_result=$("${QUANTUM_OPTIMIZATION_BINARY}" predict "${prediction_request}" 2>/dev/null)
-
-        if [[ $? -eq 0 ]]; then
+        if prediction_result=$("${QUANTUM_OPTIMIZATION_BINARY}" predict "${prediction_request}" 2>/dev/null); then
             success "Quantum failure prediction completed"
             echo "${prediction_result}"
             return 0
@@ -498,8 +504,10 @@ analyze_failure_patterns() {
     local history_file="$1"
 
     # Extract failure patterns from logs
-    local failure_count=$(grep -c "FAILED\|ERROR\|failed\|error" "${history_file}" 2>/dev/null || echo "0")
-    local total_runs=$(wc -l <"${history_file}" 2>/dev/null || echo "1")
+    local failure_count
+    failure_count=$(grep -c "FAILED\|ERROR\|failed\|error" "${history_file}" 2>/dev/null || echo "0")
+    local total_runs
+    total_runs=$(wc -l <"${history_file}" 2>/dev/null || echo "1")
     local failure_rate=$((failure_count * 100 / total_runs))
 
     cat <<EOF
@@ -524,8 +532,8 @@ EOF
 
 # Statistical failure prediction fallback
 statistical_failure_prediction() {
-    local request_file="$1"
-    local result_file="${AGENTS_DIR}/statistical_prediction_$(date +%Y%m%d_%H%M%S).json"
+    local result_file
+    result_file="${AGENTS_DIR}/statistical_prediction_$(date +%Y%m%d_%H%M%S).json"
 
     quantum_log "Generating statistical failure prediction..."
 
@@ -582,7 +590,8 @@ evolve_ci_cd_workflows() {
     fi
 
     # Create evolution request
-    local evolution_request="${AGENTS_DIR}/quantum_workflow_evolution_$(date +%Y%m%d_%H%M%S).json"
+    local evolution_request
+    evolution_request="${AGENTS_DIR}/quantum_workflow_evolution_$(date +%Y%m%d_%H%M%S).json"
 
     cat >"${evolution_request}" <<EOF
 {
@@ -607,9 +616,7 @@ EOF
     # Run quantum evolution
     if [[ -x "${QUANTUM_OPTIMIZATION_BINARY}" ]]; then
         local evolution_result
-        evolution_result=$("${QUANTUM_OPTIMIZATION_BINARY}" evolve "${evolution_request}" 2>/dev/null)
-
-        if [[ $? -eq 0 ]]; then
+        if evolution_result=$("${QUANTUM_OPTIMIZATION_BINARY}" evolve "${evolution_request}" 2>/dev/null); then
             success "Quantum workflow evolution completed"
             echo "${evolution_result}"
             return 0
@@ -622,8 +629,8 @@ EOF
 
 # Standard workflow evolution
 standard_workflow_evolution() {
-    local request_file="$1"
-    local result_file="${AGENTS_DIR}/workflow_evolution_$(date +%Y%m%d_%H%M%S).json"
+    local result_file
+    result_file="${AGENTS_DIR}/workflow_evolution_$(date +%Y%m%d_%H%M%S).json"
 
     quantum_log "Applying standard workflow evolution..."
 
@@ -681,12 +688,11 @@ EOF
 
 # Quantum-enhanced CI/CD monitoring
 quantum_monitoring() {
-    local monitoring_config="$1"
-
     quantum_log "Starting quantum-enhanced CI/CD monitoring..."
 
     # Set up quantum monitoring parameters
-    local monitoring_request="${AGENTS_DIR}/quantum_monitoring_config_$(date +%Y%m%d_%H%M%S).json"
+    local monitoring_request
+    monitoring_request="${AGENTS_DIR}/quantum_monitoring_config_$(date +%Y%m%d_%H%M%S).json"
 
     cat >"${monitoring_request}" <<EOF
 {
@@ -728,14 +734,13 @@ quantum_monitoring_loop() {
 
     while true; do
         # Collect current metrics
-        local current_metrics=$(collect_current_metrics)
+        local current_metrics
+        current_metrics=$(collect_current_metrics)
 
         # Apply quantum analysis
         if check_quantum_optimization && [[ -x "${QUANTUM_OPTIMIZATION_BINARY}" ]]; then
             local analysis_result
-            analysis_result=$("${QUANTUM_OPTIMIZATION_BINARY}" analyze "${current_metrics}" 2>/dev/null)
-
-            if [[ $? -eq 0 ]]; then
+            if analysis_result=$("${QUANTUM_OPTIMIZATION_BINARY}" analyze "${current_metrics}" 2>/dev/null); then
                 # Process quantum analysis results
                 process_quantum_analysis "${analysis_result}"
             fi
@@ -748,10 +753,12 @@ quantum_monitoring_loop() {
 
 # Collect current CI/CD metrics
 collect_current_metrics() {
-    local metrics_file="${AGENTS_DIR}/current_metrics_$(date +%Y%m%d_%H%M%S).json"
+    local metrics_file
+    metrics_file="${AGENTS_DIR}/current_metrics_$(date +%Y%m%d_%H%M%S).json"
 
     # Gather basic metrics
-    local build_count=$(find "${WORKSPACE_ROOT}/.github/runs" -name "*.json" 2>/dev/null | wc -l || echo "0")
+    local build_count
+    build_count=$(find "${WORKSPACE_ROOT}/.github/runs" -name "*.json" 2>/dev/null | wc -l || echo "0")
     local success_rate=85    # Placeholder - would calculate from actual data
     local avg_build_time=420 # Placeholder - would calculate from actual data
 
@@ -761,11 +768,15 @@ collect_current_metrics() {
   "build_count": ${build_count},
   "success_rate": ${success_rate},
   "average_build_time_seconds": ${avg_build_time},
-  "active_workflows": $(ps aux | grep "workflow\|build" | grep -v grep | wc -l),
+  "active_workflows": $(pgrep -f "workflow\|build" | wc -l),
   "queue_length": $(find "${WORKSPACE_ROOT}/.github/runs" -name "*queued*" 2>/dev/null | wc -l || echo "0"),
   "resource_usage": {
-    "cpu_percent": $(ps aux | grep "swift\|xcodebuild" | grep -v grep | awk '{sum+=$3} END {print sum+0}' || echo "0"),
-    "memory_mb": $(ps aux | grep "swift\|xcodebuild" | grep -v grep | awk '{sum+=$6} END {print sum/1024}' || echo "0")
+    "cpu_percent": $( # shellcheck disable=SC2009  # ps is more appropriate for getting CPU/memory percentages
+        ps aux | grep "swift\|xcodebuild" | grep -v grep | awk '{sum+=$3} END {print sum+0}' || echo "0"
+    ),
+    "memory_mb": $( # shellcheck disable=SC2009  # ps is more appropriate for getting CPU/memory percentages
+        ps aux | grep "swift\|xcodebuild" | grep -v grep | awk '{sum+=$6} END {print sum/1024}' || echo "0"
+    )
   }
 }
 EOF
@@ -798,7 +809,8 @@ trigger_quantum_mitigation() {
     quantum_log "Triggering quantum mitigation actions..."
 
     # Create mitigation request
-    local mitigation_file="${AGENTS_DIR}/quantum_mitigation_$(date +%Y%m%d_%H%M%S).json"
+    local mitigation_file
+    mitigation_file="${AGENTS_DIR}/quantum_mitigation_$(date +%Y%m%d_%H%M%S).json"
 
     cat >"${mitigation_file}" <<EOF
 {
@@ -825,7 +837,8 @@ apply_quantum_optimization_from_analysis() {
     quantum_log "Applying quantum optimization from analysis..."
 
     # Extract optimization recommendations
-    local optimization_file="${AGENTS_DIR}/quantum_optimization_from_analysis_$(date +%Y%m%d_%H%M%S).json"
+    local optimization_file
+    optimization_file="${AGENTS_DIR}/quantum_optimization_from_analysis_$(date +%Y%m%d_%H%M%S).json"
 
     cat >"${optimization_file}" <<EOF
 {

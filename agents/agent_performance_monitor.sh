@@ -89,7 +89,7 @@ monitor_agent_performance() {
   # Check agent status
   if [[ -s ${STATUS_FILE} ]]; then
     local running_agents
-    running_agents=$(jq '.agents | to_entries[] | select(.value.status == "running") | .key' "${STATUS_FILE}")
+    running_agents=$(update_agent_status "$AGENT_NAME" "running" "$$"") | .key' "${STATUS_FILE}")
 
     if [[ -n ${running_agents} ]]; then
       echo "[$(date)] ${AGENT_NAME}: Running agents: ${running_agents}" >>"${LOG_FILE}"
@@ -138,19 +138,71 @@ analyze_performance_trends() {
     return
   fi
 
-  # Get last 10 measurements
+  # Get last 10 measurements using Python for reliability
   local recent_metrics
-  recent_metrics=$(jq '.metrics | .[-10:]' "${PERFORMANCE_LOG}")
+  recent_metrics=$(python3 -c "
+import json
+import sys
+
+try:
+    with open('${PERFORMANCE_LOG}', 'r') as f:
+        data = json.load(f)
+    
+    metrics = data.get('metrics', [])
+    if len(metrics) > 10:
+        metrics = metrics[-10:]
+    
+    print(json.dumps(metrics))
+except Exception as e:
+    print('[]')
+" 2>/dev/null)
 
   if [[ -n ${recent_metrics} && ${recent_metrics} != "[]" ]]; then
-    # Calculate averages
-    local avg_cpu
-    local avg_memory
-    local avg_disk
+    # Calculate averages using Python
+    local avg_cpu avg_memory avg_disk
 
-    avg_cpu=$(echo "${recent_metrics}" | jq 'map(.cpu_usage | tonumber) | add / length')
-    avg_memory=$(echo "${recent_metrics}" | jq 'map(.memory_usage | tonumber) | add / length')
-    avg_disk=$(echo "${recent_metrics}" | jq 'map(.disk_usage | tonumber) | add / length')
+    read avg_cpu avg_memory avg_disk <<< $(python3 -c "
+import json
+import sys
+
+try:
+    metrics = json.loads('${recent_metrics}')
+    
+    if not metrics:
+        print('0 0 0')
+        sys.exit(0)
+    
+    cpu_values = []
+    memory_values = []
+    disk_values = []
+    
+    for metric in metrics:
+        try:
+            cpu_values.append(float(str(metric.get('cpu_usage', '0')).strip()))
+            memory_values.append(float(str(metric.get('memory_usage', '0')).strip()))
+            disk_values.append(float(str(metric.get('disk_usage', '0')).strip()))
+        except (ValueError, TypeError):
+            continue
+    
+    if cpu_values:
+        avg_cpu = sum(cpu_values) / len(cpu_values)
+    else:
+        avg_cpu = 0
+    
+    if memory_values:
+        avg_memory = sum(memory_values) / len(memory_values)
+    else:
+        avg_memory = 0
+        
+    if disk_values:
+        avg_disk = sum(disk_values) / len(disk_values)
+    else:
+        avg_disk = 0
+    
+    print(f'{avg_cpu:.1f} {avg_memory:.1f} {avg_disk:.1f}')
+except Exception as e:
+    print('0 0 0')
+" 2>/dev/null)
 
     echo "[$(date)] ${AGENT_NAME}: Average Performance (last 10 measurements):" >>"${LOG_FILE}"
     echo "[$(date)] ${AGENT_NAME}:   CPU Usage: ${avg_cpu}%" >>"${LOG_FILE}"

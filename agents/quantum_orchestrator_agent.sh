@@ -837,9 +837,39 @@ monitor_entanglement_network() {
 
     entanglement_log "Network Status: ${entangled_agents} entanglements, ${active_channels} channels, health: ${network_health}"
 
-    # Clean up stale entanglements (older than 1 hour)
+    # Clean up stale entanglements (older than 1 hour) using Python
     local cutoff_time=$(($(date +%s) - 3600))
-    jq --arg cutoff "${cutoff_time}" '.entanglements |= map(select(.created_at > ($cutoff | tonumber)))' "${ENTANGLEMENT_NETWORK}" >"${ENTANGLEMENT_NETWORK}.tmp" && mv "${ENTANGLEMENT_NETWORK}.tmp" "${ENTANGLEMENT_NETWORK}"
+    python3 -c "
+import json
+import sys
+import tempfile
+import os
+
+try:
+    cutoff_time = int('${cutoff_time}')
+    entanglements_file = '${ENTANGLEMENT_NETWORK}'
+    
+    with open(entanglements_file, 'r') as f:
+        data = json.load(f)
+    
+    if 'entanglements' in data:
+        # Filter out old entanglements
+        data['entanglements'] = [
+            ent for ent in data['entanglements']
+            if isinstance(ent.get('created_at'), (int, float)) and ent['created_at'] > cutoff_time
+        ]
+    
+    # Write to temporary file first, then atomically move
+    with tempfile.NamedTemporaryFile(mode='w', dir=os.path.dirname(entanglements_file), delete=False) as temp_file:
+        json.dump(data, temp_file, indent=2)
+        temp_file.flush()
+        os.fsync(temp_file.fileno())
+        temp_path = temp_file.name
+    
+    os.rename(temp_path, entanglements_file)
+except Exception as e:
+    pass  # Silently fail to avoid breaking the agent
+" 2>/dev/null || true
 }
 
 # Monitor multiverse navigation
@@ -857,9 +887,39 @@ monitor_multiverse_navigation() {
 
     multiverse_log "Multiverse Status: stability ${stability}, ${active_navigations} active navigations"
 
-    # Clean up old navigation records (older than 24 hours)
+    # Clean up old navigation records (older than 24 hours) using Python
     local cutoff_time=$(($(date +%s) - 86400))
-    jq --arg cutoff "${cutoff_time}" '.timeline_branches |= map(select(.navigation_time > ($cutoff | tonumber)))' "${MULTIVERSE_STATE}" >"${MULTIVERSE_STATE}.tmp" && mv "${MULTIVERSE_STATE}.tmp" "${MULTIVERSE_STATE}"
+    python3 -c "
+import json
+import sys
+import tempfile
+import os
+
+try:
+    cutoff_time = int('${cutoff_time}')
+    multiverse_file = '${MULTIVERSE_STATE}'
+    
+    with open(multiverse_file, 'r') as f:
+        data = json.load(f)
+    
+    if 'timeline_branches' in data:
+        # Filter out old navigation records
+        data['timeline_branches'] = [
+            branch for branch in data['timeline_branches']
+            if isinstance(branch.get('navigation_time'), (int, float)) and branch['navigation_time'] > cutoff_time
+        ]
+    
+    # Write to temporary file first, then atomically move
+    with tempfile.NamedTemporaryFile(mode='w', dir=os.path.dirname(multiverse_file), delete=False) as temp_file:
+        json.dump(data, temp_file, indent=2)
+        temp_file.flush()
+        os.fsync(temp_file.fileno())
+        temp_path = temp_file.name
+    
+    os.rename(temp_path, multiverse_file)
+except Exception as e:
+    pass  # Silently fail to avoid breaking the agent
+" 2>/dev/null || true
 }
 
 # Enhanced main function with quantum capabilities

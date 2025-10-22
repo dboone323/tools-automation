@@ -1598,6 +1598,7 @@ archive_results() {
 
     # Create archive of all generated files
     tar -czf "$archive_name" \
+        -- \
         *.json \
         *.md \
         Calculator*.swift \

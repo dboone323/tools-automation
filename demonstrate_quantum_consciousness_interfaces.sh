@@ -62,9 +62,7 @@ compile_framework() {
     fi
 
     print_status "Compiling QuantumConsciousnessInterfaces.swift..."
-    swiftc -o quantum_consciousness_interfaces QuantumConsciousnessInterfaces.swift
-
-    if [ $? -eq 0 ]; then
+    if swiftc -o quantum_consciousness_interfaces QuantumConsciousnessInterfaces.swift; then
         print_success "Framework compiled successfully"
     else
         print_error "Compilation failed"

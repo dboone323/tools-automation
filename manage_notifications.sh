@@ -39,9 +39,9 @@ mark_all_read() {
         -H "Accept: application/vnd.github.v3+json" \
         "https://api.github.com/notifications" \
         -d '{"read": true}' 2>/dev/null || {
-            log_error "Failed to mark notifications as read"
-            return 1
-        }
+        log_error "Failed to mark notifications as read"
+        return 1
+    }
 
     log_info "All notifications marked as read"
 }
@@ -55,12 +55,10 @@ mark_automation_read() {
     log_info "Marking automation-related notifications as read..."
 
     # Get notifications
-    notifications=$(curl -s \
+    if ! notifications=$(curl -s \
         -H "Authorization: token ${GITHUB_TOKEN}" \
         -H "Accept: application/vnd.github.v3+json" \
-        "https://api.github.com/notifications?all=true")
-
-    if [[ $? -ne 0 ]]; then
+        "https://api.github.com/notifications?all=true"); then
         log_error "Failed to fetch notifications"
         return 1
     fi
@@ -75,8 +73,8 @@ mark_automation_read() {
                 -H "Accept: application/vnd.github.v3+json" \
                 "https://api.github.com/notifications/threads/${notification_id}" \
                 -d '{"read": true}' 2>/dev/null || {
-                    log_error "Failed to mark notification ${notification_id}"
-                }
+                log_error "Failed to mark notification ${notification_id}"
+            }
         fi
     done
 
@@ -91,12 +89,10 @@ list_notifications() {
 
     log_info "Fetching current notifications..."
 
-    notifications=$(curl -s \
+    if ! notifications=$(curl -s \
         -H "Authorization: token ${GITHUB_TOKEN}" \
         -H "Accept: application/vnd.github.v3+json" \
-        "https://api.github.com/notifications?all=true")
-
-    if [[ $? -ne 0 ]]; then
+        "https://api.github.com/notifications?all=true"); then
         log_error "Failed to fetch notifications"
         return 1
     fi
@@ -116,7 +112,7 @@ list_notifications() {
 create_notification_filters() {
     log_info "Creating notification filter recommendations..."
 
-    cat << 'EOF'
+    cat <<'EOF'
 # GitHub Notification Filters Setup
 
 ## Recommended Filters:

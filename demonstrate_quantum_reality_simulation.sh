@@ -62,9 +62,7 @@ compile_framework() {
     fi
 
     print_status "Compiling QuantumRealitySimulation.swift..."
-    swiftc -o quantum_reality_simulation QuantumRealitySimulation.swift
-
-    if [ $? -eq 0 ]; then
+    if swiftc -o quantum_reality_simulation QuantumRealitySimulation.swift; then
         print_success "Framework compiled successfully"
     else
         print_error "Compilation failed"
@@ -136,7 +134,7 @@ demonstrate_parallel_universe_simulation() {
     print_status "Simulating 5 parallel universe branches..."
 
     for i in {1..5}; do
-        branch_id="branch_$(printf "%03d" $i)"
+        branch_id="branch_$(printf "%03d" "$i")"
         divergence=$(echo "scale=1; $((RANDOM % 100))" | bc)
         entanglement=$(echo "scale=2; 0.7 + 0.0$i" | bc)
         accessible=$([ $((RANDOM % 2)) -eq 0 ] && echo "Yes" || echo "No")

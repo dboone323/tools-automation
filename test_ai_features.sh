@@ -7,7 +7,9 @@ echo "╚═══════════════════════�
 echo ""
 
 # Source AI modules
+# shellcheck disable=SC1091  # Expected for sourcing AI enhancement modules
 source enhancements/ai_codegen_optimizer.sh
+# shellcheck disable=SC1091  # Expected for sourcing AI enhancement modules
 source enhancements/ai_integration_optimizer.sh
 
 # Test 1: AI Code Complexity Analysis

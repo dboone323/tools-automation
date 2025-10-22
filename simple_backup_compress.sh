@@ -11,7 +11,6 @@ BACKUP_DIR="${WORKSPACE_DIR}/Tools/Automation/agents/backups"
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
@@ -69,7 +68,7 @@ compress_old_backups() {
                 ((compressed++))
             fi
         fi
-    done < <(find "$BACKUP_DIR" -maxdepth 1 -type d -name "CodingReviewer_*" | xargs ls -tr)
+    done < <(find "$BACKUP_DIR" -maxdepth 1 -type d -name "CodingReviewer_*" -print0 | xargs -0 ls -tr)
 
     print_success "Compressed $compressed backup directories"
 }

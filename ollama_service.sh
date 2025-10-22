@@ -1,8 +1,6 @@
 #!/bin/bash
 # On-demand Ollama service manager
 
-WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-
 start_ollama() {
     if ! pgrep -f "ollama serve" >/dev/null; then
         echo "Starting Ollama service..."
@@ -26,26 +24,26 @@ stop_ollama() {
 }
 
 case "${1:-status}" in
-    start)
-        start_ollama
-        ;;
-    stop)
-        stop_ollama
-        ;;
-    restart)
-        stop_ollama
-        sleep 2
-        start_ollama
-        ;;
-    status)
-        if pgrep -f "ollama serve" >/dev/null; then
-            echo "Ollama is running"
-        else
-            echo "Ollama is not running"
-        fi
-        ;;
-    *)
-        echo "Usage: $0 {start|stop|restart|status}"
-        exit 1
-        ;;
+start)
+    start_ollama
+    ;;
+stop)
+    stop_ollama
+    ;;
+restart)
+    stop_ollama
+    sleep 2
+    start_ollama
+    ;;
+status)
+    if pgrep -f "ollama serve" >/dev/null; then
+        echo "Ollama is running"
+    else
+        echo "Ollama is not running"
+    fi
+    ;;
+*)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
+    ;;
 esac
