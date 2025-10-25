@@ -1,23 +1,19 @@
 {
   "agents": {
     "search_agent": {
-      "last_seen": 1761101029,
+      "last_seen": 1761352788,
       "status": "available"
     },
     "search_agent.sh": {
-      "last_seen": 1761101029,
+      "last_seen": 1761352788,
       "status": "available"
     },
-    "documentation_agent.sh": {
+    "testing_agent.sh": {
       "status": "available",
-      "last_seen": 1761101031
-    },
-    "learning_agent.sh": {
-      "status": "available",
-      "last_seen": 1761101034
+      "last_seen": 1761352797
     }
   },
-  "last_update": 1761101029
+  "last_update": 1761352788
 }
+8
 }
-

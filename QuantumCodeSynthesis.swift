@@ -6,8 +6,8 @@
 //  Quantum Code Synthesis System with Multi-language Support and Context-aware Generation
 //
 
-import Foundation
 import Combine
+import Foundation
 import SwiftUI
 
 // MARK: - Core Protocols
@@ -380,6 +380,7 @@ struct CodeCompletion: Codable, Sendable {
 
     enum CompletionKind: String, Codable {
         case keyword, function, method, variable, type, class, struct, enum, protocol, import
+
     }
 
     struct AdditionalEdit: Codable, Sendable {
@@ -576,7 +577,7 @@ struct CodeAnalysis: Codable, Sendable {
                 let access: AccessLevel
 
                 enum AccessLevel: String, Codable {
-                    case `private`, `fileprivate`, `internal`, `public`, `open`
+                    case `private`, `fileprivate`, `internal`, `public`, open
                 }
             }
 
@@ -1002,7 +1003,8 @@ final class QuantumCodeSynthesis: ObservableObject {
     init(synthesizer: QuantumCodeSynthesizer = QuantumCodeSynthesizerImpl(),
          analyzer: MultiLanguageAnalyzer = MultiLanguageCodeAnalyzer(),
          generator: ContextAwareGenerator = ContextAwareCodeGenerator(),
-         learner: QuantumCodeLearner = QuantumCodeLearningEngine()) {
+         learner: QuantumCodeLearner = QuantumCodeLearningEngine())
+    {
         self.synthesizer = synthesizer
         self.analyzer = analyzer
         self.generator = generator
@@ -1044,22 +1046,22 @@ final class QuantumCodeSynthesis: ObservableObject {
 
     /// Generate code completions
     func generateCompletions(for partialCode: String, at position: CodePosition, in context: SynthesisContext) async throws -> [CodeCompletion] {
-        return try await synthesizer.generateCompletions(for: partialCode, at: position, in: context)
+        try await synthesizer.generateCompletions(for: partialCode, at: position, in: context)
     }
 
     /// Refactor existing code
     func refactorCode(_ code: String, with strategy: RefactoringStrategy, in language: ProgrammingLanguage) async throws -> RefactoredCode {
-        return try await synthesizer.refactorCode(code, with: strategy, in: language)
+        try await synthesizer.refactorCode(code, with: strategy, in: language)
     }
 
     /// Optimize code for performance
     func optimizeCode(_ code: String, for metrics: [OptimizationMetric], in language: ProgrammingLanguage) async throws -> OptimizedCode {
-        return try await synthesizer.optimizeCode(code, for: metrics, in: language)
+        try await synthesizer.optimizeCode(code, for: metrics, in: language)
     }
 
     /// Analyze codebase for learning
     func learnFromCodebase(at path: String, for language: ProgrammingLanguage) async throws -> LearningModel {
-        return try await learner.learnFromCodebase(at: path, for: language)
+        try await learner.learnFromCodebase(at: path, for: language)
     }
 
     /// Validate and optimize synthesis result
@@ -1141,7 +1143,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
                     description: "Consider adding input validation",
                     codeSnippet: "// Add validation logic here",
                     priority: .medium
-                )
+                ),
             ]
         )
     }
@@ -1158,7 +1160,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
     }
 
     private func generateSwiftCode(for specification: CodeSpecification) -> String {
-        return """
+        """
         import Foundation
 
         /// \(specification.description)
@@ -1195,7 +1197,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
     }
 
     private func generatePythonCode(for specification: CodeSpecification) -> String {
-        return """
+        """
         import asyncio
         from typing import Optional, Dict, Any
         import json
@@ -1240,7 +1242,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
 
     func generateCompletions(for partialCode: String, at position: CodePosition, in context: SynthesisContext) async throws -> [CodeCompletion] {
         // Mock implementation - would analyze partial code and context
-        return [
+        [
             CodeCompletion(
                 text: "func performOperation() async throws -> Result",
                 displayText: "performOperation()",
@@ -1254,7 +1256,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
                 description: "Network request with quantum optimization",
                 kind: .method,
                 relevance: 0.85
-            )
+            ),
         ]
     }
 
@@ -1269,10 +1271,10 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
                 RefactoredCode.CodeChange(
                     type: .extraction,
                     description: "Extracted method from long function",
-                    lineRange: 1...10,
+                    lineRange: 1 ... 10,
                     originalText: "original code",
                     newText: "refactored code"
-                )
+                ),
             ],
             qualityImprovement: RefactoredCode.QualityDelta(
                 maintainabilityChange: 15.0,
@@ -1300,9 +1302,9 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
                 OptimizedCode.Optimization(
                     type: .caching,
                     description: "Added result caching to improve performance",
-                    affectedLines: 1...5,
+                    affectedLines: 1 ... 5,
                     confidence: 0.9
-                )
+                ),
             ],
             performanceGains: [
                 OptimizedCode.PerformanceGain(
@@ -1310,7 +1312,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
                     improvement: 0.25,
                     confidence: 0.85,
                     measurementMethod: "Benchmark testing"
-                )
+                ),
             ],
             tradeoffs: [],
             validationResults: OptimizedCode.ValidationResults(
@@ -1331,7 +1333,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
 final class MultiLanguageCodeAnalyzer: MultiLanguageAnalyzer {
     func analyzeCode(_ code: String, language: ProgrammingLanguage) async throws -> CodeAnalysis {
         // Mock implementation - would perform actual code analysis
-        return CodeAnalysis(
+        CodeAnalysis(
             language: language,
             syntaxTree: CodeAnalysis.SyntaxTree(
                 root: CodeAnalysis.SyntaxTree.SyntaxNode(
@@ -1379,7 +1381,7 @@ final class MultiLanguageCodeAnalyzer: MultiLanguageAnalyzer {
 
     func extractPatterns(from code: String, in language: ProgrammingLanguage) async throws -> [CodePattern] {
         // Mock implementation - would extract actual patterns
-        return [
+        [
             CodePattern(
                 name: "Singleton Pattern",
                 type: .creational,
@@ -1388,26 +1390,26 @@ final class MultiLanguageCodeAnalyzer: MultiLanguageAnalyzer {
                 locations: [],
                 quality: .good,
                 suggestions: ["Consider using dependency injection instead"]
-            )
+            ),
         ]
     }
 
     func identifyDependencies(in code: String, for language: ProgrammingLanguage) async throws -> [CodeDependency] {
         // Mock implementation - would identify actual dependencies
-        return [
+        [
             CodeDependency(
                 type: .system_framework,
                 name: "Foundation",
                 version: nil,
                 source: .spm,
                 usage: []
-            )
+            ),
         ]
     }
 
     func validateSyntax(of code: String, in language: ProgrammingLanguage) async throws -> SyntaxValidation {
         // Mock implementation - would perform actual syntax validation
-        return SyntaxValidation(
+        SyntaxValidation(
             isValid: true,
             errors: [],
             warnings: [],
@@ -1433,7 +1435,7 @@ final class ContextAwareCodeGenerator: ContextAwareGenerator {
                     pattern: "MVVM Architecture",
                     confidence: 0.9,
                     sourceLocation: "Shared/SharedArchitecture.swift"
-                )
+                ),
             ],
             appliedHints: hints.map { hint in
                 ContextualGeneration.AppliedHint(
@@ -1449,7 +1451,7 @@ final class ContextAwareCodeGenerator: ContextAwareGenerator {
 
     func adaptToStyle(of existingCode: String, for generation: String, in language: ProgrammingLanguage) async throws -> StyleAdaptedCode {
         // Mock implementation - would adapt code style
-        return StyleAdaptedCode(
+        StyleAdaptedCode(
             originalCode: generation,
             adaptedCode: generation, // Assume already adapted
             styleChanges: [],
@@ -1460,7 +1462,7 @@ final class ContextAwareCodeGenerator: ContextAwareGenerator {
 
     func maintainConsistency(across files: [String], for language: ProgrammingLanguage) async throws -> ConsistencyResult {
         // Mock implementation - would analyze consistency
-        return ConsistencyResult(
+        ConsistencyResult(
             overallConsistency: 0.88,
             inconsistencies: [],
             recommendations: [
@@ -1469,7 +1471,7 @@ final class ContextAwareCodeGenerator: ContextAwareGenerator {
                     priority: .medium,
                     implementationEffort: .easy,
                     expectedBenefit: 0.15
-                )
+                ),
             ],
             automatedFixes: []
         )
@@ -1480,7 +1482,7 @@ final class ContextAwareCodeGenerator: ContextAwareGenerator {
 final class QuantumCodeLearningEngine: QuantumCodeLearner {
     func learnFromCodebase(at path: String, for language: ProgrammingLanguage) async throws -> LearningModel {
         // Mock implementation - would analyze codebase and learn patterns
-        return LearningModel(
+        LearningModel(
             language: language,
             patterns: [
                 LearningModel.LearnedPattern(
@@ -1489,7 +1491,7 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
                     contexts: ["network operations", "file operations"],
                     quality: 0.9,
                     variations: ["try await", "async throws"]
-                )
+                ),
             ],
             stylePreferences: LearningModel.StylePreferences(
                 namingConvention: "camelCase",
@@ -1504,7 +1506,7 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
                     usage: 0.6,
                     typicalParameters: ["variable", "condition"],
                     commonVariations: ["guard let", "guard case"]
-                )
+                ),
             ],
             domainKnowledge: LearningModel.DomainKnowledge(
                 concepts: ["MVVM", "Dependency Injection", "Reactive Programming"],
@@ -1523,7 +1525,7 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
 
     func applyLearnedPatterns(to specification: CodeSpecification) async throws -> PatternEnhancedSpecification {
         // Mock implementation - would enhance specification with learned patterns
-        return PatternEnhancedSpecification(
+        PatternEnhancedSpecification(
             originalSpecification: specification,
             learnedPatterns: [
                 PatternEnhancedSpecification.AppliedPattern(
@@ -1531,7 +1533,7 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
                     application: "Applied ViewModel structure",
                     benefit: "Better separation of concerns",
                     confidence: 0.85
-                )
+                ),
             ],
             styleAdaptations: [],
             domainEnhancements: [],
@@ -1541,7 +1543,7 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
 
     func predictCodeEvolution(for code: String, over horizon: TimeInterval) async throws -> CodeEvolutionPrediction {
         // Mock implementation - would predict code evolution
-        return CodeEvolutionPrediction(
+        CodeEvolutionPrediction(
             currentCode: code,
             predictions: [
                 CodeEvolutionPrediction.EvolutionPrediction(
@@ -1553,7 +1555,7 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
                         affectedAreas: ["business logic"],
                         mitigationCost: 3600
                     )
-                )
+                ),
             ],
             riskAssessments: [
                 CodeEvolutionPrediction.RiskAssessment(
@@ -1561,15 +1563,15 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
                     probability: 0.3,
                     impact: 0.6,
                     mitigationStrategy: "Regular refactoring"
-                )
+                ),
             ],
             recommendedActions: [
                 CodeEvolutionPrediction.RecommendedAction(
                     action: "Schedule quarterly code review",
                     priority: .medium,
-                    timeline: 7776000, // 90 days
+                    timeline: 7_776_000, // 90 days
                     expectedBenefit: 0.7
-                )
+                ),
             ],
             confidenceLevel: 0.8
         )
@@ -1804,7 +1806,7 @@ struct QuantumCodeSynthesizerTool {
                     type: .security,
                     description: "Implement secure password hashing",
                     priority: .must_have
-                )
+                ),
             ],
             constraints: [],
             targetLanguage: .swift,

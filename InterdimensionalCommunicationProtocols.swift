@@ -9,8 +9,8 @@
 // Framework for secure cross-dimensional data transmission and quantum-encrypted messaging
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -332,7 +332,7 @@ class InterdimensionalCommunicationEngine {
         let encryptedMessage = try await encryptMessage(message, using: encryptionKey)
 
         // Simulate transmission
-        let transmissionTime = channel.latency + Double.random(in: 0.01...0.05)
+        let transmissionTime = channel.latency + Double.random(in: 0.01 ... 0.05)
         try await Task.sleep(nanoseconds: UInt64(transmissionTime * 1_000_000_000))
 
         // Route message
@@ -406,7 +406,7 @@ class InterdimensionalCommunicationEngine {
     func decryptMessage(_ encryptedMessage: EncryptedMessage, using key: QuantumEncryptionKey) async throws -> InterdimensionalMessage {
         // For demo purposes, return a mock decrypted message
         // In a real implementation, this would properly decrypt and reconstruct the message
-        return InterdimensionalMessage(
+        InterdimensionalMessage(
             id: encryptedMessage.messageId,
             content: "Decrypted message content",
             sender: InterdimensionalPeer(
@@ -481,7 +481,7 @@ class InterdimensionalCommunicationEngine {
         for (index, channel) in communicationChannels.enumerated() {
             if channel.status == .active {
                 // Simulate random channel degradation
-                if Double.random(in: 0...1) < 0.05 { // 5% chance
+                if Double.random(in: 0 ... 1) < 0.05 { // 5% chance
                     let degradedChannel = InterdimensionalChannel(
                         id: channel.id,
                         sourceDimension: channel.sourceDimension,
@@ -506,7 +506,7 @@ class InterdimensionalCommunicationEngine {
 /// Quantum encryption engine implementation
 class QuantumEncryptionEngineImpl: QuantumEncryptionEngine {
     func generateQuantumKey(for dimension: Int) async throws -> QuantumEncryptionKey {
-        let keyData = Data((0..<32).map { _ in UInt8.random(in: 0...255) })
+        let keyData = Data((0 ..< 32).map { _ in UInt8.random(in: 0 ... 255) })
 
         return QuantumEncryptionKey(
             keyId: "key_\(UUID().uuidString.prefix(8))",
@@ -521,7 +521,7 @@ class QuantumEncryptionEngineImpl: QuantumEncryptionEngine {
     func encryptData(_ data: Data, with key: QuantumEncryptionKey) async throws -> EncryptedData {
         // Simplified encryption simulation
         let encrypted = data.map { $0 ^ key.keyData[Int($0) % key.keyData.count] }
-        let integrityHash = Data((0..<32).map { _ in UInt8.random(in: 0...255) }) // Simplified hash
+        let integrityHash = Data((0 ..< 32).map { _ in UInt8.random(in: 0 ... 255) }) // Simplified hash
 
         return EncryptedData(
             data: Data(encrypted),
@@ -556,7 +556,7 @@ class InterdimensionalMessagingImpl: InterdimensionalMessaging {
 
         // Create quantum signature (simplified)
         let signatureData = (content + sender.id + recipient.id).data(using: .utf8) ?? Data()
-        let quantumSignature = Data((0..<32).map { _ in UInt8.random(in: 0...255) }) // Simplified signature
+        let quantumSignature = Data((0 ..< 32).map { _ in UInt8.random(in: 0 ... 255) }) // Simplified signature
 
         let metadata = InterdimensionalMessage.MessageMetadata(
             messageType: "text",
@@ -584,8 +584,8 @@ class InterdimensionalMessagingImpl: InterdimensionalMessaging {
         // Find optimal route
         let optimalRoute = channels.filter { channel in
             channel.status == .active &&
-            (channel.sourceDimension == message.sender.dimension ||
-             channel.targetDimension == message.recipient.dimension)
+                (channel.sourceDimension == message.sender.dimension ||
+                    channel.targetDimension == message.recipient.dimension)
         }
 
         let estimatedTime = optimalRoute.reduce(0) { $0 + $1.latency }
@@ -610,7 +610,7 @@ class InterdimensionalMessagingImpl: InterdimensionalMessaging {
     func validateMessageIntegrity(_ message: InterdimensionalMessage) async -> Bool {
         // Validate quantum signature
         let expectedSignature = (message.content + message.sender.id + message.recipient.id).data(using: .utf8) ?? Data()
-        let expectedHash = Data((0..<32).map { _ in UInt8.random(in: 0...255) }) // Simplified hash
+        let expectedHash = Data((0 ..< 32).map { _ in UInt8.random(in: 0 ... 255) }) // Simplified hash
 
         return message.quantumSignature == expectedHash
     }
@@ -632,7 +632,7 @@ extension InterdimensionalCommunicationEngine: InterdimensionalCommunicationSyst
 extension Array {
     func chunked(into size: Int) -> [[Element]] {
         stride(from: 0, to: count, by: size).map {
-            Array(self[$0..<Swift.min($0 + size, count)])
+            Array(self[$0 ..< Swift.min($0 + size, count)])
         }
     }
 }

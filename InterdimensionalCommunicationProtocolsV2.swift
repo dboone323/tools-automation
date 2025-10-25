@@ -9,8 +9,8 @@
 // Framework for secure cross-dimensional messaging and data transfer protocols
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -148,7 +148,7 @@ struct InterdimensionalPeer: Identifiable, Hashable {
     }
 
     static func == (lhs: InterdimensionalPeer, rhs: InterdimensionalPeer) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 }
 
@@ -243,7 +243,7 @@ struct ProtocolVersion {
     let name: String
 
     var stringValue: String {
-        return "\(major).\(minor).\(patch)"
+        "\(major).\(minor).\(patch)"
     }
 }
 
@@ -547,7 +547,7 @@ class InterdimensionalCommunicationEngine {
             publicKey: Data(),
             capabilities: InterdimensionalPeer.PeerCapabilities(
                 supportedProtocols: ["ICP-1.0"],
-                maxMessageSize: 1048576,
+                maxMessageSize: 1_048_576,
                 supportedEncodings: ["json", "binary"],
                 quantumCapabilities: true,
                 bandwidthCapacity: 1000.0,
@@ -615,7 +615,7 @@ class InterdimensionalCommunicationEngine {
         // Encrypt message
         let encryptionKey = EncryptionKey(
             keyId: "key_\(UUID().uuidString.prefix(8))",
-            keyData: Data((0..<32).map { _ in UInt8.random(in: 0...255) }),
+            keyData: Data((0 ..< 32).map { _ in UInt8.random(in: 0 ... 255) }),
             algorithm: "AES-256-GCM",
             keySize: 256,
             expirationDate: Date().addingTimeInterval(3600)
@@ -630,7 +630,7 @@ class InterdimensionalCommunicationEngine {
         )
 
         // Simulate transmission
-        let transmissionDelay = channel.latency + Double.random(in: 0...0.01)
+        let transmissionDelay = channel.latency + Double.random(in: 0 ... 0.01)
         try await Task.sleep(nanoseconds: UInt64(transmissionDelay * 1_000_000_000))
 
         let transmissionTime = Date().timeIntervalSince(startTime)
@@ -673,7 +673,7 @@ class InterdimensionalCommunicationEngine {
                 publicKey: Data(),
                 capabilities: InterdimensionalPeer.PeerCapabilities(
                     supportedProtocols: ["ICP-1.0"],
-                    maxMessageSize: 1048576,
+                    maxMessageSize: 1_048_576,
                     supportedEncodings: ["json"],
                     quantumCapabilities: true,
                     bandwidthCapacity: 1000.0,
@@ -688,7 +688,7 @@ class InterdimensionalCommunicationEngine {
                 publicKey: Data(),
                 capabilities: InterdimensionalPeer.PeerCapabilities(
                     supportedProtocols: ["ICP-1.0"],
-                    maxMessageSize: 1048576,
+                    maxMessageSize: 1_048_576,
                     supportedEncodings: ["json"],
                     quantumCapabilities: true,
                     bandwidthCapacity: 1000.0,
@@ -768,8 +768,8 @@ class InterdimensionalCommunicationEngine {
         let threats = await securityManager.detectSecurityThreats(in: mockTraffic)
 
         let overallHealth = (channelHealth.values.reduce(0, +) / Double(channelHealth.count) +
-                           (threats.isEmpty ? 1.0 : 0.8) +
-                           0.9 + 0.95) / 4.0 // protocol, qos, security
+            (threats.isEmpty ? 1.0 : 0.8) +
+            0.9 + 0.95) / 4.0 // protocol, qos, security
 
         var recommendations: [String] = []
         if overallHealth < 0.85 {
@@ -875,7 +875,7 @@ class MessageRouterImpl: MessageRouter {
 
     func discoverRoutes(to destination: DimensionalCoordinates) async -> [Route] {
         // Simplified route discovery
-        return [
+        [
             Route(
                 destination: destination,
                 path: [destination],
@@ -883,13 +883,13 @@ class MessageRouterImpl: MessageRouter {
                 reliability: 0.99,
                 bandwidth: 1000.0,
                 lastUsed: Date()
-            )
+            ),
         ]
     }
 
     func optimizeRouting(for traffic: CommunicationTraffic) async -> RoutingOptimizationResult {
         // Simplified optimization
-        return RoutingOptimizationResult(
+        RoutingOptimizationResult(
             optimizedRoutes: [],
             performanceImprovement: 0.1,
             reliabilityImprovement: 0.05,
@@ -908,8 +908,8 @@ class CommunicationSecurityManagerImpl: CommunicationSecurityManager {
             encryptedData: encryptedData,
             encryptionAlgorithm: key.algorithm,
             keyId: key.keyId,
-            nonce: Data((0..<12).map { _ in UInt8.random(in: 0...255) }),
-            authenticationTag: Data((0..<16).map { _ in UInt8.random(in: 0...255) })
+            nonce: Data((0 ..< 12).map { _ in UInt8.random(in: 0 ... 255) }),
+            authenticationTag: Data((0 ..< 16).map { _ in UInt8.random(in: 0 ... 255) })
         )
     }
 
@@ -921,7 +921,7 @@ class CommunicationSecurityManagerImpl: CommunicationSecurityManager {
 
     func authenticatePeer(_ peer: InterdimensionalPeer) async throws -> AuthenticationResult {
         // Simplified authentication
-        return AuthenticationResult(
+        AuthenticationResult(
             authenticated: true,
             peerId: peer.id,
             confidence: 0.95,
@@ -932,16 +932,16 @@ class CommunicationSecurityManagerImpl: CommunicationSecurityManager {
 
     func establishSecureChannel(with peer: InterdimensionalPeer) async throws -> SecureChannel {
         // Simplified secure channel establishment
-        return SecureChannel(
+        SecureChannel(
             channelId: "secure_\(UUID().uuidString.prefix(8))",
             encryptionKey: EncryptionKey(
                 keyId: "key_\(UUID().uuidString.prefix(8))",
-                keyData: Data((0..<32).map { _ in UInt8.random(in: 0...255) }),
+                keyData: Data((0 ..< 32).map { _ in UInt8.random(in: 0 ... 255) }),
                 algorithm: "AES-256-GCM",
                 keySize: 256,
                 expirationDate: Date().addingTimeInterval(3600)
             ),
-            authenticationKey: Data((0..<32).map { _ in UInt8.random(in: 0...255) }),
+            authenticationKey: Data((0 ..< 32).map { _ in UInt8.random(in: 0 ... 255) }),
             protocolVersion: ProtocolVersion(major: 1, minor: 0, patch: 0, name: "ICP-1.0"),
             established: Date(),
             lastUsed: Date()
@@ -952,12 +952,12 @@ class CommunicationSecurityManagerImpl: CommunicationSecurityManager {
         // Simplified threat detection - randomly detect threats
         var threats: [SecurityThreat] = []
 
-        if Double.random(in: 0...1) < 0.05 { // 5% chance of detecting a threat
+        if Double.random(in: 0 ... 1) < 0.05 { // 5% chance of detecting a threat
             threats.append(SecurityThreat(
                 threatId: "threat_\(UUID().uuidString.prefix(8))",
                 threatType: .eavesdropping,
                 severity: .medium,
-                affectedMessages: traffic.messages.map { $0.id },
+                affectedMessages: traffic.messages.map(\.id),
                 detectionTime: Date(),
                 mitigationStrategy: "Increase encryption strength"
             ))
@@ -971,14 +971,14 @@ class CommunicationSecurityManagerImpl: CommunicationSecurityManager {
 class ProtocolNegotiatorImpl: ProtocolNegotiator {
     func negotiateProtocolVersion(with peer: InterdimensionalPeer) async throws -> ProtocolVersion {
         // Simplified version negotiation
-        return ProtocolVersion(major: 1, minor: 0, patch: 0, name: "ICP-1.0")
+        ProtocolVersion(major: 1, minor: 0, patch: 0, name: "ICP-1.0")
     }
 
     func negotiateCapabilities(with peer: InterdimensionalPeer) async throws -> NegotiatedCapabilities {
         // Simplified capability negotiation
-        return NegotiatedCapabilities(
+        NegotiatedCapabilities(
             supportedEncodings: ["json", "binary"],
-            maxMessageSize: 1048576,
+            maxMessageSize: 1_048_576,
             securityFeatures: ["quantum_encryption", "authentication"],
             qosPolicies: [],
             compressionAlgorithms: ["gzip", "lz4"]
@@ -987,7 +987,7 @@ class ProtocolNegotiatorImpl: ProtocolNegotiator {
 
     func handleProtocolMismatch(_ mismatch: ProtocolMismatch) async throws -> ProtocolResolutionResult {
         // Simplified mismatch handling
-        return ProtocolResolutionResult(
+        ProtocolResolutionResult(
             resolved: true,
             resolutionApplied: mismatch.suggestedResolution,
             finalVersion: mismatch.localVersion,
@@ -998,7 +998,7 @@ class ProtocolNegotiatorImpl: ProtocolNegotiator {
 
     func upgradeProtocol(to version: ProtocolVersion) async throws -> ProtocolUpgradeResult {
         // Simplified protocol upgrade
-        return ProtocolUpgradeResult(
+        ProtocolUpgradeResult(
             success: true,
             newVersion: version,
             upgradeTime: 0.5,
@@ -1012,7 +1012,7 @@ class ProtocolNegotiatorImpl: ProtocolNegotiator {
 class QoSManagerImpl: QoSManager {
     func enforceQoSPolicy(_ policy: QoSPolicy, for message: InterdimensionalMessage) async -> QoSEnforcementResult {
         // Simplified QoS enforcement
-        return QoSEnforcementResult(
+        QoSEnforcementResult(
             enforced: true,
             policyApplied: policy,
             adjustmentsMade: [],
@@ -1023,7 +1023,7 @@ class QoSManagerImpl: QoSManager {
 
     func monitorQoSMetrics() async -> QoSMetrics {
         // Simplified QoS monitoring
-        return QoSMetrics(
+        QoSMetrics(
             averageLatency: 0.01,
             latencyVariance: 0.001,
             bandwidthUtilization: 0.7,
@@ -1035,7 +1035,7 @@ class QoSManagerImpl: QoSManager {
 
     func adjustQoSParameters(for conditions: NetworkConditions) async -> QoSAdjustmentResult {
         // Simplified QoS adjustment
-        return QoSAdjustmentResult(
+        QoSAdjustmentResult(
             adjustmentsApplied: [],
             performanceImpact: 0.02,
             stabilityImprovement: 0.05,
@@ -1045,7 +1045,7 @@ class QoSManagerImpl: QoSManager {
 
     func prioritizeMessages(_ messages: [InterdimensionalMessage]) async -> [PrioritizedMessage] {
         // Simplified message prioritization
-        return messages.enumerated().map { index, message in
+        messages.enumerated().map { index, message in
             PrioritizedMessage(
                 message: message,
                 assignedPriority: message.priority,
@@ -1066,17 +1066,17 @@ extension InterdimensionalCommunicationEngine: InterdimensionalCommunicationProt
 
 extension InterdimensionalMessage {
     var size: Int {
-        return content.data.count
+        content.data.count
     }
 
     var isExpired: Bool {
-        return Date().timeIntervalSince(timestamp) > metadata.ttl
+        Date().timeIntervalSince(timestamp) > metadata.ttl
     }
 }
 
 extension CommunicationChannel {
     var isActive: Bool {
-        return status == .active
+        status == .active
     }
 
     var effectiveBandwidth: Double {

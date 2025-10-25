@@ -9,8 +9,8 @@
 // Framework for environmental monitoring and sustainability using quantum sensors and climate modeling
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -2208,16 +2208,16 @@ class QuantumEnvironmentalSystemsEngine {
                     sensors: [],
                     coverage: 0.7,
                     reliability: 0.9
-                )
+                ),
             ],
             dataCenters: [
                 DataCenter(
                     centerId: "data_center_\(frameworkId)",
                     location: GeographicLocation(latitude: 0.0, longitude: 0.0),
-                    capacity: 1000000.0,
+                    capacity: 1_000_000.0,
                     processing: 0.9,
                     storage: 0.95
-                )
+                ),
             ],
             connectivity: NetworkConnectivity(
                 type: .quantum,
@@ -2237,7 +2237,7 @@ class QuantumEnvironmentalSystemsEngine {
                     resolution: 10.0,
                     parameters: [],
                     algorithms: [.quantumSuperposition]
-                )
+                ),
             ],
             predictions: [],
             scenarios: [],
@@ -2259,8 +2259,8 @@ class QuantumEnvironmentalSystemsEngine {
                     name: "Carbon Neutrality",
                     description: "Achieve net-zero carbon emissions",
                     priority: 0.9,
-                    timeframe: 31536000 * 10 // 10 years
-                )
+                    timeframe: 31_536_000 * 10 // 10 years
+                ),
             ],
             strategies: [],
             metrics: [],
@@ -2286,7 +2286,7 @@ class QuantumEnvironmentalSystemsEngine {
             restoration: RestorationPrograms(
                 programsId: "restoration_\(frameworkId)",
                 projects: [],
-                budget: 10000000.0,
+                budget: 10_000_000.0,
                 effectiveness: 0.8
             )
         )
@@ -2303,9 +2303,9 @@ class QuantumEnvironmentalSystemsEngine {
             ),
             markets: CarbonMarkets(
                 marketId: "carbon_market_\(frameworkId)",
-                credits: 1000000.0,
+                credits: 1_000_000.0,
                 price: 50.0,
-                volume: 100000.0,
+                volume: 100_000.0,
                 liquidity: 0.7
             ),
             regulations: CarbonRegulations(
@@ -2346,7 +2346,7 @@ class QuantumEnvironmentalSystemsEngine {
                 "temperature": 22.5,
                 "humidity": 65.0,
                 "air_quality": 45.0,
-                "water_quality": 85.0
+                "water_quality": 85.0,
             ],
             quality: .excellent,
             coverage: 0.9
@@ -2361,8 +2361,8 @@ class QuantumEnvironmentalSystemsEngine {
                     direction: .increasing,
                     magnitude: 0.02,
                     significance: 0.8,
-                    timeframe: 2592000
-                )
+                    timeframe: 2_592_000
+                ),
             ],
             anomalies: [],
             correlations: [],
@@ -2378,7 +2378,7 @@ class QuantumEnvironmentalSystemsEngine {
                 location: GeographicLocation(latitude: 40.0, longitude: -74.0),
                 description: "Temperature trend detected",
                 recommendedAction: "Implement cooling measures"
-            )
+            ),
         ]
 
         // Generate recommendations
@@ -2389,7 +2389,7 @@ class QuantumEnvironmentalSystemsEngine {
                 priority: 0.7,
                 description: "Implement renewable energy incentives",
                 expectedImpact: 0.6
-            )
+            ),
         ]
 
         let monitoring = EnvironmentalMonitoring(
@@ -2423,13 +2423,13 @@ class QuantumEnvironmentalSystemsEngine {
             temperature: TemperatureProjection(
                 baseline: 15.0,
                 projected: 17.5,
-                range: 16.0...19.0,
+                range: 16.0 ... 19.0,
                 confidence: 0.8
             ),
             precipitation: PrecipitationProjection(
                 baseline: 1000.0,
                 projected: 950.0,
-                range: 900.0...1100.0,
+                range: 900.0 ... 1100.0,
                 confidence: 0.75
             ),
             extremeEvents: ExtremeEventProjection(
@@ -2440,7 +2440,7 @@ class QuantumEnvironmentalSystemsEngine {
             ),
             seaLevel: SeaLevelProjection(
                 rise: 0.5,
-                range: 0.3...0.8,
+                range: 0.3 ... 0.8,
                 confidence: 0.7
             )
         )
@@ -2490,8 +2490,8 @@ class QuantumEnvironmentalSystemsEngine {
                     name: "Carbon Reduction",
                     description: "Reduce carbon emissions by 50%",
                     priority: 0.9,
-                    timeframe: 31536000 * 5
-                )
+                    timeframe: 31_536_000 * 5
+                ),
             ],
             methods: [.efficiency],
             technologies: [.renewableEnergy]
@@ -2511,7 +2511,7 @@ class QuantumEnvironmentalSystemsEngine {
                 environmental: 0.4,
                 economic: 0.2,
                 social: 0.1
-            )
+            ),
         ]
 
         let optimizationResult = SustainabilityOptimization(
@@ -2616,7 +2616,7 @@ class QuantumEnvironmentalSystemsEngine {
                     richness: 500,
                     threat: 0.7,
                     protection: 0.6
-                )
+                ),
             ],
             threats: [],
             trends: []
@@ -2629,7 +2629,7 @@ class QuantumEnvironmentalSystemsEngine {
                 priority: 0.8,
                 description: "Establish protected area",
                 expectedOutcome: 0.7
-            )
+            ),
         ]
 
         let biodiversityAssessment = BiodiversityAssessment(
@@ -2685,10 +2685,10 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
             ClimatePattern.ClimateCycle(
                 cycleId: "seasonal",
                 type: .seasonal,
-                period: 31536000,
+                period: 31_536_000,
                 amplitude: 10.0,
                 phase: 0.0
-            )
+            ),
         ]
 
         let anomalies = [
@@ -2696,9 +2696,9 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 anomalyId: "anomaly_1",
                 type: .temperature,
                 magnitude: 2.5,
-                duration: 2592000,
+                duration: 2_592_000,
                 significance: 0.9
-            )
+            ),
         ]
 
         let trends = [
@@ -2708,7 +2708,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 slope: 0.02,
                 significance: 0.95,
                 acceleration: 0.001
-            )
+            ),
         ]
 
         return ClimatePattern(
@@ -2727,9 +2727,9 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 forecastId: "forecast_1",
                 parameter: .temperature,
                 value: 22.0,
-                range: 20.0...24.0,
+                range: 20.0 ... 24.0,
                 probability: 0.8
-            )
+            ),
         ]
 
         return WeatherPrediction(
@@ -2757,7 +2757,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                         parameter: .temperature,
                         value: 18.5,
                         confidence: 0.8
-                    )
+                    ),
                 ],
                 probabilities: []
             )
@@ -2783,7 +2783,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 impactId: "impact_\(sector.sectorId)",
                 sector: sector.name,
                 magnitude: 0.3,
-                timing: 2592000,
+                timing: 2_592_000,
                 distribution: ImpactDistribution(
                     regional: 0.6,
                     national: 0.3,
@@ -2811,7 +2811,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 value: 2.5,
                 confidence: 0.8,
                 timeframe: horizon
-            )
+            ),
         ]
 
         return ClimateForecast(
@@ -2833,13 +2833,13 @@ class EnvironmentalSensorNetworkImpl: EnvironmentalSensorNetwork {
             locations: [],
             schedule: DeploymentSchedule(
                 startDate: Date(),
-                endDate: Date().addingTimeInterval(2592000),
+                endDate: Date().addingTimeInterval(2_592_000),
                 phases: []
             ),
             resources: DeploymentResources(
                 personnel: 50,
                 equipment: 1000,
-                budget: 5000000.0
+                budget: 5_000_000.0
             ),
             risks: []
         )
@@ -2853,14 +2853,14 @@ class EnvironmentalSensorNetworkImpl: EnvironmentalSensorNetwork {
 
         let maintenance = SensorDeployment.MaintenancePlan(
             schedule: MaintenanceSchedule(
-                frequency: 604800,
+                frequency: 604_800,
                 procedures: []
             ),
             procedures: [],
             resources: MaintenanceResources(
                 personnel: 20,
                 equipment: [],
-                budget: 1000000.0,
+                budget: 1_000_000.0,
                 spareParts: []
             )
         )
@@ -2928,7 +2928,7 @@ class EnvironmentalSensorNetworkImpl: EnvironmentalSensorNetwork {
                 stability: 0.95
             ),
             schedule: SensorCalibration.CalibrationSchedule(
-                frequency: 2592000,
+                frequency: 2_592_000,
                 triggers: [],
                 priority: .high
             )
@@ -2936,7 +2936,7 @@ class EnvironmentalSensorNetworkImpl: EnvironmentalSensorNetwork {
     }
 
     func maintainSensorNetwork(_ network: SensorNetwork, schedule: MaintenanceSchedule) async -> NetworkMaintenance {
-        return NetworkMaintenance(
+        NetworkMaintenance(
             maintenanceId: "maintenance_\(network.networkId)",
             network: network,
             schedule: schedule,
@@ -2944,7 +2944,7 @@ class EnvironmentalSensorNetworkImpl: EnvironmentalSensorNetwork {
             resources: NetworkMaintenance.MaintenanceResources(
                 personnel: 15,
                 equipment: [],
-                budget: 800000.0,
+                budget: 800_000.0,
                 spareParts: []
             ),
             performance: NetworkMaintenance.MaintenancePerformance(
@@ -2984,7 +2984,7 @@ class EnvironmentalSensorNetworkImpl: EnvironmentalSensorNetwork {
 /// Sustainability optimizer implementation
 class SustainabilityOptimizerImpl: SustainabilityOptimizer {
     func optimizeResourceUsage(_ resources: [NaturalResource], demands: [ResourceDemand]) async -> ResourceOptimization {
-        return ResourceOptimization(
+        ResourceOptimization(
             optimizationId: "resource_opt_\(UUID().uuidString.prefix(8))",
             resources: resources,
             demands: demands,
@@ -3010,7 +3010,7 @@ class SustainabilityOptimizerImpl: SustainabilityOptimizer {
     }
 
     func minimizeEnvironmentalImpact(_ activities: [HumanActivity], alternatives: [SustainableAlternative]) async -> ImpactMinimization {
-        return ImpactMinimization(
+        ImpactMinimization(
             minimizationId: "impact_min_\(UUID().uuidString.prefix(8))",
             activities: activities,
             alternatives: alternatives,
@@ -3036,7 +3036,7 @@ class SustainabilityOptimizerImpl: SustainabilityOptimizer {
     }
 
     func designSustainableSystems(_ systems: [EnvironmentalSystem], objectives: [SustainabilityObjective]) async -> SystemDesign {
-        return SystemDesign(
+        SystemDesign(
             designId: "system_design_\(UUID().uuidString.prefix(8))",
             systems: systems,
             objectives: objectives,
@@ -3056,17 +3056,17 @@ class SustainabilityOptimizerImpl: SustainabilityOptimizer {
                 phases: [],
                 resources: ImplementationResources(
                     personnel: 100,
-                    budget: 10000000.0,
-                    timeline: 31536000
+                    budget: 10_000_000.0,
+                    timeline: 31_536_000
                 ),
-                timeline: 31536000,
+                timeline: 31_536_000,
                 risks: []
             )
         )
     }
 
     func balanceEconomicEnvironmental(_ economic: EconomicActivity, environmental: EnvironmentalImpact) async -> BalanceOptimization {
-        return BalanceOptimization(
+        BalanceOptimization(
             optimizationId: "balance_opt_\(UUID().uuidString.prefix(8))",
             economic: economic,
             environmental: environmental,
@@ -3087,7 +3087,7 @@ class SustainabilityOptimizerImpl: SustainabilityOptimizer {
     }
 
     func implementCircularEconomy(_ materials: [Material], processes: [EconomicProcess]) async -> CircularImplementation {
-        return CircularImplementation(
+        CircularImplementation(
             implementationId: "circular_impl_\(UUID().uuidString.prefix(8))",
             materials: materials,
             processes: processes,
@@ -3116,7 +3116,7 @@ class SustainabilityOptimizerImpl: SustainabilityOptimizer {
 /// Ecosystem monitor implementation
 class EcosystemMonitorImpl: EcosystemMonitor {
     func monitorEcosystemHealth(_ ecosystem: Ecosystem, indicators: [HealthIndicator]) async -> HealthMonitoring {
-        return HealthMonitoring(
+        HealthMonitoring(
             monitoringId: "health_monitor_\(ecosystem.ecosystemId)",
             ecosystem: ecosystem,
             indicators: indicators,
@@ -3139,7 +3139,7 @@ class EcosystemMonitorImpl: EcosystemMonitor {
     }
 
     func detectEnvironmentalThreats(_ ecosystem: Ecosystem, sensors: [EnvironmentalSensor]) async -> ThreatDetection {
-        return ThreatDetection(
+        ThreatDetection(
             detectionId: "threat_detect_\(ecosystem.ecosystemId)",
             ecosystem: ecosystem,
             sensors: sensors,
@@ -3162,7 +3162,7 @@ class EcosystemMonitorImpl: EcosystemMonitor {
     }
 
     func assessEcosystemServices(_ ecosystem: Ecosystem, services: [EcosystemService]) async -> ServiceAssessment {
-        return ServiceAssessment(
+        ServiceAssessment(
             assessmentId: "service_assess_\(ecosystem.ecosystemId)",
             ecosystem: ecosystem,
             services: services,
@@ -3176,7 +3176,7 @@ class EcosystemMonitorImpl: EcosystemMonitor {
             valuation: ServiceAssessment.EconomicValuation(
                 valuationId: "valuation_1",
                 service: services.first?.serviceId ?? "",
-                value: 1000000.0,
+                value: 1_000_000.0,
                 method: .market,
                 uncertainty: 0.2
             ),
@@ -3185,13 +3185,13 @@ class EcosystemMonitorImpl: EcosystemMonitor {
     }
 
     func predictEcosystemChanges(_ ecosystem: Ecosystem, drivers: [ChangeDriver]) async -> ChangePrediction {
-        return ChangePrediction(
+        ChangePrediction(
             predictionId: "change_pred_\(ecosystem.ecosystemId)",
             ecosystem: ecosystem,
             drivers: drivers,
             prediction: ChangePrediction.EcosystemPrediction(
                 predictionId: "pred_1",
-                timeframe: 31536000,
+                timeframe: 31_536_000,
                 changes: [],
                 confidence: 0.8,
                 uncertainty: 0.15
@@ -3206,7 +3206,7 @@ class EcosystemMonitorImpl: EcosystemMonitor {
     }
 
     func recommendRestorationActions(_ ecosystem: Ecosystem, issues: [EnvironmentalIssue]) async -> RestorationPlan {
-        return RestorationPlan(
+        RestorationPlan(
             planId: "restoration_\(ecosystem.ecosystemId)",
             ecosystem: ecosystem,
             issues: issues,
@@ -3214,8 +3214,8 @@ class EcosystemMonitorImpl: EcosystemMonitor {
                 strategyId: "strategy_1",
                 objectives: [],
                 methods: [],
-                timeline: 31536000,
-                budget: 5000000.0
+                timeline: 31_536_000,
+                budget: 5_000_000.0
             ),
             implementation: RestorationPlan.ImplementationPlan(
                 phases: [],
@@ -3223,14 +3223,14 @@ class EcosystemMonitorImpl: EcosystemMonitor {
                 resources: RestorationPlan.ImplementationResources(
                     personnel: 50,
                     equipment: [],
-                    budget: 5000000.0
+                    budget: 5_000_000.0
                 )
             ),
             monitoring: RestorationPlan.RestorationMonitoring(
                 monitoringId: "monitor_1",
                 indicators: [],
                 frequency: 86400,
-                duration: 31536000
+                duration: 31_536_000
             )
         )
     }
@@ -3271,18 +3271,18 @@ class CarbonTrackerImpl: CarbonTracker {
     }
 
     func trackCarbonCredits(_ credits: [CarbonCredit], transactions: [CreditTransaction]) async -> CreditTracking {
-        return CreditTracking(
+        CreditTracking(
             trackingId: "credit_track_\(UUID().uuidString.prefix(8))",
             credits: credits,
             transactions: transactions,
-            balance: 100000.0,
+            balance: 100_000.0,
             retirement: 50000.0,
             verification: 0.9
         )
     }
 
     func calculateCarbonFootprint(_ entity: CarbonEmitter, scope: EmissionScope) async -> FootprintCalculation {
-        return FootprintCalculation(
+        FootprintCalculation(
             calculationId: "footprint_\(entity.emitterId)",
             entity: entity,
             scope: scope,
@@ -3310,7 +3310,7 @@ class CarbonTrackerImpl: CarbonTracker {
     }
 
     func verifyCarbonOffsets(_ offsets: [CarbonOffset], standards: [VerificationStandard]) async -> OffsetVerification {
-        return OffsetVerification(
+        OffsetVerification(
             verificationId: "offset_verify_\(UUID().uuidString.prefix(8))",
             offsets: offsets,
             standards: standards,
@@ -3331,7 +3331,7 @@ class CarbonTrackerImpl: CarbonTracker {
     }
 
     func optimizeCarbonReduction(_ strategies: [ReductionStrategy], costs: [ImplementationCost]) async -> ReductionOptimization {
-        return ReductionOptimization(
+        ReductionOptimization(
             optimizationId: "reduction_opt_\(UUID().uuidString.prefix(8))",
             strategies: strategies,
             costs: costs,
@@ -3343,7 +3343,7 @@ class CarbonTrackerImpl: CarbonTracker {
             ),
             results: ReductionOptimization.OptimizationResults(
                 reduction: 0.4,
-                cost: 5000000.0,
+                cost: 5_000_000.0,
                 feasibility: 0.8,
                 scalability: 0.75
             ),
@@ -3364,7 +3364,7 @@ class CarbonTrackerImpl: CarbonTracker {
 /// Biodiversity analyzer implementation
 class BiodiversityAnalyzerImpl: BiodiversityAnalyzer {
     func assessSpeciesDiversity(_ region: GeographicRegion, species: [Species]) async -> DiversityAssessment {
-        return DiversityAssessment(
+        DiversityAssessment(
             assessmentId: "diversity_assess_\(region.regionId)",
             region: region,
             species: species,
@@ -3381,16 +3381,16 @@ class BiodiversityAnalyzerImpl: BiodiversityAnalyzer {
     }
 
     func monitorPopulationDynamics(_ populations: [SpeciesPopulation], factors: [PopulationFactor]) async -> PopulationMonitoring {
-        return PopulationMonitoring(
+        PopulationMonitoring(
             monitoringId: "population_monitor_\(UUID().uuidString.prefix(8))",
             populations: populations,
             factors: factors,
             monitoring: PopulationMonitoring.MonitoringProgram(
                 programId: "program_1",
                 methods: [],
-                frequency: 2592000,
+                frequency: 2_592_000,
                 coverage: 0.8,
-                cost: 2000000.0
+                cost: 2_000_000.0
             ),
             results: PopulationMonitoring.PopulationAnalysis(
                 trends: [],
@@ -3411,7 +3411,7 @@ class BiodiversityAnalyzerImpl: BiodiversityAnalyzer {
     }
 
     func analyzeHabitatConnectivity(_ habitats: [Habitat], corridors: [HabitatCorridor]) async -> ConnectivityAnalysis {
-        return ConnectivityAnalysis(
+        ConnectivityAnalysis(
             analysisId: "connectivity_analysis_\(UUID().uuidString.prefix(8))",
             habitats: habitats,
             corridors: corridors,
@@ -3427,7 +3427,7 @@ class BiodiversityAnalyzerImpl: BiodiversityAnalyzer {
     }
 
     func evaluateConservationEffectiveness(_ programs: [ConservationProgram], metrics: [ConservationMetric]) async -> ConservationEvaluation {
-        return ConservationEvaluation(
+        ConservationEvaluation(
             evaluationId: "conservation_eval_\(UUID().uuidString.prefix(8))",
             programs: programs,
             metrics: metrics,
@@ -3447,7 +3447,7 @@ class BiodiversityAnalyzerImpl: BiodiversityAnalyzer {
                 assessmentId: "risk_\(species.speciesId)",
                 species: species.speciesId,
                 risk: .medium,
-                timeframe: 31536000 * 50,
+                timeframe: 31_536_000 * 50,
                 confidence: 0.8
             )
         }
@@ -3495,7 +3495,7 @@ extension QuantumEnvironmentalFramework {
     }
 
     var needsOptimization: Bool {
-        return status == .operational && environmentalHealth < 0.8
+        status == .operational && environmentalHealth < 0.8
     }
 }
 
@@ -3506,37 +3506,37 @@ extension EnvironmentalMonitoring {
     }
 
     var requiresImmediateAction: Bool {
-        return alertSeverity > 0.3
+        alertSeverity > 0.3
     }
 }
 
 extension ClimateModeling {
     var modelReliability: Double {
-        return validation.accuracy * validation.skillScore
+        validation.accuracy * validation.skillScore
     }
 
     var isHighlyReliable: Bool {
-        return modelReliability > 0.8
+        modelReliability > 0.8
     }
 }
 
 extension SustainabilityOptimization {
     var optimizationEffectiveness: Double {
-        return results.sustainabilityScore * (1.0 - results.economicCost)
+        results.sustainabilityScore * (1.0 - results.economicCost)
     }
 
     var isEffective: Bool {
-        return optimizationEffectiveness > 0.7
+        optimizationEffectiveness > 0.7
     }
 }
 
 extension CarbonTracking {
     var netCarbonPosition: Double {
-        return measurements.reduce(0.0) { $0 + $1.amount } - credits.balance - offsets.quality * 100000.0
+        measurements.reduce(0.0) { $0 + $1.amount } - credits.balance - offsets.quality * 100_000.0
     }
 
     var isCarbonNeutral: Bool {
-        return abs(netCarbonPosition) < 1000.0 // Within 1000 tonnes
+        abs(netCarbonPosition) < 1000.0 // Within 1000 tonnes
     }
 }
 
@@ -3548,7 +3548,7 @@ extension BiodiversityAssessment {
     }
 
     var requiresUrgentAction: Bool {
-        return conservationPriority > 0.7
+        conservationPriority > 0.7
     }
 }
 

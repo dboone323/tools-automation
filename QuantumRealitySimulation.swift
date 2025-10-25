@@ -11,8 +11,8 @@
 //  algorithms for advanced reality engineering.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -68,8 +68,8 @@ struct QuantumState: Hashable {
 
     static func == (lhs: QuantumState, rhs: QuantumState) -> Bool {
         lhs.amplitudes == rhs.amplitudes &&
-        lhs.basisStates == rhs.basisStates &&
-        abs(lhs.normalization - rhs.normalization) < 1e-10
+            lhs.basisStates == rhs.basisStates &&
+            abs(lhs.normalization - rhs.normalization) < 1e-10
     }
 }
 
@@ -300,6 +300,7 @@ struct StabilizationField {
 @MainActor
 class QuantumRealitySimulation: ObservableObject {
     // MARK: - Properties
+
     @Published var multiverse: Multiverse
     @Published var realityStates: [RealityState] = []
     @Published var parallelUniverses: [ParallelUniverse] = []
@@ -315,6 +316,7 @@ class QuantumRealitySimulation: ObservableObject {
     private let realityEngine: RealityEngine
 
     // MARK: - Initialization
+
     init() {
         self.multiverse = Multiverse(universes: [], quantumEntanglement: 0, realityCoherence: 0, branchingFactor: 0)
         self.multiverseModeler = MultiverseModelingImpl()
@@ -350,16 +352,16 @@ class QuantumRealitySimulation: ObservableObject {
 
         var parallels: [ParallelUniverse] = []
 
-        for i in 0..<count {
+        for i in 0 ..< count {
             let baseUniverse = try await createBaseUniverse()
             let realityStates = await realityEngine.generateRealityStates(count: 5, universeId: baseUniverse.id)
 
             let parallel = ParallelUniverse(
                 baseUniverse: baseUniverse,
                 branchId: "parallel_\(i)",
-                divergencePoint: Double.random(in: 0...100),
+                divergencePoint: Double.random(in: 0 ... 100),
                 realityStates: realityStates,
-                entanglementStrength: Double.random(in: 0.5...1.0)
+                entanglementStrength: Double.random(in: 0.5 ... 1.0)
             )
             parallels.append(parallel)
         }
@@ -457,7 +459,7 @@ class MultiverseModelingImpl: MultiverseModeling {
     func createMultiverse(branches: Int, dimensions: Int) async -> Multiverse {
         var universes: [Universe] = []
 
-        for i in 0..<branches {
+        for i in 0 ..< branches {
             let universe = Universe(
                 id: "universe_\(i)",
                 dimensions: dimensions,
@@ -465,11 +467,11 @@ class MultiverseModelingImpl: MultiverseModeling {
                     "planck": 6.626e-34,
                     "speed_of_light": 3e8,
                     "gravitational": 6.674e-11,
-                    "boltzmann": 1.381e-23
+                    "boltzmann": 1.381e-23,
                 ],
                 quantumState: QuantumState(amplitudes: [Complex(1, 0)], basisStates: ["|0⟩"], normalization: 1.0),
                 realityStates: [],
-                branchingProbability: Double.random(in: 0.1...1.0)
+                branchingProbability: Double.random(in: 0.1 ... 1.0)
             )
             universes.append(universe)
         }
@@ -485,7 +487,7 @@ class MultiverseModelingImpl: MultiverseModeling {
     func simulateUniverseBranching(_ universe: Universe, branches: Int) async -> [UniverseBranch] {
         var universeBranches: [UniverseBranch] = []
 
-        for i in 0..<branches {
+        for i in 0 ..< branches {
             let branchUniverse = Universe(
                 id: "\(universe.id)_branch_\(i)",
                 dimensions: universe.dimensions,
@@ -498,9 +500,9 @@ class MultiverseModelingImpl: MultiverseModeling {
             let branch = UniverseBranch(
                 parentUniverse: universe,
                 branchUniverse: branchUniverse,
-                divergenceTime: Double.random(in: 0...100),
-                probability: Double.random(in: 0.1...1.0),
-                quantumDifference: Double.random(in: 0...0.5)
+                divergenceTime: Double.random(in: 0 ... 100),
+                probability: Double.random(in: 0.1 ... 1.0),
+                quantumDifference: Double.random(in: 0 ... 0.5)
             )
 
             universeBranches.append(branch)
@@ -514,8 +516,8 @@ class MultiverseModelingImpl: MultiverseModeling {
             ComputationResult(
                 reality: reality,
                 result: QuantumState(amplitudes: reality.stateVector, basisStates: ["|result⟩"], normalization: 1.0),
-                computationTime: Double.random(in: 0.1...1.0),
-                accuracy: Double.random(in: 0.8...1.0)
+                computationTime: Double.random(in: 0.1 ... 1.0),
+                accuracy: Double.random(in: 0.8 ... 1.0)
             )
         }
 
@@ -556,7 +558,7 @@ class RealityManipulationImpl: RealityManipulationProtocol {
                 severity: 0.1,
                 probability: 0.05,
                 description: "Minor decoherence from manipulation"
-            )
+            ),
         ]
 
         return ManipulatedReality(
@@ -571,7 +573,7 @@ class RealityManipulationImpl: RealityManipulationProtocol {
     func stabilizeRealityState(_ reality: RealityState) async -> StabilizedReality {
         let stabilizationFields = [
             StabilizationField(type: .quantum, strength: 1.0, range: 10.0, frequency: 1.0),
-            StabilizationField(type: .temporal, strength: 0.8, range: 5.0, frequency: 2.0)
+            StabilizationField(type: .temporal, strength: 0.8, range: 5.0, frequency: 2.0),
         ]
 
         return StabilizedReality(
@@ -604,7 +606,7 @@ class UniverseComputationImpl: UniverseComputation {
         var evolvedUniverses: [Universe] = [universe]
         var metrics: [EvolutionMetric] = []
 
-        for step in 1...timeSteps {
+        for step in 1 ... timeSteps {
             let evolvedUniverse = Universe(
                 id: "\(universe.id)_t\(step)",
                 dimensions: universe.dimensions,
@@ -616,10 +618,10 @@ class UniverseComputationImpl: UniverseComputation {
 
             let metric = EvolutionMetric(
                 timeStep: step,
-                stability: Double.random(in: 0.8...1.0),
-                coherence: Double.random(in: 0.7...0.95),
-                entropy: Double.random(in: 0...1.0),
-                energy: Double.random(in: 100...1000)
+                stability: Double.random(in: 0.8 ... 1.0),
+                coherence: Double.random(in: 0.7 ... 0.95),
+                entropy: Double.random(in: 0 ... 1.0),
+                energy: Double.random(in: 100 ... 1000)
             )
 
             evolvedUniverses.append(evolvedUniverse)
@@ -635,17 +637,17 @@ class UniverseComputationImpl: UniverseComputation {
     }
 
     func simulateQuantumFluctuations(_ universe: Universe) async -> FluctuationSimulation {
-        let fluctuations = (0..<10).map { _ in
+        let fluctuations = (0 ..< 10).map { _ in
             QuantumFluctuation(
                 position: SIMD3(
-                    Double.random(in: -10...10),
-                    Double.random(in: -10...10),
-                    Double.random(in: -10...10)
+                    Double.random(in: -10 ... 10),
+                    Double.random(in: -10 ... 10),
+                    Double.random(in: -10 ... 10)
                 ),
-                time: Double.random(in: 0...100),
-                amplitude: Double.random(in: 0...1),
-                frequency: Double.random(in: 1...100),
-                phase: Double.random(in: 0...(2 * .pi))
+                time: Double.random(in: 0 ... 100),
+                amplitude: Double.random(in: 0 ... 1),
+                frequency: Double.random(in: 1 ... 100),
+                phase: Double.random(in: 0 ... (2 * .pi))
             )
         }
 
@@ -683,7 +685,7 @@ class RealityEngine {
                 "planck": 6.626e-34,
                 "speed_of_light": 3e8,
                 "gravitational": 6.674e-11,
-                "boltzmann": 1.381e-23
+                "boltzmann": 1.381e-23,
             ],
             quantumState: QuantumState(amplitudes: [Complex(1, 0)], basisStates: ["|0⟩"], normalization: 1.0),
             realityStates: [],
@@ -694,13 +696,13 @@ class RealityEngine {
     func generateRealityStates(count: Int, universeId: String) async -> [RealityState] {
         var states: [RealityState] = []
 
-        for _ in 0..<count {
+        for _ in 0 ..< count {
             let state = RealityState(
                 universeId: universeId,
-                stateVector: [Complex(Double.random(in: -1...1), Double.random(in: -1...1))],
-                probabilityAmplitude: Complex(Double.random(in: -1...1), Double.random(in: -1...1)),
-                coherence: Double.random(in: 0.5...1.0),
-                stability: Double.random(in: 0.7...1.0),
+                stateVector: [Complex(Double.random(in: -1 ... 1), Double.random(in: -1 ... 1))],
+                probabilityAmplitude: Complex(Double.random(in: -1 ... 1), Double.random(in: -1 ... 1)),
+                coherence: Double.random(in: 0.5 ... 1.0),
+                stability: Double.random(in: 0.7 ... 1.0),
                 manipulations: []
             )
             states.append(state)
@@ -715,7 +717,7 @@ class RealityEngine {
 extension QuantumRealitySimulation: RealitySimulation {
     func initializeRealitySimulation(_ universe: Universe) async throws -> RealitySimulation {
         // Implementation for protocol
-        return self
+        self
     }
 }
 
@@ -763,5 +765,5 @@ struct Complex<T: FloatingPoint & Hashable>: Hashable {
 
 /// Complex absolute value function
 func complexAbs<T: FloatingPoint>(_ complex: Complex<T>) -> T {
-    return sqrt(complex.real * complex.real + complex.imaginary * complex.imaginary)
+    sqrt(complex.real * complex.real + complex.imaginary * complex.imaginary)
 }

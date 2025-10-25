@@ -24,33 +24,31 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-WHITE='\033[1;37m'
 NC='\033[0m'
 
 # Logging
 log() {
-  echo "[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] $*" >&2
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] $*" >&2
 }
 
 error() {
-  echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ERROR: $*${NC}" >&2
+    echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ERROR: $*${NC}" >&2
 }
 
 success() {
-  echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ✅ $*${NC}" >&2
+    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ✅ $*${NC}" >&2
 }
 
 warning() {
-  echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ⚠️  $*${NC}" >&2
+    echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ⚠️  $*${NC}" >&2
 }
 
 info() {
-  echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ℹ️  $*${NC}" >&2
+    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ℹ️  $*${NC}" >&2
 }
 
 quantum_log() {
-  echo -e "${PURPLE}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ⚛️  $*${NC}" >&2
+    echo -e "${PURPLE}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ⚛️  $*${NC}" >&2
 }
 
 # Initialize quantum metrics directory
@@ -61,16 +59,16 @@ mkdir -p "${QUANTUM_METRICS_DIR}/reports"
 
 # Update agent status
 update_agent_status() {
-  local agent_script="$1"
-  local status="$2"
-  local pid="$3"
-  local task="$4"
+    local agent_script="$1"
+    local status="$2"
+    local pid="$3"
+    local task="$4"
 
-  if [[ ! -f "${STATUS_FILE}" ]]; then
-    echo "{}" >"${STATUS_FILE}"
-  fi
+    if [[ ! -f "${STATUS_FILE}" ]]; then
+        echo "{}" >"${STATUS_FILE}"
+    fi
 
-  python3 -c "
+    python3 -c "
 import json
 import time
 try:
@@ -97,91 +95,91 @@ with open('${STATUS_FILE}', 'w') as f:
 
 # Check if quantum chemistry project exists and is ready
 check_quantum_chemistry_readiness() {
-  # For demonstration purposes, allow agent to run even without full project
-  if [[ ! -d "${QUANTUM_CHEMISTRY_PROJECT}" ]]; then
-    warning "QuantumChemistry project not found at ${QUANTUM_CHEMISTRY_PROJECT} - running in demo mode"
-    return 0 # Allow demo mode
-  fi
-
-  # Check for required Swift files (optional in demo mode)
-  local required_files=(
-    "Sources/QuantumChemistry/QuantumChemistryEngine.swift"
-    "Sources/QuantumChemistry/QuantumChemistryTypes.swift"
-    "Tests/QuantumChemistryTests/QuantumChemistryTests.swift"
-  )
-
-  local missing_files=0
-  for file in "${required_files[@]}"; do
-    if [[ ! -f "${QUANTUM_CHEMISTRY_PROJECT}/${file}" ]]; then
-      warning "Required file missing: ${file} - using demo mode"
-      missing_files=$((missing_files + 1))
+    # For demonstration purposes, allow agent to run even without full project
+    if [[ ! -d "${QUANTUM_CHEMISTRY_PROJECT}" ]]; then
+        warning "QuantumChemistry project not found at ${QUANTUM_CHEMISTRY_PROJECT} - running in demo mode"
+        return 0 # Allow demo mode
     fi
-  done
 
-  # Allow demo mode if some files are missing
-  if [[ ${missing_files} -gt 0 ]]; then
-    warning "Running in demo mode - ${missing_files} files missing"
+    # Check for required Swift files (optional in demo mode)
+    local required_files=(
+        "Sources/QuantumChemistry/QuantumChemistryEngine.swift"
+        "Sources/QuantumChemistry/QuantumChemistryTypes.swift"
+        "Tests/QuantumChemistryTests/QuantumChemistryTests.swift"
+    )
+
+    local missing_files=0
+    for file in "${required_files[@]}"; do
+        if [[ ! -f "${QUANTUM_CHEMISTRY_PROJECT}/${file}" ]]; then
+            warning "Required file missing: ${file} - using demo mode"
+            missing_files=$((missing_files + 1))
+        fi
+    done
+
+    # Allow demo mode if some files are missing
+    if [[ ${missing_files} -gt 0 ]]; then
+        warning "Running in demo mode - ${missing_files} files missing"
+        return 0
+    fi
+
+    # Check if project can build (skip in demo mode for now)
+    if ! (cd "${QUANTUM_CHEMISTRY_PROJECT}" && swift build --configuration release >/dev/null 2>&1); then
+        warning "QuantumChemistry project fails to build - running in demo mode"
+        return 0 # Allow demo mode
+    fi
+
+    success "QuantumChemistry project is ready"
     return 0
-  fi
-
-  # Check if project can build (skip in demo mode for now)
-  if ! (cd "${QUANTUM_CHEMISTRY_PROJECT}" && swift build --configuration release >/dev/null 2>&1); then
-    warning "QuantumChemistry project fails to build - running in demo mode"
-    return 0 # Allow demo mode
-  fi
-
-  success "QuantumChemistry project is ready"
-  return 0
 }
 
 # Run molecular simulation using quantum hardware
 run_quantum_simulation() {
-  local molecule="$1"
-  local method="${2:-vqe}"            # vqe, qmc, qpe, vqd
-  local hardware_provider="${3:-ibm}" # ibm, rigetti, ionq
+    local molecule="$1"
+    local method="${2:-vqe}"            # vqe, qmc, qpe, vqd
+    local hardware_provider="${3:-ibm}" # ibm, rigetti, ionq
 
-  quantum_log "Starting quantum simulation: ${molecule} using ${method} on ${hardware_provider}"
+    quantum_log "Starting quantum simulation: ${molecule} using ${method} on ${hardware_provider}"
 
-  local timestamp=$(date +%s)
-  local sim_id="${method}_${molecule}_${timestamp}"
-  local output_file="${QUANTUM_METRICS_DIR}/simulations/${sim_id}.json"
+    local timestamp=$(date +%s)
+    local sim_id="${method}_${molecule}_${timestamp}"
+    local output_file="${QUANTUM_METRICS_DIR}/simulations/${sim_id}.json"
 
-  # Create simulation command based on method
-  local swift_command=""
-  case "${method}" in
-  "vqe")
-    swift_command="runQuantumChemistry --method vqe --molecule ${molecule} --provider ${hardware_provider}"
-    ;;
-  "qmc")
-    swift_command="runQuantumChemistry --method qmc --molecule ${molecule} --provider ${hardware_provider}"
-    ;;
-  "qpe")
-    swift_command="runQuantumChemistry --method qpe --molecule ${molecule} --provider ${hardware_provider}"
-    ;;
-  "vqd")
-    swift_command="runQuantumChemistry --method vqd --molecule ${molecule} --provider ${hardware_provider}"
-    ;;
-  *)
-    error "Unknown quantum method: ${method}"
-    return 1
-    ;;
-  esac
+    # Create simulation command based on method
+    local swift_command=""
+    case "${method}" in
+    "vqe")
+        swift_command="runQuantumChemistry --method vqe --molecule ${molecule} --provider ${hardware_provider}"
+        ;;
+    "qmc")
+        swift_command="runQuantumChemistry --method qmc --molecule ${molecule} --provider ${hardware_provider}"
+        ;;
+    "qpe")
+        swift_command="runQuantumChemistry --method qpe --molecule ${molecule} --provider ${hardware_provider}"
+        ;;
+    "vqd")
+        swift_command="runQuantumChemistry --method vqd --molecule ${molecule} --provider ${hardware_provider}"
+        ;;
+    *)
+        error "Unknown quantum method: ${method}"
+        return 1
+        ;;
+    esac
 
-  # Run simulation (mock for now - would integrate with actual quantum hardware)
-  local start_time=$(date +%s)
-  local simulation_result=""
+    # Run simulation (mock for now - would integrate with actual quantum hardware)
+    local start_time=$(date +%s)
+    local simulation_result=""
 
-  # Simulate quantum computation time (would be much longer in reality)
-  sleep 2
+    # Simulate quantum computation time (would be much longer in reality)
+    sleep 2
 
-  local end_time=$(date +%s)
-  local duration=$((end_time - start_time))
+    local end_time=$(date +%s)
+    local duration=$((end_time - start_time))
 
-  # Generate mock results (in reality, this would come from quantum hardware)
-  case "${method}" in
-  "vqe")
-    simulation_result=$(
-      cat <<EOF
+    # Generate mock results (in reality, this would come from quantum hardware)
+    case "${method}" in
+    "vqe")
+        simulation_result=$(
+            cat <<EOF
 {
   "simulation_id": "${sim_id}",
   "method": "VQE",
@@ -196,11 +194,11 @@ run_quantum_simulation() {
   "timestamp": ${timestamp}
 }
 EOF
-    )
-    ;;
-  "qmc")
-    simulation_result=$(
-      cat <<EOF
+        )
+        ;;
+    "qmc")
+        simulation_result=$(
+            cat <<EOF
 {
   "simulation_id": "${sim_id}",
   "method": "QMC",
@@ -217,11 +215,11 @@ EOF
   "timestamp": ${timestamp}
 }
 EOF
-    )
-    ;;
-  "qpe")
-    simulation_result=$(
-      cat <<EOF
+        )
+        ;;
+    "qpe")
+        simulation_result=$(
+            cat <<EOF
 {
   "simulation_id": "${sim_id}",
   "method": "QPE",
@@ -234,11 +232,11 @@ EOF
   "timestamp": ${timestamp}
 }
 EOF
-    )
-    ;;
-  "vqd")
-    simulation_result=$(
-      cat <<EOF
+        )
+        ;;
+    "vqd")
+        simulation_result=$(
+            cat <<EOF
 {
   "simulation_id": "${sim_id}",
   "method": "VQD",
@@ -253,26 +251,26 @@ EOF
   "timestamp": ${timestamp}
 }
 EOF
-    )
-    ;;
-  esac
+        )
+        ;;
+    esac
 
-  # Save results
-  echo "${simulation_result}" >"${output_file}"
+    # Save results
+    echo "${simulation_result}" >"${output_file}"
 
-  quantum_log "Simulation completed: ${sim_id} (${duration}s)"
-  echo "${output_file}"
+    quantum_log "Simulation completed: ${sim_id} (${duration}s)"
+    echo "${output_file}"
 }
 
 # Monitor quantum hardware status
 monitor_hardware_status() {
-  quantum_log "Monitoring quantum hardware status"
+    quantum_log "Monitoring quantum hardware status"
 
-  local hardware_status_file="${QUANTUM_METRICS_DIR}/hardware/status_$(date +%Y%m%d_%H%M%S).json"
+    local hardware_status_file="${QUANTUM_METRICS_DIR}/hardware/status_$(date +%Y%m%d_%H%M%S).json"
 
-  # Mock hardware status (would query real quantum providers)
-  local hardware_status=$(
-    cat <<EOF
+    # Mock hardware status (would query real quantum providers)
+    local hardware_status=$(
+        cat <<EOF
 {
   "timestamp": $(date +%s),
   "providers": {
@@ -303,30 +301,30 @@ monitor_hardware_status() {
   }
 }
 EOF
-  )
+    )
 
-  echo "${hardware_status}" >"${hardware_status_file}"
-  success "Hardware status updated: ${hardware_status_file}"
+    echo "${hardware_status}" >"${hardware_status_file}"
+    success "Hardware status updated: ${hardware_status_file}"
 
-  echo "${hardware_status_file}"
+    echo "${hardware_status_file}"
 }
 
 # Collect quantum performance metrics
 collect_quantum_metrics() {
-  quantum_log "Collecting quantum performance metrics"
+    quantum_log "Collecting quantum performance metrics"
 
-  local metrics_file="${QUANTUM_METRICS_DIR}/reports/metrics_$(date +%Y%m%d_%H%M%S).json"
+    local metrics_file="${QUANTUM_METRICS_DIR}/reports/metrics_$(date +%Y%m%d_%H%M%S).json"
 
-  # Count recent simulations
-  local recent_sims=$(find "${QUANTUM_METRICS_DIR}/simulations" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
+    # Count recent simulations
+    local recent_sims=$(find "${QUANTUM_METRICS_DIR}/simulations" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
 
-  # Calculate average execution times
-  local avg_execution_time=0
-  local total_sims=0
+    # Calculate average execution times
+    local avg_execution_time=0
+    local total_sims=0
 
-  while IFS= read -r sim_file; do
-    [[ ! -f "$sim_file" ]] && continue
-    local exec_time=$(python3 -c "
+    while IFS= read -r sim_file; do
+        [[ ! -f "$sim_file" ]] && continue
+        local exec_time=$(python3 -c "
 import json
 try:
     with open('$sim_file', 'r') as f:
@@ -335,20 +333,20 @@ try:
 except:
     print(0)
 " 2>/dev/null || echo 0)
-    avg_execution_time=$((avg_execution_time + exec_time))
-    total_sims=$((total_sims + 1))
-  done < <(find "${QUANTUM_METRICS_DIR}/simulations" -name "*.json" -mtime -7 2>/dev/null)
+        avg_execution_time=$((avg_execution_time + exec_time))
+        total_sims=$((total_sims + 1))
+    done < <(find "${QUANTUM_METRICS_DIR}/simulations" -name "*.json" -mtime -7 2>/dev/null)
 
-  if [[ ${total_sims} -gt 0 ]]; then
-    avg_execution_time=$((avg_execution_time / total_sims))
-  fi
+    if [[ ${total_sims} -gt 0 ]]; then
+        avg_execution_time=$((avg_execution_time / total_sims))
+    fi
 
-  # Get latest hardware status
-  local latest_hw_status=$(find "${QUANTUM_METRICS_DIR}/hardware" -name "status_*.json" -mtime -1 2>/dev/null | sort | tail -1)
-  local operational_providers=0
+    # Get latest hardware status
+    local latest_hw_status=$(find "${QUANTUM_METRICS_DIR}/hardware" -name "status_*.json" -mtime -1 2>/dev/null | sort | tail -1)
+    local operational_providers=0
 
-  if [[ -f "${latest_hw_status}" ]]; then
-    operational_providers=$(python3 -c "
+    if [[ -f "${latest_hw_status}" ]]; then
+        operational_providers=$(python3 -c "
 import json
 try:
     with open('${latest_hw_status}', 'r') as f:
@@ -357,10 +355,10 @@ try:
 except:
     print(0)
 " 2>/dev/null || echo 0)
-  fi
+    fi
 
-  local metrics=$(
-    cat <<EOF
+    local metrics=$(
+        cat <<EOF
 {
   "timestamp": $(date +%s),
   "date": "$(date -Iseconds)",
@@ -380,54 +378,54 @@ except:
   }
 }
 EOF
-  )
+    )
 
-  echo "${metrics}" >"${metrics_file}"
-  success "Quantum metrics collected: ${metrics_file}"
+    echo "${metrics}" >"${metrics_file}"
+    success "Quantum metrics collected: ${metrics_file}"
 
-  echo "${metrics_file}"
+    echo "${metrics_file}"
 }
 
 # Generate quantum chemistry report
 generate_quantum_report() {
-  info "Generating quantum chemistry report"
+    info "Generating quantum chemistry report"
 
-  local report_file="${QUANTUM_METRICS_DIR}/reports/quantum_report_$(date +%Y%m%d_%H%M%S).json"
+    local report_file="${QUANTUM_METRICS_DIR}/reports/quantum_report_$(date +%Y%m%d_%H%M%S).json"
 
-  # Collect recent simulations
-  local recent_simulations=$(find "${QUANTUM_METRICS_DIR}/simulations" -name "*.json" -mtime -7 2>/dev/null | head -10)
+    # Collect recent simulations
+    local recent_simulations=$(find "${QUANTUM_METRICS_DIR}/simulations" -name "*.json" -mtime -7 2>/dev/null | head -10)
 
-  local sims_array="[]"
-  if [[ -n "${recent_simulations}" ]]; then
-    sims_array="["
-    local first=true
-    while IFS= read -r sim_file; do
-      [[ ! -f "$sim_file" ]] && continue
-      if [[ "${first}" == "true" ]]; then
-        first=false
-      else
-        sims_array="${sims_array},"
-      fi
-      sims_array="${sims_array}$(cat "${sim_file}")"
-    done <<<"${recent_simulations}"
-    sims_array="${sims_array}]"
-  fi
+    local sims_array="[]"
+    if [[ -n "${recent_simulations}" ]]; then
+        sims_array="["
+        local first=true
+        while IFS= read -r sim_file; do
+            [[ ! -f "$sim_file" ]] && continue
+            if [[ "${first}" == "true" ]]; then
+                first=false
+            else
+                sims_array="${sims_array},"
+            fi
+            sims_array="${sims_array}$(cat "${sim_file}")"
+        done <<<"${recent_simulations}"
+        sims_array="${sims_array}]"
+    fi
 
-  # Get latest metrics
-  local latest_metrics=$(find "${QUANTUM_METRICS_DIR}/reports" -name "metrics_*.json" -mtime -1 2>/dev/null | sort | tail -1)
-  local metrics_data="{}"
-  if [[ -f "${latest_metrics}" ]]; then
-    metrics_data=$(cat "${latest_metrics}")
-  fi
+    # Get latest metrics
+    local latest_metrics=$(find "${QUANTUM_METRICS_DIR}/reports" -name "metrics_*.json" -mtime -1 2>/dev/null | sort | tail -1)
+    local metrics_data="{}"
+    if [[ -f "${latest_metrics}" ]]; then
+        metrics_data=$(cat "${latest_metrics}")
+    fi
 
-  # Get latest hardware status
-  local latest_hw=$(find "${QUANTUM_METRICS_DIR}/hardware" -name "status_*.json" -mtime -1 2>/dev/null | sort | tail -1)
-  local hw_data="{}"
-  if [[ -f "${latest_hw}" ]]; then
-    hw_data=$(cat "${latest_hw}")
-  fi
+    # Get latest hardware status
+    local latest_hw=$(find "${QUANTUM_METRICS_DIR}/hardware" -name "status_*.json" -mtime -1 2>/dev/null | sort | tail -1)
+    local hw_data="{}"
+    if [[ -f "${latest_hw}" ]]; then
+        hw_data=$(cat "${latest_hw}")
+    fi
 
-  cat >"${report_file}" <<EOF
+    cat >"${report_file}" <<EOF
 {
   "timestamp": $(date +%s),
   "date": "$(date -Iseconds)",
@@ -444,119 +442,119 @@ generate_quantum_report() {
 }
 EOF
 
-  success "Quantum report generated: ${report_file}"
+    success "Quantum report generated: ${report_file}"
 
-  # Publish to MCP
-  if command -v curl &>/dev/null; then
-    curl -s -X POST "${MCP_URL}/quantum" \
-      -H "Content-Type: application/json" \
-      -d "@${report_file}" &>/dev/null || warning "Failed to publish quantum report to MCP"
-  fi
+    # Publish to MCP
+    if command -v curl &>/dev/null; then
+        curl -s -X POST "${MCP_URL}/quantum" \
+            -H "Content-Type: application/json" \
+            -d "@${report_file}" &>/dev/null || warning "Failed to publish quantum report to MCP"
+    fi
 
-  echo "${report_file}"
+    echo "${report_file}"
 }
 
 # Run automated quantum experiments
 run_quantum_experiments() {
-  quantum_log "Running automated quantum experiments"
+    quantum_log "Running automated quantum experiments"
 
-  # Define test molecules and methods
-  local molecules=("H2" "H2O" "CH4" "NH3")
-  local methods=("vqe" "qmc")
-  local providers=("ibm" "rigetti")
+    # Define test molecules and methods
+    local molecules=("H2" "H2O" "CH4" "NH3")
+    local methods=("vqe" "qmc")
+    local providers=("ibm" "rigetti")
 
-  local experiments_run=0
+    local experiments_run=0
 
-  for molecule in "${molecules[@]}"; do
-    for method in "${methods[@]}"; do
-      for provider in "${providers[@]}"; do
-        # Skip combinations that might not be available
-        [[ "${method}" == "qmc" && "${provider}" == "rigetti" ]] && continue
+    for molecule in "${molecules[@]}"; do
+        for method in "${methods[@]}"; do
+            for provider in "${providers[@]}"; do
+                # Skip combinations that might not be available
+                [[ "${method}" == "qmc" && "${provider}" == "rigetti" ]] && continue
 
-        info "Running experiment: ${method} on ${molecule} via ${provider}"
-        if run_quantum_simulation "${molecule}" "${method}" "${provider}"; then
-          experiments_run=$((experiments_run + 1))
-        else
-          warning "Experiment failed: ${method} on ${molecule} via ${provider}"
-        fi
+                info "Running experiment: ${method} on ${molecule} via ${provider}"
+                if run_quantum_simulation "${molecule}" "${method}" "${provider}"; then
+                    experiments_run=$((experiments_run + 1))
+                else
+                    warning "Experiment failed: ${method} on ${molecule} via ${provider}"
+                fi
 
-        # Small delay between experiments
-        sleep 1
-      done
+                # Small delay between experiments
+                sleep 1
+            done
+        done
     done
-  done
 
-  success "Completed ${experiments_run} quantum experiments"
+    success "Completed ${experiments_run} quantum experiments"
 }
 
 # Main agent loop
 main() {
-  log "Quantum Chemistry Agent starting..."
-  update_agent_status "quantum_chemistry_agent.sh" "starting" $$ ""
+    log "Quantum Chemistry Agent starting..."
+    update_agent_status "quantum_chemistry_agent.sh" "starting" $$ ""
 
-  # Create PID file
-  echo $$ >"${AGENTS_DIR}/${AGENT_NAME}.pid"
+    # Create PID file
+    echo $$ >"${AGENTS_DIR}/${AGENT_NAME}.pid"
 
-  # Check quantum chemistry readiness
-  if ! check_quantum_chemistry_readiness; then
-    error "Quantum Chemistry project not ready. Agent cannot start."
-    update_agent_status "quantum_chemistry_agent.sh" "error" $$ "quantum_project_not_ready"
-    exit 1
-  fi
-
-  # Register with MCP
-  if command -v curl &>/dev/null; then
-    curl -s -X POST "${MCP_URL}/register" \
-      -H "Content-Type: application/json" \
-      -d "{\"agent\": \"${AGENT_NAME}\", \"capabilities\": [\"quantum-chemistry\", \"molecular-simulation\", \"quantum-hardware\", \"vqe\", \"qmc\", \"qpe\", \"vqd\"]}" \
-      &>/dev/null || warning "Failed to register with MCP"
-  fi
-
-  update_agent_status "quantum_chemistry_agent.sh" "available" $$ ""
-  quantum_log "Quantum Chemistry Agent ready - quantum advantage activated"
-
-  local cycle_count=0
-
-  # Main loop - quantum operations every 10 minutes
-  while true; do
-    update_agent_status "quantum_chemistry_agent.sh" "running" $$ "cycle_$((cycle_count + 1))"
-
-    # Monitor hardware status
-    monitor_hardware_status
-
-    # Run quantum experiments (every 3rd cycle)
-    if [[ $((cycle_count % 3)) -eq 0 ]]; then
-      run_quantum_experiments
-    else
-      # Run a single demonstration simulation
-      run_quantum_simulation "H2O" "vqe" "ibm"
+    # Check quantum chemistry readiness
+    if ! check_quantum_chemistry_readiness; then
+        error "Quantum Chemistry project not ready. Agent cannot start."
+        update_agent_status "quantum_chemistry_agent.sh" "error" $$ "quantum_project_not_ready"
+        exit 1
     fi
 
-    # Collect metrics
-    collect_quantum_metrics
-
-    # Generate report
-    generate_quantum_report
-
-    # Clean up old files (keep last 30 days)
-    find "${QUANTUM_METRICS_DIR}" -name "*.json" -mtime +30 -delete 2>/dev/null || true
+    # Register with MCP
+    if command -v curl &>/dev/null; then
+        curl -s -X POST "${MCP_URL}/register" \
+            -H "Content-Type: application/json" \
+            -d "{\"agent\": \"${AGENT_NAME}\", \"capabilities\": [\"quantum-chemistry\", \"molecular-simulation\", \"quantum-hardware\", \"vqe\", \"qmc\", \"qpe\", \"vqd\"]}" \
+            &>/dev/null || warning "Failed to register with MCP"
+    fi
 
     update_agent_status "quantum_chemistry_agent.sh" "available" $$ ""
-    success "Quantum cycle ${cycle_count} complete. Next quantum operations in 10 minutes."
+    quantum_log "Quantum Chemistry Agent ready - quantum advantage activated"
 
-    # Send heartbeat to MCP
-    if command -v curl &>/dev/null; then
-      curl -s -X POST "${MCP_URL}/heartbeat" \
-        -H "Content-Type: application/json" \
-        -d "{\"agent\": \"${AGENT_NAME}\", \"status\": \"available\", \"quantum_cycles\": ${cycle_count}}" \
-        &>/dev/null || true
-    fi
+    local cycle_count=0
 
-    cycle_count=$((cycle_count + 1))
+    # Main loop - quantum operations every 10 minutes
+    while true; do
+        update_agent_status "quantum_chemistry_agent.sh" "running" $$ "cycle_$((cycle_count + 1))"
 
-    # Sleep for 10 minutes
-    sleep 600
-  done
+        # Monitor hardware status
+        monitor_hardware_status
+
+        # Run quantum experiments (every 3rd cycle)
+        if [[ $((cycle_count % 3)) -eq 0 ]]; then
+            run_quantum_experiments
+        else
+            # Run a single demonstration simulation
+            run_quantum_simulation "H2O" "vqe" "ibm"
+        fi
+
+        # Collect metrics
+        collect_quantum_metrics
+
+        # Generate report
+        generate_quantum_report
+
+        # Clean up old files (keep last 30 days)
+        find "${QUANTUM_METRICS_DIR}" -name "*.json" -mtime +30 -delete 2>/dev/null || true
+
+        update_agent_status "quantum_chemistry_agent.sh" "available" $$ ""
+        success "Quantum cycle ${cycle_count} complete. Next quantum operations in 10 minutes."
+
+        # Send heartbeat to MCP
+        if command -v curl &>/dev/null; then
+            curl -s -X POST "${MCP_URL}/heartbeat" \
+                -H "Content-Type: application/json" \
+                -d "{\"agent\": \"${AGENT_NAME}\", \"status\": \"available\", \"quantum_cycles\": ${cycle_count}}" \
+                &>/dev/null || true
+        fi
+
+        cycle_count=$((cycle_count + 1))
+
+        # Sleep for 10 minutes
+        sleep 600
+    done
 }
 
 # Trap signals for graceful shutdown

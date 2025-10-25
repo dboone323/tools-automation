@@ -9,8 +9,8 @@
 // Framework for real-time data consistency across multiple dimensions and temporal streams
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -381,8 +381,8 @@ class InterdimensionalDataSynchronizationEngine {
     private func createSynchronizationChannels(dimensions: [Int]) async throws -> [SynchronizationChannel] {
         var channels: [SynchronizationChannel] = []
 
-        for i in 0..<dimensions.count {
-            for j in i+1..<dimensions.count {
+        for i in 0 ..< dimensions.count {
+            for j in i + 1 ..< dimensions.count {
                 let channel = SynchronizationChannel(
                     id: "channel_\(dimensions[i])_\(dimensions[j])_\(UUID().uuidString.prefix(4))",
                     sourceDimension: dimensions[i],
@@ -422,7 +422,7 @@ class InterdimensionalDataSynchronizationEngine {
                         publicKey: Data(),
                         capabilities: InterdimensionalPeer.PeerCapabilities(
                             supportsQuantumEncryption: true,
-                            maxMessageSize: 1048576, // 1MB
+                            maxMessageSize: 1_048_576, // 1MB
                             supportedProtocols: ["IDSS-1.0"],
                             bandwidthCapacity: 1000.0
                         )
@@ -508,7 +508,7 @@ class InterdimensionalDataSynchronizationEngine {
                 ConflictPattern(
                     patternType: pattern,
                     frequency: conflicts.filter { $0.conflictType.rawValue.contains(pattern) }.count,
-                    affectedDimensions: conflicts.flatMap { $0.conflictingDimensions },
+                    affectedDimensions: conflicts.flatMap(\.conflictingDimensions),
                     preventionStrategy: strategy
                 )
             )
@@ -537,12 +537,12 @@ class InterdimensionalDataSynchronizationEngine {
             for stream in network.temporalStreams {
                 let health = await calculateStreamHealth(stream)
                 temporalHealth[stream.timelineId] = health
-                totalConflicts += stream.dataPoints.filter { $0.dataHash.isEmpty }.count
+                totalConflicts += stream.dataPoints.filter(\.dataHash.isEmpty).count
             }
         }
 
         let overallHealth = (dimensionalHealth.values.reduce(0, +) / Double(dimensionalHealth.count) +
-                           temporalHealth.values.reduce(0, +) / Double(temporalHealth.count)) / 2.0
+            temporalHealth.values.reduce(0, +) / Double(temporalHealth.count)) / 2.0
 
         let recommendations = generateHealthRecommendations(
             overallHealth: overallHealth,
@@ -669,7 +669,7 @@ class DimensionalSynchronizationEngineImpl: DimensionalSynchronizationEngine {
                     conflictType: .dataDivergence,
                     severity: .medium,
                     timestamp: Date()
-                )
+                ),
             ],
             performanceMetrics: SynchronizationMetrics(
                 throughput: Double(data.metadata.size) / 0.01,
@@ -683,7 +683,7 @@ class DimensionalSynchronizationEngineImpl: DimensionalSynchronizationEngine {
 
     func validateDataConsistency(_ data: InterdimensionalData) async -> Bool {
         // Simplified validation - check if data integrity hash is valid
-        let expectedHash = Data((0..<32).map { _ in UInt8.random(in: 0...255) }) // Simplified
+        let expectedHash = Data((0 ..< 32).map { _ in UInt8.random(in: 0 ... 255) }) // Simplified
         return data.integrityHash == expectedHash.base64EncodedString()
     }
 
@@ -702,7 +702,7 @@ class TemporalConsistencyManagerImpl: TemporalConsistencyManager {
     func ensureTemporalConsistency(_ data: InterdimensionalData, across timeline: TemporalRange) async throws -> TemporalConsistencyResult {
         // Simplified temporal consistency check
         let isConsistent = data.temporalCoordinates.timestamp >= timeline.start &&
-                          data.temporalCoordinates.timestamp <= timeline.end
+            data.temporalCoordinates.timestamp <= timeline.end
 
         return TemporalConsistencyResult(
             isConsistent: isConsistent,
@@ -714,7 +714,7 @@ class TemporalConsistencyManagerImpl: TemporalConsistencyManager {
 
     func resolveTemporalConflicts(_ conflicts: [TemporalConflict]) async throws -> TemporalResolutionResult {
         // Simplified conflict resolution
-        return TemporalResolutionResult(
+        TemporalResolutionResult(
             resolvedConflicts: conflicts.count,
             timelineConvergence: 0.95,
             causalityRestored: true
@@ -723,7 +723,7 @@ class TemporalConsistencyManagerImpl: TemporalConsistencyManager {
 
     func synchronizeTemporalStreams(_ streams: [TemporalStream]) async throws -> TemporalSynchronizationResult {
         // Simplified stream synchronization
-        return TemporalSynchronizationResult(
+        TemporalSynchronizationResult(
             synchronizedStreams: streams.count,
             totalStreams: streams.count,
             synchronizationAccuracy: 0.98,
@@ -781,6 +781,6 @@ extension InterdimensionalDataSynchronizationEngine: InterdimensionalDataSynchro
 
 extension Data {
     func base64EncodedString() -> String {
-        return self.base64EncodedString()
+        self.base64EncodedString()
     }
 }

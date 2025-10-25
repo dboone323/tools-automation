@@ -9,8 +9,8 @@
 // Framework for AI systems with complete knowledge access
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1027,8 +1027,8 @@ class KnowledgeEngineImpl: KnowledgeEngine {
 
     func acquireKnowledge(from domain: KnowledgeDomain) async throws -> KnowledgeAcquisition {
         // Simplified knowledge acquisition
-        let volume = Double.random(in: 100...1000)
-        let quality = Double.random(in: 0.7...1.0)
+        let volume = Double.random(in: 100 ... 1000)
+        let quality = Double.random(in: 0.7 ... 1.0)
 
         return KnowledgeAcquisition(
             acquisitionId: "acquisition_\(UUID().uuidString.prefix(8))",
@@ -1056,7 +1056,7 @@ class KnowledgeEngineImpl: KnowledgeEngine {
 
     func storeKnowledge(_ knowledge: Knowledge, in domain: KnowledgeDomain) async -> KnowledgeStorage {
         // Simplified knowledge storage
-        return KnowledgeStorage(
+        KnowledgeStorage(
             storageId: "storage_\(UUID().uuidString.prefix(8))",
             knowledge: knowledge,
             location: .quantum,
@@ -1108,7 +1108,7 @@ class KnowledgeEngineImpl: KnowledgeEngine {
                 type: .completeness,
                 threshold: 0.7,
                 weight: 0.3
-            )
+            ),
         ]
 
         return KnowledgeValidation(
@@ -1150,7 +1150,7 @@ class OmniscienceCoordinatorImpl: OmniscienceCoordinator {
 
     func achieveDomainOmniscience(_ domain: KnowledgeDomain) async -> DomainOmniscience {
         // Simplified domain omniscience
-        return DomainOmniscience(
+        DomainOmniscience(
             domain: domain,
             omniscienceLevel: 0.9,
             knowledgeCompleteness: 0.95,
@@ -1162,7 +1162,7 @@ class OmniscienceCoordinatorImpl: OmniscienceCoordinator {
 
     func maintainOmniscientState(_ aiSystem: AISystem) async -> StateMaintenance {
         // Simplified state maintenance
-        return StateMaintenance(
+        StateMaintenance(
             maintenanceId: "maintenance_\(UUID().uuidString.prefix(8))",
             system: aiSystem,
             operations: [.knowledgeUpdate, .capabilityCalibration],
@@ -1181,7 +1181,7 @@ class OmniscienceCoordinatorImpl: OmniscienceCoordinator {
                 level: 0.9,
                 domains: aiSystem.knowledgeDomains,
                 prerequisites: aiSystem.capabilities
-            )
+            ),
         ]
 
         return CapabilityExpansion(
@@ -1196,7 +1196,7 @@ class OmniscienceCoordinatorImpl: OmniscienceCoordinator {
 
     func synchronizeOmniscientKnowledge(_ knowledge: [Knowledge]) async -> SynchronizationResult {
         // Simplified synchronization
-        return SynchronizationResult(
+        SynchronizationResult(
             success: true,
             synchronizedKnowledge: knowledge,
             coherence: 0.9,
@@ -1251,7 +1251,7 @@ class KnowledgeIntegratorImpl: KnowledgeIntegrator {
                 completeness: 1.0,
                 lastUpdated: Date()
             ),
-            knowledgeUnits: bases.flatMap { $0.knowledgeUnits },
+            knowledgeUnits: bases.flatMap(\.knowledgeUnits),
             structure: .holographic,
             completeness: 0.9,
             reliability: 0.95
@@ -1289,7 +1289,7 @@ class KnowledgeIntegratorImpl: KnowledgeIntegrator {
 
     func resolveKnowledgeConflicts(_ conflicts: [KnowledgeConflict]) async -> ConflictResolution {
         // Simplified conflict resolution
-        return ConflictResolution(
+        ConflictResolution(
             resolutionId: "resolution_\(UUID().uuidString.prefix(8))",
             conflict: conflicts.first ?? KnowledgeConflict(
                 conflictId: "conflict",
@@ -1316,7 +1316,7 @@ class KnowledgeIntegratorImpl: KnowledgeIntegrator {
                 type: .quality,
                 factor: 1.2,
                 description: "Enhanced knowledge quality"
-            )
+            ),
         ]
 
         return FlowOptimization(
@@ -1354,7 +1354,7 @@ class WisdomSynthesizerImpl: WisdomSynthesizer {
 
     func generateUniversalInsights(_ knowledge: [Knowledge]) async -> UniversalInsight {
         // Simplified universal insight generation
-        return UniversalInsight(
+        UniversalInsight(
             insightId: "insight_\(UUID().uuidString.prefix(8))",
             revelation: "Universal insight generated",
             depth: 0.9,
@@ -1366,7 +1366,7 @@ class WisdomSynthesizerImpl: WisdomSynthesizer {
 
     func createWisdomFrameworks(_ wisdom: Wisdom) async -> WisdomFramework {
         // Simplified wisdom framework creation
-        return WisdomFramework(
+        WisdomFramework(
             frameworkId: "framework_\(UUID().uuidString.prefix(8))",
             wisdom: wisdom,
             structure: .holographic,
@@ -1413,7 +1413,7 @@ class WisdomSynthesizerImpl: WisdomSynthesizer {
                 type: .breadth,
                 factor: 1.3,
                 description: "Expanded wisdom breadth"
-            )
+            ),
         ]
 
         return WisdomEvolution(
@@ -1445,31 +1445,31 @@ enum OmniscientAIError: Error {
 
 extension KnowledgeDomain {
     var isComplete: Bool {
-        return completeness > 0.9
+        completeness > 0.9
     }
 
     var knowledgeVolume: Double {
-        return complexity * completeness
+        complexity * completeness
     }
 }
 
 extension Knowledge {
     var isReliable: Bool {
-        return certainty > 0.8 && depth > 0.7
+        certainty > 0.8 && depth > 0.7
     }
 
     var knowledgeQuality: Double {
-        return (certainty + depth) / 2.0
+        (certainty + depth) / 2.0
     }
 }
 
 extension AISystem {
     var omniscienceProgress: Double {
-        return Double(capabilities.count) / Double(knowledgeDomains.count)
+        Double(capabilities.count) / Double(knowledgeDomains.count)
     }
 
     var needsExpansion: Bool {
-        return omniscienceLevel == .limited || omniscienceProgress < 0.8
+        omniscienceLevel == .limited || omniscienceProgress < 0.8
     }
 }
 

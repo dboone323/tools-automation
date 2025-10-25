@@ -6,8 +6,8 @@
 //  Autonomous Architecture Evolution System with Pattern Recognition and Intelligent Refactoring
 //
 
-import Foundation
 import Combine
+import Foundation
 import SwiftUI
 
 // MARK: - Core Protocols
@@ -70,6 +70,7 @@ struct ArchitectureAnalysis: Codable, Sendable {
 
         enum DependencyType: String, Codable {
             case import, inheritance, composition, protocol_conformance, function_call
+
         }
     }
 
@@ -147,7 +148,7 @@ struct CodeSmell: Codable, Sendable {
         case divergentChange = "divergent_change"
         case shotgunSurgery = "shotgun_surgery"
         case parallelInheritance = "parallel_inheritance"
-        case comments = "comments"
+        case comments
         case duplicateCode = "duplicate_code"
         case middleMan = "middle_man"
         case lazyClass = "lazy_class"
@@ -584,7 +585,8 @@ final class AutonomousArchitectureEvolution: ObservableObject {
 
     init(analyzer: ArchitectureAnalyzer = CodebaseAnalyzer(),
          refactorer: IntelligentRefactorer = IntelligentRefactoringEngine(),
-         architect: AutonomousArchitect = AutonomousArchitectureArchitect()) {
+         architect: AutonomousArchitect = AutonomousArchitectureArchitect())
+    {
         self.analyzer = analyzer
         self.refactorer = refactorer
         self.architect = architect
@@ -633,12 +635,12 @@ final class AutonomousArchitectureEvolution: ObservableObject {
 
     /// Predict future architecture state
     func predictArchitectureFuture(for analysis: ArchitectureAnalysis, horizon: TimeInterval) async throws -> ArchitecturePrediction {
-        return try await architect.predictArchitectureFuture(for: analysis, horizon: horizon)
+        try await architect.predictArchitectureFuture(for: analysis, horizon: horizon)
     }
 
     /// Generate optimization plan
     func generateOptimizationPlan(for analysis: ArchitectureAnalysis, metrics: [OptimizationPlan.ArchitectureMetric]) async throws -> OptimizationPlan {
-        return try await architect.optimizeArchitecture(analysis, for: metrics)
+        try await architect.optimizeArchitecture(analysis, for: metrics)
     }
 
     /// Save analysis to file
@@ -726,7 +728,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
 
     private func analyzeFiles(at path: String) async throws -> [ArchitectureAnalysis.CodeFile] {
         // Mock implementation - would analyze actual files
-        return [
+        [
             ArchitectureAnalysis.CodeFile(
                 path: "Shared/SharedArchitecture.swift",
                 language: "swift",
@@ -746,13 +748,13 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                 interfaces: ["Codable"],
                 classes: ["ReviewModel"],
                 functions: ["init", "encode"]
-            )
+            ),
         ]
     }
 
     private func analyzeDependencies(in files: [ArchitectureAnalysis.CodeFile]) async throws -> [ArchitectureAnalysis.Dependency] {
         // Mock implementation - would analyze actual dependencies
-        return [
+        [
             ArchitectureAnalysis.Dependency(
                 from: "Projects/CodingReviewer/Models/ReviewModel.swift",
                 to: "Foundation",
@@ -764,7 +766,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                 to: "Combine",
                 type: .import,
                 strength: 0.6
-            )
+            ),
         ]
     }
 
@@ -798,7 +800,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
     }
 
     private func calculateCohesionMetrics(for files: [ArchitectureAnalysis.CodeFile]) -> ArchitectureAnalysis.CohesionMetrics {
-        return ArchitectureAnalysis.CohesionMetrics(
+        ArchitectureAnalysis.CohesionMetrics(
             lackOfCohesionInMethods: 1.2,
             tightClassCohesion: 0.8,
             semanticCohesion: 0.75
@@ -807,7 +809,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
 
     func identifyPatterns(in analysis: ArchitectureAnalysis) async throws -> [ArchitecturalPattern] {
         // Mock implementation - would use ML to identify patterns
-        return [
+        [
             ArchitecturalPattern(
                 type: .mvvm,
                 confidence: 0.85,
@@ -821,13 +823,13 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                 locations: ["Projects/CodingReviewer/Models/"],
                 quality: .fair,
                 suggestions: ["Standardize repository interfaces", "Add error handling patterns"]
-            )
+            ),
         ]
     }
 
     func detectCodeSmells(in analysis: ArchitectureAnalysis) async throws -> [CodeSmell] {
         // Mock implementation - would analyze code for smells
-        return [
+        [
             CodeSmell(
                 type: .longMethod,
                 severity: .medium,
@@ -853,7 +855,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                     performance: 0.95
                 ),
                 refactoringEffort: .hard
-            )
+            ),
         ]
     }
 }
@@ -942,7 +944,7 @@ final class IntelligentRefactoringEngine: IntelligentRefactorer {
     }
 
     private func generatePatternSuggestion(for pattern: ArchitecturalPattern) async throws -> RefactoringSuggestion {
-        return RefactoringSuggestion(
+        RefactoringSuggestion(
             id: UUID().uuidString,
             type: .extractInterface,
             description: "Improve \(pattern.type.rawValue) pattern implementation",
@@ -965,16 +967,16 @@ final class IntelligentRefactoringEngine: IntelligentRefactorer {
         // Mock implementation - would apply actual refactoring
         // In real implementation, this would modify files
 
-        return RefactoringResult(
+        RefactoringResult(
             suggestionId: suggestion.id,
             success: true,
             appliedChanges: [
                 RefactoringResult.FileChange(
                     filePath: suggestion.affectedFiles.first ?? "",
                     changeType: .modified,
-                    linesChanged: 1...10,
+                    linesChanged: 1 ... 10,
                     contentPreview: "// Refactored code"
-                )
+                ),
             ],
             compilationErrors: [],
             testResults: RefactoringResult.TestResults(
@@ -996,7 +998,7 @@ final class IntelligentRefactoringEngine: IntelligentRefactorer {
 
     func validateRefactoring(_ result: RefactoringResult) async throws -> ValidationResult {
         // Mock validation - would run actual tests and checks
-        return ValidationResult(
+        ValidationResult(
             refactoringId: result.suggestionId,
             isValid: result.compilationErrors.isEmpty && result.testResults.failedTests == 0,
             validationErrors: result.compilationErrors.map { error in
@@ -1072,7 +1074,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     testCoverageChange: 2.0,
                     performanceChange: 0.5
                 )
-            )
+            ),
         ]
 
         return ArchitectureEvolution(
@@ -1093,7 +1095,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     priority: .medium,
                     description: "Consider adopting more MVVM patterns for better separation of concerns",
                     implementationEffort: .medium
-                )
+                ),
             ]
         )
     }
@@ -1115,7 +1117,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                         affectedComponents: ["new_features"],
                         mitigationCost: 3600
                     )
-                )
+                ),
             ],
             riskAssessment: ArchitecturePrediction.RiskAssessment(
                 overallRiskLevel: .low,
@@ -1125,12 +1127,12 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                         probability: 0.6,
                         impact: 0.3,
                         riskScore: 0.18
-                    )
+                    ),
                 ],
                 mitigationStrategies: [
                     "Regular refactoring sessions",
                     "Code review for complexity",
-                    "Automated complexity monitoring"
+                    "Automated complexity monitoring",
                 ]
             ),
             recommendedActions: [
@@ -1140,7 +1142,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     timeline: 30 * 86400, // 30 days
                     expectedBenefit: 0.7,
                     implementationEffort: .easy
-                )
+                ),
             ]
         )
     }
@@ -1184,7 +1186,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                         area: "code_quality",
                         improvement: "Improved maintainability through targeted optimizations",
                         longTermBenefit: "Reduced technical debt and easier future development"
-                    )
+                    ),
                 ]
             ),
             implementationTimeline: [
@@ -1197,18 +1199,18 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                 ),
                 OptimizationPlan.TimelinePhase(
                     phaseName: "Implementation",
-                    duration: 604800, // 1 week
+                    duration: 604_800, // 1 week
                     steps: phaseSteps[1],
                     milestones: ["Core optimizations complete", "Testing passed"],
                     deliverables: ["Optimized codebase", "Test results"]
                 ),
                 OptimizationPlan.TimelinePhase(
                     phaseName: "Validation & Deployment",
-                    duration: 259200, // 3 days
+                    duration: 259_200, // 3 days
                     steps: phaseSteps[2],
                     milestones: ["Validation complete", "Deployed to production"],
                     deliverables: ["Validation report", "Deployment confirmation"]
-                )
+                ),
             ],
             riskMitigation: [
                 OptimizationPlan.RiskMitigation(
@@ -1222,7 +1224,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     mitigationStrategy: "Performance benchmarking before and after changes",
                     contingencyPlan: "Optimize performance-critical sections",
                     monitoringApproach: "Continuous performance monitoring"
-                )
+                ),
             ]
         )
     }

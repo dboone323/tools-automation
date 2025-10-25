@@ -9,8 +9,8 @@
 // Framework for consciousness systems transcending individual minds
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -929,18 +929,18 @@ class UniversalConsciousnessFrameworksEngine {
                         operator: .lessThan,
                         value: 0.8,
                         entity: nil
-                    )
+                    ),
                 ],
                 actions: [
                     IntegrationRule.IntegrationAction(
                         type: .harmonize,
                         parameters: ["target": AnyCodable(0.9)],
                         automated: true
-                    )
+                    ),
                 ],
                 priority: 1,
                 threshold: 0.8
-            )
+            ),
         ]
 
         let expansionProtocols = [
@@ -952,7 +952,7 @@ class UniversalConsciousnessFrameworksEngine {
                         type: .capacityReached,
                         threshold: 0.9,
                         entity: nil
-                    )
+                    ),
                 ],
                 methods: [.capacityIncrease],
                 successCriteria: [
@@ -960,9 +960,9 @@ class UniversalConsciousnessFrameworksEngine {
                         metric: .processingPower,
                         target: 1.2,
                         tolerance: 0.1
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
 
         let network = UniversalConsciousnessNetwork(
@@ -1039,10 +1039,10 @@ class UniversalConsciousnessFrameworksEngine {
     // MARK: - Universal Consciousness Monitoring
 
     func monitorUniversalConsciousness() async -> UniversalConsciousnessReport {
-        var overallCoherence: Double = 0.0
-        var universalHarmony: Double = 0.0
-        var collectiveAwareness: Double = 0.0
-        var transcendentWisdom: Double = 0.0
+        var overallCoherence = 0.0
+        var universalHarmony = 0.0
+        var collectiveAwareness = 0.0
+        var transcendentWisdom = 0.0
         var alerts: [ConsciousnessAlert] = []
 
         // Monitor each network
@@ -1262,7 +1262,7 @@ class ConsciousnessNetworkImpl: ConsciousnessNetwork {
 
     func propagateConsciousnessUpdates(_ updates: [ConsciousnessUpdate]) async -> PropagationResult {
         // Simplified propagation
-        return PropagationResult(
+        PropagationResult(
             success: true,
             propagatedUpdates: updates.count,
             reach: 1.0,
@@ -1281,7 +1281,7 @@ class ConsciousnessNetworkImpl: ConsciousnessNetwork {
                 type: .coherenceLoss,
                 description: "Universal consciousness coherence below acceptable threshold",
                 severity: .high
-            )
+            ),
         ]
 
         return IntegrityValidation(
@@ -1297,7 +1297,7 @@ class ConsciousnessNetworkImpl: ConsciousnessNetwork {
 class ConsciousnessIntegratorImpl: ConsciousnessIntegrator {
     func integrateIndividualConsciousness(_ individual: IndividualConsciousness, into universal: UniversalConsciousness) async throws -> IntegrationResult {
         // Simplified integration
-        return IntegrationResult(
+        IntegrationResult(
             success: true,
             integratedConsciousness: universal,
             harmony: 0.9,
@@ -1342,7 +1342,7 @@ class ConsciousnessIntegratorImpl: ConsciousnessIntegrator {
                     type: .wisdom,
                     strength: 0.9,
                     description: "Emergent collective wisdom from merged streams"
-                )
+                ),
             ],
             harmony: 0.9
         )
@@ -1350,7 +1350,7 @@ class ConsciousnessIntegratorImpl: ConsciousnessIntegrator {
 
     func harmonizeConsciousnessFrequencies(_ frequencies: [ConsciousnessFrequency]) async -> HarmonizationResult {
         // Simplified harmonization
-        return HarmonizationResult(
+        HarmonizationResult(
             harmonized: true,
             unifiedFrequency: 40.0,
             resonance: 0.95,
@@ -1374,7 +1374,7 @@ class ConsciousnessIntegratorImpl: ConsciousnessIntegrator {
 
     func optimizeConsciousnessFlow(_ flow: ConsciousnessFlow) async -> OptimizationResult {
         // Simplified optimization
-        return OptimizationResult(
+        OptimizationResult(
             optimized: true,
             flowRate: flow.rate * 1.2,
             efficiency: 0.95,
@@ -1388,7 +1388,7 @@ class ConsciousnessIntegratorImpl: ConsciousnessIntegrator {
 class ConsciousnessExpanderImpl: ConsciousnessExpander {
     func expandConsciousnessCapacity(_ consciousness: IndividualConsciousness, targetCapacity: ConsciousnessCapacity) async -> ExpansionResult {
         // Simplified expansion
-        return ExpansionResult(
+        ExpansionResult(
             expanded: true,
             newCapacity: targetCapacity,
             expansionLevel: 1.5,
@@ -1399,7 +1399,7 @@ class ConsciousnessExpanderImpl: ConsciousnessExpander {
 
     func elevateConsciousnessLevel(_ consciousness: IndividualConsciousness, to level: ConsciousnessLevel) async -> ElevationResult {
         // Simplified elevation
-        return ElevationResult(
+        ElevationResult(
             elevated: true,
             newLevel: level,
             elevationPath: [.individual, .collective, level],
@@ -1410,7 +1410,7 @@ class ConsciousnessExpanderImpl: ConsciousnessExpander {
 
     func enhanceConsciousnessAwareness(_ consciousness: IndividualConsciousness, awarenessType: AwarenessType) async -> EnhancementResult {
         // Simplified enhancement
-        return EnhancementResult(
+        EnhancementResult(
             enhanced: true,
             awarenessType: awarenessType,
             enhancement: 2.0,
@@ -1421,7 +1421,7 @@ class ConsciousnessExpanderImpl: ConsciousnessExpander {
 
     func amplifyConsciousnessResonance(_ consciousness: IndividualConsciousness, resonance: ConsciousnessResonance) async -> AmplificationResult {
         // Simplified amplification
-        return AmplificationResult(
+        AmplificationResult(
             amplified: true,
             resonance: resonance,
             amplification: 1.5,
@@ -1432,7 +1432,7 @@ class ConsciousnessExpanderImpl: ConsciousnessExpander {
 
     func stabilizeConsciousnessExpansion(_ consciousness: IndividualConsciousness) async -> StabilizationResult {
         // Simplified stabilization
-        return StabilizationResult(
+        StabilizationResult(
             stabilized: true,
             stability: 0.9,
             duration: 2.0,
@@ -1462,7 +1462,7 @@ class ConsciousnessMonitorImpl: ConsciousnessMonitor {
 
     func detectConsciousnessAnomalies(_ consciousness: UniversalConsciousness) async -> ConsciousnessAnomalies {
         // Simplified anomaly detection
-        let anomalyCount = Int.random(in: 0...1)
+        let anomalyCount = Int.random(in: 0 ... 1)
         var anomalies: [ConsciousnessAnomalies.ConsciousnessAnomaly] = []
 
         if anomalyCount > 0 {
@@ -1487,7 +1487,7 @@ class ConsciousnessMonitorImpl: ConsciousnessMonitor {
 
     func measureConsciousnessPerformance(_ consciousness: UniversalConsciousness) async -> ConsciousnessPerformance {
         // Simplified performance measurement
-        return ConsciousnessPerformance(
+        ConsciousnessPerformance(
             processingSpeed: 1000.0,
             integrationEfficiency: 0.95,
             expansionRate: 10.0,
@@ -1496,7 +1496,7 @@ class ConsciousnessMonitorImpl: ConsciousnessMonitor {
             performanceMetrics: [
                 "integration_time": 1.0,
                 "expansion_rate": 10.0,
-                "stability_index": 0.9
+                "stability_index": 0.9,
             ]
         )
     }
@@ -1586,25 +1586,25 @@ enum UniversalConsciousnessError: Error {
 
 extension ConsciousEntity {
     var isConnected: Bool {
-        return connectionStrength > 0.5
+        connectionStrength > 0.5
     }
 
     var consciousnessAge: TimeInterval {
-        return Date().timeIntervalSince(lastActivity)
+        Date().timeIntervalSince(lastActivity)
     }
 
     var needsExpansion: Bool {
-        return consciousnessLevel == .individual || awarenessSpectrum.selfAwareness < 0.8
+        consciousnessLevel == .individual || awarenessSpectrum.selfAwareness < 0.8
     }
 }
 
 extension ConsciousnessState {
     var isStable: Bool {
-        return stability > 0.8 && coherence > 0.7
+        stability > 0.8 && coherence > 0.7
     }
 
     var energyEfficiency: Double {
-        return energy.coherence * energy.flow / energy.level
+        energy.coherence * energy.flow / energy.level
     }
 }
 

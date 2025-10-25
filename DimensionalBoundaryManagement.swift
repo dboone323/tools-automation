@@ -9,8 +9,8 @@
 // Framework for managing transitions and interactions between different dimensional contexts
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -704,8 +704,8 @@ class DimensionalBoundaryManagementEngine {
 
         // Create boundaries between all dimension pairs
         var boundaries: [DimensionalBoundary] = []
-        for i in 0..<dimensions.count {
-            for j in i+1..<dimensions.count {
+        for i in 0 ..< dimensions.count {
+            for j in i + 1 ..< dimensions.count {
                 let boundary = try await boundaryController.createBoundary(
                     between: dimensions[i],
                     dimensions[j],
@@ -927,7 +927,7 @@ class BoundaryControllerImpl: BoundaryController {
     }
 
     func getBoundaryStatus(_ boundary: DimensionalBoundary) async -> BoundaryStatus {
-        return boundary.status
+        boundary.status
     }
 }
 
@@ -956,7 +956,7 @@ class TransitionManagerImpl: TransitionManager {
                 description: "Validate transition integrity",
                 estimatedDuration: 3.0,
                 dependencies: ["transfer"]
-            )
+            ),
         ]
 
         let resourceRequirements = TransitionPlan.ResourceRequirements(
@@ -972,7 +972,7 @@ class TransitionManagerImpl: TransitionManager {
                     stepId: "rollback_transfer",
                     description: "Revert data transfer",
                     automated: true
-                )
+                ),
             ],
             estimatedDuration: 5.0,
             dataBackupRequired: true
@@ -984,7 +984,7 @@ class TransitionManagerImpl: TransitionManager {
                 type: .dataIntegrity,
                 description: "Verify data integrity after transfer",
                 critical: true
-            )
+            ),
         ]
 
         return TransitionPlan(
@@ -1030,7 +1030,7 @@ class TransitionManagerImpl: TransitionManager {
                 description: "Data corruption detected during transfer",
                 recoverable: true,
                 suggestedAction: "Retry transition with error correction"
-            )
+            ),
         ]
 
         return TransitionResult(
@@ -1052,7 +1052,7 @@ class TransitionManagerImpl: TransitionManager {
                         severity: .critical,
                         description: "No transition result available",
                         suggestion: "Complete transition before validation"
-                    )
+                    ),
                 ],
                 recommendations: ["Execute transition first"],
                 confidence: 0.0
@@ -1097,7 +1097,7 @@ class TransitionManagerImpl: TransitionManager {
             performanceMetrics: [
                 "throughput": 100.0,
                 "latency": 0.5,
-                "error_rate": 0.0
+                "error_rate": 0.0,
             ]
         )
     }
@@ -1110,7 +1110,7 @@ class InteractionCoordinatorImpl: InteractionCoordinator {
         let success = Bool.random()
         let participants = interaction.participants.count
         let dataExchanged = success ? 2048 : 0
-        let duration = Double.random(in: 1.0...5.0)
+        let duration = Double.random(in: 1.0 ... 5.0)
 
         let performanceMetrics = InteractionResult.InteractionPerformanceMetrics(
             averageLatency: duration / Double(participants),
@@ -1124,7 +1124,7 @@ class InteractionCoordinatorImpl: InteractionCoordinator {
                 type: .dataTransferred,
                 description: "Data successfully exchanged between participants",
                 value: AnyCodable(dataExchanged)
-            )
+            ),
         ]
 
         return InteractionResult(
@@ -1142,7 +1142,7 @@ class InteractionCoordinatorImpl: InteractionCoordinator {
         // Simplified conflict resolution
         let strategy: ConflictResolution.ResolutionStrategy = conflicts.contains { $0.severity == .critical } ? .manual : .automatic
 
-        let actions = conflicts.map { conflict in
+        let actions = conflicts.map { _ in
             ConflictResolution.ResolutionAction(
                 actionId: "action_\(UUID().uuidString.prefix(8))",
                 type: .merge,
@@ -1175,7 +1175,7 @@ class InteractionCoordinatorImpl: InteractionCoordinator {
                 type: .capabilityGap,
                 description: "Insufficient participants for interaction",
                 severity: .high
-            )
+            ),
         ]
 
         return CompatibilityResult(
@@ -1197,9 +1197,9 @@ class InteractionCoordinatorImpl: InteractionCoordinator {
             InteractionHealth.InteractionAlert(
                 level: .warning,
                 message: "Interaction health degraded",
-                affectedParticipants: interaction.participants.map { $0.dimension },
+                affectedParticipants: interaction.participants.map(\.dimension),
                 timestamp: Date()
-            )
+            ),
         ] : []
 
         return InteractionHealth(
@@ -1216,13 +1216,13 @@ class InteractionCoordinatorImpl: InteractionCoordinator {
 class BoundaryMonitorImpl: BoundaryMonitor {
     func monitorBoundaryStability(_ boundary: DimensionalBoundary) async -> BoundaryStability {
         // Simplified stability monitoring
-        let stabilityScore = Double.random(in: 0.7...1.0)
+        let stabilityScore = Double.random(in: 0.7 ... 1.0)
 
         let components = [
             BoundaryStability.StabilityComponent(type: .transitionSuccess, score: 0.9, weight: 0.4),
             BoundaryStability.StabilityComponent(type: .dataIntegrity, score: 0.85, weight: 0.3),
             BoundaryStability.StabilityComponent(type: .performanceConsistency, score: 0.8, weight: 0.2),
-            BoundaryStability.StabilityComponent(type: .errorRate, score: 0.95, weight: 0.1)
+            BoundaryStability.StabilityComponent(type: .errorRate, score: 0.95, weight: 0.1),
         ]
 
         let trend: BoundaryStability.StabilityTrend = stabilityScore > 0.8 ? .stable : .degrading
@@ -1237,10 +1237,10 @@ class BoundaryMonitorImpl: BoundaryMonitor {
 
     func detectBoundaryAnomalies(_ boundary: DimensionalBoundary) async -> BoundaryAnomalies {
         // Simplified anomaly detection
-        let anomalyCount = Int.random(in: 0...2)
+        let anomalyCount = Int.random(in: 0 ... 2)
         var anomalies: [BoundaryAnomalies.BoundaryAnomaly] = []
 
-        for _ in 0..<anomalyCount {
+        for _ in 0 ..< anomalyCount {
             anomalies.append(BoundaryAnomalies.BoundaryAnomaly(
                 anomalyId: "anomaly_\(UUID().uuidString.prefix(8))",
                 type: .performanceDegradation,
@@ -1262,7 +1262,7 @@ class BoundaryMonitorImpl: BoundaryMonitor {
 
     func measureBoundaryPerformance(_ boundary: DimensionalBoundary) async -> BoundaryPerformance {
         // Simplified performance measurement
-        return BoundaryPerformance(
+        BoundaryPerformance(
             throughput: 95.0,
             latency: 0.5,
             errorRate: 0.02,
@@ -1271,7 +1271,7 @@ class BoundaryMonitorImpl: BoundaryMonitor {
             performanceMetrics: [
                 "cpu_usage": 0.6,
                 "memory_usage": 0.7,
-                "network_usage": 0.8
+                "network_usage": 0.8,
             ]
         )
     }
@@ -1360,22 +1360,22 @@ enum DimensionalBoundaryError: Error {
 
 extension BoundaryTransition {
     var duration: TimeInterval {
-        guard let endTime = endTime else { return 0 }
+        guard let endTime else { return 0 }
         return endTime.timeIntervalSince(startTime)
     }
 
     var isSuccessful: Bool {
-        return status == .completed
+        status == .completed
     }
 }
 
 extension DimensionalBoundary {
     var dimensions: (Int, Int) {
-        return (dimensionA, dimensionB)
+        (dimensionA, dimensionB)
     }
 
     var isActive: Bool {
-        return status == .active
+        status == .active
     }
 }
 

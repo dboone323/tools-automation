@@ -9,8 +9,8 @@
 // Framework for generating wisdom from knowledge and universal insights
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1063,23 +1063,23 @@ class WisdomSynthesizersEngine {
                 capabilityId: "generation_\(UUID().uuidString.prefix(8))",
                 type: .generation,
                 level: 0.9,
-                knowledgeDomains: knowledge.map { $0.domain },
+                knowledgeDomains: knowledge.map(\.domain),
                 prerequisites: []
             ),
             SynthesisCapability(
                 capabilityId: "extraction_\(UUID().uuidString.prefix(8))",
                 type: .extraction,
                 level: 0.85,
-                knowledgeDomains: knowledge.map { $0.domain },
+                knowledgeDomains: knowledge.map(\.domain),
                 prerequisites: []
             ),
             SynthesisCapability(
                 capabilityId: "validation_\(UUID().uuidString.prefix(8))",
                 type: .validation,
                 level: 0.95,
-                knowledgeDomains: knowledge.map { $0.domain },
+                knowledgeDomains: knowledge.map(\.domain),
                 prerequisites: []
-            )
+            ),
         ]
 
         let frameworks = [
@@ -1094,11 +1094,11 @@ class WisdomSynthesizersEngine {
                         description: "Seek harmony across all domains and perspectives",
                         significance: 0.9,
                         applications: ["Decision making", "Conflict resolution"]
-                    )
+                    ),
                 ],
                 applications: [],
                 coherence: 0.9
-            )
+            ),
         ]
 
         let system = WisdomSynthesisSystem(
@@ -1180,7 +1180,7 @@ class WisdomSynthesizersEngine {
                 prevalence: 0.9,
                 significance: 0.95,
                 examples: ["Ecosystem balance", "Social networks", "Knowledge relationships"]
-            )
+            ),
         ]
 
         let principles = [
@@ -1190,7 +1190,7 @@ class WisdomSynthesizersEngine {
                 description: "All systems seek harmony and balance",
                 universality: 0.9,
                 applications: ["Conflict resolution", "System design", "Decision making"]
-            )
+            ),
         ]
 
         return UniversalInsights(
@@ -1275,7 +1275,7 @@ class WisdomSynthesizersEngine {
 
     private func performWisdomHealthCheck() async {
         let totalSyntheses = synthesisHistory.count
-        let successfulSyntheses = synthesisHistory.filter { $0.success }.count
+        let successfulSyntheses = synthesisHistory.filter(\.success).count
         let successRate = totalSyntheses > 0 ? Double(successfulSyntheses) / Double(totalSyntheses) : 0.0
 
         if successRate < 0.8 {
@@ -1307,7 +1307,7 @@ class WisdomGeneratorImpl: WisdomGenerator {
                     sources: [k.source],
                     context: nil,
                     timestamp: Date()
-                )
+                ),
             ]
         }
 
@@ -1318,7 +1318,7 @@ class WisdomGeneratorImpl: WisdomGenerator {
                 description: "Knowledge integration leads to wisdom",
                 significance: 0.9,
                 applications: ["Knowledge management", "Decision making"]
-            )
+            ),
         ]
 
         let applications = [
@@ -1387,7 +1387,7 @@ class WisdomGeneratorImpl: WisdomGenerator {
                 ),
                 effectiveness: 0.9,
                 timestamp: Date()
-            )
+            ),
         ]
 
         return Wisdom(
@@ -1472,7 +1472,7 @@ class WisdomGeneratorImpl: WisdomGenerator {
 
     func createWisdomFramework(_ knowledge: [Knowledge]) async -> WisdomFramework {
         // Simplified framework creation
-        return WisdomFramework(
+        WisdomFramework(
             frameworkId: "framework_\(UUID().uuidString.prefix(8))",
             structure: .hierarchical,
             components: [],
@@ -1483,7 +1483,7 @@ class WisdomGeneratorImpl: WisdomGenerator {
                     description: "Integrating knowledge creates wisdom",
                     significance: 0.9,
                     applications: ["Learning", "Problem solving"]
-                )
+                ),
             ],
             applications: [],
             coherence: 0.9
@@ -1504,7 +1504,7 @@ class WisdomGeneratorImpl: WisdomGenerator {
                 type: .clarity,
                 factor: 1.3,
                 description: "Enhanced wisdom clarity"
-            )
+            ),
         ]
 
         let optimizedWisdom = Wisdom(
@@ -1550,7 +1550,7 @@ class WisdomGeneratorImpl: WisdomGenerator {
                     type: .refine,
                     description: "Refine wisdom generation process",
                     priority: 0.8
-                )
+                ),
             ],
             validationTime: 5.0
         )
@@ -1571,7 +1571,7 @@ class InsightExtractorImpl: InsightExtractor {
                     sources: [k.source],
                     context: nil,
                     timestamp: Date()
-                )
+                ),
             ]
         }
 
@@ -1596,7 +1596,7 @@ class InsightExtractorImpl: InsightExtractor {
                 frequency: 0.7,
                 significance: 0.8,
                 examples: ["Example 1", "Example 2"]
-            )
+            ),
         ]
 
         return PatternIdentification(
@@ -1611,7 +1611,7 @@ class InsightExtractorImpl: InsightExtractor {
 
     func discoverRelationships(_ knowledge: [Knowledge]) async -> RelationshipDiscovery {
         // Simplified relationship discovery
-        let relationships = knowledge.enumerated().flatMap { (index, k) -> [RelationshipDiscovery.DiscoveredRelationship] in
+        let relationships = knowledge.enumerated().flatMap { index, k -> [RelationshipDiscovery.DiscoveredRelationship] in
             knowledge.dropFirst(index + 1).map { other in
                 RelationshipDiscovery.DiscoveredRelationship(
                     relationshipId: "relationship_\(UUID().uuidString.prefix(8))",
@@ -1641,9 +1641,9 @@ class InsightExtractorImpl: InsightExtractor {
                 insightId: "universal_\(UUID().uuidString.prefix(8))",
                 content: "Universal insight about interconnectedness",
                 universality: 0.9,
-                domains: knowledge.map { $0.domain },
+                domains: knowledge.map(\.domain),
                 applications: ["System design", "Problem solving"]
-            )
+            ),
         ]
 
         return UniversalInsightGeneration(
@@ -1670,7 +1670,7 @@ class InsightExtractorImpl: InsightExtractor {
                 type: .relevance,
                 factor: 1.3,
                 description: "Enhanced insight relevance"
-            )
+            ),
         ]
 
         let optimizedExtraction = InsightExtraction(
@@ -1725,7 +1725,7 @@ class WisdomValidatorImpl: WisdomValidator {
                     score: wisdom.quality.depth,
                     benchmark: 0.8,
                     significance: 0.9
-                )
+                ),
             ],
             assessmentTime: 3.0,
             recommendations: ["Monitor wisdom quality regularly"]
@@ -1734,7 +1734,7 @@ class WisdomValidatorImpl: WisdomValidator {
 
     func verifyWisdomConsistency(_ wisdom: Wisdom) async -> WisdomConsistencyVerification {
         // Simplified consistency verification
-        return WisdomConsistencyVerification(
+        WisdomConsistencyVerification(
             verificationId: "consistency_\(wisdom.wisdomId)",
             wisdom: wisdom,
             isConsistent: true,
@@ -1746,7 +1746,7 @@ class WisdomValidatorImpl: WisdomValidator {
 
     func measureWisdomDepth(_ wisdom: Wisdom) async -> WisdomDepthMeasurement {
         // Simplified depth measurement
-        return WisdomDepthMeasurement(
+        WisdomDepthMeasurement(
             measurementId: "measurement_\(wisdom.wisdomId)",
             wisdom: wisdom,
             depthScore: wisdom.quality.depth,
@@ -1757,7 +1757,7 @@ class WisdomValidatorImpl: WisdomValidator {
                     depth: wisdom.quality.depth,
                     maximumDepth: 1.0,
                     significance: 0.9
-                )
+                ),
             ],
             measurementTime: 2.0
         )
@@ -1765,7 +1765,7 @@ class WisdomValidatorImpl: WisdomValidator {
 
     func generateWisdomValidationReport(_ wisdom: Wisdom) async -> WisdomValidationReport {
         // Simplified validation report
-        return WisdomValidationReport(
+        WisdomValidationReport(
             reportId: "report_\(wisdom.wisdomId)",
             wisdom: wisdom,
             summary: WisdomValidationReport.ValidationSummary(
@@ -1808,7 +1808,7 @@ class WisdomValidatorImpl: WisdomValidator {
 class WisdomApplicatorImpl: WisdomApplicator {
     func applyWisdom(_ wisdom: Wisdom, to context: WisdomContext) async -> WisdomApplication {
         // Simplified wisdom application
-        return WisdomApplication(
+        WisdomApplication(
             applicationId: "application_\(wisdom.wisdomId)",
             wisdom: wisdom,
             context: context,
@@ -1822,7 +1822,7 @@ class WisdomApplicatorImpl: WisdomApplicator {
                         sequence: 1,
                         description: "Apply wisdom principles",
                         duration: 3600
-                    )
+                    ),
                 ],
                 expectedOutcome: "Successful wisdom application"
             ),
@@ -1848,7 +1848,7 @@ class WisdomApplicatorImpl: WisdomApplicator {
                 rationale: "Wisdom provides valuable insights",
                 priority: 0.9,
                 expectedBenefit: 0.8
-            )
+            ),
         ]
 
         return WisdomRecommendations(
@@ -1864,9 +1864,9 @@ class WisdomApplicatorImpl: WisdomApplicator {
                         name: "Impact",
                         weight: 0.6,
                         direction: .maximize
-                    )
+                    ),
                 ],
-                rankedRecommendations: recommendations.map { $0.recommendationId }
+                rankedRecommendations: recommendations.map(\.recommendationId)
             ),
             expectedBenefits: 0.8,
             implementationComplexity: 0.6
@@ -1889,7 +1889,7 @@ class WisdomApplicatorImpl: WisdomApplicator {
                         duration: 1800,
                         dependencies: [],
                         resources: ["Wisdom framework"]
-                    )
+                    ),
                 ],
                 successMetrics: [
                     WisdomStrategies.WisdomStrategy.SuccessMetric(
@@ -1898,7 +1898,7 @@ class WisdomApplicatorImpl: WisdomApplicator {
                         target: 0.9,
                         current: 0.8,
                         measurement: "Percentage of successful applications"
-                    )
+                    ),
                 ],
                 riskFactors: [
                     WisdomStrategies.WisdomStrategy.RiskFactor(
@@ -1907,9 +1907,9 @@ class WisdomApplicatorImpl: WisdomApplicator {
                         probability: 0.2,
                         impact: 0.3,
                         mitigation: "Validate context before application"
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
 
         return WisdomStrategies(
@@ -1942,7 +1942,7 @@ class WisdomApplicatorImpl: WisdomApplicator {
                 type: .efficiency,
                 factor: 1.3,
                 description: "Enhanced application efficiency"
-            )
+            ),
         ]
 
         let optimizedApplication = WisdomApplication(
@@ -2005,51 +2005,51 @@ enum WisdomSynthesizerError: Error {
 
 extension WisdomSynthesisSystem {
     var synthesisEfficiency: Double {
-        return Double(synthesisCapabilities.count) / Double(knowledgeBase.count)
+        Double(synthesisCapabilities.count) / Double(knowledgeBase.count)
     }
 
     var needsOptimization: Bool {
-        return status == .operational && synthesisEfficiency < 0.8
+        status == .operational && synthesisEfficiency < 0.8
     }
 }
 
 extension WisdomSynthesisResult {
     var wisdomQuality: Double {
-        return (qualityMetrics.depth + qualityMetrics.breadth + qualityMetrics.coherence + qualityMetrics.applicability) / 4.0
+        (qualityMetrics.depth + qualityMetrics.breadth + qualityMetrics.coherence + qualityMetrics.applicability) / 4.0
     }
 
     var isHighQuality: Bool {
-        return wisdomQuality > 0.8 && success
+        wisdomQuality > 0.8 && success
     }
 }
 
 extension Wisdom {
     var wisdomMaturity: Double {
-        return quality.depth * quality.coherence * quality.applicability
+        quality.depth * quality.coherence * quality.applicability
     }
 
     var isFullySynthesized: Bool {
-        return wisdomMaturity > 0.8 && !insights.isEmpty
+        wisdomMaturity > 0.8 && !insights.isEmpty
     }
 }
 
 extension UniversalInsights {
     var insightPower: Double {
-        return significance * coverage * Double(insights.count) / 10.0
+        significance * coverage * Double(insights.count) / 10.0
     }
 
     var hasStrongInsights: Bool {
-        return insightPower > 0.7
+        insightPower > 0.7
     }
 }
 
 extension WisdomApplications {
     var applicationStrength: Double {
-        return effectiveness * coverage * Double(applications.count) / 5.0
+        effectiveness * coverage * Double(applications.count) / 5.0
     }
 
     var isEffective: Bool {
-        return applicationStrength > 0.8
+        applicationStrength > 0.8
     }
 }
 

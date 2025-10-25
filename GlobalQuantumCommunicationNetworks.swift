@@ -9,8 +9,8 @@
 // Framework for worldwide quantum communication infrastructure
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -932,7 +932,7 @@ class GlobalQuantumCommunicationNetworksEngine {
         nodes.append(hubNode)
 
         // Create satellite nodes (simplified)
-        for i in 1...5 {
+        for i in 1 ... 5 {
             let satelliteNode = NetworkNode(
                 nodeId: "satellite_\(region.regionId)_\(i)",
                 location: GeographicRegion.GeographicCoordinates(
@@ -998,16 +998,16 @@ class GlobalQuantumCommunicationNetworksEngine {
     private func calculateRegionHealth(_ region: GeographicRegion) -> Double {
         // Simplified health calculation based on infrastructure and quantum readiness
         let infrastructureHealth = (region.infrastructure.satelliteCoverage +
-                                   region.infrastructure.fiberOpticDensity +
-                                   region.infrastructure.powerGridStability +
-                                   region.infrastructure.existingNetworkCapacity) / 4.0
+            region.infrastructure.fiberOpticDensity +
+            region.infrastructure.powerGridStability +
+            region.infrastructure.existingNetworkCapacity) / 4.0
 
         return (infrastructureHealth + region.quantumReadiness) / 2.0
     }
 
     private func generateChecksum(for message: QuantumMessage) -> String {
         // Simplified checksum generation
-        return "checksum_\(message.messageId.hash)"
+        "checksum_\(message.messageId.hash)"
     }
 
     private func setupNetworkMonitoring() {
@@ -1061,7 +1061,7 @@ class QuantumChannelManagerImpl: QuantumChannelManager {
 
     func maintainChannelStability(_ channel: QuantumChannel) async -> ChannelStabilityReport {
         // Simplified stability maintenance
-        return ChannelStabilityReport(
+        ChannelStabilityReport(
             channelId: channel.channelId,
             stability: 0.95,
             coherence: 0.9,
@@ -1085,7 +1085,7 @@ class QuantumChannelManagerImpl: QuantumChannelManager {
                 type: .software,
                 improvement: 0.05,
                 description: "Enhance error correction algorithms"
-            )
+            ),
         ]
 
         return ChannelOptimization(
@@ -1131,7 +1131,7 @@ class QuantumRouterImpl: QuantumRouter {
         let nodes = [source, destination]
         let channels = network.channels.filter {
             ($0.sourceNode.nodeId == source.nodeId && $0.destinationNode.nodeId == destination.nodeId) ||
-            ($0.sourceNode.nodeId == destination.nodeId && $0.destinationNode.nodeId == source.nodeId)
+                ($0.sourceNode.nodeId == destination.nodeId && $0.destinationNode.nodeId == source.nodeId)
         }
 
         let totalDistance = channels.first?.configuration.distance ?? 1000.0
@@ -1164,7 +1164,7 @@ class QuantumRouterImpl: QuantumRouter {
                 type: .expand,
                 description: "Temporarily expand channel capacity",
                 priority: 0.7
-            )
+            ),
         ]
 
         return CongestionResolution(
@@ -1178,7 +1178,7 @@ class QuantumRouterImpl: QuantumRouter {
 
     func updateRoutingTables(with changes: NetworkTopologyChange) async -> RoutingUpdate {
         // Simplified routing table update
-        return RoutingUpdate(
+        RoutingUpdate(
             updateId: "update_\(changes.changeId)",
             changes: changes,
             updatedPaths: [],
@@ -1194,11 +1194,11 @@ class QuantumEncryptionEngineImpl: QuantumEncryptionEngine {
         // Simplified key pair generation
         let keyId = "key_\(node.nodeId)_\(UUID().uuidString.prefix(8))"
 
-        let keyData = (0..<256).map { _ in
+        let keyData = (0 ..< 256).map { _ in
             QuantumMessage.QuantumContent.QuantumBit(
                 state: QuantumMessage.QuantumContent.QuantumState(
-                    alpha: Complex(real: 1.0/sqrt(2.0), imaginary: 0),
-                    beta: Complex(real: 1.0/sqrt(2.0), imaginary: 0)
+                    alpha: Complex(real: 1.0 / sqrt(2.0), imaginary: 0),
+                    beta: Complex(real: 1.0 / sqrt(2.0), imaginary: 0)
                 ),
                 fidelity: 0.99,
                 coherence: 0.95
@@ -1222,7 +1222,7 @@ class QuantumEncryptionEngineImpl: QuantumEncryptionEngine {
 
     func encryptQuantumMessage(_ message: QuantumMessage, with key: QuantumKey) async -> EncryptedQuantumMessage {
         // Simplified encryption
-        return EncryptedQuantumMessage(
+        EncryptedQuantumMessage(
             messageId: message.messageId,
             encryptedContent: key.keyData,
             keyId: key.keyId,
@@ -1320,7 +1320,7 @@ class GlobalNetworkCoordinatorImpl: GlobalNetworkCoordinator {
 
     func synchronizeNetworkState(across regions: [GeographicRegion]) async -> SynchronizationResult {
         // Simplified synchronization
-        return SynchronizationResult(
+        SynchronizationResult(
             synchronizationId: "sync_\(UUID().uuidString.prefix(8))",
             synchronizedRegions: regions,
             synchronizationMetrics: SynchronizationResult.SynchronizationMetrics(
@@ -1373,7 +1373,7 @@ class GlobalNetworkCoordinatorImpl: GlobalNetworkCoordinator {
             communicationId: "inter_regional_\(UUID().uuidString.prefix(8))",
             regions: regions,
             communicationChannels: channels,
-            dataTransferred: 1000000,
+            dataTransferred: 1_000_000,
             success: true,
             communicationTime: 45.0
         )
@@ -1395,7 +1395,7 @@ class GlobalNetworkCoordinatorImpl: GlobalNetworkCoordinator {
                 regions: ["global"],
                 improvement: 0.08,
                 description: "Optimize resource allocation across regions"
-            )
+            ),
         ]
 
         return GlobalOptimizationResult(
@@ -1436,27 +1436,27 @@ extension GlobalQuantumNetwork {
     }
 
     var needsExpansion: Bool {
-        return status == .operational && regions.count < 10 // Simplified threshold
+        status == .operational && regions.count < 10 // Simplified threshold
     }
 }
 
 extension QuantumChannel {
     var channelQuality: Double {
-        return (configuration.bandwidth / 1000.0) * (1.0 - configuration.errorRate) * (1.0 / configuration.latency)
+        (configuration.bandwidth / 1000.0) * (1.0 - configuration.errorRate) * (1.0 / configuration.latency)
     }
 
     var isHighQuality: Bool {
-        return channelQuality > 0.8 && status == .operational
+        channelQuality > 0.8 && status == .operational
     }
 }
 
 extension NetworkHealthReport {
     var isHealthy: Bool {
-        return overallHealth > 0.85 && issues.filter { $0.severity == .high || $0.severity == .critical }.isEmpty
+        overallHealth > 0.85 && issues.filter { $0.severity == .high || $0.severity == .critical }.isEmpty
     }
 
     var criticalIssuesCount: Int {
-        return issues.filter { $0.severity == .critical }.count
+        issues.filter { $0.severity == .critical }.count
     }
 }
 

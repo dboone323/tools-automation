@@ -11,8 +11,8 @@
 //  advanced multiverse exploration and manipulation.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -68,8 +68,8 @@ struct QuantumState: Hashable {
 
     static func == (lhs: QuantumState, rhs: QuantumState) -> Bool {
         lhs.amplitudes == rhs.amplitudes &&
-        lhs.basisStates == rhs.basisStates &&
-        abs(lhs.normalization - rhs.normalization) < 1e-10
+            lhs.basisStates == rhs.basisStates &&
+            abs(lhs.normalization - rhs.normalization) < 1e-10
     }
 }
 
@@ -115,7 +115,7 @@ struct Complex<T: FloatingPoint & Hashable>: Hashable {
 
 /// Complex absolute value function
 func complexAbs<T: FloatingPoint>(_ complex: Complex<T>) -> T {
-    return sqrt(complex.real * complex.real + complex.imaginary * complex.imaginary)
+    sqrt(complex.real * complex.real + complex.imaginary * complex.imaginary)
 }
 
 // MARK: - Enums
@@ -473,6 +473,7 @@ struct NavigationSideEffect {
 @MainActor
 class QuantumMultiverseNavigation: ObservableObject {
     // MARK: - Properties
+
     @Published var currentUniverse: Universe
     @Published var navigationHistory: [NavigationEntry] = []
     @Published var activeChannels: [CommunicationChannel] = []
@@ -488,6 +489,7 @@ class QuantumMultiverseNavigation: ObservableObject {
     private let navigationEngine: NavigationEngine
 
     // MARK: - Initialization
+
     init() {
         self.currentUniverse = Universe(
             id: "current_universe",
@@ -496,7 +498,7 @@ class QuantumMultiverseNavigation: ObservableObject {
                 "planck": 6.626e-34,
                 "speed_of_light": 3e8,
                 "gravitational": 6.674e-11,
-                "boltzmann": 1.381e-23
+                "boltzmann": 1.381e-23,
             ],
             quantumState: QuantumState(amplitudes: [Complex(1, 0)], basisStates: ["|0⟩"], normalization: 1.0),
             realityStates: [],
@@ -541,7 +543,7 @@ class QuantumMultiverseNavigation: ObservableObject {
         let navigationResult = NavigationResult(
             success: result.isSafe,
             targetUniverse: targetUniverse,
-            navigationTime: Double.random(in: 1.0...10.0),
+            navigationTime: Double.random(in: 1.0 ... 10.0),
             energyExpenditure: result.energyRequirement,
             stabilityIndex: 0.9,
             sideEffects: []
@@ -687,7 +689,7 @@ class UniverseHoppingImpl: UniverseHopping {
     func stabilizeHopTrajectory(_ hop: UniverseHop) async -> StabilizedTrajectory {
         let stabilizationFields = [
             StabilizationField(fieldType: .quantum, strength: 1.0, range: 10.0, frequency: 1.0, phase: 0.0),
-            StabilizationField(fieldType: .temporal, strength: 0.8, range: 5.0, frequency: 2.0, phase: .pi/2)
+            StabilizationField(fieldType: .temporal, strength: 0.8, range: 5.0, frequency: 2.0, phase: .pi / 2),
         ]
 
         return StabilizedTrajectory(
@@ -700,7 +702,7 @@ class UniverseHoppingImpl: UniverseHopping {
     }
 
     func validateHopDestination(_ destination: Universe) async -> ValidationResult {
-        let compatibilityScore = Double.random(in: 0.7...1.0)
+        let compatibilityScore = Double.random(in: 0.7 ... 1.0)
         let riskFactors = compatibilityScore > 0.8 ? [] : [
             RiskFactor(
                 type: .decoherence,
@@ -708,7 +710,7 @@ class UniverseHoppingImpl: UniverseHopping {
                 probability: 0.1,
                 description: "Minor decoherence risk",
                 mitigation: "Apply stabilization field"
-            )
+            ),
         ]
 
         return ValidationResult(
@@ -724,7 +726,7 @@ class UniverseHoppingImpl: UniverseHopping {
 /// Interdimensional communication implementation
 class InterdimensionalCommunicationImpl: InterdimensionalCommunication {
     func createCommunicationChannel(_ universes: [Universe]) async -> CommunicationChannel {
-        return CommunicationChannel(
+        CommunicationChannel(
             channelId: "channel_\(UUID().uuidString.prefix(8))",
             connectedUniverses: universes,
             channelType: .quantumEntanglement,
@@ -735,7 +737,7 @@ class InterdimensionalCommunicationImpl: InterdimensionalCommunication {
     }
 
     func transmitQuantumInformation(_ channel: CommunicationChannel, _ information: QuantumInformation) async -> TransmissionResult {
-        return TransmissionResult(
+        TransmissionResult(
             success: true,
             transmittedInformation: information,
             transmissionTime: 0.1,
@@ -746,7 +748,7 @@ class InterdimensionalCommunicationImpl: InterdimensionalCommunication {
     }
 
     func synchronizeQuantumStates(_ channel: CommunicationChannel) async -> SynchronizationResult {
-        return SynchronizationResult(
+        SynchronizationResult(
             synchronizedUniverses: channel.connectedUniverses,
             synchronizationLevel: 0.97,
             coherence: 0.92,
@@ -766,7 +768,7 @@ class ParallelRealityCoordinationImpl: ParallelRealityCoordination {
                 affectedRealities: Array(realities.prefix(2)),
                 resolution: "Apply interference cancellation",
                 priority: 1
-            )
+            ),
         ] : []
 
         return CoordinationResult(
@@ -779,7 +781,7 @@ class ParallelRealityCoordinationImpl: ParallelRealityCoordination {
     }
 
     func harmonizeQuantumEntanglement(_ realities: [ParallelReality]) async -> HarmonizationResult {
-        return HarmonizationResult(
+        HarmonizationResult(
             harmonizedRealities: realities,
             entanglementStrength: 0.85,
             coherence: 0.91,
@@ -791,7 +793,7 @@ class ParallelRealityCoordinationImpl: ParallelRealityCoordination {
     func optimizeRealityCoherence(_ realities: [ParallelReality]) async -> OptimizationResult {
         let metrics = [
             OptimizationMetric(metricType: .coherence, baselineValue: 0.8, optimizedValue: 0.92, improvement: 0.12, efficiency: 0.95),
-            OptimizationMetric(metricType: .stability, baselineValue: 0.75, optimizedValue: 0.88, improvement: 0.13, efficiency: 0.92)
+            OptimizationMetric(metricType: .stability, baselineValue: 0.75, optimizedValue: 0.88, improvement: 0.13, efficiency: 0.92),
         ]
 
         return OptimizationResult(
@@ -836,18 +838,18 @@ class NavigationEngine {
 
     func findUniverseById(_ universeId: String) async throws -> Universe {
         // Simulate universe lookup
-        return Universe(
+        Universe(
             id: universeId,
             dimensions: 4,
             physicalConstants: [
                 "planck": 6.626e-34,
                 "speed_of_light": 3e8,
                 "gravitational": 6.674e-11,
-                "boltzmann": 1.381e-23
+                "boltzmann": 1.381e-23,
             ],
             quantumState: QuantumState(amplitudes: [Complex(1, 0)], basisStates: ["|0⟩"], normalization: 1.0),
             realityStates: [],
-            branchingProbability: Double.random(in: 0.1...1.0)
+            branchingProbability: Double.random(in: 0.1 ... 1.0)
         )
     }
 }

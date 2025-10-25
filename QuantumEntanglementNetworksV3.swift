@@ -61,7 +61,7 @@ struct QuantumParticle: Identifiable, Codable {
     var spin: QuantumSpin
     var position: QuantumPosition
     var momentum: QuantumMomentum
-    var entanglementPartners: [String]  // IDs of entangled particles
+    var entanglementPartners: [String] // IDs of entangled particles
     var coherenceTime: TimeInterval
     var decoherenceRate: Double
 
@@ -146,11 +146,11 @@ struct Complex: Codable {
 /// Quantum channel representation
 struct QuantumChannel: Identifiable, Codable {
     let id: String
-    let sender: String  // Particle ID
-    let receiver: String  // Particle ID
+    let sender: String // Particle ID
+    let receiver: String // Particle ID
     let channelType: ChannelType
     var fidelity: Double
-    var capacity: Double  // qubits per second
+    var capacity: Double // qubits per second
     var latency: TimeInterval
     var isActive: Bool
 
@@ -170,8 +170,8 @@ struct QuantumInformation: Codable {
 
 /// Qubit representation
 struct Qubit: Codable {
-    let alpha: Complex  // |0⟩ amplitude
-    let beta: Complex  // |1⟩ amplitude
+    let alpha: Complex // |0⟩ amplitude
+    let beta: Complex // |1⟩ amplitude
     let phase: Double
     var measured: Bool
 
@@ -197,10 +197,10 @@ struct EntanglementState: Codable {
     var isActive: Bool
 
     enum BellState: String, Codable {
-        case phiPlus = "Φ⁺"  // |00⟩ + |11⟩
-        case phiMinus = "Φ⁻"  // |00⟩ - |11⟩
-        case psiPlus = "Ψ⁺"  // |01⟩ + |10⟩
-        case psiMinus = "Ψ⁻"  // |01⟩ - |10⟩
+        case phiPlus = "Φ⁺" // |00⟩ + |11⟩
+        case phiMinus = "Φ⁻" // |00⟩ - |11⟩
+        case psiPlus = "Ψ⁺" // |01⟩ + |10⟩
+        case psiMinus = "Ψ⁻" // |01⟩ - |10⟩
     }
 }
 
@@ -307,17 +307,17 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
         let bellState = try await createBellState(particles)
 
         // Update particle entanglement partners
-        for i in 0..<particles.count {
+        for i in 0 ..< particles.count {
             var particle = particles[i]
-            particle.entanglementPartners = particles.map { $0.id }.filter { $0 != particle.id }
+            particle.entanglementPartners = particles.map(\.id).filter { $0 != particle.id }
             particle.coherenceTime = Date().timeIntervalSince1970
             entangledParticles.append(particle)
         }
 
         let entanglementState = EntanglementState(
-            entangledParticles: particles.map { $0.id },
+            entangledParticles: particles.map(\.id),
             bellState: bellState,
-            fidelity: 0.99,  // High fidelity for initialization
+            fidelity: 0.99, // High fidelity for initialization
             coherenceTime: Date().timeIntervalSince1970,
             isActive: true
         )
@@ -347,7 +347,8 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
 
         // Apply corrections at destination
         let correctedState = try await applyTeleportationCorrections(
-            state, classicalBits: classicalBits)
+            state, classicalBits: classicalBits
+        )
 
         let executionTime = Date().timeIntervalSince1970 - startTime
         let fidelity = calculateFidelity(state, correctedState)
@@ -374,19 +375,19 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
             result: randomState,
             confidence: 0.98,
             measurementTime: Date(),
-            particles: particles.map { $0.id }
+            particles: particles.map(\.id)
         )
     }
 
     func synchronizeEntangledStates(_ particles: [QuantumParticle]) async throws
         -> SynchronizationResult
     {
-        let synchronizedParticles = particles.map { $0.id }
+        let synchronizedParticles = particles.map(\.id)
 
         // Calculate synchronization parameters
-        let phaseDifference = Double.random(in: -Double.pi...Double.pi)
-        let timingOffset = Double.random(in: -1e-9...1e-9)
-        let synchronizationFidelity = Double.random(in: 0.95...0.99)
+        let phaseDifference = Double.random(in: -Double.pi ... Double.pi)
+        let timingOffset = Double.random(in: -1e-9 ... 1e-9)
+        let synchronizationFidelity = Double.random(in: 0.95 ... 0.99)
 
         return SynchronizationResult(
             synchronizedParticles: synchronizedParticles,
@@ -411,8 +412,8 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
             receiver: receiver.id,
             channelType: .teleportation,
             fidelity: 0.97,
-            capacity: 1000.0,  // qubits per second
-            latency: 1e-6,  // 1 microsecond
+            capacity: 1000.0, // qubits per second
+            latency: 1e-6, // 1 microsecond
             isActive: true
         )
 
@@ -428,9 +429,9 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
         }
 
         // Simulate quantum transmission
-        let throughput = channel.capacity * Double.random(in: 0.8...1.0)
-        let latency = channel.latency * Double.random(in: 0.9...1.1)
-        let errorRate = (1.0 - channel.fidelity) * Double.random(in: 0.5...1.5)
+        let throughput = channel.capacity * Double.random(in: 0.8 ... 1.0)
+        let latency = channel.latency * Double.random(in: 0.9 ... 1.1)
+        let errorRate = (1.0 - channel.fidelity) * Double.random(in: 0.5 ... 1.5)
         let channelEfficiency = throughput / channel.capacity
 
         return TransmissionResult(
@@ -448,11 +449,11 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
         }
 
         // Simulate receiving quantum information
-        let qubits = (0..<10).map { _ in
+        let qubits = (0 ..< 10).map { _ in
             Qubit(
-                alpha: Complex(real: Double.random(in: 0...1), imaginary: 0),
-                beta: Complex(real: Double.random(in: 0...1), imaginary: 0),
-                phase: Double.random(in: 0...(2 * Double.pi)),
+                alpha: Complex(real: Double.random(in: 0 ... 1), imaginary: 0),
+                beta: Complex(real: Double.random(in: 0 ... 1), imaginary: 0),
+                phase: Double.random(in: 0 ... (2 * Double.pi)),
                 measured: false
             )
         }
@@ -481,8 +482,8 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
         var errors: [QuantumError] = []
 
         // Simulate error detection
-        for i in 0..<state.amplitudes.count {
-            if Double.random(in: 0...1) < 0.1 {  // 10% error rate
+        for i in 0 ..< state.amplitudes.count {
+            if Double.random(in: 0 ... 1) < 0.1 { // 10% error rate
                 let errorType: QuantumError.ErrorType = [
                     .bitFlip, .phaseFlip, .amplitudeDamping, .depolarization,
                 ].randomElement()!
@@ -490,7 +491,7 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
                     QuantumError(
                         type: errorType,
                         qubitIndex: i,
-                        severity: Double.random(in: 0.1...0.5),
+                        severity: Double.random(in: 0.1 ... 0.5),
                         timestamp: Date()
                     ))
             }
@@ -539,8 +540,8 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
         let correctedState = QuantumState(
             amplitudes: correctedAmplitudes,
             basisStates: state.basisStates,
-            entanglementEntropy: state.entanglementEntropy * 0.9,  // Improved entanglement
-            purity: min(state.purity * 1.1, 1.0)  // Improved purity
+            entanglementEntropy: state.entanglementEntropy * 0.9, // Improved entanglement
+            purity: min(state.purity * 1.1, 1.0) // Improved purity
         )
 
         let fidelityImprovement = correctedState.purity - state.purity
@@ -555,9 +556,9 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
 
     func implementErrorCorrectionCode(_ qubits: [Qubit]) async -> ErrorCorrectionCode {
         let physicalQubits = qubits.count
-        let logicalQubits = max(1, physicalQubits / 3)  // Simple repetition code
+        let logicalQubits = max(1, physicalQubits / 3) // Simple repetition code
         let distance = physicalQubits - logicalQubits + 1
-        let threshold = 0.1  // Error threshold
+        let threshold = 0.1 // Error threshold
 
         return ErrorCorrectionCode(
             codeType: .repetition,
@@ -580,7 +581,7 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
 
     private func generateClassicalBits(for measurement: BellMeasurement) -> [Bool] {
         // Generate 2 classical bits based on Bell measurement
-        return [Bool.random(), Bool.random()]
+        [Bool.random(), Bool.random()]
     }
 
     private func applyTeleportationCorrections(_ state: QuantumState, classicalBits: [Bool])
@@ -591,7 +592,7 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
 
         if classicalBits[0] {
             // Apply X correction
-            for i in 0..<correctedAmplitudes.count {
+            for i in 0 ..< correctedAmplitudes.count {
                 correctedAmplitudes[i] = Complex(
                     real: correctedAmplitudes[i].imaginary,
                     imaginary: correctedAmplitudes[i].real
@@ -601,7 +602,7 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
 
         if classicalBits[1] {
             // Apply Z correction
-            for i in 0..<correctedAmplitudes.count {
+            for i in 0 ..< correctedAmplitudes.count {
                 correctedAmplitudes[i] = Complex(
                     real: correctedAmplitudes[i].real,
                     imaginary: -correctedAmplitudes[i].imaginary
@@ -613,14 +614,14 @@ final class QuantumEntanglementNetwork: QuantumEntanglementNetworkProtocol,
             amplitudes: correctedAmplitudes,
             basisStates: state.basisStates,
             entanglementEntropy: state.entanglementEntropy,
-            purity: state.purity * 0.98  // Small fidelity loss
+            purity: state.purity * 0.98 // Small fidelity loss
         )
     }
 
     private func calculateFidelity(_ state1: QuantumState, _ state2: QuantumState) -> Double {
         // Calculate quantum state fidelity
         var fidelity = 0.0
-        for i in 0..<min(state1.amplitudes.count, state2.amplitudes.count) {
+        for i in 0 ..< min(state1.amplitudes.count, state2.amplitudes.count) {
             let amp1 = state1.amplitudes[i]
             let amp2 = state2.amplitudes[i]
             fidelity += amp1.real * amp2.real + amp1.imaginary * amp2.imaginary
@@ -651,7 +652,7 @@ extension QuantumEntanglementNetwork {
 
         // Create particles
         var particles: [QuantumParticle] = []
-        for i in 0..<particleCount {
+        for i in 0 ..< particleCount {
             let particle = QuantumParticle(
                 id: "particle_\(i)",
                 type: .qubit,
@@ -673,14 +674,14 @@ extension QuantumEntanglementNetwork {
 
     /// Perform quantum network diagnostics
     func performDiagnostics() async -> NetworkDiagnostics {
-        let entangledCount = entangledParticles.filter { $0.isEntangled }.count
-        let activeChannels = communicationChannels.filter { $0.isActive }.count
+        let entangledCount = entangledParticles.filter(\.isEntangled).count
+        let activeChannels = communicationChannels.filter(\.isActive).count
         let averageFidelity =
-            communicationChannels.map { $0.fidelity }.reduce(0, +)
-            / Double(max(1, communicationChannels.count))
+            communicationChannels.map(\.fidelity).reduce(0, +)
+                / Double(max(1, communicationChannels.count))
         let averageCoherence =
-            entangledParticles.map { $0.coherenceQuality }.reduce(0, +)
-            / Double(max(1, entangledParticles.count))
+            entangledParticles.map(\.coherenceQuality).reduce(0, +)
+                / Double(max(1, entangledParticles.count))
 
         return NetworkDiagnostics(
             totalParticles: entangledParticles.count,
@@ -731,8 +732,8 @@ extension QuantumEntanglementNetwork {
         let network = QuantumEntanglementNetwork()
 
         // Entangle every pair of particles
-        for i in 0..<particles.count {
-            for j in (i + 1)..<particles.count {
+        for i in 0 ..< particles.count {
+            for j in (i + 1) ..< particles.count {
                 _ = try await network.initializeEntanglement([particles[i], particles[j]])
             }
         }
@@ -748,7 +749,7 @@ extension QuantumEntanglementNetwork {
 
         // Create repeater particles along the distance
         var particles: [QuantumParticle] = []
-        for i in 0...segments {
+        for i in 0 ... segments {
             let position = distance * Double(i) / Double(segments)
             let particle = QuantumParticle(
                 id: "repeater_\(i)",
@@ -764,7 +765,7 @@ extension QuantumEntanglementNetwork {
         }
 
         // Entangle adjacent repeaters
-        for i in 0..<(particles.count - 1) {
+        for i in 0 ..< (particles.count - 1) {
             _ = try await network.initializeEntanglement([particles[i], particles[i + 1]])
         }
 

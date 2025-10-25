@@ -11,8 +11,8 @@
 //  for scalable quantum information processing.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -81,7 +81,7 @@ struct EntanglementGraph {
     mutating func addNode(_ node: NetworkNode) {
         nodes.append(node)
         // Update connectivity matrix
-        for i in 0..<connectivityMatrix.count {
+        for i in 0 ..< connectivityMatrix.count {
             connectivityMatrix[i].append(0.0)
         }
         connectivityMatrix.append([Double](repeating: 0.0, count: nodes.count))
@@ -90,7 +90,8 @@ struct EntanglementGraph {
     mutating func addChannel(_ channel: EntanglementChannel) {
         edges.append(channel)
         if let i = nodes.firstIndex(where: { $0.id == channel.node1.id }),
-           let j = nodes.firstIndex(where: { $0.id == channel.node2.id }) {
+           let j = nodes.firstIndex(where: { $0.id == channel.node2.id })
+        {
             connectivityMatrix[i][j] = channel.fidelity
             connectivityMatrix[j][i] = channel.fidelity
         }
@@ -176,7 +177,7 @@ struct TeleportationNetwork {
     }
 
     private mutating func updateSuccessRate() {
-        let successful = teleportationHistory.filter { $0.success }.count
+        let successful = teleportationHistory.filter(\.success).count
         successRate = Double(successful) / Double(teleportationHistory.count)
     }
 }
@@ -295,6 +296,7 @@ struct QuantumGate {
 @MainActor
 class QuantumEntanglementNetworksV2: ObservableObject {
     // MARK: - Properties
+
     @Published var entanglementGraph: EntanglementGraph
     @Published var teleportationNetwork: TeleportationNetwork
     @Published var networkNodes: [NetworkNode] = []
@@ -310,6 +312,7 @@ class QuantumEntanglementNetworksV2: ObservableObject {
     private let distributedProcessor: DistributedQuantumProcessor
 
     // MARK: - Initialization
+
     init() {
         self.entanglementGraph = EntanglementGraph(nodes: [], edges: [], connectivityMatrix: [])
         self.teleportationNetwork = TeleportationNetwork(channels: [], teleportationHistory: [], successRate: 0.0)
@@ -456,8 +459,8 @@ class EntanglementDistributionImpl: EntanglementDistribution {
     func distributeEntanglement(between nodes: [NetworkNode]) async throws -> [EntanglementChannel] {
         var channels: [EntanglementChannel] = []
 
-        for i in 0..<nodes.count {
-            for j in (i+1)..<nodes.count {
+        for i in 0 ..< nodes.count {
+            for j in (i + 1) ..< nodes.count {
                 let channel = try await createEntanglementChannel(nodes[i], nodes[j])
                 channels.append(channel)
             }
@@ -487,8 +490,8 @@ class EntanglementDistributionImpl: EntanglementDistribution {
 
     private func createEntanglementChannel(_ node1: NetworkNode, _ node2: NetworkNode) async throws -> EntanglementChannel {
         let distance = sqrt(pow(node1.position.x - node2.position.x, 2) +
-                           pow(node1.position.y - node2.position.y, 2) +
-                           pow(node1.position.z - node2.position.z, 2))
+            pow(node1.position.y - node2.position.y, 2) +
+            pow(node1.position.z - node2.position.z, 2))
 
         return EntanglementChannel(
             id: "channel_\(node1.id)_\(node2.id)",
@@ -624,10 +627,10 @@ private extension QuantumEntanglementNetworksV2 {
     func createNetworkNodes(count: Int) async throws {
         var nodes: [NetworkNode] = []
 
-        for i in 0..<count {
+        for i in 0 ..< count {
             let node = NetworkNode(
                 id: "node_\(i)",
-                position: SIMD3(Double.random(in: -10...10), Double.random(in: -10...10), Double.random(in: -10...10)),
+                position: SIMD3(Double.random(in: -10 ... 10), Double.random(in: -10 ... 10), Double.random(in: -10 ... 10)),
                 qubitCapacity: 10,
                 qubits: [],
                 processingPower: 1.0,
@@ -661,9 +664,9 @@ private extension QuantumEntanglementNetworksV2 {
 
     func generateEntangledState(_ qubits: [Qubit], type: EntanglementType) async throws -> EntangledState {
         // Generate the appropriate entangled state
-        let fidelity = Double.random(in: 0.9...0.99)
-        let concurrence = type == .bellPair ? 1.0 : Double.random(in: 0.8...0.95)
-        let tangle = Double.random(in: 0.7...0.9)
+        let fidelity = Double.random(in: 0.9 ... 0.99)
+        let concurrence = type == .bellPair ? 1.0 : Double.random(in: 0.8 ... 0.95)
+        let tangle = Double.random(in: 0.7 ... 0.9)
 
         return EntangledState(
             qubits: qubits,
@@ -677,7 +680,7 @@ private extension QuantumEntanglementNetworksV2 {
     func executeTeleportation(_ qubit: Qubit, channel: EntanglementChannel) async throws -> TeleportationResult {
         // Implement quantum teleportation protocol
         let classicalBits = [Bool](repeating: false, count: 2)
-        let fidelity = Double.random(in: 0.95...0.99)
+        let fidelity = Double.random(in: 0.95 ... 0.99)
         let success = fidelity > 0.9
 
         let teleportedQubit = Qubit(
@@ -708,7 +711,7 @@ private extension QuantumEntanglementNetworksV2 {
 
     func calculateNetworkEfficiency() -> Double {
         let totalChannels = activeChannels.count
-        let activeChannelsCount = activeChannels.filter { $0.isActive }.count
+        let activeChannelsCount = activeChannels.filter(\.isActive).count
         return Double(activeChannelsCount) / Double(totalChannels)
     }
 }

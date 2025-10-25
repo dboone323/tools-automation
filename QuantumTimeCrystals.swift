@@ -11,8 +11,8 @@
 //  breaking for advanced temporal quantum computing.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -61,8 +61,8 @@ struct QuantumState: Hashable {
 
     static func == (lhs: QuantumState, rhs: QuantumState) -> Bool {
         lhs.amplitudes == rhs.amplitudes &&
-        lhs.basisStates == rhs.basisStates &&
-        abs(lhs.normalization - rhs.normalization) < 1e-10
+            lhs.basisStates == rhs.basisStates &&
+            abs(lhs.normalization - rhs.normalization) < 1e-10
     }
 }
 
@@ -256,6 +256,7 @@ struct SymmetryBreakingResult {
 @MainActor
 class QuantumTimeCrystals: ObservableObject {
     // MARK: - Properties
+
     @Published var timeCrystalLattice: TimeCrystalLattice
     @Published var temporalOscillations: [TemporalOscillation] = []
     @Published var activeTimeCrystals: [TimeCrystal] = []
@@ -271,6 +272,7 @@ class QuantumTimeCrystals: ObservableObject {
     private let timeEvolutionEngine: TimeEvolutionEngine
 
     // MARK: - Initialization
+
     init() {
         self.timeCrystalLattice = TimeCrystalLattice(sites: [], temporalConnections: [], periodicity: 0, symmetryBreaking: 0)
         self.temporalDynamics = TemporalDynamicsImpl()
@@ -305,13 +307,13 @@ class QuantumTimeCrystals: ObservableObject {
 
         var oscillations: [TemporalOscillation] = []
 
-        for i in 0..<count {
+        for i in 0 ..< count {
             let oscillation = TemporalOscillation(
                 frequency: Double(i + 1) * 0.1,
-                amplitude: Double.random(in: 0.1...1.0),
-                phase: Double.random(in: 0...(2 * .pi)),
-                persistence: Double.random(in: 0.8...1.0),
-                coherence: Double.random(in: 0.9...1.0)
+                amplitude: Double.random(in: 0.1 ... 1.0),
+                phase: Double.random(in: 0 ... (2 * .pi)),
+                persistence: Double.random(in: 0.8 ... 1.0),
+                coherence: Double.random(in: 0.9 ... 1.0)
             )
             oscillations.append(oscillation)
         }
@@ -320,7 +322,7 @@ class QuantumTimeCrystals: ObservableObject {
             temporalOscillations = oscillations
         }
 
-        print("✅ Created \(oscillations.filter { $0.isPersistent }.count) persistent oscillations")
+        print("✅ Created \(oscillations.filter(\.isPersistent).count) persistent oscillations")
         return oscillations
     }
 
@@ -330,7 +332,7 @@ class QuantumTimeCrystals: ObservableObject {
 
         var evolution: [TimeCrystal] = [crystal]
 
-        for step in 1...timeSteps {
+        for step in 1 ... timeSteps {
             let time = Double(step) * 0.1
             let evolvedCrystal = try await timeEvolutionEngine.evolveCrystal(crystal, time: time)
             evolution.append(evolvedCrystal)
@@ -372,16 +374,16 @@ class QuantumTimeCrystals: ObservableObject {
         print("🧪 Adding temporal impurities...")
 
         var impurities: [TemporalImpurity] = []
-        for _ in 0..<impurityCount {
+        for _ in 0 ..< impurityCount {
             let impurity = TemporalImpurity(
                 position: SIMD3(
-                    Double.random(in: 0...Double(lattice.size)),
-                    Double.random(in: 0...Double(lattice.size)),
-                    Double.random(in: 0...Double(lattice.size))
+                    Double.random(in: 0 ... Double(lattice.size)),
+                    Double.random(in: 0 ... Double(lattice.size)),
+                    Double.random(in: 0 ... Double(lattice.size))
                 ),
-                strength: Double.random(in: 0.1...1.0),
-                temporalSignature: Double.random(in: 0...(2 * .pi)),
-                coherenceDisruption: Double.random(in: 0...0.5)
+                strength: Double.random(in: 0.1 ... 1.0),
+                temporalSignature: Double.random(in: 0 ... (2 * .pi)),
+                coherenceDisruption: Double.random(in: 0 ... 0.5)
             )
             impurities.append(impurity)
         }
@@ -399,12 +401,12 @@ class TemporalDynamicsImpl: TemporalDynamics {
     func computeTemporalEvolution(_ state: QuantumState, time: Double) async -> QuantumState {
         // Implement time evolution operator
         // Simplified implementation
-        return state
+        state
     }
 
     func calculatePeriodicity(_ oscillations: [TemporalOscillation]) async -> Double {
         // Calculate average periodicity from oscillations
-        let frequencies = oscillations.map { $0.frequency }
+        let frequencies = oscillations.map(\.frequency)
         let averageFrequency = frequencies.reduce(0, +) / Double(frequencies.count)
         return 2 * .pi / averageFrequency
     }
@@ -412,7 +414,7 @@ class TemporalDynamicsImpl: TemporalDynamics {
     func detectSymmetryBreaking(_ crystal: TimeCrystal) async -> SymmetryBreakingResult {
         // Detect spontaneous symmetry breaking
         let brokenSymmetries = [
-            BrokenSymmetry(symmetryType: .timeTranslation, breakingStrength: crystal.symmetryBreaking, goldstoneBosons: 1)
+            BrokenSymmetry(symmetryType: .timeTranslation, breakingStrength: crystal.symmetryBreaking, goldstoneBosons: 1),
         ]
 
         return SymmetryBreakingResult(
@@ -431,14 +433,14 @@ class CrystalLatticeManagementImpl: CrystalLatticeManagement {
         var connections: [TemporalConnection] = []
 
         // Create lattice sites
-        for x in 0..<size {
-            for y in 0..<size {
-                for z in 0..<dimensions {
+        for x in 0 ..< size {
+            for y in 0 ..< size {
+                for z in 0 ..< dimensions {
                     let position = SIMD3<Double>(Double(x), Double(y), Double(z))
                     let site = LatticeSite(
                         id: "site_\(x)_\(y)_\(z)",
                         position: position,
-                        temporalPhase: Double.random(in: 0...(2 * .pi)),
+                        temporalPhase: Double.random(in: 0 ... (2 * .pi)),
                         occupation: QuantumState(amplitudes: [Complex(1, 0)], basisStates: ["|0⟩"], normalization: 1.0),
                         couplingStrength: 1.0
                     )
@@ -448,13 +450,13 @@ class CrystalLatticeManagementImpl: CrystalLatticeManagement {
         }
 
         // Create connections between neighboring sites
-        for i in 0..<sites.count {
-            for j in (i+1)..<sites.count {
+        for i in 0 ..< sites.count {
+            for j in (i + 1) ..< sites.count {
                 let site1 = sites[i]
                 let site2 = sites[j]
                 let distance = sqrt(pow(site1.position.x - site2.position.x, 2) +
-                                  pow(site1.position.y - site2.position.y, 2) +
-                                  pow(site1.position.z - site2.position.z, 2))
+                    pow(site1.position.y - site2.position.y, 2) +
+                    pow(site1.position.z - site2.position.z, 2))
 
                 if distance < 2.0 { // Connect nearby sites
                     let connection = TemporalConnection(
@@ -502,7 +504,7 @@ class CrystalLatticeManagementImpl: CrystalLatticeManagement {
                 strength: 1.0,
                 range: Double(lattice.size),
                 temporalProfile: [Double](repeating: 1.0, count: 100)
-            )
+            ),
         ]
 
         return StabilizedLattice(
@@ -518,7 +520,7 @@ class TimeEvolutionEngine {
     func evolveCrystal(_ crystal: TimeCrystal, time: Double) async throws -> TimeCrystal {
         // Evolve crystal in time
         // Simplified implementation
-        return crystal
+        crystal
     }
 }
 
@@ -540,7 +542,7 @@ extension QuantumTimeCrystals: TimeCrystalOperation {
 
     func induceTemporalPeriodicity(_ crystal: TimeCrystal, period: Double) async throws -> PeriodicTimeCrystal {
         let harmonicModes = [
-            HarmonicMode(frequency: 2 * .pi / period, amplitude: 1.0, qualityFactor: 100.0, persistenceTime: 1000.0)
+            HarmonicMode(frequency: 2 * .pi / period, amplitude: 1.0, qualityFactor: 100.0, persistenceTime: 1000.0),
         ]
 
         return PeriodicTimeCrystal(
@@ -553,11 +555,11 @@ extension QuantumTimeCrystals: TimeCrystalOperation {
 
     func breakTimeTranslationSymmetry(_ crystal: TimeCrystal) async throws -> BrokenSymmetryCrystal {
         let goldstoneModes = [
-            GoldstoneMode(momentum: SIMD3(0.1, 0.1, 0.1), frequency: 0.01, dispersion: 0.1, lifetime: 100.0)
+            GoldstoneMode(momentum: SIMD3(0.1, 0.1, 0.1), frequency: 0.01, dispersion: 0.1, lifetime: 100.0),
         ]
 
         let brokenSymmetries = [
-            BrokenSymmetry(symmetryType: .timeTranslation, breakingStrength: crystal.symmetryBreaking, goldstoneBosons: 1)
+            BrokenSymmetry(symmetryType: .timeTranslation, breakingStrength: crystal.symmetryBreaking, goldstoneBosons: 1),
         ]
 
         return BrokenSymmetryCrystal(

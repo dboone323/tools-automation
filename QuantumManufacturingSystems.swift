@@ -153,9 +153,9 @@ struct ProductionProcess {
     let id: UUID
     let name: String
     let type: ProcessType
-    let capacity: Double  // units per hour
+    let capacity: Double // units per hour
     let efficiency: Double
-    let cost: Double  // per unit
+    let cost: Double // per unit
     let quality: Double
     let status: ProcessStatus
 
@@ -173,7 +173,7 @@ struct ManufacturingWorkflow {
     let id: UUID
     let name: String
     let processes: [ProductionProcess]
-    let sequence: [UUID]  // Process IDs in order
+    let sequence: [UUID] // Process IDs in order
     let constraints: WorkflowConstraints
     let objectives: WorkflowObjectives
 }
@@ -998,8 +998,7 @@ final class QuantumManufacturingSystemsEngine: QuantumManufacturingSystemsProtoc
         print("✅ Quantum Manufacturing Systems initialized successfully")
     }
 
-    func optimizeProduction(_ optimization: ProductionOptimization) async throws -> ProductionResult
-    {
+    func optimizeProduction(_ optimization: ProductionOptimization) async throws -> ProductionResult {
         print("⚙️ Optimizing production...")
 
         let result = try await productionOptimizer.optimizeManufacturingWorkflows([optimization])
@@ -1226,8 +1225,7 @@ final class SupplyChainCoordinationImpl: SupplyChainCoordinationProtocol {
         return try await inventoryOptimizer.optimize(inventory)
     }
 
-    func coordinateSupplierNetworks(_ networks: SupplierNetwork) async throws -> NetworkCoordination
-    {
+    func coordinateSupplierNetworks(_ networks: SupplierNetwork) async throws -> NetworkCoordination {
         print("Coordinating supplier networks...")
 
         return try await networkCoordinator.coordinate(networks)
@@ -1415,7 +1413,7 @@ final class ManufacturingMetrics {
 
 /// Manufacturing monitoring system
 final class ManufacturingMonitoringSystem {
-    @Published var systemHealth: SystemHealth = SystemHealth()
+    @Published var systemHealth: SystemHealth = .init()
     @Published var activeOperations: [ManufacturingOperation] = []
 
     func startMonitoring() {
@@ -1453,7 +1451,8 @@ final class ProcessAnalyzer {
         let bottlenecks = processes.filter { $0.efficiency < 0.8 }.map {
             ProcessBottleneck(
                 process: $0, impact: 1.0 - $0.efficiency, cause: "Low efficiency",
-                solution: "Optimize process")
+                solution: "Optimize process"
+            )
         }
         return ProcessAnalysis(
             processes: processes,
@@ -1474,7 +1473,7 @@ final class WorkflowOptimizer {
             workflow: workflow,
             optimizedSequence: workflow.sequence,
             efficiency: 0.9,
-            cost: 100000,
+            cost: 100_000,
             quality: 0.95
         )
     }
@@ -1483,7 +1482,7 @@ final class WorkflowOptimizer {
 /// Capacity balancer
 final class CapacityBalancer {
     func balance(_ capacity: ProductionCapacity) async throws -> CapacityBalance {
-        return CapacityBalance(
+        CapacityBalance(
             capacity: capacity,
             balance: capacity.availableCapacity / capacity.totalCapacity,
             recommendations: []
@@ -1494,7 +1493,7 @@ final class CapacityBalancer {
 /// Efficiency maximizer
 final class EfficiencyMaximizer {
     func maximize(_ efficiency: ProductionEfficiency) async throws -> EfficiencyResult {
-        return EfficiencyResult(
+        EfficiencyResult(
             efficiency: efficiency,
             improvements: [],
             targets: []
@@ -1505,7 +1504,7 @@ final class EfficiencyMaximizer {
 /// Chain status monitor
 final class ChainStatusMonitor {
     func monitor(_ chain: SupplyChain) async throws -> ChainStatus {
-        return ChainStatus(
+        ChainStatus(
             chain: chain,
             health: 0.9,
             risks: [],
@@ -1517,7 +1516,7 @@ final class ChainStatusMonitor {
 /// Inventory optimizer
 final class InventoryOptimizer {
     func optimize(_ inventory: InventoryManagement) async throws -> InventoryOptimization {
-        return InventoryOptimization(
+        InventoryOptimization(
             inventory: inventory,
             optimalLevels: [:],
             costSavings: 50000,
@@ -1529,7 +1528,7 @@ final class InventoryOptimizer {
 /// Network coordinator
 final class NetworkCoordinator {
     func coordinate(_ network: SupplierNetwork) async throws -> NetworkCoordination {
-        return NetworkCoordination(
+        NetworkCoordination(
             network: network,
             synergies: [],
             improvements: []
@@ -1540,7 +1539,7 @@ final class NetworkCoordinator {
 /// Fluctuation predictor
 final class FluctuationPredictor {
     func predict(_ fluctuation: DemandFluctuation) async throws -> FluctuationPrediction {
-        return FluctuationPrediction(
+        FluctuationPrediction(
             fluctuation: fluctuation,
             predictions: [],
             confidence: 0.85,
@@ -1552,7 +1551,7 @@ final class FluctuationPredictor {
 /// Product inspector
 final class ProductInspector {
     func inspect(_ products: [ProductBatch]) async throws -> QualityInspection {
-        return QualityInspection(
+        QualityInspection(
             batches: products,
             passRate: 0.98,
             defects: [],
@@ -1564,7 +1563,7 @@ final class ProductInspector {
 /// Defect monitor
 final class DefectMonitor {
     func monitor(_ defects: DefectMonitoring) async throws -> DefectAnalysis {
-        return DefectAnalysis(
+        DefectAnalysis(
             monitoring: defects,
             trends: [],
             causes: [],
@@ -1576,7 +1575,7 @@ final class DefectMonitor {
 /// Assurance implementer
 final class AssuranceImplementer {
     func implement(_ assurance: QualityAssurance) async throws -> AssuranceResult {
-        return AssuranceResult(
+        AssuranceResult(
             assurance: assurance,
             compliance: 0.96,
             effectiveness: 0.9,
@@ -1588,7 +1587,7 @@ final class AssuranceImplementer {
 /// Standards optimizer
 final class StandardsOptimizer {
     func optimize(_ standards: QualityStandards) async throws -> StandardsOptimization {
-        return StandardsOptimization(
+        StandardsOptimization(
             standards: standards,
             optimized: standards.specifications,
             cost: 20000,
@@ -1600,7 +1599,7 @@ final class StandardsOptimizer {
 /// Requirements assessor
 final class RequirementsAssessor {
     func assess(_ requirements: ResourceRequirements) async throws -> RequirementsAssessment {
-        return RequirementsAssessment(
+        RequirementsAssessment(
             requirements: requirements,
             assessment: 0.85,
             gaps: [],
@@ -1612,10 +1611,10 @@ final class RequirementsAssessor {
 /// Allocation optimizer
 final class AllocationOptimizer {
     func optimize(_ allocation: ResourceAllocation) async throws -> AllocationOptimization {
-        return AllocationOptimization(
+        AllocationOptimization(
             allocation: allocation,
             efficiency: 0.88,
-            cost: 150000,
+            cost: 150_000,
             utilization: 0.85
         )
     }
@@ -1624,7 +1623,7 @@ final class AllocationOptimizer {
 /// Utilization manager
 final class UtilizationManager {
     func manage(_ utilization: ResourceUtilization) async throws -> UtilizationManagement {
-        return UtilizationManagement(
+        UtilizationManagement(
             utilization: utilization,
             optimization: 0.9,
             waste: 0.1,
@@ -1636,7 +1635,7 @@ final class UtilizationManager {
 /// Consumption predictor
 final class ConsumptionPredictor {
     func predict(_ consumption: ResourceConsumption) async throws -> ConsumptionPrediction {
-        return ConsumptionPrediction(
+        ConsumptionPrediction(
             consumption: consumption,
             predictions: [],
             accuracy: 0.87,
@@ -1650,7 +1649,7 @@ final class ConsumptionPredictor {
 extension QuantumManufacturingSystemsEngine {
     /// Get manufacturing system statistics
     func getManufacturingStatistics() -> ManufacturingStatistics {
-        return ManufacturingStatistics(
+        ManufacturingStatistics(
             totalProcesses: manufacturingDatabase.processCount,
             totalWorkflows: manufacturingDatabase.workflowCount,
             totalProducts: manufacturingDatabase.productCount,
@@ -1725,19 +1724,24 @@ extension QuantumManufacturingSystemsEngine {
             processes: [
                 ProductionProcess(
                     id: UUID(), name: "Stamping", type: .machining, capacity: 100, efficiency: 0.9,
-                    cost: 50, quality: 0.95, status: .operational),
+                    cost: 50, quality: 0.95, status: .operational
+                ),
                 ProductionProcess(
                     id: UUID(), name: "Welding", type: .assembly, capacity: 80, efficiency: 0.85,
-                    cost: 75, quality: 0.92, status: .operational),
+                    cost: 75, quality: 0.92, status: .operational
+                ),
                 ProductionProcess(
                     id: UUID(), name: "Painting", type: .chemical, capacity: 60, efficiency: 0.88,
-                    cost: 100, quality: 0.96, status: .operational),
+                    cost: 100, quality: 0.96, status: .operational
+                ),
             ],
             sequence: [],
             constraints: WorkflowConstraints(
-                maxCycleTime: 3600, minQuality: 0.9, maxCost: 1000, resourceLimits: [:]),
+                maxCycleTime: 3600, minQuality: 0.9, maxCost: 1000, resourceLimits: [:]
+            ),
             objectives: WorkflowObjectives(
-                throughput: 50, efficiency: 0.9, quality: 0.95, costReduction: 0.1)
+                throughput: 50, efficiency: 0.9, quality: 0.95, costReduction: 0.1
+            )
         )
 
         let productionResult = try await engine.optimizeProduction(workflow)
@@ -1752,7 +1756,8 @@ extension QuantumManufacturingSystemsEngine {
             transportation: [],
             performance: ChainPerformance(
                 onTimeDelivery: 0.95, inventoryTurnover: 8, costEfficiency: 0.85,
-                qualityCompliance: 0.97)
+                qualityCompliance: 0.97
+            )
         )
 
         let coordinationResult = try await engine.coordinateSupplyChain(supplyChain)
@@ -1763,7 +1768,8 @@ extension QuantumManufacturingSystemsEngine {
             id: UUID(),
             product: Product(
                 id: UUID(), name: "Electric Vehicle", type: .finished, specifications: [],
-                billOfMaterials: [:]),
+                billOfMaterials: [:]
+            ),
             quantity: 100,
             productionDate: Date(),
             qualityMetrics: [],
@@ -1777,7 +1783,8 @@ extension QuantumManufacturingSystemsEngine {
         let resourceRequirements = ResourceRequirements(
             process: ProductionProcess(
                 id: UUID(), name: "Assembly", type: .assembly, capacity: 50, efficiency: 0.9,
-                cost: 200, quality: 0.95, status: .operational),
+                cost: 200, quality: 0.95, status: .operational
+            ),
             materials: [:],
             energy: 1000,
             labor: 20,

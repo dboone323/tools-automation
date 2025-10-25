@@ -9,8 +9,8 @@
 // Framework for maintaining quantum state coherence across interdimensional operations
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -581,18 +581,18 @@ class QuantumCoherenceMaintenanceEngine {
                         operator: .lessThan,
                         value: 0.8,
                         dimension: nil
-                    )
+                    ),
                 ],
                 actions: [
                     CoherenceRule.CoherenceAction(
                         type: .stabilize,
                         parameters: ["target": AnyCodable(0.9)],
                         automated: true
-                    )
+                    ),
                 ],
                 priority: 1,
                 threshold: 0.8
-            )
+            ),
         ]
 
         let stabilizationRules = [
@@ -604,7 +604,7 @@ class QuantumCoherenceMaintenanceEngine {
                         type: .coherenceDrop,
                         threshold: 0.85,
                         dimension: nil
-                    )
+                    ),
                 ],
                 methods: [.feedbackControl],
                 successCriteria: [
@@ -612,9 +612,9 @@ class QuantumCoherenceMaintenanceEngine {
                         metric: .coherenceLevel,
                         target: 0.9,
                         tolerance: 0.05
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
 
         let network = QuantumCoherenceNetwork(
@@ -691,7 +691,7 @@ class QuantumCoherenceMaintenanceEngine {
                         type: .energyIncrease,
                         severity: 0.1,
                         description: "Increased energy consumption for error correction"
-                    )
+                    ),
                 ]
             )
         } else {
@@ -708,7 +708,7 @@ class QuantumCoherenceMaintenanceEngine {
     // MARK: - Health Monitoring
 
     func monitorQuantumHealth() async -> QuantumHealthReport {
-        var coherenceHealth: Double = 0.0
+        var coherenceHealth = 0.0
         var alerts: [QuantumAlert] = []
 
         // Monitor each quantum state
@@ -805,7 +805,7 @@ class CoherenceControllerImpl: CoherenceController {
                 qubits: [0],
                 duration: 0.0001,
                 fidelity: 0.99
-            )
+            ),
         ]
 
         let metadata = QuantumState.QuantumMetadata(
@@ -869,7 +869,7 @@ class CoherenceControllerImpl: CoherenceController {
 
     func splitQuantumState(_ state: QuantumState, into dimensions: [Int]) async throws -> [QuantumState] {
         // Simplified quantum state splitting
-        return dimensions.map { dimension in
+        dimensions.map { dimension in
             QuantumState(
                 id: "\(state.id)_split_\(dimension)",
                 dimension: dimension,
@@ -894,7 +894,7 @@ class CoherenceControllerImpl: CoherenceController {
                 type: .lowCoherence,
                 description: "Quantum coherence below acceptable threshold",
                 severity: .high
-            )
+            ),
         ]
 
         return CoherenceValidation(
@@ -922,7 +922,7 @@ class DecoherencePreventerImpl: DecoherencePreventer {
                     type: .thermalNoise,
                     probability: 0.6,
                     description: "Thermal fluctuations causing decoherence"
-                )
+                ),
             ],
             confidence: 0.8
         )
@@ -941,13 +941,13 @@ class DecoherencePreventerImpl: DecoherencePreventer {
 
     func monitorDecoherenceRate(_ quantumState: QuantumState) async -> DecoherenceRate {
         // Simplified rate monitoring
-        return DecoherenceRate(
+        DecoherenceRate(
             rate: quantumState.decoherenceRate,
             trend: .stable,
             components: [
                 DecoherenceRate.RateComponent(type: .t1, rate: 0.001, contribution: 0.4),
                 DecoherenceRate.RateComponent(type: .t2, rate: 0.002, contribution: 0.4),
-                DecoherenceRate.RateComponent(type: .tPhi, rate: 0.001, contribution: 0.2)
+                DecoherenceRate.RateComponent(type: .tPhi, rate: 0.001, contribution: 0.2),
             ],
             lastMeasurement: Date()
         )
@@ -972,7 +972,7 @@ class DecoherencePreventerImpl: DecoherencePreventer {
 
     func stabilizeQuantumEnvironment(_ quantumState: QuantumState) async -> EnvironmentStabilization {
         // Simplified environment stabilization
-        return EnvironmentStabilization(
+        EnvironmentStabilization(
             stabilizationApplied: true,
             parameters: ["temperature": 0.005, "magnetic_field": 0.0],
             effectiveness: 0.85,
@@ -1018,7 +1018,7 @@ class CoherenceStabilizerImpl: CoherenceStabilizer {
 
     func maintainPhaseLocking(_ states: [QuantumState]) async -> PhaseLockingResult {
         // Simplified phase locking
-        return PhaseLockingResult(
+        PhaseLockingResult(
             phaseLockAchieved: true,
             lockedStates: states,
             phaseDifference: 0.01,
@@ -1029,7 +1029,7 @@ class CoherenceStabilizerImpl: CoherenceStabilizer {
 
     func implementCoherenceProtection(_ quantumState: QuantumState) async -> ProtectionResult {
         // Simplified protection implementation
-        return ProtectionResult(
+        ProtectionResult(
             protectionActive: true,
             protectionLevel: 0.9,
             coverage: 0.95,
@@ -1057,7 +1057,7 @@ class CoherenceStabilizerImpl: CoherenceStabilizer {
 class QuantumMonitorImpl: QuantumMonitor {
     func monitorQuantumCoherence(_ quantumState: QuantumState) async -> CoherenceMetrics {
         // Simplified coherence monitoring
-        return CoherenceMetrics(
+        CoherenceMetrics(
             coherenceLevel: quantumState.coherenceLevel,
             coherenceTime: 1.0 / quantumState.decoherenceRate,
             fidelity: 0.95,
@@ -1069,7 +1069,7 @@ class QuantumMonitorImpl: QuantumMonitor {
 
     func detectQuantumAnomalies(_ quantumState: QuantumState) async -> QuantumAnomalies {
         // Simplified anomaly detection
-        let anomalyCount = Int.random(in: 0...1)
+        let anomalyCount = Int.random(in: 0 ... 1)
         var anomalies: [QuantumAnomalies.QuantumAnomaly] = []
 
         if anomalyCount > 0 {
@@ -1094,7 +1094,7 @@ class QuantumMonitorImpl: QuantumMonitor {
 
     func measureQuantumPerformance(_ quantumState: QuantumState) async -> QuantumPerformance {
         // Simplified performance measurement
-        return QuantumPerformance(
+        QuantumPerformance(
             gateFidelity: 0.99,
             measurementFidelity: 0.98,
             coherenceTime: 1.0 / quantumState.decoherenceRate,
@@ -1103,7 +1103,7 @@ class QuantumMonitorImpl: QuantumMonitor {
             performanceMetrics: [
                 "gate_time": 0.0001,
                 "measurement_time": 0.001,
-                "reset_time": 0.01
+                "reset_time": 0.01,
             ]
         )
     }
@@ -1194,15 +1194,15 @@ enum QuantumCoherenceError: Error {
 
 extension QuantumState {
     var isCoherent: Bool {
-        return coherenceLevel > 0.8
+        coherenceLevel > 0.8
     }
 
     var coherenceAge: TimeInterval {
-        return Date().timeIntervalSince(lastMeasurement)
+        Date().timeIntervalSince(lastMeasurement)
     }
 
     var needsStabilization: Bool {
-        return coherenceLevel < 0.85 || stabilityIndex < 0.8
+        coherenceLevel < 0.85 || stabilityIndex < 0.8
     }
 }
 

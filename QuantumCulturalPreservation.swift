@@ -6,8 +6,8 @@
 //  Copyright © 2025 Daniel Boone. All rights reserved.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -673,9 +673,11 @@ struct CulturalDocument {
 }
 
 // MARK: - Heritage Item
+
 typealias HeritageItem = DigitalArtifact
 
 // MARK: - Knowledge Update
+
 struct KnowledgeUpdate {
     let knowledgeId: UUID
     let changes: [KnowledgeChange]
@@ -965,42 +967,42 @@ final class DigitalHeritageProtectionImpl: DigitalHeritageProtectionProtocol {
 
     private func initializeSystems() {
         // Initialize quantum storage systems
-        storageSystems = (0..<3).map { _ in QuantumStorageSystem() }
+        storageSystems = (0 ..< 3).map { _ in QuantumStorageSystem() }
 
         // Initialize restoration engines
         restorationEngines = [
             DataRestorationEngine(),
             MediaRestorationEngine(),
-            DocumentRestorationEngine()
+            DocumentRestorationEngine(),
         ]
 
         // Initialize authenticity verifiers
         authenticityVerifiers = [
             BlockchainVerifier(),
             QuantumSignatureVerifier(),
-            CulturalExpertVerifier()
+            CulturalExpertVerifier(),
         ]
     }
 
     private func selectStorageSystem(for artifact: DigitalArtifact) async throws -> QuantumStorageSystem {
         // Select appropriate storage system based on artifact type and preservation level
-        return storageSystems.first!
+        storageSystems.first!
     }
 
     private func selectRestorationEngine(for damageType: DamagedHeritage.DamageType) async throws -> RestorationEngine {
         // Select appropriate restoration engine based on damage type
-        return restorationEngines.first!
+        restorationEngines.first!
     }
 
     private func selectAuthenticityVerifier(for item: HeritageItem) async throws -> AuthenticityVerifier {
         // Select appropriate verifier based on item type
-        return authenticityVerifiers.first!
+        authenticityVerifiers.first!
     }
 
     private func distributeData(_ data: CulturalData, to systems: [QuantumStorageSystem]) async throws -> (primary: String, backups: [String]) {
         // Distribute data across storage systems
         let primary = "quantum://storage/primary/\(UUID())"
-        let backups = (0..<2).map { "quantum://storage/backup/\($0)/\(UUID())" }
+        let backups = (0 ..< 2).map { "quantum://storage/backup/\($0)/\(UUID())" }
         return (primary, backups)
     }
 }
@@ -1084,7 +1086,7 @@ final class CulturalKnowledgeSystemImpl: CulturalKnowledgeSystemProtocol {
         knowledgeNetworks = [
             QuantumKnowledgeNetwork(),
             CulturalHeritageNetwork(),
-            GlobalKnowledgeExchange()
+            GlobalKnowledgeExchange(),
         ]
     }
 }
@@ -1300,8 +1302,8 @@ final class CulturalDatabase {
 
 /// Cultural monitoring system
 final class CulturalMonitoringSystem {
-    @Published var culturalHealth: CulturalHealth = CulturalHealth()
-    @Published var preservationStatus: PreservationStatus = PreservationStatus(level: .basic, integrity: 1.0, accessibility: 1.0, lastVerified: Date())
+    @Published var culturalHealth: CulturalHealth = .init()
+    @Published var preservationStatus: PreservationStatus = .init(level: .basic, integrity: 1.0, accessibility: 1.0, lastVerified: Date())
 
     func startMonitoring() {
         print("Started cultural monitoring system")
@@ -1319,6 +1321,7 @@ struct CulturalHealth {
 }
 
 // MARK: - Quantum Storage System
+
 final class QuantumStorageSystem {
     func store(_ data: Data) async throws -> Data {
         // Simulate quantum storage
@@ -1328,6 +1331,7 @@ final class QuantumStorageSystem {
 }
 
 // MARK: - Restoration Engines
+
 protocol RestorationEngine {
     func restore(_ damaged: DamagedHeritage) async throws -> Data?
 }
@@ -1354,6 +1358,7 @@ final class DocumentRestorationEngine: RestorationEngine {
 }
 
 // MARK: - Authenticity Verifiers
+
 protocol AuthenticityVerifier {
     func verify(_ item: HeritageItem) async throws -> VerificationResult
 }
@@ -1385,9 +1390,11 @@ final class CulturalExpertVerifier: AuthenticityVerifier {
 }
 
 // MARK: - Cultural Data
+
 typealias CulturalData = Data
 
 // MARK: - Knowledge Database
+
 final class KnowledgeDatabase {
     private var storage: [UUID: CulturalKnowledge] = [:]
 
@@ -1398,7 +1405,7 @@ final class KnowledgeDatabase {
 
     func search(_ query: KnowledgeQuery) async throws -> CulturalKnowledge? {
         // Simple search implementation
-        return storage.values.first
+        storage.values.first
     }
 
     func update(_ update: KnowledgeUpdate) async throws -> CulturalKnowledge? {
@@ -1410,13 +1417,14 @@ final class KnowledgeDatabase {
 }
 
 // MARK: - AI Reasoning Engine
+
 final class AIReasoningEngine {
     func indexKnowledge(_ knowledge: CulturalKnowledge) async throws {
         print("Indexing knowledge for AI reasoning")
     }
 
     func reasonAbout(_ knowledge: CulturalKnowledge?, query: KnowledgeQuery) async throws -> ReasoningResult {
-        return ReasoningResult(relevance: 0.9, confidence: 0.85)
+        ReasoningResult(relevance: 0.9, confidence: 0.85)
     }
 
     func reindexKnowledge(_ knowledge: CulturalKnowledge) async throws {
@@ -1430,6 +1438,7 @@ struct ReasoningResult {
 }
 
 // MARK: - Knowledge Networks
+
 protocol KnowledgeNetwork {
     func canConnect(to system: KnowledgeSystem) -> Bool
     func share(_ knowledge: CulturalKnowledge, to system: KnowledgeSystem) async throws
@@ -1437,7 +1446,7 @@ protocol KnowledgeNetwork {
 
 final class QuantumKnowledgeNetwork: KnowledgeNetwork {
     func canConnect(to system: KnowledgeSystem) -> Bool {
-        return true // Simplified
+        true // Simplified
     }
 
     func share(_ knowledge: CulturalKnowledge, to system: KnowledgeSystem) async throws {
@@ -1447,7 +1456,7 @@ final class QuantumKnowledgeNetwork: KnowledgeNetwork {
 
 final class CulturalHeritageNetwork: KnowledgeNetwork {
     func canConnect(to system: KnowledgeSystem) -> Bool {
-        return system.type == .database
+        system.type == .database
     }
 
     func share(_ knowledge: CulturalKnowledge, to system: KnowledgeSystem) async throws {
@@ -1457,7 +1466,7 @@ final class CulturalHeritageNetwork: KnowledgeNetwork {
 
 final class GlobalKnowledgeExchange: KnowledgeNetwork {
     func canConnect(to system: KnowledgeSystem) -> Bool {
-        return true
+        true
     }
 
     func share(_ knowledge: CulturalKnowledge, to system: KnowledgeSystem) async throws {
@@ -1466,6 +1475,7 @@ final class GlobalKnowledgeExchange: KnowledgeNetwork {
 }
 
 // MARK: - AI Art Generator
+
 final class AIArtGenerator {
     func generate(_ parameters: ArtParameters) async throws -> Artwork {
         print("Generating AI artwork")
@@ -1488,9 +1498,10 @@ final class AIArtGenerator {
 }
 
 // MARK: - Style Analyzer
+
 final class StyleAnalyzer {
     func analyze(_ artwork: Artwork) async throws -> StyleAnalysis {
-        return StyleAnalysis(
+        StyleAnalysis(
             primaryStyle: artwork.parameters.style,
             influences: ["Digital Art", "Cultural Heritage"],
             techniques: ["AI Generation", "Quantum Processing"],
@@ -1501,6 +1512,7 @@ final class StyleAnalyzer {
 }
 
 // MARK: - Cultural Art Engine
+
 final class CulturalArtEngine {
     func create(_ tradition: CulturalTradition, parameters: ArtParameters) async throws -> CulturalArtwork {
         print("Creating cultural artwork")
@@ -1523,6 +1535,7 @@ final class CulturalArtEngine {
 }
 
 // MARK: - Innovation Engine
+
 final class InnovationEngine {
     func innovate(_ baseArt: Artwork, parameters: InnovationParameters) async throws -> InnovativeArtwork {
         print("Innovating artistic techniques")
@@ -1531,6 +1544,7 @@ final class InnovationEngine {
 }
 
 // MARK: - Tradition Database
+
 final class TraditionDatabase {
     private var traditions: [UUID: CulturalTradition] = [:]
 
@@ -1541,23 +1555,25 @@ final class TraditionDatabase {
 }
 
 // MARK: - Adaptation Engine
+
 final class AdaptationEngine {
     func generateAdaptations(_ tradition: CulturalTradition, context: ModernContext) async throws -> [Adaptation] {
-        return [
+        [
             Adaptation(
                 type: .technological,
                 description: "Integrate digital elements",
                 impact: 0.7,
                 acceptance: 0.8
-            )
+            ),
         ]
     }
 }
 
 // MARK: - Teaching System
+
 final class TeachingSystem {
     func teach(_ tradition: CulturalTradition, to generation: Generation) async throws -> TeachingResult {
-        return TeachingResult(
+        TeachingResult(
             students: [],
             learningOutcomes: [],
             engagementLevel: 0.85,
@@ -1567,9 +1583,10 @@ final class TeachingSystem {
 }
 
 // MARK: - Documentation Engine
+
 final class DocumentationEngine {
     func document(_ practice: TraditionalPractice) async throws -> CulturalDocument {
-        return CulturalDocument(
+        CulturalDocument(
             id: UUID(),
             tradition: CulturalTradition(
                 id: UUID(),
@@ -1593,7 +1610,7 @@ final class DocumentationEngine {
 extension QuantumCulturalPreservationEngine {
     /// Get cultural preservation statistics
     func getPreservationStatistics() -> PreservationStatistics {
-        return PreservationStatistics(
+        PreservationStatistics(
             totalHeritageItems: culturalDatabase.heritageCount,
             totalKnowledgeEntries: culturalDatabase.knowledgeCount,
             totalArtworks: culturalDatabase.artworkCount,
@@ -1674,7 +1691,7 @@ extension QuantumCulturalPreservationEngine {
                 size: 1000,
                 checksum: "sample-checksum"
             ),
-            creationDate: Date().addingTimeInterval(-1000000000), // ~30 years ago
+            creationDate: Date().addingTimeInterval(-1_000_000_000), // ~30 years ago
             culturalContext: CulturalContext(
                 originCulture: "Ancient Civilization",
                 region: "Ancient World",

@@ -9,8 +9,8 @@
 // Framework for multi-dimensional data replication and conflict resolution in distributed interdimensional systems
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -100,7 +100,7 @@ struct DistributedNode: Identifiable, Hashable {
     }
 
     static func == (lhs: DistributedNode, rhs: DistributedNode) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 }
 
@@ -764,17 +764,17 @@ class DistributedSystemsEngine {
 
     private func calculateNetworkHealth() -> Double {
         // Simplified calculation
-        return 0.95
+        0.95
     }
 
     private func calculateDataConsistency() -> Double {
         // Simplified calculation
-        return 0.98
+        0.98
     }
 
     private func calculateFaultTolerance() -> Double {
         // Simplified calculation
-        return 0.92
+        0.92
     }
 
     // MARK: - Private Methods
@@ -824,7 +824,7 @@ class DistributedNodeManagerImpl: DistributedNodeManager {
 
     func discoverNodes() async -> [DistributedNode] {
         // Simplified discovery - return active nodes
-        return activeNodes
+        activeNodes
     }
 
     func loadBalance(nodes: [DistributedNode]) async -> LoadBalancingResult {
@@ -847,7 +847,7 @@ class DistributedNodeManagerImpl: DistributedNodeManager {
 
         for node in activeNodes {
             // Simulate health check
-            let healthScore = Double.random(in: 0.7...1.0)
+            let healthScore = Double.random(in: 0.7 ... 1.0)
             var issues: [NodeHealthStatus.HealthIssue] = []
 
             if healthScore < 0.8 {
@@ -914,7 +914,7 @@ class DataReplicationEngineImpl: DataReplicationEngine {
 
     func synchronizeReplicas(_ replicas: [DataReplica]) async throws -> SynchronizationResult {
         // Simplified synchronization
-        return SynchronizationResult(
+        SynchronizationResult(
             success: true,
             synchronizedDataId: replicas.first?.originalDataId ?? "",
             affectedDimensions: [],
@@ -933,7 +933,7 @@ class DataReplicationEngineImpl: DataReplicationEngine {
 
     func handleReplicationConflict(_ conflict: ReplicationConflict) async throws -> ConflictResolutionResult {
         // Simplified conflict resolution
-        return ConflictResolutionResult(
+        ConflictResolutionResult(
             resolved: true,
             resolutionStrategy: .lastWriteWins,
             resolvedData: nil,
@@ -944,7 +944,7 @@ class DataReplicationEngineImpl: DataReplicationEngine {
 
     func optimizeReplicationTopology(_ topology: ReplicationTopology) async -> TopologyOptimizationResult {
         // Simplified optimization
-        return TopologyOptimizationResult(
+        TopologyOptimizationResult(
             optimizedTopology: topology,
             performanceImprovement: 0.1,
             reliabilityImprovement: 0.05,
@@ -959,7 +959,7 @@ class RaftConsensusAlgorithm: ConsensusAlgorithm {
     let consensusType: ConsensusType = .raft
 
     func proposeValue(_ value: ConsensusValue, proposer: DistributedNode) async throws -> ConsensusProposal {
-        return ConsensusProposal(
+        ConsensusProposal(
             id: "proposal_\(UUID().uuidString.prefix(8))",
             proposerId: proposer.id,
             value: value,
@@ -970,7 +970,7 @@ class RaftConsensusAlgorithm: ConsensusAlgorithm {
 
     func voteOnProposal(_ proposal: ConsensusProposal, voter: DistributedNode) async -> Vote {
         // Simplified voting - always accept for now
-        return Vote(
+        Vote(
             voterId: voter.id,
             proposalId: proposal.id,
             decision: .accept,
@@ -995,9 +995,9 @@ class RaftConsensusAlgorithm: ConsensusAlgorithm {
 
     func handlePartition(_ partitions: [NetworkPartition]) async throws -> PartitionRecoveryResult {
         // Simplified partition handling
-        return PartitionRecoveryResult(
+        PartitionRecoveryResult(
             recovered: true,
-            mergedPartitions: partitions.map { $0.partitionId },
+            mergedPartitions: partitions.map(\.partitionId),
             dataSynchronized: true,
             recoveryTime: 1.0,
             lostData: []
@@ -1009,7 +1009,7 @@ class RaftConsensusAlgorithm: ConsensusAlgorithm {
 class FaultToleranceSystemImpl: FaultToleranceSystem {
     func detectFailure(_ node: DistributedNode) async -> FailureDetectionResult {
         // Simplified failure detection
-        return FailureDetectionResult(
+        FailureDetectionResult(
             nodeId: node.id,
             failureType: .crash,
             confidence: 0.95,
@@ -1050,7 +1050,7 @@ class FaultToleranceSystemImpl: FaultToleranceSystem {
 
     func simulateFailureScenarios() async -> FailureSimulationResult {
         // Simplified failure simulation
-        return FailureSimulationResult(
+        FailureSimulationResult(
             scenariosTested: 10,
             systemResilience: 0.85,
             recoveryTimeAverage: 0.3,
@@ -1068,12 +1068,12 @@ extension DistributedSystemsEngine: DistributedSystemsArchitecture {
 
 // MARK: - Utility Extensions
 
-extension Array where Element == DistributedNode {
+extension [DistributedNode] {
     func sortedByLoad() -> [DistributedNode] {
-        return self.sorted { $0.loadFactor < $1.loadFactor }
+        self.sorted { $0.loadFactor < $1.loadFactor }
     }
 
     func withCapability(_ capability: KeyPath<DistributedNode.NodeCapabilities, Bool>) -> [DistributedNode] {
-        return self.filter { $0.capabilities[keyPath: capability] }
+        self.filter { $0.capabilities[keyPath: capability] }
     }
 }

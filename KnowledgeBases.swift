@@ -9,8 +9,8 @@
 // Framework for foundational knowledge repositories with advanced storage and retrieval
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1156,11 +1156,11 @@ class KnowledgeBasesEngine {
             StorageCapability(
                 capabilityId: "storage_\(UUID().uuidString.prefix(8))",
                 type: .distributed,
-                capacity: 1000000000, // 1GB
+                capacity: 1_000_000_000, // 1GB
                 performance: 0.9,
                 reliability: 0.95,
                 domainType: domain
-            )
+            ),
         ]
 
         let indexingCapabilities = [
@@ -1171,7 +1171,7 @@ class KnowledgeBasesEngine {
                 accuracy: 0.9,
                 coverage: 0.95,
                 domainType: domain
-            )
+            ),
         ]
 
         let retrievalCapabilities = [
@@ -1182,18 +1182,18 @@ class KnowledgeBasesEngine {
                 precision: 0.88,
                 recall: 0.92,
                 domainType: domain
-            )
+            ),
         ]
 
         let archivalCapabilities = [
             ArchivalCapability(
                 capabilityId: "archival_\(UUID().uuidString.prefix(8))",
                 type: .cold,
-                retentionPeriod: 31536000, // 1 year
+                retentionPeriod: 31_536_000, // 1 year
                 compressionRatio: 0.7,
                 accessSpeed: 0.6,
                 domainType: domain
-            )
+            ),
         ]
 
         let system = KnowledgeBaseSystem(
@@ -1243,7 +1243,7 @@ class KnowledgeBasesEngine {
                 ),
                 index: StoredKnowledge.KnowledgeIndex(
                     indexId: "index_\(UUID().uuidString.prefix(8))",
-                    terms: indexing.indexStructure.entries.map { $0.term },
+                    terms: indexing.indexStructure.entries.map(\.term),
                     vectors: [],
                     relationships: [],
                     categories: []
@@ -1438,7 +1438,7 @@ class KnowledgeRepositoryImpl: KnowledgeRepository {
 
     func updateKnowledge(_ knowledge: Knowledge, domain: KnowledgeDomainType) async throws -> KnowledgeUpdate {
         // Simplified knowledge update
-        return KnowledgeUpdate(
+        KnowledgeUpdate(
             updateId: "update_\(UUID().uuidString.prefix(8))",
             knowledgeId: knowledge.id,
             domainType: domain,
@@ -1458,7 +1458,7 @@ class KnowledgeRepositoryImpl: KnowledgeRepository {
     func deleteKnowledge(id: String, domain: KnowledgeDomainType) async throws -> KnowledgeDeletion {
         // Simplified knowledge deletion - would need actual knowledge object
         let dummyKnowledge = Knowledge(id: id, content: "Deleted content", type: .fact, domain: domain, metadata: KnowledgeMetadata(created: Date(), author: "Unknown", version: "1.0", tags: [], references: []))
-        
+
         return KnowledgeDeletion(
             deletionId: "deletion_\(UUID().uuidString.prefix(8))",
             knowledgeId: id,
@@ -1480,7 +1480,7 @@ class KnowledgeRepositoryImpl: KnowledgeRepository {
             locationId: "archive_location_\(UUID().uuidString.prefix(8))",
             type: .coldStorage,
             path: "/archive/\(domain.rawValue)",
-            retentionPeriod: 31536000
+            retentionPeriod: 31_536_000
         )
 
         return KnowledgeArchival(
@@ -1534,7 +1534,7 @@ class KnowledgeRepositoryImpl: KnowledgeRepository {
                 type: .deduplication,
                 improvement: 0.2,
                 description: "Reduced storage through deduplication"
-            )
+            ),
         ]
 
         let optimizedStorage = KnowledgeStorage(
@@ -1584,7 +1584,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     accessPattern: .direct,
                     userContext: query.context.userId
                 )
-            )
+            ),
         ]
 
         return KnowledgeRetrieval(
@@ -1614,7 +1614,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                         type: .ranking,
                         duration: 2.0,
                         resultsCount: dummyResults.count
-                    )
+                    ),
                 ]
             ),
             retrievalTime: 10.0
@@ -1634,7 +1634,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     context: "Context around match",
                     confidence: 0.9
                 )
-            )
+            ),
         ]
 
         return KnowledgeSearch(
@@ -1664,7 +1664,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     popularity: 0.8,
                     lastUpdated: Date()
                 )
-            )
+            ),
         ]
 
         return KnowledgeBrowsing(
@@ -1690,7 +1690,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                 knowledge: Knowledge(id: "knowledge_1", content: "Recommended knowledge", type: .fact, domain: domain, metadata: KnowledgeMetadata(created: Date(), author: "System", version: "1.0", tags: [], references: [])),
                 recommendationScore: 0.9,
                 recommendationReason: .relevance
-            )
+            ),
         ]
 
         return KnowledgeRecommendation(
@@ -1803,7 +1803,7 @@ class KnowledgeIndexerImpl: KnowledgeIndexer {
                 type: .caching,
                 improvement: 0.3,
                 description: "Added index caching for faster access"
-            )
+            ),
         ]
 
         let optimizedIndexing = KnowledgeIndexing(
@@ -1839,7 +1839,7 @@ class KnowledgeIndexerImpl: KnowledgeIndexer {
                 knowledgeIds: ["knowledge_1", "knowledge_2"],
                 score: 0.9,
                 context: "Search context"
-            )
+            ),
         ]
 
         return IndexSearch(
@@ -1865,7 +1865,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
             locationId: "archive_location_\(UUID().uuidString.prefix(8))",
             type: .coldStorage,
             path: "/archive/\(domain.rawValue)",
-            retentionPeriod: 31536000
+            retentionPeriod: 31_536_000
         )
 
         return KnowledgeArchival(
@@ -1896,7 +1896,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                     compressionRatio: 0.7,
                     integrityVerified: true
                 )
-            )
+            ),
         ]
 
         return ArchiveRetrieval(
@@ -1927,7 +1927,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                         locationId: "location_1",
                         type: .coldStorage,
                         path: "/archive",
-                        retentionPeriod: 31536000
+                        retentionPeriod: 31_536_000
                     ),
                     archivalMetadata: KnowledgeArchival.ArchivalMetadata(
                         archivedAt: Date(),
@@ -1938,9 +1938,9 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                     )
                 ),
                 currentPhase: .cold,
-                nextTransition: Date().addingTimeInterval(31536000),
+                nextTransition: Date().addingTimeInterval(31_536_000),
                 retentionStatus: .retain
-            )
+            ),
         ]
 
         let actions = [
@@ -1950,7 +1950,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                 archiveId: "archive_1",
                 executedAt: Date(),
                 result: .success
-            )
+            ),
         ]
 
         return ArchiveLifecycleManagement(
@@ -1974,7 +1974,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                     locationId: "location_1",
                     type: .coldStorage,
                     path: "/archive",
-                    retentionPeriod: 31536000
+                    retentionPeriod: 31_536_000
                 ),
                 archivalMetadata: KnowledgeArchival.ArchivalMetadata(
                     archivedAt: Date(),
@@ -1983,7 +1983,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                     retentionPolicy: "1 year",
                     migrationHistory: []
                 )
-            )
+            ),
         ]
 
         let optimizations = [
@@ -1998,7 +1998,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                 type: .deduplication,
                 improvement: 0.2,
                 description: "Reduced archive size through deduplication"
-            )
+            ),
         ]
 
         let optimizedArchives = dummyArchives.map { archive in
@@ -2055,27 +2055,27 @@ extension KnowledgeBaseSystem {
     }
 
     var needsOptimization: Bool {
-        return status == .operational && systemEfficiency < 0.8
+        status == .operational && systemEfficiency < 0.8
     }
 }
 
 extension KnowledgeStorageResult {
     var storageQuality: Double {
-        return (storageMetrics.compressionRatio + storageMetrics.storageEfficiency) / 2.0
+        (storageMetrics.compressionRatio + storageMetrics.storageEfficiency) / 2.0
     }
 
     var isHighQuality: Bool {
-        return storageQuality > 0.75 && success
+        storageQuality > 0.75 && success
     }
 }
 
 extension KnowledgeRetrievalResult {
     var retrievalQuality: Double {
-        return (retrievalMetrics.precision + retrievalMetrics.recall + retrievalMetrics.relevanceScore) / 3.0
+        (retrievalMetrics.precision + retrievalMetrics.recall + retrievalMetrics.relevanceScore) / 3.0
     }
 
     var isHighQuality: Bool {
-        return retrievalQuality > 0.8 && success
+        retrievalQuality > 0.8 && success
     }
 }
 

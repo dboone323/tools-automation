@@ -1,5 +1,5 @@
-import XCTest
 @testable import Calculator
+import XCTest
 
 class CalculatorTests: XCTestCase {
     var calculator: Calculator!

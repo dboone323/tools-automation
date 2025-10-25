@@ -9,8 +9,8 @@
 // Framework for organizing knowledge into specialized domains
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1088,7 +1088,7 @@ class KnowledgeDomainsEngine {
                 domainType: domain,
                 prerequisites: [],
                 effectiveness: 0.92
-            )
+            ),
         ]
 
         let domainStructure = DomainStructure(
@@ -1113,7 +1113,7 @@ class KnowledgeDomainsEngine {
                         name: "Advanced",
                         depth: 3,
                         scope: "Specialized and cutting-edge knowledge"
-                    )
+                    ),
                 ],
                 connections: []
             ),
@@ -1394,7 +1394,7 @@ class DomainOrganizerImpl: DomainOrganizer {
                 knowledgeItems: knowledge,
                 subcategories: [],
                 significance: 0.9
-            )
+            ),
         ]
 
         return KnowledgeCategorization(
@@ -1409,7 +1409,7 @@ class DomainOrganizerImpl: DomainOrganizer {
 
     func structureDomainKnowledge(_ knowledge: [Knowledge], domainType: KnowledgeDomainType) async -> DomainKnowledgeStructure {
         // Simplified domain knowledge structuring - implementation already in main method
-        return DomainKnowledgeStructure(
+        DomainKnowledgeStructure(
             structureId: "structure_\(UUID().uuidString.prefix(8))",
             domainType: domainType,
             foundation: DomainKnowledgeStructure.KnowledgeFoundation(
@@ -1456,7 +1456,7 @@ class DomainOrganizerImpl: DomainOrganizer {
                 type: .efficiency,
                 factor: 1.3,
                 description: "Enhanced organization efficiency"
-            )
+            ),
         ]
 
         let optimizedOrganization = DomainOrganization(
@@ -1504,7 +1504,7 @@ class DomainOrganizerImpl: DomainOrganizer {
                     type: .optimize,
                     description: "Optimize domain organization structure",
                     priority: 0.7
-                )
+                ),
             ]
         )
     }
@@ -1514,7 +1514,7 @@ class DomainOrganizerImpl: DomainOrganizer {
 class DomainSpecialistImpl: DomainSpecialist {
     func specializeDomainKnowledge(_ domainKnowledge: DomainKnowledge) async -> DomainSpecialization {
         // Simplified domain specialization
-        return DomainSpecialization(
+        DomainSpecialization(
             specializationId: "specialization_\(UUID().uuidString.prefix(8))",
             domainType: domainKnowledge.domainType,
             knowledge: domainKnowledge.knowledge,
@@ -1543,7 +1543,7 @@ class DomainSpecialistImpl: DomainSpecialist {
 
     func developDomainExpertise(_ knowledge: [Knowledge], domainType: KnowledgeDomainType) async -> DomainExpertiseDevelopment {
         // Simplified expertise development
-        return DomainExpertiseDevelopment(
+        DomainExpertiseDevelopment(
             developmentId: "development_\(UUID().uuidString.prefix(8))",
             domainType: domainType,
             knowledge: knowledge,
@@ -1580,7 +1580,7 @@ class DomainSpecialistImpl: DomainSpecialist {
                 improvement: 0.2,
                 method: "Practice",
                 duration: 1800.0
-            )
+            ),
         ]
 
         let enhancedSpecialization = DomainSpecialization(
@@ -1729,7 +1729,7 @@ class DomainCoordinatorImpl: DomainCoordinator {
                 type: .harmony,
                 factor: 1.2,
                 description: "Enhanced domain harmony"
-            )
+            ),
         ]
 
         let optimizedCoordination = DomainCoordination(
@@ -1774,7 +1774,7 @@ class DomainValidatorImpl: DomainValidator {
 
     func assessDomainQuality(_ domain: KnowledgeDomainType, knowledge: [Knowledge]) async -> DomainQualityAssessment {
         // Simplified quality assessment
-        return DomainQualityAssessment(
+        DomainQualityAssessment(
             assessmentId: "assessment_\(UUID().uuidString.prefix(8))",
             domain: domain,
             knowledge: knowledge,
@@ -1797,7 +1797,7 @@ class DomainValidatorImpl: DomainValidator {
 
     func verifyDomainConsistency(_ domainKnowledge: DomainKnowledge) async -> DomainConsistencyVerification {
         // Simplified consistency verification
-        return DomainConsistencyVerification(
+        DomainConsistencyVerification(
             verificationId: "consistency_\(domainKnowledge.domainId)",
             domainKnowledge: domainKnowledge,
             isConsistent: true,
@@ -1809,7 +1809,7 @@ class DomainValidatorImpl: DomainValidator {
 
     func certifyDomainExpertise(_ specialization: DomainSpecialization) async -> DomainExpertiseCertification {
         // Simplified expertise certification
-        return DomainExpertiseCertification(
+        DomainExpertiseCertification(
             certificationId: "certification_\(specialization.specializationId)",
             specialization: specialization,
             certificationLevel: .intermediate,
@@ -1819,7 +1819,7 @@ class DomainValidatorImpl: DomainValidator {
                     type: .knowledge,
                     description: "Domain knowledge requirement",
                     fulfilled: true
-                )
+                ),
             ],
             assessment: DomainExpertiseCertification.CertificationAssessment(
                 assessmentId: "assessment_\(UUID().uuidString.prefix(8))",
@@ -1852,31 +1852,31 @@ enum KnowledgeDomainError: Error {
 
 extension KnowledgeDomainSystem {
     var domainEfficiency: Double {
-        return Double(domainCapabilities.count) / Double(KnowledgeDomainType.allCases.count)
+        Double(domainCapabilities.count) / Double(KnowledgeDomainType.allCases.count)
     }
 
     var needsOptimization: Bool {
-        return status == .operational && domainEfficiency < 0.8
+        status == .operational && domainEfficiency < 0.8
     }
 }
 
 extension DomainOrganizationResult {
     var organizationQuality: Double {
-        return (qualityMetrics.coherence + qualityMetrics.completeness + qualityMetrics.consistency + qualityMetrics.relevance) / 4.0
+        (qualityMetrics.coherence + qualityMetrics.completeness + qualityMetrics.consistency + qualityMetrics.relevance) / 4.0
     }
 
     var isHighQuality: Bool {
-        return organizationQuality > 0.8 && success
+        organizationQuality > 0.8 && success
     }
 }
 
 extension DomainKnowledge {
     var domainMaturity: Double {
-        return (quality.accuracy + quality.completeness + quality.relevance + quality.currency + quality.reliability) / 5.0
+        (quality.accuracy + quality.completeness + quality.relevance + quality.currency + quality.reliability) / 5.0
     }
 
     var isMature: Bool {
-        return domainMaturity > 0.8
+        domainMaturity > 0.8
     }
 }
 

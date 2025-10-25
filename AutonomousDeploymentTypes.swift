@@ -1347,7 +1347,7 @@ struct AnyCodable: Codable, Sendable {
 // MARK: - Factory Methods
 
 /// Factory for creating deployment configurations
-struct DeploymentConfigurationFactory {
+enum DeploymentConfigurationFactory {
     static func createBasicDeployment(
         id: DeploymentID,
         name: String,
@@ -1388,7 +1388,7 @@ struct DeploymentConfigurationFactory {
 }
 
 /// Factory for creating risk analysis results
-struct RiskAnalysisFactory {
+enum RiskAnalysisFactory {
     static func createLowRiskAnalysis(deploymentId: DeploymentID) -> RiskAnalysisResult {
         RiskAnalysisResult(
             deploymentId: deploymentId,
@@ -1425,7 +1425,7 @@ struct RiskAnalysisFactory {
                     cost: 0.3,
                     effort: .medium,
                     implementation: "Use load balancer for traffic switching"
-                )
+                ),
             ],
             recommendations: ["Require manual approval", "Implement comprehensive monitoring"],
             quantumRiskAnalysis: RiskAnalysisResult.QuantumRiskAnalysisType(
@@ -1527,7 +1527,7 @@ extension DeploymentConfiguration {
 // MARK: - Constants
 
 /// Constants for autonomous deployment
-struct AutonomousDeploymentConstants {
+enum AutonomousDeploymentConstants {
     static let defaultTimeout: TimeInterval = 3600.0 // 1 hour
     static let maxRetries: Int = 3
     static let healthCheckInterval: TimeInterval = 30.0
@@ -1562,25 +1562,25 @@ enum AutonomousDeploymentError: Error, Codable {
 extension AutonomousDeploymentError: CustomStringConvertible {
     var description: String {
         switch self {
-        case .configurationError(let message):
+        case let .configurationError(message):
             return "Configuration Error: \(message)"
-        case .riskAssessmentFailed(let message):
+        case let .riskAssessmentFailed(message):
             return "Risk Assessment Failed: \(message)"
-        case .deploymentFailed(let message):
+        case let .deploymentFailed(message):
             return "Deployment Failed: \(message)"
-        case .rollbackFailed(let message):
+        case let .rollbackFailed(message):
             return "Rollback Failed: \(message)"
-        case .validationFailed(let message):
+        case let .validationFailed(message):
             return "Validation Failed: \(message)"
-        case .quantumError(let message):
+        case let .quantumError(message):
             return "Quantum Error: \(message)"
-        case .timeout(let message):
+        case let .timeout(message):
             return "Timeout: \(message)"
-        case .resourceExhausted(let message):
+        case let .resourceExhausted(message):
             return "Resource Exhausted: \(message)"
-        case .dependencyFailure(let message):
+        case let .dependencyFailure(message):
             return "Dependency Failure: \(message)"
-        case .securityViolation(let message):
+        case let .securityViolation(message):
             return "Security Violation: \(message)"
         }
     }

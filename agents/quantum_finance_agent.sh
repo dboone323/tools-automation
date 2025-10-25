@@ -24,8 +24,6 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-WHITE='\033[1;37m'
 NC='\033[0m'
 
 # Logging
@@ -616,5 +614,5 @@ main() {
 trap 'update_agent_status "quantum_finance_agent.sh" "stopped" $$ ""; log "Quantum Finance Agent stopping..."; exit 0' SIGTERM SIGINT
 
 # Run main loop
-main "$@"
+main "$@" 2>&1 | tee -a "${LOG_FILE}"
 <filePath >/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/quantum_finance_agent.sh

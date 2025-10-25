@@ -1,7 +1,8 @@
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Multiverse Navigation Systems
+
 // Phase 8A: Advanced Quantum Technologies - Task 115
 // Description: Comprehensive multiverse navigation systems with interdimensional travel and parallel universe coordination capabilities
 
@@ -98,7 +99,7 @@ struct DimensionalCoordinates {
     let multiversal: Double
 
     var coordinateMagnitude: Double {
-        sqrt(x*x + y*y + z*z + temporal*temporal + quantum*quantum + multiversal*multiversal)
+        sqrt(x * x + y * y + z * z + temporal * temporal + quantum * quantum + multiversal * multiversal)
     }
 }
 
@@ -1056,12 +1057,12 @@ class MultiverseNavigationSystemsEngine {
             dimensionalCoordinates: DimensionalCoordinates(x: 0, y: 0, z: 0, temporal: 0, quantum: 0, multiversal: 0),
             quantumState: QuantumState(superposition: 0.9, entanglement: 0.85, coherence: 0.88, stability: 0.87, resonance: 0.9),
             realityParameters: RealityParameters(
-                physicalConstants: ["gravity": 9.81, "speed_of_light": 299792458, "planck": 6.626e-34],
+                physicalConstants: ["gravity": 9.81, "speed_of_light": 299_792_458, "planck": 6.626e-34],
                 fundamentalForces: [
                     FundamentalForce(forceType: .gravitational, strength: 6.674e-11, range: Double.infinity, coupling: 1.0),
                     FundamentalForce(forceType: .electromagnetic, strength: 8.987e9, range: Double.infinity, coupling: 0.0073),
                     FundamentalForce(forceType: .weak, strength: 1.27e-6, range: 1e-18, coupling: 0.00001),
-                    FundamentalForce(forceType: .strong, strength: 1.0, range: 1e-15, coupling: 1.0)
+                    FundamentalForce(forceType: .strong, strength: 1.0, range: 1e-15, coupling: 1.0),
                 ],
                 spacetimeCurvature: 0.0,
                 quantumFieldStrength: 0.9,
@@ -1127,38 +1128,38 @@ class MultiverseNavigationSystemsEngine {
             universeId: universeId,
             universeType: .parallel,
             dimensionalCoordinates: DimensionalCoordinates(
-                x: Double.random(in: -100...100),
-                y: Double.random(in: -100...100),
-                z: Double.random(in: -100...100),
-                temporal: Double.random(in: -10...10),
-                quantum: Double.random(in: 0...1),
-                multiversal: Double.random(in: 0...1)
+                x: Double.random(in: -100 ... 100),
+                y: Double.random(in: -100 ... 100),
+                z: Double.random(in: -100 ... 100),
+                temporal: Double.random(in: -10 ... 10),
+                quantum: Double.random(in: 0 ... 1),
+                multiversal: Double.random(in: 0 ... 1)
             ),
             quantumState: QuantumState(
-                superposition: Double.random(in: 0.7...0.95),
-                entanglement: Double.random(in: 0.75...0.9),
-                coherence: Double.random(in: 0.8...0.92),
-                stability: Double.random(in: 0.82...0.88),
-                resonance: Double.random(in: 0.85...0.95)
+                superposition: Double.random(in: 0.7 ... 0.95),
+                entanglement: Double.random(in: 0.75 ... 0.9),
+                coherence: Double.random(in: 0.8 ... 0.92),
+                stability: Double.random(in: 0.82 ... 0.88),
+                resonance: Double.random(in: 0.85 ... 0.95)
             ),
             realityParameters: RealityParameters(
                 physicalConstants: [
-                    "gravity": Double.random(in: 8...11),
-                    "speed_of_light": 299792458 + Double.random(in: -10000000...10000000),
-                    "planck": 6.626e-34 + Double.random(in: -1e-34...1e-34)
+                    "gravity": Double.random(in: 8 ... 11),
+                    "speed_of_light": 299_792_458 + Double.random(in: -10_000_000 ... 10_000_000),
+                    "planck": 6.626e-34 + Double.random(in: -1e-34 ... 1e-34),
                 ],
                 fundamentalForces: [
-                    FundamentalForce(forceType: .gravitational, strength: Double.random(in: 6e-11...7e-11), range: Double.infinity, coupling: Double.random(in: 0.9...1.1)),
-                    FundamentalForce(forceType: .electromagnetic, strength: Double.random(in: 8e9...9e9), range: Double.infinity, coupling: Double.random(in: 0.006...0.008)),
-                    FundamentalForce(forceType: .weak, strength: Double.random(in: 1e-6...2e-6), range: Double.random(in: 0.5e-18...1.5e-18), coupling: Double.random(in: 0.000008...0.000012)),
-                    FundamentalForce(forceType: .strong, strength: Double.random(in: 0.9...1.1), range: Double.random(in: 0.5e-15...1.5e-15), coupling: Double.random(in: 0.9...1.1))
+                    FundamentalForce(forceType: .gravitational, strength: Double.random(in: 6e-11 ... 7e-11), range: Double.infinity, coupling: Double.random(in: 0.9 ... 1.1)),
+                    FundamentalForce(forceType: .electromagnetic, strength: Double.random(in: 8e9 ... 9e9), range: Double.infinity, coupling: Double.random(in: 0.006 ... 0.008)),
+                    FundamentalForce(forceType: .weak, strength: Double.random(in: 1e-6 ... 2e-6), range: Double.random(in: 0.5e-18 ... 1.5e-18), coupling: Double.random(in: 0.000008 ... 0.000012)),
+                    FundamentalForce(forceType: .strong, strength: Double.random(in: 0.9 ... 1.1), range: Double.random(in: 0.5e-15 ... 1.5e-15), coupling: Double.random(in: 0.9 ... 1.1)),
                 ],
-                spacetimeCurvature: Double.random(in: -0.1...0.1),
-                quantumFieldStrength: Double.random(in: 0.8...0.95),
-                realityCoherence: Double.random(in: 0.82...0.9)
+                spacetimeCurvature: Double.random(in: -0.1 ... 0.1),
+                quantumFieldStrength: Double.random(in: 0.8 ... 0.95),
+                realityCoherence: Double.random(in: 0.82 ... 0.9)
             ),
-            universeStability: Double.random(in: 0.8...0.92),
-            connectivityStrength: Double.random(in: 0.75...0.88)
+            universeStability: Double.random(in: 0.8 ... 0.92),
+            connectivityStrength: Double.random(in: 0.75 ... 0.88)
         )
 
         let navigationPath = NavigationPath(
@@ -1179,7 +1180,7 @@ class MultiverseNavigationSystemsEngine {
                     gateStability: 0.85,
                     gateCapacity: 100.0,
                     energyRequirement: 500.0
-                )
+                ),
             ],
             pathEfficiency: 0.88,
             pathStability: 0.82,
@@ -1202,7 +1203,7 @@ class MultiverseNavigationSystemsEngine {
             transitionStability: 0.9,
             transitionDuration: 95.0,
             realityShift: RealityShift(
-                physicalConstantChanges: ["gravity": 0.15, "speed_of_light": 5000000],
+                physicalConstantChanges: ["gravity": 0.15, "speed_of_light": 5_000_000],
                 forceModulations: [.gravitational: 0.12, .electromagnetic: 0.08, .weak: 0.05, .strong: 0.03],
                 spacetimeDistortion: 0.08,
                 quantumFieldShift: 0.1,
@@ -1239,7 +1240,7 @@ class MultiverseNavigationSystemsEngine {
         let travelParticipants = [
             TravelParticipant(participantId: "navigator_1", participantType: .navigator, travelRole: .primary, energyContribution: 200.0, stabilityContribution: 0.15),
             TravelParticipant(participantId: "stabilizer_1", participantType: .stabilizer, travelRole: .secondary, energyContribution: 150.0, stabilityContribution: 0.2),
-            TravelParticipant(participantId: "communicator_1", participantType: .communicator, travelRole: .support, energyContribution: 100.0, stabilityContribution: 0.1)
+            TravelParticipant(participantId: "communicator_1", participantType: .communicator, travelRole: .support, energyContribution: 100.0, stabilityContribution: 0.1),
         ]
 
         let coordinationMetrics = CoordinationMetrics(
@@ -1252,7 +1253,7 @@ class MultiverseNavigationSystemsEngine {
 
         let safetyProtocols = [
             SafetyProtocol(protocolId: "safety_1", protocolType: .emergencyReturn, activationThreshold: 0.7, responseActions: [.abortTravel, .emergencyBeacon], effectiveness: 0.95),
-            SafetyProtocol(protocolId: "safety_2", protocolType: .realityStabilization, activationThreshold: 0.8, responseActions: [.stabilizeConnection, .realityAnchor], effectiveness: 0.92)
+            SafetyProtocol(protocolId: "safety_2", protocolType: .realityStabilization, activationThreshold: 0.8, responseActions: [.stabilizeConnection, .realityAnchor], effectiveness: 0.92),
         ]
 
         let energyOptimization = EnergyOptimization(
@@ -1291,17 +1292,17 @@ class MultiverseNavigationSystemsEngine {
 
         let coordinationProtocols = [
             CoordinationProtocol(protocolId: "protocol_1", protocolType: .communication, executionOrder: 1, successCriteria: 0.9, fallbackActions: [.retry, .escalate]),
-            CoordinationProtocol(protocolId: "protocol_2", protocolType: .synchronization, executionOrder: 2, successCriteria: 0.85, fallbackActions: [.retry, .abort])
+            CoordinationProtocol(protocolId: "protocol_2", protocolType: .synchronization, executionOrder: 2, successCriteria: 0.85, fallbackActions: [.retry, .abort]),
         ]
 
         let harmonyAchievements = [
             HarmonyAchievement(achievementId: "harmony_1", achievementType: .communication, achievementLevel: 0.9, stabilityGain: 0.1, resonanceIncrease: 0.05),
-            HarmonyAchievement(achievementId: "harmony_2", achievementType: .synchronization, achievementLevel: 0.85, stabilityGain: 0.08, resonanceIncrease: 0.04)
+            HarmonyAchievement(achievementId: "harmony_2", achievementType: .synchronization, achievementLevel: 0.85, stabilityGain: 0.08, resonanceIncrease: 0.04),
         ]
 
         let stabilityImprovements = [
             StabilityImprovement(improvementId: "improvement_1", improvementType: .quantum, improvementMagnitude: 0.12, duration: 300.0, sideEffects: [.energyDrain]),
-            StabilityImprovement(improvementId: "improvement_2", improvementType: .dimensional, improvementMagnitude: 0.1, duration: 250.0, sideEffects: [.realityDistortion])
+            StabilityImprovement(improvementId: "improvement_2", improvementType: .dimensional, improvementMagnitude: 0.1, duration: 250.0, sideEffects: [.realityDistortion]),
         ]
 
         return CoordinatedUniverseInteractions(
@@ -1340,23 +1341,23 @@ class MultiverseNavigationSystemsEngine {
         let temporalLocks = [
             TemporalLock(
                 lockId: "lock_temporal",
-                lockedUniverses: universes.map { $0.universeId },
+                lockedUniverses: universes.map(\.universeId),
                 lockStrength: 0.9,
                 lockDuration: 500.0,
                 lockStability: 0.87,
                 temporalDrift: 0.02
-            )
+            ),
         ]
 
         let quantumEntanglements = [
             QuantumEntanglement(
                 entanglementId: "entanglement_main",
-                entangledUniverses: universes.map { $0.universeId },
+                entangledUniverses: universes.map(\.universeId),
                 entanglementStrength: 0.85,
                 entanglementStability: 0.82,
                 decoherenceRate: 0.01,
                 informationTransfer: 0.88
-            )
+            ),
         ]
 
         return SynchronizedUniverseStates(
@@ -1376,7 +1377,7 @@ class MultiverseNavigationSystemsEngine {
         let resonanceEffects = [
             ResonanceEffect(effectId: "effect_1", effectType: .energyAmplification, effectMagnitude: 0.15, effectDuration: 400.0, effectStability: 0.9),
             ResonanceEffect(effectId: "effect_2", effectType: .communicationEnhancement, effectMagnitude: 0.12, effectDuration: 350.0, effectStability: 0.88),
-            ResonanceEffect(effectId: "effect_3", effectType: .stabilityImprovement, effectMagnitude: 0.18, effectDuration: 450.0, effectStability: 0.85)
+            ResonanceEffect(effectId: "effect_3", effectType: .stabilityImprovement, effectMagnitude: 0.18, effectDuration: 450.0, effectStability: 0.85),
         ]
 
         return HarmonizedMultiverseResonance(
@@ -1413,7 +1414,7 @@ class MultiverseNavigationSystemsEngine {
                     gateStability: 0.88,
                     gateCapacity: 150.0,
                     energyRequirement: 400.0
-                )
+                ),
             ],
             pathEfficiency: 0.9,
             pathStability: 0.85,
@@ -1425,21 +1426,21 @@ class MultiverseNavigationSystemsEngine {
             travelPhases: [
                 TravelPhase(phaseId: "phase_prep", phaseType: .preparation, phaseDuration: 20.0, phaseEnergy: 50.0, phaseRisk: 0.1, phaseSuccess: 0.95),
                 TravelPhase(phaseId: "phase_transition", phaseType: .transition, phaseDuration: 60.0, phaseEnergy: 300.0, phaseRisk: 0.3, phaseSuccess: 0.88),
-                TravelPhase(phaseId: "phase_arrival", phaseType: .arrival, phaseDuration: 30.0, phaseEnergy: 100.0, phaseRisk: 0.2, phaseSuccess: 0.92)
+                TravelPhase(phaseId: "phase_arrival", phaseType: .arrival, phaseDuration: 30.0, phaseEnergy: 100.0, phaseRisk: 0.2, phaseSuccess: 0.92),
             ],
             checkpoints: [
                 Checkpoint(checkpointId: "checkpoint_1", checkpointType: .safety, checkpointLocation: DimensionalCoordinates(x: 5, y: 5, z: 5, temporal: 0.5, quantum: 0.5, multiversal: 0.5), validationCriteria: [.energyLevel, .stabilityIndex], timeoutDuration: 30.0),
-                Checkpoint(checkpointId: "checkpoint_2", checkpointType: .progress, checkpointLocation: DimensionalCoordinates(x: 10, y: 10, z: 10, temporal: 1.0, quantum: 0.7, multiversal: 0.7), validationCriteria: [.positionAccuracy, .realityCoherence], timeoutDuration: 45.0)
+                Checkpoint(checkpointId: "checkpoint_2", checkpointType: .progress, checkpointLocation: DimensionalCoordinates(x: 10, y: 10, z: 10, temporal: 1.0, quantum: 0.7, multiversal: 0.7), validationCriteria: [.positionAccuracy, .realityCoherence], timeoutDuration: 45.0),
             ],
             emergencyProcedures: [
                 EmergencyProcedure(procedureId: "emergency_1", triggerCondition: "energy_critical", responseActions: [.abort, .emergencyReturn], successProbability: 0.9, resourceCost: 200.0),
-                EmergencyProcedure(procedureId: "emergency_2", triggerCondition: "stability_failure", responseActions: [.stabilize, .multiverseBeacon], successProbability: 0.85, resourceCost: 150.0)
+                EmergencyProcedure(procedureId: "emergency_2", triggerCondition: "stability_failure", responseActions: [.stabilize, .multiverseBeacon], successProbability: 0.85, resourceCost: 150.0),
             ],
             successMetrics: [
                 SuccessMetric(metricId: "metric_time", metricType: .travelTime, targetValue: 120.0, tolerance: 20.0, weight: 0.3),
                 SuccessMetric(metricId: "metric_energy", metricType: .energyEfficiency, targetValue: 0.85, tolerance: 0.1, weight: 0.25),
                 SuccessMetric(metricId: "metric_safety", metricType: .safetyIndex, targetValue: 0.9, tolerance: 0.05, weight: 0.25),
-                SuccessMetric(metricId: "metric_accuracy", metricType: .destinationAccuracy, targetValue: 0.95, tolerance: 0.05, weight: 0.2)
+                SuccessMetric(metricId: "metric_accuracy", metricType: .destinationAccuracy, targetValue: 0.95, tolerance: 0.05, weight: 0.2),
             ]
         )
 
@@ -1449,12 +1450,12 @@ class MultiverseNavigationSystemsEngine {
             riskFactors: [
                 RiskFactor(factorId: "risk_energy", factorType: .energyDepletion, probability: 0.15, impact: 0.7, detectability: 0.9),
                 RiskFactor(factorId: "risk_stability", factorType: .realityInstability, probability: 0.2, impact: 0.8, detectability: 0.85),
-                RiskFactor(factorId: "risk_consciousness", factorType: .consciousnessDisruption, probability: 0.1, impact: 0.6, detectability: 0.8)
+                RiskFactor(factorId: "risk_consciousness", factorType: .consciousnessDisruption, probability: 0.1, impact: 0.6, detectability: 0.8),
             ],
             mitigationStrategies: [
                 MitigationStrategy(strategyId: "mitigation_energy", strategyType: .energyReserve, effectiveness: 0.9, cost: 100.0, implementationComplexity: 0.3),
                 MitigationStrategy(strategyId: "mitigation_stability", strategyType: .stabilityAnchor, effectiveness: 0.85, cost: 80.0, implementationComplexity: 0.4),
-                MitigationStrategy(strategyId: "mitigation_consciousness", strategyType: .consciousnessShield, effectiveness: 0.8, cost: 60.0, implementationComplexity: 0.5)
+                MitigationStrategy(strategyId: "mitigation_consciousness", strategyType: .consciousnessShield, effectiveness: 0.8, cost: 60.0, implementationComplexity: 0.5),
             ],
             riskThreshold: 0.3,
             acceptableRisk: 0.2
@@ -1494,13 +1495,13 @@ class MultiverseNavigationSystemsEngine {
         let travelEvents = [
             TravelEvent(eventId: "event_start", eventType: .checkpoint, eventTime: 0.0, eventLocation: plannedJourney.sourceUniverse.dimensionalCoordinates, eventImpact: 0.0, eventResolution: "Journey started successfully"),
             TravelEvent(eventId: "event_transition", eventType: .adaptation, eventTime: 45.0, eventLocation: DimensionalCoordinates(x: 8, y: 8, z: 8, temporal: 0.8, quantum: 0.6, multiversal: 0.6), eventImpact: 0.1, eventResolution: "Route adapted for optimal energy efficiency"),
-            TravelEvent(eventId: "event_arrival", eventType: .success, eventTime: 105.0, eventLocation: plannedJourney.destinationUniverse.dimensionalCoordinates, eventImpact: 0.0, eventResolution: "Destination reached successfully")
+            TravelEvent(eventId: "event_arrival", eventType: .success, eventTime: 105.0, eventLocation: plannedJourney.destinationUniverse.dimensionalCoordinates, eventImpact: 0.0, eventResolution: "Destination reached successfully"),
         ]
 
         let adaptations = [
             Adaptation(adaptationId: "adaptation_1", adaptationType: .energy, triggerCondition: "energy_efficiency_below_85", adaptationMagnitude: 0.1, successRate: 0.95),
             Adaptation(adaptationId: "adaptation_2", adaptationType: .route, triggerCondition: "stability_fluctuation", adaptationMagnitude: 0.05, successRate: 0.9),
-            Adaptation(adaptationId: "adaptation_3", adaptationType: .speed, triggerCondition: "time_optimization", adaptationMagnitude: 0.08, successRate: 0.92)
+            Adaptation(adaptationId: "adaptation_3", adaptationType: .speed, triggerCondition: "time_optimization", adaptationMagnitude: 0.08, successRate: 0.92),
         ]
 
         let finalState = TravelFinalState(
@@ -1542,7 +1543,7 @@ class MultiverseNavigationSystemsEngine {
                 energyEfficiency: 0.9,
                 bandwidthCapacity: 95.0,
                 maintenanceCost: 20.0
-            )
+            ),
         ]
 
         let stabilizationMetrics = StabilizationMetrics(
@@ -1568,7 +1569,7 @@ class MultiverseNavigationSystemsEngine {
             degradationRate: 0.02,
             interventionPoints: [
                 InterventionPoint(pointId: "intervention_1", interventionTime: 100.0, interventionType: .maintenance, interventionCost: 50.0, expectedBenefit: 0.1),
-                InterventionPoint(pointId: "intervention_2", interventionTime: 200.0, interventionType: .upgrade, interventionCost: 150.0, expectedBenefit: 0.15)
+                InterventionPoint(pointId: "intervention_2", interventionTime: 200.0, interventionType: .upgrade, interventionCost: 150.0, expectedBenefit: 0.15),
             ]
         )
 
@@ -1592,43 +1593,43 @@ class MultiverseNavigationSystemsEngine {
         // Generate additional connected universes based on criteria
         var connectedUniverses = navigationState.navigationNetwork.connectedUniverses
         let additionalUniverses = Int(networkCriteria.expansionRate * 10)
-        for i in 0..<additionalUniverses {
+        for i in 0 ..< additionalUniverses {
             let universe = ParallelUniverse(
                 universeId: "universe_\(i)_\(UUID().uuidString.prefix(4))",
                 universeType: .parallel,
                 dimensionalCoordinates: DimensionalCoordinates(
-                    x: Double.random(in: -200...200),
-                    y: Double.random(in: -200...200),
-                    z: Double.random(in: -200...200),
-                    temporal: Double.random(in: -20...20),
-                    quantum: Double.random(in: 0...1),
-                    multiversal: Double.random(in: 0...1)
+                    x: Double.random(in: -200 ... 200),
+                    y: Double.random(in: -200 ... 200),
+                    z: Double.random(in: -200 ... 200),
+                    temporal: Double.random(in: -20 ... 20),
+                    quantum: Double.random(in: 0 ... 1),
+                    multiversal: Double.random(in: 0 ... 1)
                 ),
                 quantumState: QuantumState(
-                    superposition: Double.random(in: 0.7...0.95),
-                    entanglement: Double.random(in: 0.75...0.9),
-                    coherence: Double.random(in: 0.8...0.92),
-                    stability: Double.random(in: 0.82...0.88),
-                    resonance: Double.random(in: 0.85...0.95)
+                    superposition: Double.random(in: 0.7 ... 0.95),
+                    entanglement: Double.random(in: 0.75 ... 0.9),
+                    coherence: Double.random(in: 0.8 ... 0.92),
+                    stability: Double.random(in: 0.82 ... 0.88),
+                    resonance: Double.random(in: 0.85 ... 0.95)
                 ),
                 realityParameters: RealityParameters(
                     physicalConstants: [
-                        "gravity": Double.random(in: 8...11),
-                        "speed_of_light": 299792458 + Double.random(in: -10000000...10000000),
-                        "planck": 6.626e-34 + Double.random(in: -1e-34...1e-34)
+                        "gravity": Double.random(in: 8 ... 11),
+                        "speed_of_light": 299_792_458 + Double.random(in: -10_000_000 ... 10_000_000),
+                        "planck": 6.626e-34 + Double.random(in: -1e-34 ... 1e-34),
                     ],
                     fundamentalForces: [
-                        FundamentalForce(forceType: .gravitational, strength: Double.random(in: 6e-11...7e-11), range: Double.infinity, coupling: Double.random(in: 0.9...1.1)),
-                        FundamentalForce(forceType: .electromagnetic, strength: Double.random(in: 8e9...9e9), range: Double.infinity, coupling: Double.random(in: 0.006...0.008)),
-                        FundamentalForce(forceType: .weak, strength: Double.random(in: 1e-6...2e-6), range: Double.random(in: 0.5e-18...1.5e-18), coupling: Double.random(in: 0.000008...0.000012)),
-                        FundamentalForce(forceType: .strong, strength: Double.random(in: 0.9...1.1), range: Double.random(in: 0.5e-15...1.5e-15), coupling: Double.random(in: 0.9...1.1))
+                        FundamentalForce(forceType: .gravitational, strength: Double.random(in: 6e-11 ... 7e-11), range: Double.infinity, coupling: Double.random(in: 0.9 ... 1.1)),
+                        FundamentalForce(forceType: .electromagnetic, strength: Double.random(in: 8e9 ... 9e9), range: Double.infinity, coupling: Double.random(in: 0.006 ... 0.008)),
+                        FundamentalForce(forceType: .weak, strength: Double.random(in: 1e-6 ... 2e-6), range: Double.random(in: 0.5e-18 ... 1.5e-18), coupling: Double.random(in: 0.000008 ... 0.000012)),
+                        FundamentalForce(forceType: .strong, strength: Double.random(in: 0.9 ... 1.1), range: Double.random(in: 0.5e-15 ... 1.5e-15), coupling: Double.random(in: 0.9 ... 1.1)),
                     ],
-                    spacetimeCurvature: Double.random(in: -0.1...0.1),
-                    quantumFieldStrength: Double.random(in: 0.8...0.95),
-                    realityCoherence: Double.random(in: 0.82...0.9)
+                    spacetimeCurvature: Double.random(in: -0.1 ... 0.1),
+                    quantumFieldStrength: Double.random(in: 0.8 ... 0.95),
+                    realityCoherence: Double.random(in: 0.82 ... 0.9)
                 ),
-                universeStability: Double.random(in: 0.8...0.92),
-                connectivityStrength: Double.random(in: 0.75...0.88)
+                universeStability: Double.random(in: 0.8 ... 0.92),
+                connectivityStrength: Double.random(in: 0.75 ... 0.88)
             )
             connectedUniverses.append(universe)
         }
@@ -1640,8 +1641,8 @@ class MultiverseNavigationSystemsEngine {
                 gateType: .multiversal,
                 gateCoordinates: universe.dimensionalCoordinates,
                 gateStability: universe.universeStability,
-                gateCapacity: Double.random(in: 50...200),
-                energyRequirement: Double.random(in: 200...800)
+                gateCapacity: Double.random(in: 50 ... 200),
+                energyRequirement: Double.random(in: 200 ... 800)
             )
         }
 
@@ -1653,16 +1654,16 @@ class MultiverseNavigationSystemsEngine {
                 targetGate: universe.universeId,
                 connectionType: .multiversal,
                 bandwidth: gate.gateCapacity,
-                latency: Double.random(in: 0.1...1.0),
+                latency: Double.random(in: 0.1 ... 1.0),
                 reliability: universe.connectivityStrength
             )
         }
 
         let networkMetrics = NetworkMetrics(
             connectivityCoverage: min(networkCriteria.connectivityRequirements, Double(connectedUniverses.count) / 100.0),
-            dataThroughput: Double.random(in: 0.1...0.9),
+            dataThroughput: Double.random(in: 0.1 ... 0.9),
             connectionStability: networkCriteria.stabilityThreshold,
-            energyEfficiency: Double.random(in: 0.8...0.95),
+            energyEfficiency: Double.random(in: 0.8 ... 0.95),
             expansionProgress: networkCriteria.expansionRate
         )
 
@@ -1724,17 +1725,17 @@ class ParallelUniverseCoordinationImpl: ParallelUniverseCoordination {
 
         let coordinationProtocols = [
             CoordinationProtocol(protocolId: "protocol_1", protocolType: .communication, executionOrder: 1, successCriteria: 0.9, fallbackActions: [.retry, .escalate]),
-            CoordinationProtocol(protocolId: "protocol_2", protocolType: .synchronization, executionOrder: 2, successCriteria: 0.85, fallbackActions: [.retry, .abort])
+            CoordinationProtocol(protocolId: "protocol_2", protocolType: .synchronization, executionOrder: 2, successCriteria: 0.85, fallbackActions: [.retry, .abort]),
         ]
 
         let harmonyAchievements = [
             HarmonyAchievement(achievementId: "harmony_1", achievementType: .communication, achievementLevel: 0.9, stabilityGain: 0.1, resonanceIncrease: 0.05),
-            HarmonyAchievement(achievementId: "harmony_2", achievementType: .synchronization, achievementLevel: 0.85, stabilityGain: 0.08, resonanceIncrease: 0.04)
+            HarmonyAchievement(achievementId: "harmony_2", achievementType: .synchronization, achievementLevel: 0.85, stabilityGain: 0.08, resonanceIncrease: 0.04),
         ]
 
         let stabilityImprovements = [
             StabilityImprovement(improvementId: "improvement_1", improvementType: .quantum, improvementMagnitude: 0.12, duration: 300.0, sideEffects: [.energyDrain]),
-            StabilityImprovement(improvementId: "improvement_2", improvementType: .dimensional, improvementMagnitude: 0.1, duration: 250.0, sideEffects: [.realityDistortion])
+            StabilityImprovement(improvementId: "improvement_2", improvementType: .dimensional, improvementMagnitude: 0.1, duration: 250.0, sideEffects: [.realityDistortion]),
         ]
 
         return CoordinatedUniverseInteractions(
@@ -1772,23 +1773,23 @@ class ParallelUniverseCoordinationImpl: ParallelUniverseCoordination {
         let temporalLocks = [
             TemporalLock(
                 lockId: "lock_temporal",
-                lockedUniverses: universes.map { $0.universeId },
+                lockedUniverses: universes.map(\.universeId),
                 lockStrength: 0.9,
                 lockDuration: 500.0,
                 lockStability: 0.87,
                 temporalDrift: 0.02
-            )
+            ),
         ]
 
         let quantumEntanglements = [
             QuantumEntanglement(
                 entanglementId: "entanglement_main",
-                entangledUniverses: universes.map { $0.universeId },
+                entangledUniverses: universes.map(\.universeId),
                 entanglementStrength: 0.85,
                 entanglementStability: 0.82,
                 decoherenceRate: 0.01,
                 informationTransfer: 0.88
-            )
+            ),
         ]
 
         return SynchronizedUniverseStates(
@@ -1807,7 +1808,7 @@ class ParallelUniverseCoordinationImpl: ParallelUniverseCoordination {
         let resonanceEffects = [
             ResonanceEffect(effectId: "effect_1", effectType: .energyAmplification, effectMagnitude: 0.15, effectDuration: 400.0, effectStability: 0.9),
             ResonanceEffect(effectId: "effect_2", effectType: .communicationEnhancement, effectMagnitude: 0.12, effectDuration: 350.0, effectStability: 0.88),
-            ResonanceEffect(effectId: "effect_3", effectType: .stabilityImprovement, effectMagnitude: 0.18, effectDuration: 450.0, effectStability: 0.85)
+            ResonanceEffect(effectId: "effect_3", effectType: .stabilityImprovement, effectMagnitude: 0.18, effectDuration: 450.0, effectStability: 0.85),
         ]
 
         return HarmonizedMultiverseResonance(
@@ -1846,7 +1847,7 @@ class InterdimensionalTravelSystemsImpl: InterdimensionalTravelSystems {
                     gateStability: 0.88,
                     gateCapacity: 150.0,
                     energyRequirement: 400.0
-                )
+                ),
             ],
             pathEfficiency: 0.9,
             pathStability: 0.85,
@@ -1858,21 +1859,21 @@ class InterdimensionalTravelSystemsImpl: InterdimensionalTravelSystems {
             travelPhases: [
                 TravelPhase(phaseId: "phase_prep", phaseType: .preparation, phaseDuration: 20.0, phaseEnergy: 50.0, phaseRisk: 0.1, phaseSuccess: 0.95),
                 TravelPhase(phaseId: "phase_transition", phaseType: .transition, phaseDuration: 60.0, phaseEnergy: 300.0, phaseRisk: 0.3, phaseSuccess: 0.88),
-                TravelPhase(phaseId: "phase_arrival", phaseType: .arrival, phaseDuration: 30.0, phaseEnergy: 100.0, phaseRisk: 0.2, phaseSuccess: 0.92)
+                TravelPhase(phaseId: "phase_arrival", phaseType: .arrival, phaseDuration: 30.0, phaseEnergy: 100.0, phaseRisk: 0.2, phaseSuccess: 0.92),
             ],
             checkpoints: [
                 Checkpoint(checkpointId: "checkpoint_1", checkpointType: .safety, checkpointLocation: DimensionalCoordinates(x: 5, y: 5, z: 5, temporal: 0.5, quantum: 0.5, multiversal: 0.5), validationCriteria: [.energyLevel, .stabilityIndex], timeoutDuration: 30.0),
-                Checkpoint(checkpointId: "checkpoint_2", checkpointType: .progress, checkpointLocation: DimensionalCoordinates(x: 10, y: 10, z: 10, temporal: 1.0, quantum: 0.7, multiversal: 0.7), validationCriteria: [.positionAccuracy, .realityCoherence], timeoutDuration: 45.0)
+                Checkpoint(checkpointId: "checkpoint_2", checkpointType: .progress, checkpointLocation: DimensionalCoordinates(x: 10, y: 10, z: 10, temporal: 1.0, quantum: 0.7, multiversal: 0.7), validationCriteria: [.positionAccuracy, .realityCoherence], timeoutDuration: 45.0),
             ],
             emergencyProcedures: [
                 EmergencyProcedure(procedureId: "emergency_1", triggerCondition: "energy_critical", responseActions: [.abort, .emergencyReturn], successProbability: 0.9, resourceCost: 200.0),
-                EmergencyProcedure(procedureId: "emergency_2", triggerCondition: "stability_failure", responseActions: [.stabilize, .multiverseBeacon], successProbability: 0.85, resourceCost: 150.0)
+                EmergencyProcedure(procedureId: "emergency_2", triggerCondition: "stability_failure", responseActions: [.stabilize, .multiverseBeacon], successProbability: 0.85, resourceCost: 150.0),
             ],
             successMetrics: [
                 SuccessMetric(metricId: "metric_time", metricType: .travelTime, targetValue: 120.0, tolerance: 20.0, weight: 0.3),
                 SuccessMetric(metricId: "metric_energy", metricType: .energyEfficiency, targetValue: 0.85, tolerance: 0.1, weight: 0.25),
                 SuccessMetric(metricId: "metric_safety", metricType: .safetyIndex, targetValue: 0.9, tolerance: 0.05, weight: 0.25),
-                SuccessMetric(metricId: "metric_accuracy", metricType: .destinationAccuracy, targetValue: 0.95, tolerance: 0.05, weight: 0.2)
+                SuccessMetric(metricId: "metric_accuracy", metricType: .destinationAccuracy, targetValue: 0.95, tolerance: 0.05, weight: 0.2),
             ]
         )
 
@@ -1882,12 +1883,12 @@ class InterdimensionalTravelSystemsImpl: InterdimensionalTravelSystems {
             riskFactors: [
                 RiskFactor(factorId: "risk_energy", factorType: .energyDepletion, probability: 0.15, impact: 0.7, detectability: 0.9),
                 RiskFactor(factorId: "risk_stability", factorType: .realityInstability, probability: 0.2, impact: 0.8, detectability: 0.85),
-                RiskFactor(factorId: "risk_consciousness", factorType: .consciousnessDisruption, probability: 0.1, impact: 0.6, detectability: 0.8)
+                RiskFactor(factorId: "risk_consciousness", factorType: .consciousnessDisruption, probability: 0.1, impact: 0.6, detectability: 0.8),
             ],
             mitigationStrategies: [
                 MitigationStrategy(strategyId: "mitigation_energy", strategyType: .energyReserve, effectiveness: 0.9, cost: 100.0, implementationComplexity: 0.3),
                 MitigationStrategy(strategyId: "mitigation_stability", strategyType: .stabilityAnchor, effectiveness: 0.85, cost: 80.0, implementationComplexity: 0.4),
-                MitigationStrategy(strategyId: "mitigation_consciousness", strategyType: .consciousnessShield, effectiveness: 0.8, cost: 60.0, implementationComplexity: 0.5)
+                MitigationStrategy(strategyId: "mitigation_consciousness", strategyType: .consciousnessShield, effectiveness: 0.8, cost: 60.0, implementationComplexity: 0.5),
             ],
             riskThreshold: 0.3,
             acceptableRisk: 0.2
@@ -1926,13 +1927,13 @@ class InterdimensionalTravelSystemsImpl: InterdimensionalTravelSystems {
         let travelEvents = [
             TravelEvent(eventId: "event_start", eventType: .checkpoint, eventTime: 0.0, eventLocation: plannedJourney.sourceUniverse.dimensionalCoordinates, eventImpact: 0.0, eventResolution: "Journey started successfully"),
             TravelEvent(eventId: "event_transition", eventType: .adaptation, eventTime: 45.0, eventLocation: DimensionalCoordinates(x: 8, y: 8, z: 8, temporal: 0.8, quantum: 0.6, multiversal: 0.6), eventImpact: 0.1, eventResolution: "Route adapted for optimal energy efficiency"),
-            TravelEvent(eventId: "event_arrival", eventType: .success, eventTime: 105.0, eventLocation: plannedJourney.destinationUniverse.dimensionalCoordinates, eventImpact: 0.0, eventResolution: "Destination reached successfully")
+            TravelEvent(eventId: "event_arrival", eventType: .success, eventTime: 105.0, eventLocation: plannedJourney.destinationUniverse.dimensionalCoordinates, eventImpact: 0.0, eventResolution: "Destination reached successfully"),
         ]
 
         let adaptations = [
             Adaptation(adaptationId: "adaptation_1", adaptationType: .energy, triggerCondition: "energy_efficiency_below_85", adaptationMagnitude: 0.1, successRate: 0.95),
             Adaptation(adaptationId: "adaptation_2", adaptationType: .route, triggerCondition: "stability_fluctuation", adaptationMagnitude: 0.05, successRate: 0.9),
-            Adaptation(adaptationId: "adaptation_3", adaptationType: .speed, triggerCondition: "time_optimization", adaptationMagnitude: 0.08, successRate: 0.92)
+            Adaptation(adaptationId: "adaptation_3", adaptationType: .speed, triggerCondition: "time_optimization", adaptationMagnitude: 0.08, successRate: 0.92),
         ]
 
         let finalState = TravelFinalState(
@@ -1973,7 +1974,7 @@ class InterdimensionalTravelSystemsImpl: InterdimensionalTravelSystems {
                 energyEfficiency: 0.9,
                 bandwidthCapacity: 95.0,
                 maintenanceCost: 20.0
-            )
+            ),
         ]
 
         let stabilizationMetrics = StabilizationMetrics(
@@ -1999,7 +2000,7 @@ class InterdimensionalTravelSystemsImpl: InterdimensionalTravelSystems {
             degradationRate: 0.02,
             interventionPoints: [
                 InterventionPoint(pointId: "intervention_1", interventionTime: 100.0, interventionType: .maintenance, interventionCost: 50.0, expectedBenefit: 0.1),
-                InterventionPoint(pointId: "intervention_2", interventionTime: 200.0, interventionType: .upgrade, interventionCost: 150.0, expectedBenefit: 0.15)
+                InterventionPoint(pointId: "intervention_2", interventionTime: 200.0, interventionType: .upgrade, interventionCost: 150.0, expectedBenefit: 0.15),
             ]
         )
 

@@ -11,8 +11,8 @@
 //  interaction modeling for advanced quantum simulations.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -114,10 +114,10 @@ struct Spacetime {
     func distance(from point1: SpacetimePoint, to point2: SpacetimePoint) -> Double {
         // Minkowski distance calculation
         var sum = 0.0
-        for i in 0..<dimension {
-            for j in 0..<dimension {
+        for i in 0 ..< dimension {
+            for j in 0 ..< dimension {
                 sum += metric[i][j] * (point1.coordinates[i] - point2.coordinates[i]) *
-                       (point1.coordinates[j] - point2.coordinates[j])
+                    (point1.coordinates[j] - point2.coordinates[j])
             }
         }
         return sqrt(abs(sum))
@@ -386,21 +386,22 @@ struct FieldFunctional {
 @MainActor
 class QuantumFieldTheoryComputing: ObservableObject {
     // MARK: - Properties
+
     @Published var fieldConfigurations: [FieldConfiguration] = []
     @Published var lagrangians: [LagrangianDensity] = []
     @Published var quantizedFields: [QuantizedField] = []
     @Published var scatteringAmplitudes: [ScatteringAmplitude] = []
 
-    @Published var spacetime: Spacetime = Spacetime(
+    @Published var spacetime: Spacetime = .init(
         dimension: 4,
         metric: [[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, -1]],
         coordinates: ["t", "x", "y", "z"]
     )
 
     @Published var couplingConstants: [String: Double] = [
-        "lambda": 0.1,  // Self-coupling
-        "g": 0.65,      // Gauge coupling
-        "y": 0.1        // Yukawa coupling
+        "lambda": 0.1, // Self-coupling
+        "g": 0.65, // Gauge coupling
+        "y": 0.1, // Yukawa coupling
     ]
 
     private let lagrangianMechanics: LagrangianMechanics
@@ -408,6 +409,7 @@ class QuantumFieldTheoryComputing: ObservableObject {
     private let scatteringCalculator: ScatteringCalculator
 
     // MARK: - Initialization
+
     init() {
         self.lagrangianMechanics = LagrangianMechanicsImpl()
         self.fieldQuantizationEngine = FieldQuantizationImpl()
@@ -614,7 +616,7 @@ extension QuantumFieldTheoryComputing: QuantumFieldOperation {
             fields: [],
             boundaryConditions: BoundaryConditions(type: .periodic, values: [:]),
             couplingConstants: couplingConstants
-        )}
+        ) }
         set { fieldConfigurations = [newValue] }
     }
 
@@ -623,7 +625,7 @@ extension QuantumFieldTheoryComputing: QuantumFieldOperation {
             kineticTerm: FieldTerm(coefficient: 1.0, derivatives: [], fields: []),
             potentialTerm: FieldTerm(coefficient: 1.0, derivatives: [], fields: []),
             interactionTerms: []
-        )}
+        ) }
         set { lagrangians = [newValue] }
     }
 

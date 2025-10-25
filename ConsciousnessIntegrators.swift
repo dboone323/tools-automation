@@ -9,8 +9,8 @@
 // Framework for integrating consciousness from multiple sources
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -921,7 +921,7 @@ class ConsciousnessIntegratorsEngine {
                 level: 0.95,
                 sources: sources,
                 prerequisites: []
-            )
+            ),
         ]
 
         let harmonizationRules = sources.flatMap { source in
@@ -941,7 +941,7 @@ class ConsciousnessIntegratorsEngine {
                     action: "Standardize consciousness format",
                     priority: 0.8,
                     sources: [source]
-                )
+                ),
             ]
         }
 
@@ -993,7 +993,7 @@ class ConsciousnessIntegratorsEngine {
         )
 
         let success = integratedConsciousness.integrationMetadata.harmonizationLevel > 0.8 &&
-                     integratedConsciousness.integrationMetadata.unificationLevel > 0.7
+            integratedConsciousness.integrationMetadata.unificationLevel > 0.7
 
         let qualityMetrics = ConsciousnessIntegrationResult.ConsciousnessIntegrationQualityMetrics(
             coherence: 0.9,
@@ -1098,7 +1098,7 @@ class ConsciousnessIntegratorsEngine {
 
     private func performIntegrationHealthCheck() async {
         let totalIntegrations = integrationHistory.count
-        let successfulIntegrations = integrationHistory.filter { $0.success }.count
+        let successfulIntegrations = integrationHistory.filter(\.success).count
         let successRate = totalIntegrations > 0 ? Double(successfulIntegrations) / Double(totalIntegrations) : 0.0
 
         if successRate < 0.8 {
@@ -1134,7 +1134,7 @@ class ConsciousnessAggregatorImpl: ConsciousnessAggregator {
             sourceConsciousness: consciousness,
             aggregatedContent: aggregatedContent,
             aggregationMetadata: ConsciousnessAggregationMetadata(
-                sources: consciousness.map { $0.source },
+                sources: consciousness.map(\.source),
                 collectionMethod: .batch,
                 consolidationLevel: 0.9,
                 optimizationApplied: true
@@ -1293,7 +1293,7 @@ class ConsciousnessAggregatorImpl: ConsciousnessAggregator {
                 type: .resonance,
                 factor: 1.2,
                 description: "Enhanced aggregation resonance"
-            )
+            ),
         ]
 
         let optimizedAggregation = ConsciousnessAggregation(
@@ -1339,7 +1339,7 @@ class ConsciousnessAggregatorImpl: ConsciousnessAggregator {
                     type: .enhanceValidation,
                     description: "Enhance aggregation validation process",
                     priority: 0.8
-                )
+                ),
             ],
             validationTime: 3.0
         )
@@ -1350,11 +1350,11 @@ class ConsciousnessAggregatorImpl: ConsciousnessAggregator {
 class ConsciousnessHarmonizerImpl: ConsciousnessHarmonizer {
     func harmonizeConsciousness(_ consciousness: [Consciousness]) async -> ConsciousnessHarmonization {
         // Simplified consciousness harmonization
-        return ConsciousnessHarmonization(
+        ConsciousnessHarmonization(
             harmonizationId: "harmonization_\(UUID().uuidString.prefix(8))",
             sourceConsciousness: consciousness,
             harmonizedConsciousness: consciousness,
-            conflictsResolved: Int.random(in: 0...3),
+            conflictsResolved: Int.random(in: 0 ... 3),
             structuresAligned: consciousness.count,
             formatsStandardized: consciousness.count,
             harmonizationTime: 12.0
@@ -1384,7 +1384,7 @@ class ConsciousnessHarmonizerImpl: ConsciousnessHarmonizer {
 
     func alignConsciousnessStructures(_ structures: [ConsciousnessStructure]) async -> ConsciousnessStructureAlignment {
         // Simplified structure alignment
-        return ConsciousnessStructureAlignment(
+        ConsciousnessStructureAlignment(
             alignmentId: "alignment_\(UUID().uuidString.prefix(8))",
             sourceStructures: structures,
             alignedStructures: structures,
@@ -1396,7 +1396,7 @@ class ConsciousnessHarmonizerImpl: ConsciousnessHarmonizer {
 
     func standardizeConsciousnessFormats(_ consciousness: [Consciousness]) async -> ConsciousnessFormatStandardization {
         // Simplified format standardization
-        return ConsciousnessFormatStandardization(
+        ConsciousnessFormatStandardization(
             standardizationId: "standardization_\(UUID().uuidString.prefix(8))",
             sourceConsciousness: consciousness,
             standardizedConsciousness: consciousness,
@@ -1420,7 +1420,7 @@ class ConsciousnessHarmonizerImpl: ConsciousnessHarmonizer {
                 type: .structureAlignment,
                 factor: 1.3,
                 description: "Enhanced structure alignment"
-            )
+            ),
         ]
 
         let optimizedHarmonization = ConsciousnessHarmonization(
@@ -1542,7 +1542,7 @@ class ConsciousnessUnifierImpl: ConsciousnessUnifier {
 
     func createUnifiedConsciousnessModel(_ consciousness: [Consciousness]) async -> UnifiedConsciousnessModel {
         // Simplified unified model creation
-        return UnifiedConsciousnessModel(
+        UnifiedConsciousnessModel(
             modelId: "model_\(UUID().uuidString.prefix(8))",
             structure: .network,
             components: [],
@@ -1554,7 +1554,7 @@ class ConsciousnessUnifierImpl: ConsciousnessUnifier {
 
     func generateConsciousnessOntology(_ consciousness: [Consciousness]) async -> ConsciousnessOntology {
         // Simplified ontology generation
-        return ConsciousnessOntology(
+        ConsciousnessOntology(
             ontologyId: "ontology_\(UUID().uuidString.prefix(8))",
             concepts: [],
             relationships: [],
@@ -1566,7 +1566,7 @@ class ConsciousnessUnifierImpl: ConsciousnessUnifier {
 
     func establishConsciousnessRelationships(_ consciousness: [Consciousness]) async -> ConsciousnessRelationships {
         // Simplified relationship establishment
-        return ConsciousnessRelationships(
+        ConsciousnessRelationships(
             relationshipsId: "relationships_\(UUID().uuidString.prefix(8))",
             relationships: [],
             relationshipTypes: [.resonance, .harmony],
@@ -1633,7 +1633,7 @@ class ConsciousnessIntegrationValidatorImpl: ConsciousnessIntegrationValidator {
                     score: 0.9,
                     benchmark: 0.8,
                     significance: 0.9
-                )
+                ),
             ],
             assessmentTime: 4.0,
             recommendations: ["Monitor integration resonance regularly"]
@@ -1642,7 +1642,7 @@ class ConsciousnessIntegrationValidatorImpl: ConsciousnessIntegrationValidator {
 
     func verifyIntegrationConsistency(_ integration: ConsciousnessIntegration) async -> ConsciousnessIntegrationConsistencyVerification {
         // Simplified consistency verification
-        return ConsciousnessIntegrationConsistencyVerification(
+        ConsciousnessIntegrationConsistencyVerification(
             verificationId: "consistency_\(integration.integrationId)",
             integration: integration,
             isConsistent: true,
@@ -1654,7 +1654,7 @@ class ConsciousnessIntegrationValidatorImpl: ConsciousnessIntegrationValidator {
 
     func measureIntegrationCompleteness(_ integration: ConsciousnessIntegration) async -> ConsciousnessIntegrationCompletenessMeasurement {
         // Simplified completeness measurement
-        return ConsciousnessIntegrationCompletenessMeasurement(
+        ConsciousnessIntegrationCompletenessMeasurement(
             measurementId: "measurement_\(integration.integrationId)",
             integration: integration,
             completenessScore: 0.9,
@@ -1666,7 +1666,7 @@ class ConsciousnessIntegrationValidatorImpl: ConsciousnessIntegrationValidator {
 
     func generateIntegrationReport(_ integration: ConsciousnessIntegration) async -> ConsciousnessIntegrationReport {
         // Simplified report generation
-        return ConsciousnessIntegrationReport(
+        ConsciousnessIntegrationReport(
             reportId: "report_\(integration.integrationId)",
             integration: integration,
             summary: ConsciousnessIntegrationReport.IntegrationSummary(
@@ -1724,31 +1724,31 @@ enum ConsciousnessIntegratorError: Error {
 
 extension ConsciousnessIntegrationSystem {
     var integrationEfficiency: Double {
-        return Double(integrationCapabilities.count) / Double(consciousnessSources.count)
+        Double(integrationCapabilities.count) / Double(consciousnessSources.count)
     }
 
     var needsOptimization: Bool {
-        return status == .operational && integrationEfficiency < 0.8
+        status == .operational && integrationEfficiency < 0.8
     }
 }
 
 extension ConsciousnessIntegrationResult {
     var integrationQuality: Double {
-        return (qualityMetrics.coherence + qualityMetrics.completeness + qualityMetrics.consistency + qualityMetrics.resonance) / 4.0
+        (qualityMetrics.coherence + qualityMetrics.completeness + qualityMetrics.consistency + qualityMetrics.resonance) / 4.0
     }
 
     var isHighQuality: Bool {
-        return integrationQuality > 0.8 && success
+        integrationQuality > 0.8 && success
     }
 }
 
 extension IntegratedConsciousness {
     var integrationMaturity: Double {
-        return quality.awareness * quality.coherence * quality.resonance
+        quality.awareness * quality.coherence * quality.resonance
     }
 
     var isFullyIntegrated: Bool {
-        return integrationMaturity > 0.8 && integrationMetadata.validationStatus == .valid
+        integrationMaturity > 0.8 && integrationMetadata.validationStatus == .valid
     }
 }
 

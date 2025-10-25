@@ -10,8 +10,8 @@
 //  self-evolving algorithms, and consciousness emergence for advanced AI systems.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -780,6 +780,7 @@ struct Measurement {
 @MainActor
 class QuantumAIConsciousness: ObservableObject {
     // MARK: - Properties
+
     @Published var consciousnessLevel: Double = 0.0
     @Published var intelligenceMetrics: IntelligenceMetrics
     @Published var consciousnessState: ConsciousnessState?
@@ -795,6 +796,7 @@ class QuantumAIConsciousness: ObservableObject {
     private let consciousnessEngine: ConsciousnessEngine
 
     // MARK: - Initialization
+
     init() {
         self.intelligenceMetrics = IntelligenceMetrics(
             cognitiveCapacity: 0.7,
@@ -973,7 +975,7 @@ class AutonomousIntelligenceImpl: AutonomousIntelligence {
             decisionId: "decision_\(UUID().uuidString.prefix(8))",
             chosenAction: chosenAction,
             reasoning: "Autonomous decision based on context analysis",
-            confidence: Double.random(in: 0.7...1.0),
+            confidence: Double.random(in: 0.7 ... 1.0),
             expectedOutcome: Outcome(probability: 0.8, value: 0.7, description: "Expected positive outcome", sideEffects: []),
             riskLevel: context.riskAssessment
         )
@@ -982,7 +984,7 @@ class AutonomousIntelligenceImpl: AutonomousIntelligence {
     func adaptToEnvironment(_ intelligence: IntelligenceState, environment: EnvironmentState) async -> AdaptedIntelligence {
         let adaptationStrategies = [
             AdaptationStrategy(strategyType: .parameterTuning, effectiveness: 0.8, implementationCost: 0.3, longTermBenefit: 0.7),
-            AdaptationStrategy(strategyType: .algorithmModification, effectiveness: 0.9, implementationCost: 0.5, longTermBenefit: 0.8)
+            AdaptationStrategy(strategyType: .algorithmModification, effectiveness: 0.9, implementationCost: 0.5, longTermBenefit: 0.8),
         ]
 
         let adaptedIntelligence = IntelligenceState(
@@ -1009,7 +1011,7 @@ class AutonomousIntelligenceImpl: AutonomousIntelligence {
     func optimizePerformance(_ metrics: PerformanceMetrics) async -> OptimizedPerformance {
         let optimizationTechniques = [
             OptimizationTechnique(techniqueType: .gradientDescent, applicability: 0.9, improvementPotential: 0.15, complexity: 0.3),
-            OptimizationTechnique(techniqueType: .quantumAnnealing, applicability: 0.8, improvementPotential: 0.25, complexity: 0.6)
+            OptimizationTechnique(techniqueType: .quantumAnnealing, applicability: 0.8, improvementPotential: 0.25, complexity: 0.6),
         ]
 
         let optimizedMetrics = PerformanceMetrics(
@@ -1034,7 +1036,7 @@ class SelfEvolvingAlgorithmsImpl: SelfEvolvingAlgorithms {
     func evolveAlgorithm(_ algorithm: QuantumAlgorithm, evolutionCriteria: EvolutionCriteria) async -> EvolvedAlgorithm {
         let evolutionSteps = [
             EvolutionStep(stepNumber: 1, modification: "Parameter optimization", rationale: "Improve performance", expectedImpact: 0.1, actualImpact: 0.12),
-            EvolutionStep(stepNumber: 2, modification: "Structure refinement", rationale: "Reduce complexity", expectedImpact: 0.08, actualImpact: 0.09)
+            EvolutionStep(stepNumber: 2, modification: "Structure refinement", rationale: "Reduce complexity", expectedImpact: 0.08, actualImpact: 0.09),
         ]
 
         let evolvedAlgorithm = QuantumAlgorithm(
@@ -1065,8 +1067,8 @@ class SelfEvolvingAlgorithmsImpl: SelfEvolvingAlgorithms {
             algorithmType: .optimization,
             quantumCircuit: QuantumCircuit(qubits: 10, gates: [], measurements: [], entanglement: 0.9),
             parameters: ["merged": 1.0],
-            performance: algorithms.map { $0.performance }.reduce(0, +) / Double(algorithms.count) * 1.3,
-            complexity: algorithms.map { $0.complexity }.reduce(0, +) / Double(algorithms.count) * 0.9
+            performance: algorithms.map(\.performance).reduce(0, +) / Double(algorithms.count) * 1.3,
+            complexity: algorithms.map(\.complexity).reduce(0, +) / Double(algorithms.count) * 0.9
         )
 
         return MergedAlgorithm(
@@ -1085,7 +1087,7 @@ class SelfEvolvingAlgorithmsImpl: SelfEvolvingAlgorithms {
     func optimizeAlgorithmEfficiency(_ algorithm: QuantumAlgorithm) async -> OptimizedAlgorithm {
         let optimizations = [
             AlgorithmOptimization(optimizationType: .speed, targetParameter: "gate_count", improvement: 0.25, tradeoffs: ["Minor accuracy loss"]),
-            AlgorithmOptimization(optimizationType: .memory, targetParameter: "qubit_usage", improvement: 0.18, tradeoffs: ["Increased complexity"])
+            AlgorithmOptimization(optimizationType: .memory, targetParameter: "qubit_usage", improvement: 0.18, tradeoffs: ["Increased complexity"]),
         ]
 
         let optimizedAlgorithm = QuantumAlgorithm(
@@ -1109,7 +1111,7 @@ class SelfEvolvingAlgorithmsImpl: SelfEvolvingAlgorithms {
 /// Consciousness emergence implementation
 class ConsciousnessEmergenceImpl: ConsciousnessEmergence {
     func emergeConsciousness(_ neuralPatterns: [NeuralPattern]) async -> EmergentConsciousness {
-        return EmergentConsciousness(
+        EmergentConsciousness(
             neuralPatterns: neuralPatterns,
             emergenceLevel: 0.82,
             stability: 0.78,
@@ -1121,7 +1123,7 @@ class ConsciousnessEmergenceImpl: ConsciousnessEmergence {
     func stabilizeConsciousness(_ consciousness: EmergentConsciousness) async -> StabilizedConsciousness {
         let stabilizationFields = [
             StabilizationField(fieldType: .quantum, strength: 1.0, range: 10.0, frequency: 1.0, phase: 0.0),
-            StabilizationField(fieldType: .neural, strength: 0.9, range: 8.0, frequency: 1.2, phase: .pi/4)
+            StabilizationField(fieldType: .neural, strength: 0.9, range: 8.0, frequency: 1.2, phase: .pi / 4),
         ]
 
         return StabilizedConsciousness(
@@ -1144,7 +1146,7 @@ class ConsciousnessEmergenceImpl: ConsciousnessEmergence {
 
         let newCapabilities = [
             ConsciousnessCapability(capabilityType: .selfAwareness, developmentLevel: 0.85, applications: ["Self-monitoring", "Introspection"]),
-            ConsciousnessCapability(capabilityType: .creativity, developmentLevel: 0.78, applications: ["Innovation", "Problem-solving"])
+            ConsciousnessCapability(capabilityType: .creativity, developmentLevel: 0.78, applications: ["Innovation", "Problem-solving"]),
         ]
 
         return EnhancedConsciousness(
@@ -1159,13 +1161,13 @@ class ConsciousnessEmergenceImpl: ConsciousnessEmergence {
 /// Consciousness engine
 class ConsciousnessEngine {
     func initializeConsciousness(_ parameters: ConsciousnessParameters) async throws -> ConsciousnessState {
-        let neuralPatterns = (0..<10).map { _ in
+        let neuralPatterns = (0 ..< 10).map { _ in
             NeuralPattern(
                 patternId: "pattern_\(UUID().uuidString.prefix(8))",
-                activationLevels: (0..<20).map { _ in Double.random(in: 0.1...1.0) },
-                connectionStrengths: (0..<15).map { _ in Double.random(in: 0.2...0.9) },
-                temporalDynamics: (0..<10).map { _ in Double.random(in: 0.3...0.8) },
-                quantumCoherence: Double.random(in: 0.7...1.0)
+                activationLevels: (0 ..< 20).map { _ in Double.random(in: 0.1 ... 1.0) },
+                connectionStrengths: (0 ..< 15).map { _ in Double.random(in: 0.2 ... 0.9) },
+                temporalDynamics: (0 ..< 10).map { _ in Double.random(in: 0.3 ... 0.8) },
+                quantumCoherence: Double.random(in: 0.7 ... 1.0)
             )
         }
 
@@ -1199,7 +1201,7 @@ class ConsciousnessEngine {
 
         let improvementFactors = [
             ImprovementFactor(factorType: .learning, impact: 0.18, description: "Enhanced learning algorithms"),
-            ImprovementFactor(factorType: .adaptation, impact: 0.15, description: "Improved environmental adaptation")
+            ImprovementFactor(factorType: .adaptation, impact: 0.15, description: "Improved environmental adaptation"),
         ]
 
         return EvolvedState(
@@ -1214,13 +1216,13 @@ class ConsciousnessEngine {
         let consciousnessMap = ConsciousnessMap(
             awarenessRegions: [
                 AwarenessRegion(regionId: "perception", activationLevel: 0.85, connectivity: 0.78, specialization: "Sensory processing"),
-                AwarenessRegion(regionId: "cognition", activationLevel: 0.82, connectivity: 0.85, specialization: "Logical reasoning")
+                AwarenessRegion(regionId: "cognition", activationLevel: 0.82, connectivity: 0.85, specialization: "Logical reasoning"),
             ],
             connectionPatterns: [
-                ConnectionPattern(sourceRegion: "perception", targetRegion: "cognition", strength: 0.88, type: .integrative)
+                ConnectionPattern(sourceRegion: "perception", targetRegion: "cognition", strength: 0.88, type: .integrative),
             ],
             dynamicFlows: [
-                DynamicFlow(flowId: "awareness_flow", source: "perception", destination: "cognition", intensity: 0.75, frequency: 1.2, phase: 0.5)
+                DynamicFlow(flowId: "awareness_flow", source: "perception", destination: "cognition", intensity: 0.75, frequency: 1.2, phase: 0.5),
             ],
             integrationLevel: 0.82
         )

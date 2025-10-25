@@ -9,8 +9,8 @@
 // Framework for maintaining data integrity across multiple dimensional contexts
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -771,7 +771,7 @@ class CrossDimensionalConsistencyEngine {
                 expression: "check_constraints(data)",
                 parameters: [:],
                 severity: .medium
-            )
+            ),
         ]
 
         let result = await integrityValidator.validateDataIntegrity(data, against: rules)
@@ -918,7 +918,7 @@ class ConsistencyManagerImpl: ConsistencyManager {
                 action: RuleAction(type: .enforce, parameters: [:]),
                 priority: 1,
                 enabled: true
-            )
+            ),
         ]
 
         let network = ConsistencyNetwork(
@@ -948,7 +948,7 @@ class ConsistencyManagerImpl: ConsistencyManager {
 
     func mergeNetworks(_ networks: [ConsistencyNetwork]) async throws -> ConsistencyNetwork {
         // Simplified network merging
-        let mergedDimensions = Array(Set(networks.flatMap { $0.dimensions }))
+        let mergedDimensions = Array(Set(networks.flatMap(\.dimensions)))
 
         return ConsistencyNetwork(
             networkId: "merged_\(UUID().uuidString.prefix(8))",
@@ -959,9 +959,9 @@ class ConsistencyManagerImpl: ConsistencyManager {
                 conflictResolutionPolicy: .lastWriteWins,
                 integrityCheckFrequency: 60.0,
                 maxReconciliationTime: 600.0,
-                dataRetentionPeriod: 172800.0
+                dataRetentionPeriod: 172_800.0
             ),
-            consistencyRules: networks.flatMap { $0.consistencyRules },
+            consistencyRules: networks.flatMap(\.consistencyRules),
             status: .active,
             created: Date(),
             lastUpdated: Date()
@@ -1012,7 +1012,7 @@ class ConsistencyManagerImpl: ConsistencyManager {
 class DimensionalCoordinatorImpl: DimensionalCoordinator {
     func coordinateDataTransfer(from sourceDimension: Int, to targetDimension: Int, data: DimensionalData) async throws -> CoordinationResult {
         // Simplified coordination
-        return CoordinationResult(
+        CoordinationResult(
             success: true,
             transferredData: data,
             coordinationTime: 0.1,
@@ -1023,7 +1023,7 @@ class DimensionalCoordinatorImpl: DimensionalCoordinator {
 
     func synchronizeDimensionalStates(_ states: [DimensionalState]) async throws -> SynchronizationResult {
         // Simplified synchronization
-        return SynchronizationResult(
+        SynchronizationResult(
             synchronized: true,
             synchronizedStates: states,
             synchronizationTime: 0.2,
@@ -1034,7 +1034,7 @@ class DimensionalCoordinatorImpl: DimensionalCoordinator {
 
     func manageDimensionalBoundaries(_ boundaries: [DimensionalBoundary]) async -> BoundaryManagementResult {
         // Simplified boundary management
-        return BoundaryManagementResult(
+        BoundaryManagementResult(
             managed: true,
             activeBoundaries: boundaries,
             securityIncidents: 0,
@@ -1044,7 +1044,7 @@ class DimensionalCoordinatorImpl: DimensionalCoordinator {
 
     func optimizeDimensionalCommunication(_ communication: DimensionalCommunication) async -> OptimizationResult {
         // Simplified optimization
-        return OptimizationResult(
+        OptimizationResult(
             optimized: true,
             communicationPath: [communication.sourceDimension, communication.targetDimension],
             optimizationGain: 0.1,
@@ -1085,7 +1085,7 @@ class ConflictResolverImpl: ConflictResolver {
 
     func preventConflicts(_ data: DimensionalData, in context: DimensionalContext) async -> ConflictPreventionResult {
         // Simplified conflict prevention
-        return ConflictPreventionResult(
+        ConflictPreventionResult(
             prevented: true,
             preventionStrategies: ["Version vectors", "Conflict-free replicated data types"],
             confidence: 0.9,
@@ -1095,7 +1095,7 @@ class ConflictResolverImpl: ConflictResolver {
 
     func learnFromConflicts(_ conflicts: [ConsistencyConflict]) async -> LearningResult {
         // Simplified learning
-        return LearningResult(
+        LearningResult(
             learned: true,
             newRules: [],
             improvedStrategies: [.automatic],
@@ -1135,7 +1135,7 @@ class IntegrityValidatorImpl: IntegrityValidator {
 
     func checkConsistencyConstraints(_ data: DimensionalData, constraints: [ConsistencyConstraint]) async -> ConstraintValidationResult {
         // Simplified constraint checking
-        return ConstraintValidationResult(
+        ConstraintValidationResult(
             valid: true,
             violations: [],
             validationScore: 1.0
@@ -1144,7 +1144,7 @@ class IntegrityValidatorImpl: IntegrityValidator {
 
     func verifyDimensionalCoherence(_ data: DimensionalData, coherence: DimensionalCoherence) async -> CoherenceValidationResult {
         // Simplified coherence verification
-        return CoherenceValidationResult(
+        CoherenceValidationResult(
             coherent: true,
             coherenceScore: 0.95,
             issues: [],
@@ -1154,7 +1154,7 @@ class IntegrityValidatorImpl: IntegrityValidator {
 
     func auditIntegrityHistory(_ data: DimensionalData, timeWindow: DateInterval) async -> IntegrityAuditResult {
         // Simplified audit
-        return IntegrityAuditResult(
+        IntegrityAuditResult(
             auditId: "audit_\(UUID().uuidString.prefix(8))",
             timeWindow: timeWindow,
             violations: [],
@@ -1184,21 +1184,21 @@ enum ConsistencyError: Error {
 
 extension DimensionalData {
     var age: TimeInterval {
-        return Date().timeIntervalSince(timestamp)
+        Date().timeIntervalSince(timestamp)
     }
 
     var isExpired: Bool {
-        return age > 86400 // 24 hours
+        age > 86400 // 24 hours
     }
 }
 
 extension ConsistencyNetwork {
     var dimensionCount: Int {
-        return dimensions.count
+        dimensions.count
     }
 
     var isActive: Bool {
-        return status == .active
+        status == .active
     }
 }
 

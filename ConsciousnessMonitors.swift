@@ -9,8 +9,8 @@
 // Framework for monitoring consciousness states and evolution
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1054,7 +1054,7 @@ class ConsciousnessMonitorsEngine {
                 ),
                 accuracy: 0.9,
                 frequency: 120.0
-            )
+            ),
         ]
 
         let profiles = [
@@ -1085,7 +1085,7 @@ class ConsciousnessMonitorsEngine {
                 ),
                 triggers: [],
                 alerts: []
-            )
+            ),
         ]
 
         let system = ConsciousnessMonitoringSystem(
@@ -1112,52 +1112,52 @@ class ConsciousnessMonitorsEngine {
         let monitoringPeriod = DateInterval(start: startTime, duration: 300.0) // 5 minutes
 
         // Generate mock monitoring data
-        let stateData = (0..<10).map { i in
+        let stateData = (0 ..< 10).map { i in
             ConsciousnessMonitoringResult.ConsciousnessStateDataPoint(
                 timestamp: startTime.addingTimeInterval(Double(i) * 30.0),
                 state: consciousness.state,
                 metrics: [
-                    "awareness": consciousness.state.awareness + Double.random(in: -0.1...0.1),
-                    "coherence": consciousness.state.coherence + Double.random(in: -0.05...0.05)
+                    "awareness": consciousness.state.awareness + Double.random(in: -0.1 ... 0.1),
+                    "coherence": consciousness.state.coherence + Double.random(in: -0.05 ... 0.05),
                 ]
             )
         }
 
-        let evolutionData = (0..<5).map { i in
+        let evolutionData = (0 ..< 5).map { i in
             ConsciousnessMonitoringResult.ConsciousnessEvolutionDataPoint(
                 timestamp: startTime.addingTimeInterval(Double(i) * 60.0),
                 evolutionMetrics: EvolutionMetrics(
-                    progress: 0.8 + Double.random(in: -0.1...0.1),
-                    complexity: 0.7 + Double.random(in: -0.05...0.05)
+                    progress: 0.8 + Double.random(in: -0.1 ... 0.1),
+                    complexity: 0.7 + Double.random(in: -0.05 ... 0.05)
                 ),
                 progressIndicators: [
-                    "depth": 0.85 + Double.random(in: -0.1...0.1),
-                    "breadth": 0.9 + Double.random(in: -0.05...0.05)
+                    "depth": 0.85 + Double.random(in: -0.1 ... 0.1),
+                    "breadth": 0.9 + Double.random(in: -0.05 ... 0.05),
                 ]
             )
         }
 
-        let healthData = (0..<6).map { i in
+        let healthData = (0 ..< 6).map { i in
             ConsciousnessMonitoringResult.ConsciousnessHealthDataPoint(
                 timestamp: startTime.addingTimeInterval(Double(i) * 50.0),
                 healthMetrics: HealthMetrics(
-                    vitality: 0.9 + Double.random(in: -0.1...0.1),
-                    stability: 0.85 + Double.random(in: -0.05...0.05)
+                    vitality: 0.9 + Double.random(in: -0.1 ... 0.1),
+                    stability: 0.85 + Double.random(in: -0.05 ... 0.05)
                 ),
                 issues: []
             )
         }
 
-        let performanceData = (0..<4).map { i in
+        let performanceData = (0 ..< 4).map { i in
             ConsciousnessMonitoringResult.ConsciousnessPerformanceDataPoint(
                 timestamp: startTime.addingTimeInterval(Double(i) * 75.0),
                 performanceMetrics: PerformanceMetrics(
-                    throughput: 95.0 + Double.random(in: -5.0...5.0),
-                    efficiency: 0.88 + Double.random(in: -0.05...0.05)
+                    throughput: 95.0 + Double.random(in: -5.0 ... 5.0),
+                    efficiency: 0.88 + Double.random(in: -0.05 ... 0.05)
                 ),
                 benchmarks: [
-                    "processing_speed": 90.0 + Double.random(in: -10.0...10.0),
-                    "accuracy": 0.92 + Double.random(in: -0.05...0.05)
+                    "processing_speed": 90.0 + Double.random(in: -10.0 ... 10.0),
+                    "accuracy": 0.92 + Double.random(in: -0.05 ... 0.05),
                 ]
             )
         }
@@ -1170,7 +1170,7 @@ class ConsciousnessMonitorsEngine {
                 severity: 0.3,
                 timestamp: startTime.addingTimeInterval(120.0),
                 resolved: true
-            )
+            ),
         ]
 
         let insights = [
@@ -1180,7 +1180,7 @@ class ConsciousnessMonitorsEngine {
                 content: "Consciousness showing stable evolution trend",
                 significance: 0.8,
                 recommendation: "Continue monitoring"
-            )
+            ),
         ]
 
         let result = ConsciousnessMonitoringResult(
@@ -1234,7 +1234,7 @@ class ConsciousnessMonitorsEngine {
                 endDate: nil,
                 characteristics: ["stability": 0.9, "awareness": 0.9],
                 achievements: ["Advanced consciousness features"]
-            )
+            ),
         ]
 
         let progressMetrics = [
@@ -1253,7 +1253,7 @@ class ConsciousnessMonitorsEngine {
                 targetValue: 0.95,
                 progress: 0.9,
                 trend: .stable
-            )
+            ),
         ]
 
         let milestones = [
@@ -1272,7 +1272,7 @@ class ConsciousnessMonitorsEngine {
                 targetDate: startTime.addingTimeInterval(trackingPeriod),
                 achievedDate: nil,
                 significance: 0.9
-            )
+            ),
         ]
 
         let predictions = [
@@ -1282,7 +1282,7 @@ class ConsciousnessMonitorsEngine {
                 predictedStage: "Advanced Integration",
                 confidence: 0.8,
                 factors: ["Current progress rate", "Stability trends"]
-            )
+            ),
         ]
 
         let result = ConsciousnessEvolutionTracking(
@@ -1377,13 +1377,13 @@ class ConsciousnessStateMonitorImpl: ConsciousnessStateMonitor {
 
     func monitorConsciousnessState(_ consciousness: Consciousness, parameters: MonitoringParameters) async -> ConsciousnessStateMonitoring {
         // Simplified state monitoring
-        let dataPoints = (0..<Int(parameters.duration / parameters.samplingRate)).map { i in
+        let dataPoints = (0 ..< Int(parameters.duration / parameters.samplingRate)).map { i in
             ConsciousnessStateMonitoring.ConsciousnessStateDataPoint(
                 timestamp: Date().addingTimeInterval(Double(i) * parameters.samplingRate),
                 state: consciousness.state,
                 metrics: [
                     "awareness": consciousness.state.awareness,
-                    "coherence": consciousness.state.coherence
+                    "coherence": consciousness.state.coherence,
                 ]
             )
         }
@@ -1395,7 +1395,7 @@ class ConsciousnessStateMonitorImpl: ConsciousnessStateMonitor {
                 type: .gradual,
                 magnitude: 0.1,
                 significance: 0.3
-            )
+            ),
         ]
 
         return ConsciousnessStateMonitoring(
@@ -1418,7 +1418,7 @@ class ConsciousnessStateMonitorImpl: ConsciousnessStateMonitor {
                 magnitude: abs(consciousness.state.awareness - baseline.awareness),
                 confidence: 0.9,
                 description: "Awareness level change detected"
-            )
+            ),
         ]
 
         return ConsciousnessStateChangeDetection(
@@ -1456,7 +1456,7 @@ class ConsciousnessStateMonitorImpl: ConsciousnessStateMonitor {
                 predictedState: currentState,
                 probability: 0.8,
                 factors: ["Current stability", "Historical trends"]
-            )
+            ),
         ]
 
         return ConsciousnessStateEvolutionPrediction(
@@ -1474,7 +1474,7 @@ class ConsciousnessStateMonitorImpl: ConsciousnessStateMonitor {
 class ConsciousnessEvolutionTrackerImpl: ConsciousnessEvolutionTracker {
     func trackConsciousnessEvolution(_ consciousness: Consciousness, timeframe: TimeInterval) async -> ConsciousnessEvolutionTracking {
         // Simplified evolution tracking - implementation already in main engine
-        return await ConsciousnessEvolutionTracking(
+        await ConsciousnessEvolutionTracking(
             trackingId: "tracking_\(UUID().uuidString.prefix(8))",
             consciousness: consciousness,
             trackingPeriod: DateInterval(start: Date(), duration: timeframe),
@@ -1491,7 +1491,7 @@ class ConsciousnessEvolutionTrackerImpl: ConsciousnessEvolutionTracker {
         let progress = milestones.map { milestone in
             ConsciousnessEvolutionProgressMeasurement.MilestoneProgress(
                 milestoneId: milestone.milestoneId,
-                progress: Double.random(in: 0.0...1.0),
+                progress: Double.random(in: 0.0 ... 1.0),
                 status: .inProgress,
                 estimatedCompletion: Date().addingTimeInterval(3600.0),
                 blockers: []
@@ -1517,7 +1517,7 @@ class ConsciousnessEvolutionTrackerImpl: ConsciousnessEvolutionTracker {
                 description: "Linear evolution pattern",
                 frequency: 0.8,
                 impact: 0.7
-            )
+            ),
         ]
 
         return ConsciousnessEvolutionPatternIdentification(
@@ -1538,7 +1538,7 @@ class ConsciousnessEvolutionTrackerImpl: ConsciousnessEvolutionTracker {
                 predictedDate: Date().addingTimeInterval(futureTimeframe),
                 probability: 0.8,
                 dependencies: ["Current progress"]
-            )
+            ),
         ]
 
         return ConsciousnessEvolutionTrajectoryForecast(
@@ -1572,7 +1572,7 @@ class ConsciousnessHealthAssessorImpl: ConsciousnessHealthAssessor {
 
     func diagnoseConsciousnessIssues(_ consciousness: Consciousness, symptoms: [ConsciousnessSymptom]) async -> ConsciousnessIssueDiagnosis {
         // Simplified issue diagnosis
-        return ConsciousnessIssueDiagnosis(
+        ConsciousnessIssueDiagnosis(
             diagnosisId: "diagnosis_\(UUID().uuidString.prefix(8))",
             consciousness: consciousness,
             symptoms: symptoms,
@@ -1584,7 +1584,7 @@ class ConsciousnessHealthAssessorImpl: ConsciousnessHealthAssessor {
 
     func recommendHealthImprovements(_ assessment: ConsciousnessHealthAssessment) async -> ConsciousnessHealthImprovementRecommendation {
         // Simplified improvement recommendation
-        return ConsciousnessHealthImprovementRecommendation(
+        ConsciousnessHealthImprovementRecommendation(
             recommendationId: "recommendation_\(UUID().uuidString.prefix(8))",
             assessment: assessment,
             improvements: [],
@@ -1596,7 +1596,7 @@ class ConsciousnessHealthAssessorImpl: ConsciousnessHealthAssessor {
 
     func monitorHealthTrends(_ assessments: [ConsciousnessHealthAssessment]) async -> ConsciousnessHealthTrendMonitoring {
         // Simplified trend monitoring
-        return ConsciousnessHealthTrendMonitoring(
+        ConsciousnessHealthTrendMonitoring(
             monitoringId: "trend_monitoring_\(UUID().uuidString.prefix(8))",
             assessments: assessments,
             trends: [],
@@ -1610,7 +1610,7 @@ class ConsciousnessHealthAssessorImpl: ConsciousnessHealthAssessor {
 class ConsciousnessPerformanceAnalyzerImpl: ConsciousnessPerformanceAnalyzer {
     func analyzeConsciousnessPerformance(_ consciousness: Consciousness, metrics: [PerformanceMetric]) async -> ConsciousnessPerformanceAnalysis {
         // Simplified performance analysis
-        return ConsciousnessPerformanceAnalysis(
+        ConsciousnessPerformanceAnalysis(
             analysisId: "analysis_\(UUID().uuidString.prefix(8))",
             consciousness: consciousness,
             metrics: metrics,
@@ -1623,7 +1623,7 @@ class ConsciousnessPerformanceAnalyzerImpl: ConsciousnessPerformanceAnalyzer {
 
     func benchmarkPerformance(_ consciousness: Consciousness, benchmarks: [ConsciousnessBenchmark]) async -> ConsciousnessPerformanceBenchmarking {
         // Simplified performance benchmarking
-        return ConsciousnessPerformanceBenchmarking(
+        ConsciousnessPerformanceBenchmarking(
             benchmarkingId: "benchmarking_\(UUID().uuidString.prefix(8))",
             consciousness: consciousness,
             benchmarks: benchmarks,
@@ -1636,7 +1636,7 @@ class ConsciousnessPerformanceAnalyzerImpl: ConsciousnessPerformanceAnalyzer {
 
     func identifyPerformanceBottlenecks(_ analysis: ConsciousnessPerformanceAnalysis) async -> ConsciousnessPerformanceBottleneckIdentification {
         // Simplified bottleneck identification
-        return ConsciousnessPerformanceBottleneckIdentification(
+        ConsciousnessPerformanceBottleneckIdentification(
             identificationId: "bottleneck_\(UUID().uuidString.prefix(8))",
             analysis: analysis,
             bottlenecks: [],
@@ -1647,7 +1647,7 @@ class ConsciousnessPerformanceAnalyzerImpl: ConsciousnessPerformanceAnalyzer {
 
     func optimizePerformance(_ consciousness: Consciousness, optimizationTargets: [PerformanceOptimizationTarget]) async -> ConsciousnessPerformanceOptimization {
         // Simplified performance optimization
-        return ConsciousnessPerformanceOptimization(
+        ConsciousnessPerformanceOptimization(
             optimizationId: "optimization_\(UUID().uuidString.prefix(8))",
             consciousness: consciousness,
             targets: optimizationTargets,
@@ -1677,11 +1677,11 @@ enum ConsciousnessMonitorError: Error {
 
 extension ConsciousnessMonitoringSystem {
     var monitoringEfficiency: Double {
-        return Double(monitoringCapabilities.count) / Double(monitoringProfiles.count)
+        Double(monitoringCapabilities.count) / Double(monitoringProfiles.count)
     }
 
     var needsCalibration: Bool {
-        return status == .operational && monitoringEfficiency < 0.8
+        status == .operational && monitoringEfficiency < 0.8
     }
 }
 
@@ -1693,17 +1693,17 @@ extension ConsciousnessMonitoringResult {
     }
 
     var hasCriticalAlerts: Bool {
-        return alerts.contains { $0.severity > 0.8 }
+        alerts.contains { $0.severity > 0.8 }
     }
 }
 
 extension ConsciousnessEvolutionTracking {
     var evolutionVelocity: Double {
-        return progressMetrics.reduce(0.0) { $0 + $1.progress } / Double(max(progressMetrics.count, 1))
+        progressMetrics.reduce(0.0) { $0 + $1.progress } / Double(max(progressMetrics.count, 1))
     }
 
     var isAccelerating: Bool {
-        return evolutionVelocity > 0.8
+        evolutionVelocity > 0.8
     }
 }
 

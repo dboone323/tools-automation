@@ -1,0 +1,254 @@
+{
+  "afb35b55b4ad": {
+    "pattern": "[ERROR] HabitQuest iOS build failed",
+    "category": "general",
+    "severity": "medium",
+    "count": 1,
+    "examples": [
+      "[16:35:08] [ERROR] HabitQuest iOS build failed"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:01.085833Z",
+    "last_seen": "2025-10-25T22:23:01.085833Z"
+  },
+  "26dc6f655963": {
+    "pattern": "Failed frontend command:",
+    "category": "info",
+    "severity": "low",
+    "count": 2,
+    "examples": [
+      "Failed frontend command:"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:01.217798Z",
+    "last_seen": "2025-10-25T22:23:03.368398Z"
+  },
+  "1d088f4db0b9": {
+    "pattern": "The following build commands failed:",
+    "category": "info",
+    "severity": "low",
+    "count": 3,
+    "examples": [
+      "The following build commands failed:"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:01.344058Z",
+    "last_seen": "2025-10-25T22:23:03.749458Z"
+  },
+  "26c3ff9315cd": {
+    "pattern": "[WARNING] HabitQuest Xcode tests not configured or failed (expected in some environments)",
+    "category": "info",
+    "severity": "low",
+    "count": 1,
+    "examples": [
+      "[16:36:10] [WARNING] HabitQuest Xcode tests not configured or failed (expected in some environments)"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:01.465791Z",
+    "last_seen": "2025-10-25T22:23:01.465791Z"
+  },
+  "f409329bdf04": {
+    "pattern": "Xcode tests not available or failed",
+    "category": "info",
+    "severity": "low",
+    "count": 3,
+    "examples": [
+      "Xcode tests not available or failed"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:01.584429Z",
+    "last_seen": "2025-10-25T22:23:03.118338Z"
+  },
+  "ce813bba2557": {
+    "pattern": "[ERROR] MomentumFinance (iOS-Swift) SwiftPM build failed",
+    "category": "build",
+    "severity": "high",
+    "count": 1,
+    "examples": [
+      "[16:38:29] [ERROR] MomentumFinance (iOS-Swift) SwiftPM build failed"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:01.705127Z",
+    "last_seen": "2025-10-25T22:23:01.705127Z"
+  },
+  "a9d4134763b6": {
+    "pattern": "error: compile command failed due to signal 6 (use -v to see invocation)",
+    "category": "general",
+    "severity": "medium",
+    "count": 1,
+    "examples": [
+      "error: compile command failed due to signal 6 (use -v to see invocation)"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:01.859090Z",
+    "last_seen": "2025-10-25T22:23:01.859090Z"
+  },
+  "38ac6c45e218": {
+    "pattern": "Assertion failed: (inserted), function recordOpenedType at TypeOfReference.cpp:<n>.",
+    "category": "test",
+    "severity": "high",
+    "count": 1,
+    "examples": [
+      "Assertion failed: (inserted), function recordOpenedType at TypeOfReference.cpp:656."
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:01.989782Z",
+    "last_seen": "2025-10-25T22:23:01.989782Z"
+  },
+  "42cadfd8ec50": {
+    "pattern": "[ERROR] MomentumFinance iOS build failed",
+    "category": "general",
+    "severity": "medium",
+    "count": 1,
+    "examples": [
+      "[16:38:31] [ERROR] MomentumFinance iOS build failed"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:02.109374Z",
+    "last_seen": "2025-10-25T22:23:02.109374Z"
+  },
+  "7f1d36b2c21f": {
+    "pattern": "[ERROR] MomentumFinance SwiftPM tests failed",
+    "category": "test",
+    "severity": "high",
+    "count": 1,
+    "examples": [
+      "[16:38:35] [ERROR] MomentumFinance SwiftPM tests failed"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:02.227831Z",
+    "last_seen": "2025-10-25T22:23:02.227831Z"
+  },
+  "d78b107600fe": {
+    "pattern": "error: emit-module command failed with exit code 1 (use -v to see invocation)",
+    "category": "general",
+    "severity": "medium",
+    "count": 1,
+    "examples": [
+      "error: emit-module command failed with exit code 1 (use -v to see invocation)"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:02.394216Z",
+    "last_seen": "2025-10-25T22:23:02.394216Z"
+  },
+  "7c2621a3cb0e": {
+    "pattern": "[ERROR] PlannerApp iOS build failed",
+    "category": "general",
+    "severity": "medium",
+    "count": 1,
+    "examples": [
+      "[16:38:36] [ERROR] PlannerApp iOS build failed"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:02.517738Z",
+    "last_seen": "2025-10-25T22:23:02.517738Z"
+  },
+  "a5b0e0226cba": {
+    "pattern": "[WARNING] PlannerApp Xcode tests not configured or failed (expected in some environments)",
+    "category": "info",
+    "severity": "low",
+    "count": 1,
+    "examples": [
+      "[16:38:37] [WARNING] PlannerApp Xcode tests not configured or failed (expected in some environments)"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:02.637176Z",
+    "last_seen": "2025-10-25T22:23:02.637176Z"
+  },
+  "818e6f686ff0": {
+    "pattern": "[ERROR] AvoidObstaclesGame iOS build failed",
+    "category": "general",
+    "severity": "medium",
+    "count": 1,
+    "examples": [
+      "[16:38:38] [ERROR] AvoidObstaclesGame iOS build failed"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:02.877295Z",
+    "last_seen": "2025-10-25T22:23:02.877295Z"
+  },
+  "e298f19c309f": {
+    "pattern": "[WARNING] AvoidObstaclesGame Xcode tests not configured or failed (expected in some environments)",
+    "category": "info",
+    "severity": "low",
+    "count": 1,
+    "examples": [
+      "[16:39:39] [WARNING] AvoidObstaclesGame Xcode tests not configured or failed (expected in some environments)"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:02.998092Z",
+    "last_seen": "2025-10-25T22:23:02.998092Z"
+  },
+  "fca7d96d4ee9": {
+    "pattern": "[ERROR] HabitQuest macOS build failed",
+    "category": "general",
+    "severity": "medium",
+    "count": 1,
+    "examples": [
+      "[16:39:50] [ERROR] HabitQuest macOS build failed"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:03.237857Z",
+    "last_seen": "2025-10-25T22:23:03.237857Z"
+  },
+  "115b578994f1": {
+    "pattern": "[ERROR] MomentumFinance macOS build failed",
+    "category": "general",
+    "severity": "medium",
+    "count": 1,
+    "examples": [
+      "[16:40:06] [ERROR] MomentumFinance macOS build failed"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:03.614471Z",
+    "last_seen": "2025-10-25T22:23:03.614471Z"
+  },
+  "96af8047528d": {
+    "pattern": "[INFO] Failed: 8",
+    "category": "info",
+    "severity": "low",
+    "count": 1,
+    "examples": [
+      "[16:40:20] [INFO] Failed: 8"
+    ],
+    "files": [
+      "/Users/danielstevens/Desktop/Quantum-workspace/test_results_20251025_163357.log"
+    ],
+    "first_seen": "2025-10-25T22:23:03.888738Z",
+    "last_seen": "2025-10-25T22:23:03.888738Z"
+  }
+}

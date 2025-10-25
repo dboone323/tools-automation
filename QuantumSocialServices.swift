@@ -671,7 +671,7 @@ class QuantumSocialServicesEngine {
                     risks: []
                 ),
                 monitoring: SustainabilityMonitoring(
-                    frequency: 604800,
+                    frequency: 604_800,
                     indicators: [],
                     thresholds: []
                 )
@@ -786,7 +786,7 @@ class QuantumSocialServicesEngine {
                 metrics: [],
                 monitoring: WellbeingMonitoring(
                     coverage: 0.9,
-                    frequency: 604800,
+                    frequency: 604_800,
                     accuracy: 0.85
                 )
             )
@@ -1004,7 +1004,7 @@ class QuantumSocialServicesEngine {
                     oversight: AccountabilityOversight(
                         oversightId: "oversight_\(frameworkId)",
                         type: "independent",
-                        frequency: 604800,
+                        frequency: 604_800,
                         effectiveness: 0.9,
                         independence: 0.85
                     ),
@@ -1115,7 +1115,7 @@ class QuantumSocialServicesEngine {
                     scaling: ScalingStrategy(
                         strategyId: "scale_strat_\(frameworkId)",
                         approach: "evidence-based",
-                        resources: 200000,
+                        resources: 200_000,
                         timeline: 31_536_000,
                         risk: 0.2
                     ),
@@ -1169,16 +1169,17 @@ class QuantumSocialServicesEngine {
                     gdp: economic.gdp,
                     inflation: economic.inflation,
                     unemployment: economic.unemployment,
-                    costOfLiving: 1500.0  // Monthly cost of living
-                ))
+                    costOfLiving: 1500.0 // Monthly cost of living
+                )
+            )
             amounts[citizen.citizenId] = amount.amount
             total += amount.amount
         }
 
         let distribution = IncomeDistribution(
             average: total / Double(citizens.count),
-            median: 1200.0,  // Calculated median
-            gini: 0.15,  // Low inequality
+            median: 1200.0, // Calculated median
+            gini: 0.15, // Low inequality
             percentiles: [
                 10: 1000.0,
                 25: 1100.0,
@@ -1230,7 +1231,8 @@ class QuantumSocialServicesEngine {
                     outcomes: [],
                     status: mapPolicyStatusToWelfareStatus($0.status)
                 )
-            }, beneficiaries: [])
+            }, beneficiaries: []
+        )
 
         print(
             "✅ Social welfare optimized with \(String(format: "%.1f", welfareOptimization.optimization.efficiency * 100))% efficiency"
@@ -1247,7 +1249,8 @@ class QuantumSocialServicesEngine {
 
         let communitySupportSystems = CommunitySupportSystemsImpl()
         let assessment = await communitySupportSystems.assessCommunityNeeds(
-            communities, indicators: [])
+            communities, indicators: []
+        )
 
         let coordination = CommunitySupportCoordination(
             coordinationId: "comm_coord_\(UUID().uuidString.prefix(8))",
@@ -1282,7 +1285,7 @@ class QuantumSocialServicesEngine {
             monitoring: CommunityMonitoringResult(
                 monitored: true,
                 coverage: 0.9,
-                frequency: 604800,
+                frequency: 604_800,
                 accuracy: 0.85
             )
         )
@@ -1366,7 +1369,8 @@ class QuantumSocialServicesEngine {
                 demographics: [:],
                 indicators: [],
                 timestamp: Date()
-            ), algorithms: [])
+            ), algorithms: []
+        )
 
         let execution = SocialJusticeExecution(
             executionId: "justice_exec_\(UUID().uuidString.prefix(8))",
@@ -1431,7 +1435,8 @@ class QuantumSocialServicesEngine {
                 indicators: [],
                 demographics: [:],
                 timestamp: Date()
-            ), thresholds: [])
+            ), thresholds: []
+        )
 
         let alleviation = PovertyAlleviationResult(
             alleviationId: "poverty_allev_\(UUID().uuidString.prefix(8))",
@@ -1507,13 +1512,13 @@ class QuantumSocialServicesEngine {
             )
         }
 
-        let averageEqualityIndex = 0.82  // Simulated
+        let averageEqualityIndex = 0.82 // Simulated
         if averageEqualityIndex < 0.75 {
             print(
                 "⚠️ Equality index degraded: \(String(format: "%.1f", averageEqualityIndex * 100))%")
         }
 
-        let povertyReductionRate = 0.25  // Simulated
+        let povertyReductionRate = 0.25 // Simulated
         if povertyReductionRate < 0.2 {
             print(
                 "⚠️ Poverty reduction rate below target: \(String(format: "%.1f", povertyReductionRate * 100))%"
@@ -1570,9 +1575,9 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
         -> BasicIncomeAmount
     {
         // Calculate based on cost of living, adjusted for economic conditions
-        let baseAmount = context.costOfLiving * 0.8  // 80% of cost of living
-        let adjustment = (context.gdp / 1_000_000) * 0.1  // GDP-based adjustment
-        let amount = max(baseAmount + adjustment, 500.0)  // Minimum amount
+        let baseAmount = context.costOfLiving * 0.8 // 80% of cost of living
+        let adjustment = (context.gdp / 1_000_000) * 0.1 // GDP-based adjustment
+        let amount = max(baseAmount + adjustment, 500.0) // Minimum amount
 
         return BasicIncomeAmount(
             citizenId: citizen.citizenId,
@@ -1590,7 +1595,7 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
     func distributeUniversalIncome(_ citizens: [Citizen], treasury: Treasury) async
         -> IncomeDistributionResult
     {
-        let totalAmount = citizens.reduce(0.0) { sum, citizen in
+        let totalAmount = citizens.reduce(0.0) { sum, _ in
             sum + (treasury.amount / Double(citizens.count))
         }
 
@@ -1612,7 +1617,7 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
     func adjustIncomeLevels(_ economic: EconomicData, inflation: InflationRate) async
         -> IncomeAdjustment
     {
-        let adjustment = inflation.rate * 0.5  // 50% inflation adjustment
+        let adjustment = inflation.rate * 0.5 // 50% inflation adjustment
         let newLevels = economic.income.average * (1 + adjustment)
 
         return IncomeAdjustment(
@@ -1629,7 +1634,7 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
     func monitorIncomeEffectiveness(_ citizens: [Citizen], metrics: [SocialMetric]) async
         -> IncomeEffectiveness
     {
-        return IncomeEffectiveness(
+        IncomeEffectiveness(
             monitoringId: "income_eff_\(UUID().uuidString.prefix(8))",
             citizens: citizens,
             metrics: metrics,
@@ -1647,7 +1652,7 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
     func optimizeIncomeDistribution(_ allocations: [IncomeAllocation], goals: [SocialGoal]) async
         -> IncomeOptimization
     {
-        return IncomeOptimization(
+        IncomeOptimization(
             optimizationId: "income_opt_\(UUID().uuidString.prefix(8))",
             allocations: allocations,
             goals: goals,
@@ -1666,7 +1671,7 @@ class UniversalBasicIncomeImpl: UniversalBasicIncome {
         -> IncomeSustainability
     {
         let sustainable = treasury.amount >= projections.requiredAmount
-        let duration = sustainable ? 31_536_000.0 : 15_768_000.0  // 1 year or 6 months
+        let duration = sustainable ? 31_536_000.0 : 15_768_000.0 // 1 year or 6 months
 
         return IncomeSustainability(
             sustainabilityId: "income_sust_\(UUID().uuidString.prefix(8))",
@@ -1689,7 +1694,7 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
     func optimizeWelfarePrograms(_ programs: [WelfareProgram], beneficiaries: [Beneficiary]) async
         -> WelfareOptimization
     {
-        return WelfareOptimization(
+        WelfareOptimization(
             optimizationId: "welfare_opt_\(UUID().uuidString.prefix(8))",
             programs: programs,
             beneficiaries: beneficiaries,
@@ -1707,7 +1712,7 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
     func allocateSocialResources(_ resources: SocialResources, priorities: [SocialPriority]) async
         -> ResourceAllocation
     {
-        return ResourceAllocation(
+        ResourceAllocation(
             allocationId: "res_alloc_\(UUID().uuidString.prefix(8))",
             resources: resources,
             priorities: priorities,
@@ -1724,7 +1729,7 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
     func maximizeSocialUtility(_ policies: [SocialPolicy], outcomes: [SocialOutcome]) async
         -> UtilityMaximization
     {
-        return UtilityMaximization(
+        UtilityMaximization(
             maximizationId: "util_max_\(UUID().uuidString.prefix(8))",
             policies: policies,
             outcomes: outcomes,
@@ -1741,7 +1746,7 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
     func balanceEquityEfficiency(_ equity: EquityMetrics, efficiency: EfficiencyMetrics) async
         -> EquityEfficiencyBalance
     {
-        return EquityEfficiencyBalance(
+        EquityEfficiencyBalance(
             balanceId: "eq_eff_bal_\(UUID().uuidString.prefix(8))",
             equity: equity,
             efficiency: efficiency,
@@ -1758,7 +1763,7 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
     func coordinateSocialServices(_ services: [SocialService], coordination: CoordinationLevel)
         async -> ServiceCoordination
     {
-        return ServiceCoordination(
+        ServiceCoordination(
             coordinationId: "serv_coord_\(UUID().uuidString.prefix(8))",
             services: services,
             coordination: coordination,
@@ -1775,7 +1780,7 @@ class SocialWelfareOptimizationImpl: SocialWelfareOptimization {
     func evaluateSocialImpact(_ interventions: [SocialIntervention], baselines: [SocialBaseline])
         async -> SocialImpactEvaluation
     {
-        return SocialImpactEvaluation(
+        SocialImpactEvaluation(
             evaluationId: "impact_eval_\(UUID().uuidString.prefix(8))",
             interventions: interventions,
             baselines: baselines,
@@ -1859,7 +1864,7 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
             metrics: [],
             monitoring: WellbeingMonitoring(
                 coverage: 0.9,
-                frequency: 604800,
+                frequency: 604_800,
                 accuracy: 0.85
             )
         )
@@ -1872,10 +1877,11 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
         self.engagementFacilitation = engagementFacilitation
         self.wellbeingMonitoring = wellbeingMonitoring
     }
+
     func assessCommunityNeeds(_ communities: [Community], indicators: [NeedIndicator]) async
         -> CommunityNeedsAssessment
     {
-        return CommunityNeedsAssessment(
+        CommunityNeedsAssessment(
             assessmentId: "needs_assess_\(UUID().uuidString.prefix(8))",
             communities: communities,
             indicators: indicators,
@@ -1892,7 +1898,7 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
     func coordinateSupportPrograms(_ programs: [SupportProgram], communities: [Community]) async
         -> SupportCoordination
     {
-        return SupportCoordination(
+        SupportCoordination(
             coordinationId: "support_coord_\(UUID().uuidString.prefix(8))",
             programs: programs,
             communities: communities,
@@ -1909,7 +1915,7 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
     func mobilizeCommunityResources(
         _ resources: CommunityResources, initiatives: [CommunityInitiative]
     ) async -> ResourceMobilization {
-        return ResourceMobilization(
+        ResourceMobilization(
             mobilizationId: "res_mob_\(UUID().uuidString.prefix(8))",
             resources: resources,
             initiatives: initiatives,
@@ -1926,7 +1932,7 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
     func strengthenSocialNetworks(_ networks: [SocialNetwork], connections: [NetworkConnection])
         async -> NetworkStrengthening
     {
-        return NetworkStrengthening(
+        NetworkStrengthening(
             strengtheningId: "net_strength_\(UUID().uuidString.prefix(8))",
             networks: networks,
             connections: connections,
@@ -1943,7 +1949,7 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
     func facilitateCommunityEngagement(_ communities: [Community], platforms: [EngagementPlatform])
         async -> CommunityEngagement
     {
-        return CommunityEngagement(
+        CommunityEngagement(
             engagementId: "comm_engage_\(UUID().uuidString.prefix(8))",
             communities: communities,
             platforms: platforms,
@@ -1960,14 +1966,14 @@ class CommunitySupportSystemsImpl: CommunitySupportSystems {
     func monitorCommunityWellbeing(_ communities: [Community], metrics: [WellbeingMetric]) async
         -> CommunityMonitoring
     {
-        return CommunityMonitoring(
+        CommunityMonitoring(
             monitoringId: "comm_mon_\(UUID().uuidString.prefix(8))",
             communities: communities,
             metrics: metrics,
             monitoring: CommunityMonitoring.MonitoringResult(
                 monitored: true,
                 coverage: 0.9,
-                frequency: 604800,
+                frequency: 604_800,
                 accuracy: 0.85
             ),
             timestamp: Date()
@@ -1980,7 +1986,7 @@ class EqualityFrameworksImpl: EqualityFrameworks {
     func measureSocialInequality(_ populations: [Population], dimensions: [InequalityDimension])
         async -> InequalityMeasurement
     {
-        return InequalityMeasurement(
+        InequalityMeasurement(
             measurementId: "ineq_meas_\(UUID().uuidString.prefix(8))",
             populations: populations,
             dimensions: dimensions,
@@ -1997,7 +2003,7 @@ class EqualityFrameworksImpl: EqualityFrameworks {
     func designEqualityInterventions(
         _ inequalities: [SocialInequality], frameworks: [EqualityFramework]
     ) async -> InterventionDesign {
-        return InterventionDesign(
+        InterventionDesign(
             designId: "intervene_design_\(UUID().uuidString.prefix(8))",
             inequalities: inequalities,
             frameworks: frameworks,
@@ -2014,7 +2020,7 @@ class EqualityFrameworksImpl: EqualityFrameworks {
     func implementEqualityPolicies(_ policies: [EqualityPolicy], enforcement: PolicyEnforcement)
         async -> PolicyImplementation
     {
-        return PolicyImplementation(
+        PolicyImplementation(
             implementationId: "policy_impl_\(UUID().uuidString.prefix(8))",
             policies: policies,
             enforcement: enforcement,
@@ -2031,7 +2037,7 @@ class EqualityFrameworksImpl: EqualityFrameworks {
     func monitorEqualityProgress(_ metrics: [EqualityMetric], targets: [EqualityTarget]) async
         -> ProgressMonitoring
     {
-        return ProgressMonitoring(
+        ProgressMonitoring(
             monitoringId: "prog_mon_\(UUID().uuidString.prefix(8))",
             metrics: metrics,
             targets: targets,
@@ -2048,7 +2054,7 @@ class EqualityFrameworksImpl: EqualityFrameworks {
     func addressDiscrimination(
         _ incidents: [DiscriminationIncident], responses: [DiscriminationResponse]
     ) async -> DiscriminationAddressing {
-        return DiscriminationAddressing(
+        DiscriminationAddressing(
             addressingId: "disc_addr_\(UUID().uuidString.prefix(8))",
             incidents: incidents,
             responses: responses,
@@ -2065,7 +2071,7 @@ class EqualityFrameworksImpl: EqualityFrameworks {
     func promoteInclusiveGrowth(_ growth: EconomicGrowth, inclusion: InclusionStrategy) async
         -> InclusiveGrowthPromotion
     {
-        return InclusiveGrowthPromotion(
+        InclusiveGrowthPromotion(
             promotionId: "incl_growth_prom_\(UUID().uuidString.prefix(8))",
             growth: growth,
             inclusion: inclusion,
@@ -2085,7 +2091,7 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
     func identifySocialInjustices(_ data: SocialData, algorithms: [JusticeAlgorithm]) async
         -> InjusticeIdentification
     {
-        return InjusticeIdentification(
+        InjusticeIdentification(
             identificationId: "injustice_id_\(UUID().uuidString.prefix(8))",
             data: data,
             algorithms: algorithms,
@@ -2102,7 +2108,7 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
     func calculateJusticeRemedies(_ injustices: [SocialInjustice], frameworks: [JusticeFramework])
         async -> RemedyCalculation
     {
-        return RemedyCalculation(
+        RemedyCalculation(
             calculationId: "remedy_calc_\(UUID().uuidString.prefix(8))",
             injustices: injustices,
             frameworks: frameworks,
@@ -2119,7 +2125,7 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
     func executeJusticeInterventions(
         _ interventions: [JusticeIntervention], coordination: InterventionCoordination
     ) async -> InterventionExecution {
-        return InterventionExecution(
+        InterventionExecution(
             executionId: "intervene_exec_\(UUID().uuidString.prefix(8))",
             interventions: interventions,
             coordination: coordination,
@@ -2136,7 +2142,7 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
     func monitorJusticeOutcomes(_ outcomes: [JusticeOutcome], metrics: [JusticeMetric]) async
         -> OutcomeMonitoring
     {
-        return OutcomeMonitoring(
+        OutcomeMonitoring(
             monitoringId: "outcome_mon_\(UUID().uuidString.prefix(8))",
             outcomes: outcomes,
             metrics: metrics,
@@ -2153,7 +2159,7 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
     func preventFutureInjustices(_ patterns: [InjusticePattern], prevention: PreventionStrategy)
         async -> InjusticePrevention
     {
-        return InjusticePrevention(
+        InjusticePrevention(
             preventionId: "injustice_prev_\(UUID().uuidString.prefix(8))",
             patterns: patterns,
             prevention: prevention,
@@ -2170,7 +2176,7 @@ class SocialJusticeAlgorithmsImpl: SocialJusticeAlgorithms {
     func ensureAccountability(_ actions: [AccountableAction], oversight: AccountabilityOversight)
         async -> AccountabilityEnsurance
     {
-        return AccountabilityEnsurance(
+        AccountabilityEnsurance(
             ensuranceId: "account_ens_\(UUID().uuidString.prefix(8))",
             actions: actions,
             oversight: oversight,
@@ -2190,7 +2196,7 @@ class PovertyAlleviationImpl: PovertyAlleviation {
     func identifyPovertyPopulations(_ data: SocioeconomicData, thresholds: [PovertyThreshold]) async
         -> PovertyIdentification
     {
-        return PovertyIdentification(
+        PovertyIdentification(
             identificationId: "pov_id_\(UUID().uuidString.prefix(8))",
             data: data,
             thresholds: thresholds,
@@ -2207,7 +2213,7 @@ class PovertyAlleviationImpl: PovertyAlleviation {
     func designPovertyPrograms(_ populations: [PovertyPopulation], resources: PovertyResources)
         async -> ProgramDesign
     {
-        return ProgramDesign(
+        ProgramDesign(
             designId: "prog_design_\(UUID().uuidString.prefix(8))",
             populations: populations,
             resources: resources,
@@ -2224,7 +2230,7 @@ class PovertyAlleviationImpl: PovertyAlleviation {
     func implementPovertyInterventions(
         _ programs: [PovertyProgram], coordination: ProgramCoordination
     ) async -> InterventionImplementation {
-        return InterventionImplementation(
+        InterventionImplementation(
             implementationId: "intervene_impl_\(UUID().uuidString.prefix(8))",
             programs: programs,
             coordination: coordination,
@@ -2241,7 +2247,7 @@ class PovertyAlleviationImpl: PovertyAlleviation {
     func monitorPovertyReduction(_ metrics: [PovertyMetric], targets: [PovertyTarget]) async
         -> PovertyMonitoring
     {
-        return PovertyMonitoring(
+        PovertyMonitoring(
             monitoringId: "pov_mon_\(UUID().uuidString.prefix(8))",
             metrics: metrics,
             targets: targets,
@@ -2258,7 +2264,7 @@ class PovertyAlleviationImpl: PovertyAlleviation {
     func evaluateProgramEffectiveness(_ programs: [PovertyProgram], outcomes: [ProgramOutcome])
         async -> EffectivenessEvaluation
     {
-        return EffectivenessEvaluation(
+        EffectivenessEvaluation(
             evaluationId: "eff_eval_\(UUID().uuidString.prefix(8))",
             programs: programs,
             outcomes: outcomes,
@@ -2275,7 +2281,7 @@ class PovertyAlleviationImpl: PovertyAlleviation {
     func scaleSuccessfulPrograms(_ successes: [SuccessfulProgram], scaling: ScalingStrategy) async
         -> ProgramScaling
     {
-        return ProgramScaling(
+        ProgramScaling(
             scalingId: "prog_scale_\(UUID().uuidString.prefix(8))",
             successes: successes,
             scaling: scaling,
@@ -3442,6 +3448,7 @@ struct EconomicTrend {
     let magnitude: Double
     let duration: TimeInterval
 }
+
 let programId: String
 let name: String
 let impact: Double
@@ -3545,6 +3552,7 @@ struct PovertyThreshold {
     let adjustment: Double
     let frequency: TimeInterval
 }
+
 extension QuantumSocialServicesEngine: QuantumSocialServices {
     // Protocol requirements already implemented in main class
 }
@@ -4865,6 +4873,7 @@ struct ServiceCoordination {
         let efficiency: Double
     }
 }
+
 /// Program coordination
 struct ProgramCoordination {
     let level: CoordinationLevel

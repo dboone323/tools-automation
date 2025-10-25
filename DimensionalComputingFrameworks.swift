@@ -1,9 +1,10 @@
 // MARK: - Dimensional Computing Frameworks
+
 // Phase 8B: Interdimensional Computing - Task 116
 // Dimensional Computing Frameworks: Computing systems operating in higher dimensions
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Dimensional Types
 
@@ -18,7 +19,7 @@ struct DimensionalCoordinates: Hashable {
     init(x: Double = 0, y: Double = 0, z: Double = 0, temporal: Double = 0, quantum: Double = 0, multiversal: Double = 0) {
         self.dimensions = [
             "x": x, "y": y, "z": z,
-            "temporal": temporal, "quantum": quantum, "multiversal": multiversal
+            "temporal": temporal, "quantum": quantum, "multiversal": multiversal,
         ]
     }
 
@@ -30,7 +31,7 @@ struct DimensionalCoordinates: Hashable {
     }
 
     static func == (lhs: DimensionalCoordinates, rhs: DimensionalCoordinates) -> Bool {
-        return lhs.dimensions == rhs.dimensions
+        lhs.dimensions == rhs.dimensions
     }
 
     subscript(dimension: String) -> Double {
@@ -79,9 +80,9 @@ struct DimensionalVector {
         }
 
         // Add higher dimensional components
-        for i in 4...dimension {
+        for i in 4 ... dimension {
             let dimKey = "d\(i)"
-            resultDimensions[dimKey] = coordinates["d\(i-1)"] ?? 0.0 * (other.coordinates["d\(i)"] ?? 0.0)
+            resultDimensions[dimKey] = coordinates["d\(i - 1)"] ?? 0.0 * (other.coordinates["d\(i)"] ?? 0.0)
         }
 
         return DimensionalVector(coordinates: DimensionalCoordinates(dimensions: resultDimensions), dimension: dimension)
@@ -101,8 +102,8 @@ struct DimensionalMatrix {
     }
 
     static func identity(_ size: Int) -> DimensionalMatrix {
-        let elements = (0..<size).map { i in
-            (0..<size).map { j in i == j ? 1.0 : 0.0 }
+        let elements = (0 ..< size).map { i in
+            (0 ..< size).map { j in i == j ? 1.0 : 0.0 }
         }
         return DimensionalMatrix(rows: size, columns: size, elements: elements)
     }
@@ -112,13 +113,13 @@ struct DimensionalMatrix {
 
         var resultDimensions = [String: Double]()
 
-        for i in 0..<rows {
+        for i in 0 ..< rows {
             var sum = 0.0
-            for j in 0..<columns {
-                let dimKey = j < 3 ? ["x", "y", "z"][j] : "d\(j-2)"
+            for j in 0 ..< columns {
+                let dimKey = j < 3 ? ["x", "y", "z"][j] : "d\(j - 2)"
                 sum += elements[i][j] * (vector.coordinates.dimensions[dimKey] ?? 0.0)
             }
-            let resultKey = i < 3 ? ["x", "y", "z"][i] : "d\(i-2)"
+            let resultKey = i < 3 ? ["x", "y", "z"][i] : "d\(i - 2)"
             resultDimensions[resultKey] = sum
         }
 
@@ -130,9 +131,9 @@ struct DimensionalMatrix {
 
         var result = [[Double]](repeating: [Double](repeating: 0.0, count: other.columns), count: rows)
 
-        for i in 0..<rows {
-            for j in 0..<other.columns {
-                for k in 0..<columns {
+        for i in 0 ..< rows {
+            for j in 0 ..< other.columns {
+                for k in 0 ..< columns {
                     result[i][j] += elements[i][k] * other.elements[k][j]
                 }
             }
@@ -369,8 +370,8 @@ struct DimensionalOptimizationParameters {
 /// Dimensional computing frameworks engine
 class DimensionalComputingFrameworksEngine {
     private let dimensionalComputingSystem = DimensionalComputingSystemImpl()
-    public let interdimensionalOperations = InterdimensionalOperationsImpl()
-    public let dimensionalQuantumOperations = DimensionalQuantumOperationsImpl()
+    let interdimensionalOperations = InterdimensionalOperationsImpl()
+    let dimensionalQuantumOperations = DimensionalQuantumOperationsImpl()
 
     private var currentSpace: DimensionalSpace?
     private var performanceMetrics: DimensionalPerformanceMetrics?
@@ -383,8 +384,8 @@ class DimensionalComputingFrameworksEngine {
 
         // Initialize coordinate system
         var coordinateSystem = DimensionalCoordinates()
-        for i in 0..<parameters.targetDimension {
-            let dimKey = i < 3 ? ["x", "y", "z"][i] : "d\(i-2)"
+        for i in 0 ..< parameters.targetDimension {
+            let dimKey = i < 3 ? ["x", "y", "z"][i] : "d\(i - 2)"
             coordinateSystem = DimensionalCoordinates(dimensions: coordinateSystem.dimensions.merging([dimKey: 0.0]) { $1 })
         }
 
@@ -451,8 +452,8 @@ class DimensionalComputingSystemImpl: DimensionalComputingSystem {
 
         // Initialize coordinate system
         var coords = [String: Double]()
-        for i in 0..<dimensions {
-            let key = i < 3 ? ["x", "y", "z"][i] : "d\(i-2)"
+        for i in 0 ..< dimensions {
+            let key = i < 3 ? ["x", "y", "z"][i] : "d\(i - 2)"
             coords[key] = 0.0
         }
         coordinateSystem = DimensionalCoordinates(dimensions: coords)
@@ -478,13 +479,13 @@ class DimensionalComputingSystemImpl: DimensionalComputingSystem {
 
         let output: Any
         switch operation {
-        case .transformation(let transform):
+        case let .transformation(transform):
             output = try await performTransformation(transform)
-        case .computation(let computation):
+        case let .computation(computation):
             output = try await performComputation(computation)
-        case .optimization(let optimization):
+        case let .optimization(optimization):
             output = try await performOptimization(optimization)
-        case .quantum(let quantumOp):
+        case let .quantum(quantumOp):
             output = try await performQuantumOperation(quantumOp)
         }
 
@@ -508,7 +509,7 @@ class DimensionalComputingSystemImpl: DimensionalComputingSystem {
 
     func optimizeDimensionalPerformance(_ parameters: DimensionalOptimizationParameters) async -> DimensionalPerformanceMetrics {
         // Implement optimization logic
-        return DimensionalPerformanceMetrics(
+        DimensionalPerformanceMetrics(
             computationTime: 0.05,
             energyConsumption: 25.0,
             accuracy: 0.99,
@@ -520,17 +521,17 @@ class DimensionalComputingSystemImpl: DimensionalComputingSystem {
 
     private func performTransformation(_ transform: DimensionalTransformation) async throws -> DimensionalCoordinates {
         // Simplified transformation implementation
-        return coordinateSystem
+        coordinateSystem
     }
 
     private func performComputation(_ computation: DimensionalComputation) async throws -> [DimensionalVector] {
         // Simplified computation implementation
-        return computation.operands
+        computation.operands
     }
 
     private func performOptimization(_ optimization: DimensionalOptimization) async throws -> DimensionalOptimization {
         // Simplified optimization implementation
-        return optimization
+        optimization
     }
 
     private func performQuantumOperation(_ quantumOp: DimensionalQuantumOperation) async throws -> DimensionalQubit {
@@ -554,13 +555,13 @@ class DimensionalComputingSystemImpl: DimensionalComputingSystem {
 class InterdimensionalOperationsImpl: InterdimensionalOperations {
     func transformCoordinates(_ coordinates: DimensionalCoordinates, transformation: DimensionalTransformation) async -> DimensionalCoordinates {
         // Implement coordinate transformation
-        return coordinates
+        coordinates
     }
 
     func projectToLowerDimension(_ coordinates: DimensionalCoordinates, targetDimension: Int) async -> DimensionalCoordinates {
         var projected = [String: Double]()
-        for i in 0..<min(targetDimension, coordinates.dimensions.count) {
-            let key = i < 3 ? ["x", "y", "z"][i] : "d\(i-2)"
+        for i in 0 ..< min(targetDimension, coordinates.dimensions.count) {
+            let key = i < 3 ? ["x", "y", "z"][i] : "d\(i - 2)"
             projected[key] = coordinates.dimensions[key] ?? 0.0
         }
         return DimensionalCoordinates(dimensions: projected)
@@ -568,15 +569,15 @@ class InterdimensionalOperationsImpl: InterdimensionalOperations {
 
     func embedInHigherDimension(_ coordinates: DimensionalCoordinates, targetDimension: Int) async -> DimensionalCoordinates {
         var embedded = coordinates.dimensions
-        for i in coordinates.dimensions.count..<targetDimension {
-            let key = i < 3 ? ["x", "y", "z"][i] : "d\(i-2)"
+        for i in coordinates.dimensions.count ..< targetDimension {
+            let key = i < 3 ? ["x", "y", "z"][i] : "d\(i - 2)"
             embedded[key] = 0.0
         }
         return DimensionalCoordinates(dimensions: embedded)
     }
 
     func computeDimensionalDistance(_ from: DimensionalCoordinates, _ to: DimensionalCoordinates) async -> Double {
-        return from.distance(to: to)
+        from.distance(to: to)
     }
 }
 
@@ -601,11 +602,11 @@ class DimensionalQuantumOperationsImpl: DimensionalQuantumOperations {
 
     func performDimensionalQuantumGate(_ gate: DimensionalQuantumGate, on qubit: DimensionalQubit) async throws -> DimensionalQubit {
         // Simplified gate implementation
-        return qubit
+        qubit
     }
 
     func measureDimensionalQubit(_ qubit: DimensionalQubit) async -> DimensionalMeasurement {
-        return DimensionalMeasurement(
+        DimensionalMeasurement(
             qubitId: qubit.id,
             result: qubit.coordinates,
             probability: 1.0,

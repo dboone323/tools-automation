@@ -872,7 +872,7 @@ enum TestVerificationError: Error, Codable {
 // MARK: - Utility Types
 
 /// Test utilities
-struct TestUtilities {
+enum TestUtilities {
     /// Generate unique test ID
     static func generateTestId(prefix: String = "test") -> String {
         "\(prefix)_\(UUID().uuidString.prefix(8))"
@@ -889,8 +889,8 @@ struct TestUtilities {
 
         switch score {
         case 0.8...: return .critical
-        case 0.6..<0.8: return .high
-        case 0.4..<0.6: return .medium
+        case 0.6 ..< 0.8: return .high
+        case 0.4 ..< 0.6: return .medium
         default: return .low
         }
     }
@@ -1006,7 +1006,7 @@ extension TestSuite {
             tags: ["mock", "unit"],
             targetFunction: "mockFunction",
             inputParameters: [
-                UnitTest.TestParameter(name: "input", type: "String", value: "test")
+                UnitTest.TestParameter(name: "input", type: "String", value: "test"),
             ],
             expectedOutput: UnitTest.TestExpectation(
                 type: .exact,

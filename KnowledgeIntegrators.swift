@@ -9,8 +9,8 @@
 // Framework for integrating knowledge from diverse sources and domains
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -921,7 +921,7 @@ class KnowledgeIntegratorsEngine {
                 level: 0.95,
                 sources: sources,
                 prerequisites: []
-            )
+            ),
         ]
 
         let harmonizationRules = sources.flatMap { source in
@@ -941,7 +941,7 @@ class KnowledgeIntegratorsEngine {
                     action: "Standardize knowledge format",
                     priority: 0.8,
                     sources: [source]
-                )
+                ),
             ]
         }
 
@@ -993,7 +993,7 @@ class KnowledgeIntegratorsEngine {
         )
 
         let success = integratedKnowledge.integrationMetadata.harmonizationLevel > 0.8 &&
-                     integratedKnowledge.integrationMetadata.unificationLevel > 0.7
+            integratedKnowledge.integrationMetadata.unificationLevel > 0.7
 
         let qualityMetrics = KnowledgeIntegrationResult.IntegrationQualityMetrics(
             coherence: 0.9,
@@ -1098,7 +1098,7 @@ class KnowledgeIntegratorsEngine {
 
     private func performIntegrationHealthCheck() async {
         let totalIntegrations = integrationHistory.count
-        let successfulIntegrations = integrationHistory.filter { $0.success }.count
+        let successfulIntegrations = integrationHistory.filter(\.success).count
         let successRate = totalIntegrations > 0 ? Double(successfulIntegrations) / Double(totalIntegrations) : 0.0
 
         if successRate < 0.8 {
@@ -1134,7 +1134,7 @@ class KnowledgeAggregatorImpl: KnowledgeAggregator {
             sourceKnowledge: knowledge,
             aggregatedContent: aggregatedContent,
             aggregationMetadata: AggregationMetadata(
-                sources: knowledge.map { $0.source },
+                sources: knowledge.map(\.source),
                 collectionMethod: .batch,
                 consolidationLevel: 0.9,
                 optimizationApplied: true
@@ -1293,7 +1293,7 @@ class KnowledgeAggregatorImpl: KnowledgeAggregator {
                 type: .quality,
                 factor: 1.2,
                 description: "Enhanced aggregation quality"
-            )
+            ),
         ]
 
         let optimizedAggregation = KnowledgeAggregation(
@@ -1339,7 +1339,7 @@ class KnowledgeAggregatorImpl: KnowledgeAggregator {
                     type: .enhanceValidation,
                     description: "Enhance aggregation validation process",
                     priority: 0.8
-                )
+                ),
             ],
             validationTime: 3.0
         )
@@ -1350,11 +1350,11 @@ class KnowledgeAggregatorImpl: KnowledgeAggregator {
 class KnowledgeHarmonizerImpl: KnowledgeHarmonizer {
     func harmonizeKnowledge(_ knowledge: [Knowledge]) async -> KnowledgeHarmonization {
         // Simplified knowledge harmonization
-        return KnowledgeHarmonization(
+        KnowledgeHarmonization(
             harmonizationId: "harmonization_\(UUID().uuidString.prefix(8))",
             sourceKnowledge: knowledge,
             harmonizedKnowledge: knowledge,
-            conflictsResolved: Int.random(in: 0...3),
+            conflictsResolved: Int.random(in: 0 ... 3),
             structuresAligned: knowledge.count,
             formatsStandardized: knowledge.count,
             harmonizationTime: 12.0
@@ -1384,7 +1384,7 @@ class KnowledgeHarmonizerImpl: KnowledgeHarmonizer {
 
     func alignKnowledgeStructures(_ structures: [KnowledgeStructure]) async -> StructureAlignment {
         // Simplified structure alignment
-        return StructureAlignment(
+        StructureAlignment(
             alignmentId: "alignment_\(UUID().uuidString.prefix(8))",
             sourceStructures: structures,
             alignedStructures: structures,
@@ -1396,7 +1396,7 @@ class KnowledgeHarmonizerImpl: KnowledgeHarmonizer {
 
     func standardizeKnowledgeFormats(_ knowledge: [Knowledge]) async -> FormatStandardization {
         // Simplified format standardization
-        return FormatStandardization(
+        FormatStandardization(
             standardizationId: "standardization_\(UUID().uuidString.prefix(8))",
             sourceKnowledge: knowledge,
             standardizedKnowledge: knowledge,
@@ -1420,7 +1420,7 @@ class KnowledgeHarmonizerImpl: KnowledgeHarmonizer {
                 type: .structureAlignment,
                 factor: 1.3,
                 description: "Enhanced structure alignment"
-            )
+            ),
         ]
 
         let optimizedHarmonization = KnowledgeHarmonization(
@@ -1542,7 +1542,7 @@ class KnowledgeUnifierImpl: KnowledgeUnifier {
 
     func createUnifiedKnowledgeModel(_ knowledge: [Knowledge]) async -> UnifiedKnowledgeModel {
         // Simplified unified model creation
-        return UnifiedKnowledgeModel(
+        UnifiedKnowledgeModel(
             modelId: "model_\(UUID().uuidString.prefix(8))",
             structure: .network,
             components: [],
@@ -1554,7 +1554,7 @@ class KnowledgeUnifierImpl: KnowledgeUnifier {
 
     func generateKnowledgeOntology(_ knowledge: [Knowledge]) async -> KnowledgeOntology {
         // Simplified ontology generation
-        return KnowledgeOntology(
+        KnowledgeOntology(
             ontologyId: "ontology_\(UUID().uuidString.prefix(8))",
             concepts: [],
             relationships: [],
@@ -1566,7 +1566,7 @@ class KnowledgeUnifierImpl: KnowledgeUnifier {
 
     func establishKnowledgeRelationships(_ knowledge: [Knowledge]) async -> KnowledgeRelationships {
         // Simplified relationship establishment
-        return KnowledgeRelationships(
+        KnowledgeRelationships(
             relationshipsId: "relationships_\(UUID().uuidString.prefix(8))",
             relationships: [],
             relationshipTypes: [.related, .complementary],
@@ -1633,7 +1633,7 @@ class IntegrationValidatorImpl: IntegrationValidator {
                     score: 0.9,
                     benchmark: 0.8,
                     significance: 0.9
-                )
+                ),
             ],
             assessmentTime: 4.0,
             recommendations: ["Monitor integration quality regularly"]
@@ -1642,7 +1642,7 @@ class IntegrationValidatorImpl: IntegrationValidator {
 
     func verifyIntegrationConsistency(_ integration: KnowledgeIntegration) async -> ConsistencyVerification {
         // Simplified consistency verification
-        return ConsistencyVerification(
+        ConsistencyVerification(
             verificationId: "consistency_\(integration.integrationId)",
             integration: integration,
             isConsistent: true,
@@ -1654,7 +1654,7 @@ class IntegrationValidatorImpl: IntegrationValidator {
 
     func measureIntegrationCompleteness(_ integration: KnowledgeIntegration) async -> CompletenessMeasurement {
         // Simplified completeness measurement
-        return CompletenessMeasurement(
+        CompletenessMeasurement(
             measurementId: "measurement_\(integration.integrationId)",
             integration: integration,
             completenessScore: 0.9,
@@ -1666,7 +1666,7 @@ class IntegrationValidatorImpl: IntegrationValidator {
 
     func generateIntegrationReport(_ integration: KnowledgeIntegration) async -> IntegrationReport {
         // Simplified report generation
-        return IntegrationReport(
+        IntegrationReport(
             reportId: "report_\(integration.integrationId)",
             integration: integration,
             summary: IntegrationReport.IntegrationSummary(
@@ -1724,31 +1724,31 @@ enum KnowledgeIntegratorError: Error {
 
 extension KnowledgeIntegrationSystem {
     var integrationEfficiency: Double {
-        return Double(integrationCapabilities.count) / Double(knowledgeSources.count)
+        Double(integrationCapabilities.count) / Double(knowledgeSources.count)
     }
 
     var needsOptimization: Bool {
-        return status == .operational && integrationEfficiency < 0.8
+        status == .operational && integrationEfficiency < 0.8
     }
 }
 
 extension KnowledgeIntegrationResult {
     var integrationQuality: Double {
-        return (qualityMetrics.coherence + qualityMetrics.completeness + qualityMetrics.consistency + qualityMetrics.accuracy) / 4.0
+        (qualityMetrics.coherence + qualityMetrics.completeness + qualityMetrics.consistency + qualityMetrics.accuracy) / 4.0
     }
 
     var isHighQuality: Bool {
-        return integrationQuality > 0.85 && success
+        integrationQuality > 0.85 && success
     }
 }
 
 extension IntegratedKnowledge {
     var integrationMaturity: Double {
-        return quality.accuracy * quality.completeness * quality.consistency
+        quality.accuracy * quality.completeness * quality.consistency
     }
 
     var isFullyIntegrated: Bool {
-        return integrationMaturity > 0.8 && integrationMetadata.validationStatus == .valid
+        integrationMaturity > 0.8 && integrationMetadata.validationStatus == .valid
     }
 }
 

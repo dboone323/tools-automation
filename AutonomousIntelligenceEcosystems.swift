@@ -11,8 +11,8 @@
 //  quantum civilizations.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -707,13 +707,13 @@ enum DecisionMetrics {
 
     var effectiveness: Double {
         switch self {
-        case .effectiveness(let efficiency, let speed): return efficiency * 0.7 + speed * 0.3
+        case let .effectiveness(efficiency, speed): return efficiency * 0.7 + speed * 0.3
         }
     }
 
     var speed: Double {
         switch self {
-        case .effectiveness(_, let speed): return speed
+        case let .effectiveness(_, speed): return speed
         }
     }
 }
@@ -755,13 +755,13 @@ enum LearningMetrics {
 
     var effectiveness: Double {
         switch self {
-        case .effectiveness(let retention, let transfer): return retention * 0.6 + transfer * 0.4
+        case let .effectiveness(retention, transfer): return retention * 0.6 + transfer * 0.4
         }
     }
 
     var retention: Double {
         switch self {
-        case .effectiveness(let retention, _): return retention
+        case let .effectiveness(retention, _): return retention
         }
     }
 }
@@ -803,13 +803,13 @@ enum ImprovementMetrics {
 
     var effectiveness: Double {
         switch self {
-        case .effectiveness(let stability, let improvement): return stability * 0.5 + improvement * 0.5
+        case let .effectiveness(stability, improvement): return stability * 0.5 + improvement * 0.5
         }
     }
 
     var stability: Double {
         switch self {
-        case .effectiveness(let stability, _): return stability
+        case let .effectiveness(stability, _): return stability
         }
     }
 }
@@ -820,6 +820,7 @@ enum ImprovementMetrics {
 @MainActor
 class AutonomousIntelligenceEcosystemsEngine: ObservableObject {
     // MARK: - Properties
+
     @Published var intelligenceNetwork: IntelligenceNetwork
     @Published var consciousnessEngine: ConsciousnessEngine
     @Published var evolutionCoordinator: EvolutionCoordinator
@@ -837,6 +838,7 @@ class AutonomousIntelligenceEcosystemsEngine: ObservableObject {
     private let intelligenceEngine: IntelligenceEngine
 
     // MARK: - Initialization
+
     init() {
         // Initialize with default intelligence systems
         self.intelligenceNetwork = IntelligenceNetwork(
@@ -904,7 +906,7 @@ class AutonomousIntelligenceEcosystemsEngine: ObservableObject {
             coordinationType: .quantum,
             evolutionStrategies: [
                 EvolutionStrategy(strategyType: .adaptive, effectiveness: 0.88, adaptability: 0.9, sustainability: 0.85),
-                EvolutionStrategy(strategyType: .emergent, effectiveness: 0.85, adaptability: 0.92, sustainability: 0.88)
+                EvolutionStrategy(strategyType: .emergent, effectiveness: 0.85, adaptability: 0.92, sustainability: 0.88),
             ],
             synchronizationMechanisms: SynchronizationMechanisms(
                 synchronizationType: .quantum,
@@ -986,7 +988,7 @@ class AutonomousIntelligenceEcosystemsEngine: ObservableObject {
             ),
             capabilityEnhancements: [
                 CapabilityEnhancement(enhancementType: .processing, enhancementFactor: 2.2, enhancementStability: 0.9),
-                CapabilityEnhancement(enhancementType: .learning, enhancementFactor: 1.8, enhancementStability: 0.88)
+                CapabilityEnhancement(enhancementType: .learning, enhancementFactor: 1.8, enhancementStability: 0.88),
             ]
         )
     }
@@ -1100,7 +1102,7 @@ class IntelligenceNetworksImpl: IntelligenceNetworks {
             ),
             capabilityImprovements: [
                 NetworkCapability.improvedConnectivity,
-                NetworkCapability.enhancedFlow
+                NetworkCapability.enhancedFlow,
             ]
         )
     }
@@ -1124,7 +1126,7 @@ class IntelligenceNetworksImpl: IntelligenceNetworks {
             ),
             flowImprovements: [
                 FlowImprovement(improvementType: .efficiency, magnitude: 0.2, stability: 0.9),
-                FlowImprovement(improvementType: .adaptability, magnitude: 0.18, stability: 0.88)
+                FlowImprovement(improvementType: .adaptability, magnitude: 0.18, stability: 0.88),
             ]
         )
     }
@@ -1183,7 +1185,7 @@ class ConsciousnessEnginesImpl: ConsciousnessEngines {
             ),
             consciousnessGains: [
                 ConsciousnessGain(gainType: .awareness, magnitude: 0.22, stability: 0.9),
-                ConsciousnessGain(gainType: .reflection, magnitude: 0.18, stability: 0.88)
+                ConsciousnessGain(gainType: .reflection, magnitude: 0.18, stability: 0.88),
             ]
         )
     }
@@ -1199,7 +1201,7 @@ class ConsciousnessEnginesImpl: ConsciousnessEngines {
                 sustainability: 0.9
             ),
             emergenceCharacteristics: [
-                EmergenceCharacteristic(characteristicType: .spontaneous, strength: 0.85, stability: 0.88)
+                EmergenceCharacteristic(characteristicType: .spontaneous, strength: 0.85, stability: 0.88),
             ]
         )
     }
@@ -1212,7 +1214,7 @@ class EvolutionCoordinatorsImpl: EvolutionCoordinators {
             coordinationType: .quantum,
             evolutionStrategies: [
                 EvolutionStrategy(strategyType: .emergent, effectiveness: 0.9, adaptability: 0.92, sustainability: 0.88),
-                EvolutionStrategy(strategyType: .adaptive, effectiveness: 0.88, adaptability: 0.94, sustainability: 0.9)
+                EvolutionStrategy(strategyType: .adaptive, effectiveness: 0.88, adaptability: 0.94, sustainability: 0.9),
             ],
             synchronizationMechanisms: SynchronizationMechanisms(
                 synchronizationType: .quantum,
@@ -1240,7 +1242,7 @@ class EvolutionCoordinatorsImpl: EvolutionCoordinators {
                 adaptability: 0.85
             ),
             synchronizationImprovements: [
-                SynchronizationImprovement(improvementType: .efficiency, magnitude: 0.15, stability: 0.9)
+                SynchronizationImprovement(improvementType: .efficiency, magnitude: 0.15, stability: 0.9),
             ]
         )
     }
@@ -1256,7 +1258,7 @@ class EvolutionCoordinatorsImpl: EvolutionCoordinators {
                 sustainability: 0.9
             ),
             evolutionEnhancements: [
-                EvolutionEnhancement(enhancementType: .acceleration, factor: 2.3, stability: 0.88)
+                EvolutionEnhancement(enhancementType: .acceleration, factor: 2.3, stability: 0.88),
             ]
         )
     }
@@ -1383,7 +1385,7 @@ class IntelligenceEngine {
             evolutionCoordinator: EvolutionCoordinator(
                 coordinationType: .quantum,
                 evolutionStrategies: [
-                    EvolutionStrategy(strategyType: .emergent, effectiveness: 0.87, adaptability: 0.91, sustainability: 0.86)
+                    EvolutionStrategy(strategyType: .emergent, effectiveness: 0.87, adaptability: 0.91, sustainability: 0.86),
                 ],
                 synchronizationMechanisms: SynchronizationMechanisms(
                     synchronizationType: .quantum,
@@ -1456,7 +1458,7 @@ class IntelligenceEngine {
 
         let intelligenceGains = [
             IntelligenceGain(gainType: .processing, magnitude: 0.25, sustainability: 0.9),
-            IntelligenceGain(gainType: .consciousness, magnitude: 0.22, sustainability: 0.88)
+            IntelligenceGain(gainType: .consciousness, magnitude: 0.22, sustainability: 0.88),
         ]
 
         return EvolvedIntelligence(

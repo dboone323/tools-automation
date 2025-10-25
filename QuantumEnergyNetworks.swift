@@ -6,8 +6,8 @@
 //  Copyright © 2025 Daniel Boone. All rights reserved.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1002,7 +1002,7 @@ final class QuantumEnergyNetworksEngine: QuantumEnergyNetworksProtocol {
             efficiency: result.maxUtilization,
             costSavings: 0.0,
             environmentalImpact: 0.0,
-            recommendations: result.improvements.map { $0.solution },
+            recommendations: result.improvements.map(\.solution),
             error: nil
         )
     }
@@ -1383,7 +1383,7 @@ final class NetworkMetrics {
 
 /// Energy monitoring system
 final class EnergyMonitoringSystem {
-    @Published var systemHealth: SystemHealth = SystemHealth()
+    @Published var systemHealth: SystemHealth = .init()
     @Published var activeOperations: [EnergyOperation] = []
 
     func startMonitoring() {
@@ -1433,12 +1433,12 @@ final class SourceAnalyzer {
 /// Generation optimizer
 final class GenerationOptimizer {
     func optimize(_ generation: EnergyGeneration) async throws -> GenerationOptimization {
-        return GenerationOptimization(
+        GenerationOptimization(
             generation: generation,
-            optimalMix: EnergyMix(renewable: 0.7, nuclear: 0.2, fossil: 0.1, other: 0.0, targetRenewable: 0.8, transitionTimeline: 365*24*60*60),
-            cost: 50000000,
+            optimalMix: EnergyMix(renewable: 0.7, nuclear: 0.2, fossil: 0.1, other: 0.0, targetRenewable: 0.8, transitionTimeline: 365 * 24 * 60 * 60),
+            cost: 50_000_000,
             reliability: 0.95,
-            emissions: 100000
+            emissions: 100_000
         )
     }
 }
@@ -1446,10 +1446,10 @@ final class GenerationOptimizer {
 /// Mix balancer
 final class MixBalancer {
     func balance(_ mix: EnergyMix) async throws -> MixBalance {
-        return MixBalance(
+        MixBalance(
             mix: mix,
             balance: 0.85,
-            transition: TransitionPlan(phases: [], timeline: 10*365*24*60*60, cost: 100000000, benefits: ["Reduced emissions", "Energy security"]),
+            transition: TransitionPlan(phases: [], timeline: 10 * 365 * 24 * 60 * 60, cost: 100_000_000, benefits: ["Reduced emissions", "Energy security"]),
             risks: []
         )
     }
@@ -1458,11 +1458,11 @@ final class MixBalancer {
 /// Utilization maximizer
 final class UtilizationMaximizer {
     func maximize(_ utilization: RenewableUtilization) async throws -> UtilizationResult {
-        return UtilizationResult(
+        UtilizationResult(
             utilization: utilization,
             maxUtilization: 0.92,
             bottlenecks: [Bottleneck(type: .storage, impact: 0.1, solution: "Increase storage capacity")],
-            improvements: [Improvement(type: .infrastructure, benefit: 0.15, cost: 20000000, timeline: 2*365*24*60*60)]
+            improvements: [Improvement(type: .infrastructure, benefit: 0.15, cost: 20_000_000, timeline: 2 * 365 * 24 * 60 * 60)]
         )
     }
 }
@@ -1470,17 +1470,17 @@ final class UtilizationMaximizer {
 /// Status monitor
 final class StatusMonitor {
     func monitor(_ grid: SmartGrid) async throws -> GridStatus {
-        return .stable
+        .stable
     }
 }
 
 /// Balance manager
 final class BalanceManager {
     func balance(_ balance: SupplyDemandBalance) async throws -> BalanceResult {
-        return BalanceResult(
+        BalanceResult(
             balance: balance,
             stability: 0.9,
-            cost: 1000000,
+            cost: 1_000_000,
             emissions: 50000
         )
     }
@@ -1489,7 +1489,7 @@ final class BalanceManager {
 /// Stability manager
 final class StabilityManager {
     func manage(_ stability: GridStability) async throws -> StabilityResult {
-        return StabilityResult(
+        StabilityResult(
             stability: stability,
             improvements: [],
             risks: []
@@ -1500,7 +1500,7 @@ final class StabilityManager {
 /// Distribution optimizer
 final class DistributionOptimizer {
     func optimize(_ distribution: EnergyDistribution) async throws -> DistributionResult {
-        return DistributionResult(
+        DistributionResult(
             distribution: distribution,
             efficiency: 0.88,
             reliability: 0.95,
@@ -1512,7 +1512,7 @@ final class DistributionOptimizer {
 /// Needs assessor
 final class NeedsAssessor {
     func assess(_ needs: StorageNeeds) async throws -> NeedsAssessment {
-        return NeedsAssessment(
+        NeedsAssessment(
             needs: needs,
             requiredCapacity: 1000,
             optimalTypes: [.battery, .pumpedHydro],
@@ -1524,11 +1524,11 @@ final class NeedsAssessor {
 /// Operations optimizer
 final class OperationsOptimizer {
     func optimize(_ operations: StorageOperations) async throws -> OperationsOptimization {
-        return OperationsOptimization(
+        OperationsOptimization(
             operations: operations,
             efficiency: 0.87,
-            revenue: 5000000,
-            lifetime: 20*365*24*60*60
+            revenue: 5_000_000,
+            lifetime: 20 * 365 * 24 * 60 * 60
         )
     }
 }
@@ -1536,10 +1536,10 @@ final class OperationsOptimizer {
 /// Capacity manager
 final class CapacityManager {
     func manage(_ capacity: StorageCapacity) async throws -> CapacityResult {
-        return CapacityResult(
+        CapacityResult(
             capacity: capacity,
             utilization: 0.75,
-            expansion: ExpansionPlan(phases: [], cost: 50000000, timeline: 5*365*24*60*60)
+            expansion: ExpansionPlan(phases: [], cost: 50_000_000, timeline: 5 * 365 * 24 * 60 * 60)
         )
     }
 }
@@ -1547,10 +1547,10 @@ final class CapacityManager {
 /// Performance predictor
 final class PerformancePredictor {
     func predict(_ performance: StoragePerformance) async throws -> PerformancePrediction {
-        return PerformancePrediction(
+        PerformancePrediction(
             performance: performance,
             degradation: 0.02,
-            remainingLife: 15*365*24*60*60,
+            remainingLife: 15 * 365 * 24 * 60 * 60,
             maintenance: []
         )
     }
@@ -1559,7 +1559,7 @@ final class PerformancePredictor {
 /// Pattern analyzer
 final class PatternAnalyzer {
     func analyze(_ patterns: ConsumptionPatterns) async throws -> PatternAnalysis {
-        return PatternAnalysis(
+        PatternAnalysis(
             patterns: patterns,
             insights: [],
             anomalies: [],
@@ -1571,7 +1571,7 @@ final class PatternAnalyzer {
 /// Demand predictor
 final class DemandPredictor {
     func predict(_ demand: EnergyDemand) async throws -> DemandPrediction {
-        return DemandPrediction(
+        DemandPrediction(
             demand: demand,
             forecast: [],
             accuracy: 0.85,
@@ -1583,7 +1583,7 @@ final class DemandPredictor {
 /// Variation forecaster
 final class VariationForecaster {
     func forecast(_ variations: SeasonalVariations) async throws -> VariationForecast {
-        return VariationForecast(
+        VariationForecast(
             variations: variations,
             predictions: [],
             confidence: 0.8
@@ -1594,10 +1594,10 @@ final class VariationForecaster {
 /// Scheduling optimizer
 final class SchedulingOptimizer {
     func optimize(_ scheduling: ConsumptionScheduling) async throws -> SchedulingResult {
-        return SchedulingResult(
+        SchedulingResult(
             scheduling: scheduling,
             optimizedSchedule: [],
-            savings: 1000000,
+            savings: 1_000_000,
             satisfaction: 0.9
         )
     }
@@ -1608,7 +1608,7 @@ final class SchedulingOptimizer {
 extension QuantumEnergyNetworksEngine {
     /// Get energy network statistics
     func getEnergyStatistics() -> EnergyStatistics {
-        return EnergyStatistics(
+        EnergyStatistics(
             totalSources: energyDatabase.sourceCount,
             totalGrids: energyDatabase.gridCount,
             totalStorage: energyDatabase.storageCount,
@@ -1688,10 +1688,10 @@ extension QuantumEnergyNetworksEngine {
         // Example smart grid
         let smartGrid = SmartGrid(
             id: UUID(),
-            region: GeographicRegion(name: "California", bounds: RegionBounds(north: 42, south: 32, east: -114, west: -125), population: 39000000),
+            region: GeographicRegion(name: "California", bounds: RegionBounds(north: 42, south: 32, east: -114, west: -125), population: 39_000_000),
             components: GridComponents(generators: [], transmission: [], distribution: [], storage: [], consumers: []),
             status: .stable,
-            performance: GridPerformance(frequency: 60, voltage: 120000, reliability: 0.999, efficiency: 0.92, losses: 0.05),
+            performance: GridPerformance(frequency: 60, voltage: 120_000, reliability: 0.999, efficiency: 0.92, losses: 0.05),
             automation: GridAutomation(demandResponse: true, predictiveMaintenance: true, autonomousOperation: false, aiOptimization: true)
         )
 
@@ -1700,11 +1700,11 @@ extension QuantumEnergyNetworksEngine {
 
         // Example storage operations
         let storageOperations = StorageOperations(
-            storage: EnergyStorage(id: UUID(), type: .battery, capacity: 100, power: 50, efficiency: 0.9, cost: 200000, lifespan: 10*365*24*60*60, location: GeographicLocation(latitude: 34.0522, longitude: -118.2437, elevation: 89, region: "California", country: "USA")),
+            storage: EnergyStorage(id: UUID(), type: .battery, capacity: 100, power: 50, efficiency: 0.9, cost: 200_000, lifespan: 10 * 365 * 24 * 60 * 60, location: GeographicLocation(latitude: 34.0522, longitude: -118.2437, elevation: 89, region: "California", country: "USA")),
             chargeSchedule: [],
             dischargeSchedule: [],
-            maintenanceSchedule: MaintenanceSchedule(frequency: 365*24*60*60, duration: 24*60*60, impact: 0.1),
-            optimization: StorageOptimization(efficiency: 0.88, cost: 50000, lifetime: 15*365*24*60*60, gridSupport: 0.9)
+            maintenanceSchedule: MaintenanceSchedule(frequency: 365 * 24 * 60 * 60, duration: 24 * 60 * 60, impact: 0.1),
+            optimization: StorageOptimization(efficiency: 0.88, cost: 50000, lifetime: 15 * 365 * 24 * 60 * 60, gridSupport: 0.9)
         )
 
         let storageResult = try await engine.manageEnergyStorage(storageOperations)
@@ -1764,7 +1764,7 @@ struct RegionBounds {
 struct SystemHealth {
     let overallStatus: Double
     let componentHealth: [String: Double]
-    
+
     init() {
         self.overallStatus = 1.0
         self.componentHealth = [:]

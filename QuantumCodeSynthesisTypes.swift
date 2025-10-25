@@ -26,17 +26,17 @@ public enum QuantumCodeSynthesisError: LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .invalidSpecification(let reason):
+        case let .invalidSpecification(reason):
             return "Invalid code specification: \(reason)"
-        case .synthesisFailed(let reason):
+        case let .synthesisFailed(reason):
             return "Code synthesis failed: \(reason)"
-        case .validationFailed(let reason):
+        case let .validationFailed(reason):
             return "Code validation failed: \(reason)"
-        case .optimizationFailed(let reason):
+        case let .optimizationFailed(reason):
             return "Code optimization failed: \(reason)"
-        case .learningFailed(let reason):
+        case let .learningFailed(reason):
             return "Code learning failed: \(reason)"
-        case .contextAnalysisFailed(let reason):
+        case let .contextAnalysisFailed(reason):
             return "Context analysis failed: \(reason)"
         }
     }
@@ -51,13 +51,13 @@ public enum MultiLanguageAnalysisError: LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .unsupportedLanguage(let language):
+        case let .unsupportedLanguage(language):
             return "Unsupported programming language: \(language.rawValue)"
-        case .parsingFailed(let reason):
+        case let .parsingFailed(reason):
             return "Code parsing failed: \(reason)"
         case .analysisTimeout:
             return "Code analysis timed out"
-        case .invalidSyntax(let details):
+        case let .invalidSyntax(details):
             return "Invalid syntax: \(details)"
         }
     }
@@ -72,11 +72,11 @@ public enum ContextAwareGenerationError: LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .insufficientContext(let reason):
+        case let .insufficientContext(reason):
             return "Insufficient context for generation: \(reason)"
-        case .styleAdaptationFailed(let reason):
+        case let .styleAdaptationFailed(reason):
             return "Style adaptation failed: \(reason)"
-        case .consistencyCheckFailed(let reason):
+        case let .consistencyCheckFailed(reason):
             return "Consistency check failed: \(reason)"
         case .generationTimeout:
             return "Code generation timed out"
@@ -405,8 +405,8 @@ public final class FileBasedSynthesisStorage: SynthesisStorage {
         let totalOperations = metrics.count
         let successfulOperations = metrics.filter { $0.validationErrors == 0 }.count
         let failedOperations = totalOperations - successfulOperations
-        let averageDuration = metrics.map { $0.duration }.reduce(0, +) / Double(max(totalOperations, 1))
-        let averageQualityScore = metrics.map { $0.qualityScore }.reduce(0, +) / Double(max(totalOperations, 1))
+        let averageDuration = metrics.map(\.duration).reduce(0, +) / Double(max(totalOperations, 1))
+        let averageQualityScore = metrics.map(\.qualityScore).reduce(0, +) / Double(max(totalOperations, 1))
 
         let languageCounts = Dictionary(grouping: metrics, by: { $0.language })
             .mapValues { $0.count }
@@ -415,7 +415,7 @@ public final class FileBasedSynthesisStorage: SynthesisStorage {
         let allPatterns = metrics.flatMap { _ in ["MVVM", "Dependency Injection"] } // Mock data
         let patternCounts = Dictionary(grouping: allPatterns, by: { $0 })
             .mapValues { $0.count }
-        let mostUsedPatterns = Array(patternCounts.sorted { $0.value > $1.value }.prefix(5).map { $0.key })
+        let mostUsedPatterns = Array(patternCounts.sorted { $0.value > $1.value }.prefix(5).map(\.key))
 
         return CodeSynthesisAnalytics(
             totalOperations: totalOperations,
@@ -510,27 +510,27 @@ public extension CodeSpecification {
 
     var isValid: Bool {
         !id.isEmpty &&
-        !description.isEmpty &&
-        qualityRequirements.minTestCoverage >= 0 &&
-        qualityRequirements.minTestCoverage <= 100 &&
-        qualityRequirements.minMaintainabilityIndex >= 0 &&
-        qualityRequirements.minMaintainabilityIndex <= 100
+            !description.isEmpty &&
+            qualityRequirements.minTestCoverage >= 0 &&
+            qualityRequirements.minTestCoverage <= 100 &&
+            qualityRequirements.minMaintainabilityIndex >= 0 &&
+            qualityRequirements.minMaintainabilityIndex <= 100
     }
 }
 
 public extension SynthesisResult {
     var overallQualityScore: Double {
         (qualityMetrics.syntaxCorrectness +
-         qualityMetrics.semanticCorrectness +
-         qualityMetrics.styleCompliance +
-         qualityMetrics.maintainabilityScore) / 4.0
+            qualityMetrics.semanticCorrectness +
+            qualityMetrics.styleCompliance +
+            qualityMetrics.maintainabilityScore) / 4.0
     }
 
     var hasPassedValidation: Bool {
         validationResults.syntaxValidation == .passed &&
-        validationResults.semanticValidation == .passed &&
-        validationResults.styleValidation != .failed &&
-        validationResults.securityValidation != .failed
+            validationResults.semanticValidation == .passed &&
+            validationResults.styleValidation != .failed &&
+            validationResults.securityValidation != .failed
     }
 }
 
@@ -677,7 +677,7 @@ public enum SynthesisTestingUtils {
                     type: .functionality,
                     description: "Implement basic functionality",
                     priority: .must_have
-                )
+                ),
             ],
             constraints: [],
             targetLanguage: language,

@@ -9,8 +9,8 @@
 // Framework for governance frameworks using quantum decision making and optimization algorithms
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1511,7 +1511,7 @@ class QuantumGovernanceSystemsEngine {
                     authority: 0.95,
                     responsibilities: ["Justice Administration", "Constitutional Review"],
                     decisionPower: 0.6
-                )
+                ),
             ],
             roles: [],
             processes: [],
@@ -1558,7 +1558,7 @@ class QuantumGovernanceSystemsEngine {
                     order: 4,
                     duration: 1800,
                     deliverables: ["Decision document", "Implementation plan"]
-                )
+                ),
             ],
             participants: [],
             methods: [],
@@ -1596,7 +1596,7 @@ class QuantumGovernanceSystemsEngine {
                     name: "Sustainability",
                     description: "Long-term thinking for future generations",
                     priority: 0.85
-                )
+                ),
             ],
             guidelines: [],
             decisionRules: [],
@@ -1609,7 +1609,7 @@ class QuantumGovernanceSystemsEngine {
                     composition: ["Independent experts", "Stakeholder representatives"]
                 ),
                 reporting: EthicalFramework.EthicalAccountability.ReportingFramework(
-                    frequency: 604800, // Weekly
+                    frequency: 604_800, // Weekly
                     format: "Public report",
                     audience: ["Public", "Government", "Media"]
                 )
@@ -1668,7 +1668,7 @@ class QuantumGovernanceSystemsEngine {
                     type: .quantitative,
                     direction: .maximize,
                     importance: 0.7
-                )
+                ),
             ],
             weights: ["efficiency": 0.8, "fairness": 0.9, "sustainability": 0.7],
             thresholds: ["efficiency": 0.7, "fairness": 0.8, "sustainability": 0.6]
@@ -1747,7 +1747,7 @@ class QuantumGovernanceSystemsEngine {
                 area: "Effectiveness",
                 improvement: 0.12,
                 description: "Better alignment with stakeholder needs"
-            )
+            ),
         ]
 
         let tradeoffs = [
@@ -1756,7 +1756,7 @@ class QuantumGovernanceSystemsEngine {
                 description: "Increased implementation time for better outcomes",
                 cost: 0.1,
                 benefit: 0.15
-            )
+            ),
         ]
 
         let optimization = PolicyOptimization(
@@ -1814,7 +1814,7 @@ class QuantumGovernanceSystemsEngine {
             stakeholders: [],
             resources: SimulationContext.SimulationResources(
                 human: 1000,
-                financial: 1000000.0,
+                financial: 1_000_000.0,
                 technological: ["AI systems", "Data analytics"],
                 informational: ["Policy data", "Stakeholder feedback"]
             ),
@@ -1831,15 +1831,15 @@ class QuantumGovernanceSystemsEngine {
                 description: "Improved economic growth",
                 probability: 0.8,
                 impact: 0.15,
-                timeframe: 31536000 // 1 year
+                timeframe: 31_536_000 // 1 year
             ),
             PolicySimulationResult.SimulatedOutcome(
                 outcomeId: "outcome_2",
                 description: "Enhanced social equity",
                 probability: 0.7,
                 impact: 0.12,
-                timeframe: 31536000
-            )
+                timeframe: 31_536_000
+            ),
         ]
 
         let risks = [
@@ -1849,7 +1849,7 @@ class QuantumGovernanceSystemsEngine {
                 probability: 0.3,
                 impact: 0.2,
                 mitigation: "Agile implementation approach"
-            )
+            ),
         ]
 
         let recommendations = [
@@ -1858,7 +1858,7 @@ class QuantumGovernanceSystemsEngine {
                 type: .implement,
                 description: "Proceed with implementation",
                 priority: 0.9
-            )
+            ),
         ]
 
         let result = PolicySimulationResult(
@@ -1933,7 +1933,7 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
                     max: 1.0,
                     optimal: 0.9
                 )
-            )
+            ),
         ]
 
         let constraints = [
@@ -1942,7 +1942,7 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
                 description: "Limited financial resources",
                 type: .resource,
                 severity: 0.7
-            )
+            ),
         ]
 
         let opportunities = [
@@ -1951,7 +1951,7 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
                 description: "Technological innovation opportunities",
                 potential: 0.8,
                 feasibility: 0.9
-            )
+            ),
         ]
 
         return DecisionAnalysis(
@@ -1971,7 +1971,7 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
 
     func generateQuantumDecisionOptions(for issue: GovernanceIssue) async -> [DecisionOption] {
         // Simplified option generation
-        return [
+        [
             DecisionOption(
                 optionId: "option_1",
                 description: "Comprehensive implementation with high investment",
@@ -1980,9 +1980,9 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
                         actionId: "action_1",
                         description: "Allocate resources for implementation",
                         responsibleParty: "Government",
-                        deadline: Date().addingTimeInterval(2592000), // 30 days
+                        deadline: Date().addingTimeInterval(2_592_000), // 30 days
                         dependencies: []
-                    )
+                    ),
                 ],
                 expectedOutcomes: [
                     DecisionOption.ExpectedOutcome(
@@ -1990,20 +1990,20 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
                         description: "Significant improvement in target area",
                         probability: 0.8,
                         impact: 0.9,
-                        timeframe: 31536000
-                    )
+                        timeframe: 31_536_000
+                    ),
                 ],
                 resourceRequirements: DecisionOption.ResourceRequirements(
                     human: 100,
-                    financial: 1000000.0,
+                    financial: 1_000_000.0,
                     technological: ["AI systems"],
                     infrastructure: ["Data centers"]
                 ),
                 timeline: DecisionOption.DecisionTimeline(
                     analysis: 3600,
-                    implementation: 2592000,
+                    implementation: 2_592_000,
                     evaluation: 86400,
-                    total: 2764800
+                    total: 2_764_800
                 )
             ),
             DecisionOption(
@@ -2014,9 +2014,9 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
                         actionId: "action_2",
                         description: "Pilot program implementation",
                         responsibleParty: "Government",
-                        deadline: Date().addingTimeInterval(1296000), // 15 days
+                        deadline: Date().addingTimeInterval(1_296_000), // 15 days
                         dependencies: []
-                    )
+                    ),
                 ],
                 expectedOutcomes: [
                     DecisionOption.ExpectedOutcome(
@@ -2024,22 +2024,22 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
                         description: "Moderate improvement with lower risk",
                         probability: 0.9,
                         impact: 0.6,
-                        timeframe: 15768000
-                    )
+                        timeframe: 15_768_000
+                    ),
                 ],
                 resourceRequirements: DecisionOption.ResourceRequirements(
                     human: 50,
-                    financial: 500000.0,
+                    financial: 500_000.0,
                     technological: ["Basic analytics"],
                     infrastructure: ["Existing systems"]
                 ),
                 timeline: DecisionOption.DecisionTimeline(
                     analysis: 1800,
-                    implementation: 1296000,
+                    implementation: 1_296_000,
                     evaluation: 43200,
-                    total: 1368000
+                    total: 1_368_000
                 )
-            )
+            ),
         ]
     }
 
@@ -2053,7 +2053,7 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
             var totalScore = 0.0
 
             for criterion in criteria.criteria {
-                let score = Double.random(in: 0.6...0.95) // Simplified scoring
+                let score = Double.random(in: 0.6 ... 0.95) // Simplified scoring
                 optionScores[criterion.criterionId] = score
                 totalScore += score * (criteria.weights[criterion.criterionId] ?? 1.0)
             }
@@ -2083,14 +2083,14 @@ class QuantumDecisionEngineImpl: QuantumDecisionEngine {
                     optionId: rankings.first?.optionId ?? "",
                     reasoning: "Highest overall score across all criteria",
                     strength: 0.9
-                )
+                ),
             ]
         )
     }
 
     func selectOptimalDecision(from options: [DecisionOption], using algorithm: DecisionAlgorithm) async -> DecisionOption {
         // Simplified selection - return first option
-        return options.first ?? DecisionOption(
+        options.first ?? DecisionOption(
             optionId: "default",
             description: "Default option",
             actions: [],
@@ -2136,7 +2136,7 @@ class GovernanceOptimizerImpl: GovernanceOptimizer {
                 area: "Decision Speed",
                 improvement: 0.15,
                 description: "Faster decision-making cycles"
-            )
+            ),
         ]
 
         return StructureOptimization(
@@ -2223,17 +2223,17 @@ class PolicySimulatorImpl: PolicySimulator {
         // Simplified policy simulation
         let timeline = PolicySimulation.SimulationTimeline(
             startDate: Date(),
-            endDate: Date().addingTimeInterval(31536000), // 1 year
+            endDate: Date().addingTimeInterval(31_536_000), // 1 year
             intervals: 12,
-            stepSize: 2592000 // Monthly
+            stepSize: 2_592_000 // Monthly
         )
 
-        let outcomes = (0..<12).map { month in
+        let outcomes = (0 ..< 12).map { month in
             PolicySimulation.SimulationResults.SimulationOutcome(
                 outcomeId: "outcome_month_\(month)",
                 description: "Monthly policy outcome",
-                value: Double.random(in: 0.7...0.95),
-                timestamp: Date().addingTimeInterval(TimeInterval(month) * 2592000)
+                value: Double.random(in: 0.7 ... 0.95),
+                timestamp: Date().addingTimeInterval(TimeInterval(month) * 2_592_000)
             )
         }
 
@@ -2249,7 +2249,7 @@ class PolicySimulatorImpl: PolicySimulator {
                 name: "Implementation Efficiency",
                 value: 0.9,
                 trend: .stable
-            )
+            ),
         ]
 
         let results = PolicySimulation.SimulationResults(
@@ -2285,7 +2285,7 @@ class PolicySimulatorImpl: PolicySimulator {
                 probability: 0.6,
                 impact: 0.3,
                 conditions: ["Implementation challenges"]
-            )
+            ),
         ]
 
         return OutcomePrediction(
@@ -2307,8 +2307,8 @@ class PolicySimulatorImpl: PolicySimulator {
                     trendId: "trend_1",
                     type: .decreasing,
                     magnitude: 0.1,
-                    timeframe: 31536000
-                )
+                    timeframe: 31_536_000
+                ),
             ],
             riskTolerance: 0.6
         )
@@ -2343,7 +2343,7 @@ class PolicySimulatorImpl: PolicySimulator {
                     name: "Technical Feasibility",
                     score: 0.8,
                     weight: 0.7
-                )
+                ),
             ],
             issues: [],
             recommendations: []
@@ -2418,7 +2418,7 @@ class EthicalGovernanceCoordinatorImpl: EthicalGovernanceCoordinator {
                     name: "Public Participation",
                     status: .strong,
                     strength: 0.9
-                )
+                ),
             ],
             threats: [],
             safeguards: []
@@ -2451,17 +2451,17 @@ extension QuantumGovernanceFramework {
     }
 
     var needsReform: Bool {
-        return status == .operational && governanceEfficiency < 0.8
+        status == .operational && governanceEfficiency < 0.8
     }
 }
 
 extension QuantumDecision {
     var decisionQuality: Double {
-        return (quantumMetrics.coherence + quantumMetrics.optimality + quantumMetrics.fairness + quantumMetrics.stability + quantumMetrics.adaptability) / 5.0
+        (quantumMetrics.coherence + quantumMetrics.optimality + quantumMetrics.fairness + quantumMetrics.stability + quantumMetrics.adaptability) / 5.0
     }
 
     var isHighQuality: Bool {
-        return decisionQuality > 0.8 && confidence > 0.85
+        decisionQuality > 0.8 && confidence > 0.85
     }
 }
 
@@ -2473,7 +2473,7 @@ extension GovernancePolicy {
     }
 
     var isEffective: Bool {
-        return policyEffectiveness > 0.7
+        policyEffectiveness > 0.7
     }
 }
 

@@ -6,8 +6,8 @@
 //  Type definitions for Autonomous Architecture Evolution System
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Protocol Definitions
 
@@ -100,6 +100,7 @@ public struct ArchitectureAnalysis: Codable, Sendable {
 
         public enum DependencyType: String, Codable {
             case import, inheritance, composition, protocol_conformance, function_call
+
         }
     }
 
@@ -225,7 +226,7 @@ public struct CodeSmell: Codable, Sendable {
         case divergentChange = "divergent_change"
         case shotgunSurgery = "shotgun_surgery"
         case parallelInheritance = "parallel_inheritance"
-        case comments = "comments"
+        case comments
         case duplicateCode = "duplicate_code"
         case middleMan = "middle_man"
         case lazyClass = "lazy_class"
@@ -976,15 +977,15 @@ public enum ArchitectureEvolutionError: Error, LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .analysisFailed(let message):
+        case let .analysisFailed(message):
             return "Architecture analysis failed: \(message)"
-        case .refactoringFailed(let message):
+        case let .refactoringFailed(message):
             return "Refactoring operation failed: \(message)"
-        case .validationFailed(let message):
+        case let .validationFailed(message):
             return "Validation failed: \(message)"
-        case .evolutionFailed(let message):
+        case let .evolutionFailed(message):
             return "Architecture evolution failed: \(message)"
-        case .fileSystemError(let message):
+        case let .fileSystemError(message):
             return "File system error: \(message)"
         }
     }
@@ -992,8 +993,8 @@ public enum ArchitectureEvolutionError: Error, LocalizedError {
 
 // MARK: - Utility Extensions
 
-extension ArchitecturalPattern.PatternType {
-    public var displayName: String {
+public extension ArchitecturalPattern.PatternType {
+    var displayName: String {
         switch self {
         case .mvvm: return "MVVM"
         case .mvp: return "MVP"
@@ -1014,12 +1015,12 @@ extension ArchitecturalPattern.PatternType {
     }
 }
 
-extension CodeSmell.SmellType {
-    public var displayName: String {
-        rawValue.split(separator: "_").map { $0.capitalized }.joined(separator: " ")
+public extension CodeSmell.SmellType {
+    var displayName: String {
+        rawValue.split(separator: "_").map(\.capitalized).joined(separator: " ")
     }
 
-    public var description: String {
+    var description: String {
         switch self {
         case .longMethod: return "A method that is too long and should be broken down"
         case .largeClass: return "A class that has grown too large and should be split"
@@ -1044,9 +1045,9 @@ extension CodeSmell.SmellType {
     }
 }
 
-extension RefactoringSuggestion.RefactoringType {
-    public var displayName: String {
-        rawValue.split(separator: "_").map { $0.capitalized }.joined(separator: " ")
+public extension RefactoringSuggestion.RefactoringType {
+    var displayName: String {
+        rawValue.split(separator: "_").map(\.capitalized).joined(separator: " ")
     }
 }
 

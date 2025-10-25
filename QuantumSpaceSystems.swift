@@ -6,8 +6,8 @@
 //  Copyright © 2025 Daniel Boone. All rights reserved.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1182,7 +1182,7 @@ final class QuantumSpaceSystemsEngine: QuantumSpaceSystemsProtocol {
             network: network,
             reliability: network.status == .operational ? 0.95 : 0.0,
             latency: 0.001,
-            throughput: 1000000,
+            throughput: 1_000_000,
             error: nil
         )
     }
@@ -1513,7 +1513,7 @@ final class SpaceSystemsMetrics {
 
 /// Space monitoring system
 final class SpaceMonitoringSystem {
-    @Published var systemHealth: SystemHealth = SystemHealth()
+    @Published var systemHealth: SystemHealth = .init()
     @Published var activeOperations: [SpaceOperation] = []
 
     func startMonitoring() {
@@ -1546,7 +1546,7 @@ struct SpaceOperation {
 /// Deployment engine
 final class DeploymentEngine {
     func deploy(_ assets: [OrbitalAsset]) async throws -> DeploymentResult {
-        return DeploymentResult(
+        DeploymentResult(
             assets: assets,
             successRate: 0.95,
             timeline: DeploymentTimeline(
@@ -1555,7 +1555,7 @@ final class DeploymentEngine {
                 launch: 24 * 60 * 60,
                 activation: 7 * 24 * 60 * 60
             ),
-            costs: 1000000000
+            costs: 1_000_000_000
         )
     }
 }
@@ -1565,10 +1565,10 @@ final class DeploymentEngine {
 /// Maintenance scheduler
 final class MaintenanceScheduler {
     func scheduleMaintenance(_ infrastructure: OrbitalInfrastructure) async throws -> MaintenanceResult {
-        return MaintenanceResult(
+        MaintenanceResult(
             infrastructure: infrastructure,
             maintenanceSchedule: [],
-            costs: 50000000,
+            costs: 50_000_000,
             downtime: 2 * 60 * 60
         )
     }
@@ -1577,7 +1577,7 @@ final class MaintenanceScheduler {
 /// Operations monitor
 final class OperationsMonitor {
     func monitor(_ operations: OrbitalOperations) async throws -> MonitoringResult {
-        return MonitoringResult(
+        MonitoringResult(
             operations: operations,
             healthStatus: 0.92,
             alerts: [],
@@ -1589,7 +1589,7 @@ final class OperationsMonitor {
 /// Trajectory optimizer
 final class TrajectoryOptimizer {
     func optimize(_ trajectories: [OrbitalTrajectory]) async throws -> OptimizationResult {
-        return OptimizationResult(
+        OptimizationResult(
             trajectories: trajectories,
             efficiency: 0.88,
             fuelSavings: 0.15,
@@ -1601,7 +1601,7 @@ final class TrajectoryOptimizer {
 /// Extraction engine
 final class ExtractionEngine {
     func extract(_ resource: SpaceResource) async throws -> ExtractionResult {
-        return ExtractionResult(
+        ExtractionResult(
             resource: resource,
             yield: 0.85,
             quality: 0.92,
@@ -1613,7 +1613,7 @@ final class ExtractionEngine {
 /// Processing facility
 final class ProcessingFacility {
     func process(_ material: SpaceMaterial) async throws -> ProcessingResult {
-        return ProcessingResult(
+        ProcessingResult(
             material: material,
             products: [],
             efficiency: 0.87,
@@ -1625,10 +1625,10 @@ final class ProcessingFacility {
 /// Distribution network
 final class DistributionNetwork {
     func distribute(_ distribution: ResourceDistribution) async throws -> DistributionResult {
-        return DistributionResult(
+        DistributionResult(
             distribution: distribution,
             deliveryRate: 0.94,
-            costs: 10000000,
+            costs: 10_000_000,
             delays: 2 * 60 * 60
         )
     }
@@ -1637,7 +1637,7 @@ final class DistributionNetwork {
 /// Sustainability manager
 final class SustainabilityManager {
     func manage(_ sustainability: ResourceSustainability) async throws -> SustainabilityResult {
-        return SustainabilityResult(
+        SustainabilityResult(
             sustainability: sustainability,
             longTermViability: 0.78,
             recommendations: ["Implement extraction quotas", "Monitor regeneration"],
@@ -1649,11 +1649,11 @@ final class SustainabilityManager {
 /// Link establishment
 final class LinkEstablishment {
     func establish(_ links: [QuantumLink]) async throws -> LinkResult {
-        return LinkResult(
+        LinkResult(
             links: links,
             establishmentTime: 5.0,
             stability: 0.96,
-            bandwidth: 1000000000
+            bandwidth: 1_000_000_000
         )
     }
 }
@@ -1661,7 +1661,7 @@ final class LinkEstablishment {
 /// Data transmission
 final class DataTransmission {
     func transmit(_ data: InterplanetaryData) async throws -> TransmissionResult {
-        return TransmissionResult(
+        TransmissionResult(
             data: data,
             success: true,
             latency: 0.002,
@@ -1673,7 +1673,7 @@ final class DataTransmission {
 /// Network maintenance
 final class NetworkMaintenance {
     func maintain(_ network: CommunicationNetwork) async throws -> NetworkResult {
-        return NetworkResult(
+        NetworkResult(
             network: network,
             uptime: 0.98,
             performance: 0.94,
@@ -1685,7 +1685,7 @@ final class NetworkMaintenance {
 /// Operations coordination
 final class OperationsCoordination {
     func coordinate(_ operations: MultiPlanetOperations) async throws -> CoordinationResult {
-        return CoordinationResult(
+        CoordinationResult(
             operations: operations,
             efficiency: 0.89,
             conflicts: [],
@@ -1697,7 +1697,7 @@ final class OperationsCoordination {
 /// Mission planner
 final class MissionPlanner {
     func plan(_ missions: [ExplorationMission]) async throws -> MissionResult {
-        return MissionResult(
+        MissionResult(
             missions: missions,
             feasibility: 0.82,
             risks: [],
@@ -1709,7 +1709,7 @@ final class MissionPlanner {
 /// Fleet coordinator
 final class FleetCoordinator {
     func coordinate(_ fleets: [ExplorationFleet]) async throws -> FleetResult {
-        return FleetResult(
+        FleetResult(
             fleet: fleets.first ?? ExplorationFleet(id: UUID(), name: "", vessels: [], mission: ExplorationMission(id: UUID(), name: "", objectives: [], target: ExplorationMission.ExplorationTarget(location: CelestialLocation(body: .earth, coordinates: CelestialLocation.CelestialCoordinates(latitude: 0, longitude: 0, altitude: 0), region: ""), features: [], hazards: [], scientificValue: 0), duration: 0, crew: [], spacecraft: ExplorationMission.Spacecraft(type: .orbiter, capabilities: [], fuel: ExplorationMission.Spacecraft.FuelStatus(current: 0, capacity: 0, type: ""), systems: []), status: .planning), formation: .line, coordination: ExplorationFleet.FleetCoordination(leader: ExplorationMission.Spacecraft(type: .orbiter, capabilities: [], fuel: ExplorationMission.Spacecraft.FuelStatus(current: 0, capacity: 0, type: ""), systems: []), communication: CommunicationNetwork(nodes: [], links: [], topology: .mesh, status: .operational), navigation: ExplorationFleet.FleetCoordination.NavigationSystem(accuracy: 0, range: 0, updateFrequency: 0))),
             coordination: 0.91,
             efficiency: 0.87,
@@ -1721,7 +1721,7 @@ final class FleetCoordinator {
 /// Data analyzer
 final class DataAnalyzer {
     func analyze(_ data: ExplorationData) async throws -> AnalysisResult {
-        return AnalysisResult(
+        AnalysisResult(
             data: data,
             insights: [],
             confidence: 0.85,
@@ -1733,7 +1733,7 @@ final class DataAnalyzer {
 /// Phenomena discoverer
 final class PhenomenaDiscoverer {
     func discover(_ phenomena: CosmicPhenomena) async throws -> DiscoveryResult {
-        return DiscoveryResult(
+        DiscoveryResult(
             phenomena: phenomena,
             significance: 0.95,
             followUp: [],
@@ -1747,7 +1747,7 @@ final class PhenomenaDiscoverer {
 extension QuantumSpaceSystemsEngine {
     /// Get space systems statistics
     func getSpaceStatistics() -> SpaceStatistics {
-        return SpaceStatistics(
+        SpaceStatistics(
             totalAssets: spaceDatabase.assetCount,
             totalResources: spaceDatabase.resourceCount,
             totalMissions: spaceDatabase.missionCount,
@@ -1837,7 +1837,7 @@ extension QuantumSpaceSystemsEngine {
         let helium3Resource = SpaceResource(
             type: .helium3,
             location: CelestialLocation(body: .moon, coordinates: CelestialLocation.CelestialCoordinates(latitude: 0, longitude: 0, altitude: 0), region: "Mare Tranquillitatis"),
-            quantity: 1000000,
+            quantity: 1_000_000,
             quality: 0.95,
             accessibility: 0.7,
             extractionDifficulty: 0.6

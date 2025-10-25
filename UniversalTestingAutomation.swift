@@ -6,8 +6,8 @@
 //  Universal Testing Automation System with Quantum Verification and Intelligent Test Generation
 //
 
-import Foundation
 import Combine
+import Foundation
 import SwiftUI
 
 // MARK: - Core Protocols
@@ -1186,7 +1186,8 @@ final class UniversalTestingAutomation: ObservableObject {
     init(testGenerator: QuantumTestGenerator = QuantumTestGeneratorImpl(),
          testExecutor: IntelligentTestExecutor = IntelligentTestExecutorImpl(),
          testVerifier: QuantumTestVerifier = QuantumTestVerifierImpl(),
-         testMaintenance: AutomatedTestMaintenance = AutomatedTestMaintenanceImpl()) {
+         testMaintenance: AutomatedTestMaintenance = AutomatedTestMaintenanceImpl())
+    {
         self.testGenerator = testGenerator
         self.testExecutor = testExecutor
         self.testVerifier = testVerifier
@@ -1200,7 +1201,7 @@ final class UniversalTestingAutomation: ObservableObject {
 
     /// Generate comprehensive test suite
     func generateTestSuite(for code: String, language: ProgrammingLanguage, coverage: TestCoverage) async throws -> TestSuite {
-        return try await testGenerator.generateTestSuite(for: code, language: language, coverage: coverage)
+        try await testGenerator.generateTestSuite(for: code, language: language, coverage: coverage)
     }
 
     /// Execute tests with intelligence
@@ -1224,47 +1225,47 @@ final class UniversalTestingAutomation: ObservableObject {
 
     /// Analyze test results
     func analyzeTestResults(_ results: TestExecutionResult) async throws -> TestAnalysis {
-        return try await testVerifier.analyzeTestResults(results)
+        try await testVerifier.analyzeTestResults(results)
     }
 
     /// Optimize test suite
     func optimizeTestSuite(_ testSuite: TestSuite, basedOn analysis: TestAnalysis) async throws -> OptimizedTestSuite {
-        return try await testMaintenance.optimizeTestSuite(testSuite, basedOn: analysis)
+        try await testMaintenance.optimizeTestSuite(testSuite, basedOn: analysis)
     }
 
     /// Generate unit tests
     func generateUnitTests(for code: String, language: ProgrammingLanguage, complexity: TestComplexity) async throws -> [UnitTest] {
-        return try await testGenerator.generateUnitTests(for: code, language: language, complexity: complexity)
+        try await testGenerator.generateUnitTests(for: code, language: language, complexity: complexity)
     }
 
     /// Generate integration tests
     func generateIntegrationTests(for components: [CodeComponent], language: ProgrammingLanguage) async throws -> [IntegrationTest] {
-        return try await testGenerator.generateIntegrationTests(for: components, language: language)
+        try await testGenerator.generateIntegrationTests(for: components, language: language)
     }
 
     /// Generate system tests
     func generateSystemTests(for system: SystemUnderTest, scenarios: [TestScenario]) async throws -> [SystemTest] {
-        return try await testGenerator.generateSystemTests(for: system, scenarios: scenarios)
+        try await testGenerator.generateSystemTests(for: system, scenarios: scenarios)
     }
 
     /// Generate performance tests
     func generatePerformanceTests(for code: String, language: ProgrammingLanguage, metrics: [PerformanceTest.PerformanceMetric]) async throws -> [PerformanceTest] {
-        return try await testGenerator.generatePerformanceTests(for: code, language: language, metrics: metrics)
+        try await testGenerator.generatePerformanceTests(for: code, language: language, metrics: metrics)
     }
 
     /// Verify test correctness
     func verifyTestCorrectness(_ test: Test, against specification: TestSpecification) async throws -> VerificationResult {
-        return try await testVerifier.verifyTestCorrectness(test, against: specification)
+        try await testVerifier.verifyTestCorrectness(test, against: specification)
     }
 
     /// Detect test smells
     func detectTestSmells(in testSuite: TestSuite) async throws -> [TestSmell] {
-        return try await testVerifier.detectTestSmells(in: testSuite)
+        try await testVerifier.detectTestSmells(in: testSuite)
     }
 
     /// Update tests for code changes
     func updateTestsForCodeChanges(codeChanges: [CodeChange], existingTests: TestSuite) async throws -> TestUpdates {
-        return try await testMaintenance.updateTestsForCodeChanges(codeChanges: codeChanges, existingTests: existingTests)
+        try await testMaintenance.updateTestsForCodeChanges(codeChanges: codeChanges, existingTests: existingTests)
     }
 
     /// Save test suite to file
@@ -1332,7 +1333,7 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
 
     func generateUnitTests(for code: String, language: ProgrammingLanguage, complexity: TestComplexity) async throws -> [UnitTest] {
         // Mock implementation - would analyze code and generate unit tests
-        return [
+        [
             UnitTest(
                 id: "test_basic_functionality",
                 name: "Test Basic Functionality",
@@ -1342,7 +1343,7 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                 tags: ["unit", "basic"],
                 targetFunction: "performOperation",
                 inputParameters: [
-                    UnitTest.TestParameter(name: "input", type: "String", value: "test")
+                    UnitTest.TestParameter(name: "input", type: "String", value: "test"),
                 ],
                 expectedOutput: UnitTest.TestExpectation(
                     type: .exact,
@@ -1351,13 +1352,13 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                 ),
                 preconditions: ["System is initialized"],
                 postconditions: ["Result is valid"]
-            )
+            ),
         ]
     }
 
     func generateIntegrationTests(for components: [CodeComponent], language: ProgrammingLanguage) async throws -> [IntegrationTest] {
         // Mock implementation
-        return [
+        [
             IntegrationTest(
                 id: "test_component_integration",
                 name: "Component Integration Test",
@@ -1373,28 +1374,28 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                         action: "processRequest",
                         parameters: ["request": "test"],
                         expectedResponse: "success"
-                    )
+                    ),
                 ],
                 successCriteria: [
                     IntegrationTest.SuccessCriterion(
                         condition: "Response received",
                         measurement: "response_time < 1.0"
-                    )
+                    ),
                 ],
                 failureScenarios: [
                     IntegrationTest.FailureScenario(
                         scenario: "Network failure",
                         expectedFailure: "ConnectionError",
                         recoveryAction: "Retry with backoff"
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
     }
 
     func generateSystemTests(for system: SystemUnderTest, scenarios: [TestScenario]) async throws -> [SystemTest] {
         // Mock implementation
-        return [
+        [
             SystemTest(
                 id: "test_end_to_end_flow",
                 name: "End-to-End Flow Test",
@@ -1425,22 +1426,22 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                         target: "/register",
                         parameters: [:],
                         waitCondition: "page_loaded"
-                    )
+                    ),
                 ],
                 validationPoints: [
                     SystemTest.ValidationPoint(
                         point: "registration_form",
                         validation: "form_visible",
                         successCriteria: "form renders correctly"
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
     }
 
     func generatePerformanceTests(for code: String, language: ProgrammingLanguage, metrics: [PerformanceTest.PerformanceMetric]) async throws -> [PerformanceTest] {
         // Mock implementation
-        return [
+        [
             PerformanceTest(
                 id: "test_performance_load",
                 name: "Performance Load Test",
@@ -1462,9 +1463,9 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                         value: 1.0,
                         unit: "seconds",
                         condition: .less_than
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
     }
 }
@@ -1477,13 +1478,13 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
             TestResult(
                 testId: test.id,
                 status: .passed,
-                duration: Double.random(in: 0.1...2.0),
+                duration: Double.random(in: 0.1 ... 2.0),
                 startTime: Date(),
-                endTime: Date().addingTimeInterval(Double.random(in: 0.1...2.0)),
+                endTime: Date().addingTimeInterval(Double.random(in: 0.1 ... 2.0)),
                 output: "Test executed successfully",
                 errorMessage: nil,
                 stackTrace: nil,
-                metrics: ["execution_time": Double.random(in: 0.1...2.0)],
+                metrics: ["execution_time": Double.random(in: 0.1 ... 2.0)],
                 artifacts: []
             )
         }
@@ -1554,7 +1555,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     adaptation: "Increased timeout for slow tests",
                     impact: .positive,
                     timestamp: Date()
-                )
+                ),
             ],
             predictions: [],
             optimizations: [
@@ -1563,23 +1564,23 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     description: "Executed tests in parallel for better performance",
                     benefit: 0.6,
                     appliedAt: Date()
-                )
+                ),
             ]
         )
     }
 
     func adaptExecutionBasedOn(results: [TestResult], environment: TestEnvironment) async throws -> AdaptedExecutionPlan {
         // Mock implementation
-        return AdaptedExecutionPlan(
+        AdaptedExecutionPlan(
             originalPlan: AdaptedExecutionPlan.ExecutionPlan(
-                testOrder: results.map { $0.testId },
-                parallelGroups: [results.map { $0.testId }],
+                testOrder: results.map(\.testId),
+                parallelGroups: [results.map(\.testId)],
                 resourceAllocation: [:],
                 estimatedDuration: 10.0
             ),
             adaptedPlan: AdaptedExecutionPlan.ExecutionPlan(
-                testOrder: results.map { $0.testId }.reversed(),
-                parallelGroups: [results.map { $0.testId }],
+                testOrder: results.map(\.testId).reversed(),
+                parallelGroups: [results.map(\.testId)],
                 resourceAllocation: [:],
                 estimatedDuration: 8.0
             ),
@@ -1587,9 +1588,9 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                 AdaptedExecutionPlan.Adaptation(
                     type: .reordering,
                     description: "Reordered tests for optimal execution",
-                    affectedTests: results.map { $0.testId },
+                    affectedTests: results.map(\.testId),
                     benefit: 0.2
-                )
+                ),
             ],
             reasoning: [
                 AdaptedExecutionPlan.AdaptationReason(
@@ -1597,14 +1598,14 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     reasoning: "Reordering to run fast tests first",
                     confidence: 0.8,
                     evidence: ["Historical data shows faster execution"]
-                )
+                ),
             ]
         )
     }
 
     func predictTestFailures(for tests: [Test], basedOn history: TestHistory) async throws -> FailurePrediction {
         // Mock implementation
-        return FailurePrediction(
+        FailurePrediction(
             testId: tests.first?.id ?? "unknown",
             probability: 0.1,
             predictedFailure: "Timeout under load",
@@ -1615,9 +1616,9 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
 
     func optimizeExecutionOrder(for tests: [Test], dependencies: [TestDependency]) async throws -> OptimizedExecutionOrder {
         // Mock implementation
-        return OptimizedExecutionOrder(
-            optimizedOrder: tests.map { $0.id },
-            parallelGroups: [tests.map { $0.id }],
+        OptimizedExecutionOrder(
+            optimizedOrder: tests.map(\.id),
+            parallelGroups: [tests.map(\.id)],
             estimatedTimeSaving: 2.0,
             dependencySatisfaction: 1.0
         )
@@ -1628,7 +1629,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
 final class QuantumTestVerifierImpl: QuantumTestVerifier {
     func verifyTestCorrectness(_ test: Test, against specification: TestSpecification) async throws -> VerificationResult {
         // Mock implementation
-        return VerificationResult(
+        VerificationResult(
             testId: test.id,
             isCorrect: true,
             confidence: 0.9,
@@ -1640,7 +1641,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
 
     func detectTestSmells(in testSuite: TestSuite) async throws -> [TestSmell] {
         // Mock implementation
-        return [
+        [
             TestSmell(
                 type: .long_test,
                 description: "Test method is too long and does multiple things",
@@ -1648,13 +1649,13 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                 severity: .medium,
                 refactoring: "Split into multiple focused test methods",
                 impact: "Improved maintainability and debugging"
-            )
+            ),
         ]
     }
 
     func measureTestQuality(_ testSuite: TestSuite) async throws -> TestQualityMetrics {
         // Mock implementation
-        return TestQualityMetrics(
+        TestQualityMetrics(
             sizeMetrics: TestQualityMetrics.SizeMetrics(
                 totalTests: testSuite.tests.count,
                 averageTestSize: 15.0,
@@ -1685,7 +1686,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
 
     func validateTestCoverage(_ coverage: TestCoverage, against requirements: CoverageRequirements) async throws -> CoverageValidation {
         // Mock implementation
-        return CoverageValidation(
+        CoverageValidation(
             requirements: requirements,
             actualCoverage: coverage,
             gaps: [
@@ -1695,7 +1696,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                     actual: 75.0,
                     gap: 15.0,
                     priority: .medium
-                )
+                ),
             ],
             compliance: .warning,
             recommendations: ["Add more error handling tests", "Increase edge case coverage"]
@@ -1704,7 +1705,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
 
     func analyzeTestResults(_ results: TestExecutionResult) async throws -> TestAnalysis {
         // Mock implementation
-        return TestAnalysis(
+        TestAnalysis(
             executionResult: results,
             qualityMetrics: TestAnalysis.TestQualityMetrics(
                 reliability: 0.95,
@@ -1765,7 +1766,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                             severity: 0.3,
                             impact: "Slow test execution",
                             mitigation: "Increase memory allocation"
-                        )
+                        ),
                     ],
                     recommendations: ["Optimize memory usage", "Consider parallel execution"]
                 ),
@@ -1803,7 +1804,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                             requiredCoverage: 85.0,
                             gap: 15.0,
                             priority: .medium
-                        )
+                        ),
                     ],
                     priorityGaps: ["Error handling", "Edge cases"],
                     recommendations: ["Add comprehensive error testing", "Implement boundary value testing"]
@@ -1825,7 +1826,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                     effort: .easy,
                     expectedBenefit: 0.1,
                     implementation: "Implement parallel test execution"
-                )
+                ),
             ]
         )
     }
@@ -1835,14 +1836,14 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
 final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
     func updateTestsForCodeChanges(codeChanges: [CodeChange], existingTests: TestSuite) async throws -> TestUpdates {
         // Mock implementation
-        return TestUpdates(
+        TestUpdates(
             newTests: [],
             modifiedTests: [
                 TestUpdates.TestModification(
                     testId: "existing_test_1",
                     changes: ["Updated assertions for new API"],
                     reason: "API signature changed"
-                )
+                ),
             ],
             obsoleteTests: [],
             impactAnalysis: TestUpdates.ImpactAnalysis(
@@ -1856,7 +1857,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
 
     func refactorTests(_ testSuite: TestSuite, strategy: RefactoringStrategy) async throws -> RefactoredTestSuite {
         // Mock implementation
-        return RefactoredTestSuite(
+        RefactoredTestSuite(
             originalSuite: testSuite,
             refactoredSuite: testSuite, // Assume refactored
             refactorings: [
@@ -1865,7 +1866,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     description: "Extracted common setup code",
                     affectedTests: ["test1", "test2"],
                     benefit: "Reduced duplication"
-                )
+                ),
             ],
             qualityImprovement: RefactoredTestSuite.QualityDelta(
                 maintainabilityChange: 15.0,
@@ -1883,7 +1884,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
 
     func removeObsoleteTests(_ testSuite: TestSuite, basedOn codeCoverage: CodeCoverage) async throws -> CleanedTestSuite {
         // Mock implementation
-        return CleanedTestSuite(
+        CleanedTestSuite(
             originalSuite: testSuite,
             cleanedSuite: testSuite, // Assume cleaned
             removedTests: [
@@ -1892,7 +1893,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     reason: .obsolete_code,
                     coverageImpact: 2.0,
                     lastExecution: Date().addingTimeInterval(-86400 * 30) // 30 days ago
-                )
+                ),
             ],
             coverageImpact: CleanedTestSuite.CoverageImpact(
                 overallChange: -2.0,
@@ -1905,7 +1906,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
 
     func evolveTestSuite(_ testSuite: TestSuite, basedOn feedback: TestFeedback) async throws -> EvolvedTestSuite {
         // Mock implementation
-        return EvolvedTestSuite(
+        EvolvedTestSuite(
             originalSuite: testSuite,
             evolvedSuite: testSuite, // Assume evolved
             evolutions: [
@@ -1914,7 +1915,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     description: "Added test for new user scenario",
                     affectedTests: ["new_scenario_test"],
                     benefit: 0.1
-                )
+                ),
             ],
             feedbackIncorporated: [
                 EvolvedTestSuite.TestFeedback(
@@ -1922,7 +1923,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     content: feedback.content,
                     priority: .medium,
                     implemented: true
-                )
+                ),
             ],
             improvementMetrics: EvolvedTestSuite.ImprovementMetrics(
                 defectDetectionIncrease: 0.1,
@@ -1935,7 +1936,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
 
     func optimizeTestSuite(_ testSuite: TestSuite, basedOn analysis: TestAnalysis) async throws -> OptimizedTestSuite {
         // Mock implementation
-        return OptimizedTestSuite(
+        OptimizedTestSuite(
             originalSuite: testSuite,
             optimizedSuite: testSuite, // Assume optimized
             optimizations: [
@@ -1945,7 +1946,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     affectedTests: ["test1", "test2"],
                     benefit: 0.15,
                     tradeoffs: ["Slightly more complex test setup"]
-                )
+                ),
             ],
             qualityImprovements: OptimizedTestSuite.QualityImprovement(
                 reliabilityIncrease: 5.0,
@@ -1977,14 +1978,14 @@ struct UniversalTestingAutomationView: View {
     @State private var selectedLanguage: ProgrammingLanguage = .swift
     @State private var testCoverage: TestCoverage = .unit
     @State private var codeInput: String = """
-func calculateTotal(items: [Double]) -> Double {
-    return items.reduce(0, +)
-}
+    func calculateTotal(items: [Double]) -> Double {
+        return items.reduce(0, +)
+    }
 
-func findMaximum(items: [Double]) -> Double? {
-    return items.max()
-}
-"""
+    func findMaximum(items: [Double]) -> Double? {
+        return items.max()
+    }
+    """
     @State private var generatedTests: [String] = []
     @State private var isGenerating = false
     @State private var executionResults: String = ""

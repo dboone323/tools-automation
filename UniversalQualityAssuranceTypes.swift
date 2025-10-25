@@ -976,7 +976,7 @@ extension QualityMetrics {
             "test": 0.20,
             "performance": 0.20,
             "security": 0.20,
-            "compliance": 0.15
+            "compliance": 0.15,
         ]
 
         let actualWeights = weights.isEmpty ? defaultWeights : weights
@@ -986,7 +986,7 @@ extension QualityMetrics {
             testQuality.unitTestCoverage,
             performanceQuality.scalability,
             securityQuality.complianceScore,
-            complianceQuality.standardCompliance
+            complianceQuality.standardCompliance,
         ]
 
         return zip(actualWeights.values, scores).map(*).reduce(0, +)
@@ -999,7 +999,7 @@ extension QualityMetrics {
             "test_coverage": testQuality.unitTestCoverage,
             "performance_score": performanceQuality.scalability,
             "security_score": securityQuality.complianceScore,
-            "compliance_score": complianceQuality.standardCompliance
+            "compliance_score": complianceQuality.standardCompliance,
         ]
     }
 }
@@ -1017,7 +1017,7 @@ extension QualityGates {
             }
         }
 
-        let totalWeight = gates.map { $0.weight }.reduce(0, +)
+        let totalWeight = gates.map(\.weight).reduce(0, +)
         guard abs(totalWeight - 1.0) < 0.01 else {
             throw QualityAssuranceError.invalidConfiguration("Gate weights must sum to 1.0, got \(totalWeight)")
         }
@@ -1044,7 +1044,7 @@ extension QualityHistory {
     func averageScore(over days: Int) -> Double {
         let cutoff = Date().addingTimeInterval(-Double(days * 24 * 3600))
         let recentAssessments = assessments.filter { $0.timestamp >= cutoff }
-        return recentAssessments.map { $0.score }.reduce(0, +) / Double(recentAssessments.count)
+        return recentAssessments.map(\.score).reduce(0, +) / Double(recentAssessments.count)
     }
 }
 
@@ -1060,17 +1060,17 @@ enum QualityAssuranceError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .invalidConfiguration(let message):
+        case let .invalidConfiguration(message):
             return "Invalid configuration: \(message)"
-        case .assessmentFailed(let message):
+        case let .assessmentFailed(message):
             return "Assessment failed: \(message)"
-        case .validationFailed(let message):
+        case let .validationFailed(message):
             return "Validation failed: \(message)"
-        case .improvementFailed(let message):
+        case let .improvementFailed(message):
             return "Improvement failed: \(message)"
-        case .evolutionFailed(let message):
+        case let .evolutionFailed(message):
             return "Evolution failed: \(message)"
-        case .synchronizationFailed(let message):
+        case let .synchronizationFailed(message):
             return "Synchronization failed: \(message)"
         }
     }
@@ -1118,7 +1118,7 @@ extension QualityPattern {
                 indicators: ["test_coverage > 0.8", "test_types > 2"],
                 confidence: 0.92,
                 impact: 0.25
-            )
+            ),
         ]
     }
 }
@@ -1130,7 +1130,7 @@ extension QualityEntanglementAnalysis {
             entanglementMatrix: [
                 [1.0, 0.8, 0.6],
                 [0.8, 1.0, 0.7],
-                [0.6, 0.7, 1.0]
+                [0.6, 0.7, 1.0],
             ],
             qualityPropagationPaths: [
                 PropagationPath(
@@ -1139,7 +1139,7 @@ extension QualityEntanglementAnalysis {
                     strength: 0.8,
                     qualityImpact: 0.15,
                     path: ["UI", "Business Logic"]
-                )
+                ),
             ],
             criticalEntanglementPoints: ["Business Logic"]
         )
@@ -1165,7 +1165,7 @@ extension QualitySuperpositionMeasurement {
                     probability: 0.3,
                     characteristics: ["average_coverage", "medium_complexity"],
                     transitions: ["state_1": 0.2, "state_3": 0.1]
-                )
+                ),
             ],
             interferencePatterns: [
                 InterferencePattern(
@@ -1173,7 +1173,7 @@ extension QualitySuperpositionMeasurement {
                     amplitude: 0.05,
                     phase: 0.0,
                     qualityImpact: -0.02
-                )
+                ),
             ],
             coherenceMeasure: 0.85,
             decoherenceRate: 0.02,
@@ -1193,7 +1193,7 @@ extension QualityInterferenceDetection {
                     intensity: 0.15,
                     frequency: 0.05,
                     duration: 3600
-                )
+                ),
             ],
             interferenceLevel: 0.08,
             sources: [
@@ -1202,7 +1202,7 @@ extension QualityInterferenceDetection {
                     factor: "rapid_changes",
                     contribution: 0.6,
                     correlation: 0.75
-                )
+                ),
             ],
             mitigationStrategies: [
                 MitigationStrategy(
@@ -1210,7 +1210,7 @@ extension QualityInterferenceDetection {
                     effectiveness: 0.8,
                     cost: 0.3,
                     implementation: "Define clear API boundaries"
-                )
+                ),
             ],
             residualInterference: 0.02
         )
@@ -1248,7 +1248,7 @@ extension QualityTrendAnalysis {
                     slope: 0.0001,
                     rSquared: 0.92,
                     dataPoints: 50
-                )
+                ),
             ],
             seasonality: SeasonalityAnalysis(
                 detected: true,
@@ -1259,7 +1259,7 @@ extension QualityTrendAnalysis {
                         frequency: 0.142857,
                         amplitude: 0.05,
                         phase: 0.0
-                    )
+                    ),
                 ]
             ),
             anomalies: [
@@ -1270,7 +1270,7 @@ extension QualityTrendAnalysis {
                     expectedValue: 300.0,
                     deviation: 3.0,
                     severity: .high
-                )
+                ),
             ],
             predictions: [
                 TrendPrediction(
@@ -1283,9 +1283,9 @@ extension QualityTrendAnalysis {
                             factor: "team_size",
                             weight: 0.3,
                             contribution: 0.02
-                        )
+                        ),
                     ]
-                )
+                ),
             ],
             confidence: 0.83
         )
@@ -1313,7 +1313,7 @@ extension QualityGateImprovementSuggestion {
                     teamImpact: 0.1,
                     mitigationStrategies: ["Gradual rollout", "Additional training"]
                 )
-            )
+            ),
         ]
     }
 }
@@ -1334,7 +1334,7 @@ extension QualityGateEvolutionStrategy {
                             changeType: .threshold,
                             oldValue: 0.75,
                             newValue: 0.78
-                        )
+                        ),
                     ],
                     validation: StepValidation(
                         tests: ["unit_tests", "integration_tests"],
@@ -1342,7 +1342,7 @@ extension QualityGateEvolutionStrategy {
                         successThreshold: 0.95
                     ),
                     duration: 7 * 24 * 3600
-                )
+                ),
             ],
             successCriteria: [
                 SuccessCriterion(
@@ -1350,7 +1350,7 @@ extension QualityGateEvolutionStrategy {
                     operator: .greater_than,
                     value: 0.80,
                     timeframe: 30 * 24 * 3600
-                )
+                ),
             ],
             rollbackPlan: RollbackPlan(
                 automatic: true,
@@ -1365,14 +1365,14 @@ extension QualityGateEvolutionStrategy {
                         condition: "quality_score < 0.75",
                         severity: "warning",
                         channels: ["slack", "email"]
-                    )
+                    ),
                 ],
                 reporting: [
                     Report(
                         frequency: "weekly",
                         recipients: ["team_lead", "qa_manager"],
                         format: "dashboard"
-                    )
+                    ),
                 ]
             )
         )
@@ -1404,11 +1404,11 @@ extension QualityConstraintAnalysis {
                         target: 0.7
                     ),
                     priority: 2
-                )
+                ),
             ],
             constraintMatrix: [
                 [1.0, 0.3],
-                [0.3, 1.0]
+                [0.3, 1.0],
             ],
             feasibleRegion: FeasibleRegion(
                 vertices: [[0.999, 0.7], [0.999, 0.8], [0.995, 0.8]],
@@ -1422,7 +1422,7 @@ extension QualityConstraintAnalysis {
                     impact: 0.15,
                     feasibility: 0.9,
                     tradeoffs: ["Initial setup cost", "Learning curve"]
-                )
+                ),
             ]
         )
     }
@@ -1501,7 +1501,7 @@ func createDefaultQualityAssuranceConfiguration() -> QualityAssuranceConfigurati
                 thresholds: ["code_coverage": 0.7, "test_coverage": 0.6],
                 tools: ["swiftlint", "xctest"],
                 schedules: [
-                    Schedule(name: "daily_assessment", frequency: "daily", time: "09:00")
+                    Schedule(name: "daily_assessment", frequency: "daily", time: "09:00"),
                 ]
             ),
             EnvironmentConfiguration(
@@ -1510,9 +1510,9 @@ func createDefaultQualityAssuranceConfiguration() -> QualityAssuranceConfigurati
                 thresholds: ["code_coverage": 0.85, "test_coverage": 0.80],
                 tools: ["swiftlint", "xctest", "sonarcloud"],
                 schedules: [
-                    Schedule(name: "continuous_monitoring", frequency: "hourly", time: "*")
+                    Schedule(name: "continuous_monitoring", frequency: "hourly", time: "*"),
                 ]
-            )
+            ),
         ],
         standards: QualityStandardsConfiguration(
             codeQuality: QualityStandardsConfiguration.CodeQualityConfiguration(
@@ -1562,7 +1562,7 @@ func createDefaultQualityAssuranceConfiguration() -> QualityAssuranceConfigurati
             notificationChannels: ["slack", "email"],
             apiEndpoints: [
                 "github_api": "https://api.github.com",
-                "slack_api": "https://slack.com/api"
+                "slack_api": "https://slack.com/api",
             ]
         ),
         notifications: QualityAssuranceConfiguration.NotificationConfiguration(
@@ -1576,7 +1576,7 @@ func createDefaultQualityAssuranceConfiguration() -> QualityAssuranceConfigurati
                     name: "email",
                     type: "smtp",
                     configuration: ["smtp_server": "smtp.company.com"]
-                )
+                ),
             ],
             templates: [
                 QualityAssuranceConfiguration.NotificationConfiguration.NotificationTemplate(
@@ -1584,14 +1584,14 @@ func createDefaultQualityAssuranceConfiguration() -> QualityAssuranceConfigurati
                     type: "alert",
                     content: "Quality alert: {{metric}} is {{value}} (threshold: {{threshold}})",
                     variables: ["metric", "value", "threshold"]
-                )
+                ),
             ],
             schedules: [
                 QualityAssuranceConfiguration.NotificationConfiguration.NotificationSchedule(
                     name: "daily_summary",
                     frequency: "daily",
                     conditions: ["has_new_issues"]
-                )
+                ),
             ]
         )
     )
@@ -1662,7 +1662,7 @@ func createQualityDashboardConfiguration() -> QualityAssuranceDashboard {
                 title: "Action Items",
                 configuration: ["status_filter": "open,pending"],
                 position: DashboardWidget.WidgetPosition(x: 0, y: 8, width: 12, height: 4)
-            )
+            ),
         ],
         filters: [
             DashboardFilter(
@@ -1685,7 +1685,7 @@ func createQualityDashboardConfiguration() -> QualityAssuranceDashboard {
                 type: .time_range,
                 options: ["1d", "7d", "30d", "90d"],
                 defaultValue: "30d"
-            )
+            ),
         ],
         refreshRate: 300.0, // 5 minutes
         permissions: ["read", "write", "admin"]

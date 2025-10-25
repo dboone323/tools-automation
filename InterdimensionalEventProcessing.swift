@@ -9,8 +9,8 @@
 // Framework for real-time event correlation and pattern recognition across dimensions
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -704,14 +704,14 @@ class InterdimensionalEventProcessingEngine {
                         dimension: nil,
                         timeWindow: 60.0,
                         customPredicate: nil
-                    )
+                    ),
                 ],
                 action: CorrelationRule.CorrelationAction(
                     type: .correlate,
                     parameters: [:]
                 ),
                 priority: 1
-            )
+            ),
         ]
 
         let patternRules = [
@@ -721,7 +721,7 @@ class InterdimensionalEventProcessingEngine {
                 patternType: .sequential,
                 conditions: [],
                 threshold: 0.8
-            )
+            ),
         ]
 
         let network = EventProcessingNetwork(
@@ -806,7 +806,7 @@ class InterdimensionalEventProcessingEngine {
             insights: [
                 "Found \(correlations.correlations.count) significant correlations",
                 "Identified \(causalityGraph.rootCauses.count) potential root causes",
-                "Clustered events into \(clusters.clusters.count) groups"
+                "Clustered events into \(clusters.clusters.count) groups",
             ]
         )
     }
@@ -982,7 +982,7 @@ class EventStreamManagerImpl: EventStreamManager {
 
     func mergeStreams(_ streams: [EventStream]) async throws -> EventStream {
         // Simplified stream merging
-        let mergedEvents = streams.flatMap { $0.events }.sorted { $0.timestamp < $1.timestamp }
+        let mergedEvents = streams.flatMap(\.events).sorted { $0.timestamp < $1.timestamp }
 
         return EventStream(
             id: "merged_\(UUID().uuidString.prefix(8))",
@@ -1027,8 +1027,8 @@ class EventCorrelationEngineImpl: EventCorrelationEngine {
         var correlationMatrix = Array(repeating: Array(repeating: 0.0, count: matrixSize), count: matrixSize)
 
         // Simple correlation based on event types
-        for i in 0..<matrixSize {
-            for j in 0..<matrixSize {
+        for i in 0 ..< matrixSize {
+            for j in 0 ..< matrixSize {
                 if i != j {
                     correlationMatrix[i][j] = events[i].eventType == events[j].eventType ? 0.8 : 0.2
                 } else {
@@ -1044,7 +1044,7 @@ class EventCorrelationEngineImpl: EventCorrelationEngine {
                 coefficient: 0.8,
                 pValue: 0.01,
                 lag: nil
-            )
+            ),
         ]
 
         return CorrelationResult(
@@ -1073,7 +1073,7 @@ class EventCorrelationEngineImpl: EventCorrelationEngine {
                 strength: 0.7,
                 delay: 1.0,
                 type: .direct
-            )
+            ),
         ]
 
         return CausalityGraph(
@@ -1089,7 +1089,7 @@ class EventCorrelationEngineImpl: EventCorrelationEngine {
         let sortedEvents = events.sorted { $0.timestamp < $1.timestamp }
 
         var transitions: [EventSequence.EventTransition] = []
-        for i in 0..<max(0, sortedEvents.count - 1) {
+        for i in 0 ..< max(0, sortedEvents.count - 1) {
             let transition = EventSequence.EventTransition(
                 fromEvent: sortedEvents[i],
                 toEvent: sortedEvents[i + 1],
@@ -1117,7 +1117,7 @@ class EventCorrelationEngineImpl: EventCorrelationEngine {
         let components = [
             SimilarityScore.SimilarityComponent(type: .semantic, score: typeSimilarity, weight: 0.4),
             SimilarityScore.SimilarityComponent(type: .spatial, score: dimensionSimilarity, weight: 0.3),
-            SimilarityScore.SimilarityComponent(type: .temporal, score: timeSimilarity, weight: 0.3)
+            SimilarityScore.SimilarityComponent(type: .temporal, score: timeSimilarity, weight: 0.3),
         ]
 
         let overallScore = components.reduce(0) { $0 + $1.score * $1.weight }
@@ -1138,11 +1138,11 @@ class EventCorrelationEngineImpl: EventCorrelationEngine {
                 centroid: EventClusters.EventCluster.ClusterCentroid(
                     averageTimestamp: Date(),
                     commonTypes: [.dataChange],
-                    averageDimension: Double(events.map { $0.dimension }.reduce(0, +)) / Double(events.count)
+                    averageDimension: Double(events.map(\.dimension).reduce(0, +)) / Double(events.count)
                 ),
                 density: 0.8,
                 radius: 1.0
-            )
+            ),
         ]
 
         return EventClusters(
@@ -1163,7 +1163,7 @@ class PatternRecognitionEngineImpl: PatternRecognitionEngine {
                 frequency: 5,
                 probability: 0.8,
                 averageInterval: 30.0
-            )
+            ),
         ]
 
         return SequentialPatterns(
@@ -1181,7 +1181,7 @@ class PatternRecognitionEngineImpl: PatternRecognitionEngine {
                 eventDistribution: Dictionary(uniqueKeysWithValues: dimensions.map { ($0, 10) }),
                 pattern: "uniform_distribution",
                 strength: 0.7
-            )
+            ),
         ]
 
         return SpatialPatterns(
@@ -1199,7 +1199,7 @@ class PatternRecognitionEngineImpl: PatternRecognitionEngine {
                 amplitude: 1.0,
                 phase: 0.0,
                 confidence: 0.85
-            )
+            ),
         ]
 
         return TemporalPatterns(
@@ -1216,7 +1216,7 @@ class PatternRecognitionEngineImpl: PatternRecognitionEngine {
                 components: [],
                 relationships: [],
                 emergence: 0.6
-            )
+            ),
         ]
 
         return ComplexPatterns(
@@ -1240,7 +1240,7 @@ class PatternRecognitionEngineImpl: PatternRecognitionEngine {
                 probability: 0.75,
                 expectedTime: Date().addingTimeInterval(60),
                 confidence: 0.8
-            )
+            ),
         ]
 
         return PatternPrediction(
@@ -1258,7 +1258,7 @@ class EventAnomalyDetectorImpl: EventAnomalyDetector {
         var anomalies: [EventAnomaly] = []
 
         for event in events {
-            let anomalyScore = Double.random(in: 0...1)
+            let anomalyScore = Double.random(in: 0 ... 1)
             if anomalyScore > 0.8 {
                 let anomaly = EventAnomaly(
                     anomalyId: "anomaly_\(UUID().uuidString.prefix(8))",
@@ -1290,7 +1290,7 @@ class EventAnomalyDetectorImpl: EventAnomalyDetector {
 
     func classifyAnomalyType(_ anomaly: EventAnomaly) async -> AnomalyClassification {
         // Simplified anomaly classification
-        return AnomalyClassification(
+        AnomalyClassification(
             anomaly: anomaly,
             category: .suspicious,
             subcategory: "unusual_frequency",
@@ -1300,12 +1300,12 @@ class EventAnomalyDetectorImpl: EventAnomalyDetector {
 
     func measureAnomalySeverity(_ anomaly: EventAnomaly) async -> SeverityScore {
         // Simplified severity measurement
-        return SeverityScore(
+        SeverityScore(
             score: 0.7,
             components: [
                 SeverityScore.SeverityComponent(type: .impact, score: 0.6, weight: 0.4),
                 SeverityScore.SeverityComponent(type: .frequency, score: 0.8, weight: 0.3),
-                SeverityScore.SeverityComponent(type: .spread, score: 0.5, weight: 0.3)
+                SeverityScore.SeverityComponent(type: .spread, score: 0.5, weight: 0.3),
             ],
             overall: .medium
         )
@@ -1313,7 +1313,7 @@ class EventAnomalyDetectorImpl: EventAnomalyDetector {
 
     func generateAnomalyResponse(_ anomaly: EventAnomaly) async -> AnomalyResponse {
         // Simplified anomaly response generation
-        return AnomalyResponse(
+        AnomalyResponse(
             responseId: "response_\(UUID().uuidString.prefix(8))",
             anomaly: anomaly,
             actions: [
@@ -1322,7 +1322,7 @@ class EventAnomalyDetectorImpl: EventAnomalyDetector {
                     description: "Send alert to monitoring system",
                     automated: true,
                     parameters: [:]
-                )
+                ),
             ],
             priority: .high,
             estimatedResolutionTime: 300.0
@@ -1366,17 +1366,17 @@ enum InterdimensionalEventError: Error {
 
 extension InterdimensionalEvent {
     var age: TimeInterval {
-        return Date().timeIntervalSince(timestamp)
+        Date().timeIntervalSince(timestamp)
     }
 
     var isRecent: Bool {
-        return age < 300 // 5 minutes
+        age < 300 // 5 minutes
     }
 }
 
 extension EventStream {
     var eventCount: Int {
-        return events.count
+        events.count
     }
 
     var duration: TimeInterval {

@@ -9,8 +9,8 @@
 // Framework for economic optimization using quantum algorithms for resource allocation and market prediction
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -2770,10 +2770,10 @@ struct ResourceManagement {
 
             enum SensorType {
                 case iot
-            let sensorId: String
-            let type: SensorType
-            let location: GeographicLocation
-            let accuracy: Double
+                let sensorId: String
+                let type: SensorType
+                let location: GeographicLocation
+                let accuracy: Double
 
                 enum SensorType {
                     case iot
@@ -3402,14 +3402,14 @@ class QuantumEconomicSystemsEngine {
                     exchangeId: "quantum_exchange",
                     name: "Quantum Global Exchange",
                     type: .stock,
-                    volume: 1000000000.0
-                )
+                    volume: 1_000_000_000.0
+                ),
             ],
             clearing: MarketInfrastructure.ClearingHouse(
                 clearingId: "clearing_\(frameworkId)",
                 name: "Quantum Clearing House",
                 members: 500,
-                volume: 500000000.0
+                volume: 500_000_000.0
             ),
             settlement: MarketInfrastructure.SettlementSystem(
                 settlementId: "settlement_\(frameworkId)",
@@ -3520,28 +3520,28 @@ class QuantumEconomicSystemsEngine {
             banking: FinancialServices.BankingServices(
                 servicesId: "banking_\(frameworkId)",
                 institutions: 1000,
-                deposits: 5000000000.0,
-                loans: 4000000000.0,
+                deposits: 5_000_000_000.0,
+                loans: 4_000_000_000.0,
                 digital: 0.8
             ),
             investment: FinancialServices.InvestmentServices(
                 servicesId: "investment_\(frameworkId)",
                 firms: 500,
-                assets: 20000000000.0,
+                assets: 20_000_000_000.0,
                 products: [.mutualFund],
                 technology: 0.9
             ),
             insurance: FinancialServices.InsuranceServices(
                 servicesId: "insurance_\(frameworkId)",
                 companies: 200,
-                premiums: 1000000000.0,
+                premiums: 1_000_000_000.0,
                 coverage: 0.85,
                 digital: 0.75
             ),
             payments: FinancialServices.PaymentServices(
                 servicesId: "payments_\(frameworkId)",
                 providers: 300,
-                volume: 10000000000.0,
+                volume: 10_000_000_000.0,
                 digital: 0.9,
                 international: 0.8
             )
@@ -3682,7 +3682,7 @@ class QuantumEconomicSystemsEngine {
         let predictions = market.assets.map { asset in
             MarketPrediction.AssetPrediction(
                 assetId: asset.assetId,
-                predictedPrice: asset.currentPrice * (1.0 + Double.random(in: -0.1...0.1)), // ±10% prediction
+                predictedPrice: asset.currentPrice * (1.0 + Double.random(in: -0.1 ... 0.1)), // ±10% prediction
                 confidence: 0.8,
                 drivers: [
                     MarketPrediction.PriceDriver(
@@ -3696,21 +3696,21 @@ class QuantumEconomicSystemsEngine {
                         name: "Inflation Expectations",
                         impact: 0.2,
                         direction: .negative
-                    )
+                    ),
                 ],
                 scenarios: [
                     MarketPrediction.PriceScenario(
                         scenarioId: "bull",
                         name: "Bull Market",
                         probability: 0.4,
-                        priceRange: asset.currentPrice * 1.0...asset.currentPrice * 1.2
+                        priceRange: asset.currentPrice * 1.0 ... asset.currentPrice * 1.2
                     ),
                     MarketPrediction.PriceScenario(
                         scenarioId: "bear",
                         name: "Bear Market",
                         probability: 0.3,
-                        priceRange: asset.currentPrice * 0.8...asset.currentPrice * 1.0
-                    )
+                        priceRange: asset.currentPrice * 0.8 ... asset.currentPrice * 1.0
+                    ),
                 ]
             )
         }
@@ -3729,7 +3729,7 @@ class QuantumEconomicSystemsEngine {
                     type: .modelError,
                     probability: 0.2,
                     impact: 0.3
-                )
+                ),
             ]
         )
 
@@ -3761,7 +3761,7 @@ class QuantumEconomicSystemsEngine {
                         baseline: 2.0,
                         simulated: 2.0 + (scenario.probability - 0.5) * 1.0,
                         difference: (scenario.probability - 0.5) * 1.0
-                    )
+                    ),
                 ],
                 metrics: [
                     PolicySimulation.SimulationMetric(
@@ -3769,7 +3769,7 @@ class QuantumEconomicSystemsEngine {
                         name: "Model Confidence",
                         value: 0.85,
                         confidence: 0.9
-                    )
+                    ),
                 ]
             )
         }
@@ -3787,7 +3787,7 @@ class QuantumEconomicSystemsEngine {
                 description: "Implement expansionary fiscal policy",
                 rationale: "Positive GDP impact with manageable inflation",
                 priority: 0.8
-            )
+            ),
         ]
 
         let simulation = PolicySimulation(
@@ -3799,7 +3799,7 @@ class QuantumEconomicSystemsEngine {
                 description: "Default economic policy",
                 objectives: [],
                 instruments: [],
-                timeframe: 31536000,
+                timeframe: 31_536_000,
                 cost: 0.0,
                 stakeholders: []
             ),
@@ -3831,7 +3831,7 @@ class QuantumEconomicSystemsEngine {
                     name: "Payment Processing",
                     description: "Process cross-border payments",
                     responsible: "Financial Institutions"
-                )
+                ),
             ],
             stakeholders: ["Exporters", "Importers", "Banks", "Governments"],
             communication: TradeCoordination.CoordinationProcess.CommunicationProtocol(
@@ -3849,7 +3849,7 @@ class QuantumEconomicSystemsEngine {
             efficiency: 0.9,
             compliance: 0.95,
             disputes: 2,
-            savings: 5000000.0
+            savings: 5_000_000.0
         )
 
         let monitoring = TradeCoordination.TradeMonitoring(
@@ -3896,7 +3896,7 @@ class QuantumEconomicSystemsEngine {
                 probability: 0.2,
                 impact: 0.3,
                 exposure: 0.6
-            )
+            ),
         ]
 
         let mitigation = [
@@ -3905,15 +3905,15 @@ class QuantumEconomicSystemsEngine {
                 strategy: "Diversification",
                 effectiveness: 0.7,
                 cost: 0.1,
-                implementation: 604800 // 1 week
+                implementation: 604_800 // 1 week
             ),
             RiskAssessment.RiskMitigation(
                 mitigationId: "hedging",
                 strategy: "Hedging",
                 effectiveness: 0.8,
                 cost: 0.2,
-                implementation: 2592000 // 1 month
-            )
+                implementation: 2_592_000 // 1 month
+            ),
         ]
 
         let recommendations = [
@@ -3922,8 +3922,8 @@ class QuantumEconomicSystemsEngine {
                 action: "Increase diversification",
                 rationale: "Reduce market risk exposure",
                 priority: 0.8,
-                timeframe: 604800
-            )
+                timeframe: 604_800
+            ),
         ]
 
         let assessment = RiskAssessment(
@@ -3980,7 +3980,7 @@ class QuantumMarketPredictorImpl: QuantumMarketPredictor {
             PricePrediction.AssetPricePrediction(
                 assetId: asset.assetId,
                 currentPrice: asset.currentPrice,
-                predictedPrice: asset.currentPrice * (1.0 + Double.random(in: -0.05...0.05)),
+                predictedPrice: asset.currentPrice * (1.0 + Double.random(in: -0.05 ... 0.05)),
                 confidence: 0.8,
                 volatility: asset.volatility
             )
@@ -4003,7 +4003,7 @@ class QuantumMarketPredictorImpl: QuantumMarketPredictor {
                 indicator: indicator.name,
                 direction: indicator.change > 0 ? .improving : .declining,
                 strength: abs(indicator.change),
-                duration: 2592000 // 30 days
+                duration: 2_592_000 // 30 days
             )
         }
 
@@ -4013,7 +4013,7 @@ class QuantumMarketPredictorImpl: QuantumMarketPredictor {
             indicators: indicators,
             trends: trends,
             confidence: 0.8,
-            timeframe: 2592000
+            timeframe: 2_592_000
         )
     }
 
@@ -4064,7 +4064,7 @@ class QuantumMarketPredictorImpl: QuantumMarketPredictor {
     }
 
     func analyzeMarketSentiment(_ data: SentimentData) async -> SentimentAnalysis {
-        return SentimentAnalysis(
+        SentimentAnalysis(
             analysisId: "sentiment_\(UUID().uuidString.prefix(8))",
             data: data,
             sentiment: MarketSentiment(
@@ -4086,7 +4086,7 @@ class QuantumMarketPredictorImpl: QuantumMarketPredictor {
                 severity: 0.7,
                 timestamp: Date(),
                 description: "Unusual price movement detected"
-            )
+            ),
         ]
 
         return AnomalyDetection(
@@ -4139,7 +4139,7 @@ class ResourceAllocationOptimizerImpl: ResourceAllocationOptimizer {
     }
 
     func balanceSupplyDemand(_ supply: SupplyChain, demand: DemandPattern) async -> SupplyDemandBalance {
-        return SupplyDemandBalance(
+        SupplyDemandBalance(
             balanceId: "balance_\(UUID().uuidString.prefix(8))",
             supply: supply,
             demand: demand,
@@ -4154,7 +4154,7 @@ class ResourceAllocationOptimizerImpl: ResourceAllocationOptimizer {
     }
 
     func maximizeEconomicEfficiency(_ economy: EconomicSystem, objectives: [EconomicObjective]) async -> EfficiencyOptimization {
-        return EfficiencyOptimization(
+        EfficiencyOptimization(
             optimizationId: "eff_opt_\(UUID().uuidString.prefix(8))",
             economy: economy,
             objectives: objectives,
@@ -4170,7 +4170,7 @@ class ResourceAllocationOptimizerImpl: ResourceAllocationOptimizer {
     }
 
     func minimizeResourceWaste(_ resources: [EconomicResource], processes: [EconomicProcess]) async -> WasteMinimization {
-        return WasteMinimization(
+        WasteMinimization(
             minimizationId: "waste_min_\(UUID().uuidString.prefix(8))",
             resources: resources,
             processes: processes,
@@ -4190,7 +4190,7 @@ class ResourceAllocationOptimizerImpl: ResourceAllocationOptimizer {
     }
 
     func coordinateInterdependentResources(_ resources: [EconomicResource], dependencies: [ResourceDependency]) async -> ResourceCoordination {
-        return ResourceCoordination(
+        ResourceCoordination(
             coordinationId: "coord_\(UUID().uuidString.prefix(8))",
             resources: resources,
             dependencies: dependencies,
@@ -4216,11 +4216,11 @@ class EconomicModelingEngineImpl: EconomicModelingEngine {
         let projections = [
             GrowthModel.GrowthProjection(
                 projectionId: "proj_1",
-                timeframe: 31536000,
+                timeframe: 31_536_000,
                 gdpGrowth: 3.5,
                 confidence: 0.8,
                 scenarios: []
-            )
+            ),
         ]
 
         return GrowthModel(
@@ -4248,10 +4248,10 @@ class EconomicModelingEngineImpl: EconomicModelingEngine {
             CycleSimulation.BusinessCycle(
                 cycleId: "cycle_1",
                 phase: .expansion,
-                duration: 2592000,
+                duration: 2_592_000,
                 amplitude: 0.05,
                 indicators: []
-            )
+            ),
         ]
 
         return CycleSimulation(
@@ -4265,15 +4265,15 @@ class EconomicModelingEngineImpl: EconomicModelingEngine {
     }
 
     func forecastInflation(_ economy: EconomicSystem, indicators: [InflationIndicator]) async -> InflationForecast {
-        return InflationForecast(
+        InflationForecast(
             forecastId: "inflation_\(economy.systemId)",
             economy: economy,
             indicators: indicators,
             forecast: InflationForecast.InflationPrediction(
                 rate: 2.5,
                 confidence: 0.8,
-                range: 2.0...3.0,
-                timeframe: 2592000
+                range: 2.0 ... 3.0,
+                timeframe: 2_592_000
             ),
             drivers: [],
             risks: []
@@ -4281,7 +4281,7 @@ class EconomicModelingEngineImpl: EconomicModelingEngine {
     }
 
     func analyzeLaborMarkets(_ market: LaborMarket, demographics: PopulationDemographics) async -> LaborAnalysis {
-        return LaborAnalysis(
+        LaborAnalysis(
             analysisId: "labor_\(market.marketId)",
             market: market,
             demographics: demographics,
@@ -4317,8 +4317,8 @@ class EconomicModelingEngineImpl: EconomicModelingEngine {
                     exporter: exporter.regionId,
                     importer: importer.regionId,
                     good: goods.first?.name ?? "General Goods",
-                    volume: 1000000.0,
-                    value: 500000.0
+                    volume: 1_000_000.0,
+                    value: 500_000.0
                 )
             }
         }
@@ -4364,7 +4364,7 @@ class GlobalTradeCoordinatorImpl: GlobalTradeCoordinator {
                 efficiency: 0.9,
                 compliance: 0.95,
                 disputes: 0,
-                savings: 1000000.0
+                savings: 1_000_000.0
             ),
             monitoring: TradeCoordination.TradeMonitoring(
                 monitoringId: "monitor_\(UUID().uuidString.prefix(8))",
@@ -4381,14 +4381,14 @@ class GlobalTradeCoordinatorImpl: GlobalTradeCoordinator {
     }
 
     func harmonizeTradeStandards(_ standards: [TradeStandard], regions: [EconomicRegion]) async -> StandardHarmonization {
-        return StandardHarmonization(
+        StandardHarmonization(
             harmonizationId: "harmonize_\(UUID().uuidString.prefix(8))",
             standards: standards,
             regions: regions,
             harmonization: StandardHarmonization.HarmonizationProcess(
                 steps: [],
                 stakeholders: [],
-                timeline: 31536000
+                timeline: 31_536_000
             ),
             outcomes: StandardHarmonization.HarmonizationOutcomes(
                 compatibility: 0.9,
@@ -4400,7 +4400,7 @@ class GlobalTradeCoordinatorImpl: GlobalTradeCoordinator {
     }
 
     func facilitateCrossBorderPayments(_ payments: [CrossBorderPayment], currencies: [Currency]) async -> PaymentFacilitation {
-        return PaymentFacilitation(
+        PaymentFacilitation(
             facilitationId: "facilitate_\(UUID().uuidString.prefix(8))",
             payments: payments,
             currencies: currencies,
@@ -4419,14 +4419,14 @@ class GlobalTradeCoordinatorImpl: GlobalTradeCoordinator {
     }
 
     func resolveTradeDisputes(_ disputes: [TradeDispute], regulations: [TradeRegulation]) async -> DisputeResolution {
-        return DisputeResolution(
+        DisputeResolution(
             resolutionId: "resolve_\(UUID().uuidString.prefix(8))",
             disputes: disputes,
             regulations: regulations,
             resolution: DisputeResolution.ResolutionProcess(
                 steps: [],
                 mediators: [],
-                timeline: 2592000,
+                timeline: 2_592_000,
                 success: 0.8
             ),
             outcomes: DisputeResolution.ResolutionOutcomes(
@@ -4439,7 +4439,7 @@ class GlobalTradeCoordinatorImpl: GlobalTradeCoordinator {
     }
 
     func optimizeSupplyChains(_ chains: [SupplyChain], disruptions: [SupplyDisruption]) async -> SupplyChainOptimization {
-        return SupplyChainOptimization(
+        SupplyChainOptimization(
             optimizationId: "supply_opt_\(UUID().uuidString.prefix(8))",
             chains: chains,
             disruptions: disruptions,
@@ -4486,7 +4486,7 @@ class FinancialRiskManagerImpl: FinancialRiskManager {
     }
 
     func manageMarketVolatility(_ market: Market, strategies: [RiskManagementStrategy]) async -> VolatilityManagement {
-        return VolatilityManagement(
+        VolatilityManagement(
             managementId: "volatility_\(market.marketId)",
             market: market,
             strategies: strategies,
@@ -4526,13 +4526,13 @@ class FinancialRiskManagerImpl: FinancialRiskManager {
     }
 
     func monitorSystemicRisk(_ system: FinancialSystem, indicators: [SystemicIndicator]) async -> SystemicRiskMonitoring {
-        return SystemicRiskMonitoring(
+        SystemicRiskMonitoring(
             monitoringId: "systemic_\(system.systemId)",
             system: system,
             indicators: indicators,
             monitoring: SystemicRiskMonitoring.MonitoringSystem(
                 systemId: "monitor_\(UUID().uuidString.prefix(8))",
-                indicators: indicators.map { $0.indicatorId },
+                indicators: indicators.map(\.indicatorId),
                 thresholds: [:],
                 frequency: 3600
             ),
@@ -4541,13 +4541,13 @@ class FinancialRiskManagerImpl: FinancialRiskManager {
     }
 
     func implementHedgingStrategies(_ exposures: [FinancialExposure], instruments: [HedgingInstrument]) async -> HedgingImplementation {
-        return HedgingImplementation(
+        HedgingImplementation(
             implementationId: "hedge_\(UUID().uuidString.prefix(8))",
             exposures: exposures,
             instruments: instruments,
             implementation: HedgingImplementation.ImplementationStrategy(
                 strategyId: "strategy_\(UUID().uuidString.prefix(8))",
-                instruments: instruments.map { $0.instrumentId },
+                instruments: instruments.map(\.instrumentId),
                 ratios: [:],
                 monitoring: 0.9
             ),
@@ -4564,7 +4564,7 @@ class FinancialRiskManagerImpl: FinancialRiskManager {
 /// Economic policy simulator implementation
 class EconomicPolicySimulatorImpl: EconomicPolicySimulator {
     func simulateFiscalPolicy(_ policy: FiscalPolicy, economy: EconomicSystem) async -> FiscalSimulation {
-        return FiscalSimulation(
+        FiscalSimulation(
             simulationId: "fiscal_sim_\(policy.policyId)",
             policy: policy,
             economy: economy,
@@ -4583,7 +4583,7 @@ class EconomicPolicySimulatorImpl: EconomicPolicySimulator {
     }
 
     func simulateMonetaryPolicy(_ policy: MonetaryPolicy, banking: BankingSystem) async -> MonetarySimulation {
-        return MonetarySimulation(
+        MonetarySimulation(
             simulationId: "monetary_sim_\(policy.policyId)",
             policy: policy,
             banking: BankingSystem(
@@ -4604,7 +4604,7 @@ class EconomicPolicySimulatorImpl: EconomicPolicySimulator {
     }
 
     func evaluatePolicyCombinations(_ policies: [EconomicPolicy], interactions: [PolicyInteraction]) async -> PolicyEvaluation {
-        return PolicyEvaluation(
+        PolicyEvaluation(
             evaluationId: "policy_eval_\(UUID().uuidString.prefix(8))",
             policies: policies,
             interactions: interactions,
@@ -4624,8 +4624,8 @@ class EconomicPolicySimulatorImpl: EconomicPolicySimulator {
                 impactId: "gdp_impact",
                 indicator: "GDP Growth",
                 change: 0.5,
-                lag: 2592000
-            )
+                lag: 2_592_000
+            ),
         ]
 
         return PolicyImpactForecast(
@@ -4639,7 +4639,7 @@ class EconomicPolicySimulatorImpl: EconomicPolicySimulator {
     }
 
     func optimizePolicyMix(_ objectives: [PolicyObjective], constraints: [PolicyConstraint]) async -> PolicyOptimization {
-        return PolicyOptimization(
+        PolicyOptimization(
             optimizationId: "policy_opt_\(UUID().uuidString.prefix(8))",
             objectives: objectives,
             constraints: constraints,
@@ -4681,27 +4681,27 @@ extension QuantumEconomicFramework {
     }
 
     var needsOptimization: Bool {
-        return status == .operational && economicEfficiency < 0.8
+        status == .operational && economicEfficiency < 0.8
     }
 }
 
 extension ResourceAllocation {
     var allocationEffectiveness: Double {
-        return optimization.efficiency * optimization.equity * optimization.sustainability
+        optimization.efficiency * optimization.equity * optimization.sustainability
     }
 
     var isEffective: Bool {
-        return allocationEffectiveness > 0.7
+        allocationEffectiveness > 0.7
     }
 }
 
 extension MarketPrediction {
     var predictionAccuracy: Double {
-        return confidence * (1.0 - risks.reduce(0.0) { $0 + $1.probability * $1.impact })
+        confidence * (1.0 - risks.reduce(0.0) { $0 + $1.probability * $1.impact })
     }
 
     var isReliable: Bool {
-        return predictionAccuracy > 0.7
+        predictionAccuracy > 0.7
     }
 }
 
@@ -4712,7 +4712,7 @@ extension PolicySimulation {
     }
 
     var isHighQuality: Bool {
-        return simulationQuality > 0.8
+        simulationQuality > 0.8
     }
 }
 

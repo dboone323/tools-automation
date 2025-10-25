@@ -1,7 +1,8 @@
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Reality Engineering Frameworks
+
 // Phase 8A: Advanced Quantum Technologies - Task 114
 // Description: Comprehensive reality engineering frameworks with quantum reality manipulation and multiversal architecture capabilities
 
@@ -256,10 +257,10 @@ enum RealityManipulationCriteria {
 
     var manipulationValue: Double {
         switch self {
-        case .precision(let precision, let stability): return precision * stability
-        case .coherence(let coherence, let resonance): return coherence * resonance
-        case .complexity(let complexity, let adaptability): return complexity * adaptability
-        case .transcendence(let transcendence, let enlightenment): return transcendence * enlightenment
+        case let .precision(precision, stability): return precision * stability
+        case let .coherence(coherence, resonance): return coherence * resonance
+        case let .complexity(complexity, adaptability): return complexity * adaptability
+        case let .transcendence(transcendence, enlightenment): return transcendence * enlightenment
         }
     }
 }
@@ -272,10 +273,10 @@ enum RealityTranscendenceCriteria {
 
     var transcendenceValue: Double {
         switch self {
-        case .transcendence(let transcendence, let enlightenment): return transcendence * enlightenment
-        case .realityDepth(let depth, let complexity): return depth * complexity
-        case .quantumCoherence(let coherence, let stability): return coherence * stability
-        case .multiversalHarmony(let harmony, let unity): return harmony * unity
+        case let .transcendence(transcendence, enlightenment): return transcendence * enlightenment
+        case let .realityDepth(depth, complexity): return depth * complexity
+        case let .quantumCoherence(coherence, stability): return coherence * stability
+        case let .multiversalHarmony(harmony, unity): return harmony * unity
         }
     }
 }
@@ -295,10 +296,10 @@ enum MultiversalCoordinationCriteria {
 
     var coordinationValue: Double {
         switch self {
-        case .dimensional(let dimensional, let temporal): return dimensional * temporal
-        case .quantum(let quantum, let multiversal): return quantum * multiversal
-        case .reality(let reality, let coherence): return reality * coherence
-        case .harmony(let harmony, let unity): return harmony * unity
+        case let .dimensional(dimensional, temporal): return dimensional * temporal
+        case let .quantum(quantum, multiversal): return quantum * multiversal
+        case let .reality(reality, coherence): return reality * coherence
+        case let .harmony(harmony, unity): return harmony * unity
         }
     }
 }
@@ -311,10 +312,10 @@ enum MultiversalHarmonyCriteria {
 
     var harmonyValue: Double {
         switch self {
-        case .harmonyStrength(let strength, let coherence): return strength * coherence
-        case .unityLevel(let level, let connectivity): return level * connectivity
-        case .dimensionalBalance(let balance, let stability): return balance * stability
-        case .quantumResonance(let resonance, let transcendence): return resonance * transcendence
+        case let .harmonyStrength(strength, coherence): return strength * coherence
+        case let .unityLevel(level, connectivity): return level * connectivity
+        case let .dimensionalBalance(balance, stability): return balance * stability
+        case let .quantumResonance(resonance, transcendence): return resonance * transcendence
         }
     }
 }
@@ -325,6 +326,7 @@ enum MultiversalHarmonyCriteria {
 @MainActor
 class RealityEngineeringFrameworksEngine: ObservableObject {
     // MARK: - Properties
+
     @Published var quantumReality: QuantumReality
     @Published var multiversalArchitecture: MultiversalArchitecture
     @Published var realityEngineeringState: RealityEngineeringState?
@@ -340,6 +342,7 @@ class RealityEngineeringFrameworksEngine: ObservableObject {
     private let realityEngineeringEngine: RealityEngineeringEngine
 
     // MARK: - Initialization
+
     init() {
         // Initialize with default reality engineering systems
         self.quantumReality = QuantumReality(
@@ -441,7 +444,7 @@ class QuantumRealityManipulationSystemsImpl: QuantumRealityManipulationSystems {
             ),
             realityEnhancements: [
                 RealityEnhancement(enhancementType: .precision, factor: 1.25, stability: 0.9),
-                RealityEnhancement(enhancementType: .coherence, factor: 1.2, stability: 0.88)
+                RealityEnhancement(enhancementType: .coherence, factor: 1.2, stability: 0.88),
             ]
         )
     }
@@ -462,7 +465,7 @@ class QuantumRealityManipulationSystemsImpl: QuantumRealityManipulationSystems {
             ),
             transcendenceCapabilities: [
                 TranscendenceCapability(capabilityType: .transcendence, strength: 0.92, stability: 0.9),
-                TranscendenceCapability(capabilityType: .enlightenment, strength: 0.89, stability: 0.88)
+                TranscendenceCapability(capabilityType: .enlightenment, strength: 0.89, stability: 0.88),
             ]
         )
     }
@@ -507,7 +510,7 @@ class MultiversalArchitectureSystemsImpl: MultiversalArchitectureSystems {
             ),
             coordinationEnhancements: [
                 CoordinationEnhancement(enhancementType: .dimensional, improvement: 0.15, stability: 0.9),
-                CoordinationEnhancement(enhancementType: .quantum, improvement: 0.18, stability: 0.88)
+                CoordinationEnhancement(enhancementType: .quantum, improvement: 0.18, stability: 0.88),
             ]
         )
     }
@@ -528,7 +531,7 @@ class MultiversalArchitectureSystemsImpl: MultiversalArchitectureSystems {
             ),
             harmonyCapabilities: [
                 HarmonyCapability(capabilityType: .harmony, strength: 0.89, stability: 0.9),
-                HarmonyCapability(capabilityType: .unity, strength: 0.87, stability: 0.88)
+                HarmonyCapability(capabilityType: .unity, strength: 0.87, stability: 0.88),
             ]
         )
     }
@@ -567,19 +570,19 @@ class RealityEngineeringEngine {
         let multiversalInfrastructure = MultiversalInfrastructure(
             realityEngines: [
                 RealityEngine(engineType: .quantum, enginePower: 0.9, enginePrecision: 0.88, engineStability: 0.85),
-                RealityEngine(engineType: .dimensional, enginePower: 0.88, enginePrecision: 0.9, engineStability: 0.87)
+                RealityEngine(engineType: .dimensional, enginePower: 0.88, enginePrecision: 0.9, engineStability: 0.87),
             ],
             quantumManipulators: [
                 QuantumManipulator(manipulatorType: .reality, manipulationPower: 2.1, manipulationPrecision: 0.88, manipulationStability: 0.9),
-                QuantumManipulator(manipulatorType: .multiversal, manipulationPower: 1.9, manipulationPrecision: 0.9, manipulationStability: 0.88)
+                QuantumManipulator(manipulatorType: .multiversal, manipulationPower: 1.9, manipulationPrecision: 0.9, manipulationStability: 0.88),
             ],
             dimensionalConnectors: [
                 DimensionalConnector(connectorType: .quantum, connectionStrength: 0.92, connectionStability: 0.89, connectionPrecision: 0.87),
-                DimensionalConnector(connectorType: .multiversal, connectionStrength: 0.88, connectionStability: 0.9, connectionPrecision: 0.85)
+                DimensionalConnector(connectorType: .multiversal, connectionStrength: 0.88, connectionStability: 0.9, connectionPrecision: 0.85),
             ],
             multiversalStabilizers: [
                 MultiversalStabilizer(stabilizerType: .reality, stabilizationPower: 0.9, stabilizationPrecision: 0.88, stabilizationRange: 0.85),
-                MultiversalStabilizer(stabilizerType: .multiversal, stabilizationPower: 0.88, stabilizationPrecision: 0.9, stabilizationRange: 0.87)
+                MultiversalStabilizer(stabilizerType: .multiversal, stabilizationPower: 0.88, stabilizationPrecision: 0.9, stabilizationRange: 0.87),
             ]
         )
 
@@ -656,7 +659,7 @@ class RealityEngineeringEngine {
         let realityGains = [
             RealityGain(gainType: .manipulation, magnitude: 0.25, stability: 0.9),
             RealityGain(gainType: .coherence, magnitude: 0.22, stability: 0.88),
-            RealityGain(gainType: .stability, magnitude: 0.28, stability: 0.87)
+            RealityGain(gainType: .stability, magnitude: 0.28, stability: 0.87),
         ]
 
         return ManipulatedReality(

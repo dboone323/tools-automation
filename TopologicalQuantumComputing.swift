@@ -10,8 +10,8 @@
 //  using anyon-based computation and braiding operations.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -54,7 +54,7 @@ enum AnyonType: CustomStringConvertible {
         case .fibonacci: return "fibonacci"
         case .ising: return "ising"
         case .su2: return "su2"
-        case .custom(let name): return name
+        case let .custom(name): return name
         }
     }
 
@@ -119,7 +119,7 @@ struct Anyon {
     func distance(to other: Anyon) -> Double {
         let dx = position.x - other.position.x
         let dy = position.y - other.position.y
-        return sqrt(dx*dx + dy*dy)
+        return sqrt(dx * dx + dy * dy)
     }
 }
 
@@ -161,6 +161,7 @@ struct TopologicalState {
 @MainActor
 class TopologicalQuantumComputing: ObservableObject {
     // MARK: - Properties
+
     @Published var anyonLattice: [[Anyon]] = []
     @Published var topologicalQubits: [TopologicalQubit] = []
     @Published var braidingOperations: [BraidingOperation] = []
@@ -175,6 +176,7 @@ class TopologicalQuantumComputing: ObservableObject {
     private let braidingProcessor: BraidingProcessor
 
     // MARK: - Initialization
+
     init() {
         self.anyonManipulator = AnyonManipulatorImpl()
         self.errorCorrectionEngine = TopologicalErrorCorrection()
@@ -308,7 +310,7 @@ class AnyonManipulatorImpl: AnyonManipulator {
     func splitAnyon(_ anyon: Anyon) async throws -> [Anyon] {
         // Split anyon into constituent parts
         // This is the reverse of fusion
-        return []
+        []
     }
 
     func measureAnyonStatistics(_ anyon: Anyon) async -> ExchangeStatistics {
@@ -367,8 +369,8 @@ class BraidingProcessor {
         }
 
         // Calculate final topological state
-        let charges = currentAnyons.map { $0.charge }
-        let statistics = currentAnyons.map { $0.statistics }
+        let charges = currentAnyons.map(\.charge)
+        let statistics = currentAnyons.map(\.statistics)
 
         return TopologicalState(
             anyons: currentAnyons,
@@ -412,12 +414,12 @@ extension TopologicalQuantumComputing: TopologicalQuantumOperation {
     }
 
     func executeBraiding(on anyons: [Anyon]) async throws -> TopologicalState {
-        return try await braidingProcessor.processBraidingSequence(braidingOperations, on: anyons)
+        try await braidingProcessor.processBraidingSequence(braidingOperations, on: anyons)
     }
 
     func measureTopologicalCharge(of anyon: Anyon) async -> TopologicalCharge {
         // Measure the topological charge of an anyon
-        return anyon.charge
+        anyon.charge
     }
 
     func createTopologicalQubit() async throws -> TopologicalQubit {
@@ -490,10 +492,10 @@ private extension TopologicalQuantumComputing {
     func createAnyonLattice() async throws {
         var lattice: [[Anyon]] = []
 
-        for i in 0..<latticeSize {
+        for i in 0 ..< latticeSize {
             var row: [Anyon] = []
-            for j in 0..<latticeSize {
-                if Double.random(in: 0...1) < anyonDensity {
+            for j in 0 ..< latticeSize {
+                if Double.random(in: 0 ... 1) < anyonDensity {
                     let anyon = Anyon(
                         id: "anyon_\(i)_\(j)",
                         type: .nonAbelian,
@@ -516,7 +518,7 @@ private extension TopologicalQuantumComputing {
     func createTopologicalQubits(count: Int) async throws {
         var qubits: [TopologicalQubit] = []
 
-        for _ in 0..<count {
+        for _ in 0 ..< count {
             let qubit = try await createTopologicalQubit()
             qubits.append(qubit)
         }
@@ -533,7 +535,7 @@ private extension TopologicalQuantumComputing {
 
     func encodeLogicalQubits(_ qubits: [TopologicalQubit]) async throws -> [TopologicalQubit] {
         // Encode logical qubits into topological encoding
-        return qubits
+        qubits
     }
 
     func executeBraidingSequence(_ sequence: [BraidingOperation]) async throws -> TopologicalState {
@@ -543,11 +545,11 @@ private extension TopologicalQuantumComputing {
 
     func applyErrorCorrection(_ state: TopologicalState) async throws -> TopologicalState {
         // Apply error correction to the topological state
-        return state
+        state
     }
 
     func decodeTopologicalResult(_ state: TopologicalState) async throws -> TopologicalResult {
-        return TopologicalResult(
+        TopologicalResult(
             outputState: state,
             fidelity: 0.9999,
             errorRate: 1e-6,
@@ -557,7 +559,7 @@ private extension TopologicalQuantumComputing {
 
     func measureSyndromeAnyon(_ anyon: Anyon, at position: (Int, Int)) async -> ErrorSyndrome {
         // Measure syndrome information from anyon
-        let hasError = Double.random(in: 0...1) < 0.01 // 1% error rate
+        let hasError = Double.random(in: 0 ... 1) < 0.01 // 1% error rate
         let type: ErrorSyndrome.SyndromeType = Bool.random() ? .vertex : .plaquette
 
         return ErrorSyndrome(
@@ -577,7 +579,7 @@ private extension TopologicalQuantumComputing {
         var sequence: [BraidingOperation] = []
 
         // Simplified braiding design - in reality this would be much more complex
-        for i in 0..<4 {
+        for i in 0 ..< 4 {
             sequence.append(BraidingOperation(
                 anyonIndex1: i,
                 anyonIndex2: i + 1,
@@ -591,17 +593,17 @@ private extension TopologicalQuantumComputing {
 
     func generateEncodingAnyons() async throws -> [Anyon] {
         // Generate anyons for encoding logical qubit
-        return []
+        []
     }
 
     func generateParityAnyons() async throws -> [Anyon] {
         // Generate parity anyons for error detection
-        return []
+        []
     }
 
     func generateSyndromeAnyons() async throws -> [Anyon] {
         // Generate syndrome anyons for error correction
-        return []
+        []
     }
 }
 

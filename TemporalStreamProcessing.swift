@@ -9,8 +9,8 @@
 // Framework for real-time temporal data analysis and synchronization across interdimensional streams
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -634,7 +634,7 @@ class TemporalStreamProcessingEngine {
         // Create synchronization topology
         let topology = SynchronizationTopology(
             masterStream: streams.first?.id ?? "",
-            slaveStreams: streams.dropFirst().map { $0.id },
+            slaveStreams: streams.dropFirst().map(\.id),
             synchronizationIntervals: 1.0,
             tolerance: 0.01,
             fallbackStrategy: .interpolate
@@ -749,7 +749,7 @@ class TemporalStreamProcessingEngine {
 
         let result = SynchronizationResult(
             success: clockResult.synchronized && alignmentResult.aligned,
-            synchronizedStreams: streams.map { $0.id },
+            synchronizedStreams: streams.map(\.id),
             synchronizationTime: synchronizationTime,
             temporalDrift: clockResult.synchronizationAccuracy,
             conflictsResolved: 0,
@@ -794,7 +794,7 @@ class TemporalStreamProcessingEngine {
             analysisTime: 0.1,
             insights: [
                 "Detected periodic patterns with high significance",
-                "Consider increasing sampling rate for better pattern resolution"
+                "Consider increasing sampling rate for better pattern resolution",
             ]
         )
 
@@ -935,7 +935,7 @@ class TemporalStreamManagerImpl: TemporalStreamManager {
 
     func mergeStreams(_ streams: [TemporalStream]) async throws -> TemporalStream {
         // Simplified stream merging
-        let mergedDataPoints = streams.flatMap { $0.dataPoints }.sorted { $0.timestamp < $1.timestamp }
+        let mergedDataPoints = streams.flatMap(\.dataPoints).sorted { $0.timestamp < $1.timestamp }
 
         return TemporalStream(
             id: "merged_\(UUID().uuidString.prefix(8))",
@@ -1003,9 +1003,9 @@ class TemporalStreamManagerImpl: TemporalStreamManager {
 class TemporalDataAnalyzerImpl: TemporalDataAnalyzer {
     func analyzeDataPoint(_ point: TemporalDataPoint, context: TemporalContext) async -> DataPointAnalysis {
         // Simplified analysis
-        let outlierScore = Double.random(in: 0...1)
-        let trendContribution = Double.random(in: 0...1)
-        let predictionAccuracy = Double.random(in: 0.8...1.0)
+        let outlierScore = Double.random(in: 0 ... 1)
+        let trendContribution = Double.random(in: 0 ... 1)
+        let predictionAccuracy = Double.random(in: 0.8 ... 1.0)
 
         return DataPointAnalysis(
             dataPoint: point,
@@ -1022,7 +1022,7 @@ class TemporalDataAnalyzerImpl: TemporalDataAnalyzer {
 
     func detectTrends(in dataPoints: [TemporalDataPoint], algorithm: TrendDetectionAlgorithm) async -> TrendAnalysis {
         // Simplified trend detection
-        let slope = Double.random(in: -1...1)
+        let slope = Double.random(in: -1 ... 1)
         let trendType: TrendAnalysis.TrendType
 
         if slope > 0.1 {
@@ -1043,7 +1043,7 @@ class TemporalDataAnalyzerImpl: TemporalDataAnalyzer {
     }
 
     func calculateTemporalStatistics(for dataPoints: [TemporalDataPoint]) async -> TemporalStatistics {
-        let values = dataPoints.compactMap { $0.value.numericValue }
+        let values = dataPoints.compactMap(\.value.numericValue)
         guard !values.isEmpty else {
             return TemporalStatistics(
                 count: 0,
@@ -1082,7 +1082,7 @@ class TemporalDataAnalyzerImpl: TemporalDataAnalyzer {
 
     func correlateTemporalEvents(_ events: [TemporalEvent]) async -> CorrelationAnalysis {
         // Simplified correlation analysis
-        return CorrelationAnalysis(
+        CorrelationAnalysis(
             correlations: [],
             overallCorrelationStrength: 0.7,
             causalRelationships: []
@@ -1091,10 +1091,10 @@ class TemporalDataAnalyzerImpl: TemporalDataAnalyzer {
 
     func forecastTemporalValues(_ historicalData: [TemporalDataPoint], steps: Int) async -> ForecastResult {
         // Simplified forecasting
-        let forecastPoints = (1...steps).map { step in
+        let forecastPoints = (1 ... steps).map { step in
             ForecastPoint(
                 timestamp: Date().addingTimeInterval(Double(step)),
-                value: Double.random(in: 0...100),
+                value: Double.random(in: 0 ... 100),
                 confidence: 0.8
             )
         }
@@ -1102,7 +1102,7 @@ class TemporalDataAnalyzerImpl: TemporalDataAnalyzer {
         return ForecastResult(
             forecastPoints: forecastPoints,
             modelAccuracy: 0.85,
-            confidenceInterval: 0.7...0.95,
+            confidenceInterval: 0.7 ... 0.95,
             forecastHorizon: Double(steps)
         )
     }
@@ -1112,7 +1112,7 @@ class TemporalDataAnalyzerImpl: TemporalDataAnalyzer {
 class TemporalSynchronizationEngineImpl: TemporalSynchronizationEngine {
     func synchronizeStreamClocks(_ streams: [TemporalStream]) async throws -> ClockSynchronizationResult {
         // Simplified clock synchronization
-        return ClockSynchronizationResult(
+        ClockSynchronizationResult(
             synchronized: true,
             masterClock: Date(),
             slaveClocks: [:],
@@ -1123,7 +1123,7 @@ class TemporalSynchronizationEngineImpl: TemporalSynchronizationEngine {
 
     func alignTemporalData(_ dataSets: [TemporalDataSet]) async throws -> DataAlignmentResult {
         // Simplified data alignment
-        return DataAlignmentResult(
+        DataAlignmentResult(
             aligned: true,
             alignedDataSets: dataSets,
             alignmentErrors: [],
@@ -1133,7 +1133,7 @@ class TemporalSynchronizationEngineImpl: TemporalSynchronizationEngine {
 
     func resolveTemporalConflicts(_ conflicts: [TemporalConflict]) async throws -> ConflictResolutionResult {
         // Simplified conflict resolution
-        return ConflictResolutionResult(
+        ConflictResolutionResult(
             resolved: true,
             resolvedConflicts: conflicts.count,
             unresolvedConflicts: 0,
@@ -1144,7 +1144,7 @@ class TemporalSynchronizationEngineImpl: TemporalSynchronizationEngine {
 
     func maintainTemporalConsistency(_ streams: [TemporalStream]) async -> ConsistencyMaintenanceResult {
         // Simplified consistency maintenance
-        return ConsistencyMaintenanceResult(
+        ConsistencyMaintenanceResult(
             consistencyAchieved: 0.95,
             correctionsApplied: 2,
             temporalDrift: 0.001,
@@ -1160,7 +1160,7 @@ class TemporalAnomalyDetectorImpl: TemporalAnomalyDetector {
         var anomalies: [TemporalAnomaly] = []
 
         for point in dataPoints {
-            let anomalyScore = Double.random(in: 0...1)
+            let anomalyScore = Double.random(in: 0 ... 1)
             if anomalyScore > 0.8 {
                 let anomaly = TemporalAnomaly(
                     anomalyId: "anomaly_\(UUID().uuidString.prefix(8))",
@@ -1198,7 +1198,7 @@ class TemporalAnomalyDetectorImpl: TemporalAnomalyDetector {
 
     func classifyAnomaly(_ anomaly: TemporalAnomaly) async -> AnomalyClassification {
         // Simplified classification
-        return AnomalyClassification(
+        AnomalyClassification(
             anomaly: anomaly,
             category: .novelty,
             subcategory: "unusual_pattern",
@@ -1209,7 +1209,7 @@ class TemporalAnomalyDetectorImpl: TemporalAnomalyDetector {
 
     func predictAnomalies(for stream: TemporalStream, timeHorizon: TimeInterval) async -> AnomalyPredictionResult {
         // Simplified prediction
-        return AnomalyPredictionResult(
+        AnomalyPredictionResult(
             predictedAnomalies: [],
             predictionAccuracy: 0.8,
             timeHorizon: timeHorizon,
@@ -1219,7 +1219,7 @@ class TemporalAnomalyDetectorImpl: TemporalAnomalyDetector {
 
     func mitigateAnomaly(_ anomaly: TemporalAnomaly) async -> AnomalyMitigationResult {
         // Simplified mitigation
-        return AnomalyMitigationResult(
+        AnomalyMitigationResult(
             mitigated: true,
             mitigationStrategy: "Data filtering",
             effectiveness: 0.9,
@@ -1239,17 +1239,17 @@ extension TemporalStreamProcessingEngine: TemporalStreamProcessingSystem {
 
 extension TemporalDataPoint {
     var age: TimeInterval {
-        return Date().timeIntervalSince(timestamp)
+        Date().timeIntervalSince(timestamp)
     }
 
     var isStale: Bool {
-        return age > 300 // 5 minutes
+        age > 300 // 5 minutes
     }
 }
 
 extension TemporalStream {
     var dataPointCount: Int {
-        return dataPoints.count
+        dataPoints.count
     }
 
     var duration: TimeInterval {

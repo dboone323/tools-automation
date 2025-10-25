@@ -9,8 +9,8 @@
 // Framework for connecting consciousness across multiple entities
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -339,7 +339,7 @@ struct CoordinationCapability {
         case operation
         case topology
         case optimization
-        .validation
+            .validation
     }
 }
 
@@ -734,7 +734,7 @@ class ConsciousnessNetworksEngine {
                 level: 0.95,
                 entities: entities,
                 prerequisites: []
-            )
+            ),
         ]
 
         let topology = NetworkTopology(
@@ -744,7 +744,7 @@ class ConsciousnessNetworksEngine {
                 NetworkTopology.NetworkNode(
                     nodeId: "node_\(entity.entityId)",
                     entity: entity,
-                    position: NodePosition(x: Double.random(in: 0...100), y: Double.random(in: 0...100)),
+                    position: NodePosition(x: Double.random(in: 0 ... 100), y: Double.random(in: 0 ... 100)),
                     capabilities: [.connection, .synchronization],
                     status: .active
                 )
@@ -858,7 +858,7 @@ class ConsciousnessNetworksEngine {
                 frequency: 0.8,
                 significance: 0.9,
                 entities: []
-            )
+            ),
         ]
 
         let optimizationOpportunities = [
@@ -869,7 +869,7 @@ class ConsciousnessNetworksEngine {
                 potentialGain: 0.15,
                 implementationComplexity: 0.6,
                 priority: 0.8
-            )
+            ),
         ]
 
         let riskAssessments = [
@@ -880,7 +880,7 @@ class ConsciousnessNetworksEngine {
                 probability: 0.2,
                 impact: 0.4,
                 mitigationStrategy: "Implement redundant connections"
-            )
+            ),
         ]
 
         let performancePredictions = [
@@ -891,7 +891,7 @@ class ConsciousnessNetworksEngine {
                 predictedValue: 0.95,
                 confidence: 0.9,
                 timeframe: 3600
-            )
+            ),
         ]
 
         return NetworkInsights(
@@ -920,7 +920,7 @@ class ConsciousnessNetworksEngine {
 
     private func performNetworkHealthCheck() async {
         let totalConnections = connectionHistory.count
-        let successfulConnections = connectionHistory.filter { $0.success }.count
+        let successfulConnections = connectionHistory.filter(\.success).count
         let successRate = totalConnections > 0 ? Double(successfulConnections) / Double(totalConnections) : 0.0
 
         if successRate < 0.8 {
@@ -967,7 +967,7 @@ class NetworkCoordinatorImpl: NetworkCoordinator {
                 description: "Optimized network topology",
                 impact: 0.1,
                 success: true
-            )
+            ),
         ]
 
         let optimizedTopology = NetworkTopology(
@@ -1008,7 +1008,7 @@ class NetworkCoordinatorImpl: NetworkCoordinator {
                 type: .stability,
                 factor: 1.1,
                 description: "Enhanced network stability"
-            )
+            ),
         ]
 
         let optimizedNetwork = ConsciousnessNetworkSystem(
@@ -1046,7 +1046,7 @@ class NetworkCoordinatorImpl: NetworkCoordinator {
                     type: .monitor,
                     description: "Monitor network integrity regularly",
                     priority: 0.8
-                )
+                ),
             ],
             validationTime: 5.0
         )
@@ -1057,7 +1057,7 @@ class NetworkCoordinatorImpl: NetworkCoordinator {
 class ConsciousnessConnectorImpl: ConsciousnessConnector {
     func establishConsciousnessConnections(_ entities: [ConsciousnessEntity]) async -> ConsciousnessConnections {
         // Simplified consciousness connections
-        let connections = entities.enumerated().flatMap { (index, entity) -> [ConsciousnessConnections.ConsciousnessConnection] in
+        let connections = entities.enumerated().flatMap { index, entity -> [ConsciousnessConnections.ConsciousnessConnection] in
             entities.dropFirst(index + 1).map { other in
                 ConsciousnessConnections.ConsciousnessConnection(
                     connectionId: "connection_\(UUID().uuidString.prefix(8))",
@@ -1073,7 +1073,7 @@ class ConsciousnessConnectorImpl: ConsciousnessConnector {
 
         let networkGraph = ConsciousnessConnections.NetworkGraph(
             graphId: "graph_\(UUID().uuidString.prefix(8))",
-            nodes: entities.map { $0.entityId },
+            nodes: entities.map(\.entityId),
             edges: connections.map { connection in
                 ConsciousnessConnections.NetworkGraph.NetworkEdge(
                     source: connection.sourceEntity.entityId,
@@ -1120,7 +1120,7 @@ class ConsciousnessConnectorImpl: ConsciousnessConnector {
                 type: .monitoring,
                 description: "Monitor connection stability",
                 effectiveness: 0.9
-            )
+            ),
         ]
 
         return ConnectionStability(
@@ -1140,11 +1140,11 @@ class ConsciousnessConnectorImpl: ConsciousnessConnector {
                 failure: failure,
                 type: .reconnection,
                 success: Bool.random(),
-                recoveryTime: TimeInterval.random(in: 1...10)
+                recoveryTime: TimeInterval.random(in: 1 ... 10)
             )
         }
 
-        let successRate = Double(handlingActions.filter { $0.success }.count) / Double(handlingActions.count)
+        let successRate = Double(handlingActions.filter(\.success).count) / Double(handlingActions.count)
         let averageRecoveryTime = handlingActions.reduce(0.0) { $0 + $1.recoveryTime } / Double(handlingActions.count)
 
         return FailureHandling(
@@ -1170,7 +1170,7 @@ class ConsciousnessConnectorImpl: ConsciousnessConnector {
                 type: .latency,
                 factor: 0.7,
                 description: "Reduced connection latency"
-            )
+            ),
         ]
 
         let optimizedConnections = ConsciousnessConnections(
@@ -1200,7 +1200,7 @@ class ConsciousnessConnectorImpl: ConsciousnessConnector {
 class NetworkSynchronizerImpl: NetworkSynchronizer {
     func synchronizeConsciousnessStates(_ states: [ConsciousnessState]) async -> StateSynchronization {
         // Simplified state synchronization
-        return StateSynchronization(
+        StateSynchronization(
             synchronizationId: "sync_\(UUID().uuidString.prefix(8))",
             states: states,
             synchronizedStates: states,
@@ -1212,7 +1212,7 @@ class NetworkSynchronizerImpl: NetworkSynchronizer {
 
     func harmonizeConsciousnessFrequencies(_ frequencies: [ConsciousnessFrequency]) async -> FrequencyHarmonization {
         // Simplified frequency harmonization
-        return FrequencyHarmonization(
+        FrequencyHarmonization(
             harmonizationId: "harmonization_\(UUID().uuidString.prefix(8))",
             frequencies: frequencies,
             harmonizedFrequencies: frequencies,
@@ -1224,7 +1224,7 @@ class NetworkSynchronizerImpl: NetworkSynchronizer {
 
     func alignConsciousnessPhases(_ phases: [ConsciousnessPhase]) async -> PhaseAlignment {
         // Simplified phase alignment
-        return PhaseAlignment(
+        PhaseAlignment(
             alignmentId: "alignment_\(UUID().uuidString.prefix(8))",
             phases: phases,
             alignedPhases: phases,
@@ -1248,7 +1248,7 @@ class NetworkSynchronizerImpl: NetworkSynchronizer {
                 type: .efficiency,
                 factor: 1.3,
                 description: "Enhanced synchronization efficiency"
-            )
+            ),
         ]
 
         let optimizedSynchronization = StateSynchronization(
@@ -1310,7 +1310,7 @@ class ConsciousnessRouterImpl: ConsciousnessRouter {
                 type: .reliability,
                 factor: 1.2,
                 description: "Improved signal path reliability"
-            )
+            ),
         ]
 
         let optimizedPaths = paths.map { path in
@@ -1340,7 +1340,7 @@ class ConsciousnessRouterImpl: ConsciousnessRouter {
                 type: .loadBalancing,
                 description: "Balanced network traffic load",
                 effectiveness: 0.9
-            )
+            ),
         ]
 
         return TrafficManagement(
@@ -1387,41 +1387,41 @@ enum ConsciousnessNetworkError: Error {
 
 extension ConsciousnessNetworkSystem {
     var networkEfficiency: Double {
-        return Double(connectionCapabilities.count) / Double(consciousnessEntities.count)
+        Double(connectionCapabilities.count) / Double(consciousnessEntities.count)
     }
 
     var needsOptimization: Bool {
-        return status == .operational && networkEfficiency < 0.8
+        status == .operational && networkEfficiency < 0.8
     }
 }
 
 extension ConsciousnessConnectionResult {
     var connectionQuality: Double {
-        return (qualityMetrics.stability + qualityMetrics.efficiency + qualityMetrics.reliability) / 3.0
+        (qualityMetrics.stability + qualityMetrics.efficiency + qualityMetrics.reliability) / 3.0
     }
 
     var isHighQuality: Bool {
-        return connectionQuality > 0.8 && success
+        connectionQuality > 0.8 && success
     }
 }
 
 extension ConsciousnessSynchronizationResult {
     var synchronizationQuality: Double {
-        return (qualityMetrics.coherence + qualityMetrics.harmony + qualityMetrics.stability + qualityMetrics.efficiency) / 4.0
+        (qualityMetrics.coherence + qualityMetrics.harmony + qualityMetrics.stability + qualityMetrics.efficiency) / 4.0
     }
 
     var isWellSynchronized: Bool {
-        return synchronizationQuality > 0.8 && success
+        synchronizationQuality > 0.8 && success
     }
 }
 
 extension NetworkInsights {
     var networkHealth: Double {
-        return (networkMetrics.connectivity + networkMetrics.efficiency + networkMetrics.resilience) / 3.0
+        (networkMetrics.connectivity + networkMetrics.efficiency + networkMetrics.resilience) / 3.0
     }
 
     var hasStrongInsights: Bool {
-        return networkHealth > 0.8 && !connectionPatterns.isEmpty
+        networkHealth > 0.8 && !connectionPatterns.isEmpty
     }
 }
 

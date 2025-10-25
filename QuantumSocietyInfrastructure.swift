@@ -10,8 +10,8 @@
 //  economic models, and social coordination for advanced quantum civilizations.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -637,13 +637,14 @@ enum CapabilityImprovement {
 @MainActor
 class QuantumSocietyInfrastructureEngine: ObservableObject {
     // MARK: - Properties
+
     @Published var governanceSystem: GovernanceSystem
     @Published var economicModel: EconomicModel
     @Published var socialCoordination: SocialCoordination
     @Published var societyState: SocietyState?
     @Published var societalStability: Double = 0.0
 
-    @Published var populationSize: Int = 1000000
+    @Published var populationSize: Int = 1_000_000
     @Published var technologicalLevel: Double = 0.8
     @Published var resourceAvailability: Double = 0.7
 
@@ -653,6 +654,7 @@ class QuantumSocietyInfrastructureEngine: ObservableObject {
     private let societyEngine: SocietyEngine
 
     // MARK: - Initialization
+
     init() {
         // Initialize with default systems
         self.governanceSystem = GovernanceSystem(
@@ -792,7 +794,7 @@ class QuantumSocietyInfrastructureEngine: ObservableObject {
             ),
             efficiencyGains: [
                 EfficiencyGain(gainType: .resource, magnitude: 0.18, implementation: "AI-optimized allocation"),
-                EfficiencyGain(gainType: .equity, magnitude: 0.25, implementation: "Balanced distribution")
+                EfficiencyGain(gainType: .equity, magnitude: 0.25, implementation: "Balanced distribution"),
             ]
         )
     }
@@ -891,7 +893,7 @@ class GovernanceSystemsImpl: GovernanceSystems {
             ),
             capabilityImprovements: [
                 CapabilityImprovement.decisionMaking,
-                CapabilityImprovement.policyImplementation
+                CapabilityImprovement.policyImplementation,
             ]
         )
     }
@@ -1163,7 +1165,7 @@ class SocietyEngine {
 
         let improvementFactors = [
             SocietyImprovementFactor(factorType: .governance, impact: 0.18, description: "Enhanced decision-making processes"),
-            SocietyImprovementFactor(factorType: .social, impact: 0.15, description: "Improved social coordination")
+            SocietyImprovementFactor(factorType: .social, impact: 0.15, description: "Improved social coordination"),
         ]
 
         return EvolvedSociety(

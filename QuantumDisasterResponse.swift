@@ -6,8 +6,8 @@
 //  Copyright © 2025 Daniel Boone. All rights reserved.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1343,7 +1343,7 @@ final class ResponseMetrics {
 /// Disaster monitoring system
 final class DisasterMonitoringSystem {
     @Published var activeEmergencies: [EmergencySituation] = []
-    @Published var systemHealth: SystemHealth = SystemHealth()
+    @Published var systemHealth: SystemHealth = .init()
 
     func startMonitoring() {
         print("Started disaster monitoring system")
@@ -1365,6 +1365,7 @@ struct SystemHealth {
 }
 
 // MARK: - Quantum Predictor
+
 final class QuantumPredictor {
     func predict(_ parameters: PredictionParameters) async throws -> DisasterPrediction {
         print("Running quantum prediction algorithm")
@@ -1375,13 +1376,13 @@ final class QuantumPredictor {
             confidence: 0.85,
             predictedImpact: ImpactEstimate(
                 humanCasualties: ImpactEstimate.CasualtyEstimate(immediate: 10, potential: 50, vulnerable: 20),
-                economicLoss: ImpactEstimate.EconomicLoss(immediate: 1000000, longTerm: 50000000, currency: "USD"),
+                economicLoss: ImpactEstimate.EconomicLoss(immediate: 1_000_000, longTerm: 50_000_000, currency: "USD"),
                 infrastructureDamage: ImpactEstimate.InfrastructureDamage(severity: 0.6, recoveryTime: 30 * 24 * 60 * 60, criticalSystems: ["power", "water"]),
                 environmentalImpact: ImpactEstimate.EnvironmentalImpact(contamination: 0.3, habitatLoss: 0.2, longTermEffects: ["soil erosion", "water contamination"])
             ),
             recommendedActions: [
                 DisasterPrediction.RecommendedAction(type: .evacuation, priority: .high, description: "Evacuate vulnerable areas", timeline: 24 * 60 * 60),
-                DisasterPrediction.RecommendedAction(type: .preparation, priority: .medium, description: "Stock emergency supplies", timeline: 48 * 60 * 60)
+                DisasterPrediction.RecommendedAction(type: .preparation, priority: .medium, description: "Stock emergency supplies", timeline: 48 * 60 * 60),
             ],
             uncertaintyFactors: ["Weather conditions", "Population movement"]
         )
@@ -1389,14 +1390,15 @@ final class QuantumPredictor {
 }
 
 // MARK: - Risk Analyzer
+
 final class RiskAnalyzer {
     func analyze(_ factors: RiskFactors) async throws -> RiskAnalysis {
-        return RiskAnalysis(
+        RiskAnalysis(
             location: factors.location,
             overallRisk: 0.7,
             riskFactors: [
                 RiskAnalysis.RiskFactor(type: "Seismic", level: 0.8, trend: .stable, contributingFactors: ["Fault lines", "Historical activity"]),
-                RiskAnalysis.RiskFactor(type: "Population", level: 0.6, trend: .increasing, contributingFactors: ["Density", "Vulnerable groups"])
+                RiskAnalysis.RiskFactor(type: "Population", level: 0.6, trend: .increasing, contributingFactors: ["Density", "Vulnerable groups"]),
             ],
             mitigationStrategies: [],
             monitoringRecommendations: ["Install seismic sensors", "Regular drills"]
@@ -1405,9 +1407,10 @@ final class RiskAnalyzer {
 }
 
 // MARK: - Scenario Modeler
+
 final class ScenarioModeler {
     func model(_ scenario: DisasterScenario) async throws -> ScenarioModel {
-        return ScenarioModel(
+        ScenarioModel(
             scenario: scenario,
             outcomes: [],
             probabilityDistribution: [0.3, 0.5, 0.2],
@@ -1421,26 +1424,28 @@ final class ScenarioModeler {
 }
 
 // MARK: - Impact Assessor
+
 final class ImpactAssessor {
     func assess(_ disaster: DisasterEvent) async throws -> ImpactAssessment {
-        return ImpactAssessment(
-            immediateImpact: ImpactAssessment.ImmediateImpact(casualties: 25, infrastructureDamage: 0.7, economicLoss: 2000000),
+        ImpactAssessment(
+            immediateImpact: ImpactAssessment.ImmediateImpact(casualties: 25, infrastructureDamage: 0.7, economicLoss: 2_000_000),
             cascadingEffects: [],
             longTermConsequences: [],
             recoveryRequirements: ImpactAssessment.RecoveryRequirements(
                 time: 90 * 24 * 60 * 60,
                 resources: [],
                 personnel: 500,
-                budget: 10000000
+                budget: 10_000_000
             )
         )
     }
 }
 
 // MARK: - Response Activator
+
 final class ResponseActivator {
     func activate(_ emergency: EmergencySituation) async throws -> ActivationResult {
-        return ActivationResult(
+        ActivationResult(
             emergency: emergency,
             activationStatus: .successful,
             activatedResources: [],
@@ -1454,9 +1459,10 @@ final class ResponseActivator {
 }
 
 // MARK: - Team Coordinator
+
 final class TeamCoordinator {
     func coordinate(_ teams: [ResponseTeam], for emergency: EmergencySituation) async throws -> CoordinationResult {
-        return CoordinationResult(
+        CoordinationResult(
             teams: teams,
             coordinationStatus: .good,
             communicationEffectiveness: 0.85,
@@ -1466,9 +1472,10 @@ final class TeamCoordinator {
 }
 
 // MARK: - Communication Manager
+
 final class CommunicationManager {
     func manage(_ channels: [CommunicationChannel]) async throws -> CommunicationResult {
-        return CommunicationResult(
+        CommunicationResult(
             channels: channels,
             effectiveness: 0.9,
             issues: [],
@@ -1478,9 +1485,10 @@ final class CommunicationManager {
 }
 
 // MARK: - Progress Monitor
+
 final class ProgressMonitor {
     func monitor(_ emergency: EmergencySituation) async throws -> ProgressReport {
-        return ProgressReport(
+        ProgressReport(
             emergency: emergency,
             currentStatus: .contained,
             progressMetrics: [],
@@ -1490,9 +1498,10 @@ final class ProgressMonitor {
 }
 
 // MARK: - Requirement Assessor
+
 final class RequirementAssessor {
     func assess(_ disaster: DisasterEvent) async throws -> ResourceRequirements {
-        return ResourceRequirements(
+        ResourceRequirements(
             disaster: disaster,
             immediateNeeds: [],
             shortTermNeeds: [],
@@ -1503,16 +1512,17 @@ final class RequirementAssessor {
 }
 
 // MARK: - Resource Allocator
+
 final class ResourceAllocator {
     func allocate(_ requirements: ResourceRequirements, available: [Resource]) async throws -> ResourceAllocation {
-        return ResourceAllocation(
+        ResourceAllocation(
             requirements: requirements,
             allocations: [],
             shortages: [],
             optimization: ResourceAllocation.AllocationOptimization(
                 efficiency: 0.85,
                 coverage: 0.9,
-                cost: 500000,
+                cost: 500_000,
                 recommendations: []
             )
         )
@@ -1520,9 +1530,10 @@ final class ResourceAllocator {
 }
 
 // MARK: - Deployment Manager
+
 final class DeploymentManager {
     func deploy(_ allocation: ResourceAllocation) async throws -> DeploymentResult {
-        return DeploymentResult(
+        DeploymentResult(
             allocation: allocation,
             deploymentStatus: [],
             timeline: DeploymentResult.DeploymentTimeline(
@@ -1536,9 +1547,10 @@ final class DeploymentManager {
 }
 
 // MARK: - Utilization Tracker
+
 final class UtilizationTracker {
     func track(_ deployment: DeploymentResult) async throws -> UtilizationReport {
-        return UtilizationReport(
+        UtilizationReport(
             deployment: deployment,
             utilization: [],
             efficiency: UtilizationReport.EfficiencyMetrics(
@@ -1553,9 +1565,10 @@ final class UtilizationTracker {
 }
 
 // MARK: - Recovery Planner
+
 final class RecoveryPlanner {
     func plan(_ disaster: DisasterEvent, impact: ImpactAssessment) async throws -> RecoveryPlan {
-        return RecoveryPlan(
+        RecoveryPlan(
             disaster: disaster,
             phases: [],
             objectives: [],
@@ -1583,9 +1596,10 @@ final class RecoveryPlanner {
 }
 
 // MARK: - Distribution Optimizer
+
 final class DistributionOptimizer {
     func optimize(_ resources: [Resource], needs: [RecoveryNeed]) async throws -> DistributionOptimization {
-        return DistributionOptimization(
+        DistributionOptimization(
             needs: needs,
             resources: resources,
             distribution: [],
@@ -1596,9 +1610,10 @@ final class DistributionOptimizer {
 }
 
 // MARK: - Recovery Monitor
+
 final class RecoveryMonitor {
     func monitor(_ plan: RecoveryPlan) async throws -> RecoveryProgress {
-        return RecoveryProgress(
+        RecoveryProgress(
             plan: plan,
             completedObjectives: [],
             currentPhase: RecoveryPlan.RecoveryPhase(
@@ -1616,9 +1631,10 @@ final class RecoveryMonitor {
 }
 
 // MARK: - Effectiveness Evaluator
+
 final class EffectivenessEvaluator {
     func evaluate(_ progress: RecoveryProgress) async throws -> EffectivenessReport {
-        return EffectivenessReport(
+        EffectivenessReport(
             progress: progress,
             overallEffectiveness: 0.83,
             objectiveAchievement: [],
@@ -1633,7 +1649,7 @@ final class EffectivenessEvaluator {
 extension QuantumDisasterResponseEngine {
     /// Get disaster response statistics
     func getResponseStatistics() -> ResponseStatistics {
-        return ResponseStatistics(
+        ResponseStatistics(
             totalPredictions: responseMetrics.predictionCount,
             totalEmergencies: disasterDatabase.emergencyCount,
             totalMobilizations: responseMetrics.mobilizationCount,
@@ -1699,12 +1715,12 @@ extension QuantumDisasterResponseEngine {
         let riskFactors = RiskFactors(
             location: GeographicLocation(latitude: 34.0522, longitude: -118.2437, elevation: 89, region: "California", country: "USA"),
             historicalData: [
-                RiskFactors.HistoricalDisaster(type: .natural(.earthquake), date: Date().addingTimeInterval(-365*24*60*60), severity: .major, impact: ImpactEstimate(
+                RiskFactors.HistoricalDisaster(type: .natural(.earthquake), date: Date().addingTimeInterval(-365 * 24 * 60 * 60), severity: .major, impact: ImpactEstimate(
                     humanCasualties: ImpactEstimate.CasualtyEstimate(immediate: 5, potential: 20, vulnerable: 10),
-                    economicLoss: ImpactEstimate.EconomicLoss(immediate: 500000, longTerm: 2000000, currency: "USD"),
-                    infrastructureDamage: ImpactEstimate.InfrastructureDamage(severity: 0.4, recoveryTime: 15*24*60*60, criticalSystems: ["roads"]),
+                    economicLoss: ImpactEstimate.EconomicLoss(immediate: 500_000, longTerm: 2_000_000, currency: "USD"),
+                    infrastructureDamage: ImpactEstimate.InfrastructureDamage(severity: 0.4, recoveryTime: 15 * 24 * 60 * 60, criticalSystems: ["roads"]),
                     environmentalImpact: ImpactEstimate.EnvironmentalImpact(contamination: 0.1, habitatLoss: 0.05, longTermEffects: ["minor contamination"])
-                ))
+                )),
             ],
             environmentalFactors: RiskFactors.EnvironmentalFactors(
                 seismicActivity: 0.8,
@@ -1714,7 +1730,7 @@ extension QuantumDisasterResponseEngine {
             ),
             infrastructureVulnerabilities: [
                 RiskFactors.Vulnerability(type: .residential, riskLevel: 0.7, mitigationMeasures: ["Retrofit buildings"]),
-                RiskFactors.Vulnerability(type: .transportation, riskLevel: 0.6, mitigationMeasures: ["Strengthen bridges"])
+                RiskFactors.Vulnerability(type: .transportation, riskLevel: 0.6, mitigationMeasures: ["Strengthen bridges"]),
             ],
             populationDensity: 0.8,
             preparednessLevel: 0.7
@@ -1732,11 +1748,11 @@ extension QuantumDisasterResponseEngine {
                 location: GeographicLocation(latitude: 34.0522, longitude: -118.2437, elevation: 89, region: "California", country: "USA"),
                 severity: .moderate,
                 startTime: Date(),
-                affectedArea: AffectedArea(radius: 50, population: 100000, infrastructure: [.residential, .transportation], vulnerableGroups: [.elderly, .children]),
+                affectedArea: AffectedArea(radius: 50, population: 100_000, infrastructure: [.residential, .transportation], vulnerableGroups: [.elderly, .children]),
                 estimatedImpact: ImpactEstimate(
                     humanCasualties: ImpactEstimate.CasualtyEstimate(immediate: 15, potential: 75, vulnerable: 30),
-                    economicLoss: ImpactEstimate.EconomicLoss(immediate: 1500000, longTerm: 75000000, currency: "USD"),
-                    infrastructureDamage: ImpactEstimate.InfrastructureDamage(severity: 0.5, recoveryTime: 45*24*60*60, criticalSystems: ["power", "water", "roads"]),
+                    economicLoss: ImpactEstimate.EconomicLoss(immediate: 1_500_000, longTerm: 75_000_000, currency: "USD"),
+                    infrastructureDamage: ImpactEstimate.InfrastructureDamage(severity: 0.5, recoveryTime: 45 * 24 * 60 * 60, criticalSystems: ["power", "water", "roads"]),
                     environmentalImpact: ImpactEstimate.EnvironmentalImpact(contamination: 0.2, habitatLoss: 0.15, longTermEffects: ["soil instability", "water contamination"])
                 ),
                 currentStatus: .active
@@ -1776,11 +1792,11 @@ extension QuantumDisasterResponseEngine {
             timeline: RecoveryPlan.RecoveryTimeline(
                 startDate: Date(),
                 milestones: [],
-                completionDate: Date().addingTimeInterval(60*24*60*60)
+                completionDate: Date().addingTimeInterval(60 * 24 * 60 * 60)
             ),
             monitoring: RecoveryPlan.RecoveryMonitoring(
                 metrics: [],
-                reporting: RecoveryPlan.ReportingSchedule(frequency: 7*24*60*60, format: .summary, recipients: []),
+                reporting: RecoveryPlan.ReportingSchedule(frequency: 7 * 24 * 60 * 60, format: .summary, recipients: []),
                 evaluation: RecoveryPlan.EvaluationCriteria(successThreshold: 0.8, keyIndicators: [], evaluationMethod: "Metrics-based")
             )
         )

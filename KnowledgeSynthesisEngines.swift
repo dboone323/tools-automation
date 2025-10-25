@@ -9,8 +9,8 @@
 // Framework for synthesizing knowledge from multiple sources into unified understanding
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1426,7 +1426,7 @@ class KnowledgeSynthesisEnginesEngine {
                 breadth: 0.85,
                 coherence: 0.9,
                 domainType: domain
-            )
+            ),
         ]
 
         let unificationCapabilities = [
@@ -1437,7 +1437,7 @@ class KnowledgeSynthesisEnginesEngine {
                 consistency: 0.88,
                 completeness: 0.85,
                 domainType: domain
-            )
+            ),
         ]
 
         let harmonizationCapabilities = [
@@ -1448,7 +1448,7 @@ class KnowledgeSynthesisEnginesEngine {
                 balance: 0.85,
                 coherence: 0.9,
                 domainType: domain
-            )
+            ),
         ]
 
         let integrationCapabilities = [
@@ -1459,7 +1459,7 @@ class KnowledgeSynthesisEnginesEngine {
                 consolidation: 0.85,
                 emergence: 0.8,
                 domainType: domain
-            )
+            ),
         ]
 
         let system = KnowledgeSynthesisSystem(
@@ -1514,7 +1514,7 @@ class KnowledgeSynthesisEnginesEngine {
                     content: "New connection discovered between concepts",
                     significance: 0.8,
                     novelty: 0.7
-                )
+                ),
             ]
         )
 
@@ -1559,7 +1559,7 @@ class KnowledgeSynthesisEnginesEngine {
         // Create unified knowledge
         let unifiedKnowledge = UnifiedKnowledge(
             unificationId: "unified_\(UUID().uuidString.prefix(8))",
-            sourceKnowledge: sources.flatMap { $0.content },
+            sourceKnowledge: sources.flatMap(\.content),
             unifiedContent: unified.unifiedKnowledge,
             unificationMetadata: UnifiedKnowledge.UnificationMetadata(
                 unifiedAt: Date(),
@@ -1573,7 +1573,7 @@ class KnowledgeSynthesisEnginesEngine {
                     type: .factual,
                     resolution: "Consensus reached",
                     confidence: 0.9
-                )
+                ),
             ],
             mergedEntities: [
                 UnifiedKnowledge.MergedEntity(
@@ -1592,7 +1592,7 @@ class KnowledgeSynthesisEnginesEngine {
                         relationships: []
                     ),
                     mergeConfidence: 0.9
-                )
+                ),
             ]
         )
 
@@ -1720,7 +1720,7 @@ class KnowledgeSynthesizerImpl: KnowledgeSynthesizer {
                 author: "Synthesis Engine",
                 version: "1.0",
                 tags: ["synthesized"],
-                references: knowledge.map { $0.id }
+                references: knowledge.map(\.id)
             )
         )
 
@@ -1772,7 +1772,7 @@ class KnowledgeSynthesizerImpl: KnowledgeSynthesizer {
                 type: .caching,
                 improvement: 0.2,
                 description: "Cache intermediate synthesis results"
-            )
+            ),
         ]
 
         let optimizedSynthesis = KnowledgeSynthesis(
@@ -1826,7 +1826,7 @@ class KnowledgeUnifierImpl: KnowledgeUnifier {
                 author: "Unification Engine",
                 version: "1.0",
                 tags: ["unified"],
-                references: sources.flatMap { $0.content.map { $0.id } }
+                references: sources.flatMap { $0.content.map(\.id) }
             )
         )
 
@@ -1954,7 +1954,7 @@ class KnowledgeHarmonizerImpl: KnowledgeHarmonizer {
 
     func alignKnowledgeOntologies(_ ontologies: [KnowledgeOntology]) async -> OntologyAlignment {
         // Simplified ontology alignment
-        let mappings = ontologies.dropFirst().enumerated().map { index, ontology in
+        let mappings = ontologies.dropFirst().enumerated().map { index, _ in
             OntologyAlignment.ConceptMapping(
                 mappingId: "mapping_\(index)",
                 sourceConcept: "concept_\(index)",
@@ -2068,7 +2068,7 @@ class KnowledgeIntegratorImpl: KnowledgeIntegrator {
                     type: .processing,
                     level: 0.9,
                     description: "Integrated processing capability"
-                )
+                ),
             ]
         )
 
@@ -2089,8 +2089,8 @@ class KnowledgeIntegratorImpl: KnowledgeIntegrator {
         let assembledStructure = KnowledgeStructure(
             structureId: "assembled_\(UUID().uuidString.prefix(8))",
             type: .modular,
-            components: structures.flatMap { $0.components },
-            relationships: structures.flatMap { $0.relationships },
+            components: structures.flatMap(\.components),
+            relationships: structures.flatMap(\.relationships),
             properties: [:]
         )
 
@@ -2185,27 +2185,27 @@ extension KnowledgeSynthesisSystem {
     }
 
     var needsOptimization: Bool {
-        return status == .operational && systemEfficiency < 0.8
+        status == .operational && systemEfficiency < 0.8
     }
 }
 
 extension KnowledgeSynthesisResult {
     var synthesisQuality: Double {
-        return (synthesisMetrics.coherence + synthesisMetrics.completeness + synthesisMetrics.novelty + synthesisMetrics.validity) / 4.0
+        (synthesisMetrics.coherence + synthesisMetrics.completeness + synthesisMetrics.novelty + synthesisMetrics.validity) / 4.0
     }
 
     var isHighQuality: Bool {
-        return synthesisQuality > 0.8 && success
+        synthesisQuality > 0.8 && success
     }
 }
 
 extension KnowledgeUnificationResult {
     var unificationQuality: Double {
-        return (unificationMetrics.consistency + unificationMetrics.completeness + unificationMetrics.resolution + unificationMetrics.integration) / 4.0
+        (unificationMetrics.consistency + unificationMetrics.completeness + unificationMetrics.resolution + unificationMetrics.integration) / 4.0
     }
 
     var isHighQuality: Bool {
-        return unificationQuality > 0.8 && success
+        unificationQuality > 0.8 && success
     }
 }
 

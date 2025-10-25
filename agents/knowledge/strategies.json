@@ -1,0 +1,80 @@
+{
+  "strategies": [
+    {
+      "id": "rebuild",
+      "name": "Rebuild Project",
+      "description": "Clean rebuild of the entire project",
+      "contexts": [
+        "build_error",
+        "compile_error"
+      ],
+      "base_risk": 0.1,
+      "estimated_time": 60,
+      "success_rate": 0.0,
+      "total_attempts": 0,
+      "successful_attempts": 0,
+      "failed_attempts": 0,
+      "avg_execution_time": 0,
+      "adaptations": [],
+      "created_at": "2025-10-25T18:06:34.028199"
+    },
+    {
+      "id": "clean_build",
+      "name": "Clean Build",
+      "description": "Clean build directory and rebuild",
+      "contexts": [
+        "dependency_issue",
+        "cache_issue"
+      ],
+      "base_risk": 0.2,
+      "estimated_time": 90,
+      "success_rate": 0.0,
+      "total_attempts": 0,
+      "successful_attempts": 0,
+      "failed_attempts": 0,
+      "avg_execution_time": 0,
+      "adaptations": [],
+      "created_at": "2025-10-25T18:06:34.028212"
+    },
+    {
+      "id": "fix_imports",
+      "name": "Fix Import Statements",
+      "description": "Update and fix import statements",
+      "contexts": [
+        "import_error",
+        "missing_module"
+      ],
+      "base_risk": 0.3,
+      "estimated_time": 40,
+      "success_rate": 0.0,
+      "total_attempts": 0,
+      "successful_attempts": 0,
+      "failed_attempts": 0,
+      "avg_execution_time": 0,
+      "adaptations": [],
+      "created_at": "2025-10-25T18:06:34.028214"
+    },
+    {
+      "id": "run_tests",
+      "name": "Run Test Suite",
+      "description": "Execute full test suite",
+      "contexts": [
+        "test_failure",
+        "regression"
+      ],
+      "base_risk": 0.1,
+      "estimated_time": 180,
+      "success_rate": 0.0,
+      "total_attempts": 0,
+      "successful_attempts": 0,
+      "failed_attempts": 0,
+      "avg_execution_time": 0,
+      "adaptations": [],
+      "created_at": "2025-10-25T18:06:34.028215"
+    }
+  ],
+  "metadata": {
+    "last_updated": "2025-10-25T18:06:34.028244",
+    "total_strategies": 4
+  }
+}

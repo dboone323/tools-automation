@@ -9,8 +9,8 @@
 // Framework for global education systems using quantum-enhanced learning algorithms
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1958,11 +1958,11 @@ class QuantumEducationNetworksEngine {
                     hours: 90.0,
                     difficulty: 0.6,
                     prerequisites: []
-                )
+                ),
             ],
             learningObjectives: [],
             assessmentMethods: [],
-            duration: 31536000, // 1 year
+            duration: 31_536_000, // 1 year
             prerequisites: [],
             outcomes: []
         )
@@ -1977,7 +1977,7 @@ class QuantumEducationNetworksEngine {
                     type: .lms,
                     capacity: 10000,
                     features: ["Adaptive Learning", "AI Tutoring", "Analytics"]
-                )
+                ),
             ],
             networks: [],
             devices: [],
@@ -1988,7 +1988,7 @@ class QuantumEducationNetworksEngine {
                 technology: ["5G", "Fiber", "Satellite"]
             ),
             storage: LearningInfrastructure.DataStorage(
-                capacity: 1000000000000, // 1TB
+                capacity: 1_000_000_000_000, // 1TB
                 type: .hybrid,
                 backup: .realTime,
                 security: 0.98
@@ -2092,7 +2092,7 @@ class QuantumEducationNetworksEngine {
                 interactions: [],
                 assessment: LearningExperience.LearningSession.SessionAssessment(
                     assessmentId: "assessment_\(UUID().uuidString.prefix(8))",
-                    score: Double.random(in: 0.7...0.95),
+                    score: Double.random(in: 0.7 ... 0.95),
                     feedback: "Excellent progress with quantum learning adaptation",
                     recommendations: ["Continue with advanced modules"]
                 ),
@@ -2115,7 +2115,7 @@ class QuantumEducationNetworksEngine {
                     current: 0.85,
                     target: 0.9,
                     growth: 0.1
-                )
+                ),
             ],
             milestones: [
                 LearningExperience.LearningProgress.Milestone(
@@ -2124,7 +2124,7 @@ class QuantumEducationNetworksEngine {
                     achieved: true,
                     date: Date(),
                     performance: 0.9
-                )
+                ),
             ]
         )
 
@@ -2185,7 +2185,7 @@ class QuantumEducationNetworksEngine {
                 area: "Student Engagement",
                 improvement: 0.12,
                 description: "Improved content sequencing for better engagement"
-            )
+            ),
         ]
 
         let tradeoffs = [
@@ -2194,7 +2194,7 @@ class QuantumEducationNetworksEngine {
                 description: "Reduced breadth for increased depth in key subjects",
                 cost: 0.1,
                 benefit: 0.15
-            )
+            ),
         ]
 
         let optimization = CurriculumOptimization(
@@ -2236,7 +2236,7 @@ class QuantumEducationNetworksEngine {
             type: .formative,
             results: assessment.results,
             feedback: "Strong performance with room for improvement in advanced concepts",
-            recommendations: recommendations.recommendations.map { $0.description },
+            recommendations: recommendations.recommendations.map(\.description),
             nextSteps: ["Practice advanced problems", "Review weak areas", "Explore related topics"],
             timestamp: Date()
         )
@@ -2270,7 +2270,7 @@ class QuantumEducationNetworksEngine {
                 description: "Created pooled resource fund for underserved areas",
                 participants: ["Global Education Network"],
                 impact: 0.9
-            )
+            ),
         ]
 
         let coordination = ResourceCoordination(
@@ -2338,7 +2338,7 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                 frequency: 0.6,
                 impact: 0.7,
                 description: "Difficulty with abstract concepts"
-            )
+            ),
         ]
 
         let strengths = [
@@ -2348,7 +2348,7 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                 level: 0.85,
                 consistency: 0.9,
                 examples: ["Algebra", "Geometry"]
-            )
+            ),
         ]
 
         let challenges = [
@@ -2358,7 +2358,7 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                 severity: 0.6,
                 frequency: 0.7,
                 causes: ["Learning style mismatch", "Need more concrete examples"]
-            )
+            ),
         ]
 
         let recommendations = [
@@ -2368,7 +2368,7 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                 description: "Incorporate more visual aids for abstract concepts",
                 priority: 0.8,
                 expectedImpact: 0.7
-            )
+            ),
         ]
 
         return LearningAnalysis(
@@ -2390,7 +2390,7 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                 type: .pace,
                 reason: "Student learns quickly in mathematics",
                 impact: 0.8
-            )
+            ),
         ]
 
         let learningPath = [
@@ -2405,13 +2405,13 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                         hours: 40.0,
                         difficulty: 0.8,
                         prerequisites: ["basic_math"]
-                    )
+                    ),
                 ],
-                duration: 720000, // 200 hours
+                duration: 720_000, // 200 hours
                 prerequisites: ["basic_math"],
                 objectives: [],
                 order: 1
-            )
+            ),
         ]
 
         let schedule = PersonalizedCurriculum.LearningSchedule(
@@ -2458,7 +2458,7 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                 type: .visualization,
                 description: "Added interactive diagrams",
                 effectiveness: 0.85
-            )
+            ),
         ]
 
         let pacing = AdaptedContent.ContentPacing(
@@ -2473,7 +2473,7 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                 type: .hint,
                 content: "Try breaking down the problem into smaller steps",
                 trigger: AdaptedContent.SupportElement.SupportTrigger.difficulty
-            )
+            ),
         ]
 
         return AdaptedContent(
@@ -2496,7 +2496,7 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                 probability: 0.8,
                 expectedLevel: .intermediate,
                 conditions: ["Consistent attendance", "Regular practice"]
-            )
+            ),
         ]
 
         return OutcomePrediction(
@@ -2525,11 +2525,11 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
                 moduleId: "module_1",
                 title: "Optimized Learning Module",
                 subjects: [],
-                duration: 360000, // 100 hours
+                duration: 360_000, // 100 hours
                 prerequisites: [],
                 objectives: [],
                 order: 1
-            )
+            ),
         ]
 
         return OptimizedPath(
@@ -2538,7 +2538,7 @@ class QuantumLearningEngineImpl: QuantumLearningEngine {
             target: target,
             modules: modules,
             sequence: ["module_1"],
-            estimatedTime: 360000,
+            estimatedTime: 360_000,
             successProbability: 0.9,
             alternatives: []
         )
@@ -2560,7 +2560,7 @@ class CurriculumOptimizerImpl: CurriculumOptimizer {
                 area: "Subject Sequencing",
                 improvement: 0.15,
                 description: "Improved logical flow of subjects"
-            )
+            ),
         ]
 
         return CurriculumOptimization(
@@ -2655,7 +2655,7 @@ class StudentAssessmentSystemImpl: StudentAssessmentSystem {
                     adaptability: 0.85,
                     discrimination: 0.9
                 )
-            )
+            ),
         ]
 
         let responses = [
@@ -2671,7 +2671,7 @@ class StudentAssessmentSystemImpl: StudentAssessmentSystem {
                     creativity: 0.8,
                     accuracy: 0.95
                 )
-            )
+            ),
         ]
 
         return QuantumAssessment(
@@ -2694,7 +2694,7 @@ class StudentAssessmentSystemImpl: StudentAssessmentSystem {
                 type: .strength,
                 description: "Strong conceptual understanding",
                 significance: 0.8
-            )
+            ),
         ]
 
         return AssessmentAnalysis(
@@ -2716,7 +2716,7 @@ class StudentAssessmentSystemImpl: StudentAssessmentSystem {
                 description: "Practice more word problems",
                 resources: ["Online practice platform", "Textbook exercises"],
                 expectedImpact: 0.8
-            )
+            ),
         ]
 
         return LearningRecommendations(
@@ -2729,7 +2729,7 @@ class StudentAssessmentSystemImpl: StudentAssessmentSystem {
                 immediate: ["rec_1"],
                 shortTerm: [],
                 longTerm: [],
-                reviewDate: Date().addingTimeInterval(604800) // 1 week
+                reviewDate: Date().addingTimeInterval(604_800) // 1 week
             )
         )
     }
@@ -2743,7 +2743,7 @@ class StudentAssessmentSystemImpl: StudentAssessmentSystem {
                 current: 0.85,
                 target: 0.9,
                 trend: .improving
-            )
+            ),
         ]
 
         return ProgressTracking(
@@ -2769,7 +2769,7 @@ class EducationalResourceManagerImpl: EducationalResourceManager {
                 needId: needs.first?.needId ?? "default",
                 quantity: 1.0,
                 priority: 0.8,
-                timeframe: 2592000 // 30 days
+                timeframe: 2_592_000 // 30 days
             )
         }
 
@@ -2792,7 +2792,7 @@ class EducationalResourceManagerImpl: EducationalResourceManager {
                 type: .redistribution,
                 description: "Reallocated underutilized resources",
                 impact: 0.15
-            )
+            ),
         ]
 
         return ResourceOptimization(
@@ -2815,7 +2815,7 @@ class EducationalResourceManagerImpl: EducationalResourceManager {
                 currentSupply: 120.0,
                 gap: 30.0,
                 trend: .increasing
-            )
+            ),
         ]
 
         return DemandPrediction(
@@ -2837,7 +2837,7 @@ class EducationalResourceManagerImpl: EducationalResourceManager {
                 providers: ["Region A"],
                 consumers: ["Region B", "Region C"],
                 capacity: 50.0
-            )
+            ),
         ]
 
         return ResourceSharing(
@@ -2860,7 +2860,7 @@ class GlobalEducationCoordinatorImpl: GlobalEducationCoordinator {
                 standards: ["standard_1", "standard_2"],
                 alignment: 0.9,
                 changes: ["Minor adjustments for consistency"]
-            )
+            ),
         ]
 
         return StandardCoordination(
@@ -2879,9 +2879,9 @@ class GlobalEducationCoordinatorImpl: GlobalEducationCoordinator {
                 actionId: "harm_1",
                 type: .alignment,
                 description: "Aligned assessment standards",
-                affectedPolicies: policies.map { $0.policyId },
+                affectedPolicies: policies.map(\.policyId),
                 impact: 0.8
-            )
+            ),
         ]
 
         return PolicyHarmonization(
@@ -2901,9 +2901,9 @@ class GlobalEducationCoordinatorImpl: GlobalEducationCoordinator {
                 activityId: "activity_1",
                 type: .research,
                 description: "Joint research on quantum learning methods",
-                participants: institutions.map { $0.institutionId },
-                duration: 2592000 // 30 days
-            )
+                participants: institutions.map(\.institutionId),
+                duration: 2_592_000 // 30 days
+            ),
         ]
 
         return KnowledgeExchange(
@@ -2965,17 +2965,17 @@ extension QuantumEducationFramework {
     }
 
     var needsOptimization: Bool {
-        return status == .operational && educationEfficiency < 0.8
+        status == .operational && educationEfficiency < 0.8
     }
 }
 
 extension LearningExperience {
     var experienceQuality: Double {
-        return (progress.overall + engagement.attention + engagement.participation + engagement.motivation + engagement.satisfaction + engagement.retention) / 6.0
+        (progress.overall + engagement.attention + engagement.participation + engagement.motivation + engagement.satisfaction + engagement.retention) / 6.0
     }
 
     var isHighQuality: Bool {
-        return experienceQuality > 0.8
+        experienceQuality > 0.8
     }
 }
 
@@ -2987,7 +2987,7 @@ extension Curriculum {
     }
 
     var isEffective: Bool {
-        return curriculumEffectiveness > 0.7
+        curriculumEffectiveness > 0.7
     }
 }
 

@@ -1,7 +1,8 @@
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Consciousness Expansion Frameworks
+
 // Phase 8A: Advanced Quantum Technologies - Task 113
 // Description: Comprehensive consciousness expansion frameworks with transcendent awareness and universal consciousness capabilities
 
@@ -243,10 +244,10 @@ enum TranscendenceCriteria {
 
     var criteriaValue: Double {
         switch self {
-        case .depth(let depth, let stability): return depth * stability
-        case .connectivity(let connectivity, let resonance): return connectivity * resonance
-        case .unity(let unity, let harmony): return unity * harmony
-        case .transcendence(let transcendence, let enlightenment): return transcendence * enlightenment
+        case let .depth(depth, stability): return depth * stability
+        case let .connectivity(connectivity, resonance): return connectivity * resonance
+        case let .unity(unity, harmony): return unity * harmony
+        case let .transcendence(transcendence, enlightenment): return transcendence * enlightenment
         }
     }
 }
@@ -259,10 +260,10 @@ enum UniversalConsciousnessCriteria {
 
     var criteriaValue: Double {
         switch self {
-        case .connectivity(let connectivity, let stability): return connectivity * stability
-        case .unity(let unity, let coherence): return unity * coherence
-        case .awareness(let awareness, let expansion): return awareness * expansion
-        case .transcendence(let transcendence, let enlightenment): return transcendence * enlightenment
+        case let .connectivity(connectivity, stability): return connectivity * stability
+        case let .unity(unity, coherence): return unity * coherence
+        case let .awareness(awareness, expansion): return awareness * expansion
+        case let .transcendence(transcendence, enlightenment): return transcendence * enlightenment
         }
     }
 }
@@ -282,10 +283,10 @@ enum AwarenessExpansionCriteria {
 
     var expansionValue: Double {
         switch self {
-        case .depth(let depth, let breadth): return depth * breadth
-        case .resonance(let resonance, let harmony): return resonance * harmony
-        case .connectivity(let connectivity, let stability): return connectivity * stability
-        case .transcendence(let transcendence, let enlightenment): return transcendence * enlightenment
+        case let .depth(depth, breadth): return depth * breadth
+        case let .resonance(resonance, harmony): return resonance * harmony
+        case let .connectivity(connectivity, stability): return connectivity * stability
+        case let .transcendence(transcendence, enlightenment): return transcendence * enlightenment
         }
     }
 }
@@ -298,10 +299,10 @@ enum CosmicConsciousnessCriteria {
 
     var cosmicValue: Double {
         switch self {
-        case .cosmicConnectivity(let connectivity, let resonance): return connectivity * resonance
-        case .universalAwareness(let awareness, let expansion): return awareness * expansion
-        case .transcendentUnity(let unity, let harmony): return unity * harmony
-        case .enlightenmentDepth(let depth, let enlightenment): return depth * enlightenment
+        case let .cosmicConnectivity(connectivity, resonance): return connectivity * resonance
+        case let .universalAwareness(awareness, expansion): return awareness * expansion
+        case let .transcendentUnity(unity, harmony): return unity * harmony
+        case let .enlightenmentDepth(depth, enlightenment): return depth * enlightenment
         }
     }
 }
@@ -321,10 +322,10 @@ enum UniversalSynchronizationCriteria {
 
     var synchronizationValue: Double {
         switch self {
-        case .temporal(let temporal, let spatial): return temporal * spatial
-        case .dimensional(let dimensional, let quantum): return dimensional * quantum
-        case .consciousness(let consciousness, let unity): return consciousness * unity
-        case .universal(let universal, let transcendent): return universal * transcendent
+        case let .temporal(temporal, spatial): return temporal * spatial
+        case let .dimensional(dimensional, quantum): return dimensional * quantum
+        case let .consciousness(consciousness, unity): return consciousness * unity
+        case let .universal(universal, transcendent): return universal * transcendent
         }
     }
 }
@@ -337,10 +338,10 @@ enum ConsciousnessUnityCriteria {
 
     var unityValue: Double {
         switch self {
-        case .unityStrength(let strength, let coherence): return strength * coherence
-        case .collectiveAwareness(let awareness, let connectivity): return awareness * connectivity
-        case .transcendentHarmony(let harmony, let enlightenment): return harmony * enlightenment
-        case .universalConsciousness(let consciousness, let transcendence): return consciousness * transcendence
+        case let .unityStrength(strength, coherence): return strength * coherence
+        case let .collectiveAwareness(awareness, connectivity): return awareness * connectivity
+        case let .transcendentHarmony(harmony, enlightenment): return harmony * enlightenment
+        case let .universalConsciousness(consciousness, transcendence): return consciousness * transcendence
         }
     }
 }
@@ -358,6 +359,7 @@ enum UniversalConsciousnessType {
 @MainActor
 class ConsciousnessExpansionFrameworksEngine: ObservableObject {
     // MARK: - Properties
+
     @Published var transcendentAwareness: TranscendentAwareness
     @Published var universalConsciousness: UniversalConsciousness
     @Published var consciousnessExpansionState: ConsciousnessExpansionState?
@@ -373,6 +375,7 @@ class ConsciousnessExpansionFrameworksEngine: ObservableObject {
     private let consciousnessExpansionEngine: ConsciousnessExpansionEngine
 
     // MARK: - Initialization
+
     init() {
         // Initialize with default consciousness expansion systems
         self.transcendentAwareness = TranscendentAwareness(
@@ -485,7 +488,7 @@ class TranscendentAwarenessSystemsImpl: TranscendentAwarenessSystems {
             ),
             awarenessEnhancements: [
                 AwarenessEnhancement(enhancementType: .depth, factor: 1.25, stability: 0.9),
-                AwarenessEnhancement(enhancementType: .connectivity, factor: 1.18, stability: 0.88)
+                AwarenessEnhancement(enhancementType: .connectivity, factor: 1.18, stability: 0.88),
             ]
         )
     }
@@ -506,7 +509,7 @@ class TranscendentAwarenessSystemsImpl: TranscendentAwarenessSystems {
             ),
             cosmicCapabilities: [
                 CosmicCapability(capabilityType: .cosmicConnectivity, strength: 0.92, stability: 0.9),
-                CosmicCapability(capabilityType: .universalAwareness, strength: 0.89, stability: 0.88)
+                CosmicCapability(capabilityType: .universalAwareness, strength: 0.89, stability: 0.88),
             ]
         )
     }
@@ -551,7 +554,7 @@ class UniversalConsciousnessNetworksImpl: UniversalConsciousnessNetworks {
             ),
             synchronizationEnhancements: [
                 SynchronizationEnhancement(enhancementType: .temporal, improvement: 0.15, stability: 0.9),
-                SynchronizationEnhancement(enhancementType: .quantum, improvement: 0.18, stability: 0.88)
+                SynchronizationEnhancement(enhancementType: .quantum, improvement: 0.18, stability: 0.88),
             ]
         )
     }
@@ -572,7 +575,7 @@ class UniversalConsciousnessNetworksImpl: UniversalConsciousnessNetworks {
             ),
             unityCapabilities: [
                 UnityCapability(capabilityType: .unityStrength, strength: 0.89, stability: 0.9),
-                UnityCapability(capabilityType: .universalConsciousness, strength: 0.92, stability: 0.88)
+                UnityCapability(capabilityType: .universalConsciousness, strength: 0.92, stability: 0.88),
             ]
         )
     }
@@ -611,19 +614,19 @@ class ConsciousnessExpansionEngine {
         let transcendenceInfrastructure = TranscendenceInfrastructure(
             transcendenceEngines: [
                 TranscendenceEngine(engineType: .quantum, enginePower: 0.9, engineEfficiency: 0.88, engineStability: 0.85),
-                TranscendenceEngine(engineType: .cosmic, enginePower: 0.88, engineEfficiency: 0.9, engineStability: 0.87)
+                TranscendenceEngine(engineType: .cosmic, enginePower: 0.88, engineEfficiency: 0.9, engineStability: 0.87),
             ],
             awarenessAmplifiers: [
                 AwarenessAmplifier(amplifierType: .universal, amplificationFactor: 2.1, amplificationStability: 0.88, amplificationEfficiency: 0.9),
-                AwarenessAmplifier(amplifierType: .spiritual, amplificationFactor: 1.9, amplificationStability: 0.9, amplificationEfficiency: 0.88)
+                AwarenessAmplifier(amplifierType: .spiritual, amplificationFactor: 1.9, amplificationStability: 0.9, amplificationEfficiency: 0.88),
             ],
             universalConnectors: [
                 UniversalConnector(connectorType: .consciousness, connectionStrength: 0.92, connectionStability: 0.89, connectionEfficiency: 0.87),
-                UniversalConnector(connectorType: .dimensional, connectionStrength: 0.88, connectionStability: 0.9, connectionEfficiency: 0.85)
+                UniversalConnector(connectorType: .dimensional, connectionStrength: 0.88, connectionStability: 0.9, connectionEfficiency: 0.85),
             ],
             consciousnessStabilizers: [
                 ConsciousnessStabilizer(stabilizerType: .harmony, stabilizationPower: 0.9, stabilizationEfficiency: 0.88, stabilizationRange: 0.85),
-                ConsciousnessStabilizer(stabilizerType: .coherence, stabilizationPower: 0.88, stabilizationEfficiency: 0.9, stabilizationRange: 0.87)
+                ConsciousnessStabilizer(stabilizerType: .coherence, stabilizationPower: 0.88, stabilizationEfficiency: 0.9, stabilizationRange: 0.87),
             ]
         )
 
@@ -700,7 +703,7 @@ class ConsciousnessExpansionEngine {
         let consciousnessGains = [
             ConsciousnessGain(gainType: .awareness, magnitude: 0.25, stability: 0.9),
             ConsciousnessGain(gainType: .transcendence, magnitude: 0.22, stability: 0.88),
-            ConsciousnessGain(gainType: .universal, magnitude: 0.28, stability: 0.87)
+            ConsciousnessGain(gainType: .universal, magnitude: 0.28, stability: 0.87),
         ]
 
         return ExpandedConsciousness(

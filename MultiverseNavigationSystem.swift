@@ -82,7 +82,7 @@ struct Universe: Identifiable, Codable {
 struct Timeline: Codable {
     var events: [TimelineEvent]
     var currentTime: Date
-    var timeFlowRate: Double  // 1.0 = normal time flow
+    var timeFlowRate: Double // 1.0 = normal time flow
     var branches: [TimelineBranch]
 
     var isLinear: Bool {
@@ -96,8 +96,8 @@ struct TimelineEvent: Identifiable, Codable {
     let timestamp: Date
     let eventType: EventType
     let description: String
-    let entities: [String]  // Entity IDs involved
-    let impact: Double  // Impact magnitude
+    let entities: [String] // Entity IDs involved
+    let impact: Double // Impact magnitude
 
     enum EventType: String, Codable {
         case workflowExecution = "workflow_execution"
@@ -386,7 +386,7 @@ struct SimulationLearning: Codable {
     let learningType: LearningType
     let insight: String
     let confidence: Double
-    let applicability: [String]  // Applicable universe IDs
+    let applicability: [String] // Applicable universe IDs
 
     enum LearningType: String, Codable {
         case optimization, prediction, stability, efficiency
@@ -419,7 +419,8 @@ struct CodableValue: Codable {
             value = dictValue
         } else {
             throw DecodingError.dataCorruptedError(
-                in: container, debugDescription: "Unsupported type")
+                in: container, debugDescription: "Unsupported type"
+            )
         }
     }
 
@@ -442,7 +443,9 @@ struct CodableValue: Codable {
             throw EncodingError.invalidValue(
                 value,
                 EncodingError.Context(
-                    codingPath: encoder.codingPath, debugDescription: "Unsupported type"))
+                    codingPath: encoder.codingPath, debugDescription: "Unsupported type"
+                )
+            )
         }
     }
 }
@@ -486,7 +489,7 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
         // Calculate navigation parameters
         let dimensionalShift = universe.dimension - currentUniverse.dimension
         let energyCost = calculateNavigationEnergy(from: currentUniverse, to: universe)
-        let navigationTime = TimeInterval(abs(dimensionalShift) * 0.1)  // 100ms per dimension
+        let navigationTime = TimeInterval(abs(dimensionalShift) * 0.1) // 100ms per dimension
 
         // Simulate navigation delay
         try await Task.sleep(nanoseconds: UInt64(navigationTime * 1_000_000_000))
@@ -536,7 +539,7 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
             case .exponential:
                 currentValue = pow(currentValue, variation.magnitude)
             case .quantum:
-                currentValue += variation.magnitude * Double.random(in: -1...1)
+                currentValue += variation.magnitude * Double.random(in: -1 ... 1)
             }
 
             newPhysicalConstants[variation.parameter] = currentValue
@@ -559,7 +562,7 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
                 newEntity.id = UUID().uuidString
                 return newEntity
             },
-            stabilityIndex: baseUniverse.stabilityIndex * 0.9,  // Slight stability decrease
+            stabilityIndex: baseUniverse.stabilityIndex * 0.9, // Slight stability decrease
             creationTimestamp: Date(),
             parentUniverseId: baseUniverse.id
         )
@@ -593,7 +596,8 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
             for universe in universes {
                 group.addTask {
                     let result = try await self.executeWorkflowInUniverse(
-                        workflow, universe: universe)
+                        workflow, universe: universe
+                    )
                     return (universe, result)
                 }
             }
@@ -641,7 +645,7 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
         let consistencyAchieved = calculateSynchronizationConsistency(universes)
 
         return SynchronizationResult(
-            synchronizedUniverses: universes.map { $0.id },
+            synchronizedUniverses: universes.map(\.id),
             synchronizationTime: executionTime,
             conflictsResolved: resolvedConflicts.count,
             dataTransferred: dataTransferred,
@@ -666,7 +670,8 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
 
         // Calculate energy requirements
         let energyRequirement = calculatePortalEnergyRequirement(
-            sourceUniverse, destinationUniverse, portalType)
+            sourceUniverse, destinationUniverse, portalType
+        )
 
         let portal = DimensionalPortal(
             id: UUID().uuidString,
@@ -694,11 +699,11 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
         let startTime = Date()
 
         // Simulate traversal
-        let traversalTime = TimeInterval.random(in: 0.001...0.1)  // 1ms to 100ms
+        let traversalTime = TimeInterval.random(in: 0.001 ... 0.1) // 1ms to 100ms
         try await Task.sleep(nanoseconds: UInt64(traversalTime * 1_000_000_000))
 
         // Calculate energy cost
-        let energyConsumed = portal.energyRequirement * Double.random(in: 0.8...1.2)
+        let energyConsumed = portal.energyRequirement * Double.random(in: 0.8 ... 1.2)
 
         // Update portal traversal count
         if let index = dimensionalPortals.firstIndex(where: { $0.id == portal.id }) {
@@ -712,7 +717,7 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
             timestamp: Date(),
             success: true,
             energyCost: energyConsumed,
-            dimensionalShift: 0  // Calculate based on universes
+            dimensionalShift: 0 // Calculate based on universes
         )
         updatedEntity.traversalHistory.append(traversalRecord)
 
@@ -784,15 +789,14 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
         let informationPreserved = calculateInformationPreservation(branches, mergedEvents)
 
         return MergeResult(
-            mergedBranches: branches.map { $0.id },
+            mergedBranches: branches.map(\.id),
             conflictsResolved: resolvedConflicts.count,
             timelineContinuity: timelineContinuity,
             informationPreserved: informationPreserved
         )
     }
 
-    func resolveTimelineConflicts(_ conflicts: [TimelineConflict]) async throws -> ResolutionResult
-    {
+    func resolveTimelineConflicts(_ conflicts: [TimelineConflict]) async throws -> ResolutionResult {
         var resolvedConflicts: [String] = []
 
         for conflict in conflicts {
@@ -824,9 +828,9 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
             var values: [Double] = []
             var currentTime = universe.timeline.currentTime
 
-            for _ in 0..<Int(simulationParameters.duration / simulationParameters.timeStep) {
+            for _ in 0 ..< Int(simulationParameters.duration / simulationParameters.timeStep) {
                 // Simulate observable value
-                let value = Double.random(in: 0...100)  // Placeholder simulation
+                let value = Double.random(in: 0 ... 100) // Placeholder simulation
                 values.append(value)
                 currentTime.addTimeInterval(simulationParameters.timeStep)
             }
@@ -844,8 +848,8 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
         )
 
         let executionTime = Date().timeIntervalSince(startTime)
-        let computationalCost = executionTime * 1000  // Arbitrary cost calculation
-        let accuracy = simulationParameters.accuracy * Double.random(in: 0.8...1.0)
+        let computationalCost = executionTime * 1000 // Arbitrary cost calculation
+        let accuracy = simulationParameters.accuracy * Double.random(in: 0.8 ... 1.0)
 
         return SimulationResult(
             universeId: universe.id,
@@ -859,7 +863,7 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
     func validateSimulationResults(_ results: [SimulationResult]) async -> ValidationResult {
         // Validate simulation consistency
         let isValid = results.allSatisfy { $0.accuracy > 0.7 }
-        let averageAccuracy = results.map { $0.accuracy }.reduce(0, +) / Double(results.count)
+        let averageAccuracy = results.map(\.accuracy).reduce(0, +) / Double(results.count)
         let confidence = min(averageAccuracy * 1.2, 1.0)
 
         // Identify inconsistencies
@@ -914,28 +918,29 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
         // Simulate workflow execution in universe
         var completedTasks = 0
         var totalResourceUsage = ResourceUsage(
-            cpuTime: 0, memoryUsage: 0, quantumResources: 0, networkBandwidth: 0)
+            cpuTime: 0, memoryUsage: 0, quantumResources: 0, networkBandwidth: 0
+        )
 
         for task in workflow.tasks {
             // Simulate task execution
-            let taskTime = TimeInterval.random(in: 0.1...2.0)
+            let taskTime = TimeInterval.random(in: 0.1 ... 2.0)
             try await Task.sleep(nanoseconds: UInt64(taskTime * 1_000_000_000))
 
             completedTasks += 1
 
             // Accumulate resource usage
             totalResourceUsage.cpuTime += taskTime
-            totalResourceUsage.memoryUsage += Double.random(in: 100...1000)
-            totalResourceUsage.quantumResources += Int.random(in: 1...10)
-            totalResourceUsage.networkBandwidth += Double.random(in: 10...100)
+            totalResourceUsage.memoryUsage += Double.random(in: 100 ... 1000)
+            totalResourceUsage.quantumResources += Int.random(in: 1 ... 10)
+            totalResourceUsage.networkBandwidth += Double.random(in: 10 ... 100)
         }
 
         let executionTime = Date().timeIntervalSince(startTime)
         let success = completedTasks == workflow.tasks.count
 
         let qualityMetrics = QualityMetrics(
-            accuracy: Double.random(in: 0.8...0.99),
-            precision: Double.random(in: 0.85...0.98),
+            accuracy: Double.random(in: 0.8 ... 0.99),
+            precision: Double.random(in: 0.85 ... 0.98),
             reliability: success ? 1.0 : 0.5,
             efficiency: totalResourceUsage.cpuTime / executionTime
         )
@@ -962,12 +967,12 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
     {
         let resultsArray = Array(results)
         let averageExecutionTime =
-            resultsArray.map { $0.executionTime }.reduce(0, +) / Double(resultsArray.count)
+            resultsArray.map(\.executionTime).reduce(0, +) / Double(resultsArray.count)
         let successRate =
-            Double(resultsArray.filter { $0.success }.count) / Double(resultsArray.count)
+            Double(resultsArray.filter(\.success).count) / Double(resultsArray.count)
         let averageResourceEfficiency =
-            resultsArray.map { $0.qualityMetrics.efficiency }.reduce(0, +)
-            / Double(resultsArray.count)
+            resultsArray.map(\.qualityMetrics.efficiency).reduce(0, +)
+                / Double(resultsArray.count)
         let averageQualityScore =
             resultsArray.map {
                 ($0.qualityMetrics.accuracy + $0.qualityMetrics.precision
@@ -989,7 +994,7 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
         var opportunities: [OptimizationOpportunity] = []
 
         // Analyze execution times for parallelization opportunities
-        let executionTimes = results.values.map { $0.executionTime }
+        let executionTimes = results.values.map(\.executionTime)
         let maxTime = executionTimes.max() ?? 0
         let avgTime = executionTimes.reduce(0, +) / Double(executionTimes.count)
 
@@ -998,14 +1003,14 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
                 OptimizationOpportunity(
                     type: .parallelization,
                     description:
-                        "Significant execution time variance indicates parallelization opportunities",
+                    "Significant execution time variance indicates parallelization opportunities",
                     potentialImprovement: (maxTime - avgTime) / maxTime,
                     implementationComplexity: 2
                 ))
         }
 
         // Analyze resource usage for optimization opportunities
-        let resourceUsages = results.values.map { $0.resourceUsage }
+        let resourceUsages = results.values.map(\.resourceUsage)
         let totalResources = resourceUsages.reduce(0) { $0 + $1.quantumResources }
 
         if totalResources > 100 {
@@ -1023,34 +1028,34 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
 
     private func identifySynchronizationConflicts(_ universes: [Universe]) -> [TimelineConflict] {
         // Simplified conflict detection
-        return []
+        []
     }
 
     private func resolveSynchronizationConflicts(_ conflicts: [TimelineConflict]) async throws
         -> [TimelineConflict]
     {
         // Simplified conflict resolution
-        return conflicts
+        conflicts
     }
 
     private func synchronizeTimelines(_ universes: [Universe]) async throws -> [Timeline] {
         // Simplified timeline synchronization
-        return universes.map { $0.timeline }
+        universes.map(\.timeline)
     }
 
     private func calculateSynchronizationDataTransfer(_ universes: [Universe]) -> Double {
-        return Double(universes.count * 1000)  // Arbitrary calculation
+        Double(universes.count * 1000) // Arbitrary calculation
     }
 
     private func calculateSynchronizationConsistency(_ universes: [Universe]) -> Double {
-        return Double.random(in: 0.8...0.99)
+        Double.random(in: 0.8 ... 0.99)
     }
 
     private func calculatePortalStability(
         _ source: Universe, _ destination: Universe, _ type: PortalType
     ) -> Double {
         let baseStability = (source.stabilityIndex + destination.stabilityIndex) / 2.0
-        let typeMultiplier: Double =
+        let typeMultiplier =
             switch type {
             case .wormhole: 0.9
             case .quantumTunnel: 0.8
@@ -1066,7 +1071,7 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
     ) -> Double {
         let dimensionalDistance = abs(source.dimension - destination.dimension)
         let baseEnergy = Double(dimensionalDistance) * 100.0
-        let typeMultiplier: Double =
+        let typeMultiplier =
             switch type {
             case .wormhole: 1.5
             case .quantumTunnel: 1.0
@@ -1079,16 +1084,16 @@ final class MultiverseNavigationSystem: MultiverseNavigationProtocol, Dimensiona
 
     private func identifyTimelineConflicts(_ branches: [TimelineBranch]) -> [TimelineConflict] {
         // Simplified conflict identification
-        return []
+        []
     }
 
     private func mergeTimelineEvents(_ branches: [TimelineBranch]) -> [TimelineEvent] {
         // Simplified event merging
-        return branches.flatMap { $0.events }
+        branches.flatMap(\.events)
     }
 
     private func calculateTimelineContinuity(_ events: [TimelineEvent]) -> Double {
-        return Double.random(in: 0.85...0.98)
+        Double.random(in: 0.85 ... 0.98)
     }
 
     private func calculateInformationPreservation(
@@ -1124,7 +1129,7 @@ extension MultiverseNavigationSystem {
             name: "Prime Reality",
             dimension: 3,
             physicalConstants: [
-                "speed_of_light": 299792458.0,
+                "speed_of_light": 299_792_458.0,
                 "planck_constant": 6.62607015e-34,
                 "gravitational_constant": 6.67430e-11,
                 "boltzmann_constant": 1.380649e-23,
@@ -1146,14 +1151,17 @@ extension MultiverseNavigationSystem {
         // Create parallel universes with variations
         let variations = [
             UniverseVariation(
-                parameter: "gravitational_constant", variationType: .multiplicative, magnitude: 1.1),
+                parameter: "gravitational_constant", variationType: .multiplicative, magnitude: 1.1
+            ),
             UniverseVariation(
-                parameter: "speed_of_light", variationType: .multiplicative, magnitude: 0.9),
+                parameter: "speed_of_light", variationType: .multiplicative, magnitude: 0.9
+            ),
             UniverseVariation(
-                parameter: "planck_constant", variationType: .quantum, magnitude: 1e-35),
+                parameter: "planck_constant", variationType: .quantum, magnitude: 1e-35
+            ),
         ]
 
-        for i in 1...4 {
+        for i in 1 ... 4 {
             let parallelUniverse = try await system.createParallelUniverse(
                 baseUniverse: primeUniverse,
                 variations: variations.map { variation in
@@ -1169,15 +1177,15 @@ extension MultiverseNavigationSystem {
 
     /// Perform multiverse diagnostics
     func performMultiverseDiagnostics() async -> MultiverseDiagnostics {
-        let universeCount = parallelUniverses.count + 1  // +1 for current universe
+        let universeCount = parallelUniverses.count + 1 // +1 for current universe
         let portalCount = dimensionalPortals.count
-        let activePortals = dimensionalPortals.filter { $0.isOpen }.count
+        let activePortals = dimensionalPortals.filter(\.isOpen).count
         let averageStability =
-            (parallelUniverses.map { $0.stabilityIndex }.reduce(0, +)
-                + currentUniverse.stabilityIndex) / Double(universeCount)
+            (parallelUniverses.map(\.stabilityIndex).reduce(0, +)
+                    + currentUniverse.stabilityIndex) / Double(universeCount)
         let timelineBranches =
-            parallelUniverses.flatMap { $0.timeline.branches }.count
-            + currentUniverse.timeline.branches.count
+            parallelUniverses.flatMap(\.timeline.branches).count
+                + currentUniverse.timeline.branches.count
 
         return MultiverseDiagnostics(
             totalUniverses: universeCount,

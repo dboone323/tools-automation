@@ -9,9 +9,9 @@
 // Framework for advanced interdimensional computations and transformations using higher-dimensional mathematics
 //
 
-import Foundation
-import Combine
 import Accelerate
+import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -111,18 +111,18 @@ struct HigherDimensionalVector: Equatable {
         self.dimension = components.count
     }
 
-    static func +(lhs: HigherDimensionalVector, rhs: HigherDimensionalVector) -> HigherDimensionalVector {
+    static func + (lhs: HigherDimensionalVector, rhs: HigherDimensionalVector) -> HigherDimensionalVector {
         precondition(lhs.dimension == rhs.dimension, "Vector dimensions must match")
         return HigherDimensionalVector(components: zip(lhs.components, rhs.components).map(+))
     }
 
-    static func -(lhs: HigherDimensionalVector, rhs: HigherDimensionalVector) -> HigherDimensionalVector {
+    static func - (lhs: HigherDimensionalVector, rhs: HigherDimensionalVector) -> HigherDimensionalVector {
         precondition(lhs.dimension == rhs.dimension, "Vector dimensions must match")
         return HigherDimensionalVector(components: zip(lhs.components, rhs.components).map(-))
     }
 
-    static func *(lhs: HigherDimensionalVector, rhs: Double) -> HigherDimensionalVector {
-        return HigherDimensionalVector(components: lhs.components.map { $0 * rhs })
+    static func * (lhs: HigherDimensionalVector, rhs: Double) -> HigherDimensionalVector {
+        HigherDimensionalVector(components: lhs.components.map { $0 * rhs })
     }
 
     func dot(_ other: HigherDimensionalVector) -> Double {
@@ -131,7 +131,7 @@ struct HigherDimensionalVector: Equatable {
     }
 
     var magnitude: Double {
-        return sqrt(components.map { $0 * $0 }.reduce(0, +))
+        sqrt(components.map { $0 * $0 }.reduce(0, +))
     }
 
     var normalized: HigherDimensionalVector {
@@ -150,8 +150,8 @@ struct DimensionalMetric {
         let difference = vectorB - vectorA
         var result = 0.0
 
-        for i in 0..<metricTensor.count {
-            for j in 0..<metricTensor[i].count {
+        for i in 0 ..< metricTensor.count {
+            for j in 0 ..< metricTensor[i].count {
                 result += difference.components[i] * difference.components[j] * metricTensor[i][j]
             }
         }
@@ -176,7 +176,7 @@ struct Tensor {
     }
 
     var totalElements: Int {
-        return shape.reduce(1, *)
+        shape.reduce(1, *)
     }
 
     func element(at indices: [Int]) -> Double {
@@ -184,7 +184,7 @@ struct Tensor {
         var flatIndex = 0
         var stride = 1
 
-        for i in (0..<rank).reversed() {
+        for i in (0 ..< rank).reversed() {
             flatIndex += indices[i] * stride
             stride *= shape[i]
         }
@@ -352,8 +352,8 @@ struct DimensionalTransformation {
         precondition(matrix.count == vector.dimension, "Matrix rows must match vector dimension")
         precondition(matrix.first?.count == vector.dimension, "Matrix columns must match vector dimension")
 
-        let resultComponents = (0..<vector.dimension).map { i in
-            (0..<vector.dimension).map { j in
+        let resultComponents = (0 ..< vector.dimension).map { i in
+            (0 ..< vector.dimension).map { j in
                 matrix[i][j] * vector.components[j]
             }.reduce(0, +)
         }
@@ -543,7 +543,7 @@ class HigherDimensionalMathematicsEngine {
     private func createMinkowskiMetric(dimensions: Int) -> [[Double]] {
         var metric = Array(repeating: Array(repeating: 0.0, count: dimensions), count: dimensions)
         metric[0][0] = 1.0 // Time component
-        for i in 1..<dimensions {
+        for i in 1 ..< dimensions {
             metric[i][i] = -1.0 // Space components
         }
         return metric
@@ -599,12 +599,12 @@ class HigherDimensionalMathematicsEngine {
 
     private func computeEulerCharacteristic(_ manifold: DifferentiableManifold) -> Int {
         // Simplified Euler characteristic computation
-        return manifold.dimension + 1
+        manifold.dimension + 1
     }
 
     private func computeBettiNumbers(_ manifold: DifferentiableManifold) -> [Int] {
         // Simplified Betti numbers computation
-        return Array(repeating: 1, count: manifold.dimension + 1)
+        Array(repeating: 1, count: manifold.dimension + 1)
     }
 
     // MARK: - Transformation Algebra
@@ -639,7 +639,7 @@ class HigherDimensionalMathematicsEngine {
                 property: "dimension",
                 value: Double(geometry.hashValue), // Simplified
                 confidence: 1.0
-            )
+            ),
         ]
 
         let invariants = [
@@ -647,7 +647,7 @@ class HigherDimensionalMathematicsEngine {
                 invariant: "volume",
                 value: 1.0,
                 type: .scalar
-            )
+            ),
         ]
 
         return GeometryAnalysisResult(
@@ -695,7 +695,7 @@ class TensorEngineImpl: TensorEngine {
     func createTensor(shape: [Int], dataType: Tensor.TensorDataType) async throws -> Tensor {
         let tensorId = "tensor_\(UUID().uuidString.prefix(8))"
         let totalElements = shape.reduce(1, *)
-        let data = (0..<totalElements).map { _ in Double.random(in: -1...1) }
+        let data = (0 ..< totalElements).map { _ in Double.random(in: -1 ... 1) }
 
         let tensor = Tensor(
             tensorId: tensorId,
@@ -728,7 +728,7 @@ class TensorEngineImpl: TensorEngine {
         let first = tensors[0]
         precondition(tensors.allSatisfy { $0.shape == first.shape }, "Tensor shapes must match")
 
-        let resultData = zip(first.data, tensors.dropFirst().flatMap { $0.data })
+        let resultData = zip(first.data, tensors.dropFirst().flatMap(\.data))
             .map { $0.0 + $0.1 }
 
         return Tensor(
@@ -752,10 +752,10 @@ class TensorEngineImpl: TensorEngine {
         let resultShape = [a.shape[0], b.shape[1]]
         var resultData = [Double]()
 
-        for i in 0..<a.shape[0] {
-            for j in 0..<b.shape[1] {
+        for i in 0 ..< a.shape[0] {
+            for j in 0 ..< b.shape[1] {
                 var sum = 0.0
-                for k in 0..<a.shape[1] {
+                for k in 0 ..< a.shape[1] {
                     sum += a.element(at: [i, k]) * b.element(at: [k, j])
                 }
                 resultData.append(sum)
@@ -784,10 +784,10 @@ class TensorEngineImpl: TensorEngine {
         let resultShape = [a.shape.dropLast().first!, b.shape.dropFirst().first!]
         var resultData = [Double]()
 
-        for i in 0..<resultShape[0] {
-            for j in 0..<resultShape[1] {
+        for i in 0 ..< resultShape[0] {
+            for j in 0 ..< resultShape[1] {
                 var sum = 0.0
-                for k in 0..<a.shape.last! {
+                for k in 0 ..< a.shape.last! {
                     sum += a.element(at: [i, k]) * b.element(at: [k, j])
                 }
                 resultData.append(sum)
@@ -818,7 +818,7 @@ class TensorEngineImpl: TensorEngine {
 
     func optimizeTensorMemory(_ tensor: Tensor) async -> MemoryOptimizationResult {
         // Simplified memory optimization
-        return MemoryOptimizationResult(
+        MemoryOptimizationResult(
             optimizedTensor: tensor,
             memoryReduction: 0.1,
             compressionRatio: 0.9,
@@ -870,12 +870,12 @@ class ManifoldProcessorImpl: ManifoldProcessor {
 
     func findCriticalPoints(on manifold: DifferentiableManifold) async -> [CriticalPoint] {
         // Simplified critical point finding
-        return []
+        []
     }
 
     func integrateOverManifold(_ function: ManifoldFunction, manifold: DifferentiableManifold) async -> IntegrationResult {
         // Simplified integration
-        return IntegrationResult(
+        IntegrationResult(
             value: 1.0,
             error: 0.01,
             convergence: true,
@@ -933,7 +933,7 @@ class TransformationAlgebraImpl: TransformationAlgebra {
 
     func exponentiateTransformation(_ algebraElement: LieAlgebraElement) async -> DimensionalTransformation {
         // Simplified matrix exponentiation
-        return DimensionalTransformation(
+        DimensionalTransformation(
             transformationId: "exp_\(UUID().uuidString.prefix(8))",
             matrix: algebraElement.matrix, // Simplified
             type: .linear,
@@ -944,7 +944,7 @@ class TransformationAlgebraImpl: TransformationAlgebra {
 
     func computeTransformationGroup(orbit: [HigherDimensionalVector], generator: DimensionalTransformation) async -> TransformationGroup {
         // Simplified group computation
-        return TransformationGroup(
+        TransformationGroup(
             generators: [generator],
             groupElements: [generator],
             groupStructure: .abelian
@@ -958,9 +958,9 @@ class TransformationAlgebraImpl: TransformationAlgebra {
 
         var result = Array(repeating: Array(repeating: 0.0, count: cols), count: rows)
 
-        for i in 0..<rows {
-            for j in 0..<cols {
-                for k in 0..<inner {
+        for i in 0 ..< rows {
+            for j in 0 ..< cols {
+                for k in 0 ..< inner {
                     result[i][j] += a[i][k] * b[k][j]
                 }
             }
@@ -970,14 +970,14 @@ class TransformationAlgebraImpl: TransformationAlgebra {
     }
 
     private func subtractMatrices(_ a: [[Double]], _ b: [[Double]]) -> [[Double]] {
-        return zip(a, b).map { zip($0, $1).map(-) }
+        zip(a, b).map { zip($0, $1).map(-) }
     }
 }
 
 /// Dimensional geometry implementation
 class DimensionalGeometryImpl: DimensionalGeometry {
     func computeDistance(between pointA: HigherDimensionalVector, pointB: HigherDimensionalVector, metric: DimensionalMetric) async -> Double {
-        return metric.distance(from: pointA, to: pointB)
+        metric.distance(from: pointA, to: pointB)
     }
 
     func calculateAngle(between vectorA: HigherDimensionalVector, vectorB: HigherDimensionalVector) async -> Double {
@@ -988,7 +988,7 @@ class DimensionalGeometryImpl: DimensionalGeometry {
 
     func findIntersection(of geometries: [GeometricObject]) async -> IntersectionResult {
         // Simplified intersection computation
-        return IntersectionResult(
+        IntersectionResult(
             intersection: nil,
             intersectionPoints: [],
             dimension: 0,
@@ -998,12 +998,12 @@ class DimensionalGeometryImpl: DimensionalGeometry {
 
     func computeVolume(of region: DimensionalRegion) async -> Double {
         // Simplified volume computation
-        return 1.0
+        1.0
     }
 
     func determineConvexHull(of points: [HigherDimensionalVector]) async -> ConvexHull {
         // Simplified convex hull computation
-        return ConvexHull(
+        ConvexHull(
             vertices: points,
             faces: [],
             volume: 1.0,
@@ -1058,8 +1058,8 @@ extension Tensor {
         let cols = shape[1]
         var transposedData = [Double]()
 
-        for j in 0..<cols {
-            for i in 0..<rows {
+        for j in 0 ..< cols {
+            for i in 0 ..< rows {
                 transposedData.append(element(at: [i, j]))
             }
         }

@@ -11,8 +11,8 @@
 //  for advanced cognitive quantum computing.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -68,8 +68,8 @@ struct QuantumState: Hashable {
 
     static func == (lhs: QuantumState, rhs: QuantumState) -> Bool {
         lhs.amplitudes == rhs.amplitudes &&
-        lhs.basisStates == rhs.basisStates &&
-        abs(lhs.normalization - rhs.normalization) < 1e-10
+            lhs.basisStates == rhs.basisStates &&
+            abs(lhs.normalization - rhs.normalization) < 1e-10
     }
 }
 
@@ -412,6 +412,7 @@ struct SynchronizedState {
 @MainActor
 class QuantumConsciousnessInterfaces: ObservableObject {
     // MARK: - Properties
+
     @Published var neuralNetwork: NeuralQuantumNetwork
     @Published var thoughtPatterns: [ThoughtPattern] = []
     @Published var activeInterfaces: [MindMachineInterface] = []
@@ -427,6 +428,7 @@ class QuantumConsciousnessInterfaces: ObservableObject {
     private let consciousnessEngine: ConsciousnessEngine
 
     // MARK: - Initialization
+
     init() {
         self.neuralNetwork = NeuralQuantumNetwork(neurons: [], synapses: [], consciousnessField: ConsciousnessField(strength: 0, coherence: 0, resonance: 0, quantumEntanglement: 0), cognitiveResonance: 0)
         self.neuralProcessing = NeuralQuantumProcessingImpl()
@@ -622,7 +624,7 @@ class ThoughtAmplificationImpl: ThoughtAmplification {
     }
 
     func enhanceCognitiveResonance(_ resonance: CognitiveResonance) async -> EnhancedResonance {
-        return EnhancedResonance(
+        EnhancedResonance(
             originalResonance: resonance,
             enhancement: 2.5,
             stability: resonance.persistence * 1.8
@@ -698,13 +700,13 @@ class ConsciousnessEngine {
     func generateThoughtPatterns(count: Int) async -> [ThoughtPattern] {
         var patterns: [ThoughtPattern] = []
 
-        for i in 0..<count {
+        for i in 0 ..< count {
             let pattern = ThoughtPattern(
-                pattern: [Double](repeating: Double.random(in: 0...1), count: 10),
+                pattern: [Double](repeating: Double.random(in: 0 ... 1), count: 10),
                 frequency: Double(i + 1) * 10.0,
-                amplitude: Double.random(in: 0.1...1.0),
-                coherence: Double.random(in: 0.8...1.0),
-                consciousnessLevel: Double.random(in: 0.7...1.0)
+                amplitude: Double.random(in: 0.1 ... 1.0),
+                coherence: Double.random(in: 0.8 ... 1.0),
+                consciousnessLevel: Double.random(in: 0.7 ... 1.0)
             )
             patterns.append(pattern)
         }
@@ -717,7 +719,7 @@ class ConsciousnessEngine {
             BrainRegion(name: "Prefrontal Cortex", type: .prefrontalCortex, neuronCount: size / 4, position: SIMD3(0, 0, 0), function: .executive),
             BrainRegion(name: "Visual Cortex", type: .visualCortex, neuronCount: size / 4, position: SIMD3(1, 0, 0), function: .perception),
             BrainRegion(name: "Motor Cortex", type: .motorCortex, neuronCount: size / 4, position: SIMD3(0, 1, 0), function: .motor),
-            BrainRegion(name: "Limbic System", type: .limbicSystem, neuronCount: size / 4, position: SIMD3(0, 0, 1), function: .emotion)
+            BrainRegion(name: "Limbic System", type: .limbicSystem, neuronCount: size / 4, position: SIMD3(0, 0, 1), function: .emotion),
         ]
 
         let connections = regions.flatMap { region1 in
@@ -726,7 +728,7 @@ class ConsciousnessEngine {
                     return NeuralConnection(
                         region1: region1,
                         region2: region2,
-                        strength: Double.random(in: 0.5...1.0),
+                        strength: Double.random(in: 0.5 ... 1.0),
                         type: .excitatory
                     )
                 }
@@ -737,9 +739,9 @@ class ConsciousnessEngine {
         let consciousnessCenters = regions.map { region in
             ConsciousnessCenter(
                 region: region,
-                consciousnessLevel: Double.random(in: 0.6...0.9),
-                quantumCoherence: Double.random(in: 0.7...0.95),
-                integrationIndex: Double.random(in: 0.5...0.8)
+                consciousnessLevel: Double.random(in: 0.6 ... 0.9),
+                quantumCoherence: Double.random(in: 0.7 ... 0.95),
+                integrationIndex: Double.random(in: 0.5 ... 0.8)
             )
         }
 
@@ -757,7 +759,7 @@ class ConsciousnessEngine {
 extension QuantumConsciousnessInterfaces: ConsciousnessInterface {
     func initializeConsciousnessInterface(_ brainModel: BrainModel) async throws -> ConsciousnessInterface {
         // Implementation for protocol
-        return self
+        self
     }
 }
 
@@ -770,14 +772,14 @@ private extension QuantumConsciousnessInterfaces {
 
     func createNeuralQuantumNetwork(_ brainModel: BrainModel) async throws -> NeuralQuantumNetwork {
         let neurons = brainModel.regions.flatMap { region in
-            (0..<region.neuronCount / 10).map { _ in
+            (0 ..< region.neuronCount / 10).map { _ in
                 QuantumNeuron(
                     id: UUID().uuidString,
                     position: region.position,
                     quantumState: QuantumState(amplitudes: [Complex(1, 0)], basisStates: ["|0⟩"], normalization: 1.0),
-                    activation: Double.random(in: 0...1),
-                    connectivity: Double.random(in: 0.5...1.0),
-                    consciousnessLevel: Double.random(in: 0.6...0.9)
+                    activation: Double.random(in: 0 ... 1),
+                    connectivity: Double.random(in: 0.5 ... 1.0),
+                    consciousnessLevel: Double.random(in: 0.6 ... 0.9)
                 )
             }
         }
@@ -788,9 +790,9 @@ private extension QuantumConsciousnessInterfaces {
                     return QuantumSynapse(
                         preNeuron: neuron1,
                         postNeuron: neuron2,
-                        strength: Double.random(in: 0.1...1.0),
-                        quantumEntanglement: Double.random(in: 0.5...0.9),
-                        plasticity: Double.random(in: 0.7...1.0)
+                        strength: Double.random(in: 0.1 ... 1.0),
+                        quantumEntanglement: Double.random(in: 0.5 ... 0.9),
+                        plasticity: Double.random(in: 0.7 ... 1.0)
                     )
                 }
                 return nil

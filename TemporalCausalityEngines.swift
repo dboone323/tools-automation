@@ -9,8 +9,8 @@
 // Framework for advanced temporal reasoning and causality analysis in interdimensional systems
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -794,7 +794,7 @@ class TemporalCausalityEngine {
                         temporalConstraints: nil,
                         dimensionalConstraints: nil,
                         propertyConstraints: [:]
-                    )
+                    ),
                 ],
                 postconditions: [
                     CausalityRule.CausalityCondition(
@@ -802,11 +802,11 @@ class TemporalCausalityEngine {
                         temporalConstraints: nil,
                         dimensionalConstraints: nil,
                         propertyConstraints: [:]
-                    )
+                    ),
                 ],
                 confidence: 0.8,
                 bidirectional: false
-            )
+            ),
         ]
 
         let temporalRules = [
@@ -820,7 +820,7 @@ class TemporalCausalityEngine {
                         eventType: .stateChange,
                         timeWindow: nil,
                         dimension: nil
-                    )
+                    ),
                 ],
                 conclusion: TemporalRule.TemporalConclusion(
                     eventType: .interaction,
@@ -829,7 +829,7 @@ class TemporalCausalityEngine {
                     confidence: 0.8
                 ),
                 confidence: 0.75
-            )
+            ),
         ]
 
         let network = TemporalCausalityNetwork(
@@ -954,7 +954,7 @@ class TemporalCausalityEngine {
             let fromEvent = events.first { $0.id == edge.fromNode }
             let toEvent = events.first { $0.id == edge.toNode }
 
-            if let fromEvent = fromEvent, let toEvent = toEvent {
+            if let fromEvent, let toEvent {
                 let strength = await causalityAnalyzer.measureCausalStrength(from: fromEvent, to: toEvent)
                 strengths.append(strength)
             }
@@ -978,7 +978,7 @@ class TemporalCausalityEngine {
 
         // Critical path insights
         let longestChain = chains.max(by: { $0.pathLength < $1.pathLength })
-        if let longestChain = longestChain {
+        if let longestChain {
             insights.append(CausalityAnalysis.CausalInsight(
                 type: .criticalPath,
                 description: "Longest causal chain has \(longestChain.pathLength) steps",
@@ -1059,7 +1059,7 @@ class CausalityAnalyzerImpl: CausalityAnalyzer {
         }
 
         // Create edges between consecutive events
-        for i in 0..<max(0, nodes.count - 1) {
+        for i in 0 ..< max(0, nodes.count - 1) {
             let edge = CausalGraph.CausalEdge(
                 fromNode: nodes[i].eventId,
                 toNode: nodes[i + 1].eventId,
@@ -1175,7 +1175,7 @@ class CausalityAnalyzerImpl: CausalityAnalyzer {
             CausalStrength.StrengthComponent(type: .temporalProximity, value: temporalProximity, weight: 0.4),
             CausalStrength.StrengthComponent(type: .correlation, value: 0.8, weight: 0.3),
             CausalStrength.StrengthComponent(type: .experimental, value: 0.6, weight: 0.2),
-            CausalStrength.StrengthComponent(type: .theoretical, value: 0.7, weight: 0.1)
+            CausalStrength.StrengthComponent(type: .theoretical, value: 0.7, weight: 0.1),
         ]
 
         let overallStrength = components.reduce(0) { $0 + $1.value * $1.weight }
@@ -1239,7 +1239,7 @@ class TemporalReasonerImpl: TemporalReasoner {
         let sortedEvents = events.sorted { $0.timestamp < $1.timestamp }
 
         var relationships: [TemporalRelationships.TemporalRelationship] = []
-        for i in 0..<max(0, sortedEvents.count - 1) {
+        for i in 0 ..< max(0, sortedEvents.count - 1) {
             let relationship = TemporalRelationships.TemporalRelationship(
                 fromEvent: sortedEvents[i].id,
                 toEvent: sortedEvents[i + 1].id,
@@ -1251,7 +1251,7 @@ class TemporalReasonerImpl: TemporalReasoner {
         }
 
         let relationshipGraph = TemporalRelationships.RelationshipGraph(
-            nodes: events.map { $0.id },
+            nodes: events.map(\.id),
             edges: relationships.map { relationship in
                 TemporalRelationships.RelationshipGraph.RelationshipEdge(
                     from: relationship.fromEvent,
@@ -1265,8 +1265,8 @@ class TemporalReasonerImpl: TemporalReasoner {
         return TemporalRelationships(
             relationships: relationships,
             relationshipGraph: relationshipGraph,
-            temporalOrder: sortedEvents.map { $0.id },
-            concurrencyGroups: [sortedEvents.map { $0.id }]
+            temporalOrder: sortedEvents.map(\.id),
+            concurrencyGroups: [sortedEvents.map(\.id)]
         )
     }
 
@@ -1283,8 +1283,8 @@ class TemporalReasonerImpl: TemporalReasoner {
                     type: .ordering,
                     description: "Events not in chronological order",
                     severity: .medium,
-                    affectedEvents: sequence.events.map { $0.id }
-                )
+                    affectedEvents: sequence.events.map(\.id)
+                ),
             ],
             recommendations: consistent ? [] : ["Reorder events chronologically"]
         )
@@ -1294,7 +1294,7 @@ class TemporalReasonerImpl: TemporalReasoner {
         // Simplified conflict resolution
         let strategy: TemporalResolution.ResolutionStrategy = conflicts.contains { $0.severity == .critical } ? .reorder : .delay
 
-        let actions = conflicts.map { conflict in
+        let actions = conflicts.map { _ in
             TemporalResolution.ResolutionAction(
                 actionId: "action_\(UUID().uuidString.prefix(8))",
                 type: .modifyOrder,
@@ -1375,7 +1375,7 @@ class CausalityValidatorImpl: CausalityValidator {
                 type: .statistical,
                 description: "Low confidence in causal relationships",
                 severity: .medium
-            )
+            ),
         ]
 
         return CausalityValidation(
@@ -1399,7 +1399,7 @@ class CausalityValidatorImpl: CausalityValidator {
                     type: .cycle,
                     description: "Causal cycles detected",
                     affectedNodes: graph.cycles.flatMap { $0 }
-                )
+                ),
             ] : [],
             evidence: ["Graph structure analysis"]
         )
@@ -1417,7 +1417,7 @@ class CausalityValidatorImpl: CausalityValidator {
                     type: .temporal,
                     strength: 0.8,
                     description: "Time ordering supports direction"
-                )
+                ),
             ],
             alternativeExplanations: directionConfirmed ? [] : ["Reverse causality possible"]
         )
@@ -1434,7 +1434,7 @@ class CausalityValidatorImpl: CausalityValidator {
                     parameter: "sample_size",
                     sensitivity: 0.3,
                     impact: 0.2
-                )
+                ),
             ],
             stabilityMetrics: [
                 RobustnessAssessment.StabilityMetric(
@@ -1442,7 +1442,7 @@ class CausalityValidatorImpl: CausalityValidator {
                     value: analysis.causalGraph.strength,
                     threshold: 0.7,
                     status: analysis.causalGraph.strength > 0.7 ? .stable : .sensitive
-                )
+                ),
             ],
             recommendations: robustnessScore > 0.8 ? [] : ["Increase sample size for better robustness"]
         )
@@ -1471,7 +1471,7 @@ class TemporalPredictorImpl: TemporalPredictor {
                 predictedTime: Date().addingTimeInterval(horizon),
                 probability: 0.7,
                 conditions: ["Based on historical patterns"]
-            )
+            ),
         ]
 
         return TemporalPrediction(
@@ -1492,7 +1492,7 @@ class TemporalPredictorImpl: TemporalPredictor {
                 predictedTime: cause.timestamp.addingTimeInterval(60),
                 probability: 0.8,
                 causalPath: [cause.id]
-            )
+            ),
         ]
 
         return CausalForecast(
@@ -1539,10 +1539,10 @@ class TemporalPredictorImpl: TemporalPredictor {
                         timeRange: DateInterval(start: Date(), end: Date().addingTimeInterval(300)),
                         probability: 0.8,
                         conditions: ["Normal conditions"]
-                    )
+                    ),
                 ],
                 probability: 0.7
-            )
+            ),
         ]
 
         return scenarios
@@ -1574,14 +1574,14 @@ class TemporalPredictorImpl: TemporalPredictor {
                     type: .assumptionValidity,
                     value: 0.8,
                     weight: 0.1
-                )
+                ),
             ],
             uncertaintySources: [
                 PredictionConfidence.UncertaintySource(
                     source: "External factors",
                     impact: 0.2,
                     mitigation: "Monitor external conditions"
-                )
+                ),
             ],
             recommendations: overallConfidence > 0.8 ? [] : ["Improve data quality", "Refine prediction model"]
         )
@@ -1608,21 +1608,21 @@ enum TemporalCausalityError: Error {
 
 extension TemporalEvent {
     var age: TimeInterval {
-        return Date().timeIntervalSince(timestamp)
+        Date().timeIntervalSince(timestamp)
     }
 
     var isRecent: Bool {
-        return age < 300 // 5 minutes
+        age < 300 // 5 minutes
     }
 }
 
 extension CausalGraph {
     var nodeCount: Int {
-        return nodes.count
+        nodes.count
     }
 
     var edgeCount: Int {
-        return edges.count
+        edges.count
     }
 
     var density: Double {
@@ -1640,7 +1640,7 @@ extension TemporalSequence {
     }
 
     var eventCount: Int {
-        return events.count
+        events.count
     }
 }
 

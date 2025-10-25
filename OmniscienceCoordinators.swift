@@ -9,8 +9,8 @@
 // Framework for coordinating omniscience across multiple knowledge domains
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -685,7 +685,7 @@ class OmniscienceCoordinatorsEngine {
                 level: 0.95,
                 domains: domains,
                 prerequisites: []
-            )
+            ),
         ]
 
         let coordinationRules = domains.flatMap { domain in
@@ -705,7 +705,7 @@ class OmniscienceCoordinatorsEngine {
                     action: "Synchronize across domains",
                     priority: 0.85,
                     domains: [domain]
-                )
+                ),
             ]
         }
 
@@ -938,7 +938,7 @@ class OmniscienceManagerImpl: OmniscienceManager {
 
     func maintainOmniscience(_ system: OmniscienceSystem) async -> OmniscienceMaintenance {
         // Simplified omniscience maintenance
-        return OmniscienceMaintenance(
+        OmniscienceMaintenance(
             maintenanceId: "maintenance_\(system.systemId)",
             system: system,
             operations: [.domainSynchronization, .insightRefinement],
@@ -957,7 +957,7 @@ class OmniscienceManagerImpl: OmniscienceManager {
                 level: 0.9,
                 domains: system.knowledgeDomains,
                 prerequisites: system.omniscienceCapabilities
-            )
+            ),
         ]
 
         return OmniscienceExpansion(
@@ -988,7 +988,7 @@ class OmniscienceManagerImpl: OmniscienceManager {
                     type: .enhanceCapability,
                     description: "Enhance omniscience capabilities",
                     priority: 0.8
-                )
+                ),
             ],
             validationTime: 5.0
         )
@@ -1008,7 +1008,7 @@ class OmniscienceManagerImpl: OmniscienceManager {
                 type: .integrationSpeed,
                 factor: 1.2,
                 description: "Faster knowledge integration"
-            )
+            ),
         ]
 
         let optimizedSystem = OmniscienceSystem(
@@ -1035,7 +1035,7 @@ class DomainCoordinatorImpl: DomainCoordinator {
     func coordinateDomains(_ domains: [KnowledgeDomain]) async -> DomainCoordination {
         // Simplified domain coordination
         let coordinationLevel = Double(domains.count) / 10.0 // Assuming max 10 domains for full coordination
-        let conflicts = Int.random(in: 0...2)
+        let conflicts = Int.random(in: 0 ... 2)
         let harmony = 1.0 - Double(conflicts) * 0.1
 
         return DomainCoordination(
@@ -1050,7 +1050,7 @@ class DomainCoordinatorImpl: DomainCoordinator {
 
     func harmonizeDomainKnowledge(_ knowledge: [Knowledge], domains: [KnowledgeDomain]) async -> DomainHarmonization {
         // Simplified domain harmonization
-        let resolvedConflicts = Int.random(in: 0...3)
+        let resolvedConflicts = Int.random(in: 0 ... 3)
         let coherence = 0.9 - Double(resolvedConflicts) * 0.05
 
         return DomainHarmonization(
@@ -1067,7 +1067,7 @@ class DomainCoordinatorImpl: DomainCoordinator {
     func synchronizeDomainUpdates(_ updates: [DomainUpdate]) async -> DomainSynchronization {
         // Simplified domain synchronization
         let synchronizationLevel = Double(updates.count) / Double(updates.count + 1) // Perfect sync when no updates pending
-        let conflictsResolved = Int.random(in: 0...updates.count)
+        let conflictsResolved = Int.random(in: 0 ... updates.count)
         let coherence = 0.95 - Double(conflictsResolved) * 0.02
 
         return DomainSynchronization(
@@ -1082,7 +1082,7 @@ class DomainCoordinatorImpl: DomainCoordinator {
 
     func resolveDomainConflicts(_ conflicts: [DomainConflict]) async -> ConflictResolution {
         // Simplified conflict resolution
-        return ConflictResolution(
+        ConflictResolution(
             resolutionId: "resolution_\(UUID().uuidString.prefix(8))",
             conflict: conflicts.first ?? DomainConflict(
                 conflictId: "conflict",
@@ -1112,7 +1112,7 @@ class DomainCoordinatorImpl: DomainCoordinator {
                 type: .effectiveness,
                 factor: 1.3,
                 description: "Improved interaction effectiveness"
-            )
+            ),
         ]
 
         let optimizedInteractions = interactions.map { interaction in
@@ -1232,7 +1232,7 @@ class KnowledgeSynthesizerImpl: KnowledgeSynthesizer {
 
     func generateUnifiedKnowledge(_ knowledge: [Knowledge]) async -> UnifiedKnowledge {
         // Simplified unified knowledge generation
-        return UnifiedKnowledge(
+        UnifiedKnowledge(
             knowledgeId: "unified_\(UUID().uuidString.prefix(8))",
             sourceKnowledge: knowledge,
             unifiedContent: KnowledgeContent(
@@ -1256,8 +1256,8 @@ class KnowledgeSynthesizerImpl: KnowledgeSynthesizer {
             KnowledgeNetwork.KnowledgeNode(
                 nodeId: "node_\(knowledge.knowledgeId)",
                 knowledge: knowledge,
-                centrality: Double.random(in: 0.5...1.0),
-                connectivity: Double.random(in: 0.3...0.9)
+                centrality: Double.random(in: 0.5 ... 1.0),
+                connectivity: Double.random(in: 0.3 ... 0.9)
             )
         }
 
@@ -1267,7 +1267,7 @@ class KnowledgeSynthesizerImpl: KnowledgeSynthesizer {
                     connectionId: "connection_\(sourceNode.nodeId)_\(targetNode.nodeId)",
                     sourceNode: sourceNode.nodeId,
                     targetNode: targetNode.nodeId,
-                    strength: Double.random(in: 0.4...0.9),
+                    strength: Double.random(in: 0.4 ... 0.9),
                     type: .conceptual
                 )
             }
@@ -1297,7 +1297,7 @@ class KnowledgeSynthesizerImpl: KnowledgeSynthesizer {
                 type: .novelty,
                 factor: 1.3,
                 description: "Enhanced synthesis novelty"
-            )
+            ),
         ]
 
         let optimizedSynthesis = KnowledgeSynthesis(
@@ -1333,7 +1333,7 @@ class InsightGeneratorImpl: InsightGenerator {
                 domains: [],
                 confidence: 0.85,
                 timestamp: Date()
-            )
+            ),
         ]
 
         let patterns = [
@@ -1345,7 +1345,7 @@ class InsightGeneratorImpl: InsightGenerator {
                 strength: 0.9,
                 domains: [],
                 discovered: Date()
-            )
+            ),
         ]
 
         return InsightGeneration(
@@ -1360,7 +1360,7 @@ class InsightGeneratorImpl: InsightGenerator {
 
     func createOmniscienceInsights(_ omniscience: OmniscienceAchievement) async -> OmniscienceInsight {
         // Simplified omniscience insight creation
-        return OmniscienceInsight(
+        OmniscienceInsight(
             insightId: "omniscience_insight_\(UUID().uuidString.prefix(8))",
             type: .revelation,
             content: "Omniscience revelation: unified understanding achieved",
@@ -1382,7 +1382,7 @@ class InsightGeneratorImpl: InsightGenerator {
                 strength: 0.85,
                 domains: [],
                 discovered: Date()
-            )
+            ),
         ]
 
         return PatternDiscovery(
@@ -1397,7 +1397,7 @@ class InsightGeneratorImpl: InsightGenerator {
 
     func predictKnowledgeEvolution(_ knowledge: [Knowledge]) async -> KnowledgePrediction {
         // Simplified knowledge prediction
-        return KnowledgePrediction(
+        KnowledgePrediction(
             predictionId: "prediction_\(UUID().uuidString.prefix(8))",
             knowledge: knowledge,
             prediction: "Knowledge will evolve towards greater unification",
@@ -1410,7 +1410,7 @@ class InsightGeneratorImpl: InsightGenerator {
 
     func generateWisdomInsights(_ knowledge: [Knowledge]) async -> WisdomInsight {
         // Simplified wisdom insight generation
-        return WisdomInsight(
+        WisdomInsight(
             insightId: "wisdom_\(UUID().uuidString.prefix(8))",
             knowledge: knowledge,
             wisdom: "True wisdom lies in the integration of all knowledge",
@@ -1441,31 +1441,31 @@ enum OmniscienceCoordinatorError: Error {
 
 extension OmniscienceSystem {
     var omniscienceEfficiency: Double {
-        return Double(omniscienceCapabilities.count) / Double(knowledgeDomains.count)
+        Double(omniscienceCapabilities.count) / Double(knowledgeDomains.count)
     }
 
     var needsOptimization: Bool {
-        return status == .omniscient && omniscienceEfficiency < 0.8
+        status == .omniscient && omniscienceEfficiency < 0.8
     }
 }
 
 extension OmniscienceAchievement {
     var omniscienceScore: Double {
-        return Double(omniscienceLevel == .universal ? 1 : 0) * performance.integrationEfficiency * performance.insightQuality
+        Double(omniscienceLevel == .universal ? 1 : 0) * performance.integrationEfficiency * performance.insightQuality
     }
 
     var isComplete: Bool {
-        return omniscienceLevel == .universal || omniscienceLevel == .cosmic || omniscienceLevel == .absolute
+        omniscienceLevel == .universal || omniscienceLevel == .cosmic || omniscienceLevel == .absolute
     }
 }
 
 extension UnifiedKnowledge {
     var integrationQuality: Double {
-        return coherence * universality
+        coherence * universality
     }
 
     var isFullyUnified: Bool {
-        return integrationQuality > 0.9 && domainConnections.count > 5
+        integrationQuality > 0.9 && domainConnections.count > 5
     }
 }
 

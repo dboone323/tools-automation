@@ -9,8 +9,8 @@
 // Framework for comprehensive knowledge processing and validation systems
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -970,7 +970,7 @@ class KnowledgeEnginesEngine {
                 level: 0.95,
                 domains: domains,
                 prerequisites: []
-            )
+            ),
         ]
 
         let validationRules = domains.flatMap { domain in
@@ -990,7 +990,7 @@ class KnowledgeEnginesEngine {
                     action: "Validate accuracy",
                     priority: 0.95,
                     domain: domain
-                )
+                ),
             ]
         }
 
@@ -1150,7 +1150,7 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
 
     func extractKnowledgeEntities(_ knowledge: Knowledge) async -> [KnowledgeEntity] {
         // Simplified entity extraction
-        return [
+        [
             KnowledgeEntity(
                 entityId: "entity_\(UUID().uuidString.prefix(8))",
                 type: .concept,
@@ -1158,13 +1158,13 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
                 properties: [],
                 relationships: [],
                 confidence: 0.85
-            )
+            ),
         ]
     }
 
     func analyzeKnowledgeStructure(_ knowledge: Knowledge) async -> KnowledgeStructure {
         // Simplified structure analysis
-        return KnowledgeStructure(
+        KnowledgeStructure(
             structureId: "structure_\(knowledge.knowledgeId)",
             type: .network,
             components: [],
@@ -1176,7 +1176,7 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
 
     func generateKnowledgeMetadata(_ knowledge: Knowledge) async -> KnowledgeMetadata {
         // Simplified metadata generation
-        return KnowledgeMetadata(
+        KnowledgeMetadata(
             metadataId: "metadata_\(knowledge.knowledgeId)",
             title: knowledge.metadata.title,
             description: knowledge.metadata.description,
@@ -1202,7 +1202,7 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
                     type: .clarity,
                     factor: 1.2,
                     description: "Improved knowledge clarity"
-                )
+                ),
             ],
             optimizationTime: 1.5
         )
@@ -1228,7 +1228,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
                     type: .crossReference,
                     description: "Cross-reference with additional sources",
                     priority: 0.8
-                )
+                ),
             ],
             validationTime: 3.0
         )
@@ -1236,7 +1236,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
 
     func verifyKnowledgeConsistency(_ knowledge: Knowledge) async -> ConsistencyVerification {
         // Simplified consistency verification
-        return ConsistencyVerification(
+        ConsistencyVerification(
             verificationId: "consistency_\(knowledge.knowledgeId)",
             knowledge: knowledge,
             isConsistent: true,
@@ -1248,7 +1248,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
 
     func assessKnowledgeReliability(_ knowledge: Knowledge) async -> ReliabilityAssessment {
         // Simplified reliability assessment
-        return ReliabilityAssessment(
+        ReliabilityAssessment(
             assessmentId: "reliability_\(knowledge.knowledgeId)",
             knowledge: knowledge,
             reliabilityScore: 0.85,
@@ -1259,7 +1259,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
                     score: 0.9,
                     weight: 0.4,
                     evidence: "Authoritative source"
-                )
+                ),
             ],
             assessmentTime: 1.5,
             recommendations: ["Verify with peer review"]
@@ -1268,7 +1268,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
 
     func detectKnowledgeConflicts(_ knowledge: Knowledge, with existing: [Knowledge]) async -> ConflictDetection {
         // Simplified conflict detection
-        return ConflictDetection(
+        ConflictDetection(
             detectionId: "conflict_\(knowledge.knowledgeId)",
             knowledge: knowledge,
             existingKnowledge: existing,
@@ -1280,7 +1280,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
 
     func authenticateKnowledgeSource(_ source: KnowledgeSource) async -> SourceAuthentication {
         // Simplified source authentication
-        return SourceAuthentication(
+        SourceAuthentication(
             authenticationId: "auth_\(source.sourceId)",
             source: source,
             isAuthenticated: true,
@@ -1391,8 +1391,8 @@ class KnowledgeIntegratorImpl: KnowledgeIntegrator {
         let harmonizedStructure = KnowledgeStructure(
             structureId: "harmonized_\(UUID().uuidString.prefix(8))",
             type: .network,
-            components: structures.flatMap { $0.components },
-            relationships: structures.flatMap { $0.relationships },
+            components: structures.flatMap(\.components),
+            relationships: structures.flatMap(\.relationships),
             complexity: structures.reduce(0.0) { $0 + $1.complexity } / Double(structures.count),
             coherence: 0.9
         )
@@ -1442,7 +1442,7 @@ class KnowledgeIntegratorImpl: KnowledgeIntegrator {
                 type: .quality,
                 factor: 1.2,
                 description: "Enhanced knowledge quality"
-            )
+            ),
         ]
 
         let optimizedFlow = KnowledgeFlow(
@@ -1523,7 +1523,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     validationDate: Date(),
                     issues: []
                 )
-            )
+            ),
         ]
 
         return KnowledgeRetrievalResult(
@@ -1591,7 +1591,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                 relevance: 0.9,
                 matchType: .exact,
                 highlights: ["matching content"]
-            )
+            ),
         ]
 
         return KnowledgeSearchResult(
@@ -1653,7 +1653,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     validationDate: Date(),
                     issues: []
                 )
-            )
+            ),
         ]
 
         return RelatedKnowledge(
@@ -1715,7 +1715,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     validationDate: Date(),
                     issues: []
                 )
-            )
+            ),
         ]
 
         return ContextualKnowledge(
@@ -1791,7 +1791,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                 reason: "Based on user expertise and interests",
                 relevance: 0.9,
                 priority: 0.8
-            )
+            ),
         ]
 
         return KnowledgeRecommendations(
@@ -1823,31 +1823,31 @@ enum KnowledgeEngineError: Error {
 
 extension Knowledge {
     var isValid: Bool {
-        return validation.status == .valid && validation.confidence > 0.8
+        validation.status == .valid && validation.confidence > 0.8
     }
 
     var qualityScore: Double {
-        return metadata.quality.accuracy * metadata.quality.completeness * metadata.quality.consistency
+        metadata.quality.accuracy * metadata.quality.completeness * metadata.quality.consistency
     }
 }
 
 extension KnowledgeDomain {
     var knowledgeComplexity: Double {
-        return complexity * interconnectedness
+        complexity * interconnectedness
     }
 
     var isInterdisciplinary: Bool {
-        return category == .interdisciplinary || scope == .universal
+        category == .interdisciplinary || scope == .universal
     }
 }
 
 extension KnowledgeSystem {
     var processingEfficiency: Double {
-        return Double(processingCapabilities.count) / Double(knowledgeDomains.count)
+        Double(processingCapabilities.count) / Double(knowledgeDomains.count)
     }
 
     var needsOptimization: Bool {
-        return status == .operational && processingEfficiency < 0.8
+        status == .operational && processingEfficiency < 0.8
     }
 }
 

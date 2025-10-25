@@ -9,8 +9,8 @@
 // Framework for ethics systems beyond human moral frameworks
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -1206,7 +1206,7 @@ class EthicalEvaluatorImpl: EthicalEvaluator {
             actionId: "evaluation_action",
             description: dilemma.description,
             intent: .neutral,
-            consequences: dilemma.options.flatMap { $0.consequences },
+            consequences: dilemma.options.flatMap(\.consequences),
             context: dilemma.context,
             timestamp: Date()
         ), in: dilemma.context)
@@ -1222,7 +1222,7 @@ class EthicalEvaluatorImpl: EthicalEvaluator {
                     action: "Choose the most universal option",
                     rationale: "Maximizes ethical transcendence",
                     priority: 0.9
-                )
+                ),
             ],
             confidence: 0.85
         )
@@ -1271,7 +1271,7 @@ class EthicalEvaluatorImpl: EthicalEvaluator {
                     value: impact.magnitude,
                     benchmark: 0.5,
                     significance: 0.8
-                )
+                ),
             ],
             assessment: assessment,
             recommendations: ["Monitor long-term effects", "Consider stakeholder feedback"]
@@ -1291,7 +1291,7 @@ class EthicalEvaluatorImpl: EthicalEvaluator {
                     type: .consistency,
                     threshold: 0.8,
                     weight: 0.4
-                )
+                ),
             ],
             result: result,
             confidence: decision.confidence
@@ -1300,7 +1300,7 @@ class EthicalEvaluatorImpl: EthicalEvaluator {
 
     func predictEthicalConsequences(_ scenario: EthicalScenario) async -> ConsequencePrediction {
         // Simplified consequence prediction
-        return ConsequencePrediction(
+        ConsequencePrediction(
             predictionId: "prediction_\(UUID().uuidString.prefix(8))",
             scenario: scenario,
             predictedOutcomes: scenario.possibleOutcomes.map { outcome in
@@ -1309,7 +1309,7 @@ class EthicalEvaluatorImpl: EthicalEvaluator {
                     description: outcome.description,
                     probability: outcome.probability,
                     ethicalValue: outcome.ethicalValue,
-                    stakeholders: outcome.consequences.flatMap { $0.stakeholders }
+                    stakeholders: outcome.consequences.flatMap(\.stakeholders)
                 )
             },
             confidence: 0.8,
@@ -1342,7 +1342,7 @@ class TranscendenceCoordinatorImpl: TranscendenceCoordinator {
 
     func achieveMoralTranscendence(_ framework: MoralFramework) async -> MoralTranscendence {
         // Simplified moral transcendence
-        return MoralTranscendence(
+        MoralTranscendence(
             transcendenceId: "transcendence_\(UUID().uuidString.prefix(8))",
             framework: framework,
             transcendenceLevel: .universal,
@@ -1356,7 +1356,7 @@ class TranscendenceCoordinatorImpl: TranscendenceCoordinator {
                     transcendence: 0.9,
                     framework: framework,
                     applications: []
-                )
+                ),
             ],
             achieved: Date()
         )
@@ -1364,7 +1364,7 @@ class TranscendenceCoordinatorImpl: TranscendenceCoordinator {
 
     func maintainTranscendentEthics(_ ethicalSystem: EthicalSystem) async -> EthicsMaintenance {
         // Simplified ethics maintenance
-        return EthicsMaintenance(
+        EthicsMaintenance(
             maintenanceId: "maintenance_\(UUID().uuidString.prefix(8))",
             system: ethicalSystem,
             operations: [.principleUpdate, .transcendenceAlignment],
@@ -1383,7 +1383,7 @@ class TranscendenceCoordinatorImpl: TranscendenceCoordinator {
                 level: 0.9,
                 frameworks: ethicalSystem.moralFrameworks,
                 prerequisites: ethicalSystem.capabilities
-            )
+            ),
         ]
 
         return EthicalExpansion(
@@ -1398,7 +1398,7 @@ class TranscendenceCoordinatorImpl: TranscendenceCoordinator {
 
     func synchronizeEthicalFrameworks(_ frameworks: [EthicalFramework]) async -> FrameworkSynchronization {
         // Simplified framework synchronization
-        return FrameworkSynchronization(
+        FrameworkSynchronization(
             synchronizationId: "sync_\(UUID().uuidString.prefix(8))",
             frameworks: frameworks,
             coherence: 0.9,
@@ -1485,7 +1485,7 @@ class MoralIntegratorImpl: MoralIntegrator {
 
     func resolveEthicalConflicts(_ conflicts: [EthicalConflict]) async -> ConflictResolution {
         // Simplified conflict resolution
-        return ConflictResolution(
+        ConflictResolution(
             resolutionId: "resolution_\(UUID().uuidString.prefix(8))",
             conflict: conflicts.first ?? EthicalConflict(
                 conflictId: "conflict",
@@ -1528,7 +1528,7 @@ class MoralIntegratorImpl: MoralIntegrator {
                 type: .transcendence,
                 factor: 1.3,
                 description: "Enhanced ethical transcendence"
-            )
+            ),
         ]
 
         return FlowOptimization(
@@ -1566,7 +1566,7 @@ class EthicalSynthesizerImpl: EthicalSynthesizer {
 
     func generateTranscendentPrinciples(_ ethics: UniversalEthics) async -> TranscendentPrinciple {
         // Simplified transcendent principle generation
-        return TranscendentPrinciple(
+        TranscendentPrinciple(
             principleId: "transcendent_\(UUID().uuidString.prefix(8))",
             revelation: "Transcendent ethical revelation",
             universality: 1.0,
@@ -1578,7 +1578,7 @@ class EthicalSynthesizerImpl: EthicalSynthesizer {
 
     func createEthicalFrameworks(_ ethics: UniversalEthics) async -> UniversalEthicalFramework {
         // Simplified ethical framework creation
-        return UniversalEthicalFramework(
+        UniversalEthicalFramework(
             frameworkId: "framework_\(UUID().uuidString.prefix(8))",
             ethics: ethics,
             structure: .transcendent,
@@ -1636,7 +1636,7 @@ class EthicalSynthesizerImpl: EthicalSynthesizer {
                 type: .transcendence,
                 factor: 1.3,
                 description: "Enhanced ethical transcendence"
-            )
+            ),
         ]
 
         return EthicalEvolution(
@@ -1668,31 +1668,31 @@ enum EthicalTranscendenceError: Error {
 
 extension MoralFramework {
     var isUniversal: Bool {
-        return universality > 0.9 && scope == .universal
+        universality > 0.9 && scope == .universal
     }
 
     var transcendencePotential: Double {
-        return universality * complexity
+        universality * complexity
     }
 }
 
 extension EthicalPrinciple {
     var isTranscendent: Bool {
-        return transcendence > 0.8 && universality > 0.9
+        transcendence > 0.8 && universality > 0.9
     }
 
     var ethicalStrength: Double {
-        return (universality + applicability + transcendence) / 3.0
+        (universality + applicability + transcendence) / 3.0
     }
 }
 
 extension EthicalSystem {
     var transcendenceProgress: Double {
-        return Double(capabilities.count) / Double(moralFrameworks.count)
+        Double(capabilities.count) / Double(moralFrameworks.count)
     }
 
     var needsTranscendence: Bool {
-        return transcendenceLevel == .human || transcendenceProgress < 0.8
+        transcendenceLevel == .human || transcendenceProgress < 0.8
     }
 }
 

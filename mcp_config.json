@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "mcp_server": {
+    "enabled": true,
+    "url": "http://127.0.0.1:5005"
+  },
+  "providers": {
+    "github_copilot": {
+      "enabled": true,
+      "type": "vscode_extension",
+      "capabilities": ["code_completion", "code_review", "explanation"]
+    },
+    "ollama": {
+      "enabled": false,
+      "endpoint": "http://localhost:11434",
+      "models": ["codellama", "mistral", "llama2"],
+      "capabilities": ["code_generation", "analysis", "chat"]
+    }
+  },
+  "default_provider": "github_copilot",
+  "request_timeout": 30,
+  "cache_enabled": true,
+  "cache_ttl": 3600
+}

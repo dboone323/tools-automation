@@ -18,7 +18,9 @@ echo "" >>"$LOG_FILE"
 
 # Check auto-restart monitor process
 echo "2. Auto-Restart Monitor Process:" >>"$LOG_FILE"
-ps aux | grep auto_restart_monitor | grep -v grep >>"$LOG_FILE" 2>&1
+if pgrep -f "auto_restart_monitor" >/dev/null; then
+    pgrep -f "auto_restart_monitor" | xargs ps -p >>"$LOG_FILE" 2>&1
+fi
 echo "" >>"$LOG_FILE"
 
 # Check core agents

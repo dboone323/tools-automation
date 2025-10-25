@@ -9,9 +9,9 @@
 // Framework for secure interdimensional data transmission and storage using quantum encryption
 //
 
-import Foundation
 import Combine
 import CryptoKit
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -597,8 +597,8 @@ class QuantumEncryptionEngineImpl {
 
         // Establish channels
         var channels: [QuantumChannel] = []
-        for i in 0..<dimensions.count {
-            for j in (i+1)..<dimensions.count {
+        for i in 0 ..< dimensions.count {
+            for j in (i + 1) ..< dimensions.count {
                 let channel = try await quantumChannel.establishChannel(
                     between: dimensions[i],
                     target: dimensions[j],
@@ -835,7 +835,7 @@ class QuantumKeyManagerImpl: QuantumKeyManager {
             newKeys.append(newKey)
         }
 
-        oldKeysRevoked = network.keys.map { $0.id }
+        oldKeysRevoked = network.keys.map(\.id)
 
         return KeyRotationResult(
             rotated: true,
@@ -932,7 +932,7 @@ class QuantumEncryptionEngineImpl: QuantumEncryptionEngine {
 
     func generateQuantumRandom(bits: Int) async -> [Bool] {
         // Simplified quantum random number generation
-        return (0..<bits).map { _ in Bool.random() }
+        (0 ..< bits).map { _ in Bool.random() }
     }
 
     func performQuantumKeyExchange(with peer: QuantumPeer) async throws -> QuantumKey {
@@ -953,7 +953,7 @@ class QuantumEncryptionEngineImpl: QuantumEncryptionEngine {
 
     func verifyQuantumSignature(_ signature: QuantumSignature, for data: QuantumData, key: QuantumKey) async -> Bool {
         // Simplified signature verification
-        return true // In real implementation, would verify XMSS/SPHINCS signature
+        true // In real implementation, would verify XMSS/SPHINCS signature
     }
 
     private func performQuantumEncryption(_ data: Data, with key: Data) async throws -> Data {
@@ -1009,7 +1009,7 @@ class QuantumCommunicationChannelImpl: QuantumCommunicationChannel {
 
     func transmitQuantumData(_ data: EncryptedQuantumData, through channel: QuantumChannel) async throws -> TransmissionResult {
         // Simplified transmission simulation
-        let transmissionTime = Double(data.encryptedData.count) / 1000000.0 // Simulated transfer rate
+        let transmissionTime = Double(data.encryptedData.count) / 1_000_000.0 // Simulated transfer rate
 
         return TransmissionResult(
             success: true,
@@ -1050,7 +1050,7 @@ class QuantumCommunicationChannelImpl: QuantumCommunicationChannel {
 
     func handleQuantumInterference(in channel: QuantumChannel) async -> InterferenceMitigationResult {
         // Simplified interference mitigation
-        return InterferenceMitigationResult(
+        InterferenceMitigationResult(
             mitigated: true,
             mitigationTechnique: .errorCorrection,
             effectiveness: 0.9,
@@ -1063,7 +1063,7 @@ class QuantumCommunicationChannelImpl: QuantumCommunicationChannel {
 class QuantumSecurityMonitorImpl: QuantumSecurityMonitor {
     func monitorQuantumAttacks(on network: QuantumEncryptionNetwork) async -> AttackDetectionResult {
         // Simplified attack monitoring
-        return AttackDetectionResult(
+        AttackDetectionResult(
             attacksDetected: [],
             detectionAccuracy: 0.95,
             falsePositiveRate: 0.02,
@@ -1073,7 +1073,7 @@ class QuantumSecurityMonitorImpl: QuantumSecurityMonitor {
 
     func detectEavesdropping(in channel: QuantumChannel) async -> EavesdroppingDetectionResult {
         // Simplified eavesdropping detection
-        return EavesdroppingDetectionResult(
+        EavesdroppingDetectionResult(
             eavesdroppingDetected: false,
             detectionMethod: .quantum,
             confidence: 0.98,
@@ -1084,7 +1084,7 @@ class QuantumSecurityMonitorImpl: QuantumSecurityMonitor {
 
     func assessQuantumVulnerability(_ system: QuantumEncryptionSystem) async -> VulnerabilityAssessment {
         // Simplified vulnerability assessment
-        return VulnerabilityAssessment(
+        VulnerabilityAssessment(
             overallRisk: .low,
             vulnerabilities: [],
             recommendations: [],
@@ -1094,12 +1094,12 @@ class QuantumSecurityMonitorImpl: QuantumSecurityMonitor {
 
     func generateSecurityAlerts() async -> [QuantumSecurityAlert] {
         // Simplified alert generation
-        return []
+        []
     }
 
     func auditQuantumSecurityEvents(timeWindow: DateInterval) async -> SecurityAuditResult {
         // Simplified security audit
-        return SecurityAuditResult(
+        SecurityAuditResult(
             auditId: "audit_\(UUID().uuidString.prefix(8))",
             timeWindow: timeWindow,
             events: [],
@@ -1130,33 +1130,33 @@ enum QuantumEncryptionError: Error {
 
 extension QuantumKey {
     var isExpired: Bool {
-        return Date() > expires
+        Date() > expires
     }
 
     var timeToExpiry: TimeInterval {
-        return expires.timeIntervalSince(Date())
+        expires.timeIntervalSince(Date())
     }
 }
 
 extension QuantumChannel {
     var age: TimeInterval {
-        return Date().timeIntervalSince(established)
+        Date().timeIntervalSince(established)
     }
 
     var isHealthy: Bool {
-        return signalStrength > 0.7 && quantumBitErrorRate < 0.05
+        signalStrength > 0.7 && quantumBitErrorRate < 0.05
     }
 }
 
 extension Data {
     func sha256() -> Data {
-        return Data(SHA256.hash(data: self))
+        Data(SHA256.hash(data: self))
     }
 }
 
 extension Data {
     func hexString() -> String {
-        return map { String(format: "%02x", $0) }.joined()
+        map { String(format: "%02x", $0) }.joined()
     }
 }
 

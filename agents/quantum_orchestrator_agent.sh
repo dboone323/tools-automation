@@ -28,9 +28,6 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
-WHITE='\033[1;37m'
-ORANGE='\033[0;33m'
-PINK='\033[0;35m'
 NC='\033[0m'
 
 # Logging
@@ -178,11 +175,11 @@ submit_quantum_job() {
 
     quantum_log "Submitting quantum job: ${domain}/${algorithm} with ${priority} priority"
 
-    local job_id=""
+    local job_id
     local timestamp=$(date +%s)
 
     # Generate job ID and add to queue
-    python3 -c "
+    job_id=$(python3 -c "
 import json
 import time
 
@@ -221,7 +218,7 @@ with open('${QUANTUM_JOB_QUEUE}', 'w') as f:
     json.dump(queue, f, indent=2)
 
 print(job_id)
-" 2>/dev/null || {
+" 2>/dev/null) || {
         error "Failed to submit job to queue"
         return 1
     }
@@ -237,7 +234,7 @@ schedule_quantum_jobs() {
     local scheduled_jobs=0
 
     # Process pending jobs in priority order
-    python3 -c "
+    scheduled_jobs=$(python3 -c "
 import json
 import time
 
@@ -328,9 +325,9 @@ with open('${QUANTUM_RESOURCE_POOL}', 'w') as f:
     json.dump(resources, f, indent=2)
 
 print(scheduled_count)
-" 2>/dev/null || {
+" 2>/dev/null) || {
         warning "Failed to schedule jobs"
-        return 0
+        scheduled_jobs=0
     }
 
     success "Scheduled ${scheduled_jobs} quantum jobs"
@@ -345,7 +342,8 @@ monitor_quantum_jobs() {
     local failed_jobs=0
 
     # Check for completed jobs and update status
-    python3 -c "
+    local result
+    result=$(python3 -c "
 import json
 import time
 
@@ -383,10 +381,12 @@ for job in queue['jobs']:
             completed += 1
 
 print(f'{completed},{failed}')
-" 2>/dev/null || {
+" 2>/dev/null) || {
         warning "Failed to monitor jobs"
-        return "0,0"
+        result="0,0"
     }
+
+    IFS=',' read -r completed_jobs failed_jobs <<<"${result}"
 
     if [[ ${completed_jobs} -gt 0 ]]; then
         success "Completed ${completed_jobs} quantum jobs"
@@ -405,7 +405,7 @@ optimize_resource_allocation() {
     local optimizations_made=0
 
     # Analyze job patterns and redistribute resources
-    python3 -c "
+    optimizations_made=$(python3 -c "
 import json
 
 try:
@@ -437,9 +437,9 @@ for provider_name, provider_info in resources['resources'].items():
         optimizations += 1
 
 print(optimizations)
-" 2>/dev/null || {
+" 2>/dev/null) || {
         warning "Failed to optimize resources"
-        return 0
+        optimizations_made=0
     }
 
     if [[ ${optimizations_made} -gt 0 ]]; then
@@ -453,10 +453,10 @@ print(optimizations)
 generate_orchestration_report() {
     info "Generating quantum orchestration report"
 
-    local report_file="${QUANTUM_ORCHESTRATOR_DIR}/reports/orchestration_report_$(date +%Y%m%d_%H%M%S).json"
+    local report_file
 
     # Collect current status
-    python3 -c "
+    report_file=$(python3 -c "
 import json
 import time
 
@@ -517,11 +517,13 @@ report = {
     }
 }
 
-with open('${report_file}', 'w') as f:
+# Write report to file
+report_file = '${AGENTS_DIR}/quantum_orchestration_report.json'
+with open(report_file, 'w') as f:
     json.dump(report, f, indent=2)
 
-print('${report_file}')
-" 2>/dev/null || {
+print(report_file)
+" 2>/dev/null) || {
         error "Failed to generate orchestration report"
         return 1
     }
@@ -536,6 +538,69 @@ print('${report_file}')
     fi
 
     echo "${report_file}"
+}
+
+# Initialize job queue (idempotent)
+initialize_job_queue() {
+    if [[ ! -f "${QUANTUM_JOB_QUEUE}" ]]; then
+        cat >"${QUANTUM_JOB_QUEUE}" <<EOF
+{
+    "jobs": [],
+    "next_job_id": 1,
+    "queue_stats": {
+        "total_jobs": 0,
+        "pending_jobs": 0,
+        "running_jobs": 0,
+        "completed_jobs": 0,
+        "failed_jobs": 0
+    }
+}
+EOF
+        success "Initialized quantum job queue"
+    fi
+}
+
+# Initialize resource pool (idempotent)
+initialize_resource_pool() {
+    if [[ ! -f "${QUANTUM_RESOURCE_POOL}" ]]; then
+        cat >"${QUANTUM_RESOURCE_POOL}" <<EOF
+{
+    "resources": {
+        "ibm_quantum": {
+            "provider": "ibm",
+            "total_qubits": 127,
+            "available_qubits": 127,
+            "queue_depth": 0,
+            "status": "operational",
+            "supported_algorithms": ["vqe", "qaoa", "qpe", "qmc"]
+        },
+        "rigetti_quantum": {
+            "provider": "rigetti",
+            "total_qubits": 32,
+            "available_qubits": 32,
+            "queue_depth": 0,
+            "status": "operational",
+            "supported_algorithms": ["vqe", "qmc"]
+        },
+        "ionq_quantum": {
+            "provider": "ionq",
+            "total_qubits": 0,
+            "available_qubits": 0,
+            "queue_depth": 0,
+            "status": "maintenance",
+            "supported_algorithms": []
+        }
+    },
+    "resource_stats": {
+        "total_providers": 3,
+        "operational_providers": 2,
+        "total_qubits": 159,
+        "available_qubits": 159
+    }
+}
+EOF
+        success "Initialized quantum resource pool"
+    fi
 }
 
 # Run coordinated quantum workflow

@@ -9,8 +9,8 @@
 // Framework for managing complex state transitions across multiple dimensions
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -144,7 +144,7 @@ struct StateVersion {
     let changes: [String]
 
     var versionString: String {
-        return "\(major).\(minor).\(patch)"
+        "\(major).\(minor).\(patch)"
     }
 }
 
@@ -747,18 +747,18 @@ class InterdimensionalStateManagementEngine {
                         operator: .equals,
                         value: AnyCodable("modified"),
                         dimension: nil
-                    )
+                    ),
                 ],
                 actions: [
                     SynchronizationRule.SynchronizationAction(
                         type: .propagate,
                         targetDimensions: dimensions,
                         parameters: [:]
-                    )
+                    ),
                 ],
                 priority: 1,
                 bidirectional: true
-            )
+            ),
         ]
 
         let transitionRules = [
@@ -772,9 +772,9 @@ class InterdimensionalStateManagementEngine {
                     TransitionRule.ValidationRule(
                         ruleType: .dataIntegrity,
                         parameters: [:]
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
 
         let network = StateManagementNetwork(
@@ -1054,13 +1054,13 @@ class StateCoordinatorImpl: StateCoordinator {
             status: .active,
             created: Date(),
             lastModified: Date(),
-            dependencies: states.map { $0.id }
+            dependencies: states.map(\.id)
         )
     }
 
     func splitState(_ state: InterdimensionalState, into dimensions: [Int]) async throws -> [InterdimensionalState] {
         // Simplified state splitting
-        return dimensions.map { dimension in
+        dimensions.map { dimension in
             InterdimensionalState(
                 id: "\(state.id)_split_\(dimension)",
                 dimension: dimension,
@@ -1085,7 +1085,7 @@ class StateCoordinatorImpl: StateCoordinator {
                 type: .consistency,
                 description: "State status is not active",
                 severity: .medium
-            )
+            ),
         ]
 
         return StateValidation(
@@ -1129,7 +1129,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                 description: "Validate transition",
                 estimatedDuration: 3.0,
                 dependencies: ["update"]
-            )
+            ),
         ]
 
         let resourceRequirements = TransitionPlan.ResourceRequirements(
@@ -1145,7 +1145,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                     stepId: "rollback_update",
                     description: "Revert state update",
                     automated: true
-                )
+                ),
             ],
             estimatedDuration: 5.0,
             dataBackupRequired: true
@@ -1163,7 +1163,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                 type: .stateConsistency,
                 description: "Verify state consistency",
                 critical: true
-            )
+            ),
         ]
 
         return TransitionPlan(
@@ -1209,7 +1209,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                 description: "Data corruption detected during transition",
                 recoverable: true,
                 suggestedAction: "Retry transition with error correction"
-            )
+            ),
         ]
 
         return TransitionResult(
@@ -1231,7 +1231,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                         severity: .critical,
                         description: "No transition result available",
                         suggestion: "Complete transition before validation"
-                    )
+                    ),
                 ],
                 recommendations: ["Execute transition first"],
                 confidence: 0.0
@@ -1276,7 +1276,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
             performanceMetrics: [
                 "throughput": 100.0,
                 "latency": 0.5,
-                "error_rate": 0.0
+                "error_rate": 0.0,
             ]
         )
     }
@@ -1297,7 +1297,7 @@ class StateSynchronizerImpl: StateSynchronizer {
                 description: "Data inconsistency detected",
                 severity: .medium,
                 resolution: nil
-            )
+            ),
         ]
 
         return SynchronizationResult(
@@ -1312,7 +1312,7 @@ class StateSynchronizerImpl: StateSynchronizer {
         // Simplified conflict resolution
         let strategy: ConflictResolution.ResolutionStrategy = conflicts.contains { $0.severity == .critical } ? .manual : .automatic
 
-        let actions = conflicts.map { conflict in
+        let actions = conflicts.map { _ in
             ConflictResolution.ResolutionAction(
                 actionId: "action_\(UUID().uuidString.prefix(8))",
                 type: .merge,
@@ -1340,8 +1340,8 @@ class StateSynchronizerImpl: StateSynchronizer {
                 violationId: "violation_1",
                 type: .dataMismatch,
                 description: "State status mismatch detected",
-                affectedStates: states.filter { $0.status != .active }.map { $0.id }
-            )
+                affectedStates: states.filter { $0.status != .active }.map(\.id)
+            ),
         ]
 
         return ConsistencyResult(
@@ -1376,8 +1376,8 @@ class StateSynchronizerImpl: StateSynchronizer {
     func detectStateDrift(_ states: [InterdimensionalState]) async -> StateDrift {
         // Simplified drift detection
         let driftDetected = Bool.random()
-        let driftMagnitude = driftDetected ? Double.random(in: 0.1...0.5) : 0.0
-        let affectedStates = driftDetected ? states.map { $0.id } : []
+        let driftMagnitude = driftDetected ? Double.random(in: 0.1 ... 0.5) : 0.0
+        let affectedStates = driftDetected ? states.map(\.id) : []
 
         return StateDrift(
             driftDetected: driftDetected,
@@ -1401,13 +1401,13 @@ struct SynchronizationResult {
 class StateMonitorImpl: StateMonitor {
     func monitorStateStability(_ state: InterdimensionalState) async -> StateStability {
         // Simplified stability monitoring
-        let stabilityScore = Double.random(in: 0.7...1.0)
+        let stabilityScore = Double.random(in: 0.7 ... 1.0)
 
         let components = [
             StateStability.StabilityComponent(type: .transitionSuccess, score: 0.9, weight: 0.4),
             StateStability.StabilityComponent(type: .synchronizationRate, score: 0.85, weight: 0.3),
             StateStability.StabilityComponent(type: .conflictRate, score: 0.8, weight: 0.2),
-            StateStability.StabilityComponent(type: .performanceConsistency, score: 0.75, weight: 0.1)
+            StateStability.StabilityComponent(type: .performanceConsistency, score: 0.75, weight: 0.1),
         ]
 
         let trend: StateStability.StabilityTrend = stabilityScore > 0.8 ? .stable : .degrading
@@ -1422,10 +1422,10 @@ class StateMonitorImpl: StateMonitor {
 
     func detectStateAnomalies(_ state: InterdimensionalState) async -> StateAnomalies {
         // Simplified anomaly detection
-        let anomalyCount = Int.random(in: 0...2)
+        let anomalyCount = Int.random(in: 0 ... 2)
         var anomalies: [StateAnomalies.StateAnomaly] = []
 
-        for _ in 0..<anomalyCount {
+        for _ in 0 ..< anomalyCount {
             anomalies.append(StateAnomalies.StateAnomaly(
                 anomalyId: "anomaly_\(UUID().uuidString.prefix(8))",
                 type: .transitionFailure,
@@ -1447,7 +1447,7 @@ class StateMonitorImpl: StateMonitor {
 
     func measureStatePerformance(_ state: InterdimensionalState) async -> StatePerformance {
         // Simplified performance measurement
-        return StatePerformance(
+        StatePerformance(
             throughput: 95.0,
             latency: 0.5,
             errorRate: 0.02,
@@ -1456,7 +1456,7 @@ class StateMonitorImpl: StateMonitor {
             performanceMetrics: [
                 "cpu_usage": 0.6,
                 "memory_usage": 0.7,
-                "storage_usage": 0.8
+                "storage_usage": 0.8,
             ]
         )
     }
@@ -1545,26 +1545,26 @@ enum InterdimensionalStateError: Error {
 
 extension InterdimensionalState {
     var age: TimeInterval {
-        return Date().timeIntervalSince(created)
+        Date().timeIntervalSince(created)
     }
 
     var isActive: Bool {
-        return status == .active
+        status == .active
     }
 
     var isModified: Bool {
-        return Date().timeIntervalSince(lastModified) < 300 // 5 minutes
+        Date().timeIntervalSince(lastModified) < 300 // 5 minutes
     }
 }
 
 extension StateTransition {
     var duration: TimeInterval {
-        guard let endTime = endTime else { return 0 }
+        guard let endTime else { return 0 }
         return endTime.timeIntervalSince(startTime)
     }
 
     var isSuccessful: Bool {
-        return status == .completed
+        status == .completed
     }
 }
 

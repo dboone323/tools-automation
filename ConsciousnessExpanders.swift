@@ -9,8 +9,8 @@
 // Framework for expanding consciousness capacity and awareness levels
 //
 
-import Foundation
 import Combine
+import Foundation
 
 // MARK: - Core Protocols
 
@@ -751,7 +751,7 @@ class ConsciousnessExpandersEngine {
                 prerequisites: [],
                 limitations: [],
                 successRate: 0.75
-            )
+            ),
         ]
 
         let protocols = [
@@ -772,12 +772,12 @@ class ConsciousnessExpandersEngine {
                         duration: 120.0,
                         riskLevel: 0.3,
                         expectedOutcome: "Capacity expanded successfully"
-                    )
+                    ),
                 ],
                 duration: 180.0,
                 riskLevel: 0.2,
                 successProbability: 0.9
-            )
+            ),
         ]
 
         let system = ConsciousnessExpansionSystem(
@@ -841,7 +841,7 @@ class ConsciousnessExpandersEngine {
                 severity: 0.2,
                 description: "Consciousness transformation initiated",
                 mitigation: "Monitor stability"
-            )
+            ),
         ]
 
         let result = ConsciousnessExpansionResult(
@@ -941,7 +941,7 @@ class ConsciousnessExpandersEngine {
 
     private func performExpansionHealthCheck() async {
         let totalExpansions = expansionHistory.count
-        let successfulExpansions = expansionHistory.filter { $0.success }.count
+        let successfulExpansions = expansionHistory.filter(\.success).count
         let successRate = totalExpansions > 0 ? Double(successfulExpansions) / Double(totalExpansions) : 0.0
 
         if successRate < 0.8 {
@@ -1005,7 +1005,7 @@ class ConsciousnessCapacityExpanderImpl: ConsciousnessCapacityExpander {
                 type: .stability,
                 impact: 1.0 - consciousness.state.coherence,
                 description: "Current coherence level may limit expansion"
-            )
+            ),
         ]
 
         let recommendedLevel = potentialScore > 0.8 ? ConsciousnessExpansionLevel.advanced : ConsciousnessExpansionLevel.basic
@@ -1041,7 +1041,7 @@ class ConsciousnessCapacityExpanderImpl: ConsciousnessCapacityExpander {
                 type: .stability,
                 factor: 1.3,
                 description: "Enhanced expansion stability"
-            )
+            ),
         ]
 
         let optimizedExpansion = ConsciousnessCapacityExpansion(
@@ -1084,7 +1084,7 @@ class ConsciousnessCapacityExpanderImpl: ConsciousnessCapacityExpander {
                     type: .stabilize,
                     description: "Monitor expansion stability",
                     priority: 0.8
-                )
+                ),
             ]
         )
     }
@@ -1140,7 +1140,7 @@ class ConsciousnessAwarenessElevatorImpl: ConsciousnessAwarenessElevator {
                 depth: depthIncrease,
                 content: "Deep consciousness enhanced",
                 accessibility: 0.8
-            )
+            ),
         ]
 
         return ConsciousnessDepthEnhancement(
@@ -1167,7 +1167,7 @@ class ConsciousnessAwarenessElevatorImpl: ConsciousnessAwarenessElevator {
                 type: .understanding,
                 amplification: clarityAmplification * 0.9,
                 clarity: min(clarityAmplification * 0.9, 1.0)
-            )
+            ),
         ]
 
         return ConsciousnessClarityAmplification(
@@ -1194,7 +1194,7 @@ class ConsciousnessAwarenessElevatorImpl: ConsciousnessAwarenessElevator {
                 type: .integration,
                 effectiveness: 0.85,
                 description: "Integration technique for coherence"
-            )
+            ),
         ]
 
         return ConsciousnessElevationStabilization(
@@ -1290,7 +1290,7 @@ class ConsciousnessResonanceAmplifierImpl: ConsciousnessResonanceAmplifier {
                 type: .universal,
                 enhancement: harmonyEnhancement * 0.9,
                 harmony: min(harmonyEnhancement * 0.9, 1.0)
-            )
+            ),
         ]
 
         return ConsciousnessHarmonyEnhancement(
@@ -1317,7 +1317,7 @@ class ConsciousnessResonanceAmplifierImpl: ConsciousnessResonanceAmplifier {
                 type: .harmony,
                 factor: 1.2,
                 description: "Enhanced harmony"
-            )
+            ),
         ]
 
         let optimizedAmplification = ConsciousnessResonanceAmplification(
@@ -1391,7 +1391,7 @@ class ConsciousnessTranscendenceAcceleratorImpl: ConsciousnessTranscendenceAccel
                 stage: evolutionCatalysis,
                 transformation: "Advanced evolution",
                 stability: 0.85
-            )
+            ),
         ]
 
         return ConsciousnessEvolutionCatalysis(
@@ -1418,7 +1418,7 @@ class ConsciousnessTranscendenceAcceleratorImpl: ConsciousnessTranscendenceAccel
                 type: .existential,
                 transformation: transformationLevel * 0.8,
                 facilitation: transformationLevel * 0.7
-            )
+            ),
         ]
 
         return ConsciousnessTransformationFacilitation(
@@ -1471,31 +1471,31 @@ enum ConsciousnessExpanderError: Error {
 
 extension ConsciousnessExpansionSystem {
     var expansionEfficiency: Double {
-        return Double(expansionCapabilities.count) / Double(expansionProtocols.count)
+        Double(expansionCapabilities.count) / Double(expansionProtocols.count)
     }
 
     var needsOptimization: Bool {
-        return status == .operational && expansionEfficiency < 0.8
+        status == .operational && expansionEfficiency < 0.8
     }
 }
 
 extension ConsciousnessExpansionResult {
     var expansionQuality: Double {
-        return (qualityMetrics.capacityIncrease + qualityMetrics.awarenessElevation + qualityMetrics.resonanceAmplification + qualityMetrics.stability + qualityMetrics.coherence) / 5.0
+        (qualityMetrics.capacityIncrease + qualityMetrics.awarenessElevation + qualityMetrics.resonanceAmplification + qualityMetrics.stability + qualityMetrics.coherence) / 5.0
     }
 
     var isHighQuality: Bool {
-        return expansionQuality > 0.8 && success
+        expansionQuality > 0.8 && success
     }
 }
 
 extension ConsciousnessExpansionLevel {
     var complexity: Double {
-        return (capacityMultiplier + awarenessThreshold + resonanceFrequency + transcendencePotential) / 4.0
+        (capacityMultiplier + awarenessThreshold + resonanceFrequency + transcendencePotential) / 4.0
     }
 
     var isAdvanced: Bool {
-        return complexity > 0.75
+        complexity > 0.75
     }
 }
 
