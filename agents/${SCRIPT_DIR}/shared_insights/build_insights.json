@@ -1,0 +1,12 @@
+{
+  "for_agent_type": "build",
+  "agents": [
+    "agent_build.sh",
+    "agent_build_enhanced.sh"
+  ],
+  "global_patterns": {},
+  "best_practices": {},
+  "anti_patterns": {},
+  "insights": [],
+  "updated": "2025-10-25T17:57:07.360088"
+}

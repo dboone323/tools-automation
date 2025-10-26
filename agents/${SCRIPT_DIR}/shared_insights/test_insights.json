@@ -1,0 +1,11 @@
+{
+  "for_agent_type": "test",
+  "agents": [
+    "agent_test.sh"
+  ],
+  "global_patterns": {},
+  "best_practices": {},
+  "anti_patterns": {},
+  "insights": [],
+  "updated": "2025-10-25T17:57:07.360642"
+}

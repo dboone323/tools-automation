@@ -1,0 +1,82 @@
+{
+  "project_name": "Quantum-workspace",
+  "history": {
+    "common_errors": [],
+    "successful_patterns": [
+      {
+        "pattern": "MVVM pattern",
+        "description": "Base architecture for all projects",
+        "recorded": "2025-10-25T17:47:57.469630"
+      },
+      {
+        "pattern": "SwiftUI preferred",
+        "description": "Use SwiftUI over UIKit where possible",
+        "recorded": "2025-10-25T17:47:57.517209"
+      }
+    ],
+    "team_preferences": {
+      "code_style": "SwiftFormat + SwiftLint",
+      "architecture": "MVVM with BaseViewModel",
+      "testing": "XCTest framework"
+    },
+    "architecture_decisions": [
+      "Data models NEVER import SwiftUI",
+      "Avoid Codable in complex data models",
+      "Use synchronous operations with background queues",
+      "Specific naming over generic",
+      "Send able for thread safety"
+    ],
+    "recurring_issues": []
+  },
+  "current_state": {
+    "active_features": [],
+    "technical_debt": [],
+    "dependencies": {
+      "swift_version": "5.9+",
+      "minimum_ios": "15.0",
+      "minimum_macos": "12.0"
+    },
+    "test_coverage": 0.77,
+    "build_status": "passing",
+    "last_successful_build": ""
+  },
+  "projects": {
+    "CodingReviewer": {
+      "type": "macOS",
+      "files": 132,
+      "language": "Swift",
+      "framework": "SwiftUI"
+    },
+    "PlannerApp": {
+      "type": "macOS, iOS",
+      "files": 57,
+      "language": "Swift",
+      "framework": "SwiftUI",
+      "features": [
+        "CloudKit integration"
+      ]
+    },
+    "AvoidObstaclesGame": {
+      "type": "iOS",
+      "files": 8,
+      "language": "Swift",
+      "framework": "SpriteKit"
+    },
+    "MomentumFinance": {
+      "type": "macOS, iOS",
+      "language": "Swift",
+      "framework": "SwiftUI"
+    },
+    "HabitQuest": {
+      "type": "iOS",
+      "language": "Swift",
+      "framework": "SwiftUI"
+    }
+  },
+  "metadata": {
+    "created": "2025-10-25T00:00:00Z",
+    "last_updated": "2025-10-25T17:47:57.611968",
+    "total_swift_files": "400+",
+    "automation_scripts": 55
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "for_agent_type": "debug",
+  "agents": [
+    "agent_debug.sh",
+    "agent_debug_enhanced.sh"
+  ],
+  "global_patterns": {},
+  "best_practices": {},
+  "anti_patterns": {},
+  "insights": [],
+  "updated": "2025-10-25T17:57:07.360336"
+}
