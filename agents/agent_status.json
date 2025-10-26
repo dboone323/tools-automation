@@ -1,19 +1,8 @@
-{
-  "agents": {
-    "search_agent": {
-      "last_seen": 1761352788,
-      "status": "available"
-    },
-    "search_agent.sh": {
-      "last_seen": 1761352788,
-      "status": "available"
-    },
-    "testing_agent.sh": {
-      "status": "available",
-      "last_seen": 1761352797
-    }
-  },
-  "last_update": 1761352788
-}
-8
-}
+[
+  {
+    "id": "default-agent",
+    "name": "default-agent",
+    "status": "busy",
+    "queue_size": 2
+  }
+]

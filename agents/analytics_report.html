@@ -1,0 +1,53 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Agent Analytics Dashboard</title>
+  <style>
+    body { font-family: -apple-system, system-ui, Segoe UI, Roboto, Arial, sans-serif; margin: 2rem; }
+    h1 { margin-bottom: 0.5rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+    .kpi { font-size: 28px; font-weight: 700; margin-top: 6px; }
+    .muted { color: #6b7280; font-size: 12px; }
+    pre { background: #f8fafc; padding: 12px; border-radius: 6px; overflow-x: auto; }
+  </style>
+  <meta http-equiv="refresh" content="60" />
+  <script>function pct(x){return (100*Number(x)).toFixed(2)+'%';}</script>
+  <script>function ms(x){return Number(x).toFixed(0)+'s';}</script>
+  <script>function int(x){return Number(x).toFixed(0);}</script>
+  <script>function fmt(x){return Number(x).toFixed(4);}</script>
+  <script>function onload(){}</script>
+  
+</head>
+<body>
+  <h1>Agent Analytics Dashboard</h1>
+  <div class="muted">Generated: 2025-10-26T00:43:45Z</div>
+  <div class="grid">
+    <div class="card"><div>Overall Success Rate</div><div class="kpi">0.0%</div></div>
+    <div class="card"><div>Avg Resolution Time</div><div class="kpi">0.0s</div></div>
+    <div class="card"><div>Learning Velocity</div><div class="kpi">0/week</div></div>
+    <div class="card"><div>Autonomy Level</div><div class="kpi">100.0%</div></div>
+    <div class="card"><div>Error Recurrence</div><div class="kpi">0.0%</div></div>
+    <div class="card"><div>Collaboration Score</div><div class="kpi">5.0%</div></div>
+    <div class="card"><div>Open Alerts</div><div class="kpi">0</div></div>
+  </div>
+  <h2>Raw Summary</h2>
+  <pre>{
+  "generated_at": "2025-10-26T00:43:45Z",
+  "overall_success_rate": 0.0,
+  "average_resolution_time": 0.0,
+  "learning_velocity_per_week": 0,
+  "autonomy_level": 1.0,
+  "error_recurrence_rate": 0.0,
+  "cross_agent_collaboration_score": 0.05,
+  "proactive_open_alerts": 0,
+  "counts": {
+    "predictions": 0,
+    "strategies": 0,
+    "emergencies": 0
+  }
+}</pre>
+</body>
+</html>

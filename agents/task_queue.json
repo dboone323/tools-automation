@@ -1,5 +1,22 @@
 {
-  "tasks": [],
+  "tasks": [
+    {
+      "id": "phase4-smoke-1",
+      "type": "diagnostics",
+      "priority": 1,
+      "assigned_to": "default-agent",
+      "assigned_at": 1761439426,
+      "status": "assigned"
+    },
+    {
+      "id": "t-123",
+      "type": "test",
+      "priority": 2,
+      "assigned_to": "default-agent",
+      "assigned_at": 1761439426,
+      "status": "assigned"
+    }
+  ],
   "completed": [],
-  "last_updated": 1761353570
+  "last_updated": 1761439426
 }
