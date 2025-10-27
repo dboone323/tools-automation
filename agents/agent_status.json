@@ -1,8 +1,145 @@
 [
   {
-    "id": "default-agent",
-    "name": "default-agent",
-    "status": "busy",
-    "queue_size": 2
+    "status": "completed",
+    "last_seen": 1761591396,
+    "pid": 40481,
+    "current_task_id": "phase4-smoke-1",
+    "tasks_completed": 8,
+    "id": "agent_debug.sh",
+    "name": "agent_debug.sh",
+    "queue_size": 3
+  },
+  {
+    "status": "completed",
+    "last_seen": 1761590923,
+    "pid": 27163,
+    "id": "agent_build.sh",
+    "name": "agent_build.sh",
+    "queue_size": 3,
+    "current_task_id": "healthcheck_2",
+    "tasks_completed": 2
+  },
+  {
+    "status": "completed",
+    "last_seen": 1761591028,
+    "pid": 27924,
+    "id": "agent_codegen.sh",
+    "name": "agent_codegen.sh",
+    "queue_size": 2,
+    "current_task_id": "verification_test_2",
+    "tasks_completed": 3
+  },
+  {
+    "id": "UIUXAgent",
+    "name": "UIUXAgent",
+    "status": "idle",
+    "last_seen": 1761510834,
+    "pid": 3244
+  },
+  {
+    "id": "AppleProAgent",
+    "name": "AppleProAgent",
+    "status": "idle",
+    "last_seen": 1761507500,
+    "pid": 83751
+  },
+  {
+    "id": "agent_monitoring.sh",
+    "name": "agent_monitoring.sh",
+    "status": "stopped",
+    "last_seen": 1761512299,
+    "pid": 25836
+  },
+  {
+    "id": "agent_backup.sh",
+    "name": "agent_backup.sh",
+    "status": "stopped",
+    "last_seen": 1761512594,
+    "pid": 32289
+  },
+  {
+    "id": "agent_supervisor.sh",
+    "name": "agent_supervisor.sh",
+    "status": "active",
+    "last_seen": 1761512654,
+    "pid": 34427
+  },
+  {
+    "id": "agent_validation.sh",
+    "name": "agent_validation.sh",
+    "status": "available",
+    "last_seen": 1761512661,
+    "pid": 36503
+  },
+  {
+    "id": "agent_integration.sh",
+    "name": "agent_integration.sh",
+    "status": "available",
+    "last_seen": 1761517483,
+    "pid": 37217
+  },
+  {
+    "id": "agent_notification.sh",
+    "name": "agent_notification.sh",
+    "status": "available",
+    "last_seen": 1761517804,
+    "pid": 38701
+  },
+  {
+    "id": "agent_optimization.sh",
+    "name": "agent_optimization.sh",
+    "status": "running",
+    "last_seen": 1761512664,
+    "pid": 39453
+  },
+  {
+    "id": "agent_cleanup.sh",
+    "name": "agent_cleanup.sh",
+    "status": "stopped",
+    "last_seen": 1761521240,
+    "pid": 52625
+  },
+  {
+    "id": "IntegrationAgent",
+    "name": "IntegrationAgent",
+    "status": "completed",
+    "last_seen": 1761527858,
+    "pid": 68989
+  },
+  {
+    "id": "NotificationAgent",
+    "name": "NotificationAgent",
+    "status": "completed",
+    "last_seen": 1761528426,
+    "pid": 70183
+  },
+  {
+    "id": "OptimizationAgent",
+    "name": "OptimizationAgent",
+    "status": "completed",
+    "last_seen": 1761528599,
+    "pid": 70622
+  },
+  {
+    "id": "PerformanceMonitorAgent",
+    "name": "PerformanceMonitorAgent",
+    "status": "completed",
+    "last_seen": 1761528880,
+    "pid": 71439
+  },
+  {
+    "id": "SecurityAgent",
+    "name": "SecurityAgent",
+    "status": "starting",
+    "last_seen": 1761534117,
+    "pid": 72973
+  },
+  {
+    "id": "agent_security.sh",
+    "name": "agent_security.sh",
+    "status": "stopped",
+    "last_seen": 1761573255,
+    "pid": 87439,
+    "current_task_id": "security_scan_plannerapp_test"
   }
 ]

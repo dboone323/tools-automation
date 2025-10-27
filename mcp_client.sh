@@ -194,7 +194,7 @@ ollama_generate() {
     fi
 
     local response
-    response=$(
+    if response=$(
         curl -sf -X POST "http://localhost:11434/api/generate" \
             -H "Content-Type: application/json" \
             -d @- <<EOF
@@ -204,9 +204,7 @@ ollama_generate() {
   "stream": false
 }
 EOF
-    )
-
-    if [[ $? -eq 0 ]]; then
+    ); then
         echo "${response}"
     else
         echo '{"status": "error", "message": "Ollama request failed"}'
@@ -352,7 +350,7 @@ list)
     list_providers
     ;;
 clear-cache)
-    rm -rf "${MCP_CACHE_DIR}"/*
+    rm -rf "${MCP_CACHE_DIR:?}"/*
     echo "MCP cache cleared"
     ;;
 

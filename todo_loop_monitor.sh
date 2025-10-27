@@ -12,6 +12,43 @@ MONITOR_INTERVAL=60 # Check every 60 seconds
 MIN_IDLE_TIME=300   # Agents must be idle for at least 5 minutes before triggering
 LAST_TRIGGER_FILE="${SCRIPT_DIR}/last_todo_trigger.txt"
 
+# Centralized throttling configuration for TODO monitoring
+MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}"    # Maximum concurrent monitor instances
+LOAD_THRESHOLD="${LOAD_THRESHOLD:-4.0}"    # System load threshold (1.0 = 100% on single core)
+WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"     # Seconds to wait when system is busy
+GLOBAL_AGENT_CAP="${GLOBAL_AGENT_CAP:-10}" # Maximum total agents that can be assigned tasks
+
+# Function to check if we should proceed with monitoring
+ensure_within_limits() {
+    local script_name="todo_loop_monitor.sh"
+
+    # Check concurrent instances of monitoring
+    local running_count
+    running_count=$(pgrep -f "${script_name}" | wc -l)
+    if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
+        echo "[$(date)] TODO Monitor: Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..." >>"${LOG_FILE}"
+        return 1
+    fi
+
+    # Check system load (macOS compatible)
+    local load_avg
+    if command -v sysctl >/dev/null 2>&1; then
+        # macOS: use sysctl vm.loadavg
+        load_avg=$(sysctl -n vm.loadavg | awk '{print $2}')
+    else
+        # Fallback: use uptime
+        load_avg=$(uptime | awk -F'load average:' '{print $2}' | awk -F',' '{print $1}' | tr -d ' ')
+    fi
+
+    # Compare load as float
+    if (($(echo "${load_avg} >= ${LOAD_THRESHOLD}" | bc -l 2>/dev/null || echo "0"))); then
+        echo "[$(date)] TODO Monitor: System load too high (${load_avg} >= ${LOAD_THRESHOLD}). Waiting..." >>"${LOG_FILE}"
+        return 1
+    fi
+
+    return 0
+}
+
 echo "[$(date)] TODO Loop Monitor started - PID: $$" >>"${LOG_FILE}"
 
 # Function to check if all agents are idle
@@ -111,6 +148,27 @@ trigger_todo_generation() {
 
 # Main monitoring loop
 while true; do
+    # Check if we should proceed with monitoring (throttling)
+    if ! ensure_within_limits; then
+        # Wait when busy, with exponential backoff
+        wait_time=${WAIT_WHEN_BUSY}
+        attempts=0
+        while ! ensure_within_limits && [[ ${attempts} -lt 10 ]]; do
+            echo "[$(date)] TODO Monitor: Waiting ${wait_time}s before retry (attempt $((attempts + 1))/10)" >>"${LOG_FILE}"
+            sleep "${wait_time}"
+            wait_time=$((wait_time * 2))                          # Exponential backoff
+            if [[ ${wait_time} -gt 300 ]]; then wait_time=300; fi # Cap at 5 minutes
+            ((attempts++))
+        done
+
+        # If still busy after retries, skip this cycle
+        if ! ensure_within_limits; then
+            echo "[$(date)] TODO Monitor: System still busy after retries. Skipping cycle." >>"${LOG_FILE}"
+            sleep 60
+            continue
+        fi
+    fi
+
     echo "[$(date)] Checking agent status..." >>"${LOG_FILE}"
 
     # Check if all agents are idle

@@ -12,38 +12,51 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 AGENTS_DIR="${SCRIPT_DIR}"
 AGENT_NAME="agent_analytics"
-MCP_URL="${MCP_URL:-http://127.0.0.1:5005}"
 LOG_FILE="${AGENTS_DIR}/${AGENT_NAME}.log"
 STATUS_FILE="${AGENTS_DIR}/agent_status.json"
 METRICS_DIR="${WORKSPACE_ROOT}/.metrics"
 ANALYTICS_DATA="${METRICS_DIR}/analytics_$(date +%Y%m).json"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-# Logging
-log() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] $*" >&2
+# Logging function
+log_message() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] $*" | tee -a "${LOG_FILE}"
 }
 
-error() {
-    echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ERROR: $*${NC}" >&2
-}
+# Throttling and load management
+ensure_within_limits() {
+    local max_concurrency=${MAX_CONCURRENCY:-3}
+    local load_threshold=${LOAD_THRESHOLD:-4.0}
+    local wait_time=${THROTTLE_WAIT_TIME:-30}
+    local max_wait_time=${MAX_THROTTLE_WAIT_TIME:-300}
 
-success() {
-    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ✅ $*${NC}" >&2
-}
+    # Check concurrent agent instances
+    local running_agents
+    running_agents=$(pgrep -f "agent_.*\.sh" | wc -l)
 
-warning() {
-    echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ⚠️  $*${NC}" >&2
-}
+    if [[ $running_agents -gt $max_concurrency ]]; then
+        log_message "WARNING: Too many agents running ($running_agents > $max_concurrency). Waiting..."
+        sleep $wait_time
+        return 1
+    fi
 
-info() {
-    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ℹ️  $*${NC}" >&2
+    # Check system load
+    local current_load
+    if command -v sysctl &>/dev/null; then
+        # macOS load average
+        current_load=$(sysctl -n vm.loadavg | awk '{print $2}')
+    else
+        # Linux fallback
+        current_load=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | sed 's/,//')
+    fi
+
+    # Compare as floats
+    if (($(echo "$current_load >= $load_threshold" | bc -l 2>/dev/null || echo "0"))); then
+        log_message "WARNING: System load too high ($current_load >= $load_threshold). Waiting..."
+        sleep $wait_time
+        return 1
+    fi
+
+    return 0
 }
 
 # Initialize metrics directory
@@ -264,18 +277,18 @@ EOF
 
 # Generate analytics report
 generate_report() {
-    info "Generating analytics report..."
+    log_message "INFO: Generating analytics report..."
 
     local timestamp
     timestamp=$(date +%s)
     local report_file
     report_file="${METRICS_DIR}/reports/analytics_$(date +%Y%m%d_%H%M%S).json"
 
-    # Collect all metrics
+    # Collect metrics for the first valid project found
     local projects=("${WORKSPACE_ROOT}/Projects/"*)
-    local code_metrics="[]"
-    local coverage_metrics="[]"
-    local complexity_metrics="[]"
+    local code_metrics="{}"
+    local coverage_metrics="{}"
+    local complexity_metrics="{}"
 
     for project in "${projects[@]}"; do
         [[ ! -d "$project" ]] && continue
@@ -284,18 +297,11 @@ generate_report() {
         pname=$(basename "$project")
         [[ "$pname" == "Tools" || "$pname" == "scripts" || "$pname" == "Config" ]] && continue
 
-        # Collect metrics
-        local code_m
-        code_m=$(collect_code_metrics "$project")
-        local cov_m
-        cov_m=$(collect_coverage_metrics "$project")
-        local comp_m
-        comp_m=$(collect_complexity_metrics "$project")
-
-        # Append to arrays (simplified - would use jq in production)
-        code_metrics="${code_m}"
-        coverage_metrics="${cov_m}"
-        complexity_metrics="${comp_m}"
+        # Collect metrics for this project
+        code_metrics=$(collect_code_metrics "$project")
+        coverage_metrics=$(collect_coverage_metrics "$project")
+        complexity_metrics=$(collect_complexity_metrics "$project")
+        break # Just use the first valid project for now
     done
 
     # Build full report
@@ -304,25 +310,18 @@ generate_report() {
   "timestamp": ${timestamp},
   "date": "$(date -Iseconds)",
   "workspace": "${WORKSPACE_ROOT}",
-  "code_metrics": ${code_m},
+  "code_metrics": ${code_metrics},
   "build_metrics": $(collect_build_metrics),
-  "coverage_metrics": ${cov_m},
-  "complexity_metrics": ${comp_m},
+  "coverage_metrics": ${coverage_metrics},
+  "complexity_metrics": ${complexity_metrics},
   "agent_metrics": $(collect_agent_metrics)
 }
 EOF
 
-    success "Report generated: ${report_file}"
+    log_message "SUCCESS: Report generated: ${report_file}"
 
     # Save to monthly analytics
     cp "${report_file}" "${ANALYTICS_DATA}"
-
-    # Publish to MCP
-    if command -v curl &>/dev/null; then
-        curl -s -X POST "${MCP_URL}/metrics" \
-            -H "Content-Type: application/json" \
-            -d "@${report_file}" &>/dev/null || warning "Failed to publish metrics to MCP"
-    fi
 
     echo "${report_file}"
 }
@@ -332,11 +331,11 @@ generate_dashboard_summary() {
     local report_file="$1"
 
     if [[ ! -f "${report_file}" ]]; then
-        error "Report file not found: ${report_file}"
+        log_message "ERROR: Report file not found: ${report_file}"
         return 1
     fi
 
-    info "Generating dashboard summary..."
+    log_message "INFO: Generating dashboard summary..."
 
     # Extract key metrics for dashboard
     python3 <<PYTHON
@@ -378,62 +377,72 @@ except Exception as e:
     exit(1)
 PYTHON
 
-    success "Dashboard summary generated: ${METRICS_DIR}/dashboard_summary.json"
+    log_message "SUCCESS: Dashboard summary generated: ${METRICS_DIR}/dashboard_summary.json"
+}
+
+# Process analytics task
+process_analytics_task() {
+    local task="$1"
+
+    log_message "Processing analytics task: $task"
+
+    # Generate full analytics report
+    local report_file
+    report_file=$(generate_report)
+
+    # Generate dashboard summary
+    if [[ -f "${report_file}" ]]; then
+        generate_dashboard_summary "${report_file}"
+    fi
+
+    # Archive old reports (keep last 30 days)
+    find "${METRICS_DIR}/reports" -name "analytics_*.json" -mtime +30 -delete 2>/dev/null || true
+
+    log_message "Analytics task completed successfully"
 }
 
 # Main agent loop
 main() {
-    log "Analytics Agent starting..."
-    update_agent_status "agent_analytics.sh" "starting" $$ ""
+    log_message "Analytics Agent starting..."
 
-    # Create PID file
-    echo $$ >"${AGENTS_DIR}/${AGENT_NAME}.pid"
-
-    # Register with MCP
-    if command -v curl &>/dev/null; then
-        curl -s -X POST "${MCP_URL}/register" \
-            -H "Content-Type: application/json" \
-            -d "{\"agent\": \"${AGENT_NAME}\", \"capabilities\": [\"analytics\", \"metrics\", \"reporting\"]}" \
-            &>/dev/null || warning "Failed to register with MCP"
+    # Check for single run mode (for testing)
+    if [[ "${SINGLE_RUN:-false}" == "true" ]]; then
+        log_message "Running in SINGLE_RUN mode for testing"
+        process_analytics_task "test_analytics_run"
+        log_message "Single run analytics complete"
+        return 0
     fi
 
-    update_agent_status "agent_analytics.sh" "available" $$ ""
-    success "Analytics Agent ready"
-
-    # Main loop - collect metrics every 5 minutes
     while true; do
-        update_agent_status "agent_analytics.sh" "running" $$ ""
-
-        # Generate full analytics report
-        local report_file
-        report_file=$(generate_report)
-
-        # Generate dashboard summary
-        if [[ -f "${report_file}" ]]; then
-            generate_dashboard_summary "${report_file}"
+        # Ensure we're within system limits
+        if ! ensure_within_limits; then
+            log_message "System limits exceeded, waiting before retry..."
+            sleep 30
+            continue
         fi
 
-        # Archive old reports (keep last 30 days)
-        find "${METRICS_DIR}/reports" -name "analytics_*.json" -mtime +30 -delete 2>/dev/null || true
+        # Get next task for this agent
+        local task
+        task=$(get_next_task "agent_analytics")
 
-        update_agent_status "agent_analytics.sh" "available" $$ ""
-        success "Analytics cycle complete. Next run in 5 minutes."
+        if [[ -n "$task" ]]; then
+            # Mark task as in progress
+            update_task_status "$task" "in_progress" "agent_analytics"
 
-        # Send heartbeat to MCP
-        if command -v curl &>/dev/null; then
-            curl -s -X POST "${MCP_URL}/heartbeat" \
-                -H "Content-Type: application/json" \
-                -d "{\"agent\": \"${AGENT_NAME}\", \"status\": \"available\"}" \
-                &>/dev/null || true
+            # Process the task
+            if process_analytics_task "$task"; then
+                update_task_status "$task" "completed" "agent_analytics"
+                log_message "Task $task completed successfully"
+            else
+                update_task_status "$task" "failed" "agent_analytics"
+                log_message "Task $task failed"
+            fi
+        else
+            # No tasks available, wait before checking again
+            sleep 60
         fi
-
-        # Sleep for 5 minutes
-        sleep 300
     done
 }
-
-# Trap signals for graceful shutdown
-trap 'update_agent_status "agent_analytics.sh" "stopped" $$ ""; log "Analytics Agent stopping..."; exit 0' SIGTERM SIGINT
 
 # Run main loop
 main "$@"

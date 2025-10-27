@@ -5047,6 +5047,30 @@
       "disk_usage": "10",
       "process_count": "709",
       "agent_count": "19"
+    },
+    {
+      "timestamp": "1761528740",
+      "cpu_usage": "322.7",
+      "memory_usage": "53.3",
+      "disk_usage": "13",
+      "process_count": "     537",
+      "agent_count": "       4"
+    },
+    {
+      "timestamp": "1761528830",
+      "cpu_usage": "297.4",
+      "memory_usage": "39.4",
+      "disk_usage": "13",
+      "process_count": "     539",
+      "agent_count": "       4"
+    },
+    {
+      "timestamp": "1761528880",
+      "cpu_usage": "682.5",
+      "memory_usage": "44.5",
+      "disk_usage": "13",
+      "process_count": "     536",
+      "agent_count": "       4"
     }
   ]
 }

@@ -26,6 +26,15 @@
       "predicted_issues": [],
       "preventions": [],
       "status": "pending"
+    },
+    {
+      "timestamp": "2025-10-25T20:01:32.080945",
+      "file": "/tmp/test_phase3_51268.swift",
+      "change_type": "modification",
+      "risk_score": 0.5,
+      "predicted_issues": [],
+      "preventions": [],
+      "status": "pending"
     }
   ],
   "accuracy": {

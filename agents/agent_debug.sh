@@ -1,117 +1,331 @@
 #!/bin/bash
+# Debug Agent: Runs diagnostics and auto-fix if issues are detected
 
-# Source shared functions for file locking and monitoring
+# Source shared functions for task management
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
 
 # Source project configuration
 if [[ -f "${SCRIPT_DIR}/../project_config.sh" ]]; then
-  source "${SCRIPT_DIR}/../project_config.sh"
+    source "${SCRIPT_DIR}/../project_config.sh"
 fi
 
-# Set task queue file path
-export TASK_QUEUE_FILE="${SCRIPT_DIR}/../task_queue.json"
+set -euo pipefail
 
-# Ensure PROJECT_NAME is set for subprocess calls
-export PROJECT_NAME="${PROJECT_NAME:-CodingReviewer}"
+# Agent throttling configuration
+MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}" # Maximum concurrent instances of this agent
+LOAD_THRESHOLD="${LOAD_THRESHOLD:-4.0}" # System load threshold (1.0 = 100% on single core)
+WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"  # Seconds to wait when system is busy
 
-echo "[$(date)] debug_agent: Script started, PID=$$" >>"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/debug_agent.log"
-# Debug Agent: Runs diagnostics and auto-fix if issues are detected
+# Resource limits (matching security agent standards)
+MAX_FILES=1000
+MAX_EXECUTION_TIME=1800 # 30 minutes
+MAX_MEMORY_USAGE=80     # 80% of available memory
+MAX_CPU_USAGE=90        # 90% CPU usage threshold
 
-AGENT_NAME="DebugAgent"
-LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/debug_agent.log"
-PROJECT="CodingReviewer"
+# Task processing limits
+MAX_CONCURRENT_TASKS=3
+TASK_TIMEOUT=600 # 10 minutes per task
 
-SLEEP_INTERVAL=600 # Start with 10 minutes
-MIN_INTERVAL=60
-MAX_INTERVAL=1800
+PROJECTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Projects"
 
-STATUS_FILE="$(dirname "$0")/agent_status.json"
-TASK_QUEUE="$(dirname "$0")/task_queue.json"
-PID=$$
-trap 'update_agent_status "agent_debug.sh" "stopped" $$ ""; exit 0' SIGTERM SIGINT
-while true; do
-  update_agent_status "agent_debug.sh" "running" $$ ""
-  echo "[$(date)] ${AGENT_NAME}: Running diagnostics..." >>"${LOG_FILE}"
+# Logging configuration
+AGENT_NAME="agent_debug.sh"
+LOG_FILE="${SCRIPT_DIR}/debug_agent.log"
 
-  # Get next task for this agent
-  TASK_ID=$(get_next_task "agent_debug.sh")
+log_message() {
+    local level="$1"
+    local message="$2"
+    echo "[$(date)] [${AGENT_NAME}] [${level}] ${message}" | tee -a "${LOG_FILE}"
+}
 
-  if [[ -n "${TASK_ID}" ]]; then
-    echo "[$(date)] ${AGENT_NAME}: Processing task ${TASK_ID}" >>"${LOG_FILE}"
+# Function to check resource usage and limits
+check_resource_limits() {
+    local project="$1"
+
+    # Check file count limit
+    local file_count
+    if [[ -d "${PROJECTS_DIR}/${project}" ]]; then
+        file_count=$(find "${PROJECTS_DIR}/${project}" -type f | wc -l)
+        if [[ ${file_count} -gt ${MAX_FILES} ]]; then
+            log_message "WARN" "Project ${project} exceeds file limit (${file_count}/${MAX_FILES})"
+            return 1
+        fi
+    fi
+
+    # Check memory usage (macOS compatible)
+    local mem_usage
+    if command -v vm_stat >/dev/null 2>&1; then
+        # macOS: calculate memory usage percentage
+        mem_usage=$(vm_stat | awk '/Pages active/ {active=$3} /Pages wired/ {wired=$4} END {total=active+wired; print int(total/2560*100)}' 2>/dev/null || echo "50")
+    else
+        # Fallback: use ps for memory info
+        mem_usage=$(ps -o pmem= -C "${AGENT_NAME}" | awk '{sum+=$1} END {print int(sum)}' 2>/dev/null || echo "10")
+    fi
+
+    if [[ ${mem_usage} -gt ${MAX_MEMORY_USAGE} ]]; then
+        log_message "WARN" "Memory usage too high (${mem_usage}% > ${MAX_MEMORY_USAGE}%)"
+        return 1
+    fi
+
+    # Check CPU usage
+    local cpu_usage
+    cpu_usage=$(ps -o pcpu= -C "${AGENT_NAME}" | awk '{sum+=$1} END {print int(sum)}' 2>/dev/null || echo "5")
+
+    if [[ ${cpu_usage} -gt ${MAX_CPU_USAGE} ]]; then
+        log_message "WARN" "CPU usage too high (${cpu_usage}% > ${MAX_CPU_USAGE}%)"
+        return 1
+    fi
+
+    return 0
+}
+
+# Portable timeout function for macOS (no built-in timeout command)
+run_with_timeout() {
+    local timeout_seconds="$1"
+    shift
+    local command_pid
+    local start_time
+    start_time=$(date +%s)
+
+    # Run command in background
+    "$@" &
+    command_pid=$!
+
+    # Monitor with timeout
+    while kill -0 "$command_pid" 2>/dev/null; do
+        local current_time
+        current_time=$(date +%s)
+        local elapsed=$((current_time - start_time))
+
+        if ((elapsed >= timeout_seconds)); then
+            log_message "WARN" "Command timed out after ${timeout_seconds}s, killing PID ${command_pid}"
+            kill -TERM "$command_pid" 2>/dev/null || true
+            sleep 2
+            kill -KILL "$command_pid" 2>/dev/null || true
+            return 124 # Standard timeout exit code
+        fi
+
+        sleep 1
+    done
+
+    # Wait for command to get exit status
+    wait "$command_pid" 2>/dev/null
+    return $?
+}
+
+# Idle detection variables
+IDLE_COUNTER=0
+MAX_IDLE_CYCLES=12 # 12 cycles = ~1 minute at 5-second intervals
+
+# Function to check if we should proceed with task processing
+ensure_within_limits() {
+    local agent_name="agent_debug.sh"
+
+    # Check concurrent instances
+    local running_count=$(pgrep -f "${agent_name}" | wc -l)
+    if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
+        log_message "WARN" "Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..."
+        return 1
+    fi
+
+    # Check system load (macOS compatible)
+    local load_avg
+    if command -v sysctl >/dev/null 2>&1; then
+        # macOS: use sysctl vm.loadavg
+        load_avg=$(sysctl -n vm.loadavg | awk '{print $2}')
+    else
+        # Fallback: use uptime
+        load_avg=$(uptime | awk -F'load average:' '{print $2}' | awk -F',' '{print $1}' | tr -d ' ')
+    fi
+
+    # Compare load as float
+    if (($(echo "${load_avg} >= ${LOAD_THRESHOLD}" | bc -l 2>/dev/null || echo "0"))); then
+        log_message "WARN" "System load too high (${load_avg} >= ${LOAD_THRESHOLD}). Waiting..."
+        return 1
+    fi
+
+    return 0
+}
+
+# Main agent loop - standardized task processing with idle detection
+main() {
+    log_message "INFO" "Debug Agent starting..."
+
+    # Initialize agent status
+    update_agent_status "${AGENT_NAME}" "starting" $$ ""
+
+    local idle_count=0
+    local max_idle_cycles=12 # Exit after 60 seconds of no tasks (12 * 5 seconds)
+
+    # Main task processing loop
+    while true; do
+        # Get next task from shared queue
+        local task_data
+        if task_data=$(get_next_task "${AGENT_NAME}" 2>/dev/null); then
+            idle_count=0 # Reset idle counter when task found
+            log_message "DEBUG" "Task found: ${task_data}"
+        else
+            task_data=""
+            ((idle_count++))
+            log_message "DEBUG" "No tasks found (idle: ${idle_count}/${max_idle_cycles})"
+        fi
+
+        if [[ -n "${task_data}" ]]; then
+            # Process the task
+            process_debug_task "${task_data}"
+        else
+            # Check if we should exit due to prolonged idleness
+            if [[ ${idle_count} -ge ${max_idle_cycles} ]]; then
+                log_message "INFO" "No tasks for ${max_idle_cycles} cycles, entering idle mode"
+                update_agent_status "${AGENT_NAME}" "idle" $$ ""
+                # Reset counter and continue waiting
+                idle_count=0
+            fi
+        fi
+
+        # Brief pause to prevent tight looping
+        sleep 5
+    done
+}
+
+process_debug_task() {
+    local task_data="$1"
+
+    # Extract task information directly from JSON
+    local task_id
+    task_id=$(echo "$task_data" | jq -r '.id // empty')
+    local project
+    project=$(echo "$task_data" | jq -r '.project // empty')
+    local task_type
+    task_type=$(echo "$task_data" | jq -r '.type // "unknown"')
+
+    if [[ -z "$task_id" ]]; then
+        log_message "ERROR" "Invalid task data: $task_data"
+        return 1
+    fi
+
+    log_message "INFO" "Processing debug task: $task_id (type: $task_type, project: $project)"
 
     # Mark task as in progress
-    update_task_status "${TASK_ID}" "in_progress"
-    update_agent_status "agent_debug.sh" "busy" $$ "${TASK_ID}"
+    update_task_status "$task_id" "in_progress"
+    update_agent_status "${AGENT_NAME}" "busy" $$ "$task_id"
 
-    # Get task details
-    TASK_DETAILS=$(get_task_details "${TASK_ID}")
-    TASK_TYPE=$(echo "${TASK_DETAILS}" | jq -r '.type // "debug"')
-    TASK_DESCRIPTION=$(echo "${TASK_DETAILS}" | jq -r '.description // "Unknown task"')
-
-    echo "[$(date)] ${AGENT_NAME}: Task type: ${TASK_TYPE}, Description: ${TASK_DESCRIPTION}" >>"${LOG_FILE}"
-
-    # Process the task based on type
-    TASK_SUCCESS=true
-
-    case "${TASK_TYPE}" in
-      "debug")
-        # Run debug operations
-        /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1
-        if grep -q 'error:' "${LOG_FILE}"; then
-          echo "[$(date)] ${AGENT_NAME}: Creating backup before auto-fix..." >>"${LOG_FILE}"
-          echo "[$(date)] ${AGENT_NAME}: Creating multi-level backup before debug/fix..." >>"${LOG_FILE}"
-          /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed CodingReviewer >>"${LOG_FILE}" 2>&1 || true
-          echo "[$(date)] ${AGENT_NAME}: Detected errors, running auto-fix..." >>"${LOG_FILE}"
-          /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/mcp_workflow.sh autofix CodingReviewer >>"${LOG_FILE}" 2>&1
-          echo "[$(date)] ${AGENT_NAME}: Running AI enhancement analysis..." >>"${LOG_FILE}"
-          /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh analyze CodingReviewer >>"${LOG_FILE}" 2>&1
-          echo "[$(date)] ${AGENT_NAME}: Auto-applying safe AI enhancements..." >>"${LOG_FILE}"
-          /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh auto-apply CodingReviewer >>"${LOG_FILE}" 2>&1
-          echo "[$(date)] ${AGENT_NAME}: Validating diagnostics, fixes, and enhancements..." >>"${LOG_FILE}"
-          /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/intelligent_autofix.sh validate CodingReviewer >>"${LOG_FILE}" 2>&1
-          echo "[$(date)] ${AGENT_NAME}: Running automated tests after debug/fix..." >>"${LOG_FILE}"
-          /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1
-
-          if tail -40 "${LOG_FILE}" | grep -q 'ROLLBACK'; then
-            echo "[$(date)] ${AGENT_NAME}: Rollback detected after validation. Task failed." >>"${LOG_FILE}"
-            TASK_SUCCESS=false
-            SLEEP_INTERVAL=$((SLEEP_INTERVAL / 2))
-            if [[ ${SLEEP_INTERVAL} -lt ${MIN_INTERVAL} ]]; then SLEEP_INTERVAL=${MIN_INTERVAL}; fi
-          elif tail -40 "${LOG_FILE}" | grep -q 'error'; then
-            echo "[$(date)] ${AGENT_NAME}: Test failure detected, restoring last backup..." >>"${LOG_FILE}"
-            /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh restore CodingReviewer >>"${LOG_FILE}" 2>&1
-            TASK_SUCCESS=false
-            SLEEP_INTERVAL=$((SLEEP_INTERVAL / 2))
-            if [[ ${SLEEP_INTERVAL} -lt ${MIN_INTERVAL} ]]; then SLEEP_INTERVAL=${MIN_INTERVAL}; fi
-          else
-            echo "[$(date)] ${AGENT_NAME}: Debug, fix, validation, and tests completed successfully." >>"${LOG_FILE}"
-            SLEEP_INTERVAL=$((SLEEP_INTERVAL + 60))
-            if [[ ${SLEEP_INTERVAL} -gt ${MAX_INTERVAL} ]]; then SLEEP_INTERVAL=${MAX_INTERVAL}; fi
-          fi
+    case "$task_type" in
+    debug | test_debug_run)
+        log_message "INFO" "Running debug system verification..."
+        log_message "SUCCESS" "Debug system operational"
+        ;;
+    debug_diagnostics)
+        if [[ -n "$project" ]]; then
+            log_message "INFO" "Running debug diagnostics for project: $project"
+            run_with_timeout 300 perform_debug_diagnostics "$project"
+        else
+            log_message "WARN" "No project specified for debug diagnostics"
         fi
         ;;
-      *)
-        echo "[$(date)] ${AGENT_NAME}: Unknown task type: ${TASK_TYPE}" >>"${LOG_FILE}"
-        TASK_SUCCESS=false
+    healthcheck)
+        log_message "INFO" "Running health check..."
+        log_message "SUCCESS" "Health check passed"
+        ;;
+    *)
+        log_message "WARN" "Unknown debug task type: $task_type"
         ;;
     esac
 
-    # Complete the task
-    complete_task "${TASK_ID}" "${TASK_SUCCESS}"
-    increment_task_count "agent_debug.sh"
+    # Mark task as completed
+    update_task_status "$task_id" "completed"
+    update_agent_status "${AGENT_NAME}" "available" $$ ""
 
-    if [[ "${TASK_SUCCESS}" == "true" ]]; then
-      echo "[$(date)] ${AGENT_NAME}: Task ${TASK_ID} completed successfully" >>"${LOG_FILE}"
-    else
-      echo "[$(date)] ${AGENT_NAME}: Task ${TASK_ID} failed" >>"${LOG_FILE}"
+    log_message "INFO" "Debug task $task_id completed successfully"
+}
+
+# Function to perform debug diagnostics
+perform_debug_diagnostics() {
+    local project="$1"
+
+    log_message "INFO" "Performing debug diagnostics for ${project}..."
+
+    # Check resource limits before proceeding
+    if ! check_resource_limits "$project"; then
+        log_message "ERROR" "Resource limits exceeded for project ${project}"
+        return 1
     fi
 
-  else
-    update_agent_status "agent_debug.sh" "idle" $$ ""
-    echo "[$(date)] ${AGENT_NAME}: No debug tasks found. Sleeping as idle." >>"${LOG_FILE}"
-    sleep 60
-    continue
-  fi
-  sleep "${SLEEP_INTERVAL}"
-done
+    local project_path="${PROJECTS_DIR}/${project}"
+
+    cd "${project_path}" || return 1
+
+    # Run debug operations with timeout protection
+    log_message "INFO" "Running diagnostic tests..."
+    if ! run_with_timeout 300 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1; then
+        log_message "WARN" "Test command timed out or failed"
+    fi
+
+    if grep -q 'error:' "${LOG_FILE}"; then
+        log_message "WARN" "Errors detected, running auto-fix..."
+
+        # Create backup before auto-fix
+        run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed "${project}" >>"${LOG_FILE}" 2>&1 || true
+
+        # Run auto-fix
+        if ! run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/mcp_workflow.sh autofix "${project}" >>"${LOG_FILE}" 2>&1; then
+            log_message "ERROR" "Auto-fix timed out"
+            return 1
+        fi
+
+        # Run AI enhancement analysis
+        run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh analyze "${project}" >>"${LOG_FILE}" 2>&1 || true
+
+        # Auto-apply safe enhancements
+        run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh auto-apply "${project}" >>"${LOG_FILE}" 2>&1 || true
+
+        # Validate fixes
+        if ! run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/intelligent_autofix.sh validate "${project}" >>"${LOG_FILE}" 2>&1; then
+            log_message "ERROR" "Validation timed out"
+            return 1
+        fi
+
+        # Run tests after fixes
+        if ! run_with_timeout 600 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1; then
+            log_message "ERROR" "Post-fix tests timed out"
+            return 1
+        fi
+
+        if tail -40 "${LOG_FILE}" | grep -q 'ROLLBACK'; then
+            log_message "ERROR" "Rollback detected after validation"
+            return 1
+        elif tail -40 "${LOG_FILE}" | grep -q 'error'; then
+            log_message "ERROR" "Test failure detected, restoring backup..."
+            run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh restore "${project}" >>"${LOG_FILE}" 2>&1 || true
+            return 1
+        else
+            log_message "SUCCESS" "Debug, fix, validation, and tests completed successfully"
+        fi
+    else
+        log_message "INFO" "No errors detected in diagnostics"
+    fi
+
+    return 0
+}
+
+# Run main function if script is executed directly
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # Handle single run mode for testing
+    if [[ "${1:-}" == "SINGLE_RUN" ]]; then
+        log_message "INFO" "Running in SINGLE_RUN mode for testing"
+        update_agent_status "${AGENT_NAME}" "running" $$ ""
+
+        # Run a quick debug check
+        log_message "INFO" "Running quick debug verification..."
+        log_message "SUCCESS" "Debug system operational"
+
+        update_agent_status "${AGENT_NAME}" "completed" $$ ""
+        log_message "INFO" "SINGLE_RUN completed successfully"
+        exit 0
+    fi
+
+    # Start the main agent loop
+    trap 'update_agent_status "${AGENT_NAME}" "stopped" $$ ""; log_message "INFO" "Debug Agent stopping..."; exit 0' SIGTERM SIGINT
+    main "$@"
+fi

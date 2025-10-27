@@ -1,22 +1,947 @@
 {
-  "tasks": [
+  "completed": [
     {
-      "id": "phase4-smoke-1",
-      "type": "diagnostics",
+      "assigned_agent": "debug_agent",
+      "assigned_at": 1761441843,
+      "assigned_to": "debug_agent",
+      "completed_at": 1761491719,
+      "description": "Investigate repeated build failures",
+      "id": "debug_fix_2",
       "priority": 1,
-      "assigned_to": "default-agent",
-      "assigned_at": 1761439426,
-      "status": "assigned"
+      "queued_at": 1761441843,
+      "started_at": 1761491639,
+      "status": "completed",
+      "type": "debug"
     },
     {
-      "id": "t-123",
-      "type": "test",
-      "priority": 2,
-      "assigned_to": "default-agent",
-      "assigned_at": 1761439426,
-      "status": "assigned"
+      "assigned_agent": "debug_agent",
+      "assigned_at": 1761442681,
+      "assigned_to": "debug_agent",
+      "completed_at": 1761491808,
+      "description": "health check",
+      "id": "health_debug_1",
+      "priority": 1,
+      "queued_at": 1761442681,
+      "started_at": 1761491747,
+      "status": "completed",
+      "type": "debug"
+    },
+    {
+      "assigned_agent": "agent_debug.sh",
+      "assigned_at": 1761442947,
+      "assigned_to": "agent_debug.sh",
+      "completed_at": 1761492411,
+      "description": "Fast validation test",
+      "id": "healthcheck_1",
+      "priority": 1,
+      "queued_at": 1761442947,
+      "started_at": 1761492411,
+      "status": "completed",
+      "type": "healthcheck"
+    },
+    {
+      "assigned_agent": "codegen_agent",
+      "assigned_at": 1761442682,
+      "assigned_to": "codegen_agent",
+      "completed_at": 1761504819,
+      "description": "health check",
+      "id": "health_codegen_1",
+      "priority": 1,
+      "queued_at": 1761442682,
+      "status": "completed",
+      "type": "codegen",
+      "updated": 1761500521
     }
   ],
-  "completed": [],
-  "last_updated": 1761439426
+  "last_updated": 1761442947,
+  "tasks": [
+    {
+      "assigned_agent": "agent_debug.sh",
+      "assigned_at": 1761440493,
+      "assigned_to": "agent_debug.sh",
+      "failed_at": 1761506507,
+      "id": "phase4-smoke-1",
+      "priority": 1,
+      "started_at": 1761506507,
+      "status": "failed",
+      "type": "diagnostics"
+    },
+    {
+      "assigned_agent": "agent_build.sh",
+      "assigned_at": 1761440493,
+      "assigned_to": "agent_build.sh",
+      "id": "t-123",
+      "priority": 2,
+      "status": "in_progress",
+      "type": "test",
+      "updated": 1761505597
+    },
+    {
+      "assigned_agent": "agent_build.sh",
+      "assigned_at": 1761440422,
+      "assigned_to": "build_agent",
+      "id": "verification_test_1",
+      "priority": 1,
+      "status": "completed",
+      "type": "verification",
+      "updated": 1761574632
+    },
+    {
+      "assigned_agent": "agent_codegen.sh",
+      "assigned_at": 1761441694,
+      "assigned_to": "agent_codegen.sh",
+      "id": "verification_test_2",
+      "priority": 1,
+      "queued_at": 1761441694,
+      "status": "failed",
+      "type": "debug",
+      "updated": 1761506521
+    },
+    {
+      "assigned_agent": "agent_build.sh",
+      "assigned_at": 1761441797,
+      "assigned_to": "build_agent",
+      "id": "debug_fix_1",
+      "priority": 1,
+      "queued_at": 1761441797,
+      "status": "completed",
+      "type": "debug",
+      "updated": 1761574637
+    },
+    {
+      "assigned_agent": "agent_build.sh",
+      "assigned_at": 1761442947,
+      "assigned_to": "agent_build.sh",
+      "description": "Fast validation test",
+      "id": "healthcheck_2",
+      "priority": 1,
+      "queued_at": 1761442947,
+      "status": "completed",
+      "type": "healthcheck",
+      "updated": 1761574643
+    },
+    {
+      "assigned_agent": "uiux_agent.sh",
+      "description": "Test UI/UX enhancement task",
+      "id": "uiux_test_1",
+      "priority": 1,
+      "project": "PlannerApp",
+      "started_at": 1761508876,
+      "status": "in_progress",
+      "type": "ui_enhancement"
+    },
+    {
+      "assigned_agent": "apple_pro_agent.sh",
+      "description": "Test Apple Pro engineering checks",
+      "id": "apple_pro_test_1",
+      "priority": 1,
+      "project": "CodingReviewer",
+      "status": "queued",
+      "type": "check"
+    },
+    {
+      "assigned_agent": "agent_security.sh",
+      "assigned_to": "agent_security.sh",
+      "completed_at": 1761573111,
+      "description": "Test security agent functionality",
+      "id": "security_test_1",
+      "priority": 1,
+      "started_at": 1761573110,
+      "status": "completed",
+      "type": "security"
+    },
+    {
+      "assigned_agent": "agent_security.sh",
+      "assigned_to": "agent_security.sh",
+      "completed_at": 1761573163,
+      "description": "Full security scan of PlannerApp",
+      "id": "security_scan_plannerapp_test",
+      "priority": 1,
+      "project": "PlannerApp",
+      "queued_at": 1761573157,
+      "started_at": 1761573163,
+      "status": "completed",
+      "type": "perform_full_security_scan"
+    },
+    {
+      "id": "long_running_33562_1761582378",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 33562 (/Users/danielste) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 33562,
+        "command": "/Users/danielste",
+        "runtime_minutes": 163,
+        "etime": "02:43:09"
+      },
+      "created_at": 1761582378
+    },
+    {
+      "id": "long_running_77067_1761582378",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 77067 (/Users/danielste) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 77067,
+        "command": "/Users/danielste",
+        "runtime_minutes": 162,
+        "etime": "02:42:57"
+      },
+      "created_at": 1761582378
+    },
+    {
+      "id": "long_running_31752_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31752 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31752,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31753_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31753 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31753,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31754_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31754 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31754,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31755_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31755 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31755,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31757_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31757 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31757,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31758_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31758 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31758,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31759_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31759 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31759,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31760_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31760 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31760,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31761_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31761 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31761,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31762_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31762 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31762,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31763_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31763 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31763,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31764_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31764 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31764,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31766_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31766 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31766,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31767_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31767 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31767,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31768_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31768 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31768,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31769_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31769 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31769,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31771_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31771 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31771,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31772_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31772 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31772,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31773_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31773 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31773,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582379
+    },
+    {
+      "id": "long_running_31774_1761582379",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31774 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31774,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31775_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31775 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31775,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31777_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31777 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31777,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31778_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31778 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31778,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31780_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31780 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31780,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31781_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31781 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31781,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31783_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31783 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31783,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31785_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31785 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31785,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31787_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31787 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31787,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31788_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31788 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31788,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31789_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31789 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31789,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31790_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31790 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31790,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31791_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31791 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31791,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31792_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31792 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31792,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31793_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31793 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31793,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31794_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31794 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31794,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31795_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31795 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31795,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31796_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31796 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31796,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31798_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31798 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31798,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582380
+    },
+    {
+      "id": "long_running_31800_1761582380",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31800 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31800,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_31801_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31801 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31801,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_31802_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31802 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31802,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_31803_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31803 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31803,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_31807_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31807 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31807,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_31809_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31809 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31809,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_31811_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31811 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31811,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_31817_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31817 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31817,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_31819_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31819 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31819,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_31820_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 31820 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 31820,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:10"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_41518_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 41518 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 41518,
+        "command": "/bin/zsh",
+        "runtime_minutes": 163,
+        "etime": "02:43:07"
+      },
+      "created_at": 1761582381
+    },
+    {
+      "id": "long_running_5706_1761582381",
+      "type": "alert",
+      "priority": 2,
+      "description": "Process 5706 (/bin/zsh) running >5min",
+      "assigned_agent": "user_attention",
+      "status": "queued",
+      "process_info": {
+        "pid": 5706,
+        "command": "/bin/zsh",
+        "runtime_minutes": 6,
+        "etime": "06:22"
+      },
+      "created_at": 1761582381
+    }
+  ]
 }

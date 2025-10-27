@@ -543,73 +543,8 @@ run_supervisor_loop() {
     echo "$$" >"${SUPERVISOR_PID_FILE}"
     # Update status when loop starts
     update_agent_status "agent_supervisor.sh" "active" $$ ""
-
-    # Agent throttling configuration
-    MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}" # Maximum concurrent instances of this agent
-    LOAD_THRESHOLD="${LOAD_THRESHOLD:-4.0}" # System load threshold (1.0 = 100% on single core)
-    WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"  # Seconds to wait when system is busy
-
-    # Function to check if we should proceed with task processing
-    ensure_within_limits() {
-        local agent_name="agent_supervisor.sh"
-
-        # Check concurrent instances
-        local running_count
-        running_count=$(pgrep -f "${agent_name}" | wc -l)
-        if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
-            echo "[$(date)] Supervisor: Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..." >>"${LOG_FILE}"
-            return 1
-        fi
-
-        # Check system load (macOS compatible)
-        local load_avg
-        if command -v sysctl >/dev/null 2>&1; then
-            # macOS: use sysctl vm.loadavg
-            load_avg=$(sysctl -n vm.loadavg | awk '{print $2}')
-        else
-            # Fallback: use uptime
-            load_avg=$(uptime | awk -F'load average:' '{print $2}' | awk -F',' '{print $1}' | tr -d ' ')
-        fi
-
-        # Compare load as float
-        if (($(echo "${load_avg} >= ${LOAD_THRESHOLD}" | bc -l 2>/dev/null || echo "0"))); then
-            echo "[$(date)] Supervisor: System load too high (${load_avg} >= ${LOAD_THRESHOLD}). Waiting..." >>"${LOG_FILE}"
-            return 1
-        fi
-
-        return 0
-    }
-
     # Supervisor main loop: monitor logs and restart agents on error/rollback
     while true; do
-        # Check if we should proceed (throttling)
-        if ! ensure_within_limits; then
-            # Wait when busy, with exponential backoff
-            wait_time=${WAIT_WHEN_BUSY}
-            attempts=0
-            while ! ensure_within_limits && [[ ${attempts} -lt 10 ]]; do
-                echo "[$(date)] Supervisor: Waiting ${wait_time}s before retry (attempt $((attempts + 1))/10)" >>"${LOG_FILE}"
-                sleep "${wait_time}"
-                wait_time=$((wait_time * 2))                          # Exponential backoff
-                if [[ ${wait_time} -gt 300 ]]; then wait_time=300; fi # Cap at 5 minutes
-                ((attempts++))
-            done
-
-            # If still busy after retries, skip this cycle
-            if ! ensure_within_limits; then
-                echo "[$(date)] Supervisor: System still busy after retries. Skipping cycle." >>"${LOG_FILE}"
-                sleep 60
-                continue
-            fi
-        fi
-
-        # SINGLE_RUN mode: exit after one cycle for testing
-        if [[ "${SINGLE_RUN:-false}" == "true" ]]; then
-            echo "[$(date)] Supervisor: SINGLE_RUN mode - exiting after one cycle" >>"${LOG_FILE}"
-            update_agent_status "agent_supervisor.sh" "stopped" $$ ""
-            exit 0
-        fi
-
         for agent in "${MANAGED_AGENTS[@]}"; do
             if ! is_agent_running "${agent}"; then
                 echo "[$(date)] Supervisor: ${agent} not running, restarting." >>"${LOG_FILE}"

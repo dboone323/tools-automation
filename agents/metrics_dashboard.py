@@ -15,6 +15,7 @@ import argparse
 import json
 import os
 import subprocess
+import time
 from typing import Any, Dict
 
 
@@ -22,6 +23,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")
 AGENTS_DIR = os.path.join(ROOT, "Tools", "Automation", "agents")
 KNOWLEDGE_DIR = os.path.join(AGENTS_DIR, "knowledge")
 SUMMARY_PATH = os.path.join(KNOWLEDGE_DIR, "analytics.json")
+TASK_QUEUE_PATH = os.path.join(AGENTS_DIR, "task_queue.json")
 
 
 def _load_json(path: str) -> Dict[str, Any]:
@@ -90,6 +92,25 @@ def show_dashboard(data: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def show_queue_status() -> str:
+    """Show quick queue summary: queued, in_progress, failed, completed."""
+    q = _load_json(TASK_QUEUE_PATH)
+    tasks = q.get("tasks", [])
+    completed = q.get("completed", [])
+    queued = [t for t in tasks if isinstance(t, dict) and t.get("status") == "queued"]
+    inprog = [
+        t for t in tasks if isinstance(t, dict) and t.get("status") == "in_progress"
+    ]
+    failed = [t for t in tasks if isinstance(t, dict) and t.get("status") == "failed"]
+    lines = []
+    lines.append("=== Task Queue Status ===")
+    lines.append(f"Queued:       {len(queued)}")
+    lines.append(f"In Progress:  {len(inprog)}")
+    lines.append(f"Failed:       {len(failed)}")
+    lines.append(f"Completed:    {len(completed)}")
+    return "\n".join(lines)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Show the Phase 4 metrics dashboard")
     sub = parser.add_subparsers(dest="cmd")
@@ -103,6 +124,11 @@ def main() -> int:
         "--out", default=os.path.join(AGENTS_DIR, "analytics_report.html")
     )
 
+    p_queue = sub.add_parser("queue", help="Show task queue status")
+    p_queue.add_argument(
+        "--watch", action="store_true", help="Auto-refresh every 60 seconds"
+    )
+
     args = parser.parse_args()
     if args.cmd == "show":
         if args.refresh:
@@ -114,6 +140,20 @@ def main() -> int:
         _run_refresh(html=True)
         print(f"HTML report generated at {args.out}")
         return 0
+    elif args.cmd == "queue":
+        if args.watch:
+            try:
+                while True:
+                    print("\033[2J\033[H")  # Clear screen
+                    print(show_queue_status())
+                    print("\n[Refreshing every 60s... Ctrl+C to stop]")
+                    time.sleep(60)
+            except KeyboardInterrupt:
+                print("\nStopped.")
+                return 0
+        else:
+            print(show_queue_status())
+            return 0
     else:
         parser.print_help()
         return 1

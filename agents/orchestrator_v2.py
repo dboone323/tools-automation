@@ -91,8 +91,42 @@ def _pick_agent(
     return scored[0]
 
 
+def _aliases_for(name: str) -> List[str]:
+    n = (name or "").lower()
+    aliases = {n}
+    base = n
+    if base.endswith(".sh"):
+        base = base[:-3]
+    if base.startswith("agent_"):
+        short = base[len("agent_") :]
+        aliases.add(f"{short}_agent")
+        aliases.add(base)
+    else:
+        aliases.add(f"agent_{base}")
+        aliases.add(f"{base}_agent")
+    return list(aliases)
+
+
 def assign_task(task: Dict[str, Any]) -> Dict[str, Any]:
-    agents = _load_json(AGENT_STATUS_PATH, [])
+    agents_data = _load_json(AGENT_STATUS_PATH, [])
+
+    # Support both list and dict schemas for agent_status.json
+    if isinstance(agents_data, dict):
+        # Convert dict format to list of agents
+        agents = []
+        for agent_name, agent_info in agents_data.get("agents", {}).items():
+            if isinstance(agent_info, dict):
+                agent = agent_info.copy()
+                if "id" not in agent:
+                    agent["id"] = agent_name
+                if "name" not in agent:
+                    agent["name"] = agent_name
+                agents.append(agent)
+    elif isinstance(agents_data, list):
+        agents = agents_data
+    else:
+        agents = []
+
     if not agents:
         agents = [
             {
@@ -113,18 +147,61 @@ def assign_task(task: Dict[str, Any]) -> Dict[str, Any]:
     else:
         queue_list = []
 
-    agent = _pick_agent(agents, strategies)
+    # Respect explicit assignment if provided
+    override = task.get("assigned_agent") or task.get("assigned_to")
+    chosen_agent = None
+    if override:
+        ov_aliases = _aliases_for(str(override))
+        for a in agents:
+            cand = (a.get("id") or a.get("name") or "").lower()
+            if cand in ov_aliases:
+                chosen_agent = a
+                break
+
+    if not chosen_agent:
+        # Simple routing by task type to prefer a matching agent
+        task_type = (task.get("type") or "").lower()
+        preferred_keywords: List[str] = []
+        if "debug" in task_type:
+            preferred_keywords = ["debug"]
+        elif any(k in task_type for k in ("build", "test", "verify", "verification")):
+            preferred_keywords = ["build"]
+        elif any(k in task_type for k in ("codegen", "generate", "scaffold")):
+            preferred_keywords = ["codegen"]
+
+        candidate_agents = agents
+        if preferred_keywords:
+            filtered = [
+                a
+                for a in agents
+                if any(
+                    k in (a.get("id", "") + ":" + a.get("name", "")).lower()
+                    for k in preferred_keywords
+                )
+            ]
+            if filtered:
+                candidate_agents = filtered
+
+        chosen_agent = _pick_agent(candidate_agents, strategies)
+
+    agent = chosen_agent
     if agent:
-        task["assigned_to"] = agent.get("id") or agent.get("name")
-        task["assigned_at"] = int(time.time())
-        task["status"] = "assigned"
+        # Write compatible fields so agents can pick up tasks
+        assigned_id = agent.get("id") or agent.get("name")
+        now_ts = int(time.time())
+        # Back-compat: set both fields; agents look for assigned_agent + queued
+        task["assigned_agent"] = assigned_id
+        task["assigned_to"] = assigned_id
+        # Queue the task for pickup by the agent loop
+        task["queued_at"] = now_ts
+        task["status"] = "queued"
+        # Keep assigned_at for analytics/back-compat
+        task["assigned_at"] = now_ts
         queue_list.append(task)
         # update agent load best-effort
         try:
             for a in agents:
-                if (a.get("id") == task["assigned_to"]) or (
-                    a.get("name") == task["assigned_to"]
-                ):
+                if (a.get("id") == assigned_id) or (a.get("name") == assigned_id):
                     a["queue_size"] = int(a.get("queue_size", 0)) + 1
                     a["status"] = "busy"
                     break
@@ -163,7 +240,8 @@ def balance_load() -> Dict[str, Any]:
     dist: Dict[str, int] = {}
     for t in queue:
         if isinstance(t, dict):
-            owner = t.get("assigned_to", "unassigned")
+            # Prefer assigned_agent, fallback to assigned_to for legacy tasks
+            owner = t.get("assigned_agent") or t.get("assigned_to") or "unassigned"
             dist[owner] = dist.get(owner, 0) + 1
     return {"queue_size": len(queue), "distribution": dist}
 

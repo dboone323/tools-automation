@@ -11,6 +11,51 @@ TODO_JSON="${WORKSPACE_DIR}/Projects/todo-tree-output.json"
 LOG_FILE="${WORKSPACE_DIR}/Tools/Automation/process_todos.log" # Corrected LOG_FILE path
 MONITOR_SCRIPT="$(dirname "$0")/todo_loop_monitor.sh"
 
+# Centralized throttling configuration for TODO processing
+MAX_CONCURRENCY="${MAX_CONCURRENCY:-3}"    # Maximum concurrent TODO processing instances
+LOAD_THRESHOLD="${LOAD_THRESHOLD:-4.0}"    # System load threshold (1.0 = 100% on single core)
+WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"     # Seconds to wait when system is busy
+GLOBAL_AGENT_CAP="${GLOBAL_AGENT_CAP:-10}" # Maximum total agents that can be assigned tasks
+
+# Function to check if we should proceed with TODO processing
+ensure_within_limits() {
+    local script_name="process_todos.sh"
+
+    # Check concurrent instances of TODO processing
+    local running_count
+    running_count=$(pgrep -f "${script_name}" | wc -l)
+    if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
+        echo "[$(date)] TODO Processor: Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..." | tee -a "${LOG_FILE}"
+        return 1
+    fi
+
+    # Check system load (macOS compatible)
+    local load_avg
+    if command -v sysctl >/dev/null 2>&1; then
+        # macOS: use sysctl vm.loadavg
+        load_avg=$(sysctl -n vm.loadavg | awk '{print $2}')
+    else
+        # Fallback: use uptime
+        load_avg=$(uptime | awk -F'load average:' '{print $2}' | awk -F',' '{print $1}' | tr -d ' ')
+    fi
+
+    # Compare load as float
+    if (($(echo "${load_avg} >= ${LOAD_THRESHOLD}" | bc -l 2>/dev/null || echo "0"))); then
+        echo "[$(date)] TODO Processor: System load too high (${load_avg} >= ${LOAD_THRESHOLD}). Waiting..." | tee -a "${LOG_FILE}"
+        return 1
+    fi
+
+    # Check global agent assignment cap
+    local active_assignments
+    active_assignments=$(grep -r "assigned_agent" "${WORKSPACE_DIR}/Tools/Automation/agents/task_queue.json" 2>/dev/null | wc -l || echo "0")
+    if [[ ${active_assignments} -gt ${GLOBAL_AGENT_CAP} ]]; then
+        echo "[$(date)] TODO Processor: Too many active agent assignments (${active_assignments}/${GLOBAL_AGENT_CAP}). Waiting..." | tee -a "${LOG_FILE}"
+        return 1
+    fi
+
+    return 0
+}
+
 # Check for flags
 LOOP_MODE=false
 STOP_MODE=false
@@ -72,6 +117,26 @@ if [[ ! -f ${TODO_JSON} ]]; then
     mkdir -p "$(dirname \""${LOG_FILE}"\")" # Ensure the directory for LOG_FILE exists
     echo "❌ TODO JSON file not found: ${TODO_JSON}" | tee -a "${LOG_FILE}"
     exit 1
+fi
+
+# Check if we should proceed with TODO processing (centralized throttling)
+if ! ensure_within_limits; then
+    # Wait when busy, with exponential backoff
+    wait_time=${WAIT_WHEN_BUSY}
+    attempts=0
+    while ! ensure_within_limits && [[ ${attempts} -lt 10 ]]; do
+        echo "[$(date)] TODO Processor: Waiting ${wait_time}s before retry (attempt $((attempts + 1))/10)" | tee -a "${LOG_FILE}"
+        sleep "${wait_time}"
+        wait_time=$((wait_time * 2))                          # Exponential backoff
+        if [[ ${wait_time} -gt 300 ]]; then wait_time=300; fi # Cap at 5 minutes
+        ((attempts++))
+    done
+
+    # If still busy after retries, exit
+    if ! ensure_within_limits; then
+        echo "[$(date)] TODO Processor: System still busy after retries. Exiting." | tee -a "${LOG_FILE}"
+        exit 1
+    fi
 fi
 
 echo "🔍 Processing TODOs from ${TODO_JSON}..." | tee -a "${LOG_FILE}"
