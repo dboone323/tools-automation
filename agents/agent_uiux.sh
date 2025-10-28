@@ -13,6 +13,41 @@ SLEEP_INTERVAL=600 # Start with 10 minutes for UI work
 MIN_INTERVAL=120
 MAX_INTERVAL=2400
 
+# Timeout protection function
+run_with_timeout() {
+    local timeout_seconds="$1"
+    local command="$2"
+    local timeout_msg="${3:-Operation timed out after ${timeout_seconds} seconds}"
+
+    echo "[$(date)] ${AGENT_NAME}: Starting operation with ${timeout_seconds}s timeout..." >>"${LOG_FILE}"
+
+    # Run command in background with timeout
+    (
+        eval "${command}" &
+        local cmd_pid=$!
+
+        # Wait for completion or timeout
+        local count=0
+        while [[ ${count} -lt ${timeout_seconds} ]] && kill -0 ${cmd_pid} 2>/dev/null; do
+            sleep 1
+            ((count++))
+        done
+
+        # Check if process is still running
+        if kill -0 ${cmd_pid} 2>/dev/null; then
+            echo "[$(date)] ${AGENT_NAME}: ${timeout_msg}" >>"${LOG_FILE}"
+            kill -TERM ${cmd_pid} 2>/dev/null || true
+            sleep 2
+            kill -KILL ${cmd_pid} 2>/dev/null || true
+            return 124 # Timeout exit code
+        fi
+
+        # Wait for process to get exit code
+        wait ${cmd_pid} 2>/dev/null
+        return $?
+    )
+}
+
 # Function to determine project from task or use default
 get_project_from_task() {
     local task_data="$1"
@@ -46,44 +81,55 @@ perform_ui_enhancements() {
         /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/backup_manager.sh backup \"${project}\" \"uiux_enhancement\"
     " >>"${LOG_FILE}" 2>&1
 
-    # Check if this is a drag-and-drop task
+    # Check if this is a drag-and-drop task with timeout protection
     local is_drag_drop
-    is_drag_drop=$(echo "${task_data}" | jq -r '.todo // empty' | grep -i "drag\|drop" | wc -l)
+    is_drag_drop=$(echo "${task_data}" | jq -r '.todo // empty' | grep -c -i "drag\|drop")
 
     if [[ ${is_drag_drop} -gt 0 ]]; then
         echo "[$(date)] ${AGENT_NAME}: Detected drag-and-drop enhancement task..." >>"${LOG_FILE}"
 
-        # Look for UI files that might need drag-and-drop functionality
-        find . -name "*.swift" -o -name "*.storyboard" -o -name "*.xib" | while read -r file; do
-            if grep -q "TODO.*drag.*drop\|drag.*drop.*TODO" "${file}" 2>/dev/null; then
-                echo "[$(date)] ${AGENT_NAME}: Found drag-drop TODO in ${file}" >>"${LOG_FILE}"
+        # Look for UI files that might need drag-and-drop functionality with timeout
+        if ! run_with_timeout 120 "
+            find . -name '*.swift' -o -name '*.storyboard' -o -name '*.xib' | while read -r file; do
+                if grep -q 'TODO.*drag.*drop\|drag.*drop.*TODO' \"\${file}\" 2>/dev/null; then
+                    echo \"[$(date)] ${AGENT_NAME}: Found drag-drop TODO in \${file}\" >>'${LOG_FILE}'
 
-                # Basic drag-and-drop implementation suggestions
-                if [[ ${file} == *".swift" ]]; then
-                    echo "[$(date)] ${AGENT_NAME}: Adding drag-and-drop implementation to ${file}" >>"${LOG_FILE}"
-                    # This would be where we add actual drag-and-drop code
-                    # For now, we'll log the enhancement
+                    # Basic drag-and-drop implementation suggestions
+                    if [[ \${file} == *'.swift' ]]; then
+                        echo \"[$(date)] ${AGENT_NAME}: Adding drag-and-drop implementation to \${file}\" >>'${LOG_FILE}'
+                        # This would be where we add actual drag-and-drop code
+                        # For now, we'll log the enhancement
+                    fi
                 fi
-            fi
-        done
+            done
+        " "Drag-and-drop analysis timed out"; then
+            echo "[$(date)] ${AGENT_NAME}: ⚠️  Drag-and-drop analysis failed or timed out" >>"${LOG_FILE}"
+        fi
     fi
 
-    # Run general UI/UX analysis
+    # Run general UI/UX analysis with timeout protection
     echo "[$(date)] ${AGENT_NAME}: Analyzing UI/UX patterns..." >>"${LOG_FILE}"
 
-    # Look for UI-related files and suggest improvements
-    find . -name "*View*.swift" -o -name "*Controller*.swift" -o -name "*UI*.swift" | head -10 | while read -r file; do
-        echo "[$(date)] ${AGENT_NAME}: Analyzing UI file: ${file}" >>"${LOG_FILE}"
+    if ! run_with_timeout 180 "
+        find . -name '*View*.swift' -o -name '*Controller*.swift' -o -name '*UI*.swift' | head -10 | while read -r file; do
+            echo \"[$(date)] ${AGENT_NAME}: Analyzing UI file: \${file}\" >>'${LOG_FILE}'
 
-        # Check for common UI improvement opportunities
-        if grep -q "TODO.*UI\|UI.*TODO" "${file}" 2>/dev/null; then
-            echo "[$(date)] ${AGENT_NAME}: Found UI TODO in ${file}" >>"${LOG_FILE}"
-        fi
-    done
+            # Check for common UI improvement opportunities
+            if grep -q 'TODO.*UI\|UI.*TODO' \"\${file}\" 2>/dev/null; then
+                echo \"[$(date)] ${AGENT_NAME}: Found UI TODO in \${file}\" >>'${LOG_FILE}'
+            fi
+        done
+    " "UI/UX analysis timed out"; then
+        echo "[$(date)] ${AGENT_NAME}: ⚠️  UI/UX analysis failed or timed out" >>"${LOG_FILE}"
+    fi
 
-    # Run validation after changes
+    # Run validation after changes with timeout protection
     echo "[$(date)] ${AGENT_NAME}: Validating UI/UX enhancements..." >>"${LOG_FILE}"
-    nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/intelligent_autofix.sh validate "${project}" >>"${LOG_FILE}" 2>&1
+    if ! run_with_timeout 300 "
+        nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/intelligent_autofix.sh validate \"${project}\"
+    " "UI/UX validation timed out"; then
+        echo "[$(date)] ${AGENT_NAME}: ⚠️  UI/UX validation failed or timed out" >>"${LOG_FILE}"
+    fi
 
     return 0
 }
@@ -158,4 +204,3 @@ while true; do
     echo "[$(date)] ${AGENT_NAME}: Sleeping for ${SLEEP_INTERVAL} seconds..." >>"${LOG_FILE}"
     sleep "${SLEEP_INTERVAL}"
 done
-name="filePath" <parameter >/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/agent_uiux.sh

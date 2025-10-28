@@ -21,6 +21,88 @@ export TODO_MIN_IDLE_TIME="${TODO_MIN_IDLE_TIME:-300}"      # Agents must be idl
 # export LOAD_THRESHOLD_high_priority=3.0     # Lower threshold for critical agents
 # export LOAD_THRESHOLD_low_priority=5.0      # Higher threshold for background agents
 
+# Configuration Agent Setup
+AGENT_NAME="ConfigAgent"
+LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/config_agent.log"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
+export TASK_QUEUE="${SCRIPT_DIR}/task_queue.json"
+export PID=$$
+
+# Source shared functions for file locking and monitoring
+if [[ -f "${SCRIPT_DIR}/shared_functions.sh" ]]; then
+    source "${SCRIPT_DIR}/shared_functions.sh"
+fi
+
+# Timeout protection function
+run_with_timeout() {
+    local timeout_seconds="$1"
+    local command="$2"
+    local timeout_msg="${3:-Operation timed out after ${timeout_seconds} seconds}"
+
+    echo "[$(date)] ${AGENT_NAME}: Starting operation with ${timeout_seconds}s timeout..." >>"${LOG_FILE}"
+
+    # Run command in background with timeout
+    (
+        eval "${command}" &
+        local cmd_pid=$!
+
+        # Wait for completion or timeout
+        local count=0
+        while [[ ${count} -lt ${timeout_seconds} ]] && kill -0 ${cmd_pid} 2>/dev/null; do
+            sleep 1
+            ((count++))
+        done
+
+        # Check if process is still running
+        if kill -0 ${cmd_pid} 2>/dev/null; then
+            echo "[$(date)] ${AGENT_NAME}: ${timeout_msg}" >>"${LOG_FILE}"
+            kill -TERM ${cmd_pid} 2>/dev/null || true
+            sleep 2
+            kill -KILL ${cmd_pid} 2>/dev/null || true
+            return 124 # Timeout exit code
+        fi
+
+        # Wait for process to get exit code
+        wait ${cmd_pid} 2>/dev/null
+        return $?
+    )
+}
+
+# Resource limits checking function
+check_resource_limits() {
+    local operation_name="$1"
+
+    echo "[$(date)] ${AGENT_NAME}: Checking resource limits for ${operation_name}..." >>"${LOG_FILE}"
+
+    # Check available disk space (require at least 1GB)
+    local available_space
+    available_space=$(df -k "/Users/danielstevens/Desktop/Quantum-workspace" | tail -1 | awk '{print $4}')
+    if [[ ${available_space} -lt 1048576 ]]; then # 1GB in KB
+        echo "[$(date)] ${AGENT_NAME}: ❌ Insufficient disk space for ${operation_name}" >>"${LOG_FILE}"
+        return 1
+    fi
+
+    # Check memory usage (require less than 90% usage)
+    local mem_usage
+    mem_usage=$(vm_stat | grep "Pages free" | awk '{print $3}' | tr -d '.')
+    if [[ ${mem_usage} -lt 100000 ]]; then # Rough check for memory pressure
+        echo "[$(date)] ${AGENT_NAME}: ❌ High memory usage detected for ${operation_name}" >>"${LOG_FILE}"
+        return 1
+    fi
+
+    # Check file count limits (prevent runaway config operations)
+    local file_count
+    file_count=$(find "/Users/danielstevens/Desktop/Quantum-workspace" -type f 2>/dev/null | wc -l)
+    if [[ ${file_count} -gt 50000 ]]; then
+        echo "[$(date)] ${AGENT_NAME}: ❌ Too many files in workspace for ${operation_name}" >>"${LOG_FILE}"
+        return 1
+    fi
+
+    echo "[$(date)] ${AGENT_NAME}: ✅ Resource limits OK for ${operation_name}" >>"${LOG_FILE}"
+    return 0
+}
+
 # Function to get agent-specific configuration
 get_agent_config() {
     local agent_name="$1"
@@ -106,8 +188,68 @@ validate_config() {
 
 # Auto-validate on source
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    # Script is being run directly
-    validate_config
+    # Script is being run directly - start agent loop
+    echo "[$(date)] ${AGENT_NAME}: Starting configuration agent..." >>"${LOG_FILE}"
+
+    # Validate configuration first
+    if ! validate_config; then
+        echo "[$(date)] ${AGENT_NAME}: Configuration validation failed, exiting" >>"${LOG_FILE}"
+        exit 1
+    fi
+
+    # Main agent loop
+    while true; do
+        update_agent_status "${AGENT_NAME}" "running" $$ ""
+
+        # Check for configuration tasks
+        TASK_ID=$(get_next_task "agent_config.sh" 2>/dev/null || echo "")
+
+        if [[ -n "${TASK_ID}" ]]; then
+            echo "[$(date)] ${AGENT_NAME}: Processing configuration task ${TASK_ID}" >>"${LOG_FILE}"
+
+            # Check resource limits before starting
+            if ! check_resource_limits "config task ${TASK_ID}"; then
+                echo "[$(date)] ${AGENT_NAME}: Resource limits check failed for task ${TASK_ID}" >>"${LOG_FILE}"
+                update_task_status "${TASK_ID}" "failed"
+                continue
+            fi
+
+            # Mark task as in progress
+            update_task_status "${TASK_ID}" "in_progress"
+            update_agent_status "${AGENT_NAME}" "busy" $$ "${TASK_ID}"
+
+            # Create backup before configuration changes
+            echo "[$(date)] ${AGENT_NAME}: Creating backup before configuration operations..." >>"${LOG_FILE}"
+            /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup "global" "config_operation_${TASK_ID}" >>"${LOG_FILE}" 2>&1 || true
+
+            # Process configuration task with timeout protection
+            if run_with_timeout 300 "
+                echo '[$(date)] ${AGENT_NAME}: Validating and updating agent configurations...' >>'${LOG_FILE}'
+                # Validate all agent configurations
+                if validate_config >>'${LOG_FILE}' 2>&1; then
+                    echo '[$(date)] ${AGENT_NAME}: Configuration validation successful' >>'${LOG_FILE}'
+                    exit 0
+                else
+                    echo '[$(date)] ${AGENT_NAME}: Configuration validation failed' >>'${LOG_FILE}'
+                    exit 1
+                fi
+            " "Configuration task timed out"; then
+                echo "[$(date)] ${AGENT_NAME}: Configuration task ${TASK_ID} completed successfully" >>"${LOG_FILE}"
+                update_task_status "${TASK_ID}" "completed"
+            else
+                echo "[$(date)] ${AGENT_NAME}: Configuration task ${TASK_ID} failed or timed out" >>"${LOG_FILE}"
+                update_task_status "${TASK_ID}" "failed"
+            fi
+
+            update_agent_status "${AGENT_NAME}" "idle" $$ ""
+        else
+            update_agent_status "${AGENT_NAME}" "idle" $$ ""
+            echo "[$(date)] ${AGENT_NAME}: No configuration tasks found. Sleeping as idle." >>"${LOG_FILE}"
+            sleep 300 # Sleep for 5 minutes when idle
+        fi
+
+        sleep 60 # Brief pause between checks
+    done
 else
     # Script is being sourced
     if ! validate_config >/dev/null 2>&1; then

@@ -1,0 +1,80 @@
+{
+  "swift_files": 934,
+  "swift_lines": 180359,
+  "todos": 2075,
+  "projects": [
+    {
+      "name": "MomentumFinance",
+      "swift_files": 568,
+      "has_tests": true,
+      "has_docs": true
+    },
+    {
+      "name": "QuantumChemistry",
+      "swift_files": 6,
+      "has_tests": true,
+      "has_docs": true
+    },
+    {
+      "name": "Tools",
+      "swift_files": 0,
+      "has_tests": false,
+      "has_docs": true
+    },
+    {
+      "name": "Config",
+      "swift_files": 0,
+      "has_tests": false,
+      "has_docs": true
+    },
+    {
+      "name": "AvoidObstaclesGame",
+      "swift_files": 126,
+      "has_tests": true,
+      "has_docs": true
+    },
+    {
+      "name": "PlannerApp",
+      "swift_files": 113,
+      "has_tests": true,
+      "has_docs": true
+    },
+    {
+      "name": "HabitQuest",
+      "swift_files": 114,
+      "has_tests": true,
+      "has_docs": true
+    },
+    {
+      "name": "QuantumFinance",
+      "swift_files": 5,
+      "has_tests": true,
+      "has_docs": true
+    },
+    {
+      "name": "scripts",
+      "swift_files": 0,
+      "has_tests": false,
+      "has_docs": true
+    },
+    {
+      "name": ".github",
+      "swift_files": 0,
+      "has_tests": false,
+      "has_docs": false
+    },
+    {
+      "name": ".vscode",
+      "swift_files": 0,
+      "has_tests": false,
+      "has_docs": false
+    },
+    {
+      "name": "CodingReviewer",
+      "swift_files": 0,
+      "has_tests": false,
+      "has_docs": true
+    }
+  ],
+  "last_update": 1761609734
+}

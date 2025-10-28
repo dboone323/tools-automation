@@ -14,9 +14,6 @@ AGENTS_DIR="${SCRIPT_DIR}"
 AGENT_NAME="agent_validation"
 MCP_URL="${MCP_URL:-http://127.0.0.1:5005}"
 LOG_FILE="${AGENTS_DIR}/${AGENT_NAME}.log"
-STATUS_FILE="${AGENTS_DIR}/agent_status.json"
-QUALITY_CONFIG="${WORKSPACE_ROOT}/quality-config.yaml"
-ARCHITECTURE_DOC="${WORKSPACE_ROOT}/Tools/ARCHITECTURE.md"
 
 # Colors
 RED='\033[0;31m'
@@ -26,277 +23,273 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 log() {
-  echo "[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] $*" | tee -a "${LOG_FILE}"
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] $*" | tee -a "${LOG_FILE}"
 }
 
 error() {
-  echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ❌ $*${NC}" | tee -a "${LOG_FILE}"
+    echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ❌ $*${NC}" | tee -a "${LOG_FILE}"
 }
 
 success() {
-  echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ✅ $*${NC}" | tee -a "${LOG_FILE}"
+    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ✅ $*${NC}" | tee -a "${LOG_FILE}"
 }
 
 warning() {
-  echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ⚠️  $*${NC}" | tee -a "${LOG_FILE}"
+    echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ⚠️  $*${NC}" | tee -a "${LOG_FILE}"
 }
 
 info() {
-  echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ℹ️  $*${NC}" | tee -a "${LOG_FILE}"
+    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] ℹ️  $*${NC}" | tee -a "${LOG_FILE}"
 }
 
 # Check for SwiftUI imports in data models
 validate_architecture_rule_1() {
-  local project_path="$1"
-  local violations=0
+    local project_path="$1"
+    local violations=0
 
-  info "Validating Rule 1: Data models NEVER import SwiftUI"
+    info "Validating Rule 1: Data models NEVER import SwiftUI"
 
-  # Find files in SharedTypes or Models directories (exclude backups and timestamped backups)
-  while IFS= read -r file; do
-    if grep -q "import SwiftUI" "$file"; then
-      error "Architecture violation in $file: Data model imports SwiftUI"
-      violations=$((violations + 1))
+    # Find files in SharedTypes or Models directories (exclude backups and timestamped backups)
+    while IFS= read -r file; do
+        if grep -q "import SwiftUI" "$file"; then
+            error "Architecture violation in $file: Data model imports SwiftUI"
+            violations=$((violations + 1))
+        fi
+    done < <(find "${project_path}" \( -path "*/SharedTypes/*" -o -path "*/Models/*" \) -name "*.swift" -not -path "*/.backups/*" -not -regex ".*/[A-Za-z]+_[0-9]{8}_[0-9]{6}/.*" 2>/dev/null)
+
+    if [[ ${violations} -eq 0 ]]; then
+        success "Rule 1 passed: No SwiftUI imports in data models"
+    else
+        error "Rule 1 failed: ${violations} violations found"
     fi
-  done < <(find "${project_path}" \( -path "*/SharedTypes/*" -o -path "*/Models/*" \) -name "*.swift" -not -path "*/.backups/*" -not -regex ".*/[A-Za-z]+_[0-9]{8}_[0-9]{6}/.*" 2>/dev/null)
 
-  if [[ ${violations} -eq 0 ]]; then
-    success "Rule 1 passed: No SwiftUI imports in data models"
-  else
-    error "Rule 1 failed: ${violations} violations found"
-  fi
+    # In CI, don't fail on violations - just warn
+    if [[ -n "${CI:-}" ]]; then
+        warning "CI mode: Architecture violations found but not blocking build"
+        return 0
+    fi
 
-  # In CI, don't fail on violations - just warn
-  if [[ -n "${CI:-}" ]]; then
-    warning "CI mode: Architecture violations found but not blocking build"
-    return 0
-  fi
-
-  return ${violations}
+    return ${violations}
 }
 
 # Check for excessive async/await usage
 validate_architecture_rule_2() {
-  local project_path="$1"
-  local violations=0
+    local project_path="$1"
+    local violations=0
 
-  info "Validating Rule 2: Prefer synchronous operations with background queues"
+    info "Validating Rule 2: Prefer synchronous operations with background queues"
 
-  # Count async functions vs total functions
-  local async_funcs
-  local total_funcs
-  async_funcs=$(grep -r "func.*async" "${project_path}" --include="*.swift" 2>/dev/null | wc -l | tr -d ' ')
-  total_funcs=$(grep -r "func " "${project_path}" --include="*.swift" 2>/dev/null | wc -l | tr -d ' ')
+    # Count async functions vs total functions
+    local async_funcs
+    local total_funcs
+    async_funcs=$(grep -r "func.*async" "${project_path}" --include="*.swift" 2>/dev/null | wc -l | tr -d ' ')
+    total_funcs=$(grep -r "func " "${project_path}" --include="*.swift" 2>/dev/null | wc -l | tr -d ' ')
 
-  if [[ ${total_funcs} -gt 0 ]]; then
-    local async_ratio=$((async_funcs * 100 / total_funcs))
-    if [[ ${async_ratio} -gt 30 ]]; then
-      warning "Rule 2 warning: ${async_ratio}% of functions are async (threshold: 30%)"
-      violations=1
-    else
-      success "Rule 2 passed: Async ratio is ${async_ratio}%"
+    if [[ ${total_funcs} -gt 0 ]]; then
+        local async_ratio=$((async_funcs * 100 / total_funcs))
+        if [[ ${async_ratio} -gt 30 ]]; then
+            warning "Rule 2 warning: ${async_ratio}% of functions are async (threshold: 30%)"
+            violations=1
+        else
+            success "Rule 2 passed: Async ratio is ${async_ratio}%"
+        fi
     fi
-  fi
 
-  # In CI, don't fail on violations - just warn
-  if [[ -n "${CI:-}" ]]; then
-    warning "CI mode: Architecture violations found but not blocking build"
-    return 0
-  fi
+    # In CI, don't fail on violations - just warn
+    if [[ -n "${CI:-}" ]]; then
+        warning "CI mode: Architecture violations found but not blocking build"
+        return 0
+    fi
 
-  return ${violations}
+    return ${violations}
 }
 
 # Check for generic naming
 validate_architecture_rule_3() {
-  local project_path="$1"
-  local violations=0
+    local project_path="$1"
+    local violations=0
 
-  info "Validating Rule 3: Specific naming over generic"
+    info "Validating Rule 3: Specific naming over generic"
 
-  # Check for generic names
-  local bad_names=("Dashboard" "Manager" "Helper" "Utility" "Base")
+    # Check for generic names
+    local bad_names=("Dashboard" "Manager" "Helper" "Utility" "Base")
 
-  for name in "${bad_names[@]}"; do
-    local count
-    count=$(grep -r "\\bclass ${name}\\b" "${project_path}" --include="*.swift" 2>/dev/null | wc -l | tr -d ' ')
-    if [[ ${count} -gt 0 ]]; then
-      warning "Found ${count} classes named '${name}' - consider more specific names"
-      violations=$((violations + count))
+    for name in "${bad_names[@]}"; do
+        local count
+        count=$(grep -r "\\bclass ${name}\\b" "${project_path}" --include="*.swift" 2>/dev/null | wc -l | tr -d ' ')
+        if [[ ${count} -gt 0 ]]; then
+            warning "Found ${count} classes named '${name}' - consider more specific names"
+            violations=$((violations + count))
+        fi
+    done
+
+    if [[ ${violations} -eq 0 ]]; then
+        success "Rule 3 passed: No generic naming detected"
+    else
+        warning "Rule 3: ${violations} potential generic names found"
     fi
-  done
 
-  if [[ ${violations} -eq 0 ]]; then
-    success "Rule 3 passed: No generic naming detected"
-  else
-    warning "Rule 3: ${violations} potential generic names found"
-  fi
-
-  return 0 # Warning only, not a hard failure
+    return 0 # Warning only, not a hard failure
 }
 
 # Validate quality gates from quality-config.yaml
 validate_quality_gates() {
-  local project_path="$1"
-  local project_name
-  project_name=$(basename "${project_path}")
-  local failures=0
+    local project_path="$1"
+    local project_name
+    project_name=$(basename "${project_path}")
+    local failures=0
 
-  info "Validating quality gates for ${project_name}..."
+    info "Validating quality gates for ${project_name}..."
 
-  # Check file size limits (warning only)
-  local oversized_files
-  oversized_files=$(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" -not -regex ".*/[A-Za-z]+_[0-9]{8}_[0-9]{6}/.*" -exec wc -l {} + 2>/dev/null |
-    awk '$1 > 500 {print $2}' | wc -l | tr -d ' ')
+    # Check file size limits (warning only)
+    local oversized_files
+    oversized_files=$(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" -not -regex ".*/[A-Za-z]+_[0-9]{8}_[0-9]{6}/.*" -exec wc -l {} + 2>/dev/null |
+        awk '$1 > 500 {print $2}' | wc -l | tr -d ' ')
 
-  if [[ ${oversized_files} -gt 0 ]]; then
-    warning "Found ${oversized_files} files exceeding 500 lines (quality gate warning)"
-    # Don't fail on file size - this is a quality gate, not a blocking error
-  else
-    success "All files within size limits"
-  fi
-
-  # Check for SwiftLint errors (warning only, not blocking)
-  if command -v swiftlint &>/dev/null; then
-    cd "${project_path}" || return 1
-    # Use unified config if available
-    local config_path="${WORKSPACE_ROOT}/Tools/Config/UNIFIED_SWIFTLINT_ROOT.yml"
-    local swiftlint_cmd="swiftlint lint --quiet"
-    if [[ -f "${config_path}" ]]; then
-      swiftlint_cmd="${swiftlint_cmd} --config ${config_path}"
-    fi
-    # Exclude backup directories from SwiftLint
-    swiftlint_cmd="${swiftlint_cmd} --exclude */*_????????_??????/**/*"
-    # Run SwiftLint but don't fail on warnings - just log them
-    if ${swiftlint_cmd} 2>/dev/null; then
-      success "SwiftLint validation passed"
+    if [[ ${oversized_files} -gt 0 ]]; then
+        warning "Found ${oversized_files} files exceeding 500 lines (quality gate warning)"
+        # Don't fail on file size - this is a quality gate, not a blocking error
     else
-      # Check if it's just warnings, not errors
-      local swiftlint_output
-      swiftlint_output=$(${swiftlint_cmd} 2>/dev/null)
-      if echo "$swiftlint_output" | grep -q "error:"; then
-        warning "SwiftLint validation failed with errors (non-blocking)"
-      else
-        success "SwiftLint validation passed (warnings only)"
-      fi
+        success "All files within size limits"
     fi
-    cd - >/dev/null || return 1
-  fi
 
-  # In CI, don't fail on quality gate issues - just warn
-  if [[ -n "${CI:-}" ]]; then
-    warning "CI mode: Quality gate issues found but not blocking build"
-    return 0
-  fi
+    # Check for SwiftLint errors (warning only, not blocking)
+    if command -v swiftlint &>/dev/null; then
+        cd "${project_path}" || return 1
+        # Use unified config if available
+        local config_path="${WORKSPACE_ROOT}/Tools/Config/UNIFIED_SWIFTLINT_ROOT.yml"
+        local swiftlint_cmd="swiftlint lint --quiet"
+        if [[ -f "${config_path}" ]]; then
+            swiftlint_cmd="${swiftlint_cmd} --config ${config_path}"
+        fi
+        # Exclude backup directories from SwiftLint
+        swiftlint_cmd="${swiftlint_cmd} --exclude */*_????????_??????/**/*"
+        # Run SwiftLint but don't fail on warnings - just log them
+        if ${swiftlint_cmd} 2>/dev/null; then
+            success "SwiftLint validation passed"
+        else
+            # Check if it's just warnings, not errors
+            local swiftlint_output
+            swiftlint_output=$(${swiftlint_cmd} 2>/dev/null)
+            if echo "$swiftlint_output" | grep -q "error:"; then
+                warning "SwiftLint validation failed with errors (non-blocking)"
+            else
+                success "SwiftLint validation passed (warnings only)"
+            fi
+        fi
+        cd - >/dev/null || return 1
+    fi
 
-  return ${failures}
+    # In CI, don't fail on quality gate issues - just warn
+    if [[ -n "${CI:-}" ]]; then
+        warning "CI mode: Quality gate issues found but not blocking build"
+        return 0
+    fi
+
+    return ${failures}
 }
 
 # Validate dependencies
 validate_dependencies() {
-  local project_path="$1"
-  local project_name
-  project_name=$(basename "${project_path}")
-  local issues=0
+    local project_path="$1"
+    local project_name
+    project_name=$(basename "${project_path}")
+    local issues=0
 
-  info "Validating dependencies for ${project_name}..."
+    info "Validating dependencies for ${project_name}..."
 
-  # Check for circular dependencies (simplified check)
-  local imports
-  imports=$(grep -rh "^import " "${project_path}" --include="*.swift" 2>/dev/null | sort -u)
+    # Check for unused imports (simplified)
+    while IFS= read -r file; do
+        local file_imports
+        file_imports=$(grep "^import " "$file" 2>/dev/null || true)
 
-  # Check for unused imports (simplified)
-  while IFS= read -r file; do
-    local file_imports
-    file_imports=$(grep "^import " "$file" 2>/dev/null || true)
+        while IFS= read -r import_line; do
+            [[ -z "$import_line" ]] && continue
+            local module
+            module=$(echo "$import_line" | awk '{print $2}')
 
-    while IFS= read -r import_line; do
-      [[ -z "$import_line" ]] && continue
-      local module
-      module=$(echo "$import_line" | awk '{print $2}')
+            # Check if module is used in file (very simplified)
+            if ! grep -q "$module" "$file" 2>/dev/null; then
+                warning "Potentially unused import in $file: $import_line"
+                issues=$((issues + 1))
+            fi
+        done <<<"$file_imports"
+    done < <(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" -not -regex ".*/[A-Za-z]+_[0-9]{8}_[0-9]{6}/.*" 2>/dev/null | head -10) # Limit for performance
 
-      # Check if module is used in file (very simplified)
-      if ! grep -q "$module" "$file" 2>/dev/null; then
-        warning "Potentially unused import in $file: $import_line"
-        issues=$((issues + 1))
-      fi
-    done <<<"$file_imports"
-  done < <(find "${project_path}" -name "*.swift" -not -path "*/.backups/*" -not -regex ".*/[A-Za-z]+_[0-9]{8}_[0-9]{6}/.*" 2>/dev/null | head -10) # Limit for performance
+    if [[ ${issues} -eq 0 ]]; then
+        success "Dependency validation passed"
+    else
+        warning "Found ${issues} potential dependency issues"
+    fi
 
-  if [[ ${issues} -eq 0 ]]; then
-    success "Dependency validation passed"
-  else
-    warning "Found ${issues} potential dependency issues"
-  fi
-
-  return 0 # Don't fail on warnings
+    return 0 # Don't fail on warnings
 }
 
 # Run full validation suite
 run_validation() {
-  local project_path="${1:-${WORKSPACE_ROOT}/Projects}"
-  local total_failures=0
+    local project_path="${1:-${WORKSPACE_ROOT}/Projects}"
+    local total_failures=0
 
-  log "Running validation suite on ${project_path}..."
+    log "Running validation suite on ${project_path}..."
 
-  # Find all project directories
-  local projects
-  if [[ -d "${project_path}" ]]; then
-    projects=("${project_path}")
-  else
-    projects=("${WORKSPACE_ROOT}"/Projects/*)
-  fi
+    # Find all project directories
+    local projects
+    if [[ -d "${project_path}" ]]; then
+        projects=("${project_path}")
+    else
+        projects=("${WORKSPACE_ROOT}"/Projects/*)
+    fi
 
-  for project in "${projects[@]}"; do
-    [[ ! -d "$project" ]] && continue
+    for project in "${projects[@]}"; do
+        [[ ! -d "$project" ]] && continue
 
-    local pname
-    pname=$(basename "$project")
-    # Skip non-code directories, backups, and timestamped backup directories
-    [[ "$pname" == "Tools" || "$pname" == "scripts" || "$pname" == "Config" || "$pname" == ".backups" ]] && continue
-    # Skip timestamped backup directories (format: ProjectName_YYYYMMDD_HHMMSS)
-    [[ "$pname" =~ ^[A-Za-z]+_[0-9]{8}_[0-9]{6}$ ]] && continue
+        local pname
+        pname=$(basename "$project")
+        # Skip non-code directories, backups, and timestamped backup directories
+        [[ "$pname" == "Tools" || "$pname" == "scripts" || "$pname" == "Config" || "$pname" == ".backups" ]] && continue
+        # Skip timestamped backup directories (format: ProjectName_YYYYMMDD_HHMMSS)
+        [[ "$pname" =~ ^[A-Za-z]+_[0-9]{8}_[0-9]{6}$ ]] && continue
 
-    info "=== Validating ${pname} ==="
+        info "=== Validating ${pname} ==="
 
-    # Run architecture validations
-    validate_architecture_rule_1 "$project" || total_failures=$((total_failures + 1))
-    validate_architecture_rule_2 "$project" || total_failures=$((total_failures + 1))
-    validate_architecture_rule_3 "$project" || total_failures=$((total_failures + 1))
+        # Run architecture validations
+        validate_architecture_rule_1 "$project" || total_failures=$((total_failures + 1))
+        validate_architecture_rule_2 "$project" || total_failures=$((total_failures + 1))
+        validate_architecture_rule_3 "$project" || total_failures=$((total_failures + 1))
 
-    # Run quality gate validations
-    validate_quality_gates "$project" || total_failures=$((total_failures + 1))
+        # Run quality gate validations
+        validate_quality_gates "$project" || total_failures=$((total_failures + 1))
 
-    # Run dependency validations
-    validate_dependencies "$project" || total_failures=$((total_failures + 1))
+        # Run dependency validations
+        validate_dependencies "$project" || total_failures=$((total_failures + 1))
 
-    info "=== ${pname} validation complete ==="
-    echo ""
-  done
+        info "=== ${pname} validation complete ==="
+        echo ""
+    done
 
-  if [[ ${total_failures} -eq 0 ]]; then
-    success "✅ All validation checks passed!"
-    return 0
-  else
-    error "❌ Validation failed with ${total_failures} errors"
-    return 1
-  fi
+    if [[ ${total_failures} -eq 0 ]]; then
+        success "✅ All validation checks passed!"
+        return 0
+    else
+        error "❌ Validation failed with ${total_failures} errors"
+        return 1
+    fi
 }
 
 # Install pre-commit hook
 install_pre_commit_hook() {
-  local git_dir="${WORKSPACE_ROOT}/.git"
+    local git_dir="${WORKSPACE_ROOT}/.git"
 
-  if [[ ! -d "${git_dir}" ]]; then
-    warning "Not a git repository, skipping hook installation"
-    return 0
-  fi
+    if [[ ! -d "${git_dir}" ]]; then
+        warning "Not a git repository, skipping hook installation"
+        return 0
+    fi
 
-  local hook_file="${git_dir}/hooks/pre-commit"
+    local hook_file="${git_dir}/hooks/pre-commit"
 
-  info "Installing pre-commit validation hook..."
+    info "Installing pre-commit validation hook..."
 
-  cat >"${hook_file}" <<'HOOK'
+    cat >"${hook_file}" <<'HOOK'
 #!/bin/bash
 # Pre-commit validation hook - runs validation agent
 
@@ -324,118 +317,163 @@ fi
 exit ${exit_code}
 HOOK
 
-  chmod +x "${hook_file}"
-  success "Pre-commit hook installed at ${hook_file}"
+    chmod +x "${hook_file}"
+    success "Pre-commit hook installed at ${hook_file}"
 }
 
-# Main agent loop
-main() {
-  log "Validation Agent starting..."
-  update_agent_status "agent_validation.sh" "starting" $$ ""
-
-  echo $$ >"${AGENTS_DIR}/${AGENT_NAME}.pid"
-
-  # Register with MCP
-  if command -v curl &>/dev/null; then
-    curl -s -X POST "${MCP_URL}/register" \
-      -H "Content-Type: application/json" \
-      -d "{\"agent\": \"${AGENT_NAME}\", \"capabilities\": [\"validation\", \"quality-gates\", \"architecture\"]}" \
-      &>/dev/null || warning "Failed to register with MCP"
-  fi
-
-  update_agent_status "agent_validation.sh" "available" $$ ""
-  success "Validation Agent ready"
-
-  # Install pre-commit hook if not exists
-  if [[ ! -f "${WORKSPACE_ROOT}/.git/hooks/pre-commit" ]]; then
-    install_pre_commit_hook
-  fi
-
-  # Main loop - check for validation tasks
-  while true; do
-    # Check MCP for validation tasks
-    if command -v curl &>/dev/null; then
-      local task
-      task=$(curl -s "${MCP_URL}/task/next?agent=${AGENT_NAME}" 2>/dev/null || echo "")
-
-      if [[ -n "$task" ]] && echo "$task" | grep -q "command"; then
-        update_agent_status "agent_validation.sh" "running" $$ ""
-
-        # Extract task details (simplified)
-        local task_id
-        task_id=$(echo "$task" | grep -o '"id":"[^"]*"' | cut -d'"' -f4)
-
-        log "Processing task ${task_id}..."
-
-        # Run validation
-        if run_validation; then
-          success "Task ${task_id} completed successfully"
-          curl -s -X POST "${MCP_URL}/task/${task_id}/complete" \
-            -H "Content-Type: application/json" \
-            -d '{"status":"success"}' &>/dev/null || true
-        else
-          error "Task ${task_id} failed"
-          curl -s -X POST "${MCP_URL}/task/${task_id}/complete" \
-            -H "Content-Type: application/json" \
-            -d '{"status":"failed"}' &>/dev/null || true
-        fi
-
-        update_agent_status "agent_validation.sh" "available" $$ ""
-      fi
-    fi
-
-    # Send heartbeat
-    if command -v curl &>/dev/null; then
-      curl -s -X POST "${MCP_URL}/heartbeat" \
-        -H "Content-Type: application/json" \
-        -d "{\"agent\": \"${AGENT_NAME}\"}" &>/dev/null || true
-    fi
-
-    sleep 60 # Check every minute
-  done
-}
-
-# Handle command-line execution
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-  case "${1:-daemon}" in
-  validate | validate-all)
-    run_validation "${2:-}"
-    ;;
-  validate-staged)
+# Validate only staged files
+validate_staged_files() {
     # Validate only staged files (exclude backups), or all files in CI
     info "Validating staged files..."
 
     # In CI, always validate all files regardless of staging
     if [[ -n "${CI:-}" ]]; then
-      info "CI mode: Running full validation on all files"
-      run_validation "${WORKSPACE_ROOT}"
-      exit $?
+        info "CI mode: Running full validation on all files"
+        run_validation "${WORKSPACE_ROOT}"
+        exit $?
     fi
 
     # Check if there are staged Swift files outside backups
     staged_swift_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.swift$' | grep -v '\.backups/' || true)
     if [[ -z "${staged_swift_files}" ]]; then
-      success "No Swift files to validate (or only backup files changed)"
-      exit 0
+        success "No Swift files to validate (or only backup files changed)"
+        exit 0
     fi
-    run_validation "${WORKSPACE_ROOT}"
-    ;;
-  install-hook)
-    install_pre_commit_hook
-    ;;
-  daemon)
-    trap 'update_agent_status "agent_validation.sh" "stopped" $$ ""; log "Validation Agent stopping..."; exit 0' SIGTERM SIGINT
-    main "$@"
-    ;;
-  *)
-    echo "Usage: $0 {validate|validate-staged|install-hook|daemon}"
-    echo ""
-    echo "Commands:"
-    echo "  validate         - Run full validation suite"
-    echo "  validate-staged  - Validate only staged files (for pre-commit)"
-    echo "  install-hook     - Install pre-commit validation hook"
-    echo "  daemon           - Run as daemon (default)"
-    exit 1
-    ;;
-  esac
+
+    # Only validate projects that have staged Swift files
+    info "Found staged Swift files, validating affected projects..."
+    local affected_projects=""
+    for file in ${staged_swift_files}; do
+        # Extract project path from file path
+        if [[ "$file" =~ ^Projects/([^/]+)/ ]]; then
+            local project_name="${BASH_REMATCH[1]}"
+            if [[ ! "$affected_projects" =~ $project_name ]]; then
+                affected_projects="$affected_projects $project_name"
+            fi
+        fi
+    done
+
+    if [[ -z "$affected_projects" ]]; then
+        success "No project files staged, skipping validation"
+        exit 0
+    fi
+
+    # Run validation only on affected projects
+    local total_failures=0
+    for project_name in $affected_projects; do
+        local project_path="${WORKSPACE_ROOT}/Projects/${project_name}"
+        if [[ -d "$project_path" ]]; then
+            info "=== Validating ${project_name} (staged files) ==="
+            validate_architecture_rule_1 "$project_path" || total_failures=$((total_failures + 1))
+            validate_architecture_rule_2 "$project_path" || total_failures=$((total_failures + 1))
+            validate_architecture_rule_3 "$project_path" || total_failures=$((total_failures + 1))
+            validate_quality_gates "$project_path" || total_failures=$((total_failures + 1))
+            validate_dependencies "$project_path" || total_failures=$((total_failures + 1))
+            info "=== ${project_name} validation complete ==="
+        fi
+    done
+
+    if [[ ${total_failures} -eq 0 ]]; then
+        success "✅ Staged file validation passed!"
+        exit 0
+    else
+        error "❌ Staged file validation failed with ${total_failures} errors"
+        exit 1
+    fi
+}
+
+# Main agent loop
+main() {
+    log "Validation Agent starting..."
+    update_agent_status "agent_validation.sh" "starting" $$ ""
+
+    echo $$ >"${AGENTS_DIR}/${AGENT_NAME}.pid"
+
+    # Register with MCP
+    if command -v curl &>/dev/null; then
+        curl -s -X POST "${MCP_URL}/register" \
+            -H "Content-Type: application/json" \
+            -d "{\"agent\": \"${AGENT_NAME}\", \"capabilities\": [\"validation\", \"quality-gates\", \"architecture\"]}" \
+            &>/dev/null || warning "Failed to register with MCP"
+    fi
+
+    update_agent_status "agent_validation.sh" "available" $$ ""
+    success "Validation Agent ready"
+
+    # Install pre-commit hook if not exists
+    if [[ ! -f "${WORKSPACE_ROOT}/.git/hooks/pre-commit" ]]; then
+        install_pre_commit_hook
+    fi
+
+    # Main loop - check for validation tasks
+    while true; do
+        # Check MCP for validation tasks
+        if command -v curl &>/dev/null; then
+            local task
+            task=$(curl -s "${MCP_URL}/task/next?agent=${AGENT_NAME}" 2>/dev/null || echo "")
+
+            if [[ -n "$task" ]] && echo "$task" | grep -q "command"; then
+                update_agent_status "agent_validation.sh" "running" $$ ""
+
+                # Extract task details (simplified)
+                local task_id
+                task_id=$(echo "$task" | grep -o '"id":"[^"]*"' | cut -d'"' -f4)
+
+                log "Processing task ${task_id}..."
+
+                # Run validation
+                if run_validation; then
+                    success "Task ${task_id} completed successfully"
+                    curl -s -X POST "${MCP_URL}/task/${task_id}/complete" \
+                        -H "Content-Type: application/json" \
+                        -d '{"status":"success"}' &>/dev/null || true
+                else
+                    error "Task ${task_id} failed"
+                    curl -s -X POST "${MCP_URL}/task/${task_id}/complete" \
+                        -H "Content-Type: application/json" \
+                        -d '{"status":"failed"}' &>/dev/null || true
+                fi
+
+                update_agent_status "agent_validation.sh" "available" $$ ""
+            fi
+        fi
+
+        # Send heartbeat
+        if command -v curl &>/dev/null; then
+            curl -s -X POST "${MCP_URL}/heartbeat" \
+                -H "Content-Type: application/json" \
+                -d "{\"agent\": \"${AGENT_NAME}\"}" &>/dev/null || true
+        fi
+
+        sleep 60 # Check every minute
+    done
+}
+
+# Handle command-line execution
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    case "${1:-daemon}" in
+    validate | validate-all)
+        run_validation "${2:-}"
+        ;;
+    validate-staged)
+        validate_staged_files
+        ;;
+    install-hook)
+        install_pre_commit_hook
+        ;;
+    daemon)
+        trap 'update_agent_status "agent_validation.sh" "stopped" $$ ""; log "Validation Agent stopping..."; exit 0' SIGTERM SIGINT
+        main "$@"
+        ;;
+    *)
+        echo "Usage: $0 {validate|validate-staged|install-hook|daemon}"
+        echo ""
+        echo "Commands:"
+        echo "  validate         - Run full validation suite"
+        echo "  validate-staged  - Validate only staged files (for pre-commit)"
+        echo "  install-hook     - Install pre-commit validation hook"
+        echo "  daemon           - Run as daemon (default)"
+        exit 1
+        ;;
+    esac
 fi

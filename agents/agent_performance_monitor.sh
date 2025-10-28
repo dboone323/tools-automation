@@ -12,6 +12,106 @@ fi
 
 set -euo pipefail
 
+# Portable run_with_timeout: run a command and kill it if it exceeds timeout (seconds)
+# Usage: run_with_timeout <seconds> <cmd> [args...]
+run_with_timeout() {
+    local timeout="$1"
+    shift
+    local cmd="$*"
+
+    # Use timeout command if available (Linux), otherwise implement with background process
+    if command -v timeout >/dev/null 2>&1; then
+        timeout --kill-after=5s "${timeout}s" bash -c "$cmd"
+    else
+        # macOS/BSD implementation using background process
+        local pid_file
+        pid_file=$(mktemp)
+        local exit_file
+        exit_file=$(mktemp)
+
+        # Run command in background
+        (
+            if bash -c "$cmd"; then
+                echo 0 >"$exit_file"
+            else
+                echo $? >"$exit_file"
+            fi
+        ) &
+        local cmd_pid
+        cmd_pid=$!
+
+        echo "$cmd_pid" >"$pid_file"
+
+        # Wait for completion or timeout
+        local count
+        count=0
+        while [[ $count -lt $timeout ]] && kill -0 "$cmd_pid" 2>/dev/null; do
+            sleep 1
+            ((count++))
+        done
+
+        # Check if still running
+        if kill -0 "$cmd_pid" 2>/dev/null; then
+            # Kill the process group
+            pkill -TERM -P "$cmd_pid" 2>/dev/null || true
+            sleep 1
+            pkill -KILL -P "$cmd_pid" 2>/dev/null || true
+            rm -f "$pid_file" "$exit_file"
+            log_message "ERROR" "Command timed out after ${timeout}s: $cmd"
+            return 124
+        else
+            # Command completed, get exit code
+            local exit_code
+            if [[ -f "$exit_file" ]]; then
+                exit_code=$(cat "$exit_file")
+                rm -f "$pid_file" "$exit_file"
+                return "$exit_code"
+            else
+                rm -f "$pid_file" "$exit_file"
+                return 0
+            fi
+        fi
+    fi
+}
+
+# Check resource limits before operations
+check_resource_limits() {
+    # Check file count limit (1000 files max)
+    local file_count
+    file_count=$(find "${WORKSPACE_ROOT:-/Users/danielstevens/Desktop/Quantum-workspace}" -type f 2>/dev/null | wc -l | tr -d ' ')
+    if [[ $file_count -gt 1000 ]]; then
+        log_message "ERROR" "File count limit exceeded: $file_count files (max: 1000)"
+        return 1
+    fi
+
+    # Check memory usage (80% max)
+    if command -v vm_stat >/dev/null 2>&1; then
+        # macOS memory check
+        local mem_usage
+        mem_usage=$(vm_stat | grep "Pages active" | awk '{print $3}' | tr -d '.')
+        local total_mem
+        total_mem=$(echo "$(sysctl -n hw.memsize) / 1024 / 1024" | bc 2>/dev/null || echo "8192")
+        local mem_percent
+        mem_percent=$((mem_usage * 4096 * 100 / (total_mem * 1024 * 1024 / 4096)))
+        if [[ $mem_percent -gt 80 ]]; then
+            log_message "ERROR" "Memory usage too high: ${mem_percent}% (max: 80%)"
+            return 1
+        fi
+    fi
+
+    # Check CPU usage (90% max)
+    if command -v ps >/dev/null 2>&1; then
+        local cpu_usage
+        cpu_usage=$(ps -A -o %cpu | awk '{s+=$1} END {print s}')
+        if [[ $(echo "$cpu_usage > 90" | bc 2>/dev/null) -eq 1 ]]; then
+            log_message "ERROR" "CPU usage too high: ${cpu_usage}% (max: 90%)"
+            return 1
+        fi
+    fi
+
+    return 0
+}
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
@@ -83,7 +183,7 @@ collect_system_metrics() {
 
     # Get agent process count
     local agent_count
-    agent_count=$(ps aux | grep -E "agent_|mcp_server" | grep -v grep | wc -l)
+    agent_count=$(pgrep -f "agent_|mcp_server" | grep -c . || echo "0")
 
     log_message "INFO" "System Metrics - CPU: ${cpu_usage}%, Memory: ${mem_usage}%, Disk: ${disk_usage}%, Processes: ${process_count}, Agents: ${agent_count}"
 
@@ -170,7 +270,7 @@ except Exception as e:
         # Calculate averages using Python
         local avg_cpu avg_memory avg_disk
 
-        read avg_cpu avg_memory avg_disk <<<$(python3 -c "
+        read -r avg_cpu avg_memory avg_disk <<<"$(python3 -c "
 import json
 import sys
 
@@ -211,7 +311,7 @@ try:
     print(f'{avg_cpu:.1f} {avg_memory:.1f} {avg_disk:.1f}')
 except Exception as e:
     print('0 0 0')
-" 2>/dev/null)
+" 2>/dev/null)"
 
         log_message "INFO" "Average Performance (last 10 measurements):"
         log_message "INFO" "  CPU Usage: ${avg_cpu}%"

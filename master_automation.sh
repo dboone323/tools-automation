@@ -402,6 +402,7 @@ show_enhanced_usage() {
     echo ""
     echo "Advanced Analytics:"
     echo "  analytics       - Run advanced predictive analytics engine"
+    echo "  code-health     - Generate code health metrics JSON"
     echo ""
     echo "Workspace Management:"
     echo "  workspace       - Validate workspace configuration integrity"
@@ -410,6 +411,9 @@ show_enhanced_usage() {
     echo "Maintenance Commands:"
     echo "  cleanup         - Run retention policy cleanup (5-backup rule)"
     echo "  retention       - Alias for cleanup command"
+    echo ""
+    echo "Developer Productivity:"
+    echo "  generate-tests [project] - Generate XCTest skeletons (to AutoTests/)"
     echo ""
     echo "Examples:"
     echo "  $0 status"
@@ -929,6 +933,15 @@ main() {
     "analytics")
         run_advanced_analytics
         ;;
+    "code-health")
+        print_status "Generating code health metrics..."
+        if command -v python3 >/dev/null 2>&1; then
+            python3 "${CODE_DIR}/Tools/Automation/code_health_dashboard.py" || print_warning "code health generation failed"
+        else
+            print_error "python3 not found; cannot run code health generator"
+            exit 1
+        fi
+        ;;
     "workspace")
         validate_workspace_configuration
         ;;
@@ -940,6 +953,16 @@ main() {
         ;;
     "retention")
         run_retention_policy
+        ;;
+    "generate-tests")
+        shift || true
+        if [[ -n ${1-} ]]; then
+            print_status "Generating tests for project: $1"
+            bash "${CODE_DIR}/Tools/Automation/ai_generate_swift_tests.sh" --project "$1"
+        else
+            print_status "Generating tests for all projects..."
+            bash "${CODE_DIR}/Tools/Automation/ai_generate_swift_tests.sh"
+        fi
         ;;
     "quantum-analysis")
         echo "🌀 Running Quantum Analysis..."

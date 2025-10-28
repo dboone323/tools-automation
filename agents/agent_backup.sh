@@ -6,96 +6,67 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
 
+# Add reliability features for enterprise-grade operation
 set -euo pipefail
-
-# Resource limits (matching security agent standards)
-MAX_FILES=1000
-MAX_EXECUTION_TIME=1800 # 30 minutes
-MAX_MEMORY_USAGE=80     # 80% of available memory
-MAX_CPU_USAGE=90        # 90% CPU usage threshold
-
-# Task processing limits
-MAX_CONCURRENT_TASKS=3
-TASK_TIMEOUT=600 # 10 minutes per task
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-AGENTS_DIR="${SCRIPT_DIR}"
-AGENT_NAME="agent_backup"
-LOG_FILE="${AGENTS_DIR}/${AGENT_NAME}.log"
-STATUS_FILE="${AGENTS_DIR}/agent_status.json"
-BACKUP_DIR="${BACKUP_DIR:-${WORKSPACE_ROOT}/.backups}"
-BACKUP_MANIFEST="${BACKUP_DIR}/manifest.json"
-
-# Logging function
-log_message() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [${AGENT_NAME}] $*" | tee -a "${LOG_FILE}"
-}
 
 # Portable run_with_timeout: run a command and kill it if it exceeds timeout (seconds)
 # Usage: run_with_timeout <seconds> <cmd> [args...]
 run_with_timeout() {
-    local timeout_secs="$1"
+    local timeout="$1"
     shift
-    if [[ -z "${timeout_secs}" || ${timeout_secs} -le 0 ]]; then
-        "$@"
-        return $?
-    fi
+    local cmd="$*"
 
-    # Run command in background
-    (
-        "$@"
-    ) &
-    local cmd_pid=$!
-
-    # Watcher: sleep then kill if still running
-    (
-        sleep "${timeout_secs}"
-        if kill -0 "${cmd_pid}" 2>/dev/null; then
-            log_message "WARN: Command timed out after ${timeout_secs}s, killing pid ${cmd_pid}"
-            kill -9 "${cmd_pid}" 2>/dev/null || true
-        fi
-    ) &
-    local watcher_pid=$!
-
-    # Wait for command to finish
-    wait "${cmd_pid}" 2>/dev/null
-    local cmd_status=$?
-
-    # Clean up watcher
-    kill -9 "${watcher_pid}" 2>/dev/null || true
-    wait "${watcher_pid}" 2>/dev/null || true
-
-    return ${cmd_status}
-}
-
-# Function to check resource usage and limits
-check_resource_limits() {
-    # Check memory usage (macOS compatible)
-    local mem_usage
-    if command -v vm_stat >/dev/null 2>&1; then
-        # macOS: calculate memory usage percentage
-        mem_usage=$(vm_stat | awk '/Pages active/ {active=$3} /Pages wired/ {wired=$4} END {total=active+wired; print int(total/2560*100)}' 2>/dev/null || echo "50")
+    # Use timeout command if available (Linux), otherwise implement with background process
+    if command -v timeout >/dev/null 2>&1; then
+        timeout --kill-after=5s "${timeout}s" bash -c "$cmd"
     else
-        # Fallback: use ps for memory info
-        mem_usage=$(ps -o pmem= -C "${AGENT_NAME}" | awk '{sum+=$1} END {print int(sum)}' 2>/dev/null || echo "10")
+        # macOS/BSD implementation using background process
+        local pid_file
+        pid_file=$(mktemp)
+        local exit_file
+        exit_file=$(mktemp)
+
+        # Run command in background
+        (
+            if bash -c "$cmd"; then
+                echo 0 >"$exit_file"
+            else
+                echo $? >"$exit_file"
+            fi
+        ) &
+        local cmd_pid=$!
+
+        echo "$cmd_pid" >"$pid_file"
+
+        # Wait for completion or timeout
+        local count=0
+        while [[ $count -lt $timeout ]] && kill -0 $cmd_pid 2>/dev/null; do
+            sleep 1
+            ((count++))
+        done
+
+        # Check if still running
+        if kill -0 $cmd_pid 2>/dev/null; then
+            # Kill the process group
+            pkill -TERM -P "$cmd_pid" 2>/dev/null || true
+            sleep 1
+            pkill -KILL -P "$cmd_pid" 2>/dev/null || true
+            rm -f "$pid_file" "$exit_file"
+            log_message "ERROR" "Command timed out after ${timeout}s: $cmd"
+            return 124
+        else
+            # Command completed, get exit code
+            local exit_code
+            if [[ -f "$exit_file" ]]; then
+                exit_code=$(cat "$exit_file")
+                rm -f "$pid_file" "$exit_file"
+                return "$exit_code"
+            else
+                rm -f "$pid_file" "$exit_file"
+                return 0
+            fi
+        fi
     fi
-
-    if [[ ${mem_usage} -gt ${MAX_MEMORY_USAGE} ]]; then
-        log_message "WARN: Memory usage too high (${mem_usage}% > ${MAX_MEMORY_USAGE}%)"
-        return 1
-    fi
-
-    # Check CPU usage
-    local cpu_usage
-    cpu_usage=$(ps -o pcpu= -C "${AGENT_NAME}" | awk '{sum+=$1} END {print int(sum)}' 2>/dev/null || echo "5")
-
-    if [[ ${cpu_usage} -gt ${MAX_CPU_USAGE} ]]; then
-        log_message "WARN: CPU usage too high (${cpu_usage}% > ${MAX_CPU_USAGE}%)"
-        return 1
-    fi
-
-    return 0
 }
 
 mkdir -p "${BACKUP_DIR}"
@@ -341,7 +312,7 @@ cleanup_old_backups() {
 
     # Find old backups
     local old_backups
-    old_backups=$(find "${BACKUP_DIR}" -name "backup_*.tar.gz" -mtime +${retention_days} 2>/dev/null || echo "")
+    old_backups=$(find "${BACKUP_DIR}" -name "backup_*.tar.gz" -mtime +"${retention_days}" 2>/dev/null || echo "")
 
     if [[ -n "${old_backups}" ]]; then
         while IFS= read -r backup_file; do
@@ -439,7 +410,8 @@ process_backup_task() {
         create_backup "incremental"
         ;;
     *verify*)
-        local backup_name=$(echo "$task" | sed 's/.*verify://')
+        local backup_name
+        backup_name="${task#*verify:}"
         if [[ -n "$backup_name" ]]; then
             verify_backup "$backup_name"
         else
@@ -452,11 +424,13 @@ process_backup_task() {
         fi
         ;;
     *cleanup*)
-        local days=$(echo "$task" | sed 's/.*cleanup://' | sed 's/[^0-9]//g')
+        local days
+        days=$(echo "$task" | sed 's/.*cleanup://' | sed 's/[^0-9]//g')
         cleanup_old_backups "${days:-30}"
         ;;
     *restore*)
-        local backup_name=$(echo "$task" | sed 's/.*restore://')
+        local backup_name
+        backup_name="${task#*restore:}"
         if [[ -n "$backup_name" ]]; then
             restore_backup "$backup_name" "${WORKSPACE_ROOT}/.restore" "false"
         fi
@@ -489,9 +463,9 @@ main() {
     fi
 
     while true; do
-        # Ensure we're within system limits
-        if ! ensure_within_limits; then
-            log_message "System limits exceeded, waiting before retry..."
+        # Check resource limits before processing
+        if ! check_resource_limits; then
+            log_message "WARN" "Resource limits exceeded, waiting before retry..."
             sleep 30
             continue
         fi

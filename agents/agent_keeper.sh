@@ -5,6 +5,86 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_FILE="${SCRIPT_DIR}/agent_keeper.log"
 PID_FILE="${SCRIPT_DIR}/agent_keeper.pid"
 
+# Agent configuration
+AGENT_NAME="KeeperAgent"
+export STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
+export TASK_QUEUE="${SCRIPT_DIR}/task_queue.json"
+export PID=$$
+
+# Source shared functions for task management
+if [[ -f "${SCRIPT_DIR}/shared_functions.sh" ]]; then
+    source "${SCRIPT_DIR}/shared_functions.sh"
+fi
+
+# Timeout protection function
+run_with_timeout() {
+    local timeout_seconds="$1"
+    local command="$2"
+    local timeout_msg="${3:-Operation timed out after ${timeout_seconds} seconds}"
+
+    echo "[$(date)] ${AGENT_NAME}: Starting operation with ${timeout_seconds}s timeout..." >>"${LOG_FILE}"
+
+    # Run command in background with timeout
+    (
+        eval "${command}" &
+        local cmd_pid=$!
+
+        # Wait for completion or timeout
+        local count=0
+        while [[ ${count} -lt ${timeout_seconds} ]] && kill -0 ${cmd_pid} 2>/dev/null; do
+            sleep 1
+            ((count++))
+        done
+
+        # Check if process is still running
+        if kill -0 ${cmd_pid} 2>/dev/null; then
+            echo "[$(date)] ${AGENT_NAME}: ${timeout_msg}" >>"${LOG_FILE}"
+            kill -TERM ${cmd_pid} 2>/dev/null || true
+            sleep 2
+            kill -KILL ${cmd_pid} 2>/dev/null || true
+            return 124 # Timeout exit code
+        fi
+
+        # Wait for process to get exit code
+        wait ${cmd_pid} 2>/dev/null
+        return $?
+    )
+}
+
+# Resource limits checking function
+check_resource_limits() {
+    local operation_name="$1"
+
+    echo "[$(date)] ${AGENT_NAME}: Checking resource limits for ${operation_name}..." >>"${LOG_FILE}"
+
+    # Check available disk space (require at least 1GB)
+    local available_space
+    available_space=$(df -k "/Users/danielstevens/Desktop/Quantum-workspace" | tail -1 | awk '{print $4}')
+    if [[ ${available_space} -lt 1048576 ]]; then # 1GB in KB
+        echo "[$(date)] ${AGENT_NAME}: ❌ Insufficient disk space for ${operation_name}" >>"${LOG_FILE}"
+        return 1
+    fi
+
+    # Check memory usage (require less than 90% usage)
+    local mem_usage
+    mem_usage=$(vm_stat | grep "Pages free" | awk '{print $3}' | tr -d '.')
+    if [[ ${mem_usage} -lt 100000 ]]; then # Rough check for memory pressure
+        echo "[$(date)] ${AGENT_NAME}: ❌ High memory usage detected for ${operation_name}" >>"${LOG_FILE}"
+        return 1
+    fi
+
+    # Check file count limits (prevent runaway keeper operations)
+    local file_count
+    file_count=$(find "/Users/danielstevens/Desktop/Quantum-workspace" -type f 2>/dev/null | wc -l)
+    if [[ ${file_count} -gt 50000 ]]; then
+        echo "[$(date)] ${AGENT_NAME}: ❌ Too many files in workspace for ${operation_name}" >>"${LOG_FILE}"
+        return 1
+    fi
+
+    echo "[$(date)] ${AGENT_NAME}: ✅ Resource limits OK for ${operation_name}" >>"${LOG_FILE}"
+    return 0
+}
+
 # Agent definitions with their capabilities
 declare -A AGENT_CAPABILITIES=(
     ["agent_analytics.sh"]="analytics,metrics,reporting"
@@ -37,18 +117,39 @@ start_keeper() {
 
     log "Starting Quantum Agent Keeper..."
 
+    # Check resource limits before starting
+    if ! check_resource_limits "keeper startup"; then
+        log "Resource limits check failed, cannot start keeper"
+        return 1
+    fi
+
+    # Create backup before starting keeper operations
+    echo "[$(date)] ${AGENT_NAME}: Creating backup before keeper operations..." >>"${LOG_FILE}"
+    /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup "global" "keeper_startup" >>"${LOG_FILE}" 2>&1 || true
+
     # Start background keeper
     (
         echo $$ >"$PID_FILE"
 
-        # Initial agent deployment
-        deploy_all_agents
+        # Initial agent deployment with timeout protection
+        if ! run_with_timeout 300 "deploy_all_agents" "Initial agent deployment timed out"; then
+            log "Failed to deploy all agents within timeout"
+        fi
 
         # Continuous monitoring loop
         while true; do
-            check_agent_health
-            balance_workload
-            optimize_performance
+            if ! run_with_timeout 60 "check_agent_health" "Health check timed out"; then
+                log "Health check failed or timed out"
+            fi
+
+            if ! run_with_timeout 60 "balance_workload" "Workload balancing timed out"; then
+                log "Workload balancing failed or timed out"
+            fi
+
+            if ! run_with_timeout 60 "optimize_performance" "Performance optimization timed out"; then
+                log "Performance optimization failed or timed out"
+            fi
+
             sleep 15 # Check every 15 seconds
         done
     ) &
@@ -63,8 +164,11 @@ deploy_all_agents() {
     local deployed=0
     for agent_script in "${!AGENT_CAPABILITIES[@]}"; do
         if [[ -f "$agent_script" ]]; then
-            deploy_agent "$agent_script"
-            ((deployed++))
+            if ! run_with_timeout 30 "deploy_agent '$agent_script'" "Deployment of $agent_script timed out"; then
+                log "Failed to deploy $agent_script within timeout"
+            else
+                ((deployed++))
+            fi
             sleep 0.3 # Stagger deployments
         fi
     done
@@ -86,6 +190,7 @@ deploy_agent() {
     # Create agent environment
     export AGENT_NAME="$agent_name"
     export AGENT_SCRIPT="$agent_script"
+    # shellcheck disable=SC2178
     export AGENT_CAPABILITIES="${AGENT_CAPABILITIES[$agent_script]}"
 
     # Start agent with monitoring
@@ -98,11 +203,13 @@ deploy_agent() {
                 local agent_pid=$!
 
                 # Monitor agent health
-                local start_time=$(date +%s)
+                local start_time
+                start_time=$(date +%s)
                 while kill -0 $agent_pid 2>/dev/null; do
                     sleep 5
                     # Check if agent is still responsive (not stuck)
-                    local current_time=$(date +%s)
+                    local current_time
+                    current_time=$(date +%s)
                     if ((current_time - start_time > 300)); then # 5 minutes
                         # Reset start time if agent is still active
                         start_time=$current_time
@@ -144,7 +251,8 @@ check_agent_health() {
 
 balance_workload() {
     # Check if any agent is overloaded (>5 tasks) and redistribute
-    local overloaded_agents=$(python3 -c "
+    local overloaded_agents
+    overloaded_agents=$(python3 -c "
 import json
 with open('task_queue.json', 'r') as f:
     data = json.load(f)
@@ -188,8 +296,10 @@ print(f'Redistributed {redistributed} tasks from overloaded agents')
 
 optimize_performance() {
     # Check system resources and adjust agent count accordingly
-    local cpu_usage=$(ps aux | awk '{sum += $3} END {print sum}')
-    local mem_usage=$(ps aux | awk '{sum += $4} END {print sum}')
+    local cpu_usage
+    cpu_usage=$(ps aux | awk '{sum += $3} END {print sum}')
+    local mem_usage
+    mem_usage=$(ps aux | awk '{sum += $4} END {print sum}')
 
     # If system is overloaded, reduce concurrent tasks
     if (($(echo "$cpu_usage > 80" | bc -l))) || (($(echo "$mem_usage > 80" | bc -l))); then

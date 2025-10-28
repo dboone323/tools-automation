@@ -64,6 +64,40 @@ run_with_timeout() {
     return ${cmd_status}
 }
 
+# Resource limits checking function
+check_resource_limits() {
+    local operation_name="$1"
+
+    log_message "INFO" "Checking resource limits for ${operation_name}..."
+
+    # Check available disk space (require at least 1GB)
+    local available_space
+    available_space=$(df -k "${PROJECTS_DIR}" | tail -1 | awk '{print $4}')
+    if [[ ${available_space} -lt 1048576 ]]; then # 1GB in KB
+        log_message "ERROR" "Insufficient disk space for ${operation_name}"
+        return 1
+    fi
+
+    # Check memory usage (require less than 90% usage)
+    local mem_usage
+    mem_usage=$(vm_stat | grep "Pages free" | awk '{print $3}' | tr -d '.')
+    if [[ ${mem_usage} -lt 100000 ]]; then # Rough check for memory pressure
+        log_message "ERROR" "High memory usage detected for ${operation_name}"
+        return 1
+    fi
+
+    # Check file count limits (prevent runaway security scans)
+    local file_count
+    file_count=$(find "${PROJECTS_DIR}" -type f 2>/dev/null | wc -l)
+    if [[ ${file_count} -gt 50000 ]]; then
+        log_message "ERROR" "Too many files in workspace for ${operation_name}"
+        return 1
+    fi
+
+    log_message "INFO" "Resource limits OK for ${operation_name}"
+    return 0
+}
+
 process_security_task() {
     local task_data="$1"
 
@@ -81,6 +115,13 @@ process_security_task() {
     fi
 
     log_message "INFO" "Processing security task: $task_id (type: $task_type, project: $project)"
+
+    # Check resource limits before starting
+    if ! check_resource_limits "security task ${task_type}"; then
+        log_message "ERROR" "Resource limits check failed for security task ${task_id}"
+        update_task_status "$task_id" "failed"
+        return 1
+    fi
 
     # Mark task as in progress
     update_task_status "$task_id" "in_progress"
@@ -154,16 +195,19 @@ perform_static_analysis() {
     # Analyze Swift files for security issues (with timeout and file limit)
     local file_count=0
     local max_files=30 # Reduced limit to prevent runaway execution
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
     local max_duration=60 # Max 60 seconds for analysis
 
     # Use a temporary file to track progress
-    local temp_files=$(mktemp)
+    local temp_files
+    temp_files=$(mktemp)
     find "${source_dir}" -name "*.swift" 2>/dev/null | head -${max_files} >"${temp_files}"
 
     while IFS= read -r swift_file; do
         # Check timeout
-        local current_time=$(date +%s)
+        local current_time
+        current_time=$(date +%s)
         local elapsed=$((current_time - start_time))
         if [[ ${elapsed} -ge ${max_duration} ]]; then
             log_message "WARN" "Analysis timed out after ${elapsed} seconds"
@@ -365,16 +409,19 @@ check_compliance() {
     # Check for data privacy compliance (with file limit and timeout)
     local file_count=0
     local max_files=20 # Reduced limit for compliance checks
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
     local max_duration=30 # Max 30 seconds
 
     # Use a temporary file to track progress
-    local temp_files=$(mktemp)
+    local temp_files
+    temp_files=$(mktemp)
     find "${source_dir}" -name "*.swift" 2>/dev/null | head -${max_files} >"${temp_files}"
 
     while IFS= read -r swift_file; do
         # Check timeout
-        local current_time=$(date +%s)
+        local current_time
+        current_time=$(date +%s)
         local elapsed=$((current_time - start_time))
         if [[ ${elapsed} -ge ${max_duration} ]]; then
             log_message "WARN" "Compliance check timed out after ${elapsed} seconds"

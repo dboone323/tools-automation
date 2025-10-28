@@ -18,20 +18,18 @@ WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"  # Seconds to wait when system is busy
 
 # Resource limits (matching security agent standards)
 MAX_FILES=1000
-MAX_EXECUTION_TIME=1800 # 30 minutes
-MAX_MEMORY_USAGE=80     # 80% of available memory
-MAX_CPU_USAGE=90        # 90% CPU usage threshold
+MAX_MEMORY_USAGE=80 # 80% of available memory
+MAX_CPU_USAGE=90    # 90% CPU usage threshold
 
 # Task processing limits
-MAX_CONCURRENT_TASKS=3
-TASK_TIMEOUT=600 # 10 minutes per task
 
 # Function to check if we should proceed with task processing
 ensure_within_limits() {
     local agent_name="agent_codegen.sh"
 
     # Check concurrent instances
-    local running_count=$(pgrep -f "${agent_name}" | wc -l)
+    local running_count
+    running_count=$(pgrep -f "${agent_name}" | wc -l)
     if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
         echo "[$(date)] ${AGENT_NAME}: Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..." >>"${LOG_FILE}"
         return 1
@@ -99,16 +97,9 @@ AI_ENHANCEMENT_BIN="${WORKSPACE}/Tools/Automation/ai_enhancement_system.sh"
 AUTO_FIX_VALIDATOR="${WORKSPACE}/Tools/Automation/intelligent_autofix.sh"
 BACKUP_MANAGER="${SCRIPT_DIR}/backup_manager.sh"
 
-SLEEP_INTERVAL=900 # Start with 15 minutes
-MIN_INTERVAL=60
-MAX_INTERVAL=1800
-
 CONSECUTIVE_FAILURES=0
-MAX_CONSECUTIVE_FAILURES=3
 
 # Idle detection variables
-IDLE_COUNTER=0
-MAX_IDLE_CYCLES=12 # 12 cycles = ~1 minute at 5-second intervals
 
 mkdir -p "${COMM_DIR}"
 touch "${NOTIFICATION_FILE}" "${COMPLETED_FILE}" "${PROCESSED_TASKS_FILE}"

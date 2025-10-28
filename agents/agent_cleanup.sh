@@ -13,14 +13,8 @@ fi
 set -euo pipefail
 
 # Resource limits (matching security agent standards)
-MAX_FILES=1000
-MAX_EXECUTION_TIME=1800 # 30 minutes
-MAX_MEMORY_USAGE=80     # 80% of available memory
-MAX_CPU_USAGE=90        # 90% CPU usage threshold
-
-# Task processing limits
-MAX_CONCURRENT_TASKS=3
-TASK_TIMEOUT=600 # 10 minutes per task
+MAX_MEMORY_USAGE=80 # 80% of available memory
+MAX_CPU_USAGE=90    # 90% CPU usage threshold
 
 # Agent throttling configuration
 MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}" # Maximum concurrent instances of this agent
@@ -32,7 +26,8 @@ ensure_within_limits() {
     local agent_name="agent_cleanup.sh"
 
     # Check concurrent instances
-    local running_count=$(pgrep -f "${agent_name}" | wc -l)
+    local running_count
+    running_count=$(pgrep -f "${agent_name}" | wc -l)
     if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
         log_message "WARN" "Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..."
         return 1
@@ -64,7 +59,6 @@ AGENT_NAME="CleanupAgent"
 LOG_FILE="${SCRIPT_DIR}/cleanup_agent.log"
 WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 AGENTS_DIR="${SCRIPT_DIR}"
-STATUS_FILE="${AGENTS_DIR}/agent_status.json"
 CLEANUP_REPORT_DIR="${WORKSPACE_ROOT}/.metrics/cleanup"
 
 # Source AI enhancement modules
@@ -75,8 +69,6 @@ if [[ -f "${ENHANCEMENTS_DIR}/ai_cleanup_optimizer.sh" ]]; then
 fi
 
 SLEEP_INTERVAL=86400 # 24 hours for cleanup tasks
-MIN_INTERVAL=3600    # 1 hour minimum
-MAX_INTERVAL=172800  # 48 hours maximum
 
 mkdir -p "${CLEANUP_REPORT_DIR}"
 
@@ -201,7 +193,7 @@ clean_old_logs() {
 
     # Find old compressed logs - add timeout and depth limit
     local old_logs
-    old_logs=$(timeout 30 find "${AGENTS_DIR}" "${WORKSPACE_ROOT}/Projects" -maxdepth 3 -name "*.log.*.gz" -mtime +${retention_days} 2>/dev/null || echo "")
+    old_logs=$(timeout 30 find "${AGENTS_DIR}" "${WORKSPACE_ROOT}/Projects" -maxdepth 3 -name "*.log.*.gz" -mtime "+${retention_days}" 2>/dev/null || echo "")
 
     if [[ -n "${old_logs}" ]]; then
         while IFS= read -r log_file; do
@@ -370,7 +362,7 @@ clean_old_metrics() {
 
     if [[ -d "${WORKSPACE_ROOT}/.metrics" ]]; then
         local old_metrics
-        old_metrics=$(timeout 30 find "${WORKSPACE_ROOT}/.metrics" -maxdepth 2 -name "*.json" -mtime +${retention_days} 2>/dev/null || echo "")
+        old_metrics=$(timeout 30 find "${WORKSPACE_ROOT}/.metrics" -maxdepth 2 -name "*.json" -mtime "+${retention_days}" 2>/dev/null || echo "")
 
         if [[ -n "${old_metrics}" ]]; then
             while IFS= read -r metric_file; do
@@ -394,7 +386,7 @@ generate_cleanup_report() {
 
     # Collect workspace statistics - add timeouts to prevent hanging
     local workspace_size
-    workspace_size=$(timeout 30 du -sk "${WORKSPACE_ROOT}" 2>/dev/null | awk '{print $1}' || echo 0)
+    workspace_size="$(timeout 30 du -sk "${WORKSPACE_ROOT}" 2>/dev/null | awk '{print $1}' || echo 0)"
 
     local file_count
     file_count=$(timeout 30 find "${WORKSPACE_ROOT}" -maxdepth 4 -type f 2>/dev/null | wc -l | tr -d ' ' || echo 0)
@@ -479,12 +471,12 @@ while true; do
     # Check if we should proceed (throttling)
     if ! ensure_within_limits; then
         # Wait when busy, with exponential backoff
-        wait_time=${WAIT_WHEN_BUSY}
+        wait_time="${WAIT_WHEN_BUSY}"
         attempts=0
         while ! ensure_within_limits && [[ ${attempts} -lt 10 ]]; do
             log_message "INFO" "Waiting ${wait_time}s before retry (attempt $((attempts + 1))/10)"
             sleep "${wait_time}"
-            wait_time=$((wait_time * 2))                          # Exponential backoff
+            wait_time="$((wait_time * 2))"                        # Exponential backoff
             if [[ ${wait_time} -gt 300 ]]; then wait_time=300; fi # Cap at 5 minutes
             ((attempts++))
         done

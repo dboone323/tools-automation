@@ -73,7 +73,6 @@ if [[ -f "${ENHANCEMENTS_DIR}/ai_build_optimizer.sh" ]]; then
     source "${ENHANCEMENTS_DIR}/ai_build_optimizer.sh"
 fi
 AGENT_NAME="agent_build.sh"
-AGENT_LABEL="BuildAgent"
 LOG_FILE="${SCRIPT_DIR}/build_agent.log"
 COMM_DIR="${SCRIPT_DIR}/communication"
 NOTIFICATION_FILE="${COMM_DIR}/agent_build.sh_notification.txt"
@@ -84,22 +83,10 @@ TASK_QUEUE_FILE="${WORKSPACE}/Tools/Automation/agents/task_queue.json"
 PROCESSED_TASKS_FILE="${SCRIPT_DIR}/${AGENT_NAME}_processed_tasks.txt"
 STATUS_UPDATE_INTERVAL=60
 
-STATUS_UTIL="${SCRIPT_DIR}/status_utils.py"
-STATUS_KEYS=("${AGENT_NAME}" "agent_build.sh")
-
-SLEEP_INTERVAL=300 # Start with 5 minutes
-MIN_INTERVAL=60
-MAX_INTERVAL=1800
+STATUS_UPDATE_INTERVAL=60
 
 # Resource limits (matching security agent standards)
 MAX_FILES=1000
-MAX_EXECUTION_TIME=1800 # 30 minutes
-MAX_MEMORY_USAGE=80     # 80% of available memory
-MAX_CPU_USAGE=90        # 90% CPU usage threshold
-
-# Task processing limits
-MAX_CONCURRENT_TASKS=3
-TASK_TIMEOUT=600 # 10 minutes per task
 
 # Function to check resource usage and limits
 check_resource_limits() {
@@ -143,8 +130,6 @@ check_resource_limits() {
 }
 
 # Idle detection variables
-IDLE_COUNTER=0
-MAX_IDLE_CYCLES=12 # 12 cycles = ~1 minute at 5-second intervals
 
 mkdir -p "${COMM_DIR}"
 touch "${NOTIFICATION_FILE}" "${COMPLETED_FILE}" "${PROCESSED_TASKS_FILE}"
@@ -167,42 +152,6 @@ log_message() {
 
 # Portable run_with_timeout: run a command and kill it if it exceeds timeout (seconds)
 # Usage: run_with_timeout <seconds> <cmd> [args...]
-run_with_timeout() {
-    local timeout_secs="$1"
-    shift
-    if [[ -z "${timeout_secs}" || ${timeout_secs} -le 0 ]]; then
-        "$@"
-        return $?
-    fi
-
-    # Run command in background
-    (
-        "$@"
-    ) &
-    local cmd_pid=$!
-
-    # Watcher: sleep then kill if still running
-    (
-        sleep "${timeout_secs}"
-        if kill -0 "${cmd_pid}" 2>/dev/null; then
-            log_message "WARN" "Command timed out after ${timeout_secs}s, killing pid ${cmd_pid}"
-            kill -9 "${cmd_pid}" 2>/dev/null || true
-        fi
-    ) &
-    local watcher_pid=$!
-
-    # Wait for command to finish
-    wait "${cmd_pid}" 2>/dev/null
-    local cmd_status=$?
-
-    # Clean up watcher
-    kill -9 "${watcher_pid}" 2>/dev/null || true
-    wait "${watcher_pid}" 2>/dev/null || true
-
-    return ${cmd_status}
-}
-
-# Portable timeout function for macOS (no built-in timeout command)
 run_with_timeout() {
     local timeout_seconds="$1"
     shift
@@ -359,6 +308,7 @@ process_task() {
     # Process the build task
     echo "[$(date)] ${AGENT_NAME}: Creating multi-level backup before build..." >>"${LOG_FILE}"
     nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed CodingReviewer >>"${LOG_FILE}" 2>&1 || true
+    # shellcheck disable=SC2129
     echo "[$(date)] ${AGENT_NAME}: Running build..." >>"${LOG_FILE}"
     nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh build >>"${LOG_FILE}" 2>&1
     echo "[$(date)] ${AGENT_NAME}: Running AI enhancement analysis..." >>"${LOG_FILE}"

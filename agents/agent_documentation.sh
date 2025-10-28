@@ -35,6 +35,75 @@ STATUS_FILE="$(dirname "$0")/agent_status.json"
 TASK_QUEUE="$(dirname "$0")/task_queue.json"
 PID=$$
 
+# Timeout protection function
+run_with_timeout() {
+    local timeout_seconds="$1"
+    local command="$2"
+    local timeout_msg="${3:-Operation timed out after ${timeout_seconds} seconds}"
+
+    echo "[$(date)] ${AGENT_NAME}: Starting operation with ${timeout_seconds}s timeout..." >>"${LOG_FILE}"
+
+    # Run command in background with timeout
+    (
+        eval "${command}" &
+        local cmd_pid=$!
+
+        # Wait for completion or timeout
+        local count=0
+        while [[ ${count} -lt ${timeout_seconds} ]] && kill -0 ${cmd_pid} 2>/dev/null; do
+            sleep 1
+            ((count++))
+        done
+
+        # Check if process is still running
+        if kill -0 ${cmd_pid} 2>/dev/null; then
+            echo "[$(date)] ${AGENT_NAME}: ${timeout_msg}" >>"${LOG_FILE}"
+            kill -TERM ${cmd_pid} 2>/dev/null || true
+            sleep 2
+            kill -KILL ${cmd_pid} 2>/dev/null || true
+            return 124 # Timeout exit code
+        fi
+
+        # Wait for process to get exit code
+        wait ${cmd_pid} 2>/dev/null
+        return $?
+    )
+}
+
+# Resource limits checking function
+check_resource_limits() {
+    local operation_name="$1"
+
+    echo "[$(date)] ${AGENT_NAME}: Checking resource limits for ${operation_name}..." >>"${LOG_FILE}"
+
+    # Check available disk space (require at least 1GB)
+    local available_space
+    available_space=$(df -k "/Users/danielstevens/Desktop/Quantum-workspace" | tail -1 | awk '{print $4}')
+    if [[ ${available_space} -lt 1048576 ]]; then # 1GB in KB
+        echo "[$(date)] ${AGENT_NAME}: ❌ Insufficient disk space for ${operation_name}" >>"${LOG_FILE}"
+        return 1
+    fi
+
+    # Check memory usage (require less than 90% usage)
+    local mem_usage
+    mem_usage=$(vm_stat | grep "Pages free" | awk '{print $3}' | tr -d '.')
+    if [[ ${mem_usage} -lt 100000 ]]; then # Rough check for memory pressure
+        echo "[$(date)] ${AGENT_NAME}: ❌ High memory usage detected for ${operation_name}" >>"${LOG_FILE}"
+        return 1
+    fi
+
+    # Check file count limits (prevent runaway documentation operations)
+    local file_count
+    file_count=$(find "/Users/danielstevens/Desktop/Quantum-workspace" -type f 2>/dev/null | wc -l)
+    if [[ ${file_count} -gt 50000 ]]; then
+        echo "[$(date)] ${AGENT_NAME}: ❌ Too many files in workspace for ${operation_name}" >>"${LOG_FILE}"
+        return 1
+    fi
+
+    echo "[$(date)] ${AGENT_NAME}: ✅ Resource limits OK for ${operation_name}" >>"${LOG_FILE}"
+    return 0
+}
+
 # Export variables for shared functions
 export STATUS_FILE
 export TASK_QUEUE
@@ -53,6 +122,13 @@ while true; do
     if [[ -n "${TASK_ID}" ]]; then
         echo "[$(date)] ${AGENT_NAME}: Processing task ${TASK_ID}" >>"${LOG_FILE}"
 
+        # Check resource limits before starting
+        if ! check_resource_limits "documentation task ${TASK_ID}"; then
+            echo "[$(date)] ${AGENT_NAME}: Resource limits check failed for task ${TASK_ID}" >>"${LOG_FILE}"
+            update_task_status "${TASK_ID}" "failed"
+            continue
+        fi
+
         # Mark task as in progress
         update_task_status "${TASK_ID}" "in_progress"
         update_agent_status "agent_documentation.sh" "busy" $$ "${TASK_ID}"
@@ -64,27 +140,46 @@ while true; do
 
         echo "[$(date)] ${AGENT_NAME}: Task type: ${TASK_TYPE}, Description: ${TASK_DESCRIPTION}" >>"${LOG_FILE}"
 
+        # Create backup before documentation operations
+        echo "[$(date)] ${AGENT_NAME}: Creating backup before documentation operations..." >>"${LOG_FILE}"
+        /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup "${PROJECT}" "documentation_operation_${TASK_ID}" >>"${LOG_FILE}" 2>&1 || true
+
         # Process the task based on type
         TASK_SUCCESS=true
 
         case "${TASK_TYPE}" in
         "documentation")
-            # Generate documentation
+            # Generate documentation with timeout protection
             echo "[$(date)] ${AGENT_NAME}: Generating documentation..." >>"${LOG_FILE}"
-            /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/master_automation.sh status >>"${LOG_FILE}" 2>&1
-            echo "[$(date)] ${AGENT_NAME}: Documentation generation completed successfully." >>"${LOG_FILE}"
+            if ! run_with_timeout 600 "/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/master_automation.sh status" "Documentation generation timed out"; then
+                echo "[$(date)] ${AGENT_NAME}: Documentation generation failed or timed out" >>"${LOG_FILE}"
+                TASK_SUCCESS=false
+            else
+                echo "[$(date)] ${AGENT_NAME}: Documentation generation completed successfully." >>"${LOG_FILE}"
+            fi
             ;;
         "readme")
-            # Update README files
+            # Update README files with timeout protection
             echo "[$(date)] ${AGENT_NAME}: Updating README files..." >>"${LOG_FILE}"
-            readme_count=$(find /Users/danielstevens/Desktop/Quantum-workspace -name "README.md" | grep -c ".*" || echo "0")
-            echo "[$(date)] ${AGENT_NAME}: Found ${readme_count} README files to update." >>"${LOG_FILE}"
-            echo "[$(date)] ${AGENT_NAME}: README updates completed successfully." >>"${LOG_FILE}"
+            if ! run_with_timeout 180 "
+                readme_count=\$(find /Users/danielstevens/Desktop/Quantum-workspace -name 'README.md' | grep -c '.*' || echo '0')
+                echo \"[$(date)] ${AGENT_NAME}: Found \${readme_count} README files to update.\" >>'${LOG_FILE}'
+            " "README update timed out"; then
+                echo "[$(date)] ${AGENT_NAME}: README update failed or timed out" >>"${LOG_FILE}"
+                TASK_SUCCESS=false
+            else
+                echo "[$(date)] ${AGENT_NAME}: README updates completed successfully." >>"${LOG_FILE}"
+            fi
             ;;
         "api-docs")
-            # Generate API documentation
+            # Generate API documentation with timeout protection
             echo "[$(date)] ${AGENT_NAME}: Generating API documentation..." >>"${LOG_FILE}"
-            echo "[$(date)] ${AGENT_NAME}: API documentation generation completed successfully." >>"${LOG_FILE}"
+            if ! run_with_timeout 300 "echo 'API documentation generation simulation completed'" "API documentation generation timed out"; then
+                echo "[$(date)] ${AGENT_NAME}: API documentation generation failed or timed out" >>"${LOG_FILE}"
+                TASK_SUCCESS=false
+            else
+                echo "[$(date)] ${AGENT_NAME}: API documentation generation completed successfully." >>"${LOG_FILE}"
+            fi
             ;;
         *)
             echo "[$(date)] ${AGENT_NAME}: Unknown task type: ${TASK_TYPE}" >>"${LOG_FILE}"
