@@ -422,6 +422,23 @@ main() {
 
     # Main task processing loop
     while true; do
+        # Check if we should proceed with task processing
+        if ! ensure_within_limits; then
+            # System is busy, implement exponential backoff
+            local wait_time=5
+            while ! ensure_within_limits && [[ ${wait_time} -lt 300 ]]; do
+                log_message "INFO" "System busy, waiting ${wait_time}s before retry..."
+                sleep ${wait_time}
+                wait_time=$((wait_time * 2))
+            done
+            # If still busy after max wait, wait maximum time
+            if ! ensure_within_limits; then
+                log_message "WARN" "System still busy after maximum wait, sleeping 300s..."
+                sleep 300
+            fi
+            continue
+        fi
+
         # Get next task from shared queue
         local task_data
         if task_data=$(get_next_task "${AGENT_NAME}" 2>/dev/null); then

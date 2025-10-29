@@ -141,5 +141,26 @@
     "last_seen": 1761573255,
     "pid": 87439,
     "current_task_id": "security_scan_plannerapp_test"
+  },
+  {
+    "id": "audit_agent.sh",
+    "name": "audit_agent.sh",
+    "status": "available",
+    "last_seen": 1761677995,
+    "pid": null
+  },
+  {
+    "id": "encryption_agent.sh",
+    "name": "encryption_agent.sh",
+    "status": "busy",
+    "last_seen": 1761670697,
+    "pid": null
+  },
+  {
+    "id": "monitoring_agent.sh",
+    "name": "monitoring_agent.sh",
+    "status": "available",
+    "last_seen": 1761681105,
+    "pid": 58376
   }
 ]

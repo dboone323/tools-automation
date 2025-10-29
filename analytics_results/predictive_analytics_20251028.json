@@ -1,39 +1,4 @@
 {
-  "dashboard_generated": "Tue Oct 28 14:53:51 CDT 2025",
-  "dashboard_version": "1.0",
-  "framework": "Phase 8: Advanced Monitoring & Analytics",
-  "summary": {
-    "status": "operational",
-    "last_updated": "1761681231",
-    "data_freshness": "current"
-  },
-  "key_metrics": {
-    "system_health": {
-  "timestamp": 1761681231,
-  "cpu_usage": 14.28,
-  "memory_usage": 31,
-  "disk_usage": 14,
-  "network_activity": 44,
-  "process_count": 670,
-  "agent_status": "monitoring_active"
-},
-    "performance_trends": {
-  "analysis_date": "Tue Oct 28 14:53:51 CDT 2025",
-  "analysis_period": "recent_data",
-  "metrics_count": 15,
-  "averages": {
-    "cpu_usage_percent": 155.698,
-    "memory_usage_percent": 62.546666666666674
-  },
-  "trends": {
-    "cpu_trend_slope": 362.82000000000005,
-    "memory_trend_slope": 42.099999999999994,
-    "cpu_direction": "increasing",
-    "memory_direction": "increasing"
-  },
-  "recommendations": []
-},
-    "predictive_insights": {
   "prediction_date": "Tue Oct 28 14:53:51 CDT 2025",
   "prediction_horizon": "30_days",
   "confidence_level": "high",
@@ -78,13 +43,4 @@
     "Prepare for multi-project scaling"
   ],
   "ai_analysis": "AI analysis not available"
-}
-  },
-  "alerts": [],
-  "recommendations": [
-    "Monitor system resources regularly",
-    "Review performance trends weekly",
-    "Implement predictive maintenance",
-    "Scale automation infrastructure as needed"
-  ]
 }

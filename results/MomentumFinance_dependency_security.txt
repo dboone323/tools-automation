@@ -1,0 +1,9 @@
+Dependency Security Check
+Project: MomentumFinance
+Check Date: Tue Oct 28 14:05:37 CDT 2025
+Dependency File: Package.swift
+========================================
+
+Dependencies Found: 4\nDEPENDENCY SECURITY: 1 potentially outdated dependencies found\n
+
+========================================

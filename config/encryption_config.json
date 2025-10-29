@@ -1,0 +1,33 @@
+{
+  "encryption": {
+    "enabled": true,
+    "default_algorithm": "AES256",
+    "key_size": 256,
+    "key_rotation_days": 90,
+    "backup_encryption": true
+  },
+  "key_management": {
+    "key_derivation": "PBKDF2",
+    "salt_size": 32,
+    "iterations": 10000,
+    "master_key_protection": "hardware_security_module"
+  },
+  "data_classification": {
+    "public": "no_encryption",
+    "internal": "AES128",
+    "confidential": "AES256",
+    "restricted": "AES256_HSM"
+  },
+  "storage_patterns": {
+    "user_data": "encrypted_keychain",
+    "application_data": "encrypted_file_system",
+    "cache_data": "optional_encryption",
+    "logs": "encrypted_with_compression"
+  },
+  "compliance": {
+    "gdpr_encryption": true,
+    "data_at_rest_encryption": true,
+    "data_in_transit_encryption": true,
+    "key_management_compliance": true
+  }
+}

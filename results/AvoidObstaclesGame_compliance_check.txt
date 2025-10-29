@@ -1,0 +1,9 @@
+Compliance Check Report
+Project: AvoidObstaclesGame
+Check Date: Tue Oct 28 14:06:01 CDT 2025
+Compliance Issues: 2
+========================================
+
+GDPR: Project handles personal data in       41 files\nGDPR COMPLIANCE ISSUE: No data deletion/minimization mechanisms found\nGDPR COMPLIANCE ISSUE: No user consent mechanisms found\n
+
+========================================

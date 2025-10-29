@@ -1,0 +1,46 @@
+{
+  "deployment": {
+    "enabled": true,
+    "target_platforms": {
+      "ios": true,
+      "macos": true,
+      "testflight": true,
+      "app_store": false
+    },
+    "build_configurations": {
+      "debug": true,
+      "release": true,
+      "beta": true
+    },
+    "code_signing": {
+      "automatic": true,
+      "team_id": "auto",
+      "provisioning_profiles": "auto"
+    },
+    "distribution": {
+      "testflight_enabled": true,
+      "app_store_enabled": false,
+      "beta_testing_groups": ["internal", "external"],
+      "release_notes_generation": true
+    },
+    "automation": {
+      "ci_cd_integration": false,
+      "automated_builds": true,
+      "automated_testing": true,
+      "automated_deployment": false
+    }
+  },
+  "quality_gates": {
+    "tests_required": true,
+    "test_coverage_minimum": 70,
+    "linting_required": true,
+    "security_scan_required": true,
+    "performance_benchmarks": false
+  },
+  "notifications": {
+    "build_success": true,
+    "build_failure": true,
+    "deployment_success": true,
+    "deployment_failure": true
+  }
+}

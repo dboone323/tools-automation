@@ -45,6 +45,24 @@ print_section() {
     echo -e "${BLUE}=== $1 ===${NC}"
 }
 
+# Run a command under the agent monitoring wrapper
+run_with_monitoring() {
+    local name="$1"
+    shift || true
+    local agent_script_dir="${CODE_DIR}/Tools/Automation"
+    local monitor_script="${agent_script_dir}/agent_monitoring.sh"
+    mkdir -p "${agent_script_dir}/monitoring"
+    if [[ -x "${monitor_script}" ]]; then
+        # Use the monitoring wrapper which will run the command and collect logs
+        "${monitor_script}" "${name}" "$@"
+        return $?
+    else
+        # Fallback to direct execution
+        "$@"
+        return $?
+    fi
+}
+
 # Enhanced status check with AI capabilities
 status_with_ai() {
     print_status "Quantum Workspace Status with AI Enhancement"
@@ -173,21 +191,21 @@ run_project_automation_with_ai() {
 
     # Check if AI-enhanced automation is available
     if command -v ollama &>/dev/null && [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
-        # Run AI-powered analysis
-        print_ai "Performing AI analysis..."
-        bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" analyze "${project_name}"
+        # Run AI-powered analysis under heavy monitoring
+        print_ai "Performing AI analysis (monitored)..."
+        run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" analyze "${project_name}"
 
-        # Generate missing components with AI
-        print_ai "Generating missing components..."
-        bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" generate "${project_name}"
+        # Generate missing components with AI (monitored)
+        print_ai "Generating missing components (monitored)..."
+        run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" generate "${project_name}"
 
-        # Perform AI code review
-        print_ai "Conducting AI code review..."
-        bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" review "${project_name}"
+        # Perform AI code review (monitored)
+        print_ai "Conducting AI code review (monitored)..."
+        run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" review "${project_name}"
 
-        # Performance optimization analysis
-        print_ai "Analyzing performance optimizations..."
-        bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" optimize "${project_name}"
+        # Performance optimization analysis (monitored)
+        print_ai "Analyzing performance optimizations (monitored)..."
+        run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" optimize "${project_name}"
     else
         print_warning "AI-enhanced automation not available, running standard automation"
     fi
@@ -393,6 +411,10 @@ show_enhanced_usage() {
     echo "  ai-review <name>  - AI code review of specific project"
     echo "  ai-optimize <name> - AI performance optimization analysis"
     echo "  ai-generate <name> - Generate missing components with AI"
+    echo "  ai-docs [project] - AI documentation generation (all projects if no arg)"
+    echo "  ai-code-review [project] - AI code review (all projects if no arg)"
+    echo "  ai-predictive   - AI predictive analytics for timelines/bottlenecks"
+    echo "  ai-agents       - Run complete AI agent suite (docs + review + predictive)"
     echo "  ai-all          - Run full AI enhancement for all projects"
     echo ""
     echo "Integration Commands:"
@@ -403,6 +425,14 @@ show_enhanced_usage() {
     echo "Advanced Analytics:"
     echo "  analytics       - Run advanced predictive analytics engine"
     echo "  code-health     - Generate code health metrics JSON"
+    echo ""
+    echo "Security & Compliance:"
+    echo "  security-audit    - Run enhanced Phase 6 security audit with compliance checks"
+    echo "  security-scan [project] - Run vulnerability scanning (all projects if no arg)"
+    echo "  compliance-check [project] - Run compliance validation (all projects if no arg)"
+    echo "  audit-trail     - Generate comprehensive audit trail report"
+    echo "  encryption-status - Check encryption configuration status"
+    echo "  security-all    - Run complete security & compliance suite"
     echo ""
     echo "Workspace Management:"
     echo "  workspace       - Validate workspace configuration integrity"
@@ -840,6 +870,61 @@ run_workspace_duplication_prevention() {
     fi
 }
 
+# Add security task to task queue
+add_security_task() {
+    local task_id="$1"
+    local task_type="$2"
+    local description="$3"
+    local agent="$4"
+
+    local task_queue_file="${CODE_DIR}/Tools/Automation/agents/communication/task_queue.json"
+
+    # Create task queue file if it doesn't exist
+    if [[ ! -f ${task_queue_file} ]]; then
+        echo '{"tasks": []}' >"${task_queue_file}"
+    fi
+
+    # Create task JSON
+    local task_json
+    task_json=$(jq -n \
+        --arg id "${task_id}" \
+        --arg type "${task_type}" \
+        --arg desc "${description}" \
+        --arg agent "${agent}" \
+        --arg timestamp "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+        '{id: $id, type: $type, description: $desc, agent: $agent, timestamp: $timestamp, status: "queued"}')
+
+    # Add task to queue
+    jq --argjson task "${task_json}" '.tasks += [$task]' "${task_queue_file}" >"${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
+}
+
+add_ai_task() {
+    local task_id="$1"
+    local task_type="$2"
+    local description="$3"
+    local agent="$4"
+
+    local task_queue_file="${CODE_DIR}/Tools/Automation/agents/communication/task_queue.json"
+
+    # Create task queue file if it doesn't exist
+    if [[ ! -f ${task_queue_file} ]]; then
+        echo '{"tasks": []}' >"${task_queue_file}"
+    fi
+
+    # Create task JSON
+    local task_json
+    task_json=$(jq -n \
+        --arg id "${task_id}" \
+        --arg type "${task_type}" \
+        --arg desc "${description}" \
+        --arg agent "${agent}" \
+        --arg timestamp "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+        '{id: $id, type: $type, description: $desc, agent: $agent, timestamp: $timestamp, status: "queued"}')
+
+    # Add task to queue
+    jq --argjson task "${task_json}" '.tasks += [$task]' "${task_queue_file}" >"${task_queue_file}.tmp" && mv "${task_queue_file}.tmp" "${task_queue_file}"
+}
+
 # Main execution logic with AI enhancements# Main execution logic with AI enhancements
 main() {
     case "${1-}" in
@@ -857,44 +942,55 @@ main() {
         ;;
     "ai-status")
         if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
-            bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" health
+            run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" health
         else
             print_error "AI-enhanced automation not found"
         fi
         ;;
     "ai-analyze")
         if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
-            bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" analyze "$2"
+            run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" analyze "$2"
         else
             print_error "AI-enhanced automation not found"
         fi
         ;;
     "ai-review")
         if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
-            bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" review "$2"
+            run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" review "$2"
         else
             print_error "AI-enhanced automation not found"
         fi
         ;;
     "ai-optimize")
         if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
-            bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" optimize "$2"
+            run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" optimize "$2"
         else
             print_error "AI-enhanced automation not found"
         fi
         ;;
     "ai-generate")
         if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
-            bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" generate "$2"
+            run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" generate "$2"
         else
             print_error "AI-enhanced automation not found"
         fi
         ;;
     "ai-all")
         if [[ -f "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ]]; then
-            bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ai-all
+            run_with_monitoring "ai_enhanced" bash "${CODE_DIR}/Tools/Automation/ai_enhanced_automation.sh" ai-all
         else
-            print_error "AI-enhanced automation not found"
+            print_status "🤖 Running Complete AI Agent Suite..."
+            # Queue documentation generation for all projects
+            for project in $(list_projects | grep "  •" | sed 's/.*• \([^:]*\):.*/\1/'); do
+                add_ai_task "ai_docs_${project}" "documentation" "AI documentation generation for ${project}" "ai_docs_agent.sh"
+                add_ai_task "ai_code_review_${project}" "code_review" "AI code review for ${project}" "ai_code_review_agent.sh"
+                echo "execute_task|ai_docs_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_docs_agent.sh_notification.txt"
+                echo "execute_task|ai_code_review_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_code_review_agent.sh_notification.txt"
+            done
+            # Add predictive analytics
+            add_ai_task "ai_predictive_analytics" "predictive" "AI predictive analytics for project timelines and bottlenecks" "ai_predictive_analytics_agent.sh"
+            echo "execute_task|ai_predictive_analytics" >"${CODE_DIR}/Tools/Automation/agents/communication/ai_predictive_analytics_agent.sh_notification.txt"
+            print_success "Complete AI agent suite queued. Check agent logs for comprehensive results."
         fi
         ;;
     "setup-ai")
@@ -957,12 +1053,155 @@ main() {
     "generate-tests")
         shift || true
         if [[ -n ${1-} ]]; then
-            print_status "Generating tests for project: $1"
-            bash "${CODE_DIR}/Tools/Automation/ai_generate_swift_tests.sh" --project "$1"
+            print_status "Generating tests for project: $1 (monitored)"
+            run_with_monitoring "ai_tests" bash "${CODE_DIR}/Tools/Automation/ai_generate_swift_tests.sh" --project "$1"
         else
-            print_status "Generating tests for all projects..."
-            bash "${CODE_DIR}/Tools/Automation/ai_generate_swift_tests.sh"
+            print_status "Generating tests for all projects (monitored)..."
+            run_with_monitoring "ai_tests" bash "${CODE_DIR}/Tools/Automation/ai_generate_swift_tests.sh"
         fi
+        ;;
+    "security-audit")
+        print_status "🔒 Running Enhanced Phase 6 Security Audit..."
+        local audit_script="${CODE_DIR}/Tools/Automation/security_audit.sh"
+        if [[ ! -f ${audit_script} ]]; then
+            print_error "Security audit script not found at: ${audit_script}"
+            exit 1
+        fi
+        if [[ ! -x ${audit_script} ]]; then
+            print_warning "Making security audit script executable..."
+            chmod +x "${audit_script}"
+        fi
+        print_status "Executing comprehensive security audit (monitored)..."
+        if run_with_monitoring "security_audit" bash "${audit_script}"; then
+            print_success "Enhanced security audit completed successfully"
+        else
+            print_error "Security audit failed - check output above for details"
+            exit 1
+        fi
+        ;;
+    "security-scan")
+        print_status "🔒 Running Security Vulnerability Scan..."
+        if [[ -n ${2-} ]]; then
+            print_status "Scanning project: $2"
+            # Add task to queue
+            add_security_task "security_scan_$2" "security" "Security scan for $2" "security_agent.sh"
+            # Notify agent
+            echo "execute_task|security_scan_$2" >"${CODE_DIR}/Tools/Automation/agents/communication/security_agent.sh_notification.txt"
+        else
+            print_status "Scanning all projects..."
+            for project in $(list_projects | grep "  •" | sed 's/.*• \([^:]*\):.*/\1/'); do
+                add_security_task "security_scan_${project}" "security" "Security scan for ${project}" "security_agent.sh"
+                echo "execute_task|security_scan_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/security_agent.sh_notification.txt"
+            done
+        fi
+        print_success "Security scan tasks queued. Check agent logs for results."
+        ;;
+    "compliance-check")
+        print_status "📋 Running Compliance Validation..."
+        if [[ -n ${2-} ]]; then
+            print_status "Checking compliance for project: $2"
+            add_security_task "compliance_check_$2" "audit" "Compliance check for $2" "audit_agent.sh"
+            echo "execute_task|compliance_check_$2" >"${CODE_DIR}/Tools/Automation/agents/communication/audit_agent.sh_notification.txt"
+        else
+            print_status "Checking compliance for all projects..."
+            for project in $(list_projects | grep "  •" | sed 's/.*• \([^:]*\):.*/\1/'); do
+                add_security_task "compliance_check_${project}" "audit" "Compliance check for ${project}" "audit_agent.sh"
+                echo "execute_task|compliance_check_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/audit_agent.sh_notification.txt"
+            done
+        fi
+        print_success "Compliance check tasks queued. Check agent logs for results."
+        ;;
+    "audit-trail")
+        print_status "📊 Generating Audit Trail Report..."
+        add_security_task "generate_audit_report" "audit" "Generate comprehensive audit trail report" "audit_agent.sh"
+        echo "execute_task|generate_audit_report" >"${CODE_DIR}/Tools/Automation/agents/communication/audit_agent.sh_notification.txt"
+        print_success "Audit trail generation queued. Check agent logs for results."
+        ;;
+    "encryption-status")
+        print_status "🔐 Checking Encryption Status..."
+        add_security_task "encryption_status" "encryption" "Check encryption configuration status" "encryption_agent.sh"
+        echo "execute_task|encryption_status" >"${CODE_DIR}/Tools/Automation/agents/communication/encryption_agent.sh_notification.txt"
+        print_success "Encryption status check queued. Check agent logs for results."
+        ;;
+    "security-all")
+        print_status "🛡️ Running Complete Security & Compliance Suite..."
+        # Add workspace-wide tasks first
+        add_security_task "generate_audit_report" "audit" "Generate comprehensive audit trail report" "audit_agent.sh"
+        add_security_task "encryption_status" "encryption" "Check encryption configuration status" "encryption_agent.sh"
+        echo "execute_task|generate_audit_report" >"${CODE_DIR}/Tools/Automation/agents/communication/audit_agent.sh_notification.txt"
+        echo "execute_task|encryption_status" >"${CODE_DIR}/Tools/Automation/agents/communication/encryption_agent.sh_notification.txt"
+        # Queue project-specific security tasks
+        for project in $(list_projects | grep "  •" | sed 's/.*• \([^:]*\):.*/\1/'); do
+            add_security_task "security_scan_${project}" "security" "Security scan for ${project}" "security_agent.sh"
+            add_security_task "compliance_check_${project}" "audit" "Compliance check for ${project}" "audit_agent.sh"
+            echo "execute_task|security_scan_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/security_agent.sh_notification.txt"
+            echo "execute_task|compliance_check_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/audit_agent.sh_notification.txt"
+        done
+        print_success "Complete security suite queued. Check agent logs for comprehensive results."
+        ;;
+    "ai-docs")
+        print_status "📚 Running AI Documentation Generation..."
+        if [[ -n ${2-} ]]; then
+            print_status "Generating documentation for project: $2"
+            add_ai_task "ai_docs_$2" "documentation" "AI documentation generation for $2" "ai_docs_agent.sh"
+            echo "execute_task|ai_docs_$2" >"${CODE_DIR}/Tools/Automation/agents/communication/ai_docs_agent.sh_notification.txt"
+        else
+            print_status "Generating documentation for all projects..."
+            for project in $(list_projects | grep "  •" | sed 's/.*• \([^:]*\):.*/\1/'); do
+                add_ai_task "ai_docs_${project}" "documentation" "AI documentation generation for ${project}" "ai_docs_agent.sh"
+                echo "execute_task|ai_docs_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_docs_agent.sh_notification.txt"
+            done
+        fi
+        print_success "AI documentation generation tasks queued. Check agent logs for results."
+        ;;
+    "ai-code-review")
+        print_status "🔍 Running AI Code Review..."
+        if [[ -n ${2-} ]]; then
+            print_status "Reviewing code for project: $2"
+            add_ai_task "ai_code_review_$2" "code_review" "AI code review for $2" "ai_code_review_agent.sh"
+            echo "execute_task|ai_code_review_$2" >"${CODE_DIR}/Tools/Automation/agents/communication/ai_code_review_agent.sh_notification.txt"
+        else
+            print_status "Reviewing code for all projects..."
+            for project in $(list_projects | grep "  •" | sed 's/.*• \([^:]*\):.*/\1/'); do
+                add_ai_task "ai_code_review_${project}" "code_review" "AI code review for ${project}" "ai_code_review_agent.sh"
+                echo "execute_task|ai_code_review_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_code_review_agent.sh_notification.txt"
+            done
+        fi
+        print_success "AI code review tasks queued. Check agent logs for results."
+        ;;
+    "ai-predictive")
+        print_status "🔮 Running AI Predictive Analytics..."
+        add_ai_task "ai_predictive_analytics" "predictive" "AI predictive analytics for project timelines and bottlenecks" "ai_predictive_analytics_agent.sh"
+        echo "execute_task|ai_predictive_analytics" >"${CODE_DIR}/Tools/Automation/agents/communication/ai_predictive_analytics_agent.sh_notification.txt"
+        print_success "AI predictive analytics task queued. Check agent logs for results."
+        ;;
+    "ai-agents")
+        print_status "🤖 Running Complete AI Agent Suite..."
+        # Queue documentation generation for all projects
+        for project in $(list_projects | grep "  •" | sed 's/.*• \([^:]*\):.*/\1/'); do
+            add_ai_task "ai_docs_${project}" "documentation" "AI documentation generation for ${project}" "ai_docs_agent.sh"
+            add_ai_task "ai_code_review_${project}" "code_review" "AI code review for ${project}" "ai_code_review_agent.sh"
+            echo "execute_task|ai_docs_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_docs_agent.sh_notification.txt"
+            echo "execute_task|ai_code_review_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_code_review_agent.sh_notification.txt"
+        done
+        # Add predictive analytics
+        add_ai_task "ai_predictive_analytics" "predictive" "AI predictive analytics for project timelines and bottlenecks" "ai_predictive_analytics_agent.sh"
+        echo "execute_task|ai_predictive_analytics" >"${CODE_DIR}/Tools/Automation/agents/communication/ai_predictive_analytics_agent.sh_notification.txt"
+        print_success "Complete AI agent suite queued. Check agent logs for comprehensive results."
+        ;;
+    "ai-all")
+        print_status "🤖 Running Complete AI Agent Suite..."
+        # Queue documentation generation for all projects
+        for project in $(list_projects | grep "  •" | sed 's/.*• \([^:]*\):.*/\1/'); do
+            add_ai_task "ai_docs_${project}" "documentation" "AI documentation generation for ${project}" "ai_docs_agent.sh"
+            add_ai_task "ai_code_review_${project}" "code_review" "AI code review for ${project}" "ai_code_review_agent.sh"
+            echo "execute_task|ai_docs_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_docs_agent.sh_notification.txt"
+            echo "execute_task|ai_code_review_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_code_review_agent.sh_notification.txt"
+        done
+        # Add predictive analytics
+        add_ai_task "ai_predictive_analytics" "predictive" "AI predictive analytics for project timelines and bottlenecks" "ai_predictive_analytics_agent.sh"
+        echo "execute_task|ai_predictive_analytics" >"${CODE_DIR}/Tools/Automation/agents/communication/ai_predictive_analytics_agent.sh_notification.txt"
+        print_success "Complete AI agent suite queued. Check agent logs for comprehensive results."
         ;;
     "quantum-analysis")
         echo "🌀 Running Quantum Analysis..."

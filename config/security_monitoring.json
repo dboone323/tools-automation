@@ -1,0 +1,36 @@
+{
+  "monitoring_enabled": true,
+  "alert_channels": {
+    "log_files": true,
+    "system_notifications": false,
+    "email_alerts": false,
+    "slack_webhooks": false
+  },
+  "alert_thresholds": {
+    "critical_vulnerabilities": 1,
+    "high_vulnerabilities": 5,
+    "medium_vulnerabilities": 10,
+    "failed_auth_attempts": 3,
+    "suspicious_activities": 1
+  },
+  "monitoring_intervals": {
+    "security_scans": 3600,
+    "log_analysis": 300,
+    "system_health": 60,
+    "dependency_checks": 86400
+  },
+  "alert_rules": {
+    "new_vulnerabilities": true,
+    "authentication_failures": true,
+    "data_exposure": true,
+    "encryption_failures": true,
+    "compliance_violations": true,
+    "dependency_vulnerabilities": true
+  },
+  "response_actions": {
+    "auto_quarantine": false,
+    "auto_block": false,
+    "auto_alert": true,
+    "auto_report": true
+  }
+}

@@ -1,0 +1,9 @@
+Compliance Check Report
+Project: HabitQuest
+Check Date: Tue Oct 28 14:05:43 CDT 2025
+Compliance Issues: 1
+========================================
+
+GDPR: Project handles personal data in       44 files\nGDPR COMPLIANCE ISSUE: No data deletion/minimization mechanisms found\n
+
+========================================

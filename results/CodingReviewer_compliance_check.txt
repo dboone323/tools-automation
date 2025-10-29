@@ -1,0 +1,9 @@
+Compliance Check Report
+Project: CodingReviewer
+Check Date: Tue Oct 28 14:05:01 CDT 2025
+Compliance Issues: 2
+========================================
+
+PRIVACY: No references to privacy policy or terms found\nDATA RETENTION: No data retention policies implemented\nACCESSIBILITY: Limited accessibility features detected\n
+
+========================================
