@@ -39,7 +39,8 @@ create_checkpoint() {
     local operation_id="$1"
     local files_to_backup="${2:-}"
 
-    local checkpoint_dir="$CHECKPOINTS_DIR/${operation_id}_$(date +%Y%m%d_%H%M%S)"
+    local checkpoint_dir
+    checkpoint_dir="$CHECKPOINTS_DIR/${operation_id}_$(date +%Y%m%d_%H%M%S)"
     mkdir -p "$checkpoint_dir"
 
     log "Creating checkpoint: $checkpoint_dir"

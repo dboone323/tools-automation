@@ -1189,20 +1189,6 @@ main() {
         echo "execute_task|ai_predictive_analytics" >"${CODE_DIR}/Tools/Automation/agents/communication/ai_predictive_analytics_agent.sh_notification.txt"
         print_success "Complete AI agent suite queued. Check agent logs for comprehensive results."
         ;;
-    "ai-all")
-        print_status "🤖 Running Complete AI Agent Suite..."
-        # Queue documentation generation for all projects
-        for project in $(list_projects | grep "  •" | sed 's/.*• \([^:]*\):.*/\1/'); do
-            add_ai_task "ai_docs_${project}" "documentation" "AI documentation generation for ${project}" "ai_docs_agent.sh"
-            add_ai_task "ai_code_review_${project}" "code_review" "AI code review for ${project}" "ai_code_review_agent.sh"
-            echo "execute_task|ai_docs_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_docs_agent.sh_notification.txt"
-            echo "execute_task|ai_code_review_${project}" >>"${CODE_DIR}/Tools/Automation/agents/communication/ai_code_review_agent.sh_notification.txt"
-        done
-        # Add predictive analytics
-        add_ai_task "ai_predictive_analytics" "predictive" "AI predictive analytics for project timelines and bottlenecks" "ai_predictive_analytics_agent.sh"
-        echo "execute_task|ai_predictive_analytics" >"${CODE_DIR}/Tools/Automation/agents/communication/ai_predictive_analytics_agent.sh_notification.txt"
-        print_success "Complete AI agent suite queued. Check agent logs for comprehensive results."
-        ;;
     "quantum-analysis")
         echo "🌀 Running Quantum Analysis..."
         SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

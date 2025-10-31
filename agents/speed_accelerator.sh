@@ -5,7 +5,6 @@ source "${SCRIPT_DIR}/shared_functions.sh"
 # Comprehensive optimization for rapid automation completion
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
 
 echo "🚀 QUANTUM WORKSPACE SPEED ACCELERATOR"
 echo "======================================"
@@ -32,7 +31,7 @@ sleep 2
 
 # Restart all agents with optimized settings
 echo "🔄 Restarting all agents..."
-cd "$SCRIPT_DIR"
+cd "$SCRIPT_DIR" || exit
 
 # Start agents in parallel
 agent_scripts=(

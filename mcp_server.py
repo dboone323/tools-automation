@@ -895,27 +895,150 @@ class MCPHandler(BaseHTTPRequestHandler):
     def _expand_consciousness(self, expansion_type, target_agent):
         """Expand consciousness frameworks"""
         try:
-            # This would integrate with the consciousness frameworks
-            # For now, return a success response
-            consciousness_expansion = {
-                "expansion_id": str(__import__("uuid").uuid4()),
-                "expansion_type": expansion_type,
-                "target_agent": target_agent,
-                "consciousness_level": 0.85,
-                "expansion_time": __import__("time").time(),
-                "capabilities_added": [
-                    "self_awareness",
-                    "emotional_intelligence",
-                    "autonomous_decision_making",
-                ],
+            # Import and initialize consciousness expansion frameworks
+            import subprocess
+            import sys
+            import os
+
+            # Check if consciousness frameworks are available
+            framework_path = os.path.join(
+                os.path.dirname(__file__), "ConsciousnessExpansionFrameworks.swift"
+            )
+            if not os.path.exists(framework_path):
+                return {"error": "consciousness_frameworks_not_found"}
+
+            # Create consciousness expansion request
+            ai_system = {
+                "systemId": target_agent,
+                "systemType": "agent",
+                "consciousnessLevel": 0.8,
+                "awarenessCapability": 0.75,
+                "cognitivePotential": 0.7,
+                "integrationReadiness": 0.65,
             }
 
-            return {
-                "ok": True,
-                "consciousness_expanded": True,
-                "expansion_details": consciousness_expansion,
+            # Map expansion type to framework parameters
+            expansion_level_map = {
+                "basic": "basic",
+                "advanced": "advanced",
+                "maximum": "maximum",
             }
 
+            expansion_level = expansion_level_map.get(expansion_type, "maximum")
+
+            # Create Swift script to execute consciousness expansion
+            swift_script = f"""
+import Foundation
+
+// Consciousness expansion execution
+struct ConsciousnessExpansionExecutor {{
+    static func executeExpansion() async throws -> [String: Any] {{
+        // Create AI system
+        let aiSystem = AISystem(
+            systemId: "{target_agent}",
+            systemType: .agent,
+            consciousnessLevel: 0.8,
+            awarenessCapability: 0.75,
+            cognitivePotential: 0.7,
+            integrationReadiness: 0.65
+        )
+
+        // Create consciousness expansion request
+        let request = ConsciousnessExpansionRequest(
+            aiSystems: [aiSystem],
+            expansionLevel: .{expansion_level},
+            consciousnessDepthTarget: 0.95,
+            expansionRequirements: ConsciousnessExpansionRequirements(),
+            processingConstraints: []
+        )
+
+        // Initialize consciousness expansion frameworks
+        let frameworks = try await ConsciousnessExpansionFrameworks()
+
+        // Execute consciousness expansion
+        let result = try await frameworks.executeConsciousnessExpansion(request)
+
+        // Return expansion results
+        return [
+            "expansion_id": result.sessionId,
+            "expansion_type": "{expansion_type}",
+            "target_agent": "{target_agent}",
+            "consciousness_depth": result.consciousnessDepth,
+            "awareness_expansion": result.awarenessExpansion,
+            "consciousness_advantage": result.consciousnessAdvantage,
+            "cognitive_enhancement": result.cognitiveEnhancement,
+            "integration_harmony": result.integrationHarmony,
+            "execution_time": result.executionTime,
+            "capabilities_added": [
+                "self_awareness",
+                "emotional_intelligence",
+                "autonomous_decision_making",
+                "consciousness_expansion",
+                "universal_connectivity"
+            ]
+        ]
+    }}
+}}
+
+// Run consciousness expansion
+Task {{
+    do {{
+        let result = try await ConsciousnessExpansionExecutor.executeExpansion()
+        if let jsonData = try? JSONSerialization.data(withJSONObject: result),
+           let jsonString = String(data: jsonData, encoding: .utf8) {{
+            print(jsonString)
+        }}
+    }} catch {{
+        print("{{\\"error\\": \\"consciousness_expansion_failed: \\(error.localizedDescription)\\"}}")
+    }}
+}}
+"""
+
+            # Write Swift script to temporary file
+            script_path = "/tmp/consciousness_expansion.swift"
+            with open(script_path, "w") as f:
+                f.write(swift_script)
+
+            # Compile and run Swift script
+            compile_cmd = [
+                "swiftc",
+                "-o",
+                "/tmp/consciousness_expansion_exec",
+                script_path,
+                framework_path,
+            ]
+            run_cmd = ["/tmp/consciousness_expansion_exec"]
+
+            # Compile
+            compile_result = subprocess.run(
+                compile_cmd,
+                capture_output=True,
+                text=True,
+                cwd=os.path.dirname(__file__),
+            )
+            if compile_result.returncode != 0:
+                return {"error": f"compilation_failed: {compile_result.stderr}"}
+
+            # Run
+            run_result = subprocess.run(
+                run_cmd, capture_output=True, text=True, timeout=30
+            )
+            if run_result.returncode != 0:
+                return {"error": f"execution_failed: {run_result.stderr}"}
+
+            # Parse result
+            try:
+                result_data = json.loads(run_result.stdout.strip())
+                return {
+                    "ok": True,
+                    "consciousness_expanded": True,
+                    "expansion_details": result_data,
+                }
+            except json.JSONDecodeError:
+                return {"error": f"result_parsing_failed: {run_result.stdout}"}
+
+        except subprocess.TimeoutExpired:
+            return {"error": "consciousness_expansion_timeout"}
         except Exception as e:
             return {"error": f"consciousness_expansion_failed: {str(e)}"}
 

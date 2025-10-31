@@ -41,45 +41,45 @@ section "IMMEDIATE TASKS (Next Hour)"
 subsection "Task 1: Generate Clean Analytics File"
 log "Running agent_analytics.sh..."
 if bash "$SCRIPT_DIR/agent_analytics.sh" >/tmp/analytics_output.json 2>/tmp/analytics_errors.log; then
-  success "Analytics generated successfully"
-  ANALYTICS_FILE=$(ls -t "$WORKSPACE_ROOT/.metrics/analytics_"*.json 2>/dev/null | head -1)
-  if [[ -n "$ANALYTICS_FILE" ]]; then
-    if jq empty "$ANALYTICS_FILE" 2>/dev/null; then
-      success "Analytics file is valid JSON: $(basename "$ANALYTICS_FILE")"
-      echo "  └─ File: $ANALYTICS_FILE"
-    else
-      error "Analytics file has JSON errors"
+    success "Analytics generated successfully"
+    ANALYTICS_FILE=$(find "$WORKSPACE_ROOT/.metrics" -name "analytics_*.json" -type f -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1 | cut -d' ' -f2-)
+    if [[ -n "$ANALYTICS_FILE" ]]; then
+        if jq empty "$ANALYTICS_FILE" 2>/dev/null; then
+            success "Analytics file is valid JSON: $(basename "$ANALYTICS_FILE")"
+            echo "  └─ File: $ANALYTICS_FILE"
+        else
+            error "Analytics file has JSON errors"
+        fi
     fi
-  fi
 else
-  warning "Analytics generation had issues (check /tmp/analytics_errors.log)"
+    warning "Analytics generation had issues (check /tmp/analytics_errors.log)"
 fi
 
 # Task 2: Verify lock timeouts
 subsection "Task 2: Verify No Lock Timeouts"
 if [[ -f "$SCRIPT_DIR/monitor_lock_timeouts.sh" ]]; then
-  bash "$SCRIPT_DIR/monitor_lock_timeouts.sh" 2>/dev/null || true
-  success "Lock timeout monitoring complete"
+    bash "$SCRIPT_DIR/monitor_lock_timeouts.sh" 2>/dev/null || true
+    success "Lock timeout monitoring complete"
 else
-  warning "Monitor script not found"
+    warning "Monitor script not found"
 fi
 
 # Task 3: Check jq errors report
 subsection "Task 3: Analyze jq Errors Report"
 if [[ -f "$SCRIPT_DIR/jq_errors_report.txt" ]]; then
-  TOTAL_ERRORS=$(grep -c "jq:" "$SCRIPT_DIR/jq_errors_report.txt" 2>/dev/null || echo "0")
-  log "Total jq errors found: $TOTAL_ERRORS"
+    TOTAL_ERRORS=$(grep -c "jq:" "$SCRIPT_DIR/jq_errors_report.txt" 2>/dev/null || echo "0")
+    log "Total jq errors found: $TOTAL_ERRORS"
 
-  # Pattern analysis
-  log "Error pattern analysis:"
-  echo "  Parse errors:"
-  grep "parse error" "$SCRIPT_DIR/jq_errors_report.txt" 2>/dev/null |
-    sed 's/^jq: parse error: //' | sort | uniq -c | sort -rn | head -5 |
-    sed 's/^/    /'
+    # Pattern analysis
+    log "Error pattern analysis:"
+    echo "  Parse errors:"
+    grep "parse error" "$SCRIPT_DIR/jq_errors_report.txt" 2>/dev/null |
+        sed 's/^jq: parse error: //' | sort | uniq -c | sort -rn | head -5 |
+        sed 's/^/    /'
 
-  success "jq error analysis complete"
+    success "jq error analysis complete"
 else
-  warning "jq errors report not found"
+    warning "jq errors report not found"
 fi
 
 # Task 4: Test auto-restart
@@ -88,28 +88,28 @@ log "Testing auto-restart with task_orchestrator.sh..."
 
 # Check if auto-restart is enabled
 if bash "$SCRIPT_DIR/configure_auto_restart.sh" status 2>/dev/null | grep -q "task_orchestrator.sh - ENABLED"; then
-  success "Auto-restart is enabled for task_orchestrator.sh"
+    success "Auto-restart is enabled for task_orchestrator.sh"
 
-  # Get current PID
-  ORCH_PID=$(pgrep -f "task_orchestrator.sh" | head -1 || echo "")
+    # Get current PID
+    ORCH_PID=$(pgrep -f "task_orchestrator.sh" | head -1 || echo "")
 
-  if [[ -n "$ORCH_PID" ]]; then
-    log "Found task_orchestrator.sh running with PID: $ORCH_PID"
-    log "Killing process to test auto-restart..."
-    kill -9 "$ORCH_PID" 2>/dev/null || true
-    sleep 3
+    if [[ -n "$ORCH_PID" ]]; then
+        log "Found task_orchestrator.sh running with PID: $ORCH_PID"
+        log "Killing process to test auto-restart..."
+        kill -9 "$ORCH_PID" 2>/dev/null || true
+        sleep 3
 
-    NEW_PID=$(pgrep -f "task_orchestrator.sh" | head -1 || echo "")
-    if [[ -n "$NEW_PID" ]] && [[ "$NEW_PID" != "$ORCH_PID" ]]; then
-      success "Auto-restart successful! New PID: $NEW_PID"
+        NEW_PID=$(pgrep -f "task_orchestrator.sh" | head -1 || echo "")
+        if [[ -n "$NEW_PID" ]] && [[ "$NEW_PID" != "$ORCH_PID" ]]; then
+            success "Auto-restart successful! New PID: $NEW_PID"
+        else
+            warning "Auto-restart may not have triggered (this is expected if orchestrator not actively running)"
+        fi
     else
-      warning "Auto-restart may not have triggered (this is expected if orchestrator not actively running)"
+        log "task_orchestrator.sh not currently running (test skipped)"
     fi
-  else
-    log "task_orchestrator.sh not currently running (test skipped)"
-  fi
 else
-  warning "Auto-restart not enabled for task_orchestrator.sh"
+    warning "Auto-restart not enabled for task_orchestrator.sh"
 fi
 
 echo ""
@@ -119,48 +119,48 @@ section "SHORT-TERM TASKS (Next 24 Hours)"
 subsection "Task 5: Monitor Lock Timeout Log"
 LOCK_LOG="/tmp/agent_lock_timeouts.log"
 if [[ -f "$LOCK_LOG" ]]; then
-  TIMEOUT_COUNT=$(grep -c "LOCK_TIMEOUT:" "$LOCK_LOG" 2>/dev/null || echo "0")
-  log "Lock timeout count: $TIMEOUT_COUNT"
+    TIMEOUT_COUNT=$(grep -c "LOCK_TIMEOUT:" "$LOCK_LOG" 2>/dev/null || echo "0")
+    log "Lock timeout count: $TIMEOUT_COUNT"
 
-  if [[ $TIMEOUT_COUNT -eq 0 ]]; then
-    success "No lock timeouts detected - excellent!"
-  else
-    warning "Found $TIMEOUT_COUNT lock timeouts"
-    log "Recent timeouts:"
-    tail -5 "$LOCK_LOG" | sed 's/^/  /'
-  fi
+    if [[ $TIMEOUT_COUNT -eq 0 ]]; then
+        success "No lock timeouts detected - excellent!"
+    else
+        warning "Found $TIMEOUT_COUNT lock timeouts"
+        log "Recent timeouts:"
+        tail -5 "$LOCK_LOG" | sed 's/^/  /'
+    fi
 else
-  success "No lock timeout log found - no timeouts recorded"
+    success "No lock timeout log found - no timeouts recorded"
 fi
 
 # Task 6: Verify analytics files remain clean
 subsection "Task 6: Verify Analytics Files Remain Clean"
 METRICS_DIR="$WORKSPACE_ROOT/.metrics"
 if [[ -d "$METRICS_DIR" ]]; then
-  VALID=0
-  INVALID=0
+    VALID=0
+    INVALID=0
 
-  while IFS= read -r file; do
-    if jq empty "$file" 2>/dev/null; then
-      VALID=$((VALID + 1))
-    else
-      INVALID=$((INVALID + 1))
-      warning "Invalid: $(basename "$file")"
+    while IFS= read -r file; do
+        if jq empty "$file" 2>/dev/null; then
+            VALID=$((VALID + 1))
+        else
+            INVALID=$((INVALID + 1))
+            warning "Invalid: $(basename "$file")"
+        fi
+    done < <(find "$METRICS_DIR" -name "*.json" -type f 2>/dev/null)
+
+    log "Analytics validation: $VALID valid, $INVALID invalid"
+    if [[ $INVALID -eq 0 ]]; then
+        success "All analytics files are clean JSON"
     fi
-  done < <(find "$METRICS_DIR" -name "*.json" -type f 2>/dev/null)
-
-  log "Analytics validation: $VALID valid, $INVALID invalid"
-  if [[ $INVALID -eq 0 ]]; then
-    success "All analytics files are clean JSON"
-  fi
 else
-  warning "Metrics directory not found: $METRICS_DIR"
+    warning "Metrics directory not found: $METRICS_DIR"
 fi
 
 # Task 7: Track agent availability improvement
 subsection "Task 7: Track Agent Availability Improvement"
 if [[ -f "$SCRIPT_DIR/agent_status.json" ]]; then
-  python3 <<'PYEOF'
+    python3 <<'PYEOF'
 import json
 import time
 
@@ -183,45 +183,45 @@ print(f"  Total: {total}")
 print(f"  Healthy: {healthy} (available: {available}, running: {running}, idle: {idle})")
 print(f"  Issues: {stopped + restarting} (stopped: {stopped}, restarting: {restarting})")
 PYEOF
-  success "Availability tracking complete"
+    success "Availability tracking complete"
 else
-  warning "agent_status.json not found"
+    warning "agent_status.json not found"
 fi
 
 # Task 8: Enable auto-restart for all agents
 subsection "Task 8: Enable Auto-Restart for All Agents"
 if [[ -f "$SCRIPT_DIR/configure_auto_restart.sh" ]]; then
-  ENABLED_COUNT=0
-  SKIPPED_COUNT=0
+    ENABLED_COUNT=0
+    SKIPPED_COUNT=0
 
-  for agent_file in "$SCRIPT_DIR"/*.sh; do
-    [[ ! -f "$agent_file" ]] && continue
-    agent_name=$(basename "$agent_file")
+    for agent_file in "$SCRIPT_DIR"/*.sh; do
+        [[ ! -f "$agent_file" ]] && continue
+        agent_name=$(basename "$agent_file")
 
-    # Skip utility scripts
-    [[ "$agent_name" == "shared_functions.sh" ]] && continue
-    [[ "$agent_name" == "configure_auto_restart.sh" ]] && continue
-    [[ "$agent_name" == "monitor_lock_timeouts.sh" ]] && continue
-    [[ "$agent_name" == "update_all_agents.sh" ]] && continue
-    [[ "$agent_name" == "execute_all_tasks.sh" ]] && continue
-    [[ "$agent_name" == *"start_"* ]] && continue
-    [[ "$agent_name" == *"monitor_"* ]] && continue
-    [[ "$agent_name" == *"deprecated"* ]] && continue
-    [[ "$agent_name" == "seed_demo_tasks.sh" ]] && continue
-    [[ "$agent_name" == "assign_once.sh" ]] && continue
+        # Skip utility scripts
+        [[ "$agent_name" == "shared_functions.sh" ]] && continue
+        [[ "$agent_name" == "configure_auto_restart.sh" ]] && continue
+        [[ "$agent_name" == "monitor_lock_timeouts.sh" ]] && continue
+        [[ "$agent_name" == "update_all_agents.sh" ]] && continue
+        [[ "$agent_name" == "execute_all_tasks.sh" ]] && continue
+        [[ "$agent_name" == *"start_"* ]] && continue
+        [[ "$agent_name" == *"monitor_"* ]] && continue
+        [[ "$agent_name" == *"deprecated"* ]] && continue
+        [[ "$agent_name" == "seed_demo_tasks.sh" ]] && continue
+        [[ "$agent_name" == "assign_once.sh" ]] && continue
 
-    # Enable auto-restart
-    if bash "$SCRIPT_DIR/configure_auto_restart.sh" enable "$agent_name" 2>/dev/null; then
-      ENABLED_COUNT=$((ENABLED_COUNT + 1))
-      log "  ✓ Enabled: $agent_name"
-    else
-      SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
-    fi
-  done
+        # Enable auto-restart
+        if bash "$SCRIPT_DIR/configure_auto_restart.sh" enable "$agent_name" 2>/dev/null; then
+            ENABLED_COUNT=$((ENABLED_COUNT + 1))
+            log "  ✓ Enabled: $agent_name"
+        else
+            SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
+        fi
+    done
 
-  success "Auto-restart enabled for $ENABLED_COUNT agents (skipped $SKIPPED_COUNT utility scripts)"
+    success "Auto-restart enabled for $ENABLED_COUNT agents (skipped $SKIPPED_COUNT utility scripts)"
 else
-  error "configure_auto_restart.sh not found"
+    error "configure_auto_restart.sh not found"
 fi
 
 echo ""
@@ -231,30 +231,32 @@ section "LONG-TERM TASKS (Next Week)"
 subsection "Task 9: Review jq Error Trends"
 log "Analyzing jq error trends..."
 if [[ -f "$SCRIPT_DIR/jq_errors_report.txt" ]]; then
-  cat >"$SCRIPT_DIR/jq_error_analysis.md" <<'ANALYSIS_EOF'
+    cat >"$SCRIPT_DIR/jq_error_analysis.md" <<'ANALYSIS_EOF'
 # JQ Error Trend Analysis
 
 ## Error Types Distribution
 ANALYSIS_EOF
 
-  echo "### Most Common Errors" >>"$SCRIPT_DIR/jq_error_analysis.md"
-  grep "parse error" "$SCRIPT_DIR/jq_errors_report.txt" 2>/dev/null |
-    sed 's/^jq: parse error: //' | sort | uniq -c | sort -rn | head -10 >>"$SCRIPT_DIR/jq_error_analysis.md" || true
+    echo "### Most Common Errors" >>"$SCRIPT_DIR/jq_error_analysis.md"
+    grep "parse error" "$SCRIPT_DIR/jq_errors_report.txt" 2>/dev/null |
+        sed 's/^jq: parse error: //' | sort | uniq -c | sort -rn | head -10 >>"$SCRIPT_DIR/jq_error_analysis.md" || true
 
-  echo -e "\n### Root Causes" >>"$SCRIPT_DIR/jq_error_analysis.md"
-  echo "1. **Unmatched braces**: Indicates concurrent write conflicts (now fixed with file locking)" >>"$SCRIPT_DIR/jq_error_analysis.md"
-  echo "2. **Invalid numeric literals**: ANSI color codes in JSON (now fixed with stderr redirection)" >>"$SCRIPT_DIR/jq_error_analysis.md"
-  echo "3. **Unfinished JSON terms**: Partial writes from race conditions (now prevented by flock)" >>"$SCRIPT_DIR/jq_error_analysis.md"
+    echo -e "\n### Root Causes" >>"$SCRIPT_DIR/jq_error_analysis.md"
+    {
+        echo "1. **Unmatched braces**: Indicates concurrent write conflicts (now fixed with file locking)"
+        echo "2. **Invalid numeric literals**: ANSI color codes in JSON (now fixed with stderr redirection)"
+        echo "3. **Unfinished JSON terms**: Partial writes from race conditions (now prevented by flock)"
+    } >>"$SCRIPT_DIR/jq_error_analysis.md"
 
-  echo -e "\n### Recommendations" >>"$SCRIPT_DIR/jq_error_analysis.md"
-  echo "✅ All root causes addressed by recent enhancements" >>"$SCRIPT_DIR/jq_error_analysis.md"
-  echo "✅ File locking prevents concurrent write issues" >>"$SCRIPT_DIR/jq_error_analysis.md"
-  echo "✅ Stderr redirection prevents ANSI contamination" >>"$SCRIPT_DIR/jq_error_analysis.md"
-  echo "📊 Monitor for 7 days to confirm error rate drops to zero" >>"$SCRIPT_DIR/jq_error_analysis.md"
+    echo -e "\n### Recommendations" >>"$SCRIPT_DIR/jq_error_analysis.md"
+    echo "✅ All root causes addressed by recent enhancements" >>"$SCRIPT_DIR/jq_error_analysis.md"
+    echo "✅ File locking prevents concurrent write issues" >>"$SCRIPT_DIR/jq_error_analysis.md"
+    echo "✅ Stderr redirection prevents ANSI contamination" >>"$SCRIPT_DIR/jq_error_analysis.md"
+    echo "📊 Monitor for 7 days to confirm error rate drops to zero" >>"$SCRIPT_DIR/jq_error_analysis.md"
 
-  success "Error trend analysis saved to jq_error_analysis.md"
+    success "Error trend analysis saved to jq_error_analysis.md"
 else
-  warning "jq errors report not found for analysis"
+    warning "jq errors report not found for analysis"
 fi
 
 # Task 10: Optimize lock timeout if needed
@@ -266,13 +268,13 @@ log "Current lock timeout: ${CURRENT_TIMEOUT}s"
 log "Lock timeout occurrences: $LOCK_TIMEOUTS"
 
 if [[ $LOCK_TIMEOUTS -gt 10 ]]; then
-  warning "High number of lock timeouts detected"
-  log "Recommendation: Increase LOCK_TIMEOUT from 10s to 15s in shared_functions.sh"
-  echo "  Edit: LOCK_TIMEOUT=15 in shared_functions.sh"
+    warning "High number of lock timeouts detected"
+    log "Recommendation: Increase LOCK_TIMEOUT from 10s to 15s in shared_functions.sh"
+    echo "  Edit: LOCK_TIMEOUT=15 in shared_functions.sh"
 elif [[ $LOCK_TIMEOUTS -eq 0 ]]; then
-  success "No lock timeouts - current timeout (${CURRENT_TIMEOUT}s) is optimal"
+    success "No lock timeouts - current timeout (${CURRENT_TIMEOUT}s) is optimal"
 else
-  success "Low timeout rate - current configuration is acceptable"
+    success "Low timeout rate - current configuration is acceptable"
 fi
 
 # Task 11: Add health checks to cron/systemd

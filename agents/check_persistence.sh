@@ -7,9 +7,11 @@ source "${SCRIPT_DIR}/shared_functions.sh"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_FILE="${SCRIPT_DIR}/persistence_status.log"
 
-echo "=== Agent Persistence Status Report ===" >>"$LOG_FILE"
-echo "Timestamp: $(date)" >>"$LOG_FILE"
-echo "" >>"$LOG_FILE"
+{
+    echo "=== Agent Persistence Status Report ==="
+    echo "Timestamp: $(date)"
+    echo ""
+} >>"$LOG_FILE"
 
 # Check launch daemon status
 echo "1. Launch Daemon Status:" >>"$LOG_FILE"
@@ -43,10 +45,12 @@ if [[ -f "${SCRIPT_DIR}/task_queue.json" ]]; then
     queued=$(jq '.tasks | map(select(.status == "queued")) | length' "${SCRIPT_DIR}/task_queue.json" 2>/dev/null || echo "0")
     total=$(jq '.tasks | length' "${SCRIPT_DIR}/task_queue.json" 2>/dev/null || echo "0")
 
-    echo "Total tasks: $total" >>"$LOG_FILE"
-    echo "Completed: $completed" >>"$LOG_FILE"
-    echo "In progress: $in_progress" >>"$LOG_FILE"
-    echo "Queued: $queued" >>"$LOG_FILE"
+    {
+        echo "Total tasks: $total"
+        echo "Completed: $completed"
+        echo "In progress: $in_progress"
+        echo "Queued: $queued"
+    } >>"$LOG_FILE"
 else
     echo "Task queue file not found" >>"$LOG_FILE"
 fi
@@ -63,8 +67,10 @@ else
 fi
 echo "" >>"$LOG_FILE"
 
-echo "=== End Report ===" >>"$LOG_FILE"
-echo "" >>"$LOG_FILE"
+{
+    echo "=== End Report ==="
+    echo ""
+} >>"$LOG_FILE"
 
 # Display summary to console
 echo "Agent Persistence Status Check Complete"

@@ -308,7 +308,7 @@ with open('$EMERGENCIES_FILE', 'r') as f:
 " 2>/dev/null || echo "Unknown error")
 
         # Try to get fix suggestion
-        timeout ${LEVEL1_TIMEOUT} python3 "$SCRIPT_DIR/fix_suggester.py" suggest "$emergency_error" 2>&1 || true
+        timeout "${LEVEL1_TIMEOUT}" python3 "$SCRIPT_DIR/fix_suggester.py" suggest "$emergency_error" 2>&1 || true
     fi
 
     # Check if resolved

@@ -6,8 +6,6 @@
 
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PROJECTS_DIR="${CODE_DIR}/Projects"
-WORKSPACE_ROOT="${CODE_DIR}"
-DOCS_DIR="${CODE_DIR}/Documentation"
 
 # Performance optimization settings
 MAX_PARALLEL_JOBS=${MAX_PARALLEL_JOBS:-3}      # Limit parallel jobs to prevent resource exhaustion
@@ -62,20 +60,22 @@ print_section() {
 # Performance monitoring functions
 start_performance_timer() {
     local timer_name="$1"
-    export PERF_START_${timer_name}=$(date +%s.%3N)
+    export PERF_START_"${timer_name}"="$(date +%s.%3N)"
 }
 
 end_performance_timer() {
     local timer_name="$1"
     local description="$2"
     local start_time="PERF_START_${timer_name}"
-    local end_time=$(date +%s.%3N)
+    local end_time
+    end_time=$(date +%s.%3N)
 
     # Use bc for floating point arithmetic if available, otherwise use awk
+    local duration
     if command -v bc &>/dev/null; then
-        local duration=$(echo "$end_time - ${!start_time}" | bc)
+        duration=$(echo "$end_time - ${!start_time}" | bc)
     else
-        local duration=$(awk "BEGIN {print $end_time - ${!start_time}}")
+        duration=$(awk "BEGIN {print $end_time - ${!start_time}}")
     fi
 
     print_performance "${description}: ${duration}s"
@@ -154,10 +154,11 @@ run_project_automation_with_ai_optimized() {
         local quick_prompt="Analyze Swift project '${project_name}' (${swift_files} files) in one sentence: key architecture, potential issues, and improvement priority."
 
         local ai_analysis
-        ai_analysis=$(echo "${quick_prompt}" | timeout ${AI_TIMEOUT_QUICK}s ollama run llama3.2:3b 2>/dev/null || echo "AI analysis completed for ${project_name}")
+        ai_analysis=$(echo "${quick_prompt}" | timeout "${AI_TIMEOUT_QUICK}"s ollama run llama3.2:3b 2>/dev/null || echo "AI analysis completed for ${project_name}")
 
         # Save analysis
-        local analysis_file="${project_path}/AI_ANALYSIS_$(date +%Y%m%d).md"
+        local analysis_file
+        analysis_file="${project_path}/AI_ANALYSIS_$(date +%Y%m%d).md"
         {
             echo "# AI Analysis for ${project_name}"
             echo "Generated: $(date)"
@@ -196,7 +197,7 @@ run_standard_project_automation_optimized() {
         print_status "Linting Swift code (${SWIFTLINT_TIMEOUT}s timeout)..."
         if cd "${project_path}"; then
             # Run swiftlint with optimized timeout
-            timeout ${SWIFTLINT_TIMEOUT}s swiftlint --quiet . || print_warning "SwiftLint timed out or failed for ${project_name}"
+            timeout "${SWIFTLINT_TIMEOUT}"s swiftlint --quiet . || print_warning "SwiftLint timed out or failed for ${project_name}"
         fi
     fi
 
@@ -220,7 +221,8 @@ generate_ai_automation_summary_optimized() {
         local swift_files
         swift_files=$(get_cached_file_count "${project_path}" "*.swift")
 
-        local summary_prompt="Generate concise automation summary for '${project_name}':
+        local summary_prompt
+        summary_prompt="Generate concise automation summary for '${project_name}':
 - Swift files: ${swift_files}
 - AI analyses: ${ai_files}
 - Completed: $(date)
@@ -228,10 +230,10 @@ generate_ai_automation_summary_optimized() {
 Format: Key achievements | Next actions | Priority items"
 
         local ai_summary
-        ai_summary=$(echo "${summary_prompt}" | timeout ${AI_TIMEOUT_SUMMARY}s ollama run llama3.2:3b 2>/dev/null || echo "Automation completed successfully for ${project_name}")
+        ai_summary=$(echo "${summary_prompt}" | timeout "${AI_TIMEOUT_SUMMARY}"s ollama run llama3.2:3b 2>/dev/null || echo "Automation completed successfully for ${project_name}")
 
         # Save summary
-        local summary_file="${summary_file}"
+        local summary_file
         summary_file="${project_path}/AUTOMATION_SUMMARY_$(date +%Y%m%d).md"
         {
             echo "# Automation Summary for ${project_name}"
@@ -349,10 +351,11 @@ Projects: CodingReviewer, PlannerApp, AvoidObstaclesGame, MomentumFinance, Habit
 Format: Health assessment | Integration opportunities | Development priorities"
 
         local workspace_insights
-        workspace_insights=$(echo "${insights_prompt}" | timeout ${AI_TIMEOUT_INSIGHTS}s ollama run llama3.2:3b 2>/dev/null || echo "Workspace analysis completed - ${successful}/${processed} projects enhanced")
+        workspace_insights=$(echo "${insights_prompt}" | timeout "${AI_TIMEOUT_INSIGHTS}"s ollama run llama3.2:3b 2>/dev/null || echo "Workspace analysis completed - ${successful}/${processed} projects enhanced")
 
         # Save workspace insights
-        local insights_file="${CODE_DIR}/WORKSPACE_AI_INSIGHTS_$(date +%Y%m%d).md"
+        local insights_file
+        insights_file="${CODE_DIR}/WORKSPACE_AI_INSIGHTS_$(date +%Y%m%d).md"
         {
             echo "# Quantum Workspace AI Insights"
             echo "Generated: $(date)"
@@ -374,7 +377,8 @@ Format: Health assessment | Integration opportunities | Development priorities"
 monitor_build_performance() {
     print_performance "Monitoring build performance..."
 
-    local build_start=$(date +%s)
+    local build_start
+    build_start=$(date +%s)
 
     # Run a quick build test
     if command -v xcodebuild &>/dev/null; then
@@ -386,7 +390,8 @@ monitor_build_performance() {
             local build_output
             build_output=$(cd "${PROJECTS_DIR}/AvoidObstaclesGame" && timeout 60s xcodebuild -project AvoidObstaclesGame.xcodeproj -scheme AvoidObstaclesGame -sdk iphonesimulator -configuration Debug build 2>&1)
 
-            local build_end=$(date +%s)
+            local build_end
+            build_end=$(date +%s)
             local build_duration=$((build_end - build_start))
 
             if echo "${build_output}" | grep -q "BUILD SUCCEEDED"; then
@@ -396,7 +401,8 @@ monitor_build_performance() {
             fi
 
             # Save build performance report
-            local perf_file="${CODE_DIR}/BUILD_PERFORMANCE_$(date +%Y%m%d).md"
+            local perf_file
+            perf_file="${CODE_DIR}/BUILD_PERFORMANCE_$(date +%Y%m%d).md"
             {
                 echo "# Build Performance Report"
                 echo "Generated: $(date)"

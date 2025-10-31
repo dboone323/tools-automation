@@ -133,7 +133,8 @@ EOF
 # Monitor a single log file
 monitor_log() {
     local log_file="$1"
-    local pos_file="${KNOWLEDGE_DIR}/.pos_$(basename "${log_file}")"
+    local pos_file
+    pos_file="${KNOWLEDGE_DIR}/.pos_$(basename "${log_file}")"
 
     # Get last position
     local last_pos=0
@@ -165,7 +166,6 @@ monitor_log() {
 # Scan all logs
 scan_logs() {
     local scanned=0
-    local errors_found=0
 
     for log_file in "${SCRIPT_DIR}"/*.log; do
         if [[ -f "${log_file}" ]] && [[ "${log_file}" != "${LOG_FILE}" ]]; then
