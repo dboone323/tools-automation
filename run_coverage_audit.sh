@@ -18,13 +18,15 @@ IOS_SIMULATOR="iPhone 16 Test"
 COVERAGE_RESULTS_DIR="${WORKSPACE_ROOT}/coverage_results"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
-# Project configurations (name, path, scheme, platform)
-declare -A PROJECTS
-PROJECTS["AvoidObstaclesGame"]="${WORKSPACE_ROOT}/Projects/AvoidObstaclesGame|AvoidObstaclesGame|iOS"
-PROJECTS["CodingReviewer"]="${WORKSPACE_ROOT}/Projects/CodingReviewer|CodingReviewer|macOS"
-PROJECTS["PlannerApp"]="${WORKSPACE_ROOT}/Projects/PlannerApp|PlannerApp|macOS"
-PROJECTS["MomentumFinance"]="${WORKSPACE_ROOT}/Projects/MomentumFinance|MomentumFinance|macOS"
-PROJECTS["HabitQuest"]="${WORKSPACE_ROOT}/Projects/HabitQuest|HabitQuest|iOS"
+# Project configurations (name|path|scheme|platform)
+# NOTE: Avoid bash associative arrays for cross-platform compatibility
+PROJECTS_LIST=(
+    "AvoidObstaclesGame|${WORKSPACE_ROOT}/Projects/AvoidObstaclesGame|AvoidObstaclesGame|iOS"
+    "CodingReviewer|${WORKSPACE_ROOT}/Projects/CodingReviewer|CodingReviewer|macOS"
+    "PlannerApp|${WORKSPACE_ROOT}/Projects/PlannerApp|PlannerApp|macOS"
+    "MomentumFinance|${WORKSPACE_ROOT}/Projects/MomentumFinance|MomentumFinance|macOS"
+    "HabitQuest|${WORKSPACE_ROOT}/Projects/HabitQuest|HabitQuest|iOS"
+)
 
 # Create coverage results directory
 mkdir -p "${COVERAGE_RESULTS_DIR}"
@@ -35,10 +37,15 @@ echo -e "${BLUE}  Timestamp: ${TIMESTAMP}${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo ""
 
-# Summary tracking
-declare -A COVERAGE_SUMMARY
-declare -A BUILD_TIMES
-declare -A TEST_TIMES
+# Summary tracking (use temp files instead of associative arrays)
+SUMMARY_DIR="${COVERAGE_RESULTS_DIR}/.summary_${TIMESTAMP}"
+mkdir -p "${SUMMARY_DIR}"
+COVERAGE_SUMMARY_FILE="${SUMMARY_DIR}/coverage_summary.tsv" # project\tcoverage
+BUILD_TIMES_FILE="${SUMMARY_DIR}/build_times.tsv"           # project\ttime
+TEST_TIMES_FILE="${SUMMARY_DIR}/test_times.tsv"             # project\ttests
+>"${COVERAGE_SUMMARY_FILE}" || true
+>"${BUILD_TIMES_FILE}" || true
+>"${TEST_TIMES_FILE}" || true
 TOTAL_PROJECTS=0
 SUCCESSFUL_PROJECTS=0
 FAILED_PROJECTS=0
@@ -46,8 +53,9 @@ FAILED_PROJECTS=0
 # Function to run coverage for a project
 run_coverage() {
     local project_name=$1
-    local project_info=${PROJECTS[$project_name]}
-    IFS='|' read -r project_path scheme platform <<<"$project_info"
+    local project_path=$2
+    local scheme=$3
+    local platform=$4
 
     echo -e "${YELLOW}----------------------------------------${NC}"
     echo -e "${YELLOW}Project: ${project_name}${NC}"
@@ -56,7 +64,7 @@ run_coverage() {
 
     TOTAL_PROJECTS=$((TOTAL_PROJECTS + 1))
 
-    # Set destination based on platform
+    # Set destination based on platform (with fallback if iOS simulators unavailable)
     local destination
     if [[ "$platform" == "iOS" ]]; then
         destination="platform=iOS Simulator,name=${IOS_SIMULATOR},OS=latest"
@@ -70,11 +78,19 @@ run_coverage() {
 
     cd "${project_path}"
 
-    # Check if xcodeproj exists
-    if [[ ! -d "${project_name}.xcodeproj" ]]; then
-        echo -e "${RED}✗ No Xcode project found for ${project_name}${NC}"
+    # Determine build mode: Xcode project vs SPM (workspace/scheme only)
+    local spm_mode="false"
+    local has_xcodeproj="false"
+    if [[ -d "${project_name}.xcodeproj" ]]; then
+        has_xcodeproj="true"
+    elif [[ -f "Package.swift" ]]; then
+        spm_mode="true"
+    fi
+
+    if [[ "${has_xcodeproj}" != "true" && "${spm_mode}" != "true" ]]; then
+        echo -e "${RED}✗ No Xcode project or Swift Package found for ${project_name}${NC}"
         FAILED_PROJECTS=$((FAILED_PROJECTS + 1))
-        COVERAGE_SUMMARY[$project_name]="ERROR: No Xcode project"
+        printf "%s\t%s\n" "${project_name}" "ERROR: No project/package" >>"${COVERAGE_SUMMARY_FILE}"
         return 1
     fi
 
@@ -82,17 +98,34 @@ run_coverage() {
     local start_time=$(date +%s)
 
     # Run tests with coverage
-    if xcodebuild test \
-        -project "${project_name}.xcodeproj" \
-        -scheme "${scheme}" \
-        -destination "${destination}" \
-        -enableCodeCoverage YES \
-        -resultBundlePath "${project_result_dir}/TestResults.xcresult" \
-        >"${project_result_dir}/build.log" 2>&1; then
+    # Build command: include -project only when an .xcodeproj exists; otherwise rely on SPM workspace
+    local xcb_cmd=(xcodebuild test -scheme "${scheme}" -destination "${destination}" -enableCodeCoverage YES -resultBundlePath "${project_result_dir}/TestResults.xcresult")
+    if [[ "${has_xcodeproj}" == "true" ]]; then
+        xcb_cmd=(xcodebuild test -project "${project_name}.xcodeproj" -scheme "${scheme}" -destination "${destination}" -enableCodeCoverage YES -resultBundlePath "${project_result_dir}/TestResults.xcresult")
+    fi
+
+    # If platform requested is iOS but no iOS Simulator destinations are available, fallback to macOS
+    if [[ "$platform" == "iOS" ]]; then
+        local showdest_cmd=(xcodebuild -showdestinations -scheme "${scheme}")
+        if [[ "${has_xcodeproj}" == "true" ]]; then
+            showdest_cmd=(xcodebuild -project "${project_name}.xcodeproj" -showdestinations -scheme "${scheme}")
+        fi
+        if ! "${showdest_cmd[@]}" 2>/dev/null | grep -q "iOS Simulator"; then
+            echo -e "${YELLOW}⚠ No iOS Simulator destination available for ${project_name}/${scheme}. Falling back to macOS destination.${NC}"
+            destination="platform=macOS"
+            if [[ "${has_xcodeproj}" == "true" ]]; then
+                xcb_cmd=(xcodebuild test -project "${project_name}.xcodeproj" -scheme "${scheme}" -destination "${destination}" -enableCodeCoverage YES -resultBundlePath "${project_result_dir}/TestResults.xcresult")
+            else
+                xcb_cmd=(xcodebuild test -scheme "${scheme}" -destination "${destination}" -enableCodeCoverage YES -resultBundlePath "${project_result_dir}/TestResults.xcresult")
+            fi
+        fi
+    fi
+
+    if "${xcb_cmd[@]}" >"${project_result_dir}/build.log" 2>&1; then
 
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
-        BUILD_TIMES[$project_name]=$duration
+        printf "%s\t%s\n" "${project_name}" "${duration}s" >>"${BUILD_TIMES_FILE}"
 
         echo -e "${GREEN}✓ Build and tests completed (${duration}s)${NC}"
 
@@ -118,24 +151,24 @@ try:
 except:
     print('0.00')
 ")
-                COVERAGE_SUMMARY[$project_name]="${coverage}%"
+                printf "%s\t%s%%\n" "${project_name}" "${coverage}" >>"${COVERAGE_SUMMARY_FILE}"
                 echo -e "${GREEN}✓ Coverage: ${coverage}%${NC}"
 
                 # Generate human-readable report
                 xcrun xccov view --report "${project_result_dir}/TestResults.xcresult" \
                     >"${project_result_dir}/coverage_report.txt" 2>/dev/null || true
             else
-                COVERAGE_SUMMARY[$project_name]="N/A"
+                printf "%s\t%s\n" "${project_name}" "N/A" >>"${COVERAGE_SUMMARY_FILE}"
                 echo -e "${YELLOW}⚠ Coverage data extraction failed${NC}"
             fi
 
             # Count test results
             local test_count=$(grep -o "Test Case.*passed" "${project_result_dir}/build.log" | wc -l || echo "0")
             local test_time=$(grep "Test Suite.*passed" "${project_result_dir}/build.log" | tail -1 | grep -o "[0-9.]*seconds" || echo "0s")
-            TEST_TIMES[$project_name]="${test_count} tests in ${test_time}"
+            printf "%s\t%s tests in %s\n" "${project_name}" "${test_count}" "${test_time}" >>"${TEST_TIMES_FILE}"
 
         else
-            COVERAGE_SUMMARY[$project_name]="N/A (no results)"
+            printf "%s\t%s\n" "${project_name}" "N/A (no results)" >>"${COVERAGE_SUMMARY_FILE}"
             echo -e "${YELLOW}⚠ No test results bundle generated${NC}"
         fi
 
@@ -143,11 +176,11 @@ except:
     else
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
-        BUILD_TIMES[$project_name]="${duration}s (failed)"
+        printf "%s\t%s\n" "${project_name}" "${duration}s (failed)" >>"${BUILD_TIMES_FILE}"
 
         echo -e "${RED}✗ Build or tests failed${NC}"
         FAILED_PROJECTS=$((FAILED_PROJECTS + 1))
-        COVERAGE_SUMMARY[$project_name]="FAILED"
+        printf "%s\t%s\n" "${project_name}" "FAILED" >>"${COVERAGE_SUMMARY_FILE}"
 
         # Extract error information
         if [[ -f "${project_result_dir}/build.log" ]]; then
@@ -160,8 +193,9 @@ except:
 }
 
 # Run coverage for all projects
-for project in "${!PROJECTS[@]}"; do
-    run_coverage "$project"
+for entry in "${PROJECTS_LIST[@]}"; do
+    IFS='|' read -r name path scheme platform <<<"${entry}"
+    run_coverage "${name}" "${path}" "${scheme}" "${platform}"
 done
 
 # Generate comprehensive summary report
@@ -191,19 +225,19 @@ cat >"${SUMMARY_FILE}" <<EOF
 EOF
 
 # Add project rows
-for project in $(echo "${!PROJECTS[@]}" | tr ' ' '\n' | sort); do
-    local coverage="${COVERAGE_SUMMARY[$project]:-N/A}"
-    local build_time="${BUILD_TIMES[$project]:-N/A}"
-    local test_time="${TEST_TIMES[$project]:-N/A}"
+for project in $(printf "%s\n" "${PROJECTS_LIST[@]}" | cut -d'|' -f1 | sort); do
+    coverage=$(grep -E "^${project}\t" "${COVERAGE_SUMMARY_FILE}" | tail -1 | cut -f2 2>/dev/null || echo "N/A")
+    build_time=$(grep -E "^${project}\t" "${BUILD_TIMES_FILE}" | tail -1 | cut -f2 2>/dev/null || echo "N/A")
+    test_time=$(grep -E "^${project}\t" "${TEST_TIMES_FILE}" | tail -1 | cut -f2- 2>/dev/null || echo "N/A")
 
-    local status
+    status=
     if [[ "$coverage" == "FAILED" ]] || [[ "$coverage" == "ERROR:"* ]]; then
         status="❌ Failed"
     elif [[ "$coverage" == "N/A"* ]]; then
         status="⚠️ No Coverage"
     else
         # Parse coverage percentage
-        local cov_num=$(echo "$coverage" | grep -o "[0-9.]*" || echo "0")
+        cov_num=$(echo "$coverage" | grep -o "[0-9.]*" || echo "0")
         if (($(echo "$cov_num >= 85" | bc -l))); then
             status="✅ Passing"
         elif (($(echo "$cov_num >= 70" | bc -l))); then
@@ -236,16 +270,16 @@ cat >>"${SUMMARY_FILE}" <<EOF
 EOF
 
 # Identify gaps
-for project in $(echo "${!PROJECTS[@]}" | tr ' ' '\n' | sort); do
-    local coverage="${COVERAGE_SUMMARY[$project]}"
+for project in $(printf "%s\n" "${PROJECTS_LIST[@]}" | cut -d'|' -f1 | sort); do
+    coverage=$(grep -E "^${project}\t" "${COVERAGE_SUMMARY_FILE}" | tail -1 | cut -f2 2>/dev/null || echo "N/A")
     if [[ "$coverage" == "FAILED" ]] || [[ "$coverage" == "ERROR:"* ]]; then
         echo "- **${project}**: Build/test failure - requires immediate attention" >>"${SUMMARY_FILE}"
     elif [[ "$coverage" == "N/A"* ]]; then
         echo "- **${project}**: No coverage data available - test infrastructure may be missing" >>"${SUMMARY_FILE}"
     else
-        local cov_num=$(echo "$coverage" | grep -o "[0-9.]*" || echo "0")
+        cov_num=$(echo "$coverage" | grep -o "[0-9.]*" || echo "0")
         if (($(echo "$cov_num < 85" | bc -l))); then
-            local gap=$(echo "85 - $cov_num" | bc)
+            gap=$(echo "85 - $cov_num" | bc)
             echo "- **${project}**: Coverage ${coverage} is ${gap}% below minimum (85%)" >>"${SUMMARY_FILE}"
         fi
     fi
@@ -283,8 +317,8 @@ echo ""
 echo -e "${GREEN}Summary Report: ${SUMMARY_FILE}${NC}"
 echo ""
 echo "Coverage Results:"
-for project in $(echo "${!PROJECTS[@]}" | tr ' ' '\n' | sort); do
-    local coverage="${COVERAGE_SUMMARY[$project]}"
+for project in $(printf "%s\n" "${PROJECTS_LIST[@]}" | cut -d'|' -f1 | sort); do
+    coverage=$(grep -E "^${project}\t" "${COVERAGE_SUMMARY_FILE}" | tail -1 | cut -f2 2>/dev/null || echo "N/A")
     if [[ "$coverage" == "FAILED" ]] || [[ "$coverage" == "ERROR:"* ]]; then
         echo -e "  ${RED}✗ ${project}: ${coverage}${NC}"
     elif [[ "$coverage" == "N/A"* ]]; then
@@ -295,3 +329,6 @@ for project in $(echo "${!PROJECTS[@]}" | tr ' ' '\n' | sort); do
 done
 echo ""
 echo -e "${BLUE}Next: Review summary report and address identified gaps${NC}"
+
+# Cleanup temp summary directory marker (keep files for inspection)
+echo "Intermediate summary files in: ${SUMMARY_DIR}"
