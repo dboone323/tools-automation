@@ -40,7 +40,9 @@ check_rate_limit() {
 
     if [[ $hours_since_reset -ge 1 ]]; then
         # Reset counter
-        jq '.last_hour_count = 0 | .last_hour_reset = "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"'" "$ISSUE_TRACKING_FILE" >"${ISSUE_TRACKING_FILE}.tmp"
+        local reset_time
+        reset_time=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+        jq ".last_hour_count = 0 | .last_hour_reset = \"$reset_time\"" "$ISSUE_TRACKING_FILE" >"${ISSUE_TRACKING_FILE}.tmp"
         mv "${ISSUE_TRACKING_FILE}.tmp" "$ISSUE_TRACKING_FILE"
     fi
 

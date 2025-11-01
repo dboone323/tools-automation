@@ -313,8 +313,8 @@ while true; do
     # Check if we should proceed (throttling)
     if ! ensure_within_limits; then
         # Wait when busy, with exponential backoff
-        local wait_time=${WAIT_WHEN_BUSY}
-        local attempts=0
+        wait_time=${WAIT_WHEN_BUSY}
+        attempts=0
         while ! ensure_within_limits && [[ ${attempts} -lt 10 ]]; do
             log "Waiting ${wait_time}s before retry (attempt $((attempts + 1))/10)"
             sleep "${wait_time}"
