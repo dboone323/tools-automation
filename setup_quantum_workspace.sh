@@ -332,22 +332,13 @@ setup_github_cli() {
 
 # Setup VS Code extensions
 setup_vscode_extensions() {
-  print_step "Setting up VS Code extensions..."
+  print_step "Setting up VS Code with MCP servers..."
 
   if command -v code &>/dev/null; then
+    print_info "Note: Migrated to MCP servers for AI integration (Nov 2025)"
+    print_info "Most extensions replaced by MCP servers. Installing only essentials..."
+    
     local extensions=(
-      "ms-vscode.vscode-typescript-next"
-      "ms-python.python"
-      "ms-vscode.vscode-json"
-      "ms-vscode-remote.remote-ssh"
-      "ms-vscode-remote.remote-containers"
-      "ms-vscode.vscode-eslint"
-      "esbenp.prettier-vscode"
-      "ms-vscode.vscode-yaml"
-      "redhat.vscode-yaml"
-      "ms-vscode.makefile-tools"
-      "ms-vscode.vscode-docker"
-      "ms-vscode-remote.remote-wsl"
       "github.copilot"
       "github.copilot-chat"
     )
@@ -360,8 +351,11 @@ setup_vscode_extensions() {
         print_warning "Failed to install extension ${ext}"
       fi
     done
+    
+    print_info "MCP servers will auto-install via npx when needed"
+    print_info "See MCP_QUICK_REFERENCE.md for details"
   else
-    print_warning "VS Code not found. Install it manually for full extension support."
+    print_warning "VS Code not found. Install it manually for full MCP support."
   fi
 }
 
