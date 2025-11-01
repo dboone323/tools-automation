@@ -64,7 +64,11 @@ class XcodeprojCleaner:
         return duplicates
 
     def find_duplicate_file_references(self):
-        """Find PBXFileReference UUIDs that are referenced in children of multiple PBXGroup entries."""
+        """Find PBXFileReference UUIDs referenced multiple times across or within PBXGroup children.
+
+        Returns a dict mapping file UUID -> list of all occurrences (line, group, filename).
+        Consumers can decide whether to remove across-group duplicates, in-group duplicates, or both.
+        """
         lines = self.lines
         in_pbxgroup_section = False
         current_group_uuid = None
@@ -104,7 +108,8 @@ class XcodeprojCleaner:
             if in_children and current_group_uuid:
                 # Match child UUID entries in children list
                 m_child = re.match(
-                    r"^\s*([A-F0-9]{24})\s*/\*\s*(.+?)\s*\*/\s*,\s*$", line
+                    r"^\s*([A-F0-9]{24})\s*/\*\s*(.+?)\s*\*/\s*,\s*$",
+                    line,
                 )
                 if m_child:
                     child_uuid = m_child.group(1)
@@ -113,13 +118,7 @@ class XcodeprojCleaner:
                         {"line": i, "group": current_group_uuid, "filename": filename}
                     )
 
-        # Determine duplicates where the same child UUID appears in more than one group
-        dupes = {}
-        for uuid, occs in occurrences.items():
-            groups = {o["group"] for o in occs}
-            if len(groups) > 1:
-                dupes[uuid] = occs
-        return dupes
+        return occurrences
 
     def remove_duplicate_build_files(self, duplicates):
         """Remove duplicate build file entries, keeping only the first one"""
@@ -145,23 +144,51 @@ class XcodeprojCleaner:
 
         return removed_count
 
-    def remove_duplicate_file_references_from_groups(self, duplicates):
-        """Remove duplicate file references from PBXGroup children arrays"""
+    def remove_duplicate_file_references_from_groups(self, occurrences):
+        """Remove duplicate file references from PBXGroup children arrays.
+
+        - Removes duplicates across groups (same UUID appears in >1 group) keeping the first overall.
+        - Removes duplicates within the same group (same UUID listed multiple times) keeping the first in that group.
+        """
         lines_to_remove = set()
         removed_count = 0
 
-        for file_uuid, occurrences in duplicates.items():
-            # Keep the first occurrence, remove the rest
-            for occurrence in occurrences[1:]:
-                line_num = occurrence["line"]
-                filename = occurrence["filename"]
-                lines_to_remove.add(line_num)
-                print(
-                    f"  ❌ Removing duplicate group reference: {filename} (line {line_num + 1})"
-                )
-                removed_count += 1
+        for file_uuid, occs in occurrences.items():
+            # Sort by (group, line) to have consistent first-kept ordering
+            occs_sorted = sorted(occs, key=lambda o: (o["group"], o["line"]))
 
-        # Remove lines in reverse order
+            # Track first overall kept
+            kept_overall = False
+            seen_groups = set()
+
+            for occ in occs_sorted:
+                line_num = occ["line"]
+                group = occ["group"]
+                filename = occ["filename"]
+
+                if not kept_overall:
+                    # keep the first overall occurrence
+                    kept_overall = True
+                    seen_groups.add(group)
+                    continue
+
+                # If we've already seen this group, this is an in-group duplicate -> remove
+                if group in seen_groups:
+                    lines_to_remove.add(line_num)
+                    removed_count += 1
+                    print(
+                        f"  ❌ Removing duplicate (in same group): {filename} (line {line_num + 1})"
+                    )
+                else:
+                    # New group but same file UUID -> remove to avoid multi-group membership warning
+                    lines_to_remove.add(line_num)
+                    removed_count += 1
+                    seen_groups.add(group)
+                    print(
+                        f"  ❌ Removing duplicate (across groups): {filename} (line {line_num + 1})"
+                    )
+
+        # Remove lines in reverse order to keep indexes stable
         new_lines = [
             line for i, line in enumerate(self.lines) if i not in lines_to_remove
         ]
@@ -196,10 +223,18 @@ class XcodeprojCleaner:
 
         # Find and remove duplicate file references in groups
         print("\n📁 Checking for duplicate file references in groups...")
-        file_ref_dupes = self.find_duplicate_file_references()
-        if file_ref_dupes:
-            print(f"Found {len(file_ref_dupes)} files referenced in multiple groups")
-            removed = self.remove_duplicate_file_references_from_groups(file_ref_dupes)
+        file_ref_occurrences = self.find_duplicate_file_references()
+        # Determine which UUIDs have duplicates either within same group or across groups
+        dupes = {
+            uuid: occs
+            for uuid, occs in file_ref_occurrences.items()
+            if len(occs) > 1  # more than one occurrence overall (same or different groups)
+        }
+        if dupes:
+            print(
+                f"Found {len(dupes)} file references appearing multiple times (same or different groups)"
+            )
+            removed = self.remove_duplicate_file_references_from_groups(dupes)
             print(f"✅ Removed {removed} duplicate group references")
         else:
             print("✅ No duplicate group references found")
