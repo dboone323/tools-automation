@@ -3,7 +3,7 @@
 # Coverage Audit Script for Comprehensive Build & Test Infrastructure
 # Runs coverage analysis on all 5 projects with proper simulator/platform configuration
 
-set -euo pipefail
+set -eo pipefail
 
 # Colors for output
 RED='\033[0;31m'
@@ -19,13 +19,12 @@ COVERAGE_RESULTS_DIR="${WORKSPACE_ROOT}/coverage_results"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
 # Project configurations (name, path, scheme, platform)
-declare -A PROJECTS=(
-    ["AvoidObstaclesGame"]="${WORKSPACE_ROOT}/Projects/AvoidObstaclesGame|AvoidObstaclesGame|iOS"
-    ["CodingReviewer"]="${WORKSPACE_ROOT}/Projects/CodingReviewer|CodingReviewer|macOS"
-    ["PlannerApp"]="${WORKSPACE_ROOT}/Projects/PlannerApp|PlannerApp|macOS"
-    ["MomentumFinance"]="${WORKSPACE_ROOT}/Projects/MomentumFinance|MomentumFinance|macOS"
-    ["HabitQuest"]="${WORKSPACE_ROOT}/Projects/HabitQuest|HabitQuest|iOS"
-)
+declare -A PROJECTS
+PROJECTS["AvoidObstaclesGame"]="${WORKSPACE_ROOT}/Projects/AvoidObstaclesGame|AvoidObstaclesGame|iOS"
+PROJECTS["CodingReviewer"]="${WORKSPACE_ROOT}/Projects/CodingReviewer|CodingReviewer|macOS"
+PROJECTS["PlannerApp"]="${WORKSPACE_ROOT}/Projects/PlannerApp|PlannerApp|macOS"
+PROJECTS["MomentumFinance"]="${WORKSPACE_ROOT}/Projects/MomentumFinance|MomentumFinance|macOS"
+PROJECTS["HabitQuest"]="${WORKSPACE_ROOT}/Projects/HabitQuest|HabitQuest|iOS"
 
 # Create coverage results directory
 mkdir -p "${COVERAGE_RESULTS_DIR}"
@@ -48,15 +47,15 @@ FAILED_PROJECTS=0
 run_coverage() {
     local project_name=$1
     local project_info=${PROJECTS[$project_name]}
-    IFS='|' read -r project_path scheme platform <<< "$project_info"
-    
+    IFS='|' read -r project_path scheme platform <<<"$project_info"
+
     echo -e "${YELLOW}----------------------------------------${NC}"
     echo -e "${YELLOW}Project: ${project_name}${NC}"
     echo -e "${YELLOW}Platform: ${platform}${NC}"
     echo -e "${YELLOW}----------------------------------------${NC}"
-    
+
     TOTAL_PROJECTS=$((TOTAL_PROJECTS + 1))
-    
+
     # Set destination based on platform
     local destination
     if [[ "$platform" == "iOS" ]]; then
@@ -64,13 +63,13 @@ run_coverage() {
     else
         destination="platform=macOS"
     fi
-    
+
     # Project-specific directory
     local project_result_dir="${COVERAGE_RESULTS_DIR}/${project_name}_${TIMESTAMP}"
     mkdir -p "${project_result_dir}"
-    
+
     cd "${project_path}"
-    
+
     # Check if xcodeproj exists
     if [[ ! -d "${project_name}.xcodeproj" ]]; then
         echo -e "${RED}✗ No Xcode project found for ${project_name}${NC}"
@@ -78,10 +77,10 @@ run_coverage() {
         COVERAGE_SUMMARY[$project_name]="ERROR: No Xcode project"
         return 1
     fi
-    
+
     echo "Building and testing with coverage..."
     local start_time=$(date +%s)
-    
+
     # Run tests with coverage
     if xcodebuild test \
         -project "${project_name}.xcodeproj" \
@@ -89,22 +88,22 @@ run_coverage() {
         -destination "${destination}" \
         -enableCodeCoverage YES \
         -resultBundlePath "${project_result_dir}/TestResults.xcresult" \
-        > "${project_result_dir}/build.log" 2>&1; then
-        
+        >"${project_result_dir}/build.log" 2>&1; then
+
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
         BUILD_TIMES[$project_name]=$duration
-        
+
         echo -e "${GREEN}✓ Build and tests completed (${duration}s)${NC}"
-        
+
         # Extract coverage data
         if [[ -d "${project_result_dir}/TestResults.xcresult" ]]; then
             echo "Extracting coverage data..."
-            
+
             # Use xcrun to extract coverage report
             xcrun xccov view --report --json "${project_result_dir}/TestResults.xcresult" \
-                > "${project_result_dir}/coverage.json" 2>/dev/null || true
-            
+                >"${project_result_dir}/coverage.json" 2>/dev/null || true
+
             # Parse coverage percentage
             if [[ -f "${project_result_dir}/coverage.json" ]]; then
                 local coverage=$(python3 -c "
@@ -121,42 +120,42 @@ except:
 ")
                 COVERAGE_SUMMARY[$project_name]="${coverage}%"
                 echo -e "${GREEN}✓ Coverage: ${coverage}%${NC}"
-                
+
                 # Generate human-readable report
                 xcrun xccov view --report "${project_result_dir}/TestResults.xcresult" \
-                    > "${project_result_dir}/coverage_report.txt" 2>/dev/null || true
+                    >"${project_result_dir}/coverage_report.txt" 2>/dev/null || true
             else
                 COVERAGE_SUMMARY[$project_name]="N/A"
                 echo -e "${YELLOW}⚠ Coverage data extraction failed${NC}"
             fi
-            
+
             # Count test results
             local test_count=$(grep -o "Test Case.*passed" "${project_result_dir}/build.log" | wc -l || echo "0")
             local test_time=$(grep "Test Suite.*passed" "${project_result_dir}/build.log" | tail -1 | grep -o "[0-9.]*seconds" || echo "0s")
             TEST_TIMES[$project_name]="${test_count} tests in ${test_time}"
-            
+
         else
             COVERAGE_SUMMARY[$project_name]="N/A (no results)"
             echo -e "${YELLOW}⚠ No test results bundle generated${NC}"
         fi
-        
+
         SUCCESSFUL_PROJECTS=$((SUCCESSFUL_PROJECTS + 1))
     else
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
         BUILD_TIMES[$project_name]="${duration}s (failed)"
-        
+
         echo -e "${RED}✗ Build or tests failed${NC}"
         FAILED_PROJECTS=$((FAILED_PROJECTS + 1))
         COVERAGE_SUMMARY[$project_name]="FAILED"
-        
+
         # Extract error information
         if [[ -f "${project_result_dir}/build.log" ]]; then
             echo -e "${RED}Last 20 lines of build log:${NC}"
             tail -20 "${project_result_dir}/build.log"
         fi
     fi
-    
+
     echo ""
 }
 
@@ -168,7 +167,7 @@ done
 # Generate comprehensive summary report
 SUMMARY_FILE="${COVERAGE_RESULTS_DIR}/coverage_audit_summary_${TIMESTAMP}.md"
 
-cat > "${SUMMARY_FILE}" << EOF
+cat >"${SUMMARY_FILE}" <<EOF
 # Coverage Audit Summary
 
 **Date**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')  
@@ -196,7 +195,7 @@ for project in $(echo "${!PROJECTS[@]}" | tr ' ' '\n' | sort); do
     local coverage="${COVERAGE_SUMMARY[$project]:-N/A}"
     local build_time="${BUILD_TIMES[$project]:-N/A}"
     local test_time="${TEST_TIMES[$project]:-N/A}"
-    
+
     local status
     if [[ "$coverage" == "FAILED" ]] || [[ "$coverage" == "ERROR:"* ]]; then
         status="❌ Failed"
@@ -205,19 +204,19 @@ for project in $(echo "${!PROJECTS[@]}" | tr ' ' '\n' | sort); do
     else
         # Parse coverage percentage
         local cov_num=$(echo "$coverage" | grep -o "[0-9.]*" || echo "0")
-        if (( $(echo "$cov_num >= 85" | bc -l) )); then
+        if (($(echo "$cov_num >= 85" | bc -l))); then
             status="✅ Passing"
-        elif (( $(echo "$cov_num >= 70" | bc -l) )); then
+        elif (($(echo "$cov_num >= 70" | bc -l))); then
             status="⚠️ Warning"
         else
             status="❌ Below Target"
         fi
     fi
-    
-    echo "| ${project} | ${coverage} | ${build_time} | ${test_time} | ${status} |" >> "${SUMMARY_FILE}"
+
+    echo "| ${project} | ${coverage} | ${build_time} | ${test_time} | ${status} |" >>"${SUMMARY_FILE}"
 done
 
-cat >> "${SUMMARY_FILE}" << EOF
+cat >>"${SUMMARY_FILE}" <<EOF
 
 ---
 
@@ -240,19 +239,19 @@ EOF
 for project in $(echo "${!PROJECTS[@]}" | tr ' ' '\n' | sort); do
     local coverage="${COVERAGE_SUMMARY[$project]}"
     if [[ "$coverage" == "FAILED" ]] || [[ "$coverage" == "ERROR:"* ]]; then
-        echo "- **${project}**: Build/test failure - requires immediate attention" >> "${SUMMARY_FILE}"
+        echo "- **${project}**: Build/test failure - requires immediate attention" >>"${SUMMARY_FILE}"
     elif [[ "$coverage" == "N/A"* ]]; then
-        echo "- **${project}**: No coverage data available - test infrastructure may be missing" >> "${SUMMARY_FILE}"
+        echo "- **${project}**: No coverage data available - test infrastructure may be missing" >>"${SUMMARY_FILE}"
     else
         local cov_num=$(echo "$coverage" | grep -o "[0-9.]*" || echo "0")
-        if (( $(echo "$cov_num < 85" | bc -l) )); then
+        if (($(echo "$cov_num < 85" | bc -l))); then
             local gap=$(echo "85 - $cov_num" | bc)
-            echo "- **${project}**: Coverage ${coverage} is ${gap}% below minimum (85%)" >> "${SUMMARY_FILE}"
+            echo "- **${project}**: Coverage ${coverage} is ${gap}% below minimum (85%)" >>"${SUMMARY_FILE}"
         fi
     fi
 done
 
-cat >> "${SUMMARY_FILE}" << EOF
+cat >>"${SUMMARY_FILE}" <<EOF
 
 ---
 
