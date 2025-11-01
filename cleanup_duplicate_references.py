@@ -228,7 +228,8 @@ class XcodeprojCleaner:
         dupes = {
             uuid: occs
             for uuid, occs in file_ref_occurrences.items()
-            if len(occs) > 1  # more than one occurrence overall (same or different groups)
+            if len(occs)
+            > 1  # more than one occurrence overall (same or different groups)
         }
         if dupes:
             print(
