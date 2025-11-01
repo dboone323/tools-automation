@@ -26,10 +26,10 @@ log_warning() { echo -e "${YELLOW}[WARNING]${NC} $1" >&2; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1" >&2; }
 
 # Performance tracking
-declare -A start_times
-declare -A end_times
-declare -A test_results
-declare -A coverage_results
+start_times=""
+end_times=""
+test_results=""
+coverage_results=""
 
 # Function to run tests for a single project
 run_project_tests() {
@@ -45,10 +45,15 @@ run_project_tests() {
     # Change to project directory
     cd "$project_path"
 
+    local test_output_file="/tmp/${project}_test_output"
+
     # Determine test command based on project type
     if [[ "$project" == "CodingReviewer" ]]; then
         # SPM-based project
-        if ! swift test --enable-code-coverage --parallel; then
+        if swift test --enable-code-coverage --parallel >"$test_output_file" 2>&1; then
+            log_success "Tests passed for $project"
+            echo "PASSED" >"/tmp/${project}_test_result"
+        else
             log_error "Tests failed for $project"
             echo "FAILED" >"/tmp/${project}_test_result"
             return 1
@@ -62,7 +67,10 @@ run_project_tests() {
             -enableCodeCoverage YES \
             -parallel-testing-enabled YES \
             -test-timeouts-enabled YES \
-            -maximum-test-execution-time-allowance "$TIMEOUT_SECONDS"; then
+            -maximum-test-execution-time-allowance "$TIMEOUT_SECONDS" >"$test_output_file" 2>&1; then
+            log_success "Tests passed for $project"
+            echo "PASSED" >"/tmp/${project}_test_result"
+        else
             log_error "Tests failed for $project"
             echo "FAILED" >"/tmp/${project}_test_result"
             return 1
@@ -71,8 +79,6 @@ run_project_tests() {
 
     local end_time=$(date +%s)
     echo "$end_time" >"/tmp/${project}_end_time"
-    echo "PASSED" >"/tmp/${project}_test_result"
-    log_success "Tests passed for $project"
 
     # Collect coverage data
     collect_coverage "$project"
@@ -86,6 +92,8 @@ collect_coverage() {
     local project_path="$WORKSPACE_ROOT/Projects/$project"
 
     log_info "Collecting coverage for $project..."
+
+    local coverage_pct="0.00"
 
     if [[ "$project" == "CodingReviewer" ]]; then
         # SPM coverage collection
@@ -103,16 +111,12 @@ collect_coverage() {
                     -ignore-filename-regex="\.build|Tests" 2>/dev/null || echo "0.00")
 
                 # Extract percentage
-                local coverage_pct=$(echo "$coverage_report" | grep -oP '\d+\.\d+(?=%)' | head -1 || echo "0.00")
-                coverage_results["$project"]="$coverage_pct"
-                echo "$coverage_pct" >"/tmp/${project}_coverage"
+                coverage_pct=$(echo "$coverage_report" | grep -oP '\d+\.\d+(?=%)' | head -1 || echo "0.00")
                 log_info "Coverage for $project: ${coverage_pct}%"
             else
-                coverage_results["$project"]="0.00"
                 log_warning "No coverage data found for $project"
             fi
         else
-            coverage_results["$project"]="N/A"
             log_warning "llvm-cov not available for $project coverage"
         fi
     else
@@ -122,20 +126,29 @@ collect_coverage() {
             local coverage_dir="$derived_data/Logs/Test/*.xcresult"
             if [[ -d "$coverage_dir" ]]; then
                 # Use xccov to get coverage
-                local coverage_pct=$(xcrun xccov view --report --json "$coverage_dir" 2>/dev/null |
+                coverage_pct=$(xcrun xccov view --report --json "$coverage_dir" 2>/dev/null |
                     jq -r '.targets[0].lineCoverage * 100' 2>/dev/null || echo "0.00")
-                coverage_results["$project"]="$coverage_pct"
-                echo "$coverage_pct" >"/tmp/${project}_coverage"
                 log_info "Coverage for $project: ${coverage_pct}%"
             else
-                coverage_results["$project"]="0.00"
                 log_warning "No Xcode coverage data found for $project"
             fi
         else
-            coverage_results["$project"]="0.00"
             log_warning "No derived data found for $project"
         fi
     fi
+
+    # Save coverage to temporary file for report generation
+    echo "$coverage_pct" >"/tmp/${project}_coverage"
+
+    # Save coverage data to JSON file for other scripts
+    local coverage_file="$WORKSPACE_ROOT/test_results/${project}_coverage.json"
+    cat >"$coverage_file" <<EOF
+{
+  "project": "$project",
+  "coverage_percentage": "$coverage_pct",
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+}
+EOF
 }
 
 # Function to run tests in parallel with job control
@@ -170,12 +183,43 @@ run_parallel_tests() {
     done
 }
 
+# Function to parse test output and extract individual test results
+parse_test_output() {
+    local output_file="$1"
+    local test_results="[]"
+
+    if [[ ! -f "$output_file" ]]; then
+        echo "$test_results"
+        return
+    fi
+
+    # Parse test results from xcodebuild output
+    # Look for lines like "Test Case '-[TestClass testMethod]' passed/failed"
+    local parsed_tests=$(grep -E "Test Case.*(passed|failed)" "$output_file" 2>/dev/null |
+        sed "s/.*Test Case '-\[\([^]]*\)\]' \([a-z]*\).*/\1 \2/" |
+        awk '{
+            test_name = $1
+            for(i=2; i<NF; i++) test_name = test_name " " $i
+            status = $NF
+            printf "{\"name\":\"%s\",\"status\":\"%s\"},", test_name, status
+        }' | sed 's/,$//')
+
+    if [[ -n "$parsed_tests" ]]; then
+        test_results="[$parsed_tests]"
+    fi
+
+    echo "$test_results"
+}
+
 # Function to generate test report
 generate_report() {
     local total_projects=${#PROJECTS[@]}
     local passed_count=0
     local failed_projects=()
     local coverage_warnings=()
+
+    # Create test_results directory if it doesn't exist
+    mkdir -p "$WORKSPACE_ROOT/test_results"
 
     echo
     echo "========================================"
@@ -188,10 +232,12 @@ generate_report() {
         local coverage_file="/tmp/${project}_coverage"
         local start_file="/tmp/${project}_start_time"
         local end_file="/tmp/${project}_end_time"
+        local output_file="/tmp/${project}_test_output"
 
         local status="UNKNOWN"
         local coverage="N/A"
         local duration="N/A"
+        local test_results="[]"
 
         if [[ -f "$status_file" ]]; then
             status=$(cat "$status_file")
@@ -206,6 +252,24 @@ generate_report() {
             local end_time=$(cat "$end_file")
             duration=$((end_time - start_time))
         fi
+
+        # Parse individual test results from output
+        if [[ -f "$output_file" ]]; then
+            test_results=$(parse_test_output "$output_file")
+        fi
+
+        # Save detailed results to JSON file for other scripts to use
+        local result_file="$WORKSPACE_ROOT/test_results/${project}_test_results.json"
+        cat >"$result_file" <<EOF
+{
+  "project": "$project",
+  "status": "$status",
+  "coverage": "$coverage",
+  "duration": "$duration",
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "tests": $test_results
+}
+EOF
 
         if [[ "$status" == "PASSED" ]]; then
             ((passed_count++))
@@ -255,8 +319,8 @@ main() {
 
     local start_time=$(date +%s)
 
-    # Run tests in parallel
-    run_parallel_tests
+    # Run tests in parallel (don't exit on failures)
+    run_parallel_tests || true
 
     local end_time=$(date +%s)
     local total_duration=$((end_time - start_time))

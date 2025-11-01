@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 WORKSPACE_ROOT="/Users/danielstevens/Desktop/Quantum-workspace"
-IOS_SIMULATOR="iPhone 17"
+IOS_SIMULATOR="iPhone 16 Test"
 COVERAGE_RESULTS_DIR="${WORKSPACE_ROOT}/coverage_results"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 

@@ -25,9 +25,9 @@ log_warning() { echo -e "${YELLOW}[WARNING]${NC} $1" >&2; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1" >&2; }
 
 # Data structures
-declare -A test_runs
-declare -A test_failures
-declare -A flaky_tests
+test_runs=""
+test_failures=""
+flaky_tests=""
 
 # Function to run a single test project multiple times
 detect_flaky_tests() {
@@ -38,6 +38,8 @@ detect_flaky_tests() {
 
     cd "$project_path"
 
+    local failures=0
+
     for run in $(seq 1 $RUNS_PER_TEST); do
         log_info "Run $run/$RUNS_PER_TEST for $project..."
 
@@ -46,10 +48,10 @@ detect_flaky_tests() {
         # Run tests based on project type
         if [[ "$project" == "CodingReviewer" ]]; then
             if swift test --parallel >/dev/null 2>&1; then
-                test_runs["$project:$run"]="PASS"
+                echo "PASS" >"/tmp/${project}_run_${run}"
             else
-                test_runs["$project:$run"]="FAIL"
-                ((test_failures["$project"]++))
+                echo "FAIL" >"/tmp/${project}_run_${run}"
+                ((failures++))
             fi
         else
             local scheme="$project"
@@ -60,32 +62,36 @@ detect_flaky_tests() {
                 -test-timeouts-enabled YES \
                 -maximum-test-execution-time-allowance "$TIMEOUT_SECONDS" \
                 >/dev/null 2>&1; then
-                test_runs["$project:$run"]="PASS"
+                echo "PASS" >"/tmp/${project}_run_${run}"
             else
-                test_runs["$project:$run"]="FAIL"
-                ((test_failures["$project"]++))
+                echo "FAIL" >"/tmp/${project}_run_${run}"
+                ((failures++))
             fi
         fi
 
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
 
-        log_info "Run $run completed in ${duration}s: ${test_runs["$project:$run"]}"
+        local result=$(cat "/tmp/${project}_run_${run}")
+        log_info "Run $run completed in ${duration}s: $result"
     done
 
     # Calculate flaky metrics
     local total_runs=$RUNS_PER_TEST
-    local failures=${test_failures["$project"]:-0}
     local failure_rate=$(echo "scale=2; $failures / $total_runs" | bc -l 2>/dev/null || echo "0")
 
+    # Store results in files
+    echo "$failures" >"/tmp/${project}_failures"
+    echo "$failure_rate" >"/tmp/${project}_failure_rate"
+
     if (($(echo "$failure_rate > $FLAKY_THRESHOLD" | bc -l 2>/dev/null || echo "0"))); then
-        flaky_tests["$project"]="FLAKY ($failure_rate failure rate)"
+        echo "FLAKY ($failure_rate failure rate)" >"/tmp/${project}_status"
         log_warning "$project is FLAKY: $failures/$total_runs failures ($failure_rate)"
     elif [[ $failures -gt 0 ]]; then
-        flaky_tests["$project"]="UNSTABLE ($failure_rate failure rate)"
+        echo "UNSTABLE ($failure_rate failure rate)" >"/tmp/${project}_status"
         log_warning "$project is UNSTABLE: $failures/$total_runs failures ($failure_rate)"
     else
-        flaky_tests["$project"]="STABLE (0 failures)"
+        echo "STABLE (0 failures)" >"/tmp/${project}_status"
         log_success "$project is STABLE: $total_runs/$total_runs passes"
     fi
 }
@@ -103,9 +109,14 @@ generate_flaky_report() {
     local unstable_projects=0
     local flaky_projects=0
 
-    for project in "${!flaky_tests[@]}"; do
+    for project in "${projects[@]}"; do
         ((total_projects++))
-        local status="${flaky_tests[$project]}"
+        local status_file="/tmp/${project}_status"
+        local status="UNKNOWN"
+
+        if [[ -f "$status_file" ]]; then
+            status=$(cat "$status_file")
+        fi
 
         if [[ "$status" == *"STABLE"* ]]; then
             ((stable_projects++))
@@ -121,7 +132,12 @@ generate_flaky_report() {
         # Show detailed run results
         echo "  Run results:"
         for run in $(seq 1 $RUNS_PER_TEST); do
-            local result="${test_runs["$project:$run"]:-UNKNOWN}"
+            local result_file="/tmp/${project}_run_${run}"
+            local result="UNKNOWN"
+            if [[ -f "$result_file" ]]; then
+                result=$(cat "$result_file")
+            fi
+
             if [[ "$result" == "PASS" ]]; then
                 echo -e "    Run $run: ${GREEN}PASS${NC}"
             else
@@ -164,17 +180,32 @@ save_flaky_results() {
     echo "  \"results\": {" >>"$output_file"
 
     local first=true
-    for project in "${!flaky_tests[@]}"; do
+    for project in "${projects[@]}"; do
         if [[ $first == false ]]; then
             echo "," >>"$output_file"
         fi
         first=false
 
-        local failures=${test_failures["$project"]:-0}
-        local failure_rate=$(echo "scale=4; $failures / $RUNS_PER_TEST" | bc -l 2>/dev/null || echo "0")
+        local failures_file="/tmp/${project}_failures"
+        local failure_rate_file="/tmp/${project}_failure_rate"
+        local status_file="/tmp/${project}_status"
+
+        local failures=0
+        local failure_rate="0"
+        local status="UNKNOWN"
+
+        if [[ -f "$failures_file" ]]; then
+            failures=$(cat "$failures_file")
+        fi
+        if [[ -f "$failure_rate_file" ]]; then
+            failure_rate=$(cat "$failure_rate_file")
+        fi
+        if [[ -f "$status_file" ]]; then
+            status=$(cat "$status_file")
+        fi
 
         echo "    \"$project\": {" >>"$output_file"
-        echo "      \"status\": \"${flaky_tests[$project]}\"," >>"$output_file"
+        echo "      \"status\": \"$status\"," >>"$output_file"
         echo "      \"failures\": $failures," >>"$output_file"
         echo "      \"total_runs\": $RUNS_PER_TEST," >>"$output_file"
         echo "      \"failure_rate\": $failure_rate," >>"$output_file"
@@ -186,7 +217,13 @@ save_flaky_results() {
                 echo "," >>"$output_file"
             fi
             run_first=false
-            echo "        \"${test_runs["$project:$run"]:-UNKNOWN}\"" >>"$output_file"
+
+            local result_file="/tmp/${project}_run_${run}"
+            local result="UNKNOWN"
+            if [[ -f "$result_file" ]]; then
+                result=$(cat "$result_file")
+            fi
+            echo "        \"$result\"" >>"$output_file"
         done
         echo "      ]" >>"$output_file"
         echo "    }" >>"$output_file"
@@ -211,11 +248,6 @@ main() {
     log_info "Configuration: Runs per test=$RUNS_PER_TEST, Flaky threshold=${FLAKY_THRESHOLD}"
 
     local start_time=$(date +%s)
-
-    # Initialize failure counters
-    for project in "${projects[@]}"; do
-        test_failures["$project"]=0
-    done
 
     # Run flaky detection for each project
     for project in "${projects[@]}"; do
