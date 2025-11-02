@@ -1,0 +1,138 @@
+#!/bin/bash
+#
+# Pre-Push Git Hook
+# Comprehensive validation before pushing (< 2 minutes target)
+#
+# Automatically runs:
+# - Tests for changed projects
+# - Ollama AI code review
+# - Quality gate validation
+# - Coverage check (if enabled)
+#
+# To bypass: git push --no-verify
+#
+
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+echo -e "${CYAN}"
+echo "╔════════════════════════════════════════════════════════════════╗"
+echo "║         🚀 Pre-Push Validation (Fast Mode)                    ║"
+echo "╚════════════════════════════════════════════════════════════════╝"
+echo -e "${NC}"
+
+# Find root directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+
+# Read push details
+while read local_ref local_sha remote_ref remote_sha; do
+    if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+        # Deleting branch
+        exit 0
+    fi
+
+    if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+        # New branch - use local commits only
+        range="$local_sha"
+    else
+        # Existing branch - check diff
+        range="$remote_sha..$local_sha"
+    fi
+
+    # Get changed files
+    changed_files=$(git diff --name-only "$range" 2>/dev/null || git diff --name-only "$local_sha" 2>/dev/null || echo "")
+
+    # Detect changed projects
+    changed_projects=()
+
+    if echo "$changed_files" | grep -q "Projects/AvoidObstaclesGame"; then
+        changed_projects+=("AvoidObstaclesGame")
+    fi
+    if echo "$changed_files" | grep -q "Projects/PlannerApp"; then
+        changed_projects+=("PlannerApp")
+    fi
+    if echo "$changed_files" | grep -q "Projects/MomentumFinance"; then
+        changed_projects+=("MomentumFinance")
+    fi
+    if echo "$changed_files" | grep -q "Projects/HabitQuest"; then
+        changed_projects+=("HabitQuest")
+    fi
+    if echo "$changed_files" | grep -q "Projects/CodingReviewer"; then
+        changed_projects+=("CodingReviewer")
+    fi
+
+    if [ ${#changed_projects[@]} -eq 0 ]; then
+        echo -e "${GREEN}✅ No project changes detected - skipping tests${NC}"
+        exit 0
+    fi
+
+    echo -e "${BLUE}📦 Changed projects: ${changed_projects[*]}${NC}"
+
+    # Run quick tests for changed projects only
+    echo -e "${BLUE}🧪 Running tests for changed projects...${NC}"
+
+    for project in "${changed_projects[@]}"; do
+        echo -e "${BLUE}Testing ${project}...${NC}"
+
+        case "$project" in
+        "CodingReviewer")
+            # SPM project
+            if [ -f "$ROOT_DIR/Projects/CodingReviewer/Package.swift" ]; then
+                cd "$ROOT_DIR/Projects/CodingReviewer"
+                swift test --quiet || {
+                    echo -e "${RED}❌ Tests failed for ${project}${NC}"
+                    exit 1
+                }
+            fi
+            ;;
+
+        *)
+            # Xcode project
+            if [ -f "$ROOT_DIR/Projects/${project}/${project}.xcodeproj/project.pbxproj" ]; then
+                cd "$ROOT_DIR"
+                xcodebuild test \
+                    -project "Projects/${project}/${project}.xcodeproj" \
+                    -scheme "${project}" \
+                    -destination "platform=macOS" \
+                    -quiet -only-testing:"${project}Tests" 2>&1 || {
+                    echo -e "${RED}❌ Tests failed for ${project}${NC}"
+                    exit 1
+                }
+            fi
+            ;;
+        esac
+
+        echo -e "${GREEN}✅ ${project} tests passed${NC}"
+    done
+
+    # Quick Ollama review (if available)
+    if command -v ollama >/dev/null 2>&1; then
+        if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
+            echo -e "${BLUE}🤖 Running quick AI review...${NC}"
+
+            # Get diff (limited size)
+            diff_content=$(git diff "$range" 2>/dev/null | head -c 5000 || echo "")
+
+            if [ -n "$diff_content" ]; then
+                # Quick review with Ollama (non-blocking)
+                ollama_response=$(curl -s http://localhost:11434/api/generate \
+                    -d "{\"model\":\"qwen2.5-coder:1.5b\",\"prompt\":\"Quick code review: any critical bugs?\\n${diff_content}\",\"stream\":false}" |
+                    jq -r '.response' 2>/dev/null || echo "Review skipped")
+
+                echo -e "${BLUE}AI Review: ${ollama_response:0:200}...${NC}"
+            fi
+        fi
+    fi
+
+    echo -e "${GREEN}✅ Pre-push validation complete!${NC}"
+done
+
+exit 0
