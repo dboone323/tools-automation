@@ -7,7 +7,8 @@ set -euo pipefail
 
 # Configuration
 WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PROJECTS=("AvoidObstaclesGame" "CodingReviewer" "PlannerApp" "MomentumFinance" "HabitQuest")
+# Projects will be determined dynamically unless TEST_PROJECTS env var is provided
+PROJECTS=()
 COVERAGE_THRESHOLD=85
 TIMEOUT_SECONDS=120
 MAX_PARALLEL_JOBS=3
@@ -27,10 +28,84 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1" >&2; }
 
 # Performance tracking (aggregated via temp files per project; variables removed to reduce lint noise)
 
+# Resolve on-disk path for a logical project name
+resolve_project_path() {
+    local project="$1"
+
+    # 1) Legacy layout: Projects/<Name>
+    if [[ -d "$WORKSPACE_ROOT/Projects/$project" ]]; then
+        echo "$WORKSPACE_ROOT/Projects/$project"
+        return 0
+    fi
+
+    # 2) Top-level folder with same name (e.g., Shared)
+    if [[ -d "$WORKSPACE_ROOT/$project" ]]; then
+        echo "$WORKSPACE_ROOT/$project"
+        return 0
+    fi
+
+    # 3) Special-case Shared package location
+    if [[ "$project" == "Shared" && -d "$WORKSPACE_ROOT/Shared" ]]; then
+        echo "$WORKSPACE_ROOT/Shared"
+        return 0
+    fi
+
+    # 4) Fallback: try to locate a folder by Package.swift parent name
+    local pkg
+    while IFS= read -r pkg; do
+        local dir
+        dir="$(dirname "$pkg")"
+        if [[ "$(basename "$dir")" == "$project" ]]; then
+            echo "$dir"
+            return 0
+        fi
+    done < <(find "$WORKSPACE_ROOT" -maxdepth 3 -name Package.swift 2>/dev/null)
+
+    # Not found
+    echo ""; return 1
+}
+
+# Discover available testable units if PROJECTS not provided
+discover_projects() {
+    local discovered=()
+
+    # If TEST_PROJECTS env is set, honor it
+    if [[ -n "${TEST_PROJECTS:-}" ]]; then
+        # Split by space
+        for p in ${TEST_PROJECTS}; do
+            discovered+=("$p")
+        done
+    else
+        # Prefer known top-level packages (Shared) and any Package.swift within first 3 levels excluding Tools/WebInterface
+        if [[ -f "$WORKSPACE_ROOT/Shared/Package.swift" ]]; then
+            discovered+=("Shared")
+        fi
+        # Discover other packages (exclude Tools/WebInterface which is not part of core testing)
+        while IFS= read -r pkg; do
+            local dir
+            dir="$(dirname "$pkg")"
+            local name
+            name="$(basename "$dir")"
+            # Skip Shared (already added) and Tools subpackages unless explicitly requested
+            if [[ "$name" != "Shared" && "$dir" != "$WORKSPACE_ROOT/Tools/WebInterface"* ]]; then
+                discovered+=("$name")
+            fi
+        done < <(find "$WORKSPACE_ROOT" -maxdepth 3 -name Package.swift 2>/dev/null)
+    fi
+
+    # If nothing found, fall back to legacy list (will be skipped if paths missing)
+    if [[ ${#discovered[@]} -eq 0 ]]; then
+        discovered=("AvoidObstaclesGame" "CodingReviewer" "PlannerApp" "MomentumFinance" "HabitQuest")
+    fi
+
+    PROJECTS=("${discovered[@]}")
+}
+
 # Function to run tests for a single project
 run_project_tests() {
     local project="$1"
-    local project_path="$WORKSPACE_ROOT/Projects/$project"
+    local project_path
+    project_path="$(resolve_project_path "$project")"
     local start_time
     start_time=$(date +%s)
 
@@ -39,21 +114,39 @@ run_project_tests() {
     # Store start time
     echo "$start_time" >"/tmp/${project}_start_time"
 
-    # Change to project directory
+    # Validate and change to project directory
+    if [[ -z "$project_path" || ! -d "$project_path" ]]; then
+        log_error "Project path not found for $project"
+        echo "FAILED" >"/tmp/${project}_test_result"
+        # Record times to avoid negative durations
+        echo "$start_time" >"/tmp/${project}_end_time"
+        # Create empty artifacts
+        : >"/tmp/${project}_test_output"
+        echo "0.00" >"/tmp/${project}_coverage"
+        return 1
+    fi
+
     cd "$project_path"
 
     local test_output_file="/tmp/${project}_test_output"
 
     # Determine test command based on project type
-    if [[ "$project" == "CodingReviewer" ]]; then
-        # SPM-based project
+    # Determine test strategy by presence of SwiftPM or Xcode project files
+    if [[ -f "Package.swift" ]]; then
+        # Swift Package
         if swift test --enable-code-coverage --parallel >"$test_output_file" 2>&1; then
             log_success "Tests passed for $project"
             echo "PASSED" >"/tmp/${project}_test_result"
         else
-            log_error "Tests failed for $project"
-            echo "FAILED" >"/tmp/${project}_test_result"
-            return 1
+            # Handle SwiftPM packages with no tests
+            if grep -q "no tests found" "$test_output_file" 2>/dev/null; then
+                log_warning "No tests found for $project - marking as PASSED (build-only)"
+                echo "PASSED" >"/tmp/${project}_test_result"
+            else
+                log_error "Tests failed for $project"
+                echo "FAILED" >"/tmp/${project}_test_result"
+                return 1
+            fi
         fi
     else
         # Xcode-based projects
@@ -93,8 +186,8 @@ collect_coverage() {
 
     local coverage_pct="0.00"
 
-    if [[ "$project" == "CodingReviewer" ]]; then
-        # SPM coverage collection
+    if [[ -f "$project_path/Package.swift" ]]; then
+        # Swift Package coverage collection
         if command -v llvm-cov >/dev/null 2>&1; then
             # Find coverage files
             local profraw_files
@@ -105,8 +198,11 @@ collect_coverage() {
 
                 # Generate coverage report
                 local coverage_report
+                # Attempt to infer binary from .build debug products
+                local bin
+                bin="$(swift build --show-bin-path 2>/dev/null)/$project"
                 coverage_report=$(xcrun llvm-cov report \
-                    "$(swift build --show-bin-path)/$project" \
+                    "$bin" \
                     -instr-profile="$project_path/coverage.profdata" \
                     -ignore-filename-regex="\.build|Tests" 2>/dev/null || echo "0.00")
 
@@ -318,6 +414,9 @@ EOF
 
 # Main execution
 main() {
+    # Discover projects before running
+    discover_projects
+
     log_info "Starting parallel test execution across ${#PROJECTS[@]} projects..."
     log_info "Configuration: Max parallel jobs=$MAX_PARALLEL_JOBS, Timeout=${TIMEOUT_SECONDS}s, Coverage threshold=${COVERAGE_THRESHOLD}%"
 
