@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./shared_functions.sh
 source "${SCRIPT_DIR}/shared_functions.sh"
 # Agent Persistence Status Check Script
 
@@ -11,12 +12,10 @@ LOG_FILE="${SCRIPT_DIR}/persistence_status.log"
     echo "=== Agent Persistence Status Report ==="
     echo "Timestamp: $(date)"
     echo ""
+    echo "1. Launch Daemon Status:"
+    launchctl list | grep quantum 2>&1 || echo "No quantum launch daemons found"
+    echo ""
 } >>"$LOG_FILE"
-
-# Check launch daemon status
-echo "1. Launch Daemon Status:" >>"$LOG_FILE"
-launchctl list | grep quantum >>"$LOG_FILE" 2>&1
-echo "" >>"$LOG_FILE"
 
 # Check auto-restart monitor process
 echo "2. Auto-Restart Monitor Process:" >>"$LOG_FILE"
@@ -77,5 +76,9 @@ echo "Agent Persistence Status Check Complete"
 echo "Report saved to: $LOG_FILE"
 echo ""
 echo "Quick Status:"
-launchctl list | grep quantum | awk '{print "Launch daemon: PID " $1}'
-ps aux | grep -c "auto_restart_monitor\|agent_build\|agent_debug\|agent_codegen" | grep -v grep | xargs echo "Agent processes running:"
+launchctl list | grep quantum | awk '{print "Launch daemon: PID " $1}' || echo "No daemons found"
+if pgrep -f "auto_restart_monitor|agent_build|agent_debug|agent_codegen" >/dev/null; then
+    echo "Agent processes running: $(pgrep -f 'auto_restart_monitor|agent_build|agent_debug|agent_codegen' | wc -l | tr -d ' ')"
+else
+    echo "Agent processes running: 0"
+fi

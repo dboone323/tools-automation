@@ -10,7 +10,6 @@ WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 COVERAGE_THRESHOLD=85
 PERFORMANCE_TIMEOUT=120 # seconds
 CIRCUIT_BREAKER_FAILURES=3
-MAX_RETRIES=2
 
 # Execution modes
 MODE="${1:-pr-validation}"
@@ -35,8 +34,6 @@ declare -A consecutive_failures
 
 # Performance tracking
 declare -A performance_metrics
-declare -A start_times
-declare -A end_times
 
 # Function to initialize circuit breaker
 init_circuit_breaker() {
@@ -146,13 +143,13 @@ run_performance_validation() {
 
         log_info "Running performance validation for $project..."
 
-        local start_time=$(date +%s)
-        start_times["$project:perf"]=$start_time
+        local start_time
+        start_time=$(date +%s)
 
         # Run performance tests with timeout
         if timeout "$PERFORMANCE_TIMEOUT" "$WORKSPACE_ROOT/Tools/Automation/run_performance_tests.sh" "$project" 2>/dev/null; then
-            local end_time=$(date +%s)
-            end_times["$project:perf"]=$end_time
+            local end_time
+            end_time=$(date +%s)
             local duration=$((end_time - start_time))
             performance_metrics["$project:duration"]=$duration
 
@@ -181,7 +178,8 @@ run_quality_gate_validation() {
     # Check coverage thresholds
     local coverage_file="$WORKSPACE_ROOT/coverage_report.json"
     if [[ -f "$coverage_file" ]]; then
-        local overall_coverage=$(jq -r '.overall_coverage // 0' "$coverage_file" 2>/dev/null || echo "0")
+        local overall_coverage
+        overall_coverage=$(jq -r '.overall_coverage // 0' "$coverage_file" 2>/dev/null || echo "0")
 
         if (($(echo "$overall_coverage < $COVERAGE_THRESHOLD" | bc -l 2>/dev/null || echo "1"))); then
             log_error "Coverage gate failed: ${overall_coverage}% < ${COVERAGE_THRESHOLD}%"
@@ -209,41 +207,20 @@ run_quality_gate_validation() {
     return 0
 }
 
-# Function to run with retry logic
-run_with_retry() {
-    local command="$1"
-    local max_retries="$2"
-    local attempt=1
-
-    while [[ $attempt -le $max_retries ]]; do
-        log_info "Attempt $attempt/$max_retries: $command"
-
-        if eval "$command"; then
-            return 0
-        fi
-
-        ((attempt++))
-        if [[ $attempt -le $max_retries ]]; then
-            log_warning "Attempt failed, retrying in 5 seconds..."
-            sleep 5
-        fi
-    done
-
-    log_error "All $max_retries attempts failed"
-    return 1
-}
-
 # Function to generate CI report
 generate_ci_report() {
     local mode="$1"
     local success="$2"
-    local output_file="$WORKSPACE_ROOT/ci_report_$(date +%Y%m%d_%H%M%S).json"
+    local output_file
+    output_file="$WORKSPACE_ROOT/ci_report_$(date +%Y%m%d_%H%M%S).json"
 
-    echo "{" >"$output_file"
-    echo "  \"timestamp\": \"$(date -Iseconds)\"," >>"$output_file"
-    echo "  \"mode\": \"$mode\"," >>"$output_file"
-    echo "  \"success\": $success," >>"$output_file"
-    echo "  \"circuit_breaker_state\": {" >>"$output_file"
+    {
+        echo "{"
+        echo "  \"timestamp\": \"$(date -Iseconds)\","
+        echo "  \"mode\": \"$mode\","
+        echo "  \"success\": $success,"
+        echo "  \"circuit_breaker_state\": {"
+    } >"$output_file"
 
     local first=true
     for project in "${!circuit_breaker_state[@]}"; do
@@ -251,14 +228,18 @@ generate_ci_report() {
             echo "," >>"$output_file"
         fi
         first=false
-        echo "    \"$project\": {" >>"$output_file"
-        echo "      \"state\": \"${circuit_breaker_state[$project]}\"," >>"$output_file"
-        echo "      \"consecutive_failures\": ${consecutive_failures[$project]}" >>"$output_file"
-        echo "    }" >>"$output_file"
+        {
+            echo "    \"$project\": {"
+            echo "      \"state\": \"${circuit_breaker_state[$project]}\","
+            echo "      \"consecutive_failures\": ${consecutive_failures[$project]}"
+            echo "    }"
+        } >>"$output_file"
     done
 
-    echo "  }," >>"$output_file"
-    echo "  \"performance_metrics\": {" >>"$output_file"
+    {
+        echo "  },"
+        echo "  \"performance_metrics\": {"
+    } >>"$output_file"
 
     first=true
     for metric in "${!performance_metrics[@]}"; do
@@ -269,8 +250,10 @@ generate_ci_report() {
         echo "    \"$metric\": ${performance_metrics[$metric]}" >>"$output_file"
     done
 
-    echo "  }" >>"$output_file"
-    echo "}" >>"$output_file"
+    {
+        echo "  }"
+        echo "}"
+    } >>"$output_file"
 
     log_info "CI report saved to: $output_file"
 }
@@ -282,7 +265,8 @@ main() {
     # Initialize circuit breaker
     init_circuit_breaker
 
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
     local success=false
 
     case "$MODE" in
@@ -302,7 +286,8 @@ main() {
         ;;
     esac
 
-    local end_time=$(date +%s)
+    local end_time
+    end_time=$(date +%s)
     local total_duration=$((end_time - start_time))
 
     # Generate report

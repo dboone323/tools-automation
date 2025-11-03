@@ -158,7 +158,8 @@ declare_emergency() {
 
     critical "Declaring $severity severity emergency: $error_message"
 
-    local emergency_id="emerg_$(date +%Y%m%d%H%M%S)"
+    local emergency_id
+    emergency_id="emerg_$(date +%Y%m%d%H%M%S)"
 
     # Record emergency
     python3 <<EOF
@@ -446,14 +447,15 @@ escalate_level5() {
     log "Enabling safe-mode..."
 
     # Enable safe mode flag
-    echo "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >"$SAFE_MODE_FLAG"
+    date -u +"%Y-%m-%dT%H:%M:%SZ" >"$SAFE_MODE_FLAG"
 
     # Halt all agent operations
     log "Halting agent operations..."
 
     # Preserve system state
     log "Preserving system state..."
-    local state_snapshot="$KNOWLEDGE_DIR/safe_mode_snapshot_$(date +%Y%m%d%H%M%S).json"
+    local state_snapshot
+    state_snapshot="$KNOWLEDGE_DIR/safe_mode_snapshot_$(date +%Y%m%d%H%M%S).json"
 
     python3 <<EOF
 import json

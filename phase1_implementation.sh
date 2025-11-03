@@ -6,7 +6,6 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 AGENTS_DIR="${SCRIPT_DIR}/agents"
 LOG_FILE="${SCRIPT_DIR}/phase1_implementation.log"
 
@@ -236,7 +235,8 @@ integrate_mcp_into_agents() {
 
         # Add MCP client reference at the top of the agent
         # (This is a placeholder - actual integration would be more complex)
-        local backup="${agent_path}.backup.$(date +%Y%m%d_%H%M%S)"
+        local backup
+        backup="${agent_path}.backup.$(date +%Y%m%d_%H%M%S)"
         cp "${agent_path}" "${backup}"
 
         log "INFO" "Created backup: ${backup}"
@@ -329,7 +329,7 @@ Phase 1 of the Agent Enhancement Master Plan has been completed successfully.
 
 ### 4. MCP Provider Status
 
-$(${SCRIPT_DIR}/mcp_client.sh list 2>&1 || echo "MCP client check failed")
+$("${SCRIPT_DIR}"/mcp_client.sh list 2>&1 || echo "MCP client check failed")
 
 ## Validation Checklist
 

@@ -52,10 +52,12 @@ detect_test_failures() {
     fi
 
     # Parse test results and look for failures
-    local failed_tests=$(jq -r '.tests[] | select(.status == "failed") | .name' "$test_results_file" 2>/dev/null || echo "")
+    local failed_tests
+    failed_tests=$(jq -r '.tests[] | select(.status == "failed") | .name' "$test_results_file" 2>/dev/null || echo "")
 
     if [[ -n "$failed_tests" ]]; then
-        local issue_file="$ISSUES_DIR/${project}_test_failures_$(date +%Y%m%d_%H%M%S).json"
+        local issue_file
+        issue_file="$ISSUES_DIR/${project}_test_failures_$(date +%Y%m%d_%H%M%S).json"
 
         jq -n --arg project "$project" --argjson failed_tests "$(echo "$failed_tests" | jq -R -s 'split("\n") | map(select(. != ""))')" '{
             type: "test_failures",
@@ -95,16 +97,22 @@ detect_coverage_regressions() {
     fi
 
     # Get current coverage
-    local current_coverage=$(jq -r '.coverage_percent // 0' "$coverage_file" 2>/dev/null || echo "0")
+    local current_coverage
+    current_coverage=$(jq -r '.coverage_percent // 0' "$coverage_file" 2>/dev/null || echo "0")
 
     # Get minimum required coverage
     local min_coverage="$COVERAGE_MINIMUM"
     if [[ "$project" == "CodingReviewer" ]]; then
-        min_coverage=$(grep "test_coverage_minimum:" "$CONFIG_FILE" | grep -A 5 "CodingReviewer" | grep "test_coverage_minimum:" | sed 's/.*: *//')
+        local temp_min_coverage
+        temp_min_coverage=$(grep "test_coverage_minimum:" "$CONFIG_FILE" | grep -A 5 "CodingReviewer" | grep "test_coverage_minimum:" | sed 's/.*: *//')
+        if [[ -n "$temp_min_coverage" ]]; then
+            min_coverage="$temp_min_coverage"
+        fi
     fi
 
     if (($(echo "$current_coverage < $min_coverage" | bc -l 2>/dev/null || echo "1"))); then
-        local issue_file="$ISSUES_DIR/${project}_coverage_regression_$(date +%Y%m%d_%H%M%S).json"
+        local issue_file
+        issue_file="$ISSUES_DIR/${project}_coverage_regression_$(date +%Y%m%d_%H%M%S).json"
 
         jq -n --arg project "$project" --arg current "$current_coverage" --arg minimum "$min_coverage" '{
             type: "coverage_regression",
@@ -145,10 +153,12 @@ detect_flaky_tests() {
     fi
 
     # Count flaky tests
-    local flaky_count=$(jq '. | length' "$flaky_file" 2>/dev/null || echo "0")
+    local flaky_count
+    flaky_count=$(jq -r '.flaky_tests | length' "$flaky_file" 2>/dev/null || echo "0")
 
     if [[ "$flaky_count" -gt "$FLAKY_THRESHOLD" ]]; then
-        local issue_file="$ISSUES_DIR/${project}_flaky_tests_$(date +%Y%m%d_%H%M%S).json"
+        local issue_file
+        issue_file="$ISSUES_DIR/${project}_flaky_tests_$(date +%Y%m%d_%H%M%S).json"
 
         jq -n --arg project "$project" --arg count "$flaky_count" --arg threshold "$FLAKY_THRESHOLD" '{
             type: "flaky_tests",
@@ -189,11 +199,14 @@ detect_performance_regressions() {
     fi
 
     # Get current performance metrics
-    local current_time=$(jq -r '.total_duration_seconds // 0' "$perf_file" 2>/dev/null || echo "0")
-    local max_allowed=$(grep "max_duration_seconds:" "$CONFIG_FILE" | head -1 | sed 's/.*: *//')
+    local current_time
+    local max_allowed
+    current_time=$(jq -r '.total_duration_seconds // 0' "$perf_file" 2>/dev/null || echo "0")
+    max_allowed=$(grep "max_duration_seconds:" "$CONFIG_FILE" | head -1 | sed 's/.*: *//')
 
     if (($(echo "$current_time > $max_allowed" | bc -l 2>/dev/null || echo "0"))); then
-        local issue_file="$ISSUES_DIR/${project}_performance_regression_$(date +%Y%m%d_%H%M%S).json"
+        local issue_file
+        issue_file="$ISSUES_DIR/${project}_performance_regression_$(date +%Y%m%d_%H%M%S).json"
 
         jq -n --arg project "$project" --arg current "$current_time" --arg max "$max_allowed" '{
             type: "performance_regression",
@@ -225,8 +238,10 @@ detect_performance_regressions() {
 generate_issue_summary() {
     log_info "📋 Generating issue summary..."
 
-    local summary_file="$ISSUES_DIR/issue_summary_$(date +%Y%m%d_%H%M%S).json"
-    local issue_files=$(find "$ISSUES_DIR" -name "*.json" -type f ! -name "issue_summary_*.json" 2>/dev/null || echo "")
+    local summary_file
+    local issue_files
+    summary_file="$ISSUES_DIR/issue_summary_$(date +%Y%m%d_%H%M%S).json"
+    issue_files=$(find "$ISSUES_DIR" -name "*.json" -type f ! -name "issue_summary_*.json" 2>/dev/null || echo "")
 
     # Count issues by type and severity
     local high_severity=0
@@ -248,7 +263,8 @@ generate_issue_summary() {
             ((performance_regressions++))
         fi
 
-        local severity=$(jq -r '.severity' "$issue_file" 2>/dev/null || echo "unknown")
+        local severity
+        severity=$(jq -r '.severity' "$issue_file" 2>/dev/null || echo "unknown")
         case "$severity" in
         "high") ((high_severity++)) ;;
         "medium") ((medium_severity++)) ;;

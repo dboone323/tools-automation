@@ -12,16 +12,18 @@ WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 QUALITY_CONFIG="$WORKSPACE_ROOT/quality-config.yaml"
 
 # Extract values from quality config (simplified parsing)
-COVERAGE_MINIMUM=$(grep "minimum:" "$QUALITY_CONFIG" | grep -o "[0-9]*" | head -1 || echo "85")
-COVERAGE_TARGET=$(grep "target:" "$QUALITY_CONFIG" | grep -o "[0-9]*" | head -1 || echo "90")
-BUILD_TIMEOUT=$(grep "max_duration_seconds:" "$QUALITY_CONFIG" | grep -A1 "build_performance" | tail -1 | grep -o "[0-9]*" | head -1 || echo "120")
-TEST_TIMEOUT=$(grep "max_duration_seconds:" "$QUALITY_CONFIG" | grep -A1 "test_performance" | tail -1 | grep -o "[0-9]*" | head -1 || echo "30")
+COVERAGE_MINIMUM=85
+BUILD_TIMEOUT=120
+TEST_TIMEOUT=30
+if [[ -f "$QUALITY_CONFIG" ]]; then
+    COVERAGE_MINIMUM=$(grep "minimum:" "$QUALITY_CONFIG" | grep -o "[0-9]*" | head -1 || echo "85")
+    BUILD_TIMEOUT=$(grep "max_duration_seconds:" "$QUALITY_CONFIG" | grep -A1 "build_performance" | tail -1 | grep -o "[0-9]*" | head -1 || echo "120")
+    TEST_TIMEOUT=$(grep "max_duration_seconds:" "$QUALITY_CONFIG" | grep -A1 "test_performance" | tail -1 | grep -o "[0-9]*" | head -1 || echo "30")
+fi
 
 # CI environment variables
 COMMIT_SHA="${GITHUB_SHA:-$(git rev-parse HEAD)}"
 CI_RUN_ID="${GITHUB_RUN_ID:-$(date +%s)}"
-PROJECT_NAME="${1:-}"
-OPERATION="${2:-}"
 
 # Colors for output
 RED='\033[0;31m'

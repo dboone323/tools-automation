@@ -75,6 +75,7 @@ check_resource_limits() { # Utility function for resource monitoring - used by c
 }
 
 # Source Phase 2 workflow
+# shellcheck source=./agent_workflow_phase2.sh
 source "$SCRIPT_DIR/agent_workflow_phase2.sh" 2>/dev/null || {
     echo "[Workflow] Warning: Phase 2 workflow not found, using Phase 3 only"
 }

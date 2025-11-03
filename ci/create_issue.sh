@@ -6,19 +6,14 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+export WORKSPACE_ROOT
+WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 # Configuration
 GITHUB_TOKEN=${GITHUB_TOKEN:-""}
 REPO_OWNER="dboone323"
 REPO_NAME="Quantum-workspace"
 MAX_ISSUES_PER_HOUR=10
-ISSUE_TRACKING_FILE="$WORKSPACE_ROOT/.issue_tracking.json"
-
-# Quality thresholds from config
-COVERAGE_MINIMUM=85
-BUILD_TIMEOUT_SECONDS=120
-TEST_TIMEOUT_SECONDS=30
 
 # Initialize issue tracking
 init_issue_tracking() {
@@ -26,17 +21,21 @@ init_issue_tracking() {
         echo '{
   "issues_created": [],
   "last_hour_count": 0,
-  "last_hour_reset": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+  "last_hour_reset": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"
 }' >"$ISSUE_TRACKING_FILE"
     fi
 }
 
 # Check rate limiting
 check_rate_limit() {
-    local current_time=$(date +%s)
-    local last_reset=$(jq -r '.last_hour_reset' "$ISSUE_TRACKING_FILE" 2>/dev/null || echo "")
-    local last_reset_epoch=$(date -d "$last_reset" +%s 2>/dev/null || echo "0")
-    local hours_since_reset=$(( (current_time - last_reset_epoch) / 3600 ))
+    local current_time
+    current_time=$(date +%s)
+    local last_reset
+    last_reset=$(jq -r '.last_hour_reset' "$ISSUE_TRACKING_FILE" 2>/dev/null || echo "")
+    local last_reset_epoch
+    last_reset_epoch=$(date -d "$last_reset" +%s 2>/dev/null || echo "0")
+    local hours_since_reset
+    hours_since_reset=$(((current_time - last_reset_epoch) / 3600))
 
     if [[ $hours_since_reset -ge 1 ]]; then
         # Reset counter
@@ -46,7 +45,8 @@ check_rate_limit() {
         mv "${ISSUE_TRACKING_FILE}.tmp" "$ISSUE_TRACKING_FILE"
     fi
 
-    local current_count=$(jq -r '.last_hour_count' "$ISSUE_TRACKING_FILE" 2>/dev/null || echo "0")
+    local current_count
+    current_count=$(jq -r '.last_hour_count' "$ISSUE_TRACKING_FILE" 2>/dev/null || echo "0")
 
     if [[ $current_count -ge $MAX_ISSUES_PER_HOUR ]]; then
         echo "Rate limit exceeded: $current_count issues in last hour (max: $MAX_ISSUES_PER_HOUR)"
@@ -76,7 +76,8 @@ create_github_issue() {
     fi
 
     local api_url="https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/issues"
-    local data=$(jq -n \
+    local data
+    data=$(jq -n \
         --arg title "$title" \
         --arg body "$body" \
         --arg labels "$labels" \
@@ -95,7 +96,8 @@ create_github_issue() {
         -d "$data" \
         "$api_url")
 
-    local issue_number=$(echo "$response" | jq -r '.number' 2>/dev/null || echo "")
+    local issue_number
+    issue_number=$(echo "$response" | jq -r '.number' 2>/dev/null || echo "")
 
     if [[ -n "$issue_number" && "$issue_number" != "null" ]]; then
         echo "Created issue #$issue_number: $title"
@@ -115,7 +117,9 @@ file_coverage_issue() {
     local run_id="$5"
 
     local title="Coverage Regression: $project (${actual_coverage}% < ${expected_minimum}%)"
-    local body=$(cat <<EOF
+    local body
+    body=$(
+        cat <<EOF
 ## Coverage Regression Detected
 
 **Project:** $project
@@ -141,7 +145,7 @@ file_coverage_issue() {
 
 **Priority:** High - Blocks deployment
 EOF
-)
+    )
 
     local labels="coverage-regression,ci-failure,high-priority,needs-tests"
     local assignees=""
@@ -159,7 +163,9 @@ file_timeout_issue() {
     local run_id="$6"
 
     local title="Build Timeout: $operation exceeded ${timeout_limit}s limit"
-    local body=$(cat <<EOF
+    local body
+    body=$(
+        cat <<EOF
 ## Build Timeout Detected
 
 **Operation:** $operation
@@ -195,7 +201,7 @@ file_timeout_issue() {
 
 **Priority:** Critical - Blocks CI/CD pipeline
 EOF
-)
+    )
 
     local labels="build-timeout,ci-failure,critical,performance"
     local assignees=""
@@ -213,7 +219,9 @@ file_flaky_test_issue() {
     local run_id="$6"
 
     local title="Flaky Test: $test_name (${failure_rate}% failure rate)"
-    local body=$(cat <<EOF
+    local body
+    body=$(
+        cat <<EOF
 ## Flaky Test Detected
 
 **Test:** $test_name
@@ -247,7 +255,7 @@ file_flaky_test_issue() {
 
 **Priority:** High - Affects CI reliability
 EOF
-)
+    )
 
     local labels="flaky-test,ci-unreliable,high-priority,test-quality"
     local assignees=""
@@ -264,7 +272,9 @@ file_security_issue() {
     local run_id="$5"
 
     local title="Security Violation: $violation_type in $project"
-    local body=$(cat <<EOF
+    local body
+    body=$(
+        cat <<EOF
 ## Security Violation Detected
 
 **Violation Type:** $violation_type
@@ -293,7 +303,7 @@ file_security_issue() {
 
 **Priority:** Critical - Security vulnerability
 EOF
-)
+    )
 
     local labels="security-violation,critical,security-review"
     local assignees=""
@@ -332,7 +342,8 @@ file_issue() {
         ;;
     esac
 
-    if [[ $? -eq 0 ]]; then
+    local result=$?
+    if [[ $result -eq 0 ]]; then
         increment_counter
     fi
 }

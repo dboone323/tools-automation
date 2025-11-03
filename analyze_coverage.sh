@@ -7,7 +7,6 @@
 set -euo pipefail
 
 # Colors
-RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -46,10 +45,12 @@ analyze_swift_project() {
     echo -e "${YELLOW}📱 Analyzing $project_name...${NC}"
 
     # Count source files
-    local source_files=$(find "$project_path" -name "*.swift" ! -path "*/Tests/*" ! -path "*/UITests/*" ! -name "*Tests.swift" 2>/dev/null | wc -l | tr -d ' ')
+    local source_files
+    source_files=$(find "$project_path" -name "*.swift" ! -path "*/Tests/*" ! -path "*/UITests/*" ! -name "*Tests.swift" 2>/dev/null | wc -l | tr -d ' ')
 
     # Count test files
-    local test_files=$(find "$project_path" -name "*Tests.swift" 2>/dev/null | wc -l | tr -d ' ')
+    local test_files
+    test_files=$(find "$project_path" -name "*Tests.swift" 2>/dev/null | wc -l | tr -d ' ')
 
     # Calculate test ratio (rough proxy for coverage)
     local test_ratio=0
@@ -58,8 +59,10 @@ analyze_swift_project() {
     fi
 
     # List untested files (files without corresponding test files)
-    local untested_files=$(find "$project_path" -name "*.swift" ! -path "*/Tests/*" ! -path "*/UITests/*" ! -name "*Tests.swift" ! -name "App.swift" ! -name "ContentView.swift" 2>/dev/null | while read -r file; do
-        local filename=$(basename "$file" .swift)
+    local untested_files
+    untested_files=$(find "$project_path" -name "*.swift" ! -path "*/Tests/*" ! -path "*/UITests/*" ! -name "*Tests.swift" ! -name "App.swift" ! -name "ContentView.swift" 2>/dev/null | while read -r file; do
+        local filename
+        filename=$(basename "$file" .swift)
         local test_file="${filename}Tests.swift"
         if ! find "$project_path" -name "$test_file" 2>/dev/null | grep -q .; then
             echo "  - $(basename "$file")"
@@ -144,8 +147,10 @@ EOF
 analyze_shell_coverage() {
     echo -e "${YELLOW}🔧 Analyzing Shell scripts...${NC}"
 
-    local shell_files=$(find "$WORKSPACE_ROOT/Tools/Automation" -name "*.sh" ! -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
-    local shell_tests=$(find "$WORKSPACE_ROOT/Tools/Automation" -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
+    local shell_files
+    shell_files=$(find "$WORKSPACE_ROOT/Tools/Automation" -name "*.sh" ! -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
+    local shell_tests
+    shell_tests=$(find "$WORKSPACE_ROOT/Tools/Automation" -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
 
     echo -e "  Shell files: $shell_files"
     echo -e "  Shell tests: $shell_tests"
@@ -180,8 +185,10 @@ analyze_agents() {
 
     local agent_dir="$WORKSPACE_ROOT/Tools/Automation/agents"
     if [ -d "$agent_dir" ]; then
-        local agent_files=$(find "$agent_dir" -type f \( -name "*.sh" -o -name "*.py" \) 2>/dev/null | wc -l | tr -d ' ')
-        local agent_tests=$(find "$agent_dir" -type f -name "test_*" 2>/dev/null | wc -l | tr -d ' ')
+        local agent_files
+        agent_files=$(find "$agent_dir" -type f \( -name "*.sh" -o -name "*.py" \) 2>/dev/null | wc -l | tr -d ' ')
+        local agent_tests
+        agent_tests=$(find "$agent_dir" -type f -name "test_*" 2>/dev/null | wc -l | tr -d ' ')
 
         echo -e "  Agent files: $agent_files"
         echo -e "  Agent tests: $agent_tests"

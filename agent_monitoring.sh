@@ -57,4 +57,4 @@ ps -o pid,ppid,%cpu,%mem,etime,stat,command -p "$AGENT_PID" >>"$LOGFILE" 2>&1 ||
 
 echo "[MONITOR] Log saved to: $LOGFILE"
 
-exit $AG_EXIT_CODE
+exit "$AG_EXIT_CODE"

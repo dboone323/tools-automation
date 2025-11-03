@@ -29,7 +29,8 @@ measure_memory() {
     local max_memory=0
 
     while kill -0 "$pid" 2>/dev/null; do
-        local current_memory=$(ps -o rss= -p "$pid" 2>/dev/null | awk '{print $1}' || echo "0")
+        local current_memory
+        current_memory=$(ps -o rss= -p "$pid" 2>/dev/null | awk '{print $1}' || echo "0")
         if [[ $current_memory -gt $max_memory ]]; then
             max_memory=$current_memory
         fi
@@ -48,7 +49,8 @@ run_performance_test() {
 
     cd "$project_path"
 
-    local start_time=$(date +%s.%3N)
+    local start_time
+    start_time=$(date +%s.%3N)
 
     # Run tests in background to measure resources
     if [[ "$project" == "CodingReviewer" ]]; then
@@ -66,7 +68,8 @@ run_performance_test() {
     local test_pid=$!
 
     # Measure memory usage
-    local max_memory=$(measure_memory "$test_pid")
+    local max_memory
+    max_memory=$(measure_memory "$test_pid")
 
     # Wait for test completion
     local exit_code=0
@@ -74,8 +77,10 @@ run_performance_test() {
         exit_code=1
     fi
 
-    local end_time=$(date +%s.%3N)
-    local duration=$(echo "$end_time - $start_time" | bc -l 2>/dev/null || echo "0")
+    local end_time
+    local duration
+    end_time=$(date +%s.%3N)
+    duration=$(echo "$end_time - $start_time" | bc -l 2>/dev/null || echo "0")
 
     # Check performance thresholds
     local success=true

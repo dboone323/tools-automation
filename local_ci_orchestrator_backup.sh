@@ -270,7 +270,8 @@ ${diff_content:0:10000}" # Limit to 10K chars
     }" | jq -r '.response')
 
     # Save review
-    local review_file="${ARTIFACTS_DIR}/reviews/ai_review_$(date +%Y%m%d_%H%M%S).md"
+    local review_file
+    review_file="${ARTIFACTS_DIR}/reviews/ai_review_$(date +%Y%m%d_%H%M%S).md"
     mkdir -p "$(dirname "$review_file")"
 
     cat >"$review_file" <<EOF
@@ -357,7 +358,8 @@ generate_report() {
 
     info "Generating CI/CD report..."
 
-    local report_file="${ARTIFACTS_DIR}/reports/ci_report_$(date +%Y%m%d_%H%M%S).md"
+    local report_file
+    report_file="${ARTIFACTS_DIR}/reports/ci_report_$(date +%Y%m%d_%H%M%S).md"
     mkdir -p "$(dirname "$report_file")"
 
     cat >"$report_file" <<EOF
@@ -425,7 +427,7 @@ main() {
         info "Running FULL CI/CD pipeline..."
         run_lint
         run_format_check
-        run_tests $changed_projects
+        run_tests "$changed_projects"
         run_coverage
         run_ai_review
         check_quality_gates
@@ -439,7 +441,7 @@ main() {
 
     projects)
         info "Running PROJECT tests..."
-        run_tests $changed_projects
+        run_tests "$changed_projects"
         ;;
 
     review)

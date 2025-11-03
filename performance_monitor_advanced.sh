@@ -21,7 +21,6 @@ COVERAGE_REGRESSION_THRESHOLD=2    # 2% decrease
 
 # Historical data retention
 RETENTION_DAYS=90
-MAX_ENTRIES_PER_METRIC=1000
 
 # Initialize metrics database
 init_metrics_db() {
@@ -362,7 +361,8 @@ generate_dashboard_data() {
     # Get recent metrics for all projects
     local projects=("CodingReviewer" "AvoidObstaclesGame" "PlannerApp" "MomentumFinance" "HabitQuest")
 
-    local dashboard_data="{\"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\", \"projects\": {"
+    local dashboard_data
+    dashboard_data="{\"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\", \"projects\": {"
 
     for project in "${projects[@]}"; do
         # Get latest build time

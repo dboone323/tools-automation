@@ -409,7 +409,7 @@ validate_cloud_usage_target() {
     local total_calls=0
     local cloud_calls=0
 
-    while IFS=',' read -r timestamp task model duration status fallback; do
+    while IFS=',' read -r _timestamp _task model _duration _status _fallback; do
         ((total_calls++))
         # Check if model name contains -cloud (indicating cloud usage)
         if [[ ${model} == *"-cloud" ]]; then

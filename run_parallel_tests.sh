@@ -25,17 +25,14 @@ log_success() { echo -e "${GREEN}[SUCCESS]${NC} $1" >&2; }
 log_warning() { echo -e "${YELLOW}[WARNING]${NC} $1" >&2; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1" >&2; }
 
-# Performance tracking
-start_times=""
-end_times=""
-test_results=""
-coverage_results=""
+# Performance tracking (aggregated via temp files per project; variables removed to reduce lint noise)
 
 # Function to run tests for a single project
 run_project_tests() {
     local project="$1"
     local project_path="$WORKSPACE_ROOT/Projects/$project"
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
 
     log_info "Starting tests for $project..."
 
@@ -77,7 +74,8 @@ run_project_tests() {
         fi
     fi
 
-    local end_time=$(date +%s)
+    local end_time
+    end_time=$(date +%s)
     echo "$end_time" >"/tmp/${project}_end_time"
 
     # Collect coverage data
@@ -99,13 +97,15 @@ collect_coverage() {
         # SPM coverage collection
         if command -v llvm-cov >/dev/null 2>&1; then
             # Find coverage files
-            local profraw_files=$(find "$project_path" -name "*.profraw" 2>/dev/null || true)
+            local profraw_files
+            profraw_files=$(find "$project_path" -name "*.profraw" 2>/dev/null || true)
             if [[ -n "$profraw_files" ]]; then
                 # Convert profraw to profdata
                 xcrun llvm-profdata merge -sparse "$profraw_files" -o "$project_path/coverage.profdata" 2>/dev/null || true
 
                 # Generate coverage report
-                local coverage_report=$(xcrun llvm-cov report \
+                local coverage_report
+                coverage_report=$(xcrun llvm-cov report \
                     "$(swift build --show-bin-path)/$project" \
                     -instr-profile="$project_path/coverage.profdata" \
                     -ignore-filename-regex="\.build|Tests" 2>/dev/null || echo "0.00")
@@ -121,7 +121,8 @@ collect_coverage() {
         fi
     else
         # Xcode coverage collection
-        local derived_data=$(find "$HOME/Library/Developer/Xcode/DerivedData" -name "*$project*" -type d -maxdepth 1 | head -1)
+        local derived_data
+        derived_data=$(find "$HOME/Library/Developer/Xcode/DerivedData" -name "*$project*" -type d -maxdepth 1 | head -1)
         if [[ -d "$derived_data" ]]; then
             local coverage_dir="$derived_data/Logs/Test/*.xcresult"
             if [[ -d "$coverage_dir" ]]; then
@@ -195,7 +196,8 @@ parse_test_output() {
 
     # Parse test results from xcodebuild output
     # Look for lines like "Test Case '-[TestClass testMethod]' passed/failed"
-    local parsed_tests=$(grep -E "Test Case.*(passed|failed)" "$output_file" 2>/dev/null |
+    local parsed_tests
+    parsed_tests=$(grep -E "Test Case.*(passed|failed)" "$output_file" 2>/dev/null |
         sed "s/.*Test Case '-\[\([^]]*\)\]' \([a-z]*\).*/\1 \2/" |
         awk '{
             test_name = $1
@@ -248,8 +250,10 @@ generate_report() {
         fi
 
         if [[ -f "$start_file" && -f "$end_file" ]]; then
-            local start_time=$(cat "$start_file")
-            local end_time=$(cat "$end_file")
+            local start_time
+            local end_time
+            start_time=$(cat "$start_file")
+            end_time=$(cat "$end_file")
             duration=$((end_time - start_time))
         fi
 
@@ -317,12 +321,14 @@ main() {
     log_info "Starting parallel test execution across ${#PROJECTS[@]} projects..."
     log_info "Configuration: Max parallel jobs=$MAX_PARALLEL_JOBS, Timeout=${TIMEOUT_SECONDS}s, Coverage threshold=${COVERAGE_THRESHOLD}%"
 
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
 
     # Run tests in parallel (don't exit on failures)
     run_parallel_tests || true
 
-    local end_time=$(date +%s)
+    local end_time
+    end_time=$(date +%s)
     local total_duration=$((end_time - start_time))
 
     # Generate report

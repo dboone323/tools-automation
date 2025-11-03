@@ -144,15 +144,19 @@ run_portfolio_optimization() {
 
     quantum_log "Optimizing portfolio: ${portfolio_size} assets, ${risk_tolerance} risk, ${time_horizon} horizon using ${quantum_method}"
 
-    local timestamp=$(date +%s)
+    local timestamp
+    timestamp=$(date +%s)
     local portfolio_id="${quantum_method}_${portfolio_size}_${risk_tolerance}_${timestamp}"
     local output_file="${QUANTUM_FINANCE_METRICS_DIR}/portfolios/${portfolio_id}.json"
 
     # Simulate quantum portfolio optimization
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
     sleep 3 # Simulate quantum computation time
-    local end_time=$(date +%s)
-    local duration=$((end_time - start_time))
+    local end_time
+    end_time=$(date +%s)
+    local duration
+    duration=$((end_time - start_time))
 
     # Generate mock optimized portfolio (would come from quantum algorithms)
     local expected_return=0
@@ -203,7 +207,8 @@ run_portfolio_optimization() {
     done
     assets="${assets}]"
 
-    local portfolio_result=$(
+    local portfolio_result
+    portfolio_result=$(
         cat <<EOF
 {
   "portfolio_id": "${portfolio_id}",
@@ -247,15 +252,19 @@ run_risk_analysis() {
 
     quantum_log "Running quantum risk analysis: ${scenarios} scenarios at ${confidence_level} confidence"
 
-    local timestamp=$(date +%s)
+    local timestamp
+    timestamp=$(date +%s)
     local risk_id="risk_${timestamp}"
     local output_file="${QUANTUM_FINANCE_METRICS_DIR}/risk_analysis/${risk_id}.json"
 
     # Simulate quantum Monte Carlo risk analysis
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
     sleep 2
-    local end_time=$(date +%s)
-    local duration=$((end_time - start_time))
+    local end_time
+    end_time=$(date +%s)
+    local duration
+    duration=$((end_time - start_time))
 
     # Generate risk metrics
     local var_95=0
@@ -265,7 +274,8 @@ run_risk_analysis() {
 
     if [[ -f "${portfolio_file}" ]]; then
         # Parse portfolio risk from file
-        local portfolio_risk=$(python3 -c "
+        local portfolio_risk
+        portfolio_risk=$(python3 -c "
 import json
 try:
     with open('${portfolio_file}', 'r') as f:
@@ -281,7 +291,8 @@ except:
         stress_test_loss=$(echo "scale=2; ${portfolio_risk} * 3.0" | bc)
     fi
 
-    local risk_result=$(
+    local risk_result
+    risk_result=$(
         cat <<EOF
 {
   "risk_analysis_id": "${risk_id}",
@@ -301,9 +312,9 @@ except:
     "execution_time_seconds": ${duration}
   },
   "scenario_analysis": {
-    "bull_market_scenarios": $((${scenarios} * 25 / 100)),
-    "bear_market_scenarios": $((${scenarios} * 15 / 100)),
-    "sideways_market_scenarios": $((${scenarios} * 60 / 100))
+    "bull_market_scenarios": $((scenarios * 25 / 100)),
+    "bear_market_scenarios": $((scenarios * 15 / 100)),
+    "sideways_market_scenarios": $((scenarios * 60 / 100))
   },
   "timestamp": ${timestamp}
 }
@@ -320,10 +331,12 @@ EOF
 monitor_market_data() {
     quantum_log "Monitoring market data and quantum signals"
 
-    local market_data_file="${QUANTUM_FINANCE_METRICS_DIR}/market_data/market_$(date +%Y%m%d_%H%M%S).json"
+    local market_data_file
+    market_data_file="${QUANTUM_FINANCE_METRICS_DIR}/market_data/market_$(date +%Y%m%d_%H%M%S).json"
 
     # Mock market data and quantum signals
-    local market_data=$(
+    local market_data
+    market_data=$(
         cat <<EOF
 {
   "timestamp": $(date +%s),
@@ -371,11 +384,14 @@ EOF
 collect_finance_metrics() {
     quantum_log "Collecting quantum finance performance metrics"
 
-    local metrics_file="${QUANTUM_FINANCE_METRICS_DIR}/reports/finance_metrics_$(date +%Y%m%d_%H%M%S).json"
+    local metrics_file
+    metrics_file="${QUANTUM_FINANCE_METRICS_DIR}/reports/finance_metrics_$(date +%Y%m%d_%H%M%S).json"
 
     # Count recent portfolios and risk analyses
-    local recent_portfolios=$(find "${QUANTUM_FINANCE_METRICS_DIR}/portfolios" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
-    local recent_risk_analyses=$(find "${QUANTUM_FINANCE_METRICS_DIR}/risk_analysis" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
+    local recent_portfolios
+    recent_portfolios=$(find "${QUANTUM_FINANCE_METRICS_DIR}/portfolios" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
+    local recent_risk_analyses
+    recent_risk_analyses=$(find "${QUANTUM_FINANCE_METRICS_DIR}/risk_analysis" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
 
     # Calculate average returns and risks
     local avg_return=0
@@ -384,7 +400,8 @@ collect_finance_metrics() {
 
     while IFS= read -r portfolio_file; do
         [[ ! -f "$portfolio_file" ]] && continue
-        local ret=$(python3 -c "
+        local ret
+        ret=$(python3 -c "
 import json
 try:
     with open('$portfolio_file', 'r') as f:
@@ -394,7 +411,8 @@ except:
     print(0)
 " 2>/dev/null || echo 0)
 
-        local risk=$(python3 -c "
+        local risk
+        risk=$(python3 -c "
 import json
 try:
     with open('$portfolio_file', 'r') as f:
@@ -414,7 +432,8 @@ except:
         avg_risk=$((avg_risk / total_portfolios))
     fi
 
-    local metrics=$(
+    local metrics
+    metrics=$(
         cat <<EOF
 {
   "timestamp": $(date +%s),
@@ -448,31 +467,36 @@ EOF
 generate_finance_report() {
     info "Generating quantum finance report"
 
-    local report_file="${QUANTUM_FINANCE_METRICS_DIR}/reports/finance_report_$(date +%Y%m%d_%H%M%S).json"
+    local report_file
+    report_file="${QUANTUM_FINANCE_METRICS_DIR}/reports/finance_report_$(date +%Y%m%d_%H%M%S).json"
 
     # Get latest portfolio
-    local latest_portfolio=$(find "${QUANTUM_FINANCE_METRICS_DIR}/portfolios" -name "*.json" -mtime -1 2>/dev/null | sort | tail -1)
+    local latest_portfolio
+    latest_portfolio=$(find "${QUANTUM_FINANCE_METRICS_DIR}/portfolios" -name "*.json" -mtime -1 2>/dev/null | sort | tail -1)
     local portfolio_data="{}"
     if [[ -f "${latest_portfolio}" ]]; then
         portfolio_data=$(cat "${latest_portfolio}")
     fi
 
     # Get latest risk analysis
-    local latest_risk=$(find "${QUANTUM_FINANCE_METRICS_DIR}/risk_analysis" -name "*.json" -mtime -1 2>/dev/null | sort | tail -1)
+    local latest_risk
+    latest_risk=$(find "${QUANTUM_FINANCE_METRICS_DIR}/risk_analysis" -name "*.json" -mtime -1 2>/dev/null | sort | tail -1)
     local risk_data="{}"
     if [[ -f "${latest_risk}" ]]; then
         risk_data=$(cat "${latest_risk}")
     fi
 
     # Get latest market data
-    local latest_market=$(find "${QUANTUM_FINANCE_METRICS_DIR}/market_data" -name "*.json" -mtime -1 2>/dev/null | sort | tail -1)
+    local latest_market
+    latest_market=$(find "${QUANTUM_FINANCE_METRICS_DIR}/market_data" -name "*.json" -mtime -1 2>/dev/null | sort | tail -1)
     local market_data="{}"
     if [[ -f "${latest_market}" ]]; then
         market_data=$(cat "${latest_market}")
     fi
 
     # Get latest metrics
-    local latest_metrics=$(find "${QUANTUM_FINANCE_METRICS_DIR}/reports" -name "finance_metrics_*.json" -mtime -1 2>/dev/null | sort | tail -1)
+    local latest_metrics
+    latest_metrics=$(find "${QUANTUM_FINANCE_METRICS_DIR}/reports" -name "finance_metrics_*.json" -mtime -1 2>/dev/null | sort | tail -1)
     local metrics_data="{}"
     if [[ -f "${latest_metrics}" ]]; then
         metrics_data=$(cat "${latest_metrics}")
@@ -522,7 +546,8 @@ run_finance_experiments() {
             for method in "${methods[@]}"; do
                 info "Running finance experiment: ${method} portfolio size ${size}, ${risk} risk"
                 if run_portfolio_optimization "${size}" "${risk}" "1year" "${method}"; then
-                    local portfolio_file="$?"
+                    local portfolio_file
+                    portfolio_file="$?"
                     if [[ -n "${portfolio_file}" ]]; then
                         run_risk_analysis "${portfolio_file}" "5000" "0.95"
                     fi
@@ -579,7 +604,8 @@ main() {
             run_finance_experiments
         else
             # Run a single portfolio optimization
-            local portfolio_file=$(run_portfolio_optimization "10" "medium" "1year" "qaoa")
+            local portfolio_file
+            portfolio_file=$(run_portfolio_optimization "10" "medium" "1year" "qaoa")
             if [[ -n "${portfolio_file}" ]]; then
                 run_risk_analysis "${portfolio_file}" "10000" "0.95"
             fi

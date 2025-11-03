@@ -61,7 +61,7 @@ echo -e "${BLUE}========================================${NC}"
 echo ""
 
 # Ask for confirmation
-read -p "$(echo -e ${YELLOW}Do you want to proceed with automated cleanup? [y/N]: ${NC})" -n 1 -r
+read -r -n 1 -p "$(echo -e "${YELLOW}Do you want to proceed with automated cleanup? [y/N]: ${NC}")"
 echo ""
 
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -76,7 +76,7 @@ echo ""
 # Close Xcode if running
 if pgrep -x "Xcode" >/dev/null; then
     echo -e "${YELLOW}⚠️  Xcode is running. Please close Xcode before continuing.${NC}"
-    read -p "Press Enter when Xcode is closed..."
+    read -r -p "Press Enter when Xcode is closed..."
 fi
 
 # Clean each project

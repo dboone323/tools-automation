@@ -43,9 +43,10 @@ mkdir -p "${SUMMARY_DIR}"
 COVERAGE_SUMMARY_FILE="${SUMMARY_DIR}/coverage_summary.tsv" # project\tcoverage
 BUILD_TIMES_FILE="${SUMMARY_DIR}/build_times.tsv"           # project\ttime
 TEST_TIMES_FILE="${SUMMARY_DIR}/test_times.tsv"             # project\ttests
->"${COVERAGE_SUMMARY_FILE}" || true
->"${BUILD_TIMES_FILE}" || true
->"${TEST_TIMES_FILE}" || true
+# Initialize summary files (use no-op to satisfy ShellCheck SC2188)
+: >"${COVERAGE_SUMMARY_FILE}" || true
+: >"${BUILD_TIMES_FILE}" || true
+: >"${TEST_TIMES_FILE}" || true
 TOTAL_PROJECTS=0
 SUCCESSFUL_PROJECTS=0
 FAILED_PROJECTS=0
@@ -95,7 +96,8 @@ run_coverage() {
     fi
 
     echo "Building and testing with coverage..."
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
 
     # Run tests with coverage
     # Build command: include -project only when an .xcodeproj exists; otherwise rely on SPM workspace
@@ -123,8 +125,10 @@ run_coverage() {
 
     if "${xcb_cmd[@]}" >"${project_result_dir}/build.log" 2>&1; then
 
-        local end_time=$(date +%s)
-        local duration=$((end_time - start_time))
+        local end_time
+        local duration
+        end_time=$(date +%s)
+        duration=$((end_time - start_time))
         printf "%s\t%s\n" "${project_name}" "${duration}s" >>"${BUILD_TIMES_FILE}"
 
         echo -e "${GREEN}✓ Build and tests completed (${duration}s)${NC}"
@@ -139,7 +143,8 @@ run_coverage() {
 
             # Parse coverage percentage
             if [[ -f "${project_result_dir}/coverage.json" ]]; then
-                local coverage=$(python3 -c "
+                local coverage
+                coverage=$(python3 -c "
 import json, sys
 try:
     with open('${project_result_dir}/coverage.json') as f:
@@ -163,8 +168,10 @@ except:
             fi
 
             # Count test results
-            local test_count=$(grep -o "Test Case.*passed" "${project_result_dir}/build.log" | wc -l || echo "0")
-            local test_time=$(grep "Test Suite.*passed" "${project_result_dir}/build.log" | tail -1 | grep -o "[0-9.]*seconds" || echo "0s")
+            local test_count
+            local test_time
+            test_count=$(grep -o "Test Case.*passed" "${project_result_dir}/build.log" | wc -l || echo "0")
+            test_time=$(grep "Test Suite.*passed" "${project_result_dir}/build.log" | tail -1 | grep -o "[0-9.]*seconds" || echo "0s")
             printf "%s\t%s tests in %s\n" "${project_name}" "${test_count}" "${test_time}" >>"${TEST_TIMES_FILE}"
 
         else
@@ -174,8 +181,10 @@ except:
 
         SUCCESSFUL_PROJECTS=$((SUCCESSFUL_PROJECTS + 1))
     else
-        local end_time=$(date +%s)
-        local duration=$((end_time - start_time))
+        local end_time
+        local duration
+        end_time=$(date +%s)
+        duration=$((end_time - start_time))
         printf "%s\t%s\n" "${project_name}" "${duration}s (failed)" >>"${BUILD_TIMES_FILE}"
 
         echo -e "${RED}✗ Build or tests failed${NC}"

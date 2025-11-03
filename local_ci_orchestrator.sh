@@ -20,7 +20,6 @@ set -euo pipefail
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 ARTIFACTS_DIR="${HOME}/.quantum-workspace/artifacts"
 OLLAMA_URL="${OLLAMA_URL:-http://localhost:11434}"
 OLLAMA_MODEL="${OLLAMA_MODEL:-codellama:7b}"
@@ -71,7 +70,10 @@ check_prerequisites() {
     if [[ "$OSTYPE" == "darwin"* ]] && ! command -v xcodebuild >/dev/null 2>&1; then missing+=("xcodebuild"); fi
     if ! command -v swiftlint >/dev/null 2>&1; then warning "SwiftLint not found - linting will be skipped"; fi
     if ! command -v swiftformat >/dev/null 2>&1; then warning "SwiftFormat not found - formatting will be skipped"; fi
-    if [ ${#missing[@]} -gt 0 ]; then error "Missing required tools: ${missing[*]}"; return 1; fi
+    if [ ${#missing[@]} -gt 0 ]; then
+        error "Missing required tools: ${missing[*]}"
+        return 1
+    fi
     success "Prerequisites check passed"
     return 0
 }
@@ -79,8 +81,15 @@ check_prerequisites() {
 # Verify Ollama is running
 check_ollama() {
     info "Checking Ollama status..."
-    if ! curl -s "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then warning "Ollama not running - starting..."; ollama serve >/dev/null 2>&1 &; sleep 3; fi
-    if ! ollama list | grep -q "${OLLAMA_MODEL}"; then info "Pulling ${OLLAMA_MODEL}..."; ollama pull "${OLLAMA_MODEL}"; fi
+    if ! curl -s "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then
+        warning "Ollama not running - starting..."
+        ollama serve >/dev/null 2>&1 &
+        sleep 3
+    fi
+    if ! ollama list | grep -q "${OLLAMA_MODEL}"; then
+        info "Pulling ${OLLAMA_MODEL}..."
+        ollama pull "${OLLAMA_MODEL}"
+    fi
     success "Ollama is ready (${OLLAMA_URL} - ${OLLAMA_MODEL})"
 }
 
@@ -89,7 +98,7 @@ run_coverage() {
     info "Running coverage analysis..."
     if [ -f "$SCRIPT_DIR/analyze_coverage.sh" ]; then
         bash "$SCRIPT_DIR/analyze_coverage.sh" || warning "Coverage analysis had errors - continuing"
-        LATEST_COVERAGE_REPORT=$(ls -t "${ARTIFACTS_DIR}/coverage/coverage_report_"*.md 2>/dev/null | head -1)
+        LATEST_COVERAGE_REPORT=$(find "${ARTIFACTS_DIR}/coverage" -name 'coverage_report_*.md' -type f 2>/dev/null | sort -r | head -1)
         export LATEST_COVERAGE_REPORT
         success "Coverage report: $LATEST_COVERAGE_REPORT"
     else
@@ -106,19 +115,24 @@ check_quality_gates() {
 
     if [ -n "$coverage_file" ] && [ -f "$coverage_file" ]; then
         info "Validating coverage from: $(basename "$coverage_file")"
-        
+
         # Extract project coverage percentages
-        local habitquest_cov=$(grep -A3 "### HabitQuest" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
-        local momentum_cov=$(grep -A3 "### MomentumFinance" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
-        local planner_cov=$(grep -A3 "### PlannerApp" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
-        local game_cov=$(grep -A3 "### AvoidObstaclesGame" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
-        local reviewer_cov=$(grep -A3 "### CodingReviewer" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
-        
+        local habitquest_cov
+        habitquest_cov=$(grep -A3 "### HabitQuest" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
+        local momentum_cov
+        momentum_cov=$(grep -A3 "### MomentumFinance" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
+        local planner_cov
+        planner_cov=$(grep -A3 "### PlannerApp" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
+        local game_cov
+        game_cov=$(grep -A3 "### AvoidObstaclesGame" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
+        local reviewer_cov
+        reviewer_cov=$(grep -A3 "### CodingReviewer" "$coverage_file" | grep "Test Coverage Proxy" | awk '{print $NF}' | tr -d '%' || echo "0")
+
         # Check 85% minimum for all projects
         local min_coverage=85
         echo ""
         echo -e "${PURPLE}═══ Coverage Report ═══${NC}"
-        
+
         [ -n "$habitquest_cov" ] && {
             if [ "$habitquest_cov" -lt "$min_coverage" ]; then
                 error "❌ HabitQuest: ${habitquest_cov}% (${min_coverage}% required)"
@@ -127,7 +141,7 @@ check_quality_gates() {
                 success "✅ HabitQuest: ${habitquest_cov}%"
             fi
         }
-        
+
         [ -n "$momentum_cov" ] && {
             if [ "$momentum_cov" -lt "$min_coverage" ]; then
                 error "❌ MomentumFinance: ${momentum_cov}% (${min_coverage}% required)"
@@ -136,7 +150,7 @@ check_quality_gates() {
                 success "✅ MomentumFinance: ${momentum_cov}%"
             fi
         }
-        
+
         [ -n "$planner_cov" ] && {
             if [ "$planner_cov" -lt "$min_coverage" ]; then
                 error "❌ PlannerApp: ${planner_cov}% (${min_coverage}% required)"
@@ -145,7 +159,7 @@ check_quality_gates() {
                 success "✅ PlannerApp: ${planner_cov}%"
             fi
         }
-        
+
         [ -n "$game_cov" ] && {
             if [ "$game_cov" -lt "$min_coverage" ]; then
                 error "❌ AvoidObstaclesGame: ${game_cov}% (${min_coverage}% required)"
@@ -154,7 +168,7 @@ check_quality_gates() {
                 success "✅ AvoidObstaclesGame: ${game_cov}%"
             fi
         }
-        
+
         [ -n "$reviewer_cov" ] && {
             if [ "$reviewer_cov" -lt "$min_coverage" ]; then
                 error "❌ CodingReviewer: ${reviewer_cov}% (${min_coverage}% required)"
@@ -163,11 +177,13 @@ check_quality_gates() {
                 success "✅ CodingReviewer: ${reviewer_cov}%"
             fi
         }
-        
+
         # Check 100% requirement for agents/workflows/AI
-        local agent_files=$(grep -A2 "### Agent Scripts" "$coverage_file" | grep "Agent Files" | awk '{print $NF}' || echo "0")
-        local agent_tests=$(grep -A2 "### Agent Scripts" "$coverage_file" | grep "Test Files" | awk '{print $NF}' || echo "0")
-        
+        local agent_files
+        agent_files=$(grep -A2 "### Agent Scripts" "$coverage_file" | grep "Agent Files" | awk '{print $NF}' || echo "0")
+        local agent_tests
+        agent_tests=$(grep -A2 "### Agent Scripts" "$coverage_file" | grep "Test Files" | awk '{print $NF}' || echo "0")
+
         if [ "$agent_files" != "0" ]; then
             local agent_pct=$((agent_tests * 100 / agent_files))
             if [ "$agent_tests" -lt "$agent_files" ]; then
@@ -177,7 +193,7 @@ check_quality_gates() {
                 success "✅ Agent Scripts: 100% coverage"
             fi
         fi
-        
+
         echo -e "${PURPLE}═══════════════════════${NC}"
         echo ""
     else
@@ -196,7 +212,8 @@ check_quality_gates() {
 
 # Main orchestration
 main() {
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
     banner
     local mode="${1:-full}"
     log "INFO" "Starting CI/CD orchestrator (mode: ${mode})"

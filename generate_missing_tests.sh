@@ -36,7 +36,8 @@ generate_swift_test() {
     local project_name=$2
     local relative_path=$3
 
-    local filename=$(basename "$source_file" .swift)
+    local filename
+    filename=$(basename "$source_file" .swift)
     local test_filename="${filename}Tests.swift"
 
     # Determine test directory
@@ -73,7 +74,8 @@ generate_swift_test() {
     echo -e "  ${BLUE}🔨 Generating test for $filename...${NC}"
 
     # Read source file
-    local source_code=$(cat "$source_file" 2>/dev/null || echo "")
+    local source_code
+    source_code=$(cat "$source_file" 2>/dev/null || echo "")
 
     if [ -z "$source_code" ]; then
         echo -e "  ${RED}❌ Could not read source file${NC}"
@@ -98,7 +100,8 @@ Generate ONLY the test file code with proper imports. Start with:
 import XCTest
 @testable import $project_name"
 
-    local test_code=$(curl -s -X POST http://localhost:11434/api/generate \
+    local test_code
+    test_code=$(curl -s -X POST http://localhost:11434/api/generate \
         -H "Content-Type: application/json" \
         -d "{
             \"model\": \"$OLLAMA_MODEL\",
@@ -143,14 +146,16 @@ generate_project_tests() {
         ! -path "*/UITests/*" \
         ! -name "*Tests.swift" \
         ! -name "*.generated.swift" \
-        2>/dev/null | while read -r file && [ $count -lt $max_tests ]; do
+        2>/dev/null | while read -r file && [ "$count" -lt "$max_tests" ]; do
 
-        local filename=$(basename "$file" .swift)
+        local filename
+        filename=$(basename "$file" .swift)
         local test_file="${filename}Tests.swift"
 
         # Check if test exists
         if ! find "$project_path" -name "$test_file" 2>/dev/null | grep -q .; then
-            local relative_path=$(echo "$file" | sed "s|$project_path/||")
+            local relative_path
+            relative_path=${file#"$project_path/"}
             generate_swift_test "$file" "$project_name" "$relative_path"
             count=$((count + 1))
 
@@ -173,7 +178,7 @@ echo "4) AvoidObstaclesGame (Current: 32%, Target: 85%)"
 echo "5) CodingReviewer (Current: 68%, Target: 85%)"
 echo "6) All projects (batch mode - 5 tests per project)"
 echo ""
-read -p "Enter choice [1-6]: " choice
+read -r -p "Enter choice [1-6]: " choice
 
 case $choice in
 1)

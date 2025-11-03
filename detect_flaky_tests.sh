@@ -24,10 +24,7 @@ log_success() { echo -e "${GREEN}[SUCCESS]${NC} $1" >&2; }
 log_warning() { echo -e "${YELLOW}[WARNING]${NC} $1" >&2; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1" >&2; }
 
-# Data structures
-test_runs=""
-test_failures=""
-flaky_tests=""
+# Data structures (unused placeholders removed)
 
 # Function to run a single test project multiple times
 detect_flaky_tests() {
@@ -43,7 +40,8 @@ detect_flaky_tests() {
     for run in $(seq 1 $RUNS_PER_TEST); do
         log_info "Run $run/$RUNS_PER_TEST for $project..."
 
-        local start_time=$(date +%s)
+        local start_time
+        start_time=$(date +%s)
 
         # Run tests based on project type
         if [[ "$project" == "CodingReviewer" ]]; then
@@ -69,16 +67,20 @@ detect_flaky_tests() {
             fi
         fi
 
-        local end_time=$(date +%s)
-        local duration=$((end_time - start_time))
+        local end_time
+        local duration
+        local result
+        end_time=$(date +%s)
+        duration=$((end_time - start_time))
 
-        local result=$(cat "/tmp/${project}_run_${run}")
+        result=$(cat "/tmp/${project}_run_${run}")
         log_info "Run $run completed in ${duration}s: $result"
     done
 
     # Calculate flaky metrics
     local total_runs=$RUNS_PER_TEST
-    local failure_rate=$(echo "scale=2; $failures / $total_runs" | bc -l 2>/dev/null || echo "0")
+    local failure_rate
+    failure_rate=$(echo "scale=2; $failures / $total_runs" | bc -l 2>/dev/null || echo "0")
 
     # Store results in files
     echo "$failures" >"/tmp/${project}_failures"
@@ -170,14 +172,17 @@ generate_flaky_report() {
 
 # Function to save flaky test results to file
 save_flaky_results() {
-    local output_file="$WORKSPACE_ROOT/flaky_test_results_$(date +%Y%m%d_%H%M%S).json"
+    local output_file
+    output_file="$WORKSPACE_ROOT/flaky_test_results_$(date +%Y%m%d_%H%M%S).json"
 
     # Create JSON output
-    echo "{" >"$output_file"
-    echo "  \"timestamp\": \"$(date -Iseconds)\"," >>"$output_file"
-    echo "  \"runs_per_test\": $RUNS_PER_TEST," >>"$output_file"
-    echo "  \"flaky_threshold\": $FLAKY_THRESHOLD," >>"$output_file"
-    echo "  \"results\": {" >>"$output_file"
+    {
+        echo "{"
+        echo "  \"timestamp\": \"$(date -Iseconds)\","
+        echo "  \"runs_per_test\": $RUNS_PER_TEST,"
+        echo "  \"flaky_threshold\": $FLAKY_THRESHOLD,"
+        echo "  \"results\": {"
+    } >"$output_file"
 
     local first=true
     for project in "${projects[@]}"; do
@@ -204,12 +209,14 @@ save_flaky_results() {
             status=$(cat "$status_file")
         fi
 
-        echo "    \"$project\": {" >>"$output_file"
-        echo "      \"status\": \"$status\"," >>"$output_file"
-        echo "      \"failures\": $failures," >>"$output_file"
-        echo "      \"total_runs\": $RUNS_PER_TEST," >>"$output_file"
-        echo "      \"failure_rate\": $failure_rate," >>"$output_file"
-        echo "      \"runs\": [" >>"$output_file"
+        {
+            echo "    \"$project\": {"
+            echo "      \"status\": \"$status\","
+            echo "      \"failures\": $failures,"
+            echo "      \"total_runs\": $RUNS_PER_TEST,"
+            echo "      \"failure_rate\": $failure_rate,"
+            echo "      \"runs\": ["
+        } >>"$output_file"
 
         local run_first=true
         for run in $(seq 1 $RUNS_PER_TEST); do
@@ -225,12 +232,16 @@ save_flaky_results() {
             fi
             echo "        \"$result\"" >>"$output_file"
         done
-        echo "      ]" >>"$output_file"
-        echo "    }" >>"$output_file"
+        {
+            echo "      ]"
+            echo "    }"
+        } >>"$output_file"
     done
 
-    echo "  }" >>"$output_file"
-    echo "}" >>"$output_file"
+    {
+        echo "  }"
+        echo "}"
+    } >>"$output_file"
 
     log_info "Flaky test results saved to: $output_file"
 }
@@ -247,14 +258,16 @@ main() {
     log_info "Starting flaky test detection across ${#projects[@]} projects..."
     log_info "Configuration: Runs per test=$RUNS_PER_TEST, Flaky threshold=${FLAKY_THRESHOLD}"
 
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
 
     # Run flaky detection for each project
     for project in "${projects[@]}"; do
         detect_flaky_tests "$project"
     done
 
-    local end_time=$(date +%s)
+    local end_time
+    end_time=$(date +%s)
     local total_duration=$((end_time - start_time))
 
     # Generate and save report
@@ -266,7 +279,7 @@ main() {
     echo
     log_info "Total execution time: ${total_duration}s"
 
-    exit $report_exit
+    exit "$report_exit"
 }
 
 # Run main function with all arguments

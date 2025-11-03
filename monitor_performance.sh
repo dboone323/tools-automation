@@ -40,7 +40,8 @@ load_config() {
 # Function to record current performance metrics
 record_performance() {
     local project="$1"
-    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local timestamp
+    timestamp=$(date +%Y%m%d_%H%M%S)
     local perf_file="$PERF_DIR/${project}_${timestamp}.json"
 
     log_info "📊 Recording performance metrics for $project..."
@@ -57,10 +58,14 @@ record_performance() {
     fi
 
     # Extract performance metrics
-    local total_time=$(jq -r '.total_duration_seconds // 0' "$current_results" 2>/dev/null || echo "0")
-    local test_count=$(jq -r '.test_count // 0' "$current_results" 2>/dev/null || echo "0")
-    local passed_count=$(jq -r '.passed_count // 0' "$current_results" 2>/dev/null || echo "0")
-    local failed_count=$(jq -r '.failed_count // 0' "$current_results" 2>/dev/null || echo "0")
+    local total_time
+    local test_count
+    local passed_count
+    local failed_count
+    total_time=$(jq -r '.total_duration_seconds // 0' "$current_results" 2>/dev/null || echo "0")
+    test_count=$(jq -r '.test_count // 0' "$current_results" 2>/dev/null || echo "0")
+    passed_count=$(jq -r '.passed_count // 0' "$current_results" 2>/dev/null || echo "0")
+    failed_count=$(jq -r '.failed_count // 0' "$current_results" 2>/dev/null || echo "0")
 
     # Calculate rates
     local pass_rate=0
@@ -103,7 +108,8 @@ analyze_trends() {
     log_info "📈 Analyzing performance trends for $project..."
 
     # Get all performance records for this project (last 10)
-    local perf_files=$(ls -t "$PERF_DIR/${project}_"*.json 2>/dev/null | head -10 || echo "")
+    local perf_files
+    perf_files=$(find "$PERF_DIR" -name "${project}_*.json" -type f 2>/dev/null | sort -r | head -10 || echo "")
 
     if [[ -z "$perf_files" ]]; then
         log_warning "No historical performance data found for $project"
@@ -115,8 +121,10 @@ analyze_trends() {
     local recent_rates=()
 
     for file in $perf_files; do
-        local time=$(jq -r '.metrics.total_duration_seconds' "$file" 2>/dev/null || echo "0")
-        local rate=$(jq -r '.metrics.pass_rate_percent' "$file" 2>/dev/null || echo "0")
+        local time
+        local rate
+        time=$(jq -r '.metrics.total_duration_seconds' "$file" 2>/dev/null || echo "0")
+        rate=$(jq -r '.metrics.pass_rate_percent' "$file" 2>/dev/null || echo "0")
 
         recent_times+=("$time")
         recent_rates+=("$rate")
@@ -184,7 +192,8 @@ analyze_trends() {
     fi
 
     # Generate trend report
-    local trend_file="$PERF_DIR/${project}_trend_$(date +%Y%m%d_%H%M%S).json"
+    local trend_file
+    trend_file="$PERF_DIR/${project}_trend_$(date +%Y%m%d_%H%M%S).json"
 
     jq -n \
         --arg project "$project" \
@@ -235,7 +244,8 @@ analyze_trends() {
 generate_dashboard() {
     log_info "📊 Generating performance dashboard..."
 
-    local dashboard_file="$PERF_DIR/performance_dashboard_$(date +%Y%m%d_%H%M%S).json"
+    local dashboard_file
+    dashboard_file="$PERF_DIR/performance_dashboard_$(date +%Y%m%d_%H%M%S).json"
 
     # Get all projects
     local projects=("AvoidObstaclesGame" "CodingReviewer" "PlannerApp" "MomentumFinance" "HabitQuest")
@@ -245,10 +255,12 @@ generate_dashboard() {
 
     for project in "${projects[@]}"; do
         # Get latest performance file
-        local latest_file=$(ls -t "$PERF_DIR/${project}_"*.json 2>/dev/null | head -1 || echo "")
+        local latest_file
+        latest_file=$(find "$PERF_DIR" -name "${project}_*.json" -type f 2>/dev/null | sort -r | head -1 || echo "")
 
         if [[ -n "$latest_file" ]]; then
-            local metrics=$(jq '.metrics' "$latest_file" 2>/dev/null || echo "null")
+            local metrics
+            metrics=$(jq '.metrics' "$latest_file" 2>/dev/null || echo "null")
             if [[ "$metrics" != "null" ]]; then
                 project_metrics=$(echo "$project_metrics" | jq --arg project "$project" --argjson metrics "$metrics" '. + [{project: $project, metrics: $metrics}]')
             fi
@@ -256,11 +268,13 @@ generate_dashboard() {
     done
 
     # Get trend analysis
-    local trend_files=$(ls -t "$PERF_DIR/"*"_trend_"*.json 2>/dev/null | head -5 || echo "")
+    local trend_files
+    trend_files=$(find "$PERF_DIR" -name '*_trend_*.json' -type f 2>/dev/null | sort -r | head -5 || echo "")
     local trends="[]"
 
     for trend_file in $trend_files; do
-        local trend=$(jq '{project, performance_trends, regression_detected}' "$trend_file" 2>/dev/null || echo "null")
+        local trend
+        trend=$(jq '{project, performance_trends, regression_detected}' "$trend_file" 2>/dev/null || echo "null")
         if [[ "$trend" != "null" ]]; then
             trends=$(echo "$trends" | jq --argjson trend "$trend" '. + [$trend]')
         fi
@@ -269,7 +283,8 @@ generate_dashboard() {
     # Generate dashboard
     local avg_pass_rate=0
     local total_exec_time=0
-    local metrics_length=$(echo "$project_metrics" | jq 'length')
+    local metrics_length
+    metrics_length=$(echo "$project_metrics" | jq 'length')
 
     if [[ $metrics_length -gt 0 ]]; then
         avg_pass_rate=$(echo "$project_metrics" | jq 'map(.metrics.pass_rate_percent) | add / length' 2>/dev/null || echo "0")
@@ -312,7 +327,8 @@ generate_dashboard() {
     echo "Max Duration: ${MAX_DURATION}s"
     echo
 
-    local regression_count=$(echo "$trends" | jq '[.[] | select(.regression_detected == true)] | length')
+    local regression_count
+    regression_count=$(echo "$trends" | jq '[.[] | select(.regression_detected == true)] | length')
     echo "Projects with regressions: $regression_count"
 
     echo "$project_metrics" | jq -r '.[] | "✓ \(.project): \(.metrics.total_duration_seconds)s, \(.metrics.pass_rate_percent)% pass rate"'

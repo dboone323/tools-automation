@@ -64,7 +64,8 @@ show_infrastructure_status() {
     # Check for test results
     local test_results_dir="$WORKSPACE_ROOT/test_results"
     if [[ -d "$test_results_dir" ]]; then
-        local result_files=$(find "$test_results_dir" -name "*.json" | wc -l)
+        local result_files
+        result_files=$(find "$test_results_dir" -name "*.json" | wc -l)
         echo -e "  ✅ Test results directory - ${GREEN}$result_files files${NC}"
     else
         echo -e "  ⚠️  Test results directory - ${YELLOW}NOT CREATED YET${NC}"
@@ -73,7 +74,8 @@ show_infrastructure_status() {
     # Check for performance history
     local perf_dir="$WORKSPACE_ROOT/performance_history"
     if [[ -d "$perf_dir" ]]; then
-        local perf_files=$(find "$perf_dir" -name "*.json" | wc -l)
+        local perf_files
+        perf_files=$(find "$perf_dir" -name "*.json" | wc -l)
         echo -e "  ✅ Performance history - ${GREEN}$perf_files files${NC}"
     else
         echo -e "  ⚠️  Performance history - ${YELLOW}NOT CREATED YET${NC}"
@@ -82,7 +84,8 @@ show_infrastructure_status() {
     # Check for issues
     local issues_dir="$test_results_dir/issues"
     if [[ -d "$issues_dir" ]]; then
-        local issue_files=$(find "$issues_dir" -name "*.json" | wc -l)
+        local issue_files
+        issue_files=$(find "$issues_dir" -name "*.json" | wc -l)
         echo -e "  ✅ Issue tracking - ${GREEN}$issue_files issues detected${NC}"
     else
         echo -e "  ✅ Issue tracking - ${GREEN}READY (no issues yet)${NC}"
@@ -96,7 +99,8 @@ show_recent_test_summary() {
     echo
 
     local test_results_dir="$WORKSPACE_ROOT/test_results"
-    local latest_summary=$(find "$test_results_dir" -name "*test_summary*.json" -type f -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1 | cut -d' ' -f2- || echo "")
+    local latest_summary
+    latest_summary=$(find "$test_results_dir" -name "*test_summary*.json" -type f -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1 | cut -d' ' -f2- || echo "")
 
     if [[ -n "$latest_summary" && -f "$latest_summary" ]]; then
         echo "Latest test run summary:"
@@ -114,7 +118,8 @@ show_performance_status() {
     echo
 
     local perf_dir="$WORKSPACE_ROOT/performance_history"
-    local latest_dashboard=$(find "$perf_dir" -name "*dashboard*.json" -type f -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1 | cut -d' ' -f2- || echo "")
+    local latest_dashboard
+    latest_dashboard=$(find "$perf_dir" -name "*dashboard*.json" -type f -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1 | cut -d' ' -f2- || echo "")
 
     if [[ -n "$latest_dashboard" && -f "$latest_dashboard" ]]; then
         echo "Performance dashboard status:"

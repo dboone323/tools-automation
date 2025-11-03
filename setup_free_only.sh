@@ -144,9 +144,11 @@ fi
 # Update .gitignore to ignore API keys
 if [ -f "$ROOT_DIR/.gitignore" ]; then
     if ! grep -q ".env.secure" "$ROOT_DIR/.gitignore"; then
-        echo -e "\n# API Keys (keep local only)" >>"$ROOT_DIR/.gitignore"
-        echo ".secure/.env.secure" >>"$ROOT_DIR/.gitignore"
-        echo ".env" >>"$ROOT_DIR/.gitignore"
+        {
+            echo -e "\n# API Keys (keep local only)"
+            echo ".secure/.env.secure"
+            echo ".env"
+        } >>"$ROOT_DIR/.gitignore"
         success "Updated .gitignore"
     fi
 fi
@@ -196,7 +198,7 @@ step "Step 7: Marking GitHub Actions workflows as opt-in..."
 cd "$ROOT_DIR/.github/workflows"
 
 # Don't automatically disable - just inform
-active_workflows=$(ls *.yml 2>/dev/null | grep -v disabled | wc -l)
+active_workflows=$(find . -maxdepth 1 -name '*.yml' ! -name '*disabled*' 2>/dev/null | grep -c .)
 info "Found $active_workflows active GitHub Actions workflows"
 info "These will now run in parallel with local CI/CD"
 info "To disable a workflow: mv workflow.yml workflow.disabled.yml"
