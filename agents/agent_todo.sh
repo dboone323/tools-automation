@@ -988,6 +988,7 @@ while true; do
 
     # Run AI project analysis every N cycles (configured)
     ((ai_analysis_cycle++))
+    # shellcheck disable=SC2153  # comparing counter (ai_analysis_cycle) to configured threshold (AI_ANALYSIS_CYCLE)
     if [[ $ai_analysis_cycle -ge ${AI_ANALYSIS_CYCLE} ]]; then
         ai_analysis_cycle=0
         log_message "INFO" "Running AI project analysis cycle"

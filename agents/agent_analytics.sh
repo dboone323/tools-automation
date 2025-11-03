@@ -3,8 +3,15 @@
 # Tracks code complexity, build times, test coverage, and agent performance
 
 # Source shared functions for file locking and monitoring
+# shellcheck source=./shared_functions.sh
+# shellcheck disable=SC1091
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
+if [[ -f "${SCRIPT_DIR}/agent_loop_utils.sh" ]]; then
+    # shellcheck source=./agent_loop_utils.sh
+    # shellcheck disable=SC1091
+    source "${SCRIPT_DIR}/agent_loop_utils.sh"
+fi
 
 set -euo pipefail
 
@@ -510,11 +517,17 @@ main() {
         return 0
     fi
 
+    # Standardize timing/backoff and support pipeline quick-exit
+    agent_init_backoff
+    if agent_detect_pipe_and_quick_exit "${AGENT_NAME}"; then
+        return 0
+    fi
+
     while true; do
         # Ensure we're within system limits
         if ! ensure_within_limits; then
             log_message "System limits exceeded, waiting before retry..."
-            sleep 30
+            agent_sleep_with_backoff
             continue
         fi
 
@@ -536,7 +549,7 @@ main() {
             fi
         else
             # No tasks available, wait before checking again
-            sleep 60
+            agent_sleep_with_backoff
         fi
     done
 }

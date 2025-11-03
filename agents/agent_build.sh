@@ -2,11 +2,20 @@
 # Build Agent - Automated build and test execution
 
 # Source shared functions for task management
+# shellcheck source=./shared_functions.sh
+# shellcheck disable=SC1091
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
+if [[ -f "${SCRIPT_DIR}/agent_loop_utils.sh" ]]; then
+    # shellcheck source=./agent_loop_utils.sh
+    # shellcheck disable=SC1091
+    source "${SCRIPT_DIR}/agent_loop_utils.sh"
+fi
 
 # Source project configuration
 if [[ -f "${SCRIPT_DIR}/../project_config.sh" ]]; then
+    # shellcheck source=../project_config.sh
+    # shellcheck disable=SC1091
     source "${SCRIPT_DIR}/../project_config.sh"
 fi
 
@@ -70,6 +79,7 @@ WORKSPACE="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"
 if [[ -f "${ENHANCEMENTS_DIR}/ai_build_optimizer.sh" ]]; then
     # shellcheck source=../enhancements/ai_build_optimizer.sh
+    # shellcheck disable=SC1091
     source "${ENHANCEMENTS_DIR}/ai_build_optimizer.sh"
 fi
 AGENT_NAME="agent_build.sh"
@@ -308,22 +318,21 @@ process_task() {
     # Process the build task
     echo "[$(date)] ${AGENT_NAME}: Creating multi-level backup before build..." >>"${LOG_FILE}"
     nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed CodingReviewer >>"${LOG_FILE}" 2>&1 || true
-    # shellcheck disable=SC2129
-    echo "[$(date)] ${AGENT_NAME}: Running build..." >>"${LOG_FILE}"
+    log_message "INFO" "Running build..."
     nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh build >>"${LOG_FILE}" 2>&1
-    echo "[$(date)] ${AGENT_NAME}: Running AI enhancement analysis..." >>"${LOG_FILE}"
+    log_message "INFO" "Running AI enhancement analysis..."
     nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh analyze CodingReviewer >>"${LOG_FILE}" 2>&1
-    echo "[$(date)] ${AGENT_NAME}: Auto-applying safe AI enhancements..." >>"${LOG_FILE}"
+    log_message "INFO" "Auto-applying safe AI enhancements..."
     nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh auto-apply CodingReviewer >>"${LOG_FILE}" 2>&1
-    echo "[$(date)] ${AGENT_NAME}: Validating build and enhancements..." >>"${LOG_FILE}"
+    log_message "INFO" "Validating build and enhancements..."
     nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/intelligent_autofix.sh validate CodingReviewer >>"${LOG_FILE}" 2>&1
-    echo "[$(date)] ${AGENT_NAME}: Running automated tests after build and enhancements..." >>"${LOG_FILE}"
+    log_message "INFO" "Running automated tests after build and enhancements..."
     nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1
 
     if tail -40 "${LOG_FILE}" | grep -q 'ROLLBACK'; then
-        echo "[$(date)] ${AGENT_NAME}: Rollback detected after validation. Investigate issues." >>"${LOG_FILE}"
+        log_message "WARN" "Rollback detected after validation. Investigate issues."
         CONSECUTIVE_FAILURES=$((CONSECUTIVE_FAILURES + 1))
-        echo "[$(date)] ${AGENT_NAME}: Consecutive failures: ${CONSECUTIVE_FAILURES}" >>"${LOG_FILE}"
+        log_message "WARN" "Consecutive failures: ${CONSECUTIVE_FAILURES}"
         success_flag="false"
         # Create debug task if failures are persistent
         if [[ ${CONSECUTIVE_FAILURES} -ge ${MAX_CONSECUTIVE_FAILURES} ]]; then
@@ -331,10 +340,10 @@ process_task() {
             CONSECUTIVE_FAILURES=0 # Reset counter after creating task
         fi
     elif tail -40 "${LOG_FILE}" | grep -q 'error'; then
-        echo "[$(date)] ${AGENT_NAME}: Test failure detected, restoring last backup..." >>"${LOG_FILE}"
+        log_message "ERROR" "Test failure detected, restoring last backup..."
         /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh restore CodingReviewer >>"${LOG_FILE}" 2>&1
         CONSECUTIVE_FAILURES=$((CONSECUTIVE_FAILURES + 1))
-        echo "[$(date)] ${AGENT_NAME}: Consecutive failures: ${CONSECUTIVE_FAILURES}" >>"${LOG_FILE}"
+        log_message "WARN" "Consecutive failures: ${CONSECUTIVE_FAILURES}"
         success_flag="false"
         # Create debug task if failures are persistent
         if [[ ${CONSECUTIVE_FAILURES} -ge ${MAX_CONSECUTIVE_FAILURES} ]]; then
@@ -342,9 +351,9 @@ process_task() {
             CONSECUTIVE_FAILURES=0 # Reset counter after creating task
         fi
     else
-        echo "[$(date)] ${AGENT_NAME}: Build, AI enhancement, validation, and tests completed successfully." >>"${LOG_FILE}"
+        log_message "INFO" "Build, AI enhancement, validation, and tests completed successfully."
         if [[ ${CONSECUTIVE_FAILURES} -gt 0 ]]; then
-            echo "[$(date)] ${AGENT_NAME}: Reset consecutive failures counter (was: ${CONSECUTIVE_FAILURES})" >>"${LOG_FILE}"
+            log_message "INFO" "Reset consecutive failures counter (was: ${CONSECUTIVE_FAILURES})"
         fi
         CONSECUTIVE_FAILURES=0 # Reset counter on success
     fi
@@ -417,6 +426,12 @@ main() {
     # Initialize agent status
     update_agent_status "${AGENT_NAME}" "starting" $$ ""
 
+    # Standardize timing/backoff and support pipeline quick-exit
+    agent_init_backoff
+    if agent_detect_pipe_and_quick_exit "${AGENT_NAME}"; then
+        return 0
+    fi
+
     local idle_count=0
     local max_idle_cycles=12 # Exit after 60 seconds of no tasks (12 * 5 seconds)
 
@@ -463,8 +478,8 @@ main() {
             fi
         fi
 
-        # Brief pause to prevent tight looping
-        sleep 5
+        # Pause using exponential backoff
+        agent_sleep_with_backoff
     done
 }
 

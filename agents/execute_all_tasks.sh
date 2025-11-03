@@ -237,22 +237,22 @@ if [[ -f "$SCRIPT_DIR/jq_errors_report.txt" ]]; then
 ## Error Types Distribution
 ANALYSIS_EOF
 
-    echo "### Most Common Errors" >>"$SCRIPT_DIR/jq_error_analysis.md"
-    grep "parse error" "$SCRIPT_DIR/jq_errors_report.txt" 2>/dev/null |
-        sed 's/^jq: parse error: //' | sort | uniq -c | sort -rn | head -10 >>"$SCRIPT_DIR/jq_error_analysis.md" || true
-
-    echo -e "\n### Root Causes" >>"$SCRIPT_DIR/jq_error_analysis.md"
     {
+        echo "### Most Common Errors"
+        grep "parse error" "$SCRIPT_DIR/jq_errors_report.txt" 2>/dev/null |
+            sed 's/^jq: parse error: //' | sort | uniq -c | sort -rn | head -10
+
+        printf "\n### Root Causes\n"
         echo "1. **Unmatched braces**: Indicates concurrent write conflicts (now fixed with file locking)"
         echo "2. **Invalid numeric literals**: ANSI color codes in JSON (now fixed with stderr redirection)"
         echo "3. **Unfinished JSON terms**: Partial writes from race conditions (now prevented by flock)"
-    } >>"$SCRIPT_DIR/jq_error_analysis.md"
 
-    echo -e "\n### Recommendations" >>"$SCRIPT_DIR/jq_error_analysis.md"
-    echo "✅ All root causes addressed by recent enhancements" >>"$SCRIPT_DIR/jq_error_analysis.md"
-    echo "✅ File locking prevents concurrent write issues" >>"$SCRIPT_DIR/jq_error_analysis.md"
-    echo "✅ Stderr redirection prevents ANSI contamination" >>"$SCRIPT_DIR/jq_error_analysis.md"
-    echo "📊 Monitor for 7 days to confirm error rate drops to zero" >>"$SCRIPT_DIR/jq_error_analysis.md"
+        printf "\n### Recommendations\n"
+        echo "✅ All root causes addressed by recent enhancements"
+        echo "✅ File locking prevents concurrent write issues"
+        echo "✅ Stderr redirection prevents ANSI contamination"
+        echo "📊 Monitor for 7 days to confirm error rate drops to zero"
+    } >>"$SCRIPT_DIR/jq_error_analysis.md"
 
     success "Error trend analysis saved to jq_error_analysis.md"
 else

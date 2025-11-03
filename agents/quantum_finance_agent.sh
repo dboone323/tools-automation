@@ -4,6 +4,8 @@
 
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./shared_functions.sh
+# shellcheck disable=SC1091
 source "${SCRIPT_DIR}/shared_functions.sh"
 
 set -euo pipefail
@@ -615,4 +617,3 @@ trap 'update_agent_status "quantum_finance_agent.sh" "stopped" $$ ""; log "Quant
 
 # Run main loop
 main "$@" 2>&1 | tee -a "${LOG_FILE}"
-<filePath >/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/quantum_finance_agent.sh

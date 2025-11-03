@@ -3,8 +3,9 @@
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
-TASK_QUEUE_FILE="${SCRIPT_DIR}/task_queue.json"
+# Allow environment overrides for testability
+STATUS_FILE="${STATUS_FILE:-${SCRIPT_DIR}/agent_status.json}"
+TASK_QUEUE_FILE="${TASK_QUEUE_FILE:-${SCRIPT_DIR}/task_queue.json}"
 
 # Initialize monitoring
 init_monitoring() {
@@ -22,6 +23,10 @@ update_agent_status() {
     echo "DEBUG: update_agent_status called for $agent_name with status=$agent_status, pid=$pid, task_id=$task_id" >&2
     echo "DEBUG: Using update_status.py script" >&2
     echo "DEBUG: About to call update_status.py" >&2
+    # Ensure status file exists with a valid structure
+    if [[ ! -f "$STATUS_FILE" ]]; then
+        echo '{"agents":{},"last_update":0}' > "$STATUS_FILE"
+    fi
     STATUS_FILE="$STATUS_FILE" python3 "${SCRIPT_DIR}/update_status.py" "$agent_status" "$agent_name" "$pid" "$task_id" 2>&1
     return $?
 }
@@ -31,12 +36,21 @@ get_next_task() {
     local agent_name="$1"
 
     # Get next task using Python
+    # Ensure task queue file exists
+    if [[ ! -f "$TASK_QUEUE_FILE" ]]; then
+        echo '{"tasks":[]}' > "$TASK_QUEUE_FILE"
+    fi
     python3 -c "
 import json
 import sys
-import tempfile
 import os
-import time
+
+def match_agent(task, aliases):
+    for key in ('agent', 'assigned_agent', 'assigned_to'):
+        val = task.get(key)
+        if val in aliases:
+            return True
+    return False
 
 try:
     agent_name = sys.argv[1]
@@ -58,18 +72,32 @@ try:
         aliases.add(f'agent_{base}')
         aliases.add(f'{base}_agent')
 
-    if 'tasks' in data:
-        for task in data['tasks']:
-            assigned = task.get('assigned_agent') or task.get('assigned_to')
-            status = task.get('status')
-            if (assigned in aliases and status in ('queued', 'assigned')):
-                print(json.dumps(task))
-                sys.exit(0)
+    pending_statuses = {'pending', 'queued', 'assigned', 'waiting'}
+    best = None
+    best_pri = -1
 
-    # No task found
-    sys.exit(1)
-except Exception as e:
-    sys.exit(1)
+    for task in (data.get('tasks') or []):
+        status = task.get('status')
+        if status not in pending_statuses:
+            continue
+        if not match_agent(task, aliases):
+            continue
+        pri = task.get('priority')
+        try:
+            pri = int(pri) if pri is not None else 0
+        except Exception:
+            pri = 0
+        if pri > best_pri:
+            best = task
+            best_pri = pri
+
+    if best is not None:
+        print(json.dumps(best))
+    # Always exit 0 to be non-fatal when no task
+    sys.exit(0)
+except Exception:
+    # Graceful on errors
+    sys.exit(0)
 " "$agent_name"
 }
 

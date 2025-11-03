@@ -3,6 +3,8 @@
 
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./shared_functions.sh
+# shellcheck disable=SC1091
 source "${SCRIPT_DIR}/shared_functions.sh"
 
 AGENT_NAME="UIUXAgent"
@@ -50,7 +52,7 @@ perform_ui_enhancements() {
 
     # Check if this is a drag-and-drop task
     local is_drag_drop
-    is_drag_drop=$(echo "${task_data}" | jq -r '.todo // empty' | grep -i "drag\|drop" | wc -l)
+    is_drag_drop=$(echo "${task_data}" | jq -r '.todo // empty' | grep -ci -E 'drag|drop')
 
     if [[ ${is_drag_drop} -gt 0 ]]; then
         echo "[$(date)] ${AGENT_NAME}: Detected drag-and-drop enhancement task..." >>"${LOG_FILE}"

@@ -3,7 +3,15 @@
 
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./shared_functions.sh
+# shellcheck disable=SC1091
 source "${SCRIPT_DIR}/shared_functions.sh"
+# Optional shared loop utilities (backoff + pipeline quick-exit)
+if [[ -f "${SCRIPT_DIR}/agent_loop_utils.sh" ]]; then
+    # shellcheck source=./agent_loop_utils.sh
+    # shellcheck disable=SC1091
+    source "${SCRIPT_DIR}/agent_loop_utils.sh"
+fi
 
 # Agent throttling configuration
 MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}" # Maximum concurrent instances of this agent
@@ -15,7 +23,8 @@ ensure_within_limits() {
     local agent_name="testing_agent.sh"
 
     # Check concurrent instances
-    local running_count=$(pgrep -f "${agent_name}" | wc -l)
+    local running_count
+    running_count=$(pgrep -f "${agent_name}" | wc -l)
     if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
         log "Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..."
         return 1
@@ -232,9 +241,11 @@ run_testing_analysis() {
                 local async_tests
                 async_tests=$(find . -name "*Test*.swift" -exec grep -l "async" {} \; | wc -l)
 
-                echo "[$(date)] ${AGENT_NAME}: Unit tests: ${unit_tests}" >>"${LOG_FILE}"
-                echo "[$(date)] ${AGENT_NAME}: UI tests: ${ui_tests}" >>"${LOG_FILE}"
-                echo "[$(date)] ${AGENT_NAME}: Async tests: ${async_tests}" >>"${LOG_FILE}"
+                {
+                    echo "[$(date)] ${AGENT_NAME}: Unit tests: ${unit_tests}"
+                    echo "[$(date)] ${AGENT_NAME}: UI tests: ${ui_tests}"
+                    echo "[$(date)] ${AGENT_NAME}: Async tests: ${async_tests}"
+                } >>"${LOG_FILE}"
 
                 # Check for test best practices
                 local missing_asserts
@@ -281,8 +292,10 @@ run_testing_analysis() {
             done
 
             if [[ ${test_files} -eq 0 ]]; then
-                echo "[$(date)] ${AGENT_NAME}: Recommendation: Create unit tests for core functionality" >>"${LOG_FILE}"
-                echo "[$(date)] ${AGENT_NAME}: Recommendation: Add UI tests for user interactions" >>"${LOG_FILE}"
+                {
+                    echo "[$(date)] ${AGENT_NAME}: Recommendation: Create unit tests for core functionality"
+                    echo "[$(date)] ${AGENT_NAME}: Recommendation: Add UI tests for user interactions"
+                } >>"${LOG_FILE}"
             fi
 
             if [[ ${coverage_ratio} -lt 50 ]]; then
@@ -305,6 +318,16 @@ run_testing_analysis() {
 # Main agent loop
 echo "[$(date)] ${AGENT_NAME}: Starting testing agent..." >>"${LOG_FILE}"
 update_status "available"
+
+# Standardize timing/backoff and support pipeline quick-exit
+if command -v agent_init_backoff >/dev/null 2>&1; then
+    agent_init_backoff
+fi
+if command -v agent_detect_pipe_and_quick_exit >/dev/null 2>&1; then
+    if agent_detect_pipe_and_quick_exit "${AGENT_NAME}"; then
+        exit 0
+    fi
+fi
 
 # Track processed tasks to avoid duplicates
 declare -A processed_tasks
@@ -351,7 +374,7 @@ while true; do
         done <"${NOTIFICATION_FILE}"
 
         # Clear processed notifications to prevent re-processing
-        true >"${NOTIFICATION_FILE}"
+        : >"${NOTIFICATION_FILE}"
     fi
 
     # Update last seen timestamp

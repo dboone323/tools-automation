@@ -100,19 +100,19 @@ analyze_python_coverage() {
     test_modules=$(mktemp)
 
     # All Python files under Tools (excluding __init__.py for module list)
-    find "$WORKSPACE_ROOT/Tools" -type f -name "*.py" 2>/dev/null > "$tmp_all"
+    find "$WORKSPACE_ROOT/Tools" -type f -name "*.py" 2>/dev/null >"$tmp_all"
     # Derive non-test module basenames
-    grep -v "/__init__\.py$" "$tmp_all" | grep -v "/test_.*\.py$" | grep -v "/_test\.py$" | xargs -I{} basename {} | sed 's/\.py$//' | sort -u > "$py_modules"
+    grep -v "/__init__\.py$" "$tmp_all" | grep -v "/test_.*\.py$" | grep -v "/_test\.py$" | xargs -I{} basename {} | sed 's/\.py$//' | sort -u >"$py_modules"
 
     # Test files list
-    grep -E "/(test_.*\.py|.*_test\.py)$" "$tmp_all" | xargs -I{} basename {} | sort -u > "$tmp_tests"
+    grep -E "/(test_.*\.py|.*_test\.py)$" "$tmp_all" | xargs -I{} basename {} | sort -u >"$tmp_tests"
     # Normalize test names to the module names they test
     # Strip leading 'test_' or trailing '_test' and .py
-    awk '{n=$0; sub(/^test_/, "", n); sub(/\.py$/, "", n); sub(/_test$/, "", n); print n}' "$tmp_tests" | sort -u > "$test_modules"
+    awk '{n=$0; sub(/^test_/, "", n); sub(/\.py$/, "", n); sub(/_test$/, "", n); print n}' "$tmp_tests" | sort -u >"$test_modules"
 
     local python_files python_tests
-    python_files=$(wc -l < "$tmp_all" | tr -d ' ')
-    python_tests=$(wc -l < "$tmp_tests" | tr -d ' ')
+    python_files=$(wc -l <"$tmp_all" | tr -d ' ')
+    python_tests=$(wc -l <"$tmp_tests" | tr -d ' ')
 
     echo -e "  Python files: $python_files"
     echo -e "  Python tests: $python_tests"
@@ -133,7 +133,7 @@ EOF
         # Find first match of module name under Tools
         src=$(grep -E "/${mod}\.py$" "$tmp_all" | head -1)
         if [ -n "$src" ]; then
-            echo "- $(basename "$src")" >> "$REPORT_FILE"
+            echo "- $(basename "$src")" >>"$REPORT_FILE"
         fi
     done
 

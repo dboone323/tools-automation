@@ -1,12 +1,33 @@
 #!/bin/bash
 
 # Source shared functions for file locking and monitoring
+# shellcheck source=./shared_functions.sh
+# shellcheck disable=SC1091
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
+if [[ -f "${SCRIPT_DIR}/agent_loop_utils.sh" ]]; then
+    # shellcheck source=./agent_loop_utils.sh
+    # shellcheck disable=SC1091
+    source "${SCRIPT_DIR}/agent_loop_utils.sh"
+fi
 
 # Source project configuration
 if [[ -f "${SCRIPT_DIR}/../project_config.sh" ]]; then
+    # shellcheck source=../project_config.sh
+    # shellcheck disable=SC1091
     source "${SCRIPT_DIR}/../project_config.sh"
+fi
+
+# Quick-exit for pipeline mode BEFORE setting strict error handling
+if [[ -p /dev/stdout ]] || [[ -p /dev/stderr ]]; then
+    if [[ "${DISABLE_PIPE_QUICK_EXIT:-0}" -ne 1 ]]; then
+        echo "[$(date)] agent_codegen.sh: starting (pipeline mode detected)"
+        echo "[$(date)] agent_codegen.sh: PATH='${PATH}'"
+        echo "[$(date)] agent_codegen.sh: status=running"
+        echo "[$(date)] agent_codegen.sh: no tasks found (quick check)"
+        echo "[$(date)] agent_codegen.sh: exiting early to avoid hanging pipelines"
+        exit 0
+    fi
 fi
 
 set -euo pipefail
@@ -67,6 +88,7 @@ WORKSPACE="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"
 if [[ -f "${ENHANCEMENTS_DIR}/ai_codegen_optimizer.sh" ]]; then
     # shellcheck source=../enhancements/ai_codegen_optimizer.sh
+    # shellcheck disable=SC1091
     source "${ENHANCEMENTS_DIR}/ai_codegen_optimizer.sh"
 fi
 
@@ -398,6 +420,12 @@ main() {
     # Initialize agent status
     update_agent_status "${AGENT_NAME}" "starting" $$ ""
 
+    # Standardize timing/backoff and support pipeline quick-exit
+    agent_init_backoff
+    if agent_detect_pipe_and_quick_exit "${AGENT_NAME}"; then
+        return 0
+    fi
+
     local idle_count=0
     local max_idle_cycles=12 # Exit after 60 seconds of no tasks (12 * 5 seconds)
 
@@ -427,8 +455,8 @@ main() {
             fi
         fi
 
-        # Brief pause to prevent tight looping
-        sleep 5
+        # Pause using exponential backoff
+        agent_sleep_with_backoff
     done
 }
 

@@ -7,6 +7,7 @@ import time
 import tempfile
 import os
 import sys
+import fcntl
 
 
 def main():
@@ -29,23 +30,33 @@ def main():
             file=sys.stderr,
         )
 
-        # Read existing data with retry
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                with open(status_file, "r") as f:
-                    data = json.load(f)
-                break
-            except json.JSONDecodeError as e:
-                if attempt < max_retries - 1:
-                    print(
-                        f"JSON decode error (attempt {attempt + 1}/{max_retries}): {e}",
-                        file=sys.stderr,
-                    )
-                    time.sleep(0.1)
-                    continue
-                else:
-                    raise e
+        # Update under an exclusive file lock to avoid lost updates
+        lock_path = f"{status_file}.lock"
+        os.makedirs(os.path.dirname(status_file) or ".", exist_ok=True)
+        with open(lock_path, "w") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+
+            # Read existing data with retry; if missing, initialize dict format
+            max_retries = 3
+            data = None
+            for attempt in range(max_retries):
+                try:
+                    if os.path.exists(status_file):
+                        with open(status_file, "r") as f:
+                            data = json.load(f)
+                    else:
+                        data = {"agents": {}, "last_update": 0}
+                    break
+                except json.JSONDecodeError as e:
+                    if attempt < max_retries - 1:
+                        print(
+                            f"JSON decode error (attempt {attempt + 1}/{max_retries}): {e}",
+                            file=sys.stderr,
+                        )
+                        time.sleep(0.1)
+                        continue
+                    else:
+                        raise e
 
         # Handle both formats: list of agents or dict with agents key
         if isinstance(data, list):
@@ -94,17 +105,19 @@ def main():
             data["agents"][agent_name] = agent_data
             data["last_update"] = int(time.time())
 
-        # Write to temporary file first, then atomically move
-        with tempfile.NamedTemporaryFile(
-            mode="w", dir=os.path.dirname(status_file), delete=False
-        ) as temp_file:
-            json.dump(data, temp_file, indent=2)
-            temp_file.flush()
-            os.fsync(temp_file.fileno())  # Force write to disk
-            temp_path = temp_file.name
+            # Write to temporary file first, then atomically move
+            with tempfile.NamedTemporaryFile(
+                mode="w", dir=os.path.dirname(status_file), delete=False
+            ) as temp_file:
+                json.dump(data, temp_file, indent=2)
+                temp_file.flush()
+                os.fsync(temp_file.fileno())  # Force write to disk
+                temp_path = temp_file.name
 
-        # Atomic move
-        os.rename(temp_path, status_file)
+            # Atomic move
+            os.rename(temp_path, status_file)
+
+            # Release lock automatically on context exit
 
         sys.exit(0)
     except Exception as e:
