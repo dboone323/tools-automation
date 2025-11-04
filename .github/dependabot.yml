@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
@@ -13,10 +13,10 @@ updates:
   - package-ecosystem: "swift"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
 
   # added by normalize
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
