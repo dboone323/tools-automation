@@ -1,0 +1,153 @@
+# Root ignore for generated artifacts and local state
+
+# TODO export output (generated)
+Projects/todo-tree-output.json
+todo-tree-output.json
+
+# Automation runtime files
+Tools/Automation/export_todos.pid
+Tools/Automation/process_todos.log
+Tools/logs/
+Tools/Automation/agents/.dashboard_metrics_state.json
+
+# macOS junk
+.DS_Store
+*/.DS_Store
+# Xcode
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# SwiftPM
+.swiftpm/
+.build/
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build/
+
+# Swift build caches and module caches
+**/Build/
+**/BuildData_*/
+**/ModuleCache.noindex/
+**/*.pcm
+**/*.swiftmodule
+**/*.swiftinterface
+**/*.swiftdoc
+**/*.o
+**/*.dSYM
+**/SDKStatCaches.noindex/
+
+# Platform-specific
+*.DS_Store
+
+# Python caches
+**/__pycache__/
+*.pyc
+
+# Logs and temp
+*.log
+*.tmp
+*.swp
+
+# Tools snapshots and imports
+Tools/Imported/
+Tools/Automation/Imported_Tools_snapshot-*/
+Tools/Automation/IMPORTS/
+
+# Project-specific caches and outputs
+Projects/**/build_output*.txt
+Projects/**/lint_results.json
+Projects/**/quality_gates_results.json
+node_modules/
+
+# Node.js
+dist/
+build/
+.env
+.env.local
+.env.*.local
+.secure/.env.secure
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/mcp-settings.json
+.idea/
+
+# Husky
+.husky/
+
+# Pre-commit
+.pre-commit-config.yaml
+
+# Dev containers
+.devcontainer/
+
+# Agent runtime files
+Tools/Automation/agents/*.pid
+Tools/Automation/agents/*.processing
+Tools/Automation/agents/*.tmp.*
+Tools/Automation/agents/task_queue.json.old
+Tools/Automation/export_todos.pid
+
+# Temporary TODO export files
+Projects/todo-tree-output.json.broken
+Projects/todo-tree-output.json.fixed
+Projects/todo-tree-output.json.items.*
+Projects/todo-tree-output.json.tmp.*
+Projects/todo-tree-output.json.limited
+
+# Exclude backup files (too large for GitHub)
+.backups/
+
+# Auto-fix and workspace backup artifacts
+# Prevent accidental commits of massive backup directories and archives
+.autofix_backups/
+Workspace_Backup_*/
+**/*.backup
+**/*.bak
+**/*.tar
+**/*.tar.gz
+**/*.zip
+
+# Xcode test artifacts and reports
+*.xcresult
+Reports/**/*.xcresult
+Reports/Coverage/**/*.json
+Reports/Coverage/**/*.html
+Reports/Coverage/**/*.xml
+
+# Test artifacts and reports
+**/test-results/
+**/coverage/
+**/.coverage
+**/htmlcov/
+**/*.lcov
+**/*.profdata
+
+# Linting and formatting caches
+**/.swiftlint_cache/
+**/.swiftformat_cache/
+
+# Temporary split files
+/tmp/
+*.swift.tmp
+
+# Build/test artifacts
+coverage_results/
+coverage_results/**
+test_results/
+performance_history/
+*.xcresult
+DerivedData/
+.xcworkspace/xcuserdata/
+**/*.xcuserstate
+**/*.xcuserdatad
+

@@ -1,0 +1,39 @@
+# SwiftLint configuration (generic)
+disabled_rules:
+  - todo
+  - function_body_length
+  - type_body_length
+  - file_length
+  - cyclomatic_complexity
+  - force_cast
+  - force_try
+  - inclusive_language
+  - function_parameter_count
+  - shorthand_operator
+
+opt_in_rules:
+  - array_init
+  - closure_end_indentation
+  - explicit_init
+  - modifier_order
+  - redundant_nil_coalescing
+
+included:
+  - .
+
+excluded:
+  - "**/.build"
+  - "**/DerivedData"
+  - "**/.swiftpm"
+  - "**/Pods"
+  - "**/Carthage"
+  - "**/node_modules"
+  - "**/*.generated.swift"
+
+identifier_name:
+  min_length: { warning: 1, error: 1 }
+  validates_start_with_lowercase: true
+  excluded: [i, j, id, x, y, z, a, b, r, g, t, l, n]
+
+line_length: { warning: 200, error: 240 }
+reporter: xcode
