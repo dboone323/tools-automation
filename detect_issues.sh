@@ -39,6 +39,37 @@ load_config() {
     log_info "Loaded configuration: flaky_threshold=$FLAKY_THRESHOLD, coverage_minimum=$COVERAGE_MINIMUM, performance_threshold=$PERFORMANCE_THRESHOLD"
 }
 
+# Discover projects from existing test result artifacts or coverage files
+discover_projects() {
+    local projects=()
+
+    # Prefer projects from test_results/*_test_results.json
+    if compgen -G "$RESULTS_DIR/*_test_results.json" >/dev/null; then
+        while IFS= read -r file; do
+            local name
+            name="$(basename "$file")"
+            name="${name%%_test_results.json}"
+            projects+=("$name")
+        done < <(ls -1 "$RESULTS_DIR"/*_test_results.json 2>/dev/null | sort)
+    fi
+
+    # Also include any projects with coverage files
+    if compgen -G "$RESULTS_DIR/*_coverage.json" >/dev/null; then
+        while IFS= read -r file; do
+            local name
+            name="$(basename "$file")"
+            name="${name%%_coverage.json}"
+            # De-duplicate
+            if [[ " ${projects[*]} " != *" $name "* ]]; then
+                projects+=("$name")
+            fi
+        done < <(ls -1 "$RESULTS_DIR"/*_coverage.json 2>/dev/null | sort)
+    fi
+
+    # Fallback empty -> return nothing; caller handles
+    echo "${projects[@]}"
+}
+
 # Function to detect test failures
 detect_test_failures() {
     local project="$1"
@@ -96,9 +127,9 @@ detect_coverage_regressions() {
         return 0
     fi
 
-    # Get current coverage
+    # Get current coverage (support both keys)
     local current_coverage
-    current_coverage=$(jq -r '.coverage_percent // 0' "$coverage_file" 2>/dev/null || echo "0")
+    current_coverage=$(jq -r '.coverage_percentage // .coverage_percent // 0' "$coverage_file" 2>/dev/null || echo "0")
 
     # Get minimum required coverage
     local min_coverage="$COVERAGE_MINIMUM"
@@ -342,8 +373,13 @@ main() {
     local projects=("$@")
 
     if [[ ${#projects[@]} -eq 0 ]]; then
-        # Default to all projects
-        projects=("AvoidObstaclesGame" "CodingReviewer" "PlannerApp" "MomentumFinance" "HabitQuest")
+        # Auto-discover from artifacts
+        read -r -a projects <<<"$(discover_projects)"
+    fi
+
+    if [[ ${#projects[@]} -eq 0 ]]; then
+        log_warning "No projects discovered from artifacts; nothing to analyze."
+        exit 0
     fi
 
     log_info "Starting automated issue detection for ${#projects[@]} projects..."

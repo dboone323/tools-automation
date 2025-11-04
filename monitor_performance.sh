@@ -59,6 +59,19 @@ record_performance() {
 
     # Extract performance metrics
     local total_time
+    # Discover projects based on existing test result artifacts
+    discover_projects() {
+        local projects=()
+        if compgen -G "$CURRENT_RESULTS_DIR/*_test_results.json" >/dev/null; then
+            while IFS= read -r file; do
+                local name
+                name="$(basename "$file")"
+                name="${name%%_test_results.json}"
+                projects+=("$name")
+            done < <(ls -1 "$CURRENT_RESULTS_DIR"/*_test_results.json 2>/dev/null | sort)
+        fi
+        echo "${projects[@]}"
+    }
     local test_count
     local passed_count
     local failed_count
@@ -271,7 +284,8 @@ generate_dashboard() {
     local trend_files
     trend_files=$(find "$PERF_DIR" -name '*_trend_*.json' -type f 2>/dev/null | sort -r | head -5 || echo "")
     local trends="[]"
-
+    local projects=()
+    read -r -a projects <<<"$(discover_projects)"
     for trend_file in $trend_files; do
         local trend
         trend=$(jq '{project, performance_trends, regression_detected}' "$trend_file" 2>/dev/null || echo "null")
