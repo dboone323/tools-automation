@@ -8,3 +8,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+
+  # added by normalize
+  - package-ecosystem: "swift"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # added by normalize
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "weekly"
