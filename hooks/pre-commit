@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Prevent committing files larger than 50MB. Use Git LFS for large binaries.
+max_bytes=$((50 * 1024 * 1024))
+fail=0
+
+while IFS= read -r -d '' file; do
+    if [ -f "$file" ]; then
+        # macOS BSD stat
+        size=$(stat -f%z "$file")
+        if [ "$size" -gt "$max_bytes" ]; then
+            pretty=$(numfmt --to=iec "$size" 2>/dev/null || echo "${size}B")
+            echo "Error: '$file' is $pretty, exceeds 50MB limit."
+            fail=1
+        fi
+    fi
+done < <(git diff --cached --name-only -z)
+
+if [ "$fail" -eq 1 ]; then
+    echo "Commit aborted. Consider tracking with Git LFS (see Tools/Automation/setup_lfs.sh)."
+    exit 1
+fi
