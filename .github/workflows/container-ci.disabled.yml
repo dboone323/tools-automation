@@ -10,7 +10,7 @@ jobs:
   containerized:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build images
@@ -27,7 +27,7 @@ jobs:
     if: ${{ false }} # enable when self-hosted runner is available
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Verify Ollama availability
         run: |
           curl -sf http://localhost:11434/api/tags >/dev/null
