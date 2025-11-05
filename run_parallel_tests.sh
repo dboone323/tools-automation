@@ -1,4 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# Ensure we're running under bash even if invoked by sh/zsh
+if [[ -z "${BASH_VERSION:-}" ]]; then
+    exec /usr/bin/env bash "$0" "$@"
+fi
 
 # Parallel Test Execution Framework for Quantum-workspace
 # SwiftPM-first runner with coverage, parallelism, and JSON artifacts
@@ -146,19 +151,71 @@ run_project_tests() {
         fi
     else
         # Xcode-based projects (fallback)
-        local scheme="$project"
+        local xcodeproj
+        xcodeproj=$(find "$project_path" -maxdepth 2 -name "*.xcodeproj" -type d 2>/dev/null | head -1 || true)
+
+        # Detect scheme from project
+        local scheme
+        detect_xcode_scheme() {
+            local proj_path="$1"
+            local default_name="$2"
+            local list_output schemes detected
+            if [[ -n "$proj_path" ]]; then
+                list_output=$(xcodebuild -list -project "$proj_path" 2>/dev/null || true)
+                # Extract schemes section lines
+                schemes=$(echo "$list_output" | awk '/Schemes:/{flag=1;next}/^$/{flag=0}flag')
+                if [[ -n "$schemes" ]]; then
+                    # Prefer exact match, then case-insensitive contains, else first
+                    while IFS= read -r s; do
+                        s_trimmed=$(echo "$s" | sed 's/^ *//;s/ *$//')
+                        if [[ "$s_trimmed" == "$default_name" ]]; then
+                            echo "$s_trimmed"; return 0
+                        fi
+                        detected+="$s_trimmed
+"
+                    done <<<"$schemes"
+                    # case-insensitive contains
+                    while IFS= read -r s; do
+                        if echo "$s" | grep -qi "$default_name"; then
+                            echo "$s"; return 0
+                        fi
+                    done <<<"$detected"
+                    # first non-empty
+                    echo "$schemes" | sed 's/^ *//;s/ *$//' | awk 'NF{print; exit}'; return 0
+                fi
+            fi
+            echo "$default_name"
+        }
+
+        scheme=$(detect_xcode_scheme "$xcodeproj" "$project")
+
+        # Try macOS destination first, then iOS Simulator fallback
         if xcodebuild test \
+            ${xcodeproj:+-project "$xcodeproj"} \
             -scheme "$scheme" \
             -destination 'platform=macOS' \
             -enableCodeCoverage YES \
             -parallel-testing-enabled YES \
             -test-timeouts-enabled YES \
             -maximum-test-execution-time-allowance "$TIMEOUT_SECONDS" >"$test_output_file" 2>&1; then
-            log_success "Tests passed for $project"
+            log_success "Tests passed for $project (macOS)"
             echo "PASSED" >"/tmp/${project}_test_result"
         else
-            log_error "Tests failed for $project"
-            echo "FAILED" >"/tmp/${project}_test_result"
+            log_warning "macOS test run failed; retrying on iOS Simulator for $project"
+            if xcodebuild test \
+                ${xcodeproj:+-project "$xcodeproj"} \
+                -scheme "$scheme" \
+                -destination 'platform=iOS Simulator,name=iPhone 15' \
+                -enableCodeCoverage YES \
+                -parallel-testing-enabled YES \
+                -test-timeouts-enabled YES \
+                -maximum-test-execution-time-allowance "$TIMEOUT_SECONDS" >>"$test_output_file" 2>&1; then
+                log_success "Tests passed for $project (iOS Simulator)"
+                echo "PASSED" >"/tmp/${project}_test_result"
+            else
+                log_error "Tests failed for $project"
+                echo "FAILED" >"/tmp/${project}_test_result"
+            fi
         fi
     fi
 
