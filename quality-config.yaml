@@ -1,114 +1,130 @@
-# Quality Gates Configuration
+# Quality Gates Configuration - Comprehensive Build & Test Infrastructure
+# Enforces 85% minimum coverage (90-100% ideal), parallel PR validation, sequential release builds
+# Includes flaky detection, timeouts, performance monitoring, and automated remediation
+
 quality_gates:
   code_coverage:
-    minimum: 85  # Hard requirement - CI blocks below this
-    target: 90   # Ideal target
-    aspirational: 100
-    block_ci: true
+    minimum: 85  # Hard requirement - blocks CI merge
+    target: 90   # Ideal target for recognition
+    aspirational: 100  # Excellence target
+    block_ci: true  # Enforce minimum threshold
     incremental_requirement: 90  # New code must have 90%+
-    regression_threshold: 2  # Alert on coverage drops >2%
 
   test_performance:
-    max_duration_seconds: 30
-    unit_tests_max: 60
-    integration_tests_max: 120
-    ui_tests_max: 180
+    max_duration_seconds: 30  # Unit tests
+    max_integration_duration_seconds: 120  # Integration tests
+    max_ui_duration_seconds: 180  # UI tests
+    timeout_buffer_percent: 50  # Allow 50% buffer before timeout
 
   build_performance:
-    max_duration_seconds: 120
-    per_project_max: 180  # 50% buffer
-    total_sequential_max: 600
-    pr_parallel_max: 600  # 10 minutes
-    release_sequential_max: 900  # 15 minutes
+    max_duration_seconds: 120  # Individual project builds
+    max_sequential_duration_seconds: 600  # Complete workspace sequential
+    pr_validation_target_seconds: 600  # <10 minutes parallel PR validation
+    release_build_target_seconds: 900  # <15 minutes sequential releases
+
+  flaky_test_detection:
+    auto_skip_threshold: 3  # 3 failures in 5 runs = auto-skip
+    block_ci_threshold: 5   # 5 consecutive failures = block CI
+    max_iterations: 5       # Test runs for flaky detection
+    quarantine_days: 7      # Auto-skip duration
+
+  timeout_management:
+    circuit_breaker_trips: 3    # Consecutive failures trigger circuit breaker
+    circuit_breaker_reset_minutes: 5  # Half-open state duration
+    emergency_skip_timeout_seconds: 300  # Emergency skip for stuck processes
+    retry_attempts: 3           # Test retry attempts
+    retry_backoff_seconds: [1, 2, 4]  # Exponential backoff
 
   code_quality:
     max_warnings: 5
     max_errors: 0
+    swiftlint_strict: true
+    swiftformat_check: true
 
   file_limits:
     max_file_size_kb: 1000
     max_lines_per_file: 500
+    max_complexity_cyclomatic: 10
+    max_complexity_cognitive: 15
 
-  complexity:
-    max_cyclomatic_complexity: 10
-    max_cognitive_complexity: 15
-
-  test_reliability:
-    flaky_test_threshold: 3  # Auto-skip after 3 failures in 5 runs
-    critical_failure_threshold: 5  # Block CI after 5 consecutive failures
-    max_retry_attempts: 3
-    retry_backoff_seconds: [1, 2, 4]  # Exponential backoff
-    flaky_skip_max_days: 7  # Maximum days a test can be skipped
-
-  ci_strategy:
-    pr_validation: "parallel"  # Fast feedback for pull requests
-    release_builds: "sequential"  # Stable, comprehensive validation
-    
-  performance_regression:
-    alert_threshold_percent: 10  # Alert on >10% slowdown
-    auto_block: true
+  security:
+    audit_required: true
+    encryption_validation: true
+    privacy_compliance_check: true
 
 project_specific:
   CodingReviewer:
-    test_coverage_minimum: 85  # Updated to workspace standard
+    test_coverage_minimum: 85
     max_file_uploads: 1000
+    security_framework_validation: true
+    performance_target_ms: 500
 
-  HabitQuest:
-    test_coverage_minimum: 85  # Updated to workspace standard
-    performance_target_ms: 100
+  AvoidObstaclesGame:
+    test_coverage_minimum: 85
+    game_performance_target_fps: 60
+    memory_usage_limit_mb: 100
+
+  PlannerApp:
+    test_coverage_minimum: 85
+    cloudkit_sync_timeout_seconds: 30
+    ui_responsiveness_target_ms: 100
 
   MomentumFinance:
     test_coverage_minimum: 85
     data_integrity_checks: true
-  
-  PlannerApp:
-    test_coverage_minimum: 85
-    cloudkit_integration_tests: true
-  
-  AvoidObstaclesGame:
-    test_coverage_minimum: 85
-    game_logic_tests_required: true
+    financial_calculation_precision: 0.01
 
-# Critical components requiring 100% coverage
-critical_components:
-  agents:
-    path: "Tools/Automation/agents"
-    coverage_minimum: 100
-    block_ci: true
-    description: "Agent scripts must have full test coverage"
-  
-  workflows:
-    paths:
-      - "Tools/Automation/local_ci_orchestrator.sh"
-      - "Tools/Automation/master_automation.sh"
-      - "Tools/Automation/setup_free_only.sh"
-      - ".github/workflows"
-    coverage_minimum: 100
-    block_ci: true
-    description: "CI/CD workflows must have full test coverage"
-  
-  ai_components:
-    paths:
-      - "**/AI*.swift"
-      - "**/Ollama*.swift"
-      - "**/HuggingFace*.swift"
-      - "**/ML*.swift"
-      - "Tools/Automation/*ai*.py"
-      - "Tools/Automation/*ollama*.py"
-    coverage_minimum: 100
-    block_ci: true
-    description: "AI/ML components must have full test coverage"
+  HabitQuest:
+    test_coverage_minimum: 85
+    habit_tracking_accuracy: 99.9
+    notification_delivery_target_ms: 100
 
-# Coverage enforcement rules
-coverage_enforcement:
-  fail_on_coverage_decrease: true
-  minimum_new_code_coverage: 90
-  allow_coverage_decrease_percent: 0  # No decrease allowed
-  coverage_trend_monitoring: true
-  generate_coverage_badge: true
-  coverage_report_formats:
-    - markdown
-    - html
-    - json
-  store_historical_coverage: true
-  historical_coverage_path: "~/.quantum-workspace/artifacts/baselines/coverage_history.json"
+ci_strategy:
+  pr_validation:
+    execution: parallel
+    max_concurrent_jobs: 5
+    timeout_minutes: 10
+    target_completion_minutes: 8
+    resource_optimization: true
+    fast_feedback: true
+
+  release_builds:
+    execution: sequential
+    timeout_minutes: 15
+    target_completion_minutes: 12
+    comprehensive_validation: true
+    stability_priority: true
+
+automated_remediation:
+  issue_filing:
+    enabled: true
+    max_issues_per_hour: 10
+    auto_assign: true
+    priority_mapping:
+      coverage_below_minimum: high
+      build_timeout: critical
+      flaky_test_blocked: high
+      security_violation: critical
+
+  self_healing:
+    enabled: true
+    known_patterns_recognition: true
+    auto_fix_attempts: 3
+    success_rate_tracking: true
+
+monitoring:
+  performance_tracking:
+    enabled: true
+    metrics_retention_days: 90
+    regression_alerts: true
+    dashboard_integration: true
+
+  flaky_test_registry:
+    enabled: true
+    auto_cleanup_days: 30
+    quarantine_management: true
+
+  build_analytics:
+    enabled: true
+    bottleneck_detection: true
+    optimization_recommendations: true

@@ -1,0 +1,14 @@
+# Unified SwiftFormat configuration (proposed root)
+--swiftversion 6.0
+--indent 4
+--maxwidth 140
+--wraparguments before-first
+--wrapcollections before-first
+--ifdef no-indent
+--hexgrouping ignore
+--commas inline
+--stripunusedargs closure-only
+--trimwhitespace nonblank-lines
+--self insert
+--disable sortedImports,trailingCommas,wrapMultilineStatementBraces,redundantFileprivate
+--exclude Tools/Imported

@@ -1,0 +1,208 @@
+{
+  "email": {
+    "enabled": true,
+    "smtp_server": "y",
+    "smtp_port": 587,
+    "username": "dboon323",
+    "password": "Stevens!2",
+    "from_email": "dboon323@gmail.com",
+    "to_emails": [
+      "dboone323@gmail.com"
+    ]
+  },
+  "slack": {
+    "enabled": false,
+    "webhook_url": "",
+    "channel": "#alerts",
+    "username": "Tool Monitor"
+  },
+  "alert_levels": {
+    "CRITICAL": [
+      "email",
+      "slack"
+    ],
+    "HIGH": [
+      "email",
+      "slack"
+    ],
+    "MEDIUM": [
+      "slack"
+    ],
+    "LOW": [
+      "slack"
+    ]
+  },
+  "throttling": {
+    "max_alerts_per_hour": 10,
+    "cooldown_minutes": 5
+  },
+  "escalation": {
+    "enabled": true,
+    "policies": {
+      "frequency_escalation": {
+        "enabled": true,
+        "thresholds": {
+          "3": "HIGH",
+          "5": "CRITICAL",
+          "3": "HIGH",
+          "5": "CRITICAL"
+        },
+        "time_window_minutes": 60
+      },
+      "duration_escalation": {
+        "enabled": true,
+        "thresholds": {
+          "30": "HIGH",
+          "120": "CRITICAL",
+          "30": "HIGH",
+          "120": "CRITICAL"
+        }
+      },
+      "persistent_escalation": {
+        "enabled": true,
+        "check_interval_minutes": 15,
+        "max_checks": 4,
+        "escalate_to": "CRITICAL"
+      }
+    },
+    "escalated_channels": {
+      "CRITICAL": [
+        "email",
+        "slack"
+      ],
+      "HIGH": [
+        "email",
+        "slack"
+      ],
+      "MEDIUM": [
+        "slack"
+      ],
+      "LOW": [
+        "slack"
+      ]
+    }
+  },
+  "correlation": {
+    "enabled": true,
+    "rules": {
+      "time_window_minutes": 10,
+      "similarity_threshold": 0.7,
+      "max_group_size": 5,
+      "correlation_patterns": {
+        "disk_issues": {
+          "keywords": [
+            "disk",
+            "space",
+            "storage",
+            "filesystem"
+          ],
+          "sources": [
+            "system_monitor",
+            "tool_monitor"
+          ],
+          "group_title": "Storage System Issues",
+          "group_level": "HIGH"
+        },
+        "memory_issues": {
+          "keywords": [
+            "memory",
+            "ram",
+            "swap",
+            "out of memory"
+          ],
+          "sources": [
+            "system_monitor",
+            "tool_monitor"
+          ],
+          "group_title": "Memory Resource Issues",
+          "group_level": "HIGH"
+        },
+        "network_issues": {
+          "keywords": [
+            "network",
+            "connection",
+            "timeout",
+            "dns"
+          ],
+          "sources": [
+            "system_monitor",
+            "tool_monitor"
+          ],
+          "group_title": "Network Connectivity Issues",
+          "group_level": "MEDIUM"
+        },
+        "tool_failures": {
+          "keywords": [
+            "unhealthy",
+            "failed",
+            "error",
+            "crash"
+          ],
+          "sources": [
+            "tool_monitor",
+            "predictive_monitor"
+          ],
+          "group_title": "Tool Health Issues",
+          "group_level": "HIGH"
+        }
+      }
+    }
+  },
+  "custom_thresholds": {
+    "enabled": true,
+    "environments": {
+      "development": {
+        "disk_usage_percent": 90,
+        "memory_usage_percent": 85,
+        "cpu_usage_percent": 80,
+        "network_latency_ms": 500,
+        "tool_health_score": 0.7
+      },
+      "staging": {
+        "disk_usage_percent": 85,
+        "memory_usage_percent": 80,
+        "cpu_usage_percent": 75,
+        "network_latency_ms": 300,
+        "tool_health_score": 0.8
+      },
+      "production": {
+        "disk_usage_percent": 80,
+        "memory_usage_percent": 75,
+        "cpu_usage_percent": 70,
+        "network_latency_ms": 200,
+        "tool_health_score": 0.9
+      }
+    },
+    "tools": {
+      "default": {
+        "response_time_ms": 1000,
+        "error_rate_percent": 5,
+        "uptime_percent": 99.5,
+        "memory_mb": 500,
+        "cpu_percent": 50
+      },
+      "CodingReviewer": {
+        "response_time_ms": 2000,
+        "error_rate_percent": 2,
+        "uptime_percent": 99.9,
+        "memory_mb": 1000,
+        "cpu_percent": 60
+      },
+      "PlannerApp": {
+        "response_time_ms": 1500,
+        "error_rate_percent": 3,
+        "uptime_percent": 99.7,
+        "memory_mb": 800,
+        "cpu_percent": 55
+      },
+      "AvoidObstaclesGame": {
+        "response_time_ms": 100,
+        "error_rate_percent": 1,
+        "uptime_percent": 99.8,
+        "memory_mb": 200,
+        "cpu_percent": 40
+      }
+    },
+    "current_environment": "development"
+  }
+}

@@ -1,0 +1,61 @@
+# Unified SwiftLint configuration (proposed root)
+# Once validated, move to repository root as .swiftlint.yml and delete project-level duplicates.
+
+included: []
+
+excluded:
+  - Carthage
+  - Pods
+  - .build
+  - DerivedData
+  - Tools/Imported
+  - "**/Snapshots"
+  - "**/Generated"
+  - "**/BuildArtifacts"
+  - "**/backups/**"
+  - "**/*_????????_??????/**/*"
+
+# Core disabled (temporary until refactors reduce violations)
+disabled_rules:
+  - file_length
+  - type_body_length
+  - function_body_length
+  - line_length
+  - cyclomatic_complexity
+  - large_tuple
+  - nesting
+  - function_parameter_count
+  - identifier_name
+  - type_name
+  - multiple_closures_with_trailing_closure
+  - todo
+  - opening_brace
+  - trailing_comma
+  - sorted_imports
+  - for_where
+  - unused_optional_binding
+  - orphaned_doc_comment
+  - closure_parameter_position
+  - unneeded_override
+  - static_over_final_class
+  - implicit_return
+
+opt_in_rules:
+  - explicit_init
+  - implicit_return
+  - overridden_super_call
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - sorted_first_last
+  - toggle_bool
+  - unavailable_function
+  - unneeded_parentheses_in_closure_argument
+  - untyped_error_in_catch
+  - prefer_self_type_over_type_of_self
+
+analyzer_rules:
+  - explicit_self
+  - unused_import
+  - unused_declaration
+
+reporter: xcode
