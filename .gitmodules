@@ -1,0 +1,18 @@
+[submodule "CodingReviewer"]
+	path = CodingReviewer
+	url = https://github.com/dboone323/coding-reviewer.git
+[submodule "PlannerApp"]
+	path = PlannerApp
+	url = https://github.com/dboone323/planner-app.git
+[submodule "HabitQuest"]
+	path = HabitQuest
+	url = https://github.com/dboone323/habitquest.git
+[submodule "MomentumFinance"]
+	path = MomentumFinance
+	url = https://github.com/dboone323/momentum-finance.git
+[submodule "AvoidObstaclesGame"]
+	path = AvoidObstaclesGame
+	url = https://github.com/dboone323/avoid-obstacles-game.git
+[submodule "shared-kit"]
+	path = shared-kit
+	url = https://github.com/dboone323/shared-kit.git
