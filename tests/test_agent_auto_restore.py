@@ -15,7 +15,9 @@ AGENT_PY = os.path.join(os.path.dirname(__file__), "..", "agents", "run_agent.py
 def start_mcp(port=5005):
     env = os.environ.copy()
     env["PYTHONUNBUFFERED"] = "1"
-    p = subprocess.Popen([sys.executable, MCP_PY, "127.0.0.1", str(port)], env=env)
+    env["MCP_HOST"] = "127.0.0.1"
+    env["MCP_PORT"] = str(port)
+    p = subprocess.Popen([sys.executable, MCP_PY], env=env)
     for _ in range(20):
         try:
             r = requests.get(f"http://127.0.0.1:{port}/status", timeout=1)

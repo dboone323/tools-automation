@@ -1,0 +1,10 @@
+{
+  "id": "task_9",
+  "agent": "subproc-agent",
+  "command": "write-artifact",
+  "project": null,
+  "status": "success",
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

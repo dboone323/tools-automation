@@ -4,20 +4,16 @@ import sys
 
 import pytest
 
-# make top-level 'Tools' package importable during tests
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-)
 # Skip tests if Flask is not available in the environment
 pytest.importorskip("flask")
-from Tools.Automation import mcp_dashboard_flask as dashboard
+from mcp_dashboard_flask import app, session
 
 
 # Use Flask test client
 @pytest.fixture
 def client():
-    dashboard.app.config["TESTING"] = True
-    with dashboard.app.test_client() as c:
+    app.config["TESTING"] = True
+    with app.test_client() as c:
         yield c
 
 
@@ -42,7 +38,7 @@ def test_api_status_happypath(monkeypatch, client):
             return DummyResponse(200, text='{"controllers": []}')
         raise RuntimeError("unexpected")
 
-    monkeypatch.setattr(dashboard.session, "get", fake_get, raising=False)
+    monkeypatch.setattr(session, "get", fake_get, raising=False)
     rv = client.get("/api/status")
     assert rv.status_code == 200
     data = rv.get_json()
@@ -54,7 +50,7 @@ def test_health_unavailable(monkeypatch, client):
     def fake_get(url, timeout=0):
         raise Exception("conn refused")
 
-    monkeypatch.setattr(dashboard.session, "get", fake_get, raising=False)
+    monkeypatch.setattr(session, "get", fake_get, raising=False)
     rv = client.get("/health")
     assert rv.status_code == 503
     data = rv.get_json()

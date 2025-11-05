@@ -2,7 +2,7 @@ import hashlib
 import hmac
 import json
 
-from Automation import mcp_server
+from mcp_server import verify_github_signature
 
 
 def make_sig(secret: str, payload: bytes, algo: str = "sha256") -> str:
@@ -20,18 +20,18 @@ def test_verify_sha256_valid():
     secret = "secret123"
     payload = json.dumps({"hello": "world"}).encode("utf-8")
     sig = make_sig(secret, payload, "sha256")
-    assert mcp_server.verify_github_signature(secret, payload, sig)
+    assert verify_github_signature(secret, payload, sig)
 
 
 def test_verify_sha1_valid():
     secret = "secret123"
     payload = json.dumps({"a": 1}).encode("utf-8")
     sig = make_sig(secret, payload, "sha1")
-    assert mcp_server.verify_github_signature(secret, payload, sig)
+    assert verify_github_signature(secret, payload, sig)
 
 
 def test_verify_invalid_signature():
     secret = "secret123"
     payload = b"{}"
     bad_sig = "sha256=deadbeef"
-    assert not mcp_server.verify_github_signature(secret, payload, bad_sig)
+    assert not verify_github_signature(secret, payload, bad_sig)

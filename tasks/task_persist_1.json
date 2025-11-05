@@ -1,0 +1,10 @@
+{
+  "id": "task_persist_1",
+  "agent": "t",
+  "command": "echo",
+  "project": null,
+  "status": "success",
+  "returncode": 0,
+  "stdout": "hello\n",
+  "stderr": ""
+}

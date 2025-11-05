@@ -23,9 +23,34 @@ import gc
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 
+
+def verify_github_signature(secret, payload, sig):
+    """Verify GitHub webhook signature"""
+    if not secret:
+        return False
+    if not sig:
+        return False
+    try:
+        if sig.startswith("sha256="):
+            expected = sig.split("=", 1)[1]
+            mac = hmac.new(
+                secret.encode("utf-8"), msg=payload, digestmod=hashlib.sha256
+            )
+            digest = mac.hexdigest()
+            return hmac.compare_digest(digest, expected)
+        elif sig.startswith("sha1="):
+            expected = sig.split("=", 1)[1]
+            mac = hmac.new(secret.encode("utf-8"), msg=payload, digestmod=hashlib.sha1)
+            digest = mac.hexdigest()
+            return hmac.compare_digest(digest, expected)
+    except Exception:
+        return False
+    return False
+
+
 CODE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-HOST = "127.0.0.1"
-PORT = 5005
+HOST = os.environ.get("MCP_HOST", "127.0.0.1")
+PORT = int(os.environ.get("MCP_PORT", "5005"))
 TASK_TTL_DAYS = int(os.environ.get("TASK_TTL_DAYS", "7"))
 CLEANUP_INTERVAL_MIN = int(os.environ.get("CLEANUP_INTERVAL_MIN", "60"))
 RATE_LIMIT_WINDOW_SEC = int(os.environ.get("RATE_LIMIT_WINDOW_SEC", "60"))
@@ -96,6 +121,8 @@ ALLOWED_COMMANDS = {
         "./Tools/Automation/agents/agent_control.sh",
         "dimensional",
     ],
+    # Test command for failure simulation
+    "modify-fail": ["sh", "-c", "echo 'modify-fail executed'; exit 1"],
 }
 
 

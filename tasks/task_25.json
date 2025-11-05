@@ -1,0 +1,10 @@
+{
+  "id": "task_25",
+  "agent": "pytest-auto",
+  "command": "modify-fail",
+  "project": "",
+  "status": "failed",
+  "returncode": 1,
+  "stdout": "modify-fail executed\n",
+  "stderr": ""
+}
