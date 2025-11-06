@@ -62,15 +62,13 @@ log() {
     echo "[$(date)] ${AGENT_NAME}: $*" >>"${LOG_FILE}"
 }
 
-# Ollama Integration Functions
+# Ollama Integration Functions (policy-aware)
 ollama_query() {
     local prompt="$1"
-    local model="${2:-codellama}"
-
-    curl -s -X POST "${OLLAMA_ENDPOINT}/api/generate" \
-        -H "Content-Type: application/json" \
-        -d "{\"model\": \"${model}\", \"prompt\": \"${prompt}\", \"stream\": false}" |
-        jq -r '.response // empty'
+    # Route via policy-aware client using testGen task
+    local input_json
+    input_json=$(jq -n --arg task "testGen" --arg prompt "$prompt" '{task:$task, prompt:$prompt}')
+    echo "$input_json" | "$SCRIPT_DIR/../ollama_client.sh" | jq -r '.text // empty'
 }
 
 generate_test_with_ollama() {
