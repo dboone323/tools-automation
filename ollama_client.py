@@ -15,6 +15,171 @@ from pathlib import Path
 
 MODEL_REGISTRY = os.getenv("MODEL_REGISTRY", "model_registry.json")
 RESOURCE_PROFILE = os.getenv("RESOURCE_PROFILE", "resource_profile.json")
+CLOUD_FALLBACK_CONFIG = os.getenv(
+    "CLOUD_FALLBACK_CONFIG", "config/cloud_fallback_config.json"
+)
+QUOTA_TRACKER = os.getenv("QUOTA_TRACKER", "metrics/quota_tracker.json")
+ESCALATION_LOG = os.getenv("ESCALATION_LOG", "logs/cloud_escalation_log.jsonl")
+
+
+class CloudFallbackPolicy:
+    """Manages cloud fallback policy with circuit breaker and quotas"""
+
+    def __init__(self):
+        self.enabled = False
+        self.config: Dict[str, Any] = {}
+        self.quota_data: Dict[str, Any] = {}
+
+        if os.path.exists(CLOUD_FALLBACK_CONFIG):
+            self.enabled = True
+            self.config = load_json(CLOUD_FALLBACK_CONFIG)
+            if os.path.exists(QUOTA_TRACKER):
+                self.quota_data = load_json(QUOTA_TRACKER)
+
+    def check_quota(self, priority: str) -> bool:
+        """Check if quota available for given priority"""
+        if not self.enabled:
+            return True
+
+        allowed = self.config.get("allowed_priority_levels", [])
+        if priority not in allowed:
+            return False
+
+        quotas = self.quota_data.get("quotas", {}).get(priority, {})
+        daily_used = quotas.get("daily_used", 0)
+        hourly_used = quotas.get("hourly_used", 0)
+        daily_limit = quotas.get("daily_limit", 999999)
+        hourly_limit = quotas.get("hourly_limit", 999999)
+
+        return daily_used < daily_limit and hourly_used < hourly_limit
+
+    def check_circuit_breaker(self, priority: str) -> bool:
+        """Check if circuit breaker allows requests"""
+        if not self.enabled:
+            return True
+
+        cb = self.quota_data.get("circuit_breaker", {}).get(priority, {})
+        state = cb.get("state", "closed")
+
+        if state == "open":
+            # Check if reset time has passed
+            opened_at = cb.get("opened_at")
+            if opened_at:
+                from datetime import datetime, timedelta
+
+                opened_time = datetime.fromisoformat(opened_at.replace("Z", "+00:00"))
+                reset_minutes = self.config.get("circuit_breaker", {}).get(
+                    "reset_after_minutes", 30
+                )
+                if datetime.utcnow() - opened_time >= timedelta(minutes=reset_minutes):
+                    # Reset circuit breaker
+                    self.quota_data["circuit_breaker"][priority]["state"] = "closed"
+                    self.quota_data["circuit_breaker"][priority]["failure_count"] = 0
+                    self.quota_data["circuit_breaker"][priority]["opened_at"] = None
+                    save_json(QUOTA_TRACKER, self.quota_data)
+                    return True
+            return False
+
+        return True
+
+    def record_failure(self, priority: str) -> None:
+        """Record a failure and potentially trip circuit breaker"""
+        if not self.enabled:
+            return
+
+        from datetime import datetime
+
+        now = datetime.utcnow().isoformat() + "Z"
+
+        if "circuit_breaker" not in self.quota_data:
+            self.quota_data["circuit_breaker"] = {}
+        if priority not in self.quota_data["circuit_breaker"]:
+            self.quota_data["circuit_breaker"][priority] = {
+                "state": "closed",
+                "failure_count": 0,
+                "last_failure": None,
+                "opened_at": None,
+            }
+
+        cb = self.quota_data["circuit_breaker"][priority]
+        cb["failure_count"] = cb.get("failure_count", 0) + 1
+        cb["last_failure"] = now
+
+        # Trip circuit breaker if threshold exceeded
+        threshold = self.config.get("circuit_breaker", {}).get("failure_threshold", 3)
+        if cb["failure_count"] >= threshold:
+            cb["state"] = "open"
+            cb["opened_at"] = now
+            print(f"Circuit breaker tripped for priority: {priority}", file=sys.stderr)
+
+        save_json(QUOTA_TRACKER, self.quota_data)
+
+    def increment_quota(self, priority: str) -> None:
+        """Increment quota usage for given priority"""
+        if not self.enabled:
+            return
+
+        if "quotas" not in self.quota_data:
+            self.quota_data["quotas"] = {}
+        if priority not in self.quota_data["quotas"]:
+            self.quota_data["quotas"][priority] = {"daily_used": 0, "hourly_used": 0}
+
+        self.quota_data["quotas"][priority]["daily_used"] += 1
+        self.quota_data["quotas"][priority]["hourly_used"] += 1
+        save_json(QUOTA_TRACKER, self.quota_data)
+
+    def log_escalation(
+        self,
+        task: str,
+        priority: str,
+        reason: str,
+        model_attempted: str,
+        cloud_provider: str,
+    ) -> None:
+        """Log cloud escalation event"""
+        if not self.enabled:
+            return
+
+        from datetime import datetime
+
+        timestamp = datetime.utcnow().isoformat() + "Z"
+
+        quotas = self.quota_data.get("quotas", {}).get(priority, {})
+        daily_limit = quotas.get("daily_limit", 0)
+        daily_used = quotas.get("daily_used", 0)
+        quota_remaining = daily_limit - daily_used
+
+        event = {
+            "timestamp": timestamp,
+            "task": task,
+            "priority": priority,
+            "reason": reason,
+            "model_attempted": model_attempted,
+            "cloud_provider": cloud_provider,
+            "quota_remaining": quota_remaining,
+        }
+
+        # Append to escalation log
+        with open(ESCALATION_LOG, "a") as f:
+            f.write(json.dumps(event) + "\n")
+
+        # Update dashboard metrics
+        dashboard_file = os.getenv("DASHBOARD_DATA", "dashboard_data.json")
+        if os.path.exists(dashboard_file):
+            try:
+                data = load_json(dashboard_file)
+                if "ai_metrics" not in data:
+                    data["ai_metrics"] = {}
+                data["ai_metrics"]["escalation_count"] = (
+                    data["ai_metrics"].get("escalation_count", 0) + 1
+                )
+                total_calls = data.get("ollama_metrics", {}).get("total_calls", 1)
+                data["ai_metrics"]["fallback_rate"] = data["ai_metrics"][
+                    "escalation_count"
+                ] / max(total_calls, 1)
+                save_json(dashboard_file, data)
+            except Exception as e:
+                print(f"Warning: Failed to update dashboard: {e}", file=sys.stderr)
 
 
 def load_json(file_path: str) -> Dict[str, Any]:
@@ -162,6 +327,8 @@ def main():
     # Parse command line arguments
     dry_run = "--dry-run" in sys.argv
     rollback = "--rollback" in sys.argv
+    # Initialize policy
+    policy = CloudFallbackPolicy()
 
     if rollback:
         result = rollback_changes()
@@ -187,6 +354,7 @@ def main():
 
     task_config = registry[task]
     primary_model = task_config["primaryModel"]
+    priority = task_config.get("priority", "medium")
     fallbacks = task_config.get("fallbacks", [])
     preset = task_config.get("preset", {})
     preprocess = task_config.get("preprocess", {})
@@ -217,6 +385,7 @@ def main():
 
     # Try models
     models = [primary_model] + fallbacks
+    local_failed = False
     for i, model in enumerate(models):
         if dry_run:
             # Dry run mode: just return routing info without inference
@@ -254,8 +423,57 @@ def main():
             print(json.dumps(result))
             sys.exit(0)
         else:
-            # Log failed attempt
+            # Record failure for policy tracking and log failed attempt
+            policy.record_failure(priority)
             log_usage_metrics(task, model, 0, 0, "failed")
+            local_failed = True
+
+    # All local models failed - check if cloud escalation is allowed
+    if local_failed and policy.enabled:
+        if not policy.check_quota(priority):
+            print(
+                json.dumps(
+                    {
+                        "error": "All local models failed and cloud quota exhausted",
+                        "fallback_used": False,
+                        "reason": "quota_exhausted",
+                    }
+                ),
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+        if not policy.check_circuit_breaker(priority):
+            print(
+                json.dumps(
+                    {
+                        "error": "All local models failed and circuit breaker open",
+                        "fallback_used": False,
+                        "reason": "circuit_breaker_open",
+                    }
+                ),
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+        # Log cloud escalation (would attempt cloud here if enabled)
+        policy.log_escalation(
+            task, priority, "local_failure", primary_model, "ollama_cloud"
+        )
+        policy.increment_quota(priority)
+
+        # For now, cloud is disabled, so this is just logging
+        print(
+            json.dumps(
+                {
+                    "error": "All local models failed, cloud escalation logged but not enabled",
+                    "fallback_used": False,
+                    "reason": "cloud_disabled",
+                }
+            ),
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     # All failed
     print(
