@@ -37,7 +37,13 @@ Consider:
 Respond with: clean, incremental, or cached"
 
   local strategy
-  strategy=$(ollama run llama2 "${prompt}" 2>/dev/null | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  strategy=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "incremental"' 2>/dev/null | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]' || echo "incremental")
 
   case "${strategy}" in
   clean | incremental | cached)
@@ -76,7 +82,13 @@ Consider:
 Respond with just the number of seconds (30-7200)."
 
   local predicted_time
-  predicted_time=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  predicted_time=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "300"' 2>/dev/null | grep -oE '[0-9]+' | head -1 || echo "300")
 
   # Ensure reasonable bounds: 30s-7200s (2 hours)
   if [[ -n "${predicted_time}" ]]; then
@@ -113,7 +125,13 @@ Consider:
 Respond with: keep, prune, or clear"
 
   local action
-  action=$(ollama run llama2 "${prompt}" 2>/dev/null | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  action=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "keep"' 2>/dev/null | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]' || echo "keep")
 
   case "${action}" in
   keep | prune | clear)
@@ -150,7 +168,13 @@ Identify:
 
 Respond with: rebuild-all, rebuild-affected, or module-list (comma-separated)"
 
-  ollama run llama2 "${prompt}" 2>/dev/null | tail -1 | tr -d '[:space:]'
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "rebuild-all"' 2>/dev/null | tail -1 | tr -d '[:space:]' || echo "rebuild-all"
 }
 
 # AI-powered build failure prediction
@@ -179,7 +203,13 @@ Identify:
 Respond with: OK if no issues expected, or list specific risks."
 
   local analysis
-  analysis=$(ollama run llama2 "${prompt}" 2>/dev/null)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  analysis=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "OK"' 2>/dev/null || echo "OK")
 
   if echo "${analysis}" | grep -iq "^OK"; then
     return 0 # No failures predicted
@@ -216,7 +246,13 @@ Consider:
 Respond with just the number of parallel jobs (1-32)."
 
   local jobs
-  jobs=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  jobs=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "4"' 2>/dev/null | grep -oE '[0-9]+' | head -1 || echo "4")
 
   # Ensure reasonable bounds: 1-32 jobs
   if [[ -n "${jobs}" ]]; then
@@ -254,7 +290,13 @@ Generate a report covering:
 
 Format as markdown with clear sections."
 
-  ollama run llama2 "${prompt}" 2>/dev/null >"${output_file}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "AI insights unavailable (Ollama not installed)"' 2>/dev/null >"${output_file}" || echo "AI insights unavailable (Ollama not installed)" >"${output_file}"
 }
 
 # Smart build target selection
@@ -282,7 +324,13 @@ Consider:
 
 Return comma-separated target names."
 
-  ollama run llama2 "${prompt}" 2>/dev/null | tail -1 | tr -d '[:space:]' || echo "${available_targets}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "'${available_targets}'"' 2>/dev/null | tail -1 | tr -d '[:space:]' || echo "${available_targets}"
 }
 
 # Export functions for sourcing

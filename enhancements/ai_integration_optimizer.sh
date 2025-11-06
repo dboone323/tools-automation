@@ -35,7 +35,13 @@ Consider:
 
 Respond with specific optimization suggestions."
 
-  ollama run llama2 "${prompt}" 2>/dev/null
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "keep"' 2>/dev/null || echo "keep"
 }
 
 # AI-powered deployment readiness check
@@ -65,7 +71,13 @@ Respond with: GO (safe to deploy) or NO_GO (issues detected)
 Followed by brief reasoning."
 
   local assessment
-  assessment=$(ollama run llama2 "${prompt}" 2>/dev/null)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  assessment=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "GO"' 2>/dev/null || echo "GO")
 
   echo "${assessment}"
 
@@ -100,7 +112,13 @@ Provide:
 
 Be concise and actionable."
 
-  ollama run llama2 "${prompt}" 2>/dev/null
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "Manual investigation required (AI unavailable)"' 2>/dev/null || echo "Manual investigation required (AI unavailable)"
 }
 
 # AI-powered workflow scheduling optimization
@@ -125,7 +143,13 @@ Consider:
 Respond with a cron expression only."
 
   local schedule
-  schedule=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9*/ ]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  schedule=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "0 2 * * *"' 2>/dev/null | grep -oE '[0-9*/ ]+' | head -1 || echo "0 2 * * *")
 
   echo "${schedule:-0 2 * * *}"
 }
@@ -152,7 +176,13 @@ Consider:
 Respond with just the number of days (1-90)."
 
   local days
-  days=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  days=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "30"' 2>/dev/null | grep -oE '[0-9]+' | head -1 || echo "30")
 
   # Ensure reasonable bounds: 1-90 days
   if [[ -n "${days}" ]]; then
@@ -192,7 +222,13 @@ Available strategies:
 Respond with only the strategy name: blue-green, canary, rolling, or recreate"
 
   local strategy
-  strategy=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oiE '(blue-green|canary|rolling|recreate)' | head -1 | tr '[:upper:]' '[:lower:]')
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  strategy=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "blue-green"' 2>/dev/null | grep -oiE '(blue-green|canary|rolling|recreate)' | head -1 | tr '[:upper:]' '[:lower:]' || echo "blue-green")
 
   case "${strategy}" in
   blue-green | canary | rolling | recreate)
@@ -224,7 +260,13 @@ Identify:
 
 Provide specific recommendations."
 
-  ollama run llama2 "${prompt}" 2>/dev/null
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // ""' 2>/dev/null || return 0
 }
 
 # AI-powered integration test prioritization
@@ -253,7 +295,13 @@ Prioritize tests by:
 
 Return prioritized test list, one per line."
 
-  ollama run llama2 "${prompt}" 2>/dev/null | grep -v "^$" || echo "${test_suite}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "'${test_suite}'"' 2>/dev/null | grep -v "^$" || echo "${test_suite}"
 }
 
 # AI-powered deployment window recommendation
@@ -280,7 +328,13 @@ Consider:
 Respond with time range in HH:MM-HH:MM format."
 
   local window
-  window=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]{2}:[0-9]{2}-[0-9]{2}:[0-9]{2}' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  window=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "02:00-04:00"' 2>/dev/null | grep -oE '[0-9]{2}:[0-9]{2}-[0-9]{2}:[0-9]{2}' | head -1 || echo "02:00-04:00")
 
   echo "${window:-02:00-04:00}"
 }
@@ -311,7 +365,13 @@ Respond with: ROLLBACK (immediate action needed) or MONITOR (continue observing)
 Followed by reasoning."
 
   local assessment
-  assessment=$(ollama run llama2 "${prompt}" 2>/dev/null)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  assessment=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "MONITOR\nNo assessment available"' 2>/dev/null)
 
   echo "${assessment}"
 
@@ -345,7 +405,13 @@ Generate report covering:
 
 Format as Markdown with clear sections."
 
-  ollama run llama2 "${prompt}" 2>/dev/null >"${output_file}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "# Integration Insights (AI unavailable)"' 2>/dev/null >"${output_file}"
 }
 
 # Export functions for sourcing

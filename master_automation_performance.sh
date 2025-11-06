@@ -154,7 +154,13 @@ run_project_automation_with_ai_optimized() {
         local quick_prompt="Analyze Swift project '${project_name}' (${swift_files} files) in one sentence: key architecture, potential issues, and improvement priority."
 
         local ai_analysis
-        ai_analysis=$(echo "${quick_prompt}" | timeout "${AI_TIMEOUT_QUICK}"s ollama run llama3.2:3b 2>/dev/null || echo "AI analysis completed for ${project_name}")
+        # Use Ollama adapter instead of direct calls
+        local adapter_input
+        adapter_input=$(jq -n \
+            --arg task "dashboardSummary" \
+            --arg prompt "$quick_prompt" \
+            '{task: $task, prompt: $prompt}')
+        ai_analysis=$(echo "$adapter_input" | ./ollama_client.sh 2>/dev/null | jq -r '.text // "AI analysis completed for '${project_name}'"' 2>/dev/null || echo "AI analysis completed for ${project_name}")
 
         # Save analysis
         local analysis_file
@@ -230,7 +236,13 @@ generate_ai_automation_summary_optimized() {
 Format: Key achievements | Next actions | Priority items"
 
         local ai_summary
-        ai_summary=$(echo "${summary_prompt}" | timeout "${AI_TIMEOUT_SUMMARY}"s ollama run llama3.2:3b 2>/dev/null || echo "Automation completed successfully for ${project_name}")
+        # Use Ollama adapter instead of direct calls
+        local adapter_input
+        adapter_input=$(jq -n \
+            --arg task "dashboardSummary" \
+            --arg prompt "$summary_prompt" \
+            '{task: $task, prompt: $prompt}')
+        ai_summary=$(echo "$adapter_input" | ./ollama_client.sh 2>/dev/null | jq -r '.text // "Automation completed successfully for '${project_name}'"' 2>/dev/null || echo "Automation completed successfully for ${project_name}")
 
         # Save summary
         local summary_file
@@ -351,7 +363,13 @@ Projects: CodingReviewer, PlannerApp, AvoidObstaclesGame, MomentumFinance, Habit
 Format: Health assessment | Integration opportunities | Development priorities"
 
         local workspace_insights
-        workspace_insights=$(echo "${insights_prompt}" | timeout "${AI_TIMEOUT_INSIGHTS}"s ollama run llama3.2:3b 2>/dev/null || echo "Workspace analysis completed - ${successful}/${processed} projects enhanced")
+        # Use Ollama adapter instead of direct calls
+        local adapter_input
+        adapter_input=$(jq -n \
+            --arg task "dashboardSummary" \
+            --arg prompt "$insights_prompt" \
+            '{task: $task, prompt: $prompt}')
+        workspace_insights=$(echo "$adapter_input" | ./ollama_client.sh 2>/dev/null | jq -r '.text // "Workspace analysis completed - '${successful}'/'${processed}' projects enhanced"' 2>/dev/null || echo "Workspace analysis completed - ${successful}/${processed} projects enhanced")
 
         # Save workspace insights
         local insights_file
@@ -518,7 +536,13 @@ list_projects_with_ai_insights_performance() {
                 if command -v ollama &>/dev/null && ollama list &>/dev/null && [[ ! -f "${project}/AI_ANALYSIS_$(date +%Y%m%d).md" ]]; then
                     local quick_prompt="One-sentence insight for ${project_name} (${swift_files} files):"
                     local insight
-                    insight=$(echo "${quick_prompt}" | timeout 3s ollama run llama3.2:3b 2>/dev/null || echo "")
+                    # Use Ollama adapter instead of direct calls
+                    local adapter_input
+                    adapter_input=$(jq -n \
+                        --arg task "dashboardSummary" \
+                        --arg prompt "$quick_prompt" \
+                        '{task: $task, prompt: $prompt}')
+                    insight=$(echo "$adapter_input" | ./ollama_client.sh 2>/dev/null | jq -r '.text // ""' 2>/dev/null || echo "")
                     if [[ -n ${insight} ]]; then
                         echo "     💡 ${insight}"
                     fi

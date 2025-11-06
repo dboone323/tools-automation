@@ -110,7 +110,13 @@ Provide:
 
   # Get AI analysis
   local ai_analysis
-  ai_analysis=$(echo "${analysis_prompt}" | ollama run codellama:7b 2>/dev/null || echo "${analysis_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${analysis_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 200}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "AI analysis temporarily unavailable")
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$analysis_prompt" \
+    '{task: $task, prompt: $prompt}')
+  ai_analysis=$(echo "$adapter_input" | ../ollama_client.sh 2>/dev/null | jq -r '.text // "AI analysis temporarily unavailable"' 2>/dev/null || echo "AI analysis temporarily unavailable")
 
   # Save analysis
   {
@@ -216,7 +222,13 @@ Recommendations should include:
 Focus on the most impactful TODOs first."
 
   local ai_recommendations
-  ai_recommendations=$(echo "${rec_prompt}" | ollama run codellama:7b 2>/dev/null || echo "${rec_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${rec_prompt}" | head -c 400)\", \"parameters\": {\"max_length\": 200}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Recommendations generation temporarily unavailable")
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$rec_prompt" \
+    '{task: $task, prompt: $prompt}')
+  ai_recommendations=$(echo "$adapter_input" | ../ollama_client.sh 2>/dev/null | jq -r '.text // "Recommendations generation temporarily unavailable"' 2>/dev/null || echo "Recommendations generation temporarily unavailable")
 
   # Add to analysis file
   {

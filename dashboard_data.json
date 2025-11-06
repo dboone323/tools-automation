@@ -9,76 +9,76 @@
   },
   "key_metrics": {
     "system_health": {
-  "timestamp": 1761681231,
-  "cpu_usage": 14.28,
-  "memory_usage": 31,
-  "disk_usage": 14,
-  "network_activity": 44,
-  "process_count": 670,
-  "agent_status": "monitoring_active"
-},
+      "timestamp": 1761681231,
+      "cpu_usage": 14.28,
+      "memory_usage": 31,
+      "disk_usage": 14,
+      "network_activity": 44,
+      "process_count": 670,
+      "agent_status": "monitoring_active"
+    },
     "performance_trends": {
-  "analysis_date": "Tue Oct 28 14:53:51 CDT 2025",
-  "analysis_period": "recent_data",
-  "metrics_count": 15,
-  "averages": {
-    "cpu_usage_percent": 155.698,
-    "memory_usage_percent": 62.546666666666674
-  },
-  "trends": {
-    "cpu_trend_slope": 362.82000000000005,
-    "memory_trend_slope": 42.099999999999994,
-    "cpu_direction": "increasing",
-    "memory_direction": "increasing"
-  },
-  "recommendations": []
-},
+      "analysis_date": "Tue Oct 28 14:53:51 CDT 2025",
+      "analysis_period": "recent_data",
+      "metrics_count": 15,
+      "averages": {
+        "cpu_usage_percent": 155.698,
+        "memory_usage_percent": 62.546666666666674
+      },
+      "trends": {
+        "cpu_trend_slope": 362.82000000000005,
+        "memory_trend_slope": 42.099999999999994,
+        "cpu_direction": "increasing",
+        "memory_direction": "increasing"
+      },
+      "recommendations": []
+    },
     "predictive_insights": {
-  "prediction_date": "Tue Oct 28 14:53:51 CDT 2025",
-  "prediction_horizon": "30_days",
-  "confidence_level": "high",
-  "current_state": {
-  "timestamp": 1761681231,
-  "cpu_usage": 14.28,
-  "memory_usage": 31,
-  "disk_usage": 14,
-  "network_activity": 44,
-  "process_count": 670,
-  "agent_status": "monitoring_active"
-},
-  "predictions": {
-    "resource_utilization": {
-      "cpu_forecast": "stable_to_moderate_increase",
-      "memory_forecast": "moderate_increase",
-      "disk_forecast": "stable",
-      "network_forecast": "moderate_increase"
-    },
-    "development_velocity": {
-      "trend": "increasing",
-      "estimated_completion_rate": "85%",
-      "confidence": "high"
-    },
-    "risk_assessment": {
-      "high_risk_items": [
-        "Complex AI agent interactions",
-        "Cross-platform compatibility",
-        "Performance scaling with project growth"
+      "prediction_date": "Tue Oct 28 14:53:51 CDT 2025",
+      "prediction_horizon": "30_days",
+      "confidence_level": "high",
+      "current_state": {
+        "timestamp": 1761681231,
+        "cpu_usage": 14.28,
+        "memory_usage": 31,
+        "disk_usage": 14,
+        "network_activity": 44,
+        "process_count": 670,
+        "agent_status": "monitoring_active"
+      },
+      "predictions": {
+        "resource_utilization": {
+          "cpu_forecast": "stable_to_moderate_increase",
+          "memory_forecast": "moderate_increase",
+          "disk_forecast": "stable",
+          "network_forecast": "moderate_increase"
+        },
+        "development_velocity": {
+          "trend": "increasing",
+          "estimated_completion_rate": "85%",
+          "confidence": "high"
+        },
+        "risk_assessment": {
+          "high_risk_items": [
+            "Complex AI agent interactions",
+            "Cross-platform compatibility",
+            "Performance scaling with project growth"
+          ],
+          "mitigation_strategies": [
+            "Implement comprehensive testing",
+            "Regular performance monitoring",
+            "Modular architecture maintenance"
+          ]
+        }
+      },
+      "recommendations": [
+        "Continue AI agent ecosystem development",
+        "Implement advanced monitoring dashboards",
+        "Focus on cross-platform testing",
+        "Prepare for multi-project scaling"
       ],
-      "mitigation_strategies": [
-        "Implement comprehensive testing",
-        "Regular performance monitoring",
-        "Modular architecture maintenance"
-      ]
+      "ai_analysis": "AI analysis not available"
     }
-  },
-  "recommendations": [
-    "Continue AI agent ecosystem development",
-    "Implement advanced monitoring dashboards",
-    "Focus on cross-platform testing",
-    "Prepare for multi-project scaling"
-  ],
-  "ai_analysis": "AI analysis not available"
-}
   },
   "alerts": [],
   "recommendations": [
@@ -86,5 +86,103 @@
     "Review performance trends weekly",
     "Implement predictive maintenance",
     "Scale automation infrastructure as needed"
-  ]
+  ],
+  "ollama_metrics": {
+    "last_updated": 1762388692,
+    "total_calls": 18,
+    "successful_calls": 18,
+    "failed_calls": 0,
+    "total_latency_ms": 53000,
+    "total_tokens": 3267,
+    "task_usage": {
+      "dashboardSummary": 16,
+      "codeGen": 2
+    },
+    "model_usage": {
+      "llama3.2:3b": 16,
+      "codellama:7b": 2
+    },
+    "recent_calls": [
+      {
+        "timestamp": 1762388358,
+        "task": "dashboardSummary",
+        "model": "llama3.2:3b",
+        "latency_ms": 2000,
+        "tokens_est": 113,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762388359,
+        "task": "dashboardSummary",
+        "model": "llama3.2:3b",
+        "latency_ms": 1000,
+        "tokens_est": 66,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762388360,
+        "task": "dashboardSummary",
+        "model": "llama3.2:3b",
+        "latency_ms": 1000,
+        "tokens_est": 68,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762388362,
+        "task": "dashboardSummary",
+        "model": "llama3.2:3b",
+        "latency_ms": 1000,
+        "tokens_est": 128,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762388363,
+        "task": "dashboardSummary",
+        "model": "llama3.2:3b",
+        "latency_ms": 1000,
+        "tokens_est": 96,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762388375,
+        "task": "dashboardSummary",
+        "model": "llama3.2:3b",
+        "latency_ms": 0,
+        "tokens_est": 7,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762388556,
+        "task": "dashboardSummary",
+        "model": "llama3.2:3b",
+        "latency_ms": 11000,
+        "tokens_est": 623,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762388568,
+        "task": "dashboardSummary",
+        "model": "llama3.2:3b",
+        "latency_ms": 11000,
+        "tokens_est": 581,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762388689,
+        "task": "codeGen",
+        "model": "codellama:7b",
+        "latency_ms": 4000,
+        "tokens_est": 42,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762388692,
+        "task": "codeGen",
+        "model": "codellama:7b",
+        "latency_ms": 1000,
+        "tokens_est": 47,
+        "status": "success"
+      }
+    ]
+  }
 }

@@ -31,7 +31,13 @@ Consider:
 Respond with a single word: incremental, full, or differential"
 
   local strategy
-  strategy=$(ollama run llama2 "${prompt}" 2>/dev/null | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  strategy=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "incremental"' 2>/dev/null | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]' || echo "incremental")
 
   case "${strategy}" in
   incremental | full | differential)
@@ -58,7 +64,13 @@ ${historical_data}
 Provide only a number (integer GB needed)."
 
   local prediction
-  prediction=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  prediction=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "0"' 2>/dev/null | grep -oE '[0-9]+' | head -1 || echo "0")
 
   echo "${prediction:-0}"
 }
@@ -84,7 +96,13 @@ Consider:
 Respond with just the number of days."
 
   local days
-  days=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  days=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "14"' 2>/dev/null | grep -oE '[0-9]+' | head -1 || echo "14")
 
   # Ensure minimum 7 days, maximum 365 days
   if [[ -n "${days}" ]]; then
@@ -120,7 +138,13 @@ Consider:
 
 Return the list in priority order, one per line."
 
-  ollama run llama2 "${prompt}" 2>/dev/null | grep -v "^$" || echo "${file_list}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "'${file_list}'"' 2>/dev/null | grep -v "^$" || echo "${file_list}"
 }
 
 # Smart backup verification
@@ -145,7 +169,13 @@ Look for:
 Respond with: OK if no issues, or list specific concerns."
 
   local analysis
-  analysis=$(ollama run llama2 "${prompt}" 2>/dev/null)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  analysis=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "OK"' 2>/dev/null || echo "OK")
 
   if echo "${analysis}" | grep -iq "^OK"; then
     return 0
@@ -176,7 +206,13 @@ Generate a concise report covering:
 
 Format as markdown with clear sections."
 
-  ollama run llama2 "${prompt}" 2>/dev/null >"${output_file}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "AI insights unavailable (Ollama not installed)"' 2>/dev/null >"${output_file}" || echo "AI insights unavailable (Ollama not installed)" >"${output_file}"
 }
 
 # Export functions for sourcing

@@ -36,7 +36,13 @@ Consider:
 
 Return a prioritized list of test names, one per line."
 
-  ollama run llama2 "${prompt}" 2>/dev/null | grep -v "^$" || echo "all"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "all"' 2>/dev/null | grep -v "^$" || echo "all"
 }
 
 # Predictive test failure detection
@@ -64,7 +70,13 @@ Identify tests that:
 Return test names likely to fail, one per line, or 'NONE' if all should pass."
 
   local predictions
-  predictions=$(ollama run llama2 "${prompt}" 2>/dev/null)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  predictions=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "NONE"' 2>/dev/null)
 
   if echo "${predictions}" | grep -iq "^NONE"; then
     return 0 # No failures predicted
@@ -100,7 +112,13 @@ Optimize for:
 
 Return prioritized test list, one per line."
 
-  ollama run llama2 "${prompt}" 2>/dev/null | grep -v "^$" || echo "${test_suite}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "'${test_suite}'"' 2>/dev/null | grep -v "^$" || echo "${test_suite}"
 }
 
 # AI-powered test gap analysis
@@ -128,7 +146,13 @@ Identify:
 
 Provide specific recommendations, one per line."
 
-  ollama run llama2 "${prompt}" 2>/dev/null | grep -v "^$"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // ""' 2>/dev/null | grep -v "^$"
 }
 
 # Intelligent test timeout recommendations
@@ -152,7 +176,13 @@ Consider:
 Respond with just the number of seconds (30-3600)."
 
   local timeout
-  timeout=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  timeout=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "300"' 2>/dev/null | grep -oE '[0-9]+' | head -1)
 
   # Ensure reasonable bounds: 30s-3600s (1 hour)
   if [[ -n "${timeout}" ]]; then
@@ -188,7 +218,13 @@ Identify tests that:
 Return flaky test names with confidence level (HIGH/MEDIUM/LOW), one per line, or 'NONE'."
 
   local flaky_tests
-  flaky_tests=$(ollama run llama2 "${prompt}" 2>/dev/null)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  flaky_tests=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "NONE"' 2>/dev/null)
 
   if echo "${flaky_tests}" | grep -iq "^NONE"; then
     return 0 # No flaky tests detected
@@ -220,7 +256,13 @@ Generate a report covering:
 
 Format as markdown with clear sections."
 
-  ollama run llama2 "${prompt}" 2>/dev/null >"${output_file}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "AI insights unavailable (Ollama not installed)"' 2>/dev/null >"${output_file}"
 }
 
 # Smart test generation suggestions
@@ -248,7 +290,13 @@ Suggest tests for:
 
 Format as test case descriptions, one per line."
 
-  ollama run llama2 "${prompt}" 2>/dev/null | grep -v "^$"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // ""' 2>/dev/null | grep -v "^$"
 }
 
 # Export functions for sourcing

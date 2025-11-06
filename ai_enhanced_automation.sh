@@ -1,59 +1,18 @@
 #!/bin/bash
 
 # AI-Enhanced Master Automation Controller
-# Integrates Ollama AI across all workspace operations
-# Enhanced by Ollama v0.12 with cloud model support
-# Phase 7: AI Cloud Strategy with Health Checks and Fallback Mechanisms
+# Enhanced by Ollama v0.12 with local-first strategy
+# Local-First: Free Ollama automation with M1 Pro resource limits
+# Keychain secrets, offline bootstrap, per-task model selection
 
-CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PROJECTS_DIR="${CODE_DIR}/Projects"
+CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECTS_DIR="${CODE_DIR}"
 
-# AI Cloud Strategy Configuration
-OLLAMA_CLOUD_URL="https://ollama.com"
+# Local-First Ollama Configuration
 OLLAMA_LOCAL_URL="http://localhost:11434"
 
-# Model Configuration - Cloud-first with local fallbacks (using functions instead of arrays)
-get_primary_model() {
-    local task_type="$1"
-    case "${task_type}" in
-    "code_analysis")
-        echo "qwen2.5-coder:7b-cloud"
-        ;;
-    "documentation")
-        echo "llama3.2:3b-cloud"
-        ;;
-    "complex_reasoning")
-        echo "llama3.1:8b-cloud"
-        ;;
-    "security_analysis")
-        echo "qwen2.5-coder:7b-cloud"
-        ;;
-    "general")
-        echo "llama3.2:3b-cloud"
-        ;;
-    *)
-        echo "llama3.2:3b-cloud"
-        ;;
-    esac
-}
-
-get_fallback_model() {
-    local primary_model="$1"
-    case "${primary_model}" in
-    "qwen2.5-coder:7b-cloud")
-        echo "codellama:7b"
-        ;;
-    "llama3.2:3b-cloud")
-        echo "llama2"
-        ;;
-    "llama3.1:8b-cloud")
-        echo "codellama:7b"
-        ;;
-    *)
-        echo "llama2"
-        ;;
-    esac
-}
+# Model Configuration - Local-first with registry-based fallbacks
+# Models now managed via model_registry.json and ollama_client.sh
 
 # Error tracking for fallback logic (using files instead of arrays)
 MODEL_ERRORS_FILE="${CODE_DIR}/model_errors.txt"
@@ -94,474 +53,126 @@ print_ai() {
     echo -e "${PURPLE}[🤖 OLLAMA]${NC} $1"
 }
 
-# Phase 7: AI Health Check Function
-# Validates Ollama Cloud availability and local Ollama connectivity
+# Local-First AI Health Check Function
+# Validates local Ollama connectivity and model availability
 check_ai_health() {
-    print_ai "Phase 7: Performing comprehensive AI health check..."
+    print_ai "Checking local Ollama health and model availability..."
 
-    local local_available=false
-    local cloud_available=false
     local health_score=0
-
-    # Check Ollama Cloud availability
-    print_ai "Checking Ollama Cloud availability at ${OLLAMA_CLOUD_URL}..."
-    if curl -s --max-time 10 --head "${OLLAMA_CLOUD_URL}" | head -n 1 | grep -q "HTTP/1.[01] [23].."; then
-        print_success "Ollama Cloud service is accessible"
-        cloud_available=true
-        ((health_score += 40))
-    else
-        print_warning "Ollama Cloud service is not accessible"
-    fi
 
     # Check local Ollama availability
     print_ai "Checking local Ollama at ${OLLAMA_LOCAL_URL}..."
     if curl -s --max-time 5 "${OLLAMA_LOCAL_URL}/api/tags" >/dev/null 2>&1; then
         print_success "Local Ollama is running"
-        local_available=true
-        ((health_score += 30))
+        ((health_score += 50))
     else
-        print_warning "Local Ollama is not running or accessible"
+        print_error "Local Ollama is not running or accessible"
+        print_error "Run: brew services start ollama"
+        return 1
     fi
 
-    # Check model availability if local is available
-    if [[ ${local_available} == true ]]; then
-        print_ai "Checking available models..."
-        local models
-        models=$(curl -s "${OLLAMA_LOCAL_URL}/api/tags" | jq -r '.models[].name' 2>/dev/null || echo "")
+    # Check model availability
+    print_ai "Checking available models..."
+    local models
+    models=$(curl -s "${OLLAMA_LOCAL_URL}/api/tags" | jq -r '.models[].name' 2>/dev/null || echo "")
 
-        local required_models=("codellama:7b" "llama2" "llama3.2:3b")
-        local available_count=0
+    local required_models=("codellama:7b" "llama2" "llama3.2:3b")
+    local available_count=0
 
-        for model in "${required_models[@]}"; do
-            if echo "${models}" | grep -q "^${model}$"; then
-                print_ai "✓ Model ${model} is available locally"
-                ((available_count++))
-            else
-                print_warning "✗ Model ${model} not available locally"
-            fi
-        done
+    for model in "${required_models[@]}"; do
+        if echo "${models}" | grep -q "^${model}$"; then
+            print_ai "✓ Model ${model} is available locally"
+            ((available_count++))
+        else
+            print_warning "✗ Model ${model} not available locally"
+        fi
+    done
 
-        # Add model availability to health score
-        health_score=$((health_score + available_count * 5))
-    fi
+    # Add model availability to health score
+    health_score=$((health_score + available_count * 10))
 
-    # Test cloud model availability if cloud is accessible
-    if [[ ${cloud_available} == true ]]; then
-        print_ai "Testing cloud model availability..."
-        # Quick test with a simple prompt
-        local test_response
-        test_response=$(call_cloud_model "llama3.2:3b-cloud" "Hello" 2>/dev/null)
-        if [[ -n ${test_response} && ${test_response} != *"unavailable"* ]]; then
-            print_success "Cloud models are functional"
+    # Test model functionality with a quick call
+    print_ai "Testing model functionality..."
+    local test_result
+    test_result=$(echo '{"task": "dashboardSummary", "prompt": "Hello"}' | ./ollama_client.sh 2>/dev/null)
+    if [[ $? -eq 0 ]] && [[ -n "$test_result" ]]; then
+        local test_text
+        test_text=$(echo "$test_result" | jq -r '.text // empty')
+        if [[ -n "$test_text" ]]; then
+            print_success "Model inference is working"
             ((health_score += 20))
         else
-            print_warning "Cloud models not functional"
-            cloud_available=false
+            print_warning "Model inference returned empty response"
         fi
+    else
+        print_warning "Model inference test failed"
     fi
 
     # Overall health assessment
     if [[ ${health_score} -ge 80 ]]; then
-        print_success "AI Health Score: ${health_score}/100 - Excellent (Cloud-first ready)"
+        print_success "AI Health Score: ${health_score}/100 - Excellent (Local-first ready)"
         return 0
     elif [[ ${health_score} -ge 60 ]]; then
-        if [[ ${cloud_available} == true ]]; then
-            print_success "AI Health Score: ${health_score}/100 - Good (Cloud operational)"
-        else
-            print_success "AI Health Score: ${health_score}/100 - Good (Local fallback ready)"
-        fi
+        print_success "AI Health Score: ${health_score}/100 - Good (Functional)"
         return 0
     elif [[ ${health_score} -ge 40 ]]; then
-        print_warning "AI Health Score: ${health_score}/100 - Fair (Limited AI functionality)"
+        print_warning "AI Health Score: ${health_score}/100 - Fair (Limited functionality)"
         return 0
     else
-        print_error "AI Health Score: ${health_score}/100 - Poor (Local setup required)"
+        print_error "AI Health Score: ${health_score}/100 - Poor (Setup required)"
         return 1
     fi
 }
 
-# Phase 7: Intelligent AI Call with Fallback Mechanism
-# Implements cloud-first strategy with automatic fallback after consecutive errors
+# Local-First AI Call with Registry-Based Model Selection
+# Implements local-only strategy using Ollama adapters with registry fallbacks
 call_ai_with_fallback() {
     local task_type="$1"
     local prompt="$2"
     local max_retries="${3:-2}"
-    local start_time
-    start_time=$(date +%s)
 
-    # Determine primary model for task type
-    local primary_model
-    primary_model=$(get_primary_model "${task_type}")
-    local fallback_model
-    fallback_model=$(get_fallback_model "${primary_model}")
+    # Map old task types to new registry tasks
+    local registry_task
+    case "${task_type}" in
+    "code_analysis")
+        registry_task="codeGen"
+        ;;
+    "documentation")
+        registry_task="dashboardSummary"
+        ;;
+    "complex_reasoning")
+        registry_task="archAnalysis"
+        ;;
+    "security_analysis")
+        registry_task="archAnalysis"
+        ;;
+    "general")
+        registry_task="dashboardSummary"
+        ;;
+    *)
+        registry_task="dashboardSummary"
+        ;;
+    esac
 
-    # Initialize error tracking if not exists
-    local current_errors
-    current_errors=$(grep "^${primary_model}|" "${MODEL_ERRORS_FILE}" | cut -d'|' -f2 || echo "0")
-    local current_success
-    current_success=$(grep "^${primary_model}|" "${MODEL_SUCCESS_FILE}" | cut -d'|' -f2 || echo "0")
-    local current_total
-    current_total=$(grep "^${primary_model}|" "${MODEL_TOTAL_FILE}" | cut -d'|' -f2 || echo "0")
+    # Call the unified Ollama adapter
+    local json_input
+    json_input=$(jq -n --arg task "$registry_task" --arg prompt "$prompt" '{task: $task, prompt: $prompt}')
+    local result
+    result=$(echo "$json_input" | ./ollama_client.sh 2>/dev/null)
 
-    # Ensure variables are numeric (fallback to 0 if empty or invalid)
-    current_errors=$((current_errors + 0))
-    current_success=$((current_success + 0))
-    current_total=$((current_total + 0))
-
-    local attempt=1
-    local current_model="${primary_model}"
-    local result=""
-    local used_fallback=false
-
-    while [[ ${attempt} -le $((max_retries + 1)) ]]; do
-        print_ai "Attempt ${attempt}: Using ${current_model} for ${task_type}..."
-
-        # Track total calls
-        current_total=$((current_total + 1))
-        update_model_count "${MODEL_TOTAL_FILE}" "${primary_model}" "${current_total}"
-
-        # Try AI call
-        if [[ ${current_model} == *"-cloud" ]]; then
-            # Cloud model call (simulated - would use actual cloud API)
-            result=$(call_cloud_model "${current_model}" "${prompt}")
-        else
-            # Local model call
-            result=$(call_local_model "${current_model}" "${prompt}")
-        fi
-
-        # Check if call was successful
-        if [[ -n ${result} ]] && [[ ${result} != *"temporarily unavailable"* ]] && [[ ${result} != *"error"* ]]; then
-            # Success
-            current_success=$((current_success + 1))
-            update_model_count "${MODEL_SUCCESS_FILE}" "${primary_model}" "${current_success}"
-            update_model_count "${MODEL_ERRORS_FILE}" "${primary_model}" "0" # Reset error count on success
-
-            local end_time
-            end_time=$(date +%s)
-            local duration=$((end_time - start_time))
-
-            # Log performance
-            log_ai_performance "${task_type}" "${current_model}" "${duration}" "success" "${used_fallback}"
-
-            if [[ ${used_fallback} == true ]]; then
-                print_warning "Used fallback model ${current_model} (cloud model failed)"
-            fi
-
-            echo "${result}"
+    if [[ $? -eq 0 ]] && [[ -n "$result" ]]; then
+        # Extract text from JSON response
+        local text
+        text=$(echo "$result" | jq -r '.text // empty')
+        if [[ -n "$text" ]]; then
+            echo "$text"
             return 0
-        else
-            # Failure
-            current_errors=$((current_errors + 1))
-            update_model_count "${MODEL_ERRORS_FILE}" "${primary_model}" "${current_errors}"
-
-            if [[ ${current_model} == "${primary_model}" ]]; then
-                print_warning "Primary model ${primary_model} failed, switching to fallback ${fallback_model}"
-                current_model="${fallback_model}"
-                used_fallback=true
-            else
-                print_error "Fallback model ${fallback_model} also failed"
-            fi
         fi
+    fi
 
-        ((attempt++))
-    done
-
-    # All attempts failed
-    local end_time
-    end_time=$(date +%s)
-    local duration=$((end_time - start_time))
-
-    log_ai_performance "${task_type}" "all_failed" "${duration}" "failure" "true"
-
-    print_error "All AI calls failed for ${task_type} after ${attempt} attempts"
+    # Fallback failed
     echo "AI analysis temporarily unavailable - please check Ollama connectivity"
     return 1
-}
-
-# Helper function to update model count in file
-update_model_count() {
-    local file="$1"
-    local model="$2"
-    local count="$3"
-
-    # Remove existing entry
-    sed -i '' "/^${model}|/d" "${file}" 2>/dev/null || sed -i "/^${model}|/d" "${file}"
-
-    # Add new entry
-    echo "${model}|${count}" >>"${file}"
-}
-
-# Helper function to call cloud models
-call_cloud_model() {
-    local model="$1"
-    local prompt="$2"
-
-    # Remove -cloud suffix to get actual model name
-    local actual_model="${model%-cloud}"
-
-    print_ai "Attempting Ollama Cloud API call for model: ${actual_model}..."
-
-    # Check if cloud service is available first
-    if ! curl -s --max-time 5 --head "${OLLAMA_CLOUD_URL}" | head -n 1 | grep -q "HTTP/1.[01] [23].."; then
-        print_warning "Ollama Cloud service not accessible, falling back to local"
-        return 1
-    fi
-
-    # Prepare JSON payload for Ollama API (compatible with both cloud and local)
-    local json_payload
-    json_payload=$(
-        cat <<EOF
-{
-  "model": "${actual_model}",
-  "prompt": "${prompt}",
-  "stream": false,
-  "options": {
-    "temperature": 0.7,
-    "top_p": 0.9,
-    "num_predict": 1024
-  }
-}
-EOF
-    )
-
-    # Make API call to Ollama Cloud
-    local response
-    response=$(curl -s -X POST \
-        "${OLLAMA_CLOUD_URL}/api/generate" \
-        -H "Content-Type: application/json" \
-        -d "${json_payload}" \
-        --max-time 30)
-
-    # Check if response is valid JSON with response field
-    if [[ -n ${response} ]] && echo "${response}" | jq -e '.response' >/dev/null 2>&1; then
-        # Extract response text
-        local response_text
-        response_text=$(echo "${response}" | jq -r '.response')
-        if [[ -n ${response_text} && ${response_text} != "null" ]]; then
-            print_success "Cloud API call successful"
-            echo "${response_text}"
-            return 0
-        fi
-    fi
-
-    # Check if response contains error information
-    if [[ -n ${response} ]] && echo "${response}" | jq -e '.error' >/dev/null 2>&1; then
-        local error_msg
-        error_msg=$(echo "${response}" | jq -r '.error')
-        print_warning "Cloud API error: ${error_msg}"
-    else
-        print_warning "Cloud API call failed or returned invalid response"
-    fi
-
-    return 1
-}
-
-# Helper function to call local models
-call_local_model() {
-    local model="$1"
-    local prompt="$2"
-
-    # Check if model is available
-    if ! curl -s "${OLLAMA_LOCAL_URL}/api/tags" | jq -r '.models[].name' | grep -q "^${model}$"; then
-        print_warning "Model ${model} not available locally, attempting to pull..."
-        if ollama pull "${model}" 2>/dev/null; then
-            print_success "Successfully pulled ${model}"
-        else
-            echo "Failed to pull model ${model}"
-            return 1
-        fi
-    fi
-
-    # Make the AI call
-    local response
-    response=$(echo "${prompt}" | ollama run "${model}" 2>/dev/null)
-
-    if [[ -n ${response} ]]; then
-        echo "${response}"
-        return 0
-    else
-        echo "Local model call failed"
-        return 1
-    fi
-}
-
-# Performance logging function
-log_ai_performance() {
-    local task_type="$1"
-    local model="$2"
-    local duration="$3"
-    local status="$4"
-    local used_fallback="$5"
-
-    echo "$(date '+%Y-%m-%d %H:%M:%S'),${task_type},${model},${duration},${status},${used_fallback}" >>"${AI_PERFORMANCE_LOG}"
-}
-
-# Validate 90% cloud usage target
-validate_cloud_usage_target() {
-    print_ai "Validating 90% cloud usage target..."
-
-    if [[ ! -f ${AI_PERFORMANCE_LOG} ]]; then
-        print_warning "No AI performance data available for cloud usage validation"
-        return 1
-    fi
-
-    # Calculate cloud vs local usage
-    local total_calls=0
-    local cloud_calls=0
-
-    while IFS=',' read -r _timestamp _task model _duration _status _fallback; do
-        ((total_calls++))
-        # Check if model name contains -cloud (indicating cloud usage)
-        if [[ ${model} == *"-cloud" ]]; then
-            ((cloud_calls++))
-        fi
-    done <"${AI_PERFORMANCE_LOG}"
-
-    if [[ ${total_calls} -gt 0 ]]; then
-        local cloud_percentage=$((cloud_calls * 100 / total_calls))
-        print_ai "Cloud Usage: ${cloud_percentage}% (${cloud_calls}/${total_calls} calls)"
-
-        if [[ ${cloud_percentage} -ge 90 ]]; then
-            print_success "✅ 90% cloud usage target ACHIEVED"
-            return 0
-        elif [[ ${cloud_percentage} -ge 75 ]]; then
-            print_success "⚠️ 75% cloud usage - approaching target"
-            return 0
-        else
-            print_warning "❌ Cloud usage below target: ${cloud_percentage}% (Target: 90%)"
-            return 1
-        fi
-    else
-        print_warning "No usage data available"
-        return 1
-    fi
-}
-
-# Document cloud-first strategy in README
-document_cloud_strategy() {
-    local readme_file="${CODE_DIR}/AI_CLOUD_STRATEGY_README.md"
-
-    print_ai "Documenting cloud-first AI strategy..."
-
-    cat >"${readme_file}" <<'EOF'
-# AI Cloud Strategy - Phase 7 Implementation
-
-## Overview
-This workspace implements a cloud-first AI strategy using Ollama Cloud services with intelligent local fallbacks for maximum reliability and performance.
-
-## Architecture
-
-### Cloud-First Model Selection
-- **Code Analysis**: `qwen2.5-coder:7b-cloud` (primary), `codellama:7b` (fallback)
-- **Documentation**: `llama3.2:3b-cloud` (primary), `llama2` (fallback)
-- **Complex Reasoning**: `llama3.1:8b-cloud` (primary), `codellama:7b` (fallback)
-- **Security Analysis**: `qwen2.5-coder:7b-cloud` (primary), `codellama:7b` (fallback)
-- **General Tasks**: `llama3.2:3b-cloud` (primary), `llama2` (fallback)
-
-### Intelligent Fallback Mechanism
-1. **Primary Attempt**: Cloud model with 30-second timeout
-2. **Automatic Fallback**: After 2 consecutive cloud failures
-3. **Error Tracking**: Per-model failure counting and recovery
-4. **Performance Monitoring**: Response time and success rate tracking
-
-### Health Monitoring
-- **Cloud Service Availability**: HTTP connectivity checks
-- **Local Service Status**: Ollama daemon verification
-- **Model Availability**: Required model presence validation
-- **Functional Testing**: End-to-end cloud model testing
-
-## Usage Targets
-- **Cloud Usage**: ≥90% of AI operations
-- **Response Time**: <30 seconds average
-- **Success Rate**: >95% overall
-- **Fallback Rate**: <10% of operations
-
-## API Integration
-
-### Cloud API Endpoint
-```
-POST https://ollama.com/api/generate
-Content-Type: application/json
-
-{
-  "model": "model-name",
-  "prompt": "user prompt",
-  "stream": false,
-  "options": {
-    "temperature": 0.7,
-    "top_p": 0.9,
-    "num_predict": 1024
-  }
-}
-```
-
-### Response Format
-```json
-{
-  "model": "model-name",
-  "response": "generated text",
-  "done": true,
-  "total_duration": 1234567890,
-  "load_duration": 123456,
-  "prompt_eval_count": 10,
-  "eval_count": 100,
-  "eval_duration": 123456789
-}
-```
-
-## Performance Metrics
-
-### Current Status
-- **Health Score**: Monitored via `check_ai_health()`
-- **Cloud Usage**: Tracked in `ai_performance_$(date +%Y%m%d).log`
-- **Model Success Rates**: Stored in `model_success.txt`
-- **Error Patterns**: Logged in `model_errors.txt`
-
-### Monitoring Commands
-```bash
-# Check AI health
-./Tools/Automation/ai_enhanced_automation.sh health
-
-# Validate cloud usage target
-./Tools/Automation/ai_enhanced_automation.sh status
-
-# View performance statistics
-# (Integrated into status output)
-```
-
-## Benefits
-- **Cost Effective**: Cloud resources scale with usage
-- **High Performance**: Latest model versions and optimizations
-- **Reliability**: Automatic fallback prevents service disruption
-- **Security**: Enterprise-grade cloud infrastructure
-- **Innovation**: Access to cutting-edge AI capabilities
-
-## Implementation Details
-
-### Error Handling
-- Network timeouts with exponential backoff
-- Model unavailability detection
-- JSON parsing error recovery
-- Graceful degradation to local services
-
-### Security Considerations
-- No sensitive data in prompts
-- Encrypted API communications
-- Audit logging of all AI operations
-- Privacy-preserving prompt engineering
-
-### Maintenance
-- Daily health checks via automation
-- Weekly performance reviews
-- Monthly model updates and optimizations
-- Continuous monitoring and alerting
-
----
-
-*This document is automatically maintained by the AI automation system.*
-EOF
-
-    print_success "Cloud strategy documentation created: ${readme_file}"
 }
 
 # Check Ollama connectivity and model availability
@@ -1050,8 +661,6 @@ Provide specific security recommendations with code examples."
     print_success "Security analysis report saved to ${security_file}"
 }
 list_projects_with_ai() {
-    check_ollama_health || return 1
-
     print_ai "Analyzing all projects with AI insights..."
     echo ""
 
@@ -1196,12 +805,12 @@ run_ai_automation_all() {
 
 # Show usage information
 show_usage() {
-    echo "AI-Enhanced Master Automation Controller - Phase 7: AI Cloud Strategy"
+    echo "AI-Enhanced Master Automation Controller - Local-First Ollama Strategy"
     echo ""
     echo "Usage: $0 [command] [project_name]"
     echo ""
     echo "Commands:"
-    echo "  status          - Check AI health and cloud usage statistics"
+    echo "  status          - Check AI health and project statistics"
     echo "  list            - List all projects with AI insights"
     echo "  analyze <name>  - AI analysis of specific project"
     echo "  review <name>   - AI code review of specific project"
@@ -1211,15 +820,11 @@ show_usage() {
     echo "  ai <name>       - Run full AI automation for specific project"
     echo "  ai-all          - Run AI automation for all projects"
     echo "  health          - Check AI connectivity and model availability"
-    echo "  validate-cloud  - Validate 90% cloud usage target"
-    echo "  document-cloud  - Generate cloud strategy documentation"
     echo ""
     echo "Examples:"
     echo "  $0 status"
     echo "  $0 list"
     echo "  $0 ai CodingReviewer"
-    echo "  $0 validate-cloud"
-    echo "  $0 document-cloud"
 }
 
 # Main execution logic - only run if this script is called directly
@@ -1228,8 +833,6 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
     "status" | "")
         check_ollama_health
         list_projects_with_ai
-        get_ai_performance_stats
-        validate_cloud_usage_target
         ;;
     "list")
         list_projects_with_ai
@@ -1257,12 +860,6 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
         ;;
     "health")
         check_ai_health
-        ;;
-    "validate-cloud")
-        validate_cloud_usage_target
-        ;;
-    "document-cloud")
-        document_cloud_strategy
         ;;
     *)
         show_usage

@@ -33,7 +33,13 @@ Requirements:
 
 Provide only the code, no explanations."
 
-  ollama run codellama "${prompt}" 2>/dev/null >"${output_file}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "# AI code generation failed"' 2>/dev/null >"${output_file}" || echo "# AI code generation failed" >"${output_file}"
 
   if [[ -s "${output_file}" ]]; then
     return 0
@@ -68,7 +74,13 @@ Identify:
 
 Provide specific, actionable suggestions with code examples."
 
-  ollama run codellama "${prompt}" 2>/dev/null
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "No suggestions available (AI unavailable)"' 2>/dev/null || echo "No suggestions available (AI unavailable)"
 }
 
 # AI-powered code complexity analysis
@@ -96,7 +108,13 @@ Consider:
 Respond with ONLY: low, medium, or high"
 
   local complexity
-  complexity=$(ollama run codellama "${prompt}" 2>/dev/null | grep -oiE '(low|medium|high)' | head -1 | tr '[:upper:]' '[:lower:]')
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  complexity=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "medium"' 2>/dev/null | grep -oiE '(low|medium|high)' | head -1 | tr '[:upper:]' '[:lower:]' || echo "medium")
 
   echo "${complexity:-medium}"
 }
@@ -128,7 +146,13 @@ Include:
 
 Format as Markdown."
 
-  ollama run codellama "${prompt}" 2>/dev/null >"${output_file}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "# API Documentation (auto-generated)\nAI documentation unavailable - manual documentation required"' 2>/dev/null >"${output_file}" || echo "# API Documentation (auto-generated)\nAI documentation unavailable - manual documentation required" >"${output_file}"
 }
 
 # AI-powered test case generation
@@ -157,7 +181,13 @@ Include:
 
 Provide complete, runnable test code."
 
-  ollama run codellama "${prompt}" 2>/dev/null
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "testGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "// AI test generation unavailable"' 2>/dev/null || echo "// AI test generation unavailable"
 }
 
 # AI-powered code review
@@ -192,7 +222,13 @@ Provide:
 Start your response with either 'APPROVE:' or 'REQUEST_CHANGES:'"
 
   local review
-  review=$(ollama run codellama "${prompt}" 2>/dev/null)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  review=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "✅ Manual review required (AI unavailable)"' 2>/dev/null || echo "✅ Manual review required (AI unavailable)")
 
   echo "${review}"
 
@@ -223,7 +259,13 @@ Follow naming conventions:
 
 Provide ONLY 3 names, one per line, no explanations."
 
-  ollama run codellama "${prompt}" 2>/dev/null | head -3
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "suggestedName"' 2>/dev/null | head -3 || echo "suggestedName"
 }
 
 # AI-powered bug fix suggestions
@@ -250,7 +292,13 @@ Provide:
 
 Be concise and actionable."
 
-  ollama run codellama "${prompt}" 2>/dev/null
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "Manual debugging required (AI unavailable)"' 2>/dev/null || echo "Manual debugging required (AI unavailable)"
 }
 
 # AI-powered code optimization
@@ -276,7 +324,13 @@ Provide:
 
 Focus on ${optimization_goal} while maintaining correctness."
 
-  ollama run codellama "${prompt}" 2>/dev/null
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "codeGen" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // ""' 2>/dev/null || return 1
 }
 
 # Generate code quality insights
@@ -310,7 +364,13 @@ Provide insights on:
 
 Format as Markdown."
 
-  ollama run codellama "${prompt}" 2>/dev/null >"${output_file}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "# Code Quality Insights (AI unavailable)"' 2>/dev/null >"${output_file}" || echo "# Code Quality Insights (AI unavailable)" >"${output_file}"
 }
 
 # Export functions for sourcing

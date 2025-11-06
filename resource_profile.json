@@ -1,0 +1,17 @@
+{
+  "OLLAMA_NUM_PARALLEL": 1,
+  "maxConcurrentAgents": 1,
+  "agentNice": 10,
+  "defaultNumCtx": 4096,
+  "visionConcurrency": 1,
+  "keepAliveSec": 300,
+  "quantization": "Q4_K_M",
+  "guidance": {
+    "staggerLongTasks": true,
+    "preferTextForPdfs": true,
+    "chunkLargeInputs": true,
+    "chunkSizeTokens": 4096,
+    "maxChunkOverlap": 512,
+    "memoryAwareChunking": true
+  }
+}

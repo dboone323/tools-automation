@@ -31,7 +31,13 @@ Consider:
 Return comma-separated priorities: logs, cache, temp, artifacts, derived_data"
 
   local priorities
-  priorities=$(ollama run llama2 "${prompt}" 2>/dev/null | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  priorities=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "logs,cache,temp"' 2>/dev/null | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]' || echo "logs,cache,temp")
 
   # Validate response contains expected keywords
   if echo "${priorities}" | grep -qE '(logs|cache|temp|artifacts|derived)'; then
@@ -57,7 +63,13 @@ ${historical_usage}
 Analyze trends and provide a single number (GB)."
 
   local prediction
-  prediction=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  prediction=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "0"' 2>/dev/null | grep -oE '[0-9]+' | head -1 || echo "0")
 
   echo "${prediction:-0}"
 }
@@ -83,7 +95,13 @@ Consider:
 Respond with just the number of days (1-30)."
 
   local days
-  days=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  days=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "7"' 2>/dev/null | grep -oE '[0-9]+' | head -1 || echo "7")
 
   # Ensure reasonable bounds: 1-30 days
   if [[ -n "${days}" ]]; then
@@ -120,7 +138,13 @@ Consider:
 Respond with just the number in MB (5-100)."
 
   local threshold
-  threshold=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oE '[0-9]+' | head -1)
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  threshold=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "10"' 2>/dev/null | grep -oE '[0-9]+' | head -1 || echo "10")
 
   # Ensure reasonable bounds: 5-100 MB
   if [[ -n "${threshold}" ]]; then
@@ -157,7 +181,13 @@ Consider:
 Respond with: LOW, MEDIUM, or HIGH risk."
 
   local risk
-  risk=$(ollama run llama2 "${prompt}" 2>/dev/null | grep -oiE '(LOW|MEDIUM|HIGH)' | head -1 | tr '[:lower:]' '[:upper:]')
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  risk=$(echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "LOW"' 2>/dev/null | grep -oiE '(LOW|MEDIUM|HIGH)' | head -1 | tr '[:lower:]' '[:upper:]' || echo "LOW")
 
   case "${risk}" in
   HIGH)
@@ -193,7 +223,13 @@ Generate a report covering:
 
 Format as markdown."
 
-  ollama run llama2 "${prompt}" 2>/dev/null >"${output_file}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "AI insights unavailable (Ollama not installed)"' 2>/dev/null >"${output_file}" || echo "AI insights unavailable (Ollama not installed)" >"${output_file}"
 }
 
 # Smart artifact cleanup
@@ -216,7 +252,13 @@ Safe deletion criteria:
 
 Return only the safe-to-delete items, one per line."
 
-  ollama run llama2 "${prompt}" 2>/dev/null | grep -v "^$" || echo "${artifact_list}"
+  # Use Ollama adapter instead of direct calls
+  local adapter_input
+  adapter_input=$(jq -n \
+    --arg task "archAnalysis" \
+    --arg prompt "$prompt" \
+    '{task: $task, prompt: $prompt}')
+  echo "$adapter_input" | ../../../ollama_client.sh 2>/dev/null | jq -r '.text // "'${artifact_list}'"' 2>/dev/null | grep -v "^$" || echo "${artifact_list}"
 }
 
 # Export functions for sourcing

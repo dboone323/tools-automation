@@ -172,7 +172,13 @@ generate_quick_ai_insight() {
     if [[ ${file_count} -gt 0 ]]; then
         local insight_prompt="In one sentence, suggest the most valuable AI enhancement for a Swift project called '${project_name}' with ${file_count} files:"
         local ai_insight
-        ai_insight=$(echo "${insight_prompt}" | timeout 10s ollama run codellama:7b 2>/dev/null | head -1 || echo "${insight_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"${insight_prompt}\", \"parameters\": {\"max_length\": 50}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null | head -1 || echo "AI enhancement available")
+        # Use Ollama adapter instead of direct calls
+        local adapter_input
+        adapter_input=$(jq -n \
+            --arg task "dashboardSummary" \
+            --arg prompt "$insight_prompt" \
+            '{task: $task, prompt: $prompt}')
+        ai_insight=$(echo "$adapter_input" | ./ollama_client.sh 2>/dev/null | jq -r '.text // "AI enhancement available"' 2>/dev/null | head -1 || echo "AI enhancement available")
         echo "     💡 ${ai_insight}"
     fi
 }
@@ -283,7 +289,13 @@ Provide:
 Keep it concise and actionable."
 
         local ai_summary
-        ai_summary=$(echo "${summary_prompt}" | timeout 15s ollama run llama3.2:3b 2>/dev/null || echo "${summary_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${summary_prompt}" | head -c 500)\", \"parameters\": {\"max_length\": 200}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Summary generation completed")
+        # Use Ollama adapter instead of direct calls
+        local adapter_input
+        adapter_input=$(jq -n \
+            --arg task "dashboardSummary" \
+            --arg prompt "$summary_prompt" \
+            '{task: $task, prompt: $prompt}')
+        ai_summary=$(echo "$adapter_input" | ./ollama_client.sh 2>/dev/null | jq -r '.text // "Summary generation completed"' 2>/dev/null || echo "Summary generation completed")
 
         # Save summary
         local summary_file
@@ -372,7 +384,13 @@ Provide:
 Focus on actionable insights for the development team."
 
         local workspace_insights
-        workspace_insights=$(echo "${insights_prompt}" | timeout 20s ollama run llama3.2:3b 2>/dev/null || echo "${insights_prompt}" | curl -s -X POST "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium" -H "Authorization: Bearer ${HUGGINGFACE_TOKEN:-}" -H "Content-Type: application/json" -d "{\"inputs\": \"$(echo "${insights_prompt}" | head -c 500)\", \"parameters\": {\"max_length\": 300}}" 2>/dev/null | jq -r '.[0]?.generated_text' 2>/dev/null || echo "Workspace analysis completed")
+        # Use Ollama adapter instead of direct calls
+        local adapter_input
+        adapter_input=$(jq -n \
+            --arg task "dashboardSummary" \
+            --arg prompt "$insights_prompt" \
+            '{task: $task, prompt: $prompt}')
+        workspace_insights=$(echo "$adapter_input" | ./ollama_client.sh 2>/dev/null | jq -r '.text // "Workspace analysis completed"' 2>/dev/null || echo "Workspace analysis completed")
 
         # Save workspace insights
         local insights_file

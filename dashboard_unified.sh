@@ -179,6 +179,87 @@ show_mcp_integration() {
   echo ""
 }
 
+# Show Ollama AI metrics
+show_ollama_metrics() {
+  print_section "Ollama AI Metrics"
+
+  local dashboard_file="./dashboard_data.json"
+  if [[ ! -f "$dashboard_file" ]]; then
+    echo -e "  ❌ ${RED}Dashboard data not found${NC}"
+    echo ""
+    return
+  fi
+
+  # Extract Ollama metrics
+  local ollama_data
+  ollama_data=$(jq -r '.ollama_metrics // empty' "$dashboard_file" 2>/dev/null)
+
+  if [[ -z "$ollama_data" || "$ollama_data" == "null" ]]; then
+    echo -e "  📊 ${YELLOW}No Ollama metrics available yet${NC}"
+    echo "     Run some AI operations to generate metrics"
+    echo ""
+    return
+  fi
+
+  local total_calls
+  total_calls=$(echo "$ollama_data" | jq -r '.total_calls // 0')
+  local successful_calls
+  successful_calls=$(echo "$ollama_data" | jq -r '.successful_calls // 0')
+  local failed_calls
+  failed_calls=$(echo "$ollama_data" | jq -r '.failed_calls // 0')
+  local avg_latency
+  avg_latency=$(echo "$ollama_data" | jq -r 'if .total_calls > 0 then (.total_latency_ms / .total_calls | round) else 0 end')
+  local total_tokens
+  total_tokens=$(echo "$ollama_data" | jq -r '.total_tokens // 0')
+
+  echo -e "  🤖 ${BLUE}AI Operations Summary${NC}"
+  echo "     Total Calls: $total_calls"
+  echo "     Success Rate: $successful_calls/$total_calls ($(echo "scale=1; $successful_calls * 100 / ($total_calls > 0 ? $total_calls : 1)" | bc -l 2>/dev/null || echo "0")%)"
+  echo "     Failed Calls: $failed_calls"
+  echo "     Avg Latency: ${avg_latency}ms"
+  echo "     Total Tokens: $total_tokens"
+  echo ""
+
+  # Show task usage
+  echo -e "  📋 ${BLUE}Task Usage${NC}"
+  local task_usage
+  task_usage=$(echo "$ollama_data" | jq -r '.task_usage // {} | to_entries | sort_by(.value) | reverse | .[0:5] | .[] | "\(.key): \(.value)"' 2>/dev/null)
+  if [[ -n "$task_usage" ]]; then
+    echo "$task_usage" | while read -r line; do
+      echo "     $line"
+    done
+  else
+    echo "     No task data available"
+  fi
+  echo ""
+
+  # Show model usage
+  echo -e "  🧠 ${BLUE}Model Usage${NC}"
+  local model_usage
+  model_usage=$(echo "$ollama_data" | jq -r '.model_usage // {} | to_entries | sort_by(.value) | reverse | .[0:3] | .[] | "\(.key): \(.value)"' 2>/dev/null)
+  if [[ -n "$model_usage" ]]; then
+    echo "$model_usage" | while read -r line; do
+      echo "     $line"
+    done
+  else
+    echo "     No model data available"
+  fi
+  echo ""
+
+  # Show recent calls
+  echo -e "  🕐 ${BLUE}Recent Activity${NC}"
+  local recent_calls
+  recent_calls=$(echo "$ollama_data" | jq -r '.recent_calls // [] | .[-3:] | .[] | "\(.timestamp | strftime("%H:%M:%S")) \(.task)@\(.model) (\(.latency_ms)ms) \(.status)"' 2>/dev/null)
+  if [[ -n "$recent_calls" ]]; then
+    echo "$recent_calls" | while read -r line; do
+      echo "     $line"
+    done
+  else
+    echo "     No recent activity"
+  fi
+  echo ""
+}
+
 # Show workflow implementation summary
 show_workflow_summary() {
   print_section "Workflow Implementation Summary"
@@ -314,6 +395,9 @@ show_dashboard() {
 
   # MCP Integration Status
   show_mcp_integration
+
+  # Ollama AI Metrics
+  show_ollama_metrics
 
   # Projects Overview
   print_section "Projects Overview"
