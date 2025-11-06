@@ -7,7 +7,19 @@
         "general": "llama2",
         "code": "codellama"
       },
-      "cost": "free"
+      "cost": "free",
+      "priority": 1
+    },
+    "ollama_cloud": {
+      "endpoint": "https://ollama.ai/api",
+      "models": {
+        "general": "llama2",
+        "code": "codellama"
+      },
+      "cost": "bounded_fallback",
+      "priority": 99,
+      "enabled": false,
+      "requires_config": "cloud_fallback_config.json"
     },
     "huggingface": {
       "endpoint": "https://api-inference.huggingface.co",
@@ -15,12 +27,16 @@
         "general": "microsoft/DialoGPT-medium",
         "code": "microsoft/codebert-base"
       },
-      "cost": "free_tier"
+      "cost": "free_tier",
+      "priority": 98,
+      "enabled": false
     }
   },
-  "fallback_order": ["ollama", "huggingface"],
+  "fallback_order": ["ollama", "ollama_cloud"],
+  "fallback_policy": "adaptive_by_priority",
   "rate_limits": {
     "ollama": "unlimited",
+    "ollama_cloud": "governed_by_config",
     "huggingface": "3000_requests/hour"
   }
 }

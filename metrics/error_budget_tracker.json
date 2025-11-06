@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "services": {
+    "post_merge_tests": {
+      "budget_percent": 5.0,
+      "window_hours": 24,
+      "current_failures": 0,
+      "total_runs": 0,
+      "last_reset": "2025-11-06T00:00:00Z"
+    },
+    "agent_health": {
+      "budget_percent": 2.0,
+      "window_hours": 24,
+      "current_failures": 0,
+      "total_runs": 0,
+      "last_reset": "2025-11-06T00:00:00Z"
+    }
+  }
+}

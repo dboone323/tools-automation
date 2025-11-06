@@ -1,0 +1,24 @@
+#!/bin/bash
+# Post-merge hook: run tests and rollback on failure
+
+set -e
+
+echo "Running post-merge validation..."
+
+# Run fast test suite
+if ! ./ci_orchestrator.sh smoke 2>/dev/null; then
+    echo "ERROR: Post-merge tests failed!"
+
+    # Check error budget before rollback
+    if ./scripts/check_error_budget.sh post_merge_tests --can-rollback 2>/dev/null; then
+        echo "Rolling back merge..."
+        git reset --hard HEAD~1
+        ./agents/auto_rollback.sh log-incident "post-merge-test-failure" 2>/dev/null || true
+        exit 1
+    else
+        echo "ERROR: Tests failed but error budget exhausted - manual intervention required"
+        exit 1
+    fi
+fi
+
+echo "Post-merge validation passed"

@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "mode": "adaptive",
+  "allowed_priority_levels": ["critical", "high"],
+  "circuit_breaker": {
+    "failure_threshold": 3,
+    "window_minutes": 10,
+    "reset_after_minutes": 30
+  },
+  "quotas": {
+    "critical": {
+      "daily_limit": 50,
+      "hourly_limit": 10,
+      "per_task_timeout_sec": 30
+    },
+    "high": {
+      "daily_limit": 20,
+      "hourly_limit": 5,
+      "per_task_timeout_sec": 20
+    }
+  },
+  "fallback_conditions": {
+    "local_timeout_sec": 60,
+    "local_consecutive_failures": 2,
+    "model_not_available": true
+  },
+  "cloud_providers": {
+    "ollama_cloud": {
+      "enabled": false,
+      "endpoint": "https://ollama.ai/api",
+      "requires_auth": true
+    }
+  }
+}

@@ -375,6 +375,38 @@ main() {
     clean)
         clean_checkpoints "${1:-10}"
         ;;
+    log-incident)
+        # Quick incident logging (for git hooks)
+        if [ $# -lt 1 ]; then
+            error "Usage: auto_rollback.sh log-incident <reason>"
+            exit 1
+        fi
+
+        local reason="$1"
+        local incident_id="$(date +%Y%m%d_%H%M%S)_${reason}"
+        local incident_dir="${ROOT_DIR}/incidents/${incident_id}"
+
+        mkdir -p "$incident_dir"
+
+        # Capture state
+        git -C "$ROOT_DIR" log -1 >"${incident_dir}/last_commit.txt" 2>/dev/null || echo "No git info" >"${incident_dir}/last_commit.txt"
+        cp "${ROOT_DIR}/dashboard_data.json" "${incident_dir}/" 2>/dev/null || echo "{}" >"${incident_dir}/dashboard_data.json"
+        cp "${ROOT_DIR}/logs/cloud_escalation_log.jsonl" "${incident_dir}/" 2>/dev/null || touch "${incident_dir}/cloud_escalation_log.jsonl"
+
+        # Log incident metadata
+        cat >"${incident_dir}/metadata.json" <<EOF
+{
+  "incident_id": "${incident_id}",
+  "reason": "${reason}",
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "user": "$USER",
+  "hostname": "$(hostname)",
+  "pwd": "$PWD"
+}
+EOF
+
+        log "Incident logged: ${incident_dir}"
+        ;;
     help | --help | -h)
         cat <<EOF
 Auto-Rollback System - Automatic State Restoration

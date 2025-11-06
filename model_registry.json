@@ -1,8 +1,12 @@
 {
   "codeGen": {
     "task": "codeGen",
+    "priority": "medium",
     "primaryModel": "codellama:7b",
-    "fallbacks": ["qwen2.5-coder:1.5b", "codellama:latest"],
+    "fallbacks": [
+      "qwen2.5-coder:1.5b",
+      "codellama:latest"
+    ],
     "preset": {
       "num_ctx": 6144,
       "temperature": 0.1,
@@ -24,8 +28,12 @@
   },
   "testGen": {
     "task": "testGen",
+    "priority": "medium",
     "primaryModel": "codellama:7b",
-    "fallbacks": ["qwen2.5-coder:1.5b", "codellama:latest"],
+    "fallbacks": [
+      "qwen2.5-coder:1.5b",
+      "codellama:latest"
+    ],
     "preset": {
       "num_ctx": 4096,
       "temperature": 0.2,
@@ -47,8 +55,12 @@
   },
   "archAnalysis": {
     "task": "archAnalysis",
+    "priority": "high",
     "primaryModel": "mistral:7b",
-    "fallbacks": ["llama2:7b", "codellama:7b"],
+    "fallbacks": [
+      "llama2:7b",
+      "codellama:7b"
+    ],
     "preset": {
       "num_ctx": 8192,
       "temperature": 0.3,
@@ -70,8 +82,12 @@
   },
   "dashboardSummary": {
     "task": "dashboardSummary",
+    "priority": "low",
     "primaryModel": "llama3.2:3b",
-    "fallbacks": ["mistral:7b", "llama2:7b"],
+    "fallbacks": [
+      "mistral:7b",
+      "llama2:7b"
+    ],
     "preset": {
       "num_ctx": 2048,
       "temperature": 0.4,
@@ -93,8 +109,11 @@
   },
   "visionOcr": {
     "task": "visionOcr",
+    "priority": "medium",
     "primaryModel": "llava:7b",
-    "fallbacks": ["moondream:1.8b"],
+    "fallbacks": [
+      "moondream:1.8b"
+    ],
     "preset": {
       "num_ctx": 2048,
       "temperature": 0.2,
@@ -116,8 +135,11 @@
   },
   "visionLayout": {
     "task": "visionLayout",
+    "priority": "medium",
     "primaryModel": "llava:7b",
-    "fallbacks": ["moondream:1.8b"],
+    "fallbacks": [
+      "moondream:1.8b"
+    ],
     "preset": {
       "num_ctx": 2048,
       "temperature": 0.2,
@@ -139,8 +161,12 @@
   },
   "codeAnalysis": {
     "task": "codeAnalysis",
+    "priority": "high",
     "primaryModel": "codellama:7b",
-    "fallbacks": ["qwen2.5-coder:1.5b", "mistral:7b"],
+    "fallbacks": [
+      "qwen2.5-coder:1.5b",
+      "mistral:7b"
+    ],
     "preset": {
       "num_ctx": 4096,
       "temperature": 0.1,
@@ -162,8 +188,12 @@
   },
   "projectHealth": {
     "task": "projectHealth",
+    "priority": "high",
     "primaryModel": "mistral:7b",
-    "fallbacks": ["llama3.2:3b", "llama2:7b"],
+    "fallbacks": [
+      "llama3.2:3b",
+      "llama2:7b"
+    ],
     "preset": {
       "num_ctx": 4096,
       "temperature": 0.2,
@@ -185,8 +215,12 @@
   },
   "workflowOptimization": {
     "task": "workflowOptimization",
+    "priority": "medium",
     "primaryModel": "mistral:7b",
-    "fallbacks": ["llama3.2:3b", "codellama:7b"],
+    "fallbacks": [
+      "llama3.2:3b",
+      "codellama:7b"
+    ],
     "preset": {
       "num_ctx": 4096,
       "temperature": 0.3,
