@@ -29,6 +29,22 @@ done
 # Config paths
 MODEL_REGISTRY="${MODEL_REGISTRY:-model_registry.json}"
 RESOURCE_PROFILE="${RESOURCE_PROFILE:-resource_profile.json}"
+CLOUD_FALLBACK_CONFIG="${CLOUD_FALLBACK_CONFIG:-config/cloud_fallback_config.json}"
+QUOTA_TRACKER="${QUOTA_TRACKER:-metrics/quota_tracker.json}"
+ESCALATION_LOG="${ESCALATION_LOG:-logs/cloud_escalation_log.jsonl}"
+
+# Load cloud fallback policy
+FALLBACK_POLICY_ENABLED=false
+if [[ -f "$CLOUD_FALLBACK_CONFIG" ]]; then
+    FALLBACK_POLICY_ENABLED=true
+    FALLBACK_MODE=$(jq -r '.mode // "disabled"' "$CLOUD_FALLBACK_CONFIG")
+    ALLOWED_PRIORITIES=$(jq -r '.allowed_priority_levels | join(" ")' "$CLOUD_FALLBACK_CONFIG")
+    CB_FAILURE_THRESHOLD=$(jq -r '.circuit_breaker.failure_threshold // 3' "$CLOUD_FALLBACK_CONFIG")
+    CB_WINDOW_MINUTES=$(jq -r '.circuit_breaker.window_minutes // 10' "$CLOUD_FALLBACK_CONFIG")
+    CB_RESET_MINUTES=$(jq -r '.circuit_breaker.reset_after_minutes // 30' "$CLOUD_FALLBACK_CONFIG")
+    LOCAL_TIMEOUT_SEC=$(jq -r '.fallback_conditions.local_timeout_sec // 60' "$CLOUD_FALLBACK_CONFIG")
+    LOCAL_CONSECUTIVE_FAILURES=$(jq -r '.fallback_conditions.local_consecutive_failures // 2' "$CLOUD_FALLBACK_CONFIG")
+fi
 
 # Handle rollback functionality
 if [[ "$ROLLBACK" == true ]]; then
@@ -77,6 +93,7 @@ primary_model=$(echo "$task_config" | jq -r '.primaryModel')
 fallbacks=$(echo "$task_config" | jq -r '.fallbacks | join(" ")')
 preset=$(echo "$task_config" | jq -r '.preset')
 limits=$(echo "$task_config" | jq -r '.limits')
+priority=$(echo "$task_config" | jq -r '.priority // "medium"')
 
 # Build Ollama options from preset
 num_ctx=$(echo "$preset" | jq -r '.num_ctx // 2048')
@@ -95,6 +112,119 @@ CHUNK_LARGE_INPUTS=$(jq -r '.guidance.chunkLargeInputs // false' "$RESOURCE_PROF
 CHUNK_SIZE_TOKENS=$(jq -r '.guidance.chunkSizeTokens // 2048' "$RESOURCE_PROFILE")
 MAX_CHUNK_OVERLAP=$(jq -r '.guidance.maxChunkOverlap // 512' "$RESOURCE_PROFILE")
 MEMORY_AWARE_CHUNKING=$(jq -r '.guidance.memoryAwareChunking // false' "$RESOURCE_PROFILE")
+
+# Policy enforcement functions
+check_quota() {
+    local priority=$1
+
+    if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
+        return 0 # Policy not enabled, allow all
+    fi
+
+    # Check if priority is allowed for cloud fallback
+    if [[ ! " $ALLOWED_PRIORITIES " =~ " $priority " ]]; then
+        return 1 # Priority not allowed for cloud escalation
+    fi
+
+    # Check quota availability
+    local daily_used=$(jq -r ".quotas.${priority}.daily_used // 0" "$QUOTA_TRACKER")
+    local hourly_used=$(jq -r ".quotas.${priority}.hourly_used // 0" "$QUOTA_TRACKER")
+    local daily_limit=$(jq -r ".quotas.${priority}.daily_limit // 999999" "$QUOTA_TRACKER")
+    local hourly_limit=$(jq -r ".quotas.${priority}.hourly_limit // 999999" "$QUOTA_TRACKER")
+
+    if [[ $daily_used -ge $daily_limit ]] || [[ $hourly_used -ge $hourly_limit ]]; then
+        return 1 # Quota exhausted
+    fi
+
+    return 0 # Quota available
+}
+
+check_circuit_breaker() {
+    local priority=$1
+
+    if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
+        return 0 # Policy not enabled, allow all
+    fi
+
+    local cb_state=$(jq -r ".circuit_breaker.${priority}.state // \"closed\"" "$QUOTA_TRACKER")
+
+    if [[ "$cb_state" == "open" ]]; then
+        # Check if reset time has passed
+        local opened_at=$(jq -r ".circuit_breaker.${priority}.opened_at // null" "$QUOTA_TRACKER")
+        if [[ "$opened_at" != "null" ]]; then
+            local now=$(date +%s)
+            local opened_timestamp=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$opened_at" +%s 2>/dev/null || echo 0)
+            local reset_seconds=$((CB_RESET_MINUTES * 60))
+
+            if [[ $((now - opened_timestamp)) -ge $reset_seconds ]]; then
+                # Reset circuit breaker
+                jq ".circuit_breaker.${priority}.state = \"closed\" | .circuit_breaker.${priority}.failure_count = 0 | .circuit_breaker.${priority}.opened_at = null" "$QUOTA_TRACKER" >"${QUOTA_TRACKER}.tmp" && mv "${QUOTA_TRACKER}.tmp" "$QUOTA_TRACKER"
+                return 0
+            fi
+        fi
+        return 1 # Circuit breaker still open
+    fi
+
+    return 0 # Circuit breaker closed
+}
+
+record_failure() {
+    local priority=$1
+
+    if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
+        return 0
+    fi
+
+    local now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    local failure_count=$(jq -r ".circuit_breaker.${priority}.failure_count // 0" "$QUOTA_TRACKER")
+    failure_count=$((failure_count + 1))
+
+    # Update failure count
+    jq ".circuit_breaker.${priority}.failure_count = $failure_count | .circuit_breaker.${priority}.last_failure = \"$now\"" "$QUOTA_TRACKER" >"${QUOTA_TRACKER}.tmp" && mv "${QUOTA_TRACKER}.tmp" "$QUOTA_TRACKER"
+
+    # Trip circuit breaker if threshold exceeded
+    if [[ $failure_count -ge $CB_FAILURE_THRESHOLD ]]; then
+        jq ".circuit_breaker.${priority}.state = \"open\" | .circuit_breaker.${priority}.opened_at = \"$now\"" "$QUOTA_TRACKER" >"${QUOTA_TRACKER}.tmp" && mv "${QUOTA_TRACKER}.tmp" "$QUOTA_TRACKER"
+        echo "Circuit breaker tripped for priority: $priority" >&2
+    fi
+}
+
+increment_quota() {
+    local priority=$1
+
+    if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
+        return 0
+    fi
+
+    local daily_used=$(jq -r ".quotas.${priority}.daily_used // 0" "$QUOTA_TRACKER")
+    local hourly_used=$(jq -r ".quotas.${priority}.hourly_used // 0" "$QUOTA_TRACKER")
+
+    jq ".quotas.${priority}.daily_used = $((daily_used + 1)) | .quotas.${priority}.hourly_used = $((hourly_used + 1))" "$QUOTA_TRACKER" >"${QUOTA_TRACKER}.tmp" && mv "${QUOTA_TRACKER}.tmp" "$QUOTA_TRACKER"
+}
+
+log_cloud_escalation() {
+    local task=$1
+    local priority=$2
+    local reason=$3
+    local model_attempted=$4
+    local cloud_provider=$5
+
+    if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
+        return 0
+    fi
+
+    local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    local quota_remaining=$(jq -r ".quotas.${priority}.daily_limit - .quotas.${priority}.daily_used" "$QUOTA_TRACKER")
+
+    # Append to escalation log
+    echo "{\"timestamp\": \"$timestamp\", \"task\": \"$task\", \"priority\": \"$priority\", \"reason\": \"$reason\", \"model_attempted\": \"$model_attempted\", \"cloud_provider\": \"$cloud_provider\", \"quota_remaining\": $quota_remaining}" >>"$ESCALATION_LOG"
+
+    # Update dashboard metrics
+    local dashboard_file="${DASHBOARD_DATA:-dashboard_data.json}"
+    if [[ -f "$dashboard_file" ]]; then
+        jq ".ai_metrics = (.ai_metrics // {}) | .ai_metrics.escalation_count = ((.ai_metrics.escalation_count // 0) + 1) | .ai_metrics.fallback_rate = ((.ai_metrics.escalation_count // 0) / (.ollama_metrics.total_calls // 1))" "$dashboard_file" >"${dashboard_file}.tmp" && mv "${dashboard_file}.tmp" "$dashboard_file" 2>/dev/null || true
+    fi
+}
 
 # Function to chunk large prompts
 chunk_prompt() {
@@ -179,9 +309,15 @@ try_model() {
     processed_prompt=$(process_chunked_prompt "$full_prompt" "$model")
 
     # Call Ollama via generate (for non-interactive)
-    output=$(echo "{\"model\": \"$model\", \"prompt\": \"$processed_prompt\", \"stream\": false, \"options\": {\"num_ctx\": $num_ctx, \"temperature\": $temperature, \"top_p\": $top_p, \"top_k\": $top_k, \"repeat_penalty\": $repeat_penalty, \"num_predict\": $num_predict}}" | curl -s -X POST http://localhost:11434/api/generate -H "Content-Type: application/json" -d @- | jq -r '.response // empty')
+    output=$(timeout $LOCAL_TIMEOUT_SEC bash -c "echo \"{\\\"model\\\": \\\"$model\\\", \\\"prompt\\\": \\\"$processed_prompt\\\", \\\"stream\\\": false, \\\"options\\\": {\\\"num_ctx\\\": $num_ctx, \\\"temperature\\\": $temperature, \\\"top_p\\\": $top_p, \\\"top_k\\\": $top_k, \\\"repeat_penalty\\\": $repeat_penalty, \\\"num_predict\\\": $num_predict}}\" | curl -s -X POST http://localhost:11434/api/generate -H 'Content-Type: application/json' -d @- | jq -r '.response // empty'" 2>/dev/null)
     exit_code=$?
-    if [[ $exit_code -eq 0 && -n "$output" ]]; then
+
+    if [[ $exit_code -eq 124 ]]; then
+        # Timeout occurred
+        record_failure "$priority"
+        log_usage_metrics "$task" "$model" "0" "0" "timeout"
+        return 1
+    elif [[ $exit_code -eq 0 && -n "$output" ]]; then
         local end_time=$(date +%s)
         local latency_ms=$(((end_time - start_time) * 1000))
         # Estimate tokens (rough: 4 chars per token, account for chunking)
@@ -193,7 +329,8 @@ try_model() {
         echo "{\"text\": \"$output\", \"model\": \"$model\", \"latency_ms\": $latency_ms, \"tokens_est\": $tokens_est, \"fallback_used\": false}"
         return 0
     else
-        # Log failed attempt
+        # Log failed attempt and record circuit breaker failure
+        record_failure "$priority"
         log_usage_metrics "$task" "$model" "0" "0" "failed"
         return 1
     fi
@@ -245,11 +382,35 @@ log_usage_metrics() {
 }
 
 # Try primary, then fallbacks
+LOCAL_FAILED=false
 for model in "$primary_model" $fallbacks; do
     if try_model "$model"; then
         exit 0
     fi
+    LOCAL_FAILED=true
 done
+
+# All local models failed - check if cloud escalation is allowed
+if [[ "$LOCAL_FAILED" == "true" && "$FALLBACK_POLICY_ENABLED" == "true" ]]; then
+    # Check if priority allows cloud escalation
+    if ! check_quota "$priority"; then
+        echo '{"error": "All local models failed and cloud quota exhausted", "fallback_used": false, "reason": "quota_exhausted"}' >&2
+        exit 1
+    fi
+
+    if ! check_circuit_breaker "$priority"; then
+        echo '{"error": "All local models failed and circuit breaker open", "fallback_used": false, "reason": "circuit_breaker_open"}' >&2
+        exit 1
+    fi
+
+    # Log cloud escalation (would attempt cloud here if enabled)
+    log_cloud_escalation "$task" "$priority" "local_failure" "$primary_model" "ollama_cloud"
+    increment_quota "$priority"
+
+    # For now, cloud is disabled, so this is just logging
+    echo '{"error": "All local models failed, cloud escalation logged but not enabled", "fallback_used": false, "reason": "cloud_disabled"}' >&2
+    exit 1
+fi
 
 # All failed
 echo '{"error": "All models failed", "fallback_used": true}' >&2

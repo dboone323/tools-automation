@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "last_reset": "2025-11-06T00:00:00Z",
+  "quotas": {
+    "critical": {
+      "daily_limit": 50,
+      "hourly_limit": 10,
+      "daily_used": 0,
+      "hourly_used": 0,
+      "last_hourly_reset": "2025-11-06T00:00:00Z"
+    },
+    "high": {
+      "daily_limit": 20,
+      "hourly_limit": 5,
+      "daily_used": 0,
+      "hourly_used": 0,
+      "last_hourly_reset": "2025-11-06T00:00:00Z"
+    }
+  },
+  "circuit_breaker": {
+    "critical": {
+      "state": "closed",
+      "failure_count": 0,
+      "last_failure": null,
+      "opened_at": null
+    },
+    "high": {
+      "state": "closed",
+      "failure_count": 0,
+      "last_failure": null,
+      "opened_at": null
+    }
+  }
+}
