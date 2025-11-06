@@ -243,9 +243,5 @@ export -f update_agent_status
 export -f get_next_task
 export -f update_task_status
 export -f add_task_to_queue
-export -f init_monitoring
 export -f set_resource_limits
 export -f with_resource_limits
-
-# Initialize on source
-init_monitoring

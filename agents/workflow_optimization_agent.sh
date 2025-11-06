@@ -7,19 +7,19 @@ source "${SCRIPT_DIR}/shared_functions.sh"
 
 AGENT_NAME="workflow_optimization_agent.sh"
 LOG_FILE="${SCRIPT_DIR}/workflow_optimization_agent.log"
-TODO_FILE="${WORKSPACE_ROOT}/todo_queue.json"
 WORKSPACE_ROOT="/Users/danielstevens/Desktop/github-projects/tools-automation"
+TODO_FILE="${WORKSPACE_ROOT}/todo_queue.json"
 OLLAMA_CLIENT="${SCRIPT_DIR}/../../../ollama_client.sh"
 
 # Analysis intervals (in seconds)
-MANUAL_PROCESS_CHECK_INTERVAL="${MANUAL_PROCESS_CHECK_INTERVAL:-300}"  # 5 minutes (reduced for testing)
-CICD_CHECK_INTERVAL="${CICD_CHECK_INTERVAL:-600}"  # 10 minutes (reduced for testing)
-REDUNDANCY_CHECK_INTERVAL="${REDUNDANCY_CHECK_INTERVAL:-900}"  # 15 minutes (reduced for testing)
+MANUAL_PROCESS_CHECK_INTERVAL="${MANUAL_PROCESS_CHECK_INTERVAL:-300}" # 5 minutes (reduced for testing)
+CICD_CHECK_INTERVAL="${CICD_CHECK_INTERVAL:-600}"                     # 10 minutes (reduced for testing)
+REDUNDANCY_CHECK_INTERVAL="${REDUNDANCY_CHECK_INTERVAL:-900}"         # 15 minutes (reduced for testing)
 
 # Thresholds
-MIN_AUTOMATION_RATIO="${MIN_AUTOMATION_RATIO:-0.3}"  # 30% of processes should be automated
-MAX_CICD_STEPS="${MAX_CICD_STEPS:-20}"  # Maximum reasonable CI/CD steps
-DUPLICATE_CODE_THRESHOLD="${DUPLICATE_CODE_THRESHOLD:-5}"  # Lines for duplicate detection
+MIN_AUTOMATION_RATIO="${MIN_AUTOMATION_RATIO:-0.3}"       # 30% of processes should be automated
+MAX_CICD_STEPS="${MAX_CICD_STEPS:-20}"                    # Maximum reasonable CI/CD steps
+DUPLICATE_CODE_THRESHOLD="${DUPLICATE_CODE_THRESHOLD:-5}" # Lines for duplicate detection
 
 # Initialize agent
 log_message() {
@@ -186,7 +186,8 @@ analyze_cicd_pipelines() {
         local workflow_files
         workflow_files=$(find "$github_actions_dir" -name "*.yml" -o -name "*.yaml" | wc -l)
 
-        for workflow_file in "$github_actions_dir"/*.yml "$github_actions_dir"/*.yaml 2>/dev/null; do
+        # Use find to get the files instead of globbing in for loop
+        while IFS= read -r -d '' workflow_file; do
             if [[ -f "$workflow_file" ]]; then
                 # Count steps in workflow
                 local step_count
@@ -215,7 +216,7 @@ analyze_cicd_pipelines() {
                         "medium" "$project"
                 fi
             fi
-        done
+        done < <(find "$github_actions_dir" -name "*.yml" -o -name "*.yaml" -print0 2>/dev/null)
     else
         create_todo ".github/workflows/" "1" "cicd_efficiency" \
             "Missing CI/CD workflows - project needs automated testing and deployment" \
@@ -417,4 +418,4 @@ while true; do
     log_message "DEBUG" "Optimization analysis cycle completed, sleeping for 60 seconds..."
     sleep 60
 done
-<parameter name="filePath">/Users/danielstevens/Desktop/github-projects/tools-automation/agents/workflow_optimization_agent.sh
+name="filePath" <parameter >/Users/danielstevens/Desktop/github-projects/tools-automation/agents/workflow_optimization_agent.sh
