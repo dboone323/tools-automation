@@ -136,5 +136,74 @@
       "maxParallel": 1,
       "maxImages": 1
     }
+  },
+  "codeAnalysis": {
+    "task": "codeAnalysis",
+    "primaryModel": "codellama:7b",
+    "fallbacks": ["qwen2.5-coder:1.5b", "mistral:7b"],
+    "preset": {
+      "num_ctx": 4096,
+      "temperature": 0.1,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 512
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 4096,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
+  },
+  "projectHealth": {
+    "task": "projectHealth",
+    "primaryModel": "mistral:7b",
+    "fallbacks": ["llama3.2:3b", "llama2:7b"],
+    "preset": {
+      "num_ctx": 4096,
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 512
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 4096,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
+  },
+  "workflowOptimization": {
+    "task": "workflowOptimization",
+    "primaryModel": "mistral:7b",
+    "fallbacks": ["llama3.2:3b", "codellama:7b"],
+    "preset": {
+      "num_ctx": 4096,
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 512
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 4096,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
   }
 }

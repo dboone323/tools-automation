@@ -1,0 +1,14 @@
+[
+  {
+    "file": "AutonomousDeployment.swift",
+    "line": 1,
+    "text": "CODE-ANALYSIS: Excessive print statements (      22) in production code",
+    "type": "code_smell",
+    "priority": "low",
+    "ai_generated": true,
+    "project": "tools-automation",
+    "timestamp": 1762391298310,
+    "source": "code_analysis_agent",
+    "agent": "code_analysis_agent.sh"
+  }
+]

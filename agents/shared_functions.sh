@@ -8,9 +8,6 @@ STATUS_FILE="${STATUS_FILE:-${SCRIPT_DIR}/agent_status.json}"
 TASK_QUEUE_FILE="${TASK_QUEUE_FILE:-${SCRIPT_DIR}/task_queue.json}"
 
 # Initialize monitoring
-init_monitoring() {
-    echo "DEBUG: shared_functions.sh sourced" >&2
-}
 
 # Update agent status
 update_agent_status() {
@@ -25,7 +22,7 @@ update_agent_status() {
     echo "DEBUG: About to call update_status.py" >&2
     # Ensure status file exists with a valid structure
     if [[ ! -f "$STATUS_FILE" ]]; then
-        echo '{"agents":{},"last_update":0}' > "$STATUS_FILE"
+        echo '{"agents":{},"last_update":0}' >"$STATUS_FILE"
     fi
     STATUS_FILE="$STATUS_FILE" python3 "${SCRIPT_DIR}/update_status.py" "$agent_status" "$agent_name" "$pid" "$task_id" 2>&1
     return $?
@@ -38,7 +35,7 @@ get_next_task() {
     # Get next task using Python
     # Ensure task queue file exists
     if [[ ! -f "$TASK_QUEUE_FILE" ]]; then
-        echo '{"tasks":[]}' > "$TASK_QUEUE_FILE"
+        echo '{"tasks":[]}' >"$TASK_QUEUE_FILE"
     fi
     python3 -c "
 import json
