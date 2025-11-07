@@ -15,6 +15,10 @@
       "daily_used": 0,
       "hourly_used": 0,
       "last_hourly_reset": "2025-11-06T00:00:00Z"
+    },
+    "test_value_0": {
+      "daily_used": 2,
+      "hourly_used": 2
     }
   },
   "circuit_breaker": {
@@ -28,6 +32,18 @@
       "state": "closed",
       "failure_count": 0,
       "last_failure": null,
+      "opened_at": null
+    },
+    "low": {
+      "failure_count": 6,
+      "last_failure": "2025-11-07T01:15:27Z",
+      "state": "open",
+      "opened_at": "2025-11-07T01:15:27Z"
+    },
+    "test_value_0": {
+      "state": "closed",
+      "failure_count": 2,
+      "last_failure": "2025-11-07T12:51:23.038481Z",
       "opened_at": null
     }
   }

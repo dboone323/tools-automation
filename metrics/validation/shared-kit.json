@@ -1,0 +1,14 @@
+{
+  "submodule": "shared-kit",
+  "lint": {
+    "result": "clean",
+    "warnings": 0,
+    "errors": 0
+  },
+  "validation": {
+    "mode": "swiftpm",
+    "status": "ok"
+  },
+  "coverage": "skipped",
+  "timestamp": 1762469265
+}

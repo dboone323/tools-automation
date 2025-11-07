@@ -1,0 +1,10 @@
+{
+  "id": "task_52",
+  "agent": "int-test",
+  "command": "test-echo",
+  "project": null,
+  "status": "success",
+  "returncode": 0,
+  "stdout": "ok\n",
+  "stderr": ""
+}

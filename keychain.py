@@ -40,21 +40,27 @@ def set_secret(service: str, value: str):
         pass
 
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 3:
         print(
             "Usage: python keychain.py get <service> or set <service> <value>",
             file=sys.stderr,
         )
-        sys.exit(1)
+        return 1
 
     action = sys.argv[1]
     service = sys.argv[2]
 
     if action == "get":
         print(get_secret(service))
+        return 0
     elif action == "set" and len(sys.argv) == 4:
         set_secret(service, sys.argv[3])
+        return 0
     else:
         print("Invalid action", file=sys.stderr)
-        sys.exit(1)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

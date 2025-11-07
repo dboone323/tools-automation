@@ -9,6 +9,7 @@ import os
 import subprocess
 import threading
 
+
 class FinalAccelerator:
     def __init__(self, workspace_root="/Users/danielstevens/Desktop/Quantum-workspace"):
         self.workspace_root = workspace_root
@@ -19,26 +20,26 @@ class FinalAccelerator:
         print("🚨 EMERGENCY AGENT RESTART")
 
         # Kill all existing agents
-        subprocess.run(['pkill', '-f', 'agent_.*\.sh'], capture_output=True)
-        subprocess.run(['pkill', '-f', 'quality_agent.sh'], capture_output=True)
+        subprocess.run(["pkill", "-f", "agent_.*.sh"], capture_output=True)
+        subprocess.run(["pkill", "-f", "quality_agent.sh"], capture_output=True)
         time.sleep(2)
 
         # Start agents with high priority
         agents_to_start = [
-            'agent_analytics.sh',
-            'agent_build.sh',
-            'agent_cleanup.sh',
-            'agent_codegen.sh',
-            'code_review_agent.sh',
-            'deployment_agent.sh',
-            'documentation_agent.sh',
-            'learning_agent.sh',
-            'monitoring_agent.sh',
-            'performance_agent.sh',
-            'quality_agent.sh',
-            'search_agent.sh',
-            'security_agent.sh',
-            'testing_agent.sh'
+            "agent_analytics.sh",
+            "agent_build.sh",
+            "agent_cleanup.sh",
+            "agent_codegen.sh",
+            "code_review_agent.sh",
+            "deployment_agent.sh",
+            "documentation_agent.sh",
+            "learning_agent.sh",
+            "monitoring_agent.sh",
+            "performance_agent.sh",
+            "quality_agent.sh",
+            "search_agent.sh",
+            "security_agent.sh",
+            "testing_agent.sh",
         ]
 
         started = 0
@@ -47,8 +48,11 @@ class FinalAccelerator:
             if os.path.exists(agent_path):
                 try:
                     # Start with nice -n -10 (high priority)
-                    subprocess.Popen(['nice', '-n', '-10', 'bash', agent_path, 'start'],
-                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    subprocess.Popen(
+                        ["nice", "-n", "-10", "bash", agent_path, "start"],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
                     started += 1
                     time.sleep(0.2)  # Stagger starts
                 except:
@@ -62,19 +66,19 @@ class FinalAccelerator:
         print("🔥 FORCE MAXIMUM TASK DISTRIBUTION")
 
         # Load current data
-        with open(f"{self.agents_dir}/task_queue.json", 'r') as f:
+        with open(f"{self.agents_dir}/task_queue.json", "r") as f:
             queue_data = json.load(f)
 
-        with open(f"{self.agents_dir}/agent_status.json", 'r') as f:
+        with open(f"{self.agents_dir}/agent_status.json", "r") as f:
             agent_data = json.load(f)
 
-        tasks = queue_data['tasks']
-        agents = agent_data['agents']
+        tasks = queue_data["tasks"]
+        agents = agent_data["agents"]
 
         # Get running agents
         running_agents = []
         for agent_name, agent_info in agents.items():
-            pid = agent_info.get('pid', 0)
+            pid = agent_info.get("pid", 0)
             if pid > 0:
                 try:
                     os.kill(pid, 0)
@@ -85,7 +89,7 @@ class FinalAccelerator:
         print(f"Running agents: {len(running_agents)}")
 
         # Get available tasks
-        available_tasks = [t for t in tasks if t.get('status') in ['queued', 'batched']]
+        available_tasks = [t for t in tasks if t.get("status") in ["queued", "batched"]]
         print(f"Available tasks: {len(available_tasks)}")
 
         # Force assign tasks (allow multiple per agent)
@@ -98,20 +102,20 @@ class FinalAccelerator:
                 break
 
             agent = running_agents[agent_index % len(running_agents)]
-            task['status'] = 'in_progress'
-            task['assigned_agent'] = agent
-            task['force_assigned'] = True
-            task['emergency_boost'] = True
+            task["status"] = "in_progress"
+            task["assigned_agent"] = agent
+            task["force_assigned"] = True
+            task["emergency_boost"] = True
             assignments += 1
 
             agent_index += 1
 
         # Save updated queue
-        queue_data['tasks'] = tasks
-        queue_data['emergency_acceleration'] = True
-        queue_data['max_assignments'] = assignments
+        queue_data["tasks"] = tasks
+        queue_data["emergency_acceleration"] = True
+        queue_data["max_assignments"] = assignments
 
-        with open(f"{self.agents_dir}/task_queue.json", 'w') as f:
+        with open(f"{self.agents_dir}/task_queue.json", "w") as f:
             json.dump(queue_data, f, indent=2)
 
         print(f"✅ Force assigned {assignments} tasks ({max_per_agent} per agent max)")
@@ -132,21 +136,21 @@ class FinalAccelerator:
             "batch_size": 20,
             "emergency_acceleration": True,
             "disable_logging": False,  # Keep logging for monitoring
-            "aggressive_cleanup": True
+            "aggressive_cleanup": True,
         }
 
-        with open(f"{self.agents_dir}/ultra_performance_config.json", 'w') as f:
+        with open(f"{self.agents_dir}/ultra_performance_config.json", "w") as f:
             json.dump(config, f, indent=2)
 
         print("✅ Ultra performance config created")
 
         # Send URGENT signals to running agents
-        with open(f"{self.agents_dir}/agent_status.json", 'r') as f:
+        with open(f"{self.agents_dir}/agent_status.json", "r") as f:
             agent_data = json.load(f)
 
         urgent_signals = 0
-        for agent_name, agent_info in agent_data['agents'].items():
-            pid = agent_info.get('pid', 0)
+        for agent_name, agent_info in agent_data["agents"].items():
+            pid = agent_info.get("pid", 0)
             if pid > 0:
                 try:
                     # Send SIGURG (urgent condition)
@@ -159,19 +163,24 @@ class FinalAccelerator:
 
     def start_acceleration_monitor(self):
         """Start real-time acceleration monitoring"""
+
         def monitor():
             while True:
                 try:
                     # Quick status check
-                    with open(f"{self.agents_dir}/task_queue.json", 'r') as f:
+                    with open(f"{self.agents_dir}/task_queue.json", "r") as f:
                         queue_data = json.load(f)
 
-                    tasks = queue_data['tasks']
-                    in_progress = len([t for t in tasks if t.get('status') == 'in_progress'])
-                    completed = len(queue_data.get('completed', []))
+                    tasks = queue_data["tasks"]
+                    in_progress = len(
+                        [t for t in tasks if t.get("status") == "in_progress"]
+                    )
+                    completed = len(queue_data.get("completed", []))
 
                     if in_progress < 10:  # If less than 10 tasks running, boost
-                        print(f"📈 Low activity detected ({in_progress} tasks). Boosting...")
+                        print(
+                            f"📈 Low activity detected ({in_progress} tasks). Boosting..."
+                        )
                         self.force_maximum_task_distribution()
 
                 except Exception as e:
@@ -206,9 +215,11 @@ class FinalAccelerator:
         print("\n📊 Monitor progress at: http://127.0.0.1:8080")
         print("🎯 Expected completion: DAYS (not months)!")
 
+
 def main():
     accelerator = FinalAccelerator()
     accelerator.run_emergency_acceleration()
+
 
 if __name__ == "__main__":
     main()

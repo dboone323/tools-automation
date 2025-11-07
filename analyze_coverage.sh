@@ -12,8 +12,8 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-WORKSPACE_ROOT="/Users/danielstevens/Desktop/Quantum-workspace"
-COVERAGE_DIR="$HOME/.quantum-workspace/artifacts/coverage"
+WORKSPACE_ROOT="/Users/danielstevens/Desktop/github-projects/tools-automation"
+COVERAGE_DIR="$WORKSPACE_ROOT/metrics/coverage"
 REPORT_FILE="$COVERAGE_DIR/coverage_report_$(date +%Y%m%d_%H%M%S).md"
 
 mkdir -p "$COVERAGE_DIR"
@@ -103,7 +103,7 @@ analyze_python_coverage() {
     test_modules=$(mktemp)
 
     # All Python files under Tools (excluding __init__.py for module list)
-    find "$WORKSPACE_ROOT/Tools" -type f -name "*.py" 2>/dev/null >"$tmp_all"
+    find "$WORKSPACE_ROOT" -type f -name "*.py" 2>/dev/null >"$tmp_all"
     # Derive non-test module basenames
     grep -v "/__init__\.py$" "$tmp_all" | grep -v "/test_.*\.py$" | grep -v "/_test\.py$" | xargs -I{} basename {} | sed 's/\.py$//' | sort -u >"$py_modules"
 
@@ -148,9 +148,9 @@ analyze_shell_coverage() {
     echo -e "${YELLOW}🔧 Analyzing Shell scripts...${NC}"
 
     local shell_files
-    shell_files=$(find "$WORKSPACE_ROOT/Tools/Automation" -name "*.sh" ! -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
+    shell_files=$(find "$WORKSPACE_ROOT" -name "*.sh" ! -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
     local shell_tests
-    shell_tests=$(find "$WORKSPACE_ROOT/Tools/Automation" -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
+    shell_tests=$(find "$WORKSPACE_ROOT" -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
 
     echo -e "  Shell files: $shell_files"
     echo -e "  Shell tests: $shell_tests"
@@ -167,13 +167,14 @@ EOF
 
     # List critical scripts
     critical_scripts=(
-        "local_ci_orchestrator.sh"
-        "master_automation.sh"
-        "setup_free_only.sh"
+        "ci_orchestrator.sh"
+        "agent_monitoring.sh"
+        "dashboard_unified.sh"
+        "mcp_server.py"
     )
 
     for script in "${critical_scripts[@]}"; do
-        if [ -f "$WORKSPACE_ROOT/Tools/Automation/$script" ]; then
+        if [ -f "$WORKSPACE_ROOT/$script" ]; then
             echo "- $script (100% coverage required)" >>"$REPORT_FILE"
         fi
     done
@@ -183,7 +184,7 @@ EOF
 analyze_agents() {
     echo -e "${YELLOW}🤖 Analyzing agent scripts...${NC}"
 
-    local agent_dir="$WORKSPACE_ROOT/Tools/Automation/agents"
+    local agent_dir="$WORKSPACE_ROOT/agents"
     if [ -d "$agent_dir" ]; then
         local agent_files
         agent_files=$(find "$agent_dir" -type f \( -name "*.sh" -o -name "*.py" \) 2>/dev/null | wc -l | tr -d ' ')
@@ -219,15 +220,17 @@ EOF
 
 # Analyze each Swift project
 echo ""
-analyze_swift_project "HabitQuest" "$WORKSPACE_ROOT/Projects/HabitQuest"
+analyze_swift_project "HabitQuest" "$WORKSPACE_ROOT/HabitQuest"
 echo ""
-analyze_swift_project "MomentumFinance" "$WORKSPACE_ROOT/Projects/MomentumFinance"
+analyze_swift_project "MomentumFinance" "$WORKSPACE_ROOT/MomentumFinance"
 echo ""
-analyze_swift_project "PlannerApp" "$WORKSPACE_ROOT/Projects/PlannerApp"
+analyze_swift_project "PlannerApp" "$WORKSPACE_ROOT/PlannerApp"
 echo ""
-analyze_swift_project "AvoidObstaclesGame" "$WORKSPACE_ROOT/Projects/AvoidObstaclesGame"
+analyze_swift_project "AvoidObstaclesGame" "$WORKSPACE_ROOT/AvoidObstaclesGame"
 echo ""
-analyze_swift_project "CodingReviewer" "$WORKSPACE_ROOT/Projects/CodingReviewer"
+analyze_swift_project "CodingReviewer" "$WORKSPACE_ROOT/CodingReviewer"
+echo ""
+analyze_swift_project "shared-kit" "$WORKSPACE_ROOT/shared-kit"
 
 # Analyze Python and Shell scripts
 echo ""
@@ -260,9 +263,9 @@ cat >>"$REPORT_FILE" <<'EOF'
 
 ## Next Steps
 
-1. Run `./Tools/Automation/generate_missing_tests.sh` to auto-generate test stubs
+1. Run `./comprehensive_test_generator.sh` to auto-generate test stubs
 2. Update `quality-config.yaml` to enforce 85% minimum coverage
-3. Integrate coverage checks into `local_ci_orchestrator.sh`
+3. Integrate coverage checks into `ci_orchestrator.sh`
 4. Set up coverage monitoring in daily cron job
 
 EOF

@@ -1,0 +1,14 @@
+{
+  "submodule": "MomentumFinance",
+  "lint": {
+    "result": "issues",
+    "warnings": 0,
+    "errors": 0
+  },
+  "validation": {
+    "mode": "xcode",
+    "status": "ok"
+  },
+  "coverage": "skipped",
+  "timestamp": 1762469259
+}

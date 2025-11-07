@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # CI Orchestrator for Quantum-workspace
 # Handles PR validation vs release builds with circuit breakers and performance monitoring
@@ -207,6 +207,66 @@ run_quality_gate_validation() {
     return 0
 }
 
+# Function to run smoke test (fast validation)
+run_smoke_test() {
+    log_info "Running smoke test mode (fast validation)..."
+
+    # Quick checks: verify key scripts exist and are executable
+    local script_checks=(
+        "agent_monitoring.sh"
+        "dashboard_unified.sh"
+        "scripts/check_error_budget.sh"
+    )
+
+    for script in "${script_checks[@]}"; do
+        if [[ ! -x "$script" ]]; then
+            log_error "Smoke test failed: $script not executable"
+            return 1
+        fi
+        log_info "✓ $script is executable"
+    done
+
+    # Check Python files exist (don't need to be executable)
+    local python_checks=(
+        "mcp_server.py"
+    )
+
+    for pyfile in "${python_checks[@]}"; do
+        if [[ ! -f "$pyfile" ]]; then
+            log_error "Smoke test failed: $pyfile not found"
+            return 1
+        fi
+        log_info "✓ $pyfile exists"
+    done
+
+    # Quick syntax check on Python files
+    if command -v python3 >/dev/null 2>&1; then
+        if ! python3 -m py_compile mcp_server.py 2>/dev/null; then
+            log_error "Smoke test failed: mcp_server.py syntax error"
+            return 1
+        fi
+        log_info "✓ mcp_server.py syntax OK"
+    fi
+
+    # Check if key config files exist
+    local configs=(
+        "config/cloud_fallback_config.json"
+        "model_registry.json"
+        "alert_config.json"
+    )
+
+    for config in "${configs[@]}"; do
+        if [[ ! -f "$config" ]]; then
+            log_error "Smoke test failed: $config not found"
+            return 1
+        fi
+        log_info "✓ $config exists"
+    done
+
+    log_success "Smoke test passed"
+    return 0
+}
+
 # Function to generate CI report
 generate_ci_report() {
     local mode="$1"
@@ -280,8 +340,13 @@ main() {
             success=true
         fi
         ;;
+    "smoke")
+        if run_smoke_test; then
+            success=true
+        fi
+        ;;
     *)
-        log_error "Unknown mode: $MODE. Use 'pr-validation' or 'release-build'"
+        log_error "Unknown mode: $MODE. Use 'pr-validation', 'release-build', or 'smoke'"
         exit 1
         ;;
     esac

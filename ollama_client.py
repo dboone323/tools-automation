@@ -65,13 +65,15 @@ class CloudFallbackPolicy:
             # Check if reset time has passed
             opened_at = cb.get("opened_at")
             if opened_at:
-                from datetime import datetime, timedelta
+                from datetime import datetime, timedelta, timezone
 
                 opened_time = datetime.fromisoformat(opened_at.replace("Z", "+00:00"))
                 reset_minutes = self.config.get("circuit_breaker", {}).get(
                     "reset_after_minutes", 30
                 )
-                if datetime.utcnow() - opened_time >= timedelta(minutes=reset_minutes):
+                if datetime.now(timezone.utc) - opened_time >= timedelta(
+                    minutes=reset_minutes
+                ):
                     # Reset circuit breaker
                     self.quota_data["circuit_breaker"][priority]["state"] = "closed"
                     self.quota_data["circuit_breaker"][priority]["failure_count"] = 0
@@ -87,9 +89,9 @@ class CloudFallbackPolicy:
         if not self.enabled:
             return
 
-        from datetime import datetime
+        from datetime import datetime, timezone
 
-        now = datetime.utcnow().isoformat() + "Z"
+        now = datetime.now(timezone.utc).isoformat() + "Z"
 
         if "circuit_breaker" not in self.quota_data:
             self.quota_data["circuit_breaker"] = {}
@@ -140,9 +142,9 @@ class CloudFallbackPolicy:
         if not self.enabled:
             return
 
-        from datetime import datetime
+        from datetime import datetime, timezone
 
-        timestamp = datetime.utcnow().isoformat() + "Z"
+        timestamp = datetime.now(timezone.utc).isoformat() + "Z"
 
         quotas = self.quota_data.get("quotas", {}).get(priority, {})
         daily_limit = quotas.get("daily_limit", 0)

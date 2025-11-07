@@ -1,0 +1,7 @@
+{
+  "id": "test_task_3",
+  "command": "analyze",
+  "project": "test_project",
+  "status": "error",
+  "stderr": "Command 'timeout' timed out after 1800 seconds"
+}

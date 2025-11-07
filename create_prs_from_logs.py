@@ -32,7 +32,7 @@ def extract_repo_and_branch(text):
         m = re.search(r"git@github.com:([^/\s]+/[^/\s]+)\.git", text)
     if not m:
         return None, None
-    repo = m.group(1)
+    repo = m.group(1).rstrip(".git")
     b = re.search(r"(snapshot/[0-9T:\-]+)", text)
     if not b:
         b = re.search(r"(snapshot/[0-9A-Za-z_\-:]+)", text)

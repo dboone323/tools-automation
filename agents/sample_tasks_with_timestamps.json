@@ -1,0 +1,9 @@
+{
+  "tasks": [
+    {"id": "t1","type":"build","description":"Build Shared lib","priority":7,"assigned_agent":"agent_build.sh","status":"queued","created": 1762465790},
+    {"id": "t2","type":"test","description":"Test MomentumFinance","priority":8,"assigned_agent":"agent_build.sh","status":"queued","created": 1762465790},
+    {"id": "t3","type":"documentation","description":"Update README","priority":6,"assigned_agent":"documentation_agent.sh","status":"queued","created": 1762465790}
+  ],
+  "completed": [],
+  "failed": []
+}

@@ -1,0 +1,14 @@
+{
+  "submodule": "AvoidObstaclesGame",
+  "lint": {
+    "result": "clean",
+    "warnings": 0,
+    "errors": 0
+  },
+  "validation": {
+    "mode": "xcode",
+    "status": "ok"
+  },
+  "coverage": "skipped",
+  "timestamp": 1762469263
+}

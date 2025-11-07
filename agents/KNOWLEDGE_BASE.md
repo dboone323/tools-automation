@@ -1,62 +1,195 @@
 # Agent System Knowledge Base (Auto-Generated)
 
-_Last updated: 2025-10-01 18:10:47_
+_Last updated: 2025-11-07 07:56:24_
 
 ## Agents & Tools
 
+- **.auto_restart_agent_analytics.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_backup.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_build.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_cleanup.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_codegen.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_control.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_debug.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_integration.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_notification.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_optimization.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_performance_monitor.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_security.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_supervisor.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_test_quality.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_testing.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_todo.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_uiux.sh**: !/usr/bin/env bash
+- **.auto_restart_agent_validation.sh**: !/usr/bin/env bash
+- **.auto_restart_apple_pro_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_auto_update_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_code_review_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_collab_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_deployment_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_documentation_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_knowledge_base_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_learning_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_public_api_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_pull_request_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_quality_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_search_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_task_orchestrator.sh**: !/usr/bin/env bash
+- **.auto_restart_uiux_agent.sh**: !/usr/bin/env bash
+- **.auto_restart_updater_agent.sh**: !/usr/bin/env bash
+- **agent_analytics.sh**: !/bin/bash
+- **agent_backup.sh**: !/bin/bash
 - **agent_build.sh**: !/bin/bash
+- **agent_build_enhanced.sh**: !/bin/bash
+- **agent_cleanup.sh**: !/bin/bash
 - **agent_codegen.sh**: !/bin/bash
+- **agent_config.sh**: !/bin/bash
+- **agent_control.sh**: !/bin/bash
 - **agent_debug.sh**: !/bin/bash
+- **agent_debug_enhanced.sh**: !/bin/bash
+- **agent_deployment.sh**: !/bin/bash
+- **agent_documentation.sh**: !/bin/bash
+- **agent_helpers.sh**: !/bin/bash
+- **agent_integration.sh**: !/bin/bash
+- **agent_keeper.sh**: !/bin/bash
+- **agent_loop_utils.sh**: !/bin/bash
+- **agent_migration.sh**: !/bin/bash
+- **agent_monitoring.sh**: !/bin/bash
+- **agent_notification.sh**: !/bin/bash
+- **agent_optimization.sh**: !/bin/bash
+- **agent_optimizer.py**: !/usr/bin/env python3
 - **agent_performance_monitor.sh**: !/bin/bash
+- **agent_recovery.py**: !/usr/bin/env python3
+- **agent_search.sh**: !/bin/bash
 - **agent_security.sh**: !/bin/bash
 - **agent_supervisor.sh**: !/usr/bin/env bash
+- **agent_test_quality.sh**: !/bin/bash
 - **agent_testing.sh**: !/bin/bash
 - **agent_todo.sh**: !/usr/bin/env bash
 - **agent_uiux.sh**: !/bin/bash
+- **agent_validation.sh**: !/bin/bash
+- **agent_workflow_phase2.sh**: !/bin/bash
+- **agent_workflow_phase3.sh**: !/bin/bash
+- **ai_client.sh**: !/bin/bash
+- **ai_code_review_agent.sh**: !/bin/bash
+- **ai_docs_agent.sh**: !/bin/bash
+- **ai_integration.py**: !/usr/bin/env python3
 - **ai_log_analyzer.py**: !/usr/bin/env python3
+- **ai_predictive_analytics_agent.sh**: !/bin/bash
+- **analytics_collector.py**: !/usr/bin/env python3
 - **api_server.py**: api_server.py
 - **apple_pro_agent.sh**: !/bin/bash
 - **assign_once.sh**: !/usr/bin/env bash
+- **audit_agent.sh**: !/bin/bash
+- **auto_restart_code_analysis_agent.sh**: !/bin/bash
+- **auto_restart_monitor.sh**: !/bin/bash
+- **auto_restart_project_health_agent.sh**: !/bin/bash
+- **auto_restart_workflow_optimization_agent.sh**: !/bin/bash
+- **auto_rollback.sh**: !/bin/bash
 - **auto_update_agent.sh**: !/bin/bash
 - **backup_manager.sh**: !/bin/bash
+- **check_persistence.sh**: !/bin/bash
+- **clear_alerts.sh**: !/bin/bash
+- **code_analysis_agent.sh**: !/bin/bash
 - **code_review_agent.sh**: !/bin/bash
 - **collab_agent.sh**: !/bin/bash
-- **dashboard_api_server.py**: !/usr/bin/env python3
+- **configure_auto_restart.sh**: !/bin/bash
+- **context_loader.sh**: !/bin/bash
+- **cron_setup.sh**: !/bin/bash
 - **dashboard_launcher.sh**: !/bin/bash
+- **decision_engine.py**: !/usr/bin/env python3
+- **dependency_graph_agent.sh**: !/bin/bash
 - **deployment_agent.sh**: !/bin/bash
 - **documentation_agent.sh**: !/bin/bash
+- **emergency_accelerator.py**: !/usr/bin/env python3
+- **emergency_response.sh**: !/bin/bash
+- **encryption_agent.sh**: !/bin/bash
+- **enhanced_shared_functions.sh**: !/bin/bash
+- **error_learning_agent.sh**: !/usr/bin/env bash
+- **error_learning_agent_simple.sh**: !/bin/bash
+- **error_learning_agent_v2.sh**: !/bin/bash
+- **error_learning_scan.sh**: !/usr/bin/env bash
+- **execute_all_tasks.sh**: !/bin/bash
+- **fix_agent_system.sh**: !/bin/bash
+- **fix_suggester.py**: !/usr/bin/env python3
+- **inject_todo.sh**: !/bin/bash
+- **integrate_phase1.sh**: !/bin/bash
+- **integrate_phase2.sh**: !/bin/bash
+- **integrate_phase3.sh**: !/bin/bash
+- **integrate_phase4.sh**: !/usr/bin/env bash
 - **knowledge_base_agent.sh**: !/bin/bash
+- **knowledge_sync.sh**: !/bin/bash
 - **launch_agent_dashboard.sh**: !/bin/bash
 - **learning_agent.sh**: !/bin/bash
+- **max_processor.py**: !/usr/bin/env python3
+- **mcp_client.sh**: !/bin/bash
+- **metrics_dashboard.py**: !/usr/bin/env python3
 - **minimal_dashboard.sh**: !/bin/bash
 - **monitor_agents.sh**: !/bin/bash
-- **monitor_agents_final.sh**: !/bin/bash
 - **monitor_agents_fixed.sh**: !/bin/bash
 - **monitor_dashboard.py**: monitor_dashboard.py
-- **monitor_dashboard.sh**: !/bin/bash
+- **monitor_lock_timeouts.sh**: !/bin/bash
 - **monitoring_agent.sh**: !/bin/bash
+- **normalize_task_queue.py**: !/usr/bin/env python3
+- **orchestrator_v2.py**: !/usr/bin/env python3
+- **pattern_recognizer.py**: !/usr/bin/env python3
 - **performance_agent.sh**: !/bin/bash
 - **plugin_api.sh**: !/bin/bash
+- **prediction_engine.py**: !/usr/bin/env python3
+- **predictive_analytics_agent.sh**: !/bin/bash
+- **proactive_monitor.sh**: !/bin/bash
+- **project_health_agent.sh**: !/bin/bash
 - **public_api_agent.sh**: !/bin/bash
 - **pull_request_agent.sh**: !/bin/bash
 - **quality_agent.sh**: !/bin/bash
+- **quantum_chemistry_agent.sh**: !/bin/bash
+- **quantum_finance_agent.sh**: !/bin/bash
+- **quantum_learning_agent.sh**: !/bin/bash
+- **quantum_orchestrator_agent.sh**: !/bin/bash
 - **run_agent.py**: !/usr/bin/env python3
+- **run_mcp_server.sh**: !/bin/zsh
+- **run_task_orchestrator.sh**: !/bin/zsh
+- **safe_shutdown.sh**: !/bin/bash
 - **scheduled_inventory.sh**: !/usr/bin/env bash
 - **search_agent.sh**: !/bin/bash
 - **security_agent.sh**: !/bin/bash
+- **seed_demo_tasks.sh**: !/bin/bash
 - **serve_dashboard.sh**: !/bin/bash
+- **shared_functions.sh**: !/bin/bash
+- **show_alerts.sh**: !/bin/bash
 - **simple_dashboard.sh**: !/bin/bash
+- **speed_accelerator.sh**: !/bin/bash
 - **start_agents.sh**: !/bin/bash
 - **start_recommended_agents.sh**: !/usr/bin/env bash
 - **status_utils.py**: !/usr/bin/env python3
 - **stop_agents.sh**: !/bin/bash
+- **strategy_evolution.py**: !/usr/bin/env python3
+- **strategy_tracker.py**: !/usr/bin/env python3
+- **success_verifier.py**: !/usr/bin/env python3
+- **task_accelerator.py**: !/usr/bin/env python3
 - **task_orchestrator.sh**: !/bin/bash
+- **task_processor.sh**: !/bin/bash
 - **test_dashboard.sh**: !/bin/bash
+- **test_metrics.sh**: !/bin/bash
+- **test_phase1_integration.sh**: !/bin/bash
+- **test_phase2_integration.sh**: !/bin/bash
+- **test_phase3_integration.sh**: !/bin/bash
+- **test_phase4_integration.sh**: !/usr/bin/env bash
+- **test_script.sh**: !/bin/bash
+- **test_update.sh**: !/bin/bash
 - **testing_agent.sh**: !/bin/bash
 - **testing_agent_backup.sh**: !/bin/bash
+- **timeout_utils.sh**: !/bin/bash
+- **todo_ai_config.sh**: !/bin/bash
 - **uiux_agent.sh**: !/bin/bash
 - **unified_dashboard_agent.sh**: !/bin/bash
+- **update_all_agents.sh**: !/bin/bash
+- **update_knowledge.py**: !/usr/bin/env python3
+- **update_status.py**: !/usr/bin/env python3
 - **updater_agent.sh**: !/bin/bash
+- **validation_framework.py**: !/usr/bin/env python3
+- **watch_supervisor.sh**: !/bin/bash
+- **workflow_optimization_agent.sh**: !/bin/bash
 - **working_dashboard.sh**: !/bin/bash
 
 ## Configs
@@ -65,68 +198,16 @@ _Last updated: 2025-10-01 18:10:47_
 
 ## Logs
 
-- **agent_build.sh.log**: Audit or agent log file.
-- **agent_codegen.sh.log**: Audit or agent log file.
-- **agent_debug.sh.log**: Audit or agent log file.
-- **analytics_agent.log**: Audit or agent log file.
-- **apple_pro_agent.log**: Audit or agent log file.
-- **apple_pro_agent.sh.log**: Audit or agent log file.
-- **audit.log**: Audit or agent log file.
-- **auto_update_agent.log**: Audit or agent log file.
-- **auto_update_agent.sh.log**: Audit or agent log file.
-- **backup_agent.log**: Audit or agent log file.
-- **build_agent.log**: Audit or agent log file.
-- **cleanup_agent.log**: Audit or agent log file.
-- **code_review_agent.log**: Audit or agent log file.
-- **codegen_agent.log**: Audit or agent log file.
-- **collab_agent.log**: Audit or agent log file.
-- **collab_agent.sh.log**: Audit or agent log file.
-- **dashboard_launcher.log**: Audit or agent log file.
-- **dashboard_server.log**: Audit or agent log file.
-- **debug_agent.log**: Audit or agent log file.
-- **deployment_agent.log**: Audit or agent log file.
-- **documentation_agent.log**: Audit or agent log file.
-- **integration_agent.log**: Audit or agent log file.
-- **knowledge_base_agent.log**: Audit or agent log file.
-- **knowledge_base_agent.sh.log**: Audit or agent log file.
-- **learning_agent.log**: Audit or agent log file.
-- **migration_agent.log**: Audit or agent log file.
-- **monitor_agents.log**: Audit or agent log file.
-- **monitor_agents_final.log**: Audit or agent log file.
-- **monitor_agents_fixed.log**: Audit or agent log file.
-- **monitoring_agent.log**: Audit or agent log file.
-- **notification_agent.log**: Audit or agent log file.
-- **optimization_agent.log**: Audit or agent log file.
-- **performance_agent.log**: Audit or agent log file.
-- **performance_monitor.log**: Audit or agent log file.
-- **performance_restart.log**: Audit or agent log file.
-- **public_api_agent.log**: Audit or agent log file.
-- **pull_request_agent.log**: Audit or agent log file.
-- **pull_request_agent.sh.log**: Audit or agent log file.
-- **quality_agent.log**: Audit or agent log file.
-- **search_agent.log**: Audit or agent log file.
-- **search_agent.sh.log**: Audit or agent log file.
-- **security_agent.log**: Audit or agent log file.
-- **security_agent_startup.log**: Audit or agent log file.
-- **security_restart.log**: Audit or agent log file.
-- **supervisor.log**: Audit or agent log file.
-- **supervisor_restart.log**: Audit or agent log file.
-- **task_orchestrator.log**: Audit or agent log file.
-- **testing_agent.log**: Audit or agent log file.
-- **testing_agent.sh.log**: Audit or agent log file.
-- **testing_restart.log**: Audit or agent log file.
-- **todo_agent.log**: Audit or agent log file.
-- **uiux_agent.log**: Audit or agent log file.
-- **uiux_agent.sh.log**: Audit or agent log file.
-- **uiux_restart.log**: Audit or agent log file.
-- **unified_dashboard_agent.log**: Audit or agent log file.
-- **updater_agent.log**: Audit or agent log file.
-- **updater_agent.sh.log**: Audit or agent log file.
-- **validation_agent.log**: Audit or agent log file.
-- **working_dashboard.log**: Audit or agent log file.
+- **code_analysis_agent.log**: Audit or agent log file.
+- **code_analysis_agent_restart.log**: Audit or agent log file.
+- **dependency_graph_agent.log**: Audit or agent log file.
+- **project_health_agent.log**: Audit or agent log file.
+- **project_health_agent_restart.log**: Audit or agent log file.
+- **rollback.log**: Audit or agent log file.
+- **workflow_optimization_agent.log**: Audit or agent log file.
+- **workflow_optimization_agent_restart.log**: Audit or agent log file.
 
 ## Quickstart
-
 - Run `onboard.sh` to set up environment and permissions.
 - Start supervisor: `./agent_supervisor.sh`
 - Run API server: `python3 api_server.py`

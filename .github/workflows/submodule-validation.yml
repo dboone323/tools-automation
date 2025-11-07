@@ -1,0 +1,76 @@
+name: Submodule Fast Validation
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+    workflow_dispatch: {}
+
+jobs:
+    validate:
+        runs-on: macos-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                submodule:
+                    [
+                        CodingReviewer,
+                        PlannerApp,
+                        HabitQuest,
+                        MomentumFinance,
+                        AvoidObstaclesGame,
+                        shared-kit,
+                    ]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  submodules: recursive
+
+            - name: Setup Swift
+              uses: swift-actions/setup-swift@v2
+              with:
+                  swift-version: "5.9"
+
+            - name: Install SwiftLint (optional)
+              run: |
+                  brew install swiftlint || echo "SwiftLint optional"
+
+            - name: Fast validate submodule
+              run: |
+                  bash scripts/submodule_fast_validate.sh "${{ matrix.submodule }}"
+
+            - name: Upload validation artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: validation-${{ matrix.submodule }}
+                  path: metrics/validation/${{ matrix.submodule }}.json
+
+    summary:
+        runs-on: macos-latest
+        needs: [validate]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  submodules: recursive
+
+            - name: Download artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  path: metrics/validation
+
+            - name: AI summary (optional)
+              run: |
+                  bash scripts/ollama_ci_summary.sh || true
+
+            - name: Upload combined summary
+              run: |
+                  jq -s '[.[]]' metrics/validation/*.json > metrics/validation/combined.json
+              shell: bash
+
+            - name: Store combined summary
+              uses: actions/upload-artifact@v4
+              with:
+                  name: validation-combined
+                  path: metrics/validation/combined.json
