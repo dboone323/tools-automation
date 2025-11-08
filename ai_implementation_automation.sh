@@ -37,6 +37,11 @@ log_error() {
 
 # Check if Ollama is available for AI assistance
 check_ollama() {
+  # TEST_MODE bypass
+  if [[ ${TEST_MODE:-0} == "1" ]]; then
+    echo "(TEST_MODE) Ollama check bypassed" >&2
+    return 0
+  fi
   if command -v ollama &>/dev/null && ollama list &>/dev/null; then
     log_success "Ollama available for AI assistance"
     return 0

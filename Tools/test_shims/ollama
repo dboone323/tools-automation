@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Simple Ollama CLI shim returning deterministic JSON for tests.
+# Supports: list, run, pull, serve
+
+cmd=${1:-}
+shift || true
+
+iso_ts() {
+    date -u +"%Y-%m-%dT%H:%M:%SZ"
+}
+
+json_escape() {
+    python3 - <<'PY'
+import json,sys
+print(json.dumps(' '.join(sys.argv[1:])))
+PY
+}
+
+case "$cmd" in
+list)
+    cat <<JSON
+{"models":[{"name":"mistral","size":"7b"},{"name":"llama2","size":"13b"}]}
+JSON
+    ;;
+run)
+    model="${1:-mistral}" || true
+    shift || true
+    prompt=$(json_escape "$@")
+    cat <<JSON
+{"model":"${model}","created_at":"$(iso_ts)","status":"stubbed","response":"canned completion","tokens":5,"prompt":${prompt}}
+JSON
+    ;;
+pull)
+    model="${1:-mistral}" || true
+    cat <<JSON
+{"model":"${model}","created_at":"$(iso_ts)","status":"pulled"}
+JSON
+    ;;
+serve)
+    echo "ollama shim server started (no-op)" >&2
+    # Simulate a running server quickly and exit success
+    exit 0
+    ;;
+*)
+    cat <<JSON
+{"created_at":"$(iso_ts)","status":"stubbed","info":"unknown or unsupported command"}
+JSON
+    ;;
+esac

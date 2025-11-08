@@ -621,6 +621,10 @@ log() {
 }
 
 check_ollama_health() {
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        log "✅ (TEST_MODE) Ollama assumed healthy"
+        return 0
+    fi
     if command -v ollama &> /dev/null; then
         if ollama list &> /dev/null; then
             local model_count=$(ollama list | tail -n +2 | wc -l)

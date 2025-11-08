@@ -42,6 +42,21 @@ log_test() {
 }
 
 # Assertion functions
+assert_not_contains() {
+    local haystack="$1"
+    local needle="$2"
+    local message="$3"
+    ((TESTS_RUN++))
+    if ! echo "$haystack" | grep -q "$needle"; then
+        ((TESTS_PASSED++))
+        log_test "PASS" "$message"
+        return 0
+    else
+        ((TESTS_FAILED++))
+        log_test "FAIL" "$message (unexpected match: '$needle')"
+        return 1
+    fi
+}
 assert_success() {
     local message="$1"
     local exit_code=$?
@@ -214,6 +229,16 @@ run_test_suite() {
 
         # Setup
         setup_test_env
+
+        # Apply per-test timeout override if declared (TIMEOUT_SEC inside test function)
+        local per_test_timeout="${TIMEOUT_SEC:-}"
+        if declare -f "${test_func}_timeout" >/dev/null 2>&1; then
+            per_test_timeout=$("${test_func}_timeout")
+        fi
+
+        if [[ -n "$per_test_timeout" ]]; then
+            export TIMEOUT_SEC="$per_test_timeout"
+        fi
 
         # Run test
         if "$test_func"; then

@@ -39,6 +39,11 @@ log_error() {
 
 # Check if Ollama server is running and select available model
 check_ollama_health() {
+    # TEST_MODE bypass: when enabled, skip real network/model operations and assume healthy
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        log_info "TEST_MODE active: skipping real Ollama health checks (stubbed healthy)"
+        return 0
+    fi
     log_info "Checking Ollama server health at ${OLLAMA_URL}..."
 
     if ! curl -sf "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then
@@ -100,6 +105,29 @@ generate_ai_review() {
     local head_ref="${3:-HEAD}"
 
     log_info "Generating AI review for diff (${#diff_content} chars)..."
+
+    # If TEST_MODE, return canned review quickly
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        log_info "TEST_MODE active: returning stubbed AI review"
+        cat <<'EOF'
+## Severity Assessment
+- Critical Issues: 0
+- Major Issues: 0
+- Minor Issues: 1
+
+## Detailed Findings
+
+### Minor Issues / Suggestions
+- Example suggestion: consider adding more unit tests for edge cases.
+
+## Recommendations
+Add coverage for error handling paths.
+
+## Approval Status
+APPROVED
+EOF
+        return 0
+    fi
 
     # Dynamic token allocation based on diff size
     local num_tokens=1500 # Default for small diffs
