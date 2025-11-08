@@ -18,8 +18,14 @@ print(json.dumps(' '.join(sys.argv[1:])))
 PY
 }
 
+variant="${OLLAMA_STUB_VARIANT:-success}"
+
 case "$cmd" in
 list)
+    if [[ "$variant" == "error" ]]; then
+        echo '{"error":"list failed (stub)"}' >&2
+        exit 2
+    fi
     cat <<JSON
 {"models":[{"name":"mistral","size":"7b"},{"name":"llama2","size":"13b"}]}
 JSON
@@ -28,17 +34,31 @@ run)
     model="${1:-mistral}" || true
     shift || true
     prompt=$(json_escape "$@")
+    if [[ "$variant" == "slow" ]]; then sleep 1; fi
+    if [[ "$variant" == "error" ]]; then
+        echo '{"error":"run failed (stub)"}' >&2
+        exit 2
+    fi
     cat <<JSON
 {"model":"${model}","created_at":"$(iso_ts)","status":"stubbed","response":"canned completion","tokens":5,"prompt":${prompt}}
 JSON
     ;;
 pull)
     model="${1:-mistral}" || true
+    if [[ "$variant" == "error" ]]; then
+        echo '{"error":"pull failed (stub)"}' >&2
+        exit 2
+    fi
     cat <<JSON
 {"model":"${model}","created_at":"$(iso_ts)","status":"pulled"}
 JSON
     ;;
 serve)
+    if [[ "$variant" == "error" ]]; then
+        echo 'server failed (stub)' >&2
+        exit 2
+    fi
+    if [[ "$variant" == "slow" ]]; then sleep 1; fi
     echo "ollama shim server started (no-op)" >&2
     # Simulate a running server quickly and exit success
     exit 0

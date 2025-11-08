@@ -14,6 +14,11 @@ cd "$ROOT_DIR"
 
 export PATH="$ROOT_DIR/tools/test_shims:$PATH"
 
+# Prefer project virtual environment Python if present
+if [[ -x "$ROOT_DIR/.venv/bin/python" ]]; then
+    export PATH="$ROOT_DIR/.venv/bin:$PATH"
+fi
+
 if [[ "${TEST_MODE:-0}" == "1" ]]; then
     echo "[info] TEST_MODE enabled: AI calls stubbed"
 fi
@@ -44,6 +49,10 @@ python_tests() {
     echo "[phase] Python tests"
     if [[ -d tests ]]; then
         local PY=python
+        # Prefer venv python explicitly if available
+        if [[ -x "$ROOT_DIR/.venv/bin/python" ]]; then
+            PY="$ROOT_DIR/.venv/bin/python"
+        fi
         if ! command -v "$PY" >/dev/null 2>&1; then
             PY=python3
         fi
@@ -51,21 +60,33 @@ python_tests() {
             echo "[skip] No python interpreter found; skipping Python tests"
             return 0
         fi
-        if ! "$PY" -c "import importlib,sys;\nexit(0 if importlib.util.find_spec('pytest') else 1)" >/dev/null 2>&1; then
+        if ! "$PY" -c "import pytest" >/dev/null 2>&1; then
             echo "[skip] pytest module not available; skipping Python tests"
             return 0
         fi
-        local cmd=("$PY" -m pytest -q)
+        local cmd
+        if [[ "${COVERAGE:-0}" == "1" ]] && "$PY" -c "import coverage" >/dev/null 2>&1; then
+            cmd=("$PY" -m coverage run -m pytest -q)
+        else
+            cmd=("$PY" -m pytest -q)
+        fi
         if [[ "${CI_FULL:-0}" == "1" ]]; then
-            cmd=("$PY" -m pytest -n auto -q)
+            if [[ "${COVERAGE:-0}" == "1" ]] && "$PY" -c "import coverage" >/dev/null 2>&1; then
+                cmd=("$PY" -m coverage run -m pytest -n auto -q)
+            else
+                cmd=("$PY" -m pytest -n auto -q)
+            fi
         fi
         if [[ "${RUN_INTEGRATION}" == "1" ]]; then
-            cmd+=( -m "not skip" )
+            cmd+=(-m "not skip")
         else
-            cmd+=( -m "not integration" )
+            cmd+=(-m "not integration")
         fi
         echo "[cmd] ${cmd[*]}"
         "${cmd[@]}"
+        if [[ "${COVERAGE:-0}" == "1" ]] && "$PY" -c "import coverage" >/dev/null 2>&1; then
+            "$PY" -m coverage json -o reports/python-coverage.json || true
+        fi
     fi
 }
 
@@ -76,14 +97,24 @@ swift_tests() {
         echo "[skip] swift not installed; skipping Swift tests"
         return 0
     fi
+    # Optional exclusions via env: comma-separated list
+    IFS=',' read -r -a EXCLUDES <<<"${SWIFT_PACKAGE_EXCLUDES:-}"
     for pkg in "${swift_packages[@]}"; do
         if [[ -f "$pkg/Package.swift" ]]; then
+            skip_pkg=0
+            for ex in "${EXCLUDES[@]}"; do
+                [[ "$ex" == "$pkg" ]] && skip_pkg=1 && break
+            done
+            if [[ $skip_pkg -eq 1 ]]; then
+                echo "[skip] Excluding Swift package $pkg"
+                continue
+            fi
             echo "[run] swift test ($pkg)"
             pushd "$pkg" >/dev/null
             if [[ "${COVERAGE:-0}" == "1" ]]; then
-                swift test --parallel --build-path .build/test-cache --enable-code-coverage || return 1
+                swift test --enable-code-coverage || return 1
             else
-                swift test --parallel --build-path .build/test-cache || return 1
+                swift test || return 1
             fi
             popd >/dev/null
         fi

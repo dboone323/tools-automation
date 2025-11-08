@@ -1,0 +1,24 @@
+[
+  {
+    "package_dir": "MomentumFinance",
+    "build_ok": false,
+    "issues": [
+      "missing Tests directory",
+      "swift package describe failed"
+    ]
+  },
+  {
+    "package_dir": "shared-kit/Neuromorphic",
+    "build_ok": true,
+    "issues": [
+      "missing Tests directory"
+    ]
+  },
+  {
+    "package_dir": "shared-kit",
+    "build_ok": true,
+    "issues": [
+      ""
+    ]
+  }
+]

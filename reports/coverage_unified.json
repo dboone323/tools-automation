@@ -1,0 +1,14 @@
+{
+  "python": {
+    "covered": 13993,
+    "total": 19926
+  },
+  "swift": {
+    "covered": 0,
+    "total": 0
+  },
+  "overall": {
+    "covered": 13993,
+    "total": 19926
+  }
+}
