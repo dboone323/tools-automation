@@ -1,0 +1,243 @@
+{
+  "codeGen": {
+    "task": "codeGen",
+    "priority": "medium",
+    "primaryModel": "codellama:7b",
+    "fallbacks": [
+      "qwen2.5-coder:1.5b",
+      "codellama:latest"
+    ],
+    "preset": {
+      "num_ctx": 6144,
+      "temperature": 0.1,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 512
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 6144,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
+  },
+  "testGen": {
+    "task": "testGen",
+    "priority": "medium",
+    "primaryModel": "codellama:7b",
+    "fallbacks": [
+      "qwen2.5-coder:1.5b",
+      "codellama:latest"
+    ],
+    "preset": {
+      "num_ctx": 4096,
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 256
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 4096,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
+  },
+  "archAnalysis": {
+    "task": "archAnalysis",
+    "priority": "high",
+    "primaryModel": "mistral:7b",
+    "fallbacks": [
+      "llama2:7b",
+      "codellama:7b"
+    ],
+    "preset": {
+      "num_ctx": 8192,
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 1024
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 8192,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
+  },
+  "dashboardSummary": {
+    "task": "dashboardSummary",
+    "priority": "low",
+    "primaryModel": "llama3.2:3b",
+    "fallbacks": [
+      "mistral:7b",
+      "llama2:7b"
+    ],
+    "preset": {
+      "num_ctx": 2048,
+      "temperature": 0.4,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 512
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 2048,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
+  },
+  "visionOcr": {
+    "task": "visionOcr",
+    "priority": "medium",
+    "primaryModel": "llava:7b",
+    "fallbacks": [
+      "moondream:1.8b"
+    ],
+    "preset": {
+      "num_ctx": 2048,
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 256
+    },
+    "preprocess": {
+      "pdfToText": false,
+      "ocrIfNoText": false,
+      "imageToVision": true
+    },
+    "limits": {
+      "maxInputTokens": 2048,
+      "maxParallel": 1,
+      "maxImages": 1
+    }
+  },
+  "visionLayout": {
+    "task": "visionLayout",
+    "priority": "medium",
+    "primaryModel": "llava:7b",
+    "fallbacks": [
+      "moondream:1.8b"
+    ],
+    "preset": {
+      "num_ctx": 2048,
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 256
+    },
+    "preprocess": {
+      "pdfToText": false,
+      "ocrIfNoText": false,
+      "imageToVision": true
+    },
+    "limits": {
+      "maxInputTokens": 2048,
+      "maxParallel": 1,
+      "maxImages": 1
+    }
+  },
+  "codeAnalysis": {
+    "task": "codeAnalysis",
+    "priority": "high",
+    "primaryModel": "codellama:7b",
+    "fallbacks": [
+      "qwen2.5-coder:1.5b",
+      "mistral:7b"
+    ],
+    "preset": {
+      "num_ctx": 4096,
+      "temperature": 0.1,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 512
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 4096,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
+  },
+  "projectHealth": {
+    "task": "projectHealth",
+    "priority": "high",
+    "primaryModel": "mistral:7b",
+    "fallbacks": [
+      "llama3.2:3b",
+      "llama2:7b"
+    ],
+    "preset": {
+      "num_ctx": 4096,
+      "temperature": 0.2,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 512
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 4096,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
+  },
+  "workflowOptimization": {
+    "task": "workflowOptimization",
+    "priority": "medium",
+    "primaryModel": "mistral:7b",
+    "fallbacks": [
+      "llama3.2:3b",
+      "codellama:7b"
+    ],
+    "preset": {
+      "num_ctx": 4096,
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "top_k": 40,
+      "repeat_penalty": 1.1,
+      "num_predict": 512
+    },
+    "preprocess": {
+      "pdfToText": true,
+      "ocrIfNoText": false,
+      "imageToVision": false
+    },
+    "limits": {
+      "maxInputTokens": 4096,
+      "maxParallel": 1,
+      "maxImages": 0
+    }
+  }
+}

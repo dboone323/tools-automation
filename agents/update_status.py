@@ -83,6 +83,18 @@ def main():
                 if task_id:
                     new_agent["current_task_id"] = task_id
                 data.append(new_agent)
+
+            # Write to temporary file first, then atomically move (same as dict format)
+            with tempfile.NamedTemporaryFile(
+                mode="w", dir=os.path.dirname(status_file), delete=False
+            ) as temp_file:
+                json.dump(data, temp_file, indent=2)
+                temp_file.flush()
+                os.fsync(temp_file.fileno())  # Force write to disk
+                temp_path = temp_file.name
+
+            # Atomic move
+            os.rename(temp_path, status_file)
         else:
             # Dict format (legacy)
             if "agents" not in data:

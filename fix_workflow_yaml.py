@@ -18,54 +18,75 @@ def fix_yaml_file(file_path):
     fixed_lines = []
 
     for line in lines:
+        original_line = line
         # Remove trailing spaces
         line = line.rstrip()
 
         # Fix bracket spacing - remove extra spaces inside brackets
         line = re.sub(r"\[\s+", "[", line)
         line = re.sub(r"\s+\]", "]", line)
+        # Remove spaces before commas in bracketed lists (but keep spaces after)
+        line = re.sub(r"\s+,", ",", line)
 
-        # Fix indentation issues for common workflow patterns
-        if line.strip().startswith("runs-on:") and not line.startswith("      "):
-            if line.startswith("    runs-on:"):
-                line = "      " + line.strip()
-            elif line.startswith("  runs-on:"):
-                line = "      " + line.strip()
+        stripped = line.strip()
+        current_indent = len(line) - len(line.lstrip())
 
-        if line.strip().startswith("steps:") and not line.startswith("      "):
-            if line.startswith("    steps:"):
-                line = "      " + line.strip()
-            elif line.startswith("  steps:"):
-                line = "      " + line.strip()
-
-        # Fix job indentation
-        if re.match(r"^  [a-zA-Z-_]+:", line) and "jobs:" not in line:
-            # This is likely a job definition, should be at 2-space indentation
-            pass
+        # Fix common indentation issues based on content patterns
+        if stripped == "jobs:":
+            # jobs should be at 0 spaces (top level)
+            line = stripped
+        elif stripped == "steps:":
+            # Steps should be at 6 spaces under jobs
+            if current_indent != 6:
+                line = "      " + stripped
+        elif stripped.startswith("runs-on:") or stripped.startswith("needs:"):
+            # These should be at 6 spaces (job properties)
+            if current_indent != 6:
+                line = "      " + stripped
+        elif stripped.startswith("strategy:"):
+            # Strategy should be at 6 spaces
+            if current_indent != 6:
+                line = "      " + stripped
+        elif stripped.startswith("matrix:"):
+            # Matrix should be at 8 spaces
+            if current_indent != 8:
+                line = "        " + stripped
+        elif stripped.startswith("node:"):
+            # Node should be at 10 spaces under matrix
+            if current_indent != 10:
+                line = "          " + stripped
+        elif "node-version:" in stripped:
+            # node-version should be at 12 spaces
+            if current_indent != 12:
+                line = "            " + stripped
         elif (
-            re.match(r"^    [a-zA-Z-_]+:", line)
-            and not line.strip().startswith("env:")
-            and not line.strip().startswith("with:")
+            re.match(r"^\s*[a-zA-Z-_]+:", line)
+            and current_indent == 2
+            and "jobs:" not in line
+            and stripped != "steps:"
         ):
-            # Job properties should be at 4-space indentation, but some need 6
-            if any(
-                prop in line
-                for prop in ["runs-on:", "steps:", "strategy:", "env:", "needs:"]
-            ):
-                if not line.startswith("      "):
-                    line = "  " + line
-
-        # Fix step indentation - steps should be 8 spaces, step properties 10 spaces
-        if (
-            line.strip().startswith("- name:")
-            or line.strip().startswith("- uses:")
-            or line.strip().startswith("- run:")
-        ):
-            if not line.startswith("        "):
-                # Count current indentation
-                current_indent = len(line) - len(line.lstrip())
-                if current_indent < 8:
-                    line = "        " + line.strip()
+            # Job names should stay at 2 spaces
+            pass
+        elif stripped.startswith("- "):
+            # Step list items should be at 8 spaces
+            if current_indent != 8:
+                line = "        " + stripped
+        elif stripped.startswith(("uses:", "run:")):
+            # Step properties should be at 10 spaces
+            if current_indent != 10:
+                line = "          " + stripped
+        elif stripped == "name:" and current_indent > 0:
+            # Name property under a step should be at 10 spaces
+            if current_indent != 10:
+                line = "          " + stripped
+        elif stripped.startswith("with:"):
+            # With should be at 10 spaces
+            if current_indent != 10:
+                line = "          " + stripped
+        elif current_indent >= 10 and ":" in stripped:
+            # Properties under 'with' should be at 12 spaces
+            if current_indent != 12:
+                line = "            " + stripped
 
         # Fix 'on:' value from 'true' to proper triggers
         if line.strip() == "on: true":

@@ -21,7 +21,7 @@ def parse_pbxproj(pbxproj_path: Path):
     current_uuid = None
     block_lines = []
     for i, line in enumerate(lines):
-        m = re.match(r"^\s*([A-F0-9]{24}) \/\*.*?\*\/ = \{\s*$", line)
+        m = re.match(r"^\s*([A-F0-9]{6,24}) \/\*.*?\*\/ = \{\s*$", line)
         if m:
             current_uuid = m.group(1)
             in_file_ref = False
@@ -46,6 +46,25 @@ def parse_pbxproj(pbxproj_path: Path):
                 current_uuid = None
                 block_lines = []
 
+    # Also check for single-line PBXFileReference entries
+    for line in lines:
+        m_single = re.match(
+            r"^\s*([A-F0-9]{6,24}) \/\* (.+?) \*\/ = \{isa = PBXFileReference; (.+?)\};\s*$",
+            line,
+        )
+        if m_single:
+            uuid = m_single.group(1)
+            content = m_single.group(3)
+            name = None
+            path = None
+            mn = re.search(r"name = ([^;]+);", content)
+            if mn:
+                name = mn.group(1).strip().strip('"')
+            mp = re.search(r"path = ([^;]+);", content)
+            if mp:
+                path = mp.group(1).strip().strip('"')
+            file_refs[uuid] = {"name": name, "path": path}
+
     # Parse PBXGroup section and children lists
     in_group_section = False
     current_group = None
@@ -61,7 +80,7 @@ def parse_pbxproj(pbxproj_path: Path):
             continue
         if not in_group_section:
             continue
-        mg = re.match(r"^\s*([A-F0-9]{24}) \/\*.*?\*\/ = \{", line)
+        mg = re.match(r"^\s*([A-Z0-9]{5,24}) \/\*.*?\*\/ = \{", line)
         if mg:
             current_group = mg.group(1)
             in_children = False
@@ -83,7 +102,7 @@ def parse_pbxproj(pbxproj_path: Path):
             in_children = False
             continue
         if in_children and current_group:
-            mc = re.match(r"^\s*([A-F0-9]{24}) \/\* (.+?) \*\/\s*,\s*$", line)
+            mc = re.match(r"^\s*([A-F0-9]{6,24}) \/\* (.+?) \*\/\s*,\s*$", line)
             if mc:
                 child_uuid = mc.group(1)
                 group_children[current_group].append(child_uuid)
@@ -186,8 +205,14 @@ def generate_report(project_dir: Path):
     print(f"Report written: {report_path}")
 
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 2:
         print("Usage: report_duplicate_paths.py <ProjectDir>")
         sys.exit(1)
-    generate_report(Path(sys.argv[1]))
+
+    project_dir = Path(sys.argv[1])
+    generate_report(project_dir)
+
+
+if __name__ == "__main__":
+    main()

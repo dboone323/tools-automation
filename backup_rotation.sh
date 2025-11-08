@@ -6,7 +6,7 @@
 set -euo pipefail
 
 WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-BACKUP_DIR="${WORKSPACE_DIR}/Tools/Automation/agents/backups"
+BACKUP_DIR="${1:-${WORKSPACE_DIR}/Tools/Automation/agents/backups}"
 
 # Colors
 GREEN='\033[0;32m'
@@ -115,6 +115,9 @@ rotate_backups() {
     local total_backups=${#all_backups[@]}
     print_status "Found $total_backups backup items"
 
+    # Clean up very old compressed backups (older than 30 days) first
+    cleanup_old_backups "$backup_dir" 30
+
     if [[ $total_backups -le $keep_recent ]]; then
         print_success "No rotation needed - only $total_backups backups (keeping $keep_recent)"
         return 0
@@ -152,9 +155,6 @@ rotate_backups() {
     if [[ $compress_count -gt 0 ]]; then
         print_success "Compressed $compress_count old backup directories"
     fi
-
-    # Clean up very old compressed backups (older than 30 days)
-    cleanup_old_backups "$backup_dir" 30
 }
 
 # Show backup statistics
@@ -181,28 +181,29 @@ show_stats() {
 
 # Main function
 main() {
-    local keep_recent="${1:-10}"
+    local backup_dir="$1"
+    local keep_recent="${2:-10}"
 
     echo "=================================================="
     print_status "Quantum Workspace Backup Rotation"
     echo "=================================================="
 
-    if [[ ! -d "$BACKUP_DIR" ]]; then
-        print_error "Backup directory not found: $BACKUP_DIR"
+    if [[ ! -d "$backup_dir" ]]; then
+        print_error "Backup directory not found: $backup_dir"
         exit 1
     fi
 
     # Show current stats
-    show_stats "$BACKUP_DIR"
+    show_stats "$backup_dir"
     echo ""
 
     # Perform rotation
-    rotate_backups "$BACKUP_DIR" "$keep_recent"
+    rotate_backups "$backup_dir" "$keep_recent"
     echo ""
 
     # Show final stats
     print_status "Final statistics:"
-    show_stats "$BACKUP_DIR"
+    show_stats "$backup_dir"
     echo ""
 
     print_success "Backup rotation complete!"
@@ -213,10 +214,18 @@ main() {
     echo "- Remove compressed backups older than 30 days"
 }
 
-# Allow override of keep count via argument
+# Allow override of backup directory and keep count via arguments
+backup_dir="$BACKUP_DIR"
 keep_recent=10
+
 if [[ $# -gt 0 ]]; then
-    keep_recent="$1"
+    if [[ -d "$1" ]]; then
+        backup_dir="$1"
+        shift
+    fi
+    if [[ $# -gt 0 ]]; then
+        keep_recent="$1"
+    fi
 fi
 
-main "$keep_recent"
+main "$backup_dir" "$keep_recent"

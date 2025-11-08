@@ -169,6 +169,23 @@ class StrategyTracker:
                 f"[Strategy Tracker] Warning: Strategy {strategy_id} not found",
                 file=sys.stderr,
             )
+            # Still record in history even for unknown strategies
+            execution_record = {
+                "timestamp": datetime.now().isoformat(),
+                "strategy_id": strategy_id,
+                "context": context,
+                "success": success,
+                "execution_time": execution_time,
+                "details": details or {},
+            }
+            self.history["executions"].append(execution_record)
+
+            # Keep last 1000 executions
+            if len(self.history["executions"]) > 1000:
+                self.history["executions"] = self.history["executions"][-1000:]
+
+            # Save history
+            self._save_history()
             return
 
         # Update strategy stats

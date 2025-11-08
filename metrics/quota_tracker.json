@@ -35,16 +35,22 @@
       "opened_at": null
     },
     "low": {
-      "failure_count": 6,
-      "last_failure": "2025-11-07T01:15:27Z",
+      "failure_count": 267,
+      "last_failure": "2025-11-08T00:30:06Z",
       "state": "open",
-      "opened_at": "2025-11-07T01:15:27Z"
+      "opened_at": "2025-11-08T00:30:06Z"
     },
     "test_value_0": {
       "state": "closed",
       "failure_count": 2,
       "last_failure": "2025-11-07T12:51:23.038481Z",
       "opened_at": null
+    },
+    "medium": {
+      "failure_count": 342,
+      "last_failure": "2025-11-08T00:14:57Z",
+      "state": "open",
+      "opened_at": "2025-11-08T00:14:57Z"
     }
   }
 }

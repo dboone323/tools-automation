@@ -121,12 +121,13 @@ def list_secrets() -> list:
 
         secrets = []
         for line in result.stdout.split("\n"):
-            if KEYCHAIN_SERVICE in line:
-                # Extract service name
-                if "svce" in line or "service" in line:
-                    parts = line.split('"')
-                    if len(parts) >= 2:
-                        secrets.append(parts[1])
+            if KEYCHAIN_SERVICE in line and ('"svce"' in line or '"service"' in line):
+                # Extract service name from "svce"<blob>="service-name"
+                parts = line.split('="')
+                if len(parts) >= 2:
+                    service_name = parts[1].strip('"')
+                    if service_name.startswith(KEYCHAIN_SERVICE):
+                        secrets.append(service_name)
 
         return list(set(secrets))
     except subprocess.CalledProcessError:

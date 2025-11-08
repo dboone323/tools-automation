@@ -3,8 +3,11 @@ set -euo pipefail
 
 threshold="${1:-50M}"
 
+# Convert threshold units to find-compatible format (k for kilobytes, etc.)
+threshold_find=$(echo "$threshold" | sed 's/K/k/g')
+
 echo "Scanning working tree for files > $threshold..."
-find . -type f -not -path "./.git/*" -size +"$threshold" -print | sed 's|^./||' || true
+find . -type f -not -path "./.git/*" -size +"$threshold_find" -print | sed 's|^./||' || true
 
 printf "\nTop 30 largest blobs in Git history (bytes\tpath):\n"
 
@@ -13,7 +16,7 @@ trap 'rm -rf "$tmpdir"' EXIT
 
 git rev-list --objects --all >"$tmpdir/objects.txt"
 cut -d' ' -f1 "$tmpdir/objects.txt" |
-    git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' >"$tmpdir/sizes.txt"
+  git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' >"$tmpdir/sizes.txt"
 
 awk '
   FNR==NR && $1=="blob" { size[$2]=$3; next }

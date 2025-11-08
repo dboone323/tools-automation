@@ -46,7 +46,7 @@ class XcodeprojCleaner:
     def find_duplicate_build_files(self):
         """Find duplicate PBXBuildFile entries"""
         # Pattern: UUID /* filename in Sources */ = {isa = PBXBuildFile; fileRef = UUID /* filename */; };
-        build_file_pattern = r"^\s*([A-F0-9]+)\s*/\*\s*(.+?)\s+in\s+Sources\s*\*/\s*=\s*\{isa\s*=\s*PBXBuildFile;\s*fileRef\s*=\s*([A-F0-9]+)"
+        build_file_pattern = r"^\s*([A-Z0-9]+)\s*/\*\s*(.+?)\s+in\s+Sources\s*\*/\s*=\s*\{isa\s*=\s*PBXBuildFile;\s*fileRef\s*=\s*([A-Z0-9]+)"
 
         file_refs = defaultdict(list)  # fileRef UUID -> list of build file UUIDs
 
@@ -91,7 +91,7 @@ class XcodeprojCleaner:
                 continue
 
             # Detect group header: <UUID> /* name */ = {
-            m_group = re.match(r"^\s*([A-F0-9]{24})\s*/\*.*\*/\s*=\s*\{", line)
+            m_group = re.match(r"^\s*([A-Z0-9]+)\s*/\*.*\*/\s*=\s*\{", line)
             if m_group:
                 current_group_uuid = m_group.group(1)
                 in_children = False
@@ -108,7 +108,7 @@ class XcodeprojCleaner:
             if in_children and current_group_uuid:
                 # Match child UUID entries in children list
                 m_child = re.match(
-                    r"^\s*([A-F0-9]{24})\s*/\*\s*(.+?)\s*\*/\s*,\s*$",
+                    r"^\s*([A-Z0-9]+)\s*/\*\s*(.+?)\s*\*/\s*,\s*$",
                     line,
                 )
                 if m_child:

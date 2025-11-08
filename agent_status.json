@@ -1,1 +1,10 @@
-{"agents": {}}
+{
+  "agents": {
+    "agent_2": {
+      "status": "busy",
+      "last_seen": 1762534393,
+      "pid": 77777
+    }
+  },
+  "last_update": 1762534393
+}

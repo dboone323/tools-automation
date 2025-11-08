@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DASHBOARD_DIR="${WORKSPACE_ROOT}/Tools/Automation/dashboard"
 MONITORING_DIR="${WORKSPACE_ROOT}/Tools/Automation/monitoring"
 PROJECTS_DIR="${WORKSPACE_ROOT}/Projects"

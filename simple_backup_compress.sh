@@ -56,19 +56,33 @@ compress_old_backups() {
 
     print_status "Finding uncompressed backup directories..."
 
-    # Get directories sorted by modification time (oldest first)
-    while IFS= read -r backup_dir; do
-        if [[ $compressed -ge $max_to_compress ]]; then
-            break
-        fi
+    # Get directories
+    local backup_dirs=()
+    while IFS= read -r -d '' dir; do
+        backup_dirs+=("$dir")
+    done < <(find "$BACKUP_DIR" -maxdepth 1 -type d -name "CodingReviewer_*" -print0)
 
-        # Only process directories
-        if [[ -d "$backup_dir" ]]; then
-            if compress_backup "$backup_dir"; then
-                ((compressed++))
+    # Sort by modification time, oldest first
+    if [[ ${#backup_dirs[@]} -gt 0 ]]; then
+        local sorted_dirs
+        sorted_dirs=$(for backup_dir in "${backup_dirs[@]}"; do
+            mtime=$(stat -f %m "$backup_dir" 2>/dev/null || stat -c %Y "$backup_dir" 2>/dev/null || date -r "$backup_dir" +%s)
+            echo "$mtime $backup_dir"
+        done | sort -n | cut -d' ' -f2-)
+
+        for backup_dir in $sorted_dirs; do
+            if [[ $compressed -ge $max_to_compress ]]; then
+                break
             fi
-        fi
-    done < <(find "$BACKUP_DIR" -maxdepth 1 -type d -name "CodingReviewer_*" -print0 | xargs -0 ls -tr)
+
+            # Only process directories
+            if [[ -d "$backup_dir" ]]; then
+                if compress_backup "$backup_dir"; then
+                    ((compressed++))
+                fi
+            fi
+        done
+    fi
 
     print_success "Compressed $compressed backup directories"
 }
