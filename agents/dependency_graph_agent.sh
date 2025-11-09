@@ -68,7 +68,7 @@ build_graph() {
 
             # Scan import statements
             imports=$(scan_swift_imports "$submodule")
-            
+
             # Add edges from imports (only for other submodules)
             for import_name in $imports; do
                 if [[ "$import_name" =~ (CodingReviewer|PlannerApp|HabitQuest|MomentumFinance|AvoidObstaclesGame|shared-kit) ]]; then
@@ -125,35 +125,35 @@ analyze_impact() {
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     # Script is being executed directly, not sourced
     if [[ "$1" == "once" ]]; then
-    log_message "Running one-time dependency graph scan..."
-    build_graph
-    exit 0
-elif [[ "$1" == "impact" ]]; then
-    if [[ -z "$2" ]]; then
-        log_message "ERROR: Usage: $0 impact <module_name>"
-        exit 1
-    fi
-    analyze_impact "$2"
-    exit 0
-elif [[ "$1" == "help" || "$1" == "--help" ]]; then
-    echo "Usage: $0 [once|impact <module>|daemon]"
-    echo ""
-    echo "Commands:"
-    echo "  once             - Run one-time graph scan and exit"
-    echo "  impact <module>  - Analyze impact of changes to module"
-    echo "  daemon           - Run continuous monitoring (default)"
-    echo ""
-    echo "Environment variables:"
-    echo "  SCAN_INTERVAL    - Seconds between scans (default: 600)"
-    exit 0
-else
-    # Daemon mode
-    log_message "Starting Dependency Graph Agent (daemon mode)..."
-    log_message "Scan interval: ${SCAN_INTERVAL} seconds"
-
-    while true; do
+        log_message "Running one-time dependency graph scan..."
         build_graph
-        sleep "$SCAN_INTERVAL"
-    done
-fi
+        exit 0
+    elif [[ "$1" == "impact" ]]; then
+        if [[ -z "$2" ]]; then
+            log_message "ERROR: Usage: $0 impact <module_name>"
+            exit 1
+        fi
+        analyze_impact "$2"
+        exit 0
+    elif [[ "$1" == "help" || "$1" == "--help" ]]; then
+        echo "Usage: $0 [once|impact <module>|daemon]"
+        echo ""
+        echo "Commands:"
+        echo "  once             - Run one-time graph scan and exit"
+        echo "  impact <module>  - Analyze impact of changes to module"
+        echo "  daemon           - Run continuous monitoring (default)"
+        echo ""
+        echo "Environment variables:"
+        echo "  SCAN_INTERVAL    - Seconds between scans (default: 600)"
+        exit 0
+    else
+        # Daemon mode
+        log_message "Starting Dependency Graph Agent (daemon mode)..."
+        log_message "Scan interval: ${SCAN_INTERVAL} seconds"
+
+        while true; do
+            build_graph
+            sleep "$SCAN_INTERVAL"
+        done
+    fi
 fi

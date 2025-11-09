@@ -78,7 +78,7 @@ EOF
     # Set up environment variables for testing
     export WORKSPACE_ROOT="$TEST_DIR"
     export GRAPH_FILE="${TEST_DIR}/dependency_graph.json"
-    export SCAN_INTERVAL=1  # Fast scanning for tests
+    export SCAN_INTERVAL=1 # Fast scanning for tests
 }
 
 # Cleanup test environment
@@ -263,7 +263,7 @@ test_file_system_operations() {
     # Test file size is reasonable
     local file_size
     file_size=$(stat -f%z "$GRAPH_FILE" 2>/dev/null || echo "0")
-    if [[ "$file_size" -gt 10 ]]; then  # Should contain some JSON content
+    if [[ "$file_size" -gt 10 ]]; then # Should contain some JSON content
         assert_true true "Graph file should contain content"
     else
         assert_true false "Graph file should contain content"
