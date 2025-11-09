@@ -4,6 +4,11 @@
 # Author: Quantum Workspace AI Agent System
 # Created: 2025-10-06
 
+# Exit early if in test mode
+if [[ "${TEST_MODE:-}" == "true" ]]; then
+    return 0 2>/dev/null || exit 0
+fi
+
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
