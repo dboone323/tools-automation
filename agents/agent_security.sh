@@ -1,6 +1,11 @@
 #!/bin/bash
 # Security Agent - Security vulnerability scanning and compliance checking
 
+# Exit early if in test mode
+if [[ "${TEST_MODE:-}" == "true" ]]; then
+    return 0 2>/dev/null || exit 0
+fi
+
 # Source shared functions for task management
 # shellcheck source=./shared_functions.sh
 # shellcheck disable=SC1091
