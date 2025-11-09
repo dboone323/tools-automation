@@ -1,6 +1,6 @@
 {
   "total_agents": 203,
-  "tested_agents": 16,
+  "tested_agents": 21,
   "coverage_percentage": 0.99,
   "last_updated": "2025-01-09",
   "agents": {
@@ -95,6 +95,30 @@
       "coverage_percentage": 100
     },
     "plugin_api.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "quality_agent.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "run_mcp_server.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "run_task_orchestrator.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "timeout_utils.sh": {
       "tests": 10,
       "status": "passed",
       "last_run": "2025-01-09",
