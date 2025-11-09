@@ -1,11 +1,11 @@
 #!/bin/bash
-# Comprehensive test suite for auto_restart_project_health_agent.sh
+# Comprehensive test suite for auto_restart_workflow_optimization_agent.sh
 # Tests agent lifecycle management, PID file handling, logging, and restart functionality
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TEST_DIR="${SCRIPT_DIR}/test_tmp"
-AGENT_SCRIPT="${SCRIPT_DIR}/agents/auto_restart_project_health_agent.sh"
-TARGET_AGENT="${SCRIPT_DIR}/agents/project_health_agent.sh"
+AGENT_SCRIPT="${SCRIPT_DIR}/agents/auto_restart_workflow_optimization_agent.sh"
+TARGET_AGENT="${SCRIPT_DIR}/agents/workflow_optimization_agent.sh"
 
 # Source test framework
 source "${SCRIPT_DIR}/shell_test_framework.sh"
@@ -15,22 +15,22 @@ setup_test_env() {
     mkdir -p "$TEST_DIR"
     export TEST_MODE=true
 
-    # Create mock project_health_agent.sh for testing
-    cat >"${SCRIPT_DIR}/project_health_agent.sh.mock" <<'EOF'
+    # Create mock workflow_optimization_agent.sh for testing
+    cat >"${SCRIPT_DIR}/workflow_optimization_agent.sh.mock" <<'EOF'
 #!/bin/bash
-# Mock project health agent for testing
-echo "Mock project health agent started with PID: $$"
+# Mock workflow optimization agent for testing
+echo "Mock workflow optimization agent started with PID: $$"
 
-# In TEST_MODE, just sleep briefly and exit
+# In TEST_MODE, sleep longer to allow tests to complete
 if [[ "$TEST_MODE" == "true" ]]; then
-    sleep 10  # Sleep long enough for tests to check if it's running
+    sleep 30  # Sleep long enough for all tests to check if it's running
 else
     while true; do
         sleep 1
     done
 fi
 EOF
-    chmod +x "${SCRIPT_DIR}/project_health_agent.sh.mock"
+    chmod +x "${SCRIPT_DIR}/workflow_optimization_agent.sh.mock"
 
     # Backup original agent if it exists
     if [[ -f "$TARGET_AGENT" ]]; then
@@ -38,48 +38,48 @@ EOF
     fi
 
     # Replace with mock for testing
-    cp "${SCRIPT_DIR}/project_health_agent.sh.mock" "$TARGET_AGENT"
+    cp "${SCRIPT_DIR}/workflow_optimization_agent.sh.mock" "$TARGET_AGENT"
 
     # Create test PID file
-    echo "#!/bin/bash" >"${SCRIPT_DIR}/agents/.test_restart_project_health.sh"
-    echo "echo 'Test project health agent restarted'" >>"${SCRIPT_DIR}/agents/.test_restart_project_health.sh"
-    chmod +x "${SCRIPT_DIR}/agents/.test_restart_project_health.sh"
+    echo "#!/bin/bash" >"${SCRIPT_DIR}/agents/.test_restart_workflow_optimization.sh"
+    echo "echo 'Test workflow optimization agent restarted'" >>"${SCRIPT_DIR}/agents/.test_restart_workflow_optimization.sh"
+    chmod +x "${SCRIPT_DIR}/agents/.test_restart_workflow_optimization.sh"
 
     # Create test agent script
-    cat >"${SCRIPT_DIR}/agents/test_project_health_agent.sh" <<'EOF'
+    cat >"${SCRIPT_DIR}/agents/test_workflow_optimization_agent.sh" <<'EOF'
 #!/bin/bash
-# Test project health agent for auto-restart testing
-echo "Test project health agent started with PID: $$"
+# Test workflow optimization agent for auto-restart testing
+echo "Test workflow optimization agent started with PID: $$"
 if [[ "$TEST_MODE" == "true" ]]; then
-    sleep 10
+    sleep 30
 else
     while true; do
         sleep 1
     done
 fi
 EOF
-    chmod +x "${SCRIPT_DIR}/agents/test_project_health_agent.sh"
+    chmod +x "${SCRIPT_DIR}/agents/test_workflow_optimization_agent.sh"
 }
 
 # Cleanup test environment
 cleanup_test_env() {
     # Remove mock and restore original
-    rm -f "${SCRIPT_DIR}/project_health_agent.sh.mock"
+    rm -f "${SCRIPT_DIR}/workflow_optimization_agent.sh.mock"
     if [[ -f "${TARGET_AGENT}.backup" ]]; then
         mv "${TARGET_AGENT}.backup" "$TARGET_AGENT"
     fi
 
     # Clean up test files
     rm -rf "$TEST_DIR"
-    rm -f "${SCRIPT_DIR}/agents/.test_restart_project_health.sh"
-    rm -f "${SCRIPT_DIR}/agents/test_project_health_agent.sh"
-    rm -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid"
-    rm -f "${SCRIPT_DIR}/agents/project_health_agent_restart.log"
-    rm -f "${SCRIPT_DIR}/agents/project_health_agent.log"
+    rm -f "${SCRIPT_DIR}/agents/.test_restart_workflow_optimization.sh"
+    rm -f "${SCRIPT_DIR}/agents/test_workflow_optimization_agent.sh"
+    rm -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid"
+    rm -f "${SCRIPT_DIR}/agents/workflow_optimization_agent_restart.log"
+    rm -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.log"
 
     # Kill any test processes
-    pkill -f "test_project_health_agent.sh" || true
-    pkill -f "project_health_agent.sh.mock" || true
+    pkill -f "test_workflow_optimization_agent.sh" || true
+    pkill -f "workflow_optimization_agent.sh.mock" || true
 }
 
 # Test 1: Agent start functionality
@@ -88,20 +88,20 @@ test_agent_start() {
     announce_test "$test_name"
 
     # Ensure agent is not running initially
-    pkill -f "project_health_agent.sh" || true
-    rm -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid"
+    pkill -f "workflow_optimization_agent.sh" || true
+    rm -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid"
     sleep 1
 
     # Start the agent
     bash "$AGENT_SCRIPT" start >/dev/null 2>&1
 
     # Check if PID file was created
-    assert_file_exists "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" "PID file should be created"
+    assert_file_exists "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" "PID file should be created"
 
     # Check if agent is running
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         local pid
-        pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+        pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
         if kill -0 "$pid" 2>/dev/null; then
             assert_true true "Agent should be running"
         else
@@ -112,7 +112,7 @@ test_agent_start() {
     fi
 
     # Check log file
-    assert_file_exists "${SCRIPT_DIR}/agents/project_health_agent_restart.log" "Restart log file should be created"
+    assert_file_exists "${SCRIPT_DIR}/agents/workflow_optimization_agent_restart.log" "Restart log file should be created"
 
     # Cleanup
     bash "$AGENT_SCRIPT" stop >/dev/null 2>&1
@@ -130,9 +130,9 @@ test_agent_stop() {
     sleep 2
 
     # Verify it's running
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         local pid
-        pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+        pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
         if kill -0 "$pid" 2>/dev/null; then
             assert_true true "Agent should be running before stop"
         else
@@ -149,16 +149,16 @@ test_agent_stop() {
     sleep 2
 
     # Check if PID file was removed
-    if [[ ! -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ ! -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         assert_true true "PID file should be removed after stop"
     else
         assert_true false "PID file should be removed after stop"
     fi
 
     # Check if agent is no longer running
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         local pid
-        pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+        pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
         if ! kill -0 "$pid" 2>/dev/null; then
             assert_true true "Agent should not be running after stop"
         else
@@ -182,8 +182,8 @@ test_agent_restart() {
 
     # Get initial PID
     local initial_pid=""
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
-        initial_pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
+        initial_pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
     fi
 
     # Restart the agent
@@ -191,12 +191,12 @@ test_agent_restart() {
     sleep 3
 
     # Check if new PID file exists
-    assert_file_exists "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" "PID file should exist after restart"
+    assert_file_exists "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" "PID file should exist after restart"
 
     # Check if agent is running with new PID
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         local new_pid
-        new_pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+        new_pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
         if kill -0 "$new_pid" 2>/dev/null; then
             assert_true true "Agent should be running after restart"
         else
@@ -257,18 +257,18 @@ test_pid_file_management() {
     announce_test "$test_name"
 
     # Ensure clean state
-    rm -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid"
+    rm -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid"
 
     # Start agent
     bash "$AGENT_SCRIPT" start >/dev/null 2>&1
     sleep 2
 
     # Check PID file exists and contains valid PID
-    assert_file_exists "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" "PID file should be created"
+    assert_file_exists "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" "PID file should be created"
 
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         local pid
-        pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+        pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
         if [[ "$pid" =~ ^[0-9]+$ ]] && kill -0 "$pid" 2>/dev/null; then
             assert_true true "PID file should contain valid running PID"
         else
@@ -281,7 +281,7 @@ test_pid_file_management() {
     sleep 2
 
     # Check PID file is removed
-    if [[ ! -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ ! -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         assert_true true "PID file should be removed after stop"
     else
         assert_true false "PID file should be removed after stop"
@@ -296,19 +296,19 @@ test_log_file_handling() {
     announce_test "$test_name"
 
     # Clear log file
-    >"${SCRIPT_DIR}/agents/project_health_agent_restart.log"
+    >"${SCRIPT_DIR}/agents/workflow_optimization_agent_restart.log"
 
     # Start agent
     bash "$AGENT_SCRIPT" start >/dev/null 2>&1
     sleep 2
 
     # Check log file exists
-    assert_file_exists "${SCRIPT_DIR}/agents/project_health_agent_restart.log" "Restart log file should be created"
+    assert_file_exists "${SCRIPT_DIR}/agents/workflow_optimization_agent_restart.log" "Restart log file should be created"
 
     # Check log contains start message
     local log_content
-    log_content=$(cat "${SCRIPT_DIR}/agents/project_health_agent_restart.log" 2>/dev/null || echo "")
-    if echo "$log_content" | grep -q "Starting Project Health Agent"; then
+    log_content=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent_restart.log" 2>/dev/null || echo "")
+    if echo "$log_content" | grep -q "Starting Workflow Optimization Agent"; then
         assert_true true "Log should contain start message"
     else
         assert_true false "Log should contain start message"
@@ -319,7 +319,7 @@ test_log_file_handling() {
     sleep 2
 
     # Check log contains stop message
-    log_content=$(cat "${SCRIPT_DIR}/agents/project_health_agent_restart.log" 2>/dev/null || echo "")
+    log_content=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent_restart.log" 2>/dev/null || echo "")
     if echo "$log_content" | grep -q "Stopping agent\|Agent stopped"; then
         assert_true true "Log should contain stop message"
     else
@@ -340,8 +340,8 @@ test_multiple_start_prevention() {
 
     # Get first PID
     local first_pid=""
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
-        first_pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
+        first_pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
     fi
 
     # Try to start again
@@ -349,9 +349,9 @@ test_multiple_start_prevention() {
     sleep 2
 
     # Check PID is the same (no new process started)
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         local second_pid
-        second_pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+        second_pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
         if [[ "$first_pid" == "$second_pid" ]]; then
             assert_true true "Multiple starts should not create new processes"
         else
@@ -400,8 +400,8 @@ test_default_command_behavior() {
     announce_test "$test_name"
 
     # Ensure agent is not running
-    pkill -f "project_health_agent.sh" || true
-    rm -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid"
+    pkill -f "workflow_optimization_agent.sh" || true
+    rm -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid"
     sleep 1
 
     # Run script without arguments (should default to start)
@@ -409,9 +409,9 @@ test_default_command_behavior() {
     sleep 2
 
     # Check if agent started
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         local pid
-        pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+        pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
         if kill -0 "$pid" 2>/dev/null; then
             assert_true true "Default command should start agent"
         else
@@ -438,8 +438,8 @@ test_graceful_shutdown_handling() {
 
     # Verify it's running
     local pid=""
-    if [[ -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
-        pid=$(cat "${SCRIPT_DIR}/agents/project_health_agent.sh.pid")
+    if [[ -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
+        pid=$(cat "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid")
     fi
 
     if [[ -z "$pid" ]] || ! kill -0 "$pid" 2>/dev/null; then
@@ -461,7 +461,7 @@ test_graceful_shutdown_handling() {
     fi
 
     # Check PID file is cleaned up
-    if [[ ! -f "${SCRIPT_DIR}/agents/project_health_agent.sh.pid" ]]; then
+    if [[ ! -f "${SCRIPT_DIR}/agents/workflow_optimization_agent.sh.pid" ]]; then
         assert_true true "PID file should be cleaned up after shutdown"
     else
         assert_true false "PID file should be cleaned up after shutdown"
@@ -474,7 +474,7 @@ test_graceful_shutdown_handling() {
 run_tests() {
     setup_test_env
 
-    echo "Running comprehensive tests for auto_restart_project_health_agent.sh..."
+    echo "Running comprehensive tests for auto_restart_workflow_optimization_agent.sh..."
     echo "================================================================="
 
     # Run individual tests

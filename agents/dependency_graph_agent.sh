@@ -3,8 +3,8 @@
 
 AGENT_NAME="dependency_graph_agent.sh"
 LOG_FILE="agents/dependency_graph_agent.log"
-WORKSPACE_ROOT="/Users/danielstevens/Desktop/github-projects/tools-automation"
-GRAPH_FILE="${WORKSPACE_ROOT}/dependency_graph.json"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-/Users/danielstevens/Desktop/github-projects/tools-automation}"
+GRAPH_FILE="${GRAPH_FILE:-${WORKSPACE_ROOT}/dependency_graph.json}"
 SCAN_INTERVAL="${SCAN_INTERVAL:-600}" # 10 minutes
 
 log_message() {
@@ -67,6 +67,8 @@ build_graph() {
             done
 
             # Scan import statements
+            imports=$(scan_swift_imports "$submodule")
+            
             # Add edges from imports (only for other submodules)
             for import_name in $imports; do
                 if [[ "$import_name" =~ (CodingReviewer|PlannerApp|HabitQuest|MomentumFinance|AvoidObstaclesGame|shared-kit) ]]; then
@@ -120,7 +122,9 @@ analyze_impact() {
 }
 
 # Main loop or one-shot
-if [[ "$1" == "once" ]]; then
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    # Script is being executed directly, not sourced
+    if [[ "$1" == "once" ]]; then
     log_message "Running one-time dependency graph scan..."
     build_graph
     exit 0
@@ -151,4 +155,5 @@ else
         build_graph
         sleep "$SCAN_INTERVAL"
     done
+fi
 fi

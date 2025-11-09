@@ -1,0 +1,10 @@
+#!/bin/bash
+# Mock shared functions for testing
+
+register_with_mcp() {
+    echo "Mock MCP registration: $1 - $2"
+}
+
+update_agent_status() {
+    echo "Mock status update: $1 - $2 - $3 - $4"
+}
