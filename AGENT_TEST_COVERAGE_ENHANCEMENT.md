@@ -4,7 +4,7 @@
 
 Systematic implementation of comprehensive test coverage for all 203 agent scripts (177 shell scripts + 26 Python scripts).
 
-**Current Status:** 26 Python agent tests exist, 23 shell script agent tests exist (Phase 2 Complete + Phase 3 Started)
+**Current Status:** 26 Python agent tests exist, 24 shell script agent tests exist (Phase 3 Started)
 **Target:** 100% test coverage for all agent scripts
 
 ## Progress Tracking
@@ -176,7 +176,7 @@ Systematic implementation of comprehensive test coverage for all 203 agent scrip
 | security_agent.sh                           | ❌ Missing  | -                                        | Needs implementation   |
 | seed_demo_tasks.sh                          | ❌ Missing  | -                                        | Needs implementation   |
 | serve_dashboard.sh                          | ❌ Missing  | -                                        | Needs implementation   |
-| shared_functions.sh                         | ❌ Missing  | -                                        | Needs implementation   |
+| shared_functions.sh                         | ✅ Complete | test_agents_shared_functions.sh          | 10 comprehensive tests |
 | show_alerts.sh                              | ❌ Missing  | -                                        | Needs implementation   |
 | simple_dashboard.sh                         | ❌ Missing  | -                                        | Needs implementation   |
 | speed_accelerator.sh                        | ❌ Missing  | -                                        | Needs implementation   |
@@ -204,7 +204,7 @@ Systematic implementation of comprehensive test coverage for all 203 agent scrip
 | workflow_optimization_agent.sh              | ❌ Missing  | -                                        | Needs implementation   |
 | working_dashboard.sh                        | ❌ Missing  | -                                        | Needs implementation   |
 
-**Shell Script Agents: 23/177 ✅ PHASE 2 COMPLETE + Phase 3 Started**
+**Shell Script Agents: 24/177 ✅ PHASE 3 Started**
 
 ### Phase 2 Results & Findings
 
@@ -265,232 +265,245 @@ Systematic implementation of comprehensive test coverage for all 203 agent scrip
 ## Prioritized Implementation Order for Remaining Agents
 
 ### 🔥 CRITICAL PRIORITY (Core Infrastructure - Test First)
+
 These scripts are dependencies for other agents and system stability:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
+| Agent Script        | Priority    | Reason                                                          |
+| ------------------- | ----------- | --------------------------------------------------------------- |
 | shared_functions.sh | 🔥 Critical | Used by ALL other agents for task management and status updates |
-| backup_manager.sh | 🔥 Critical | Used by build/UIUX agents for project backups |
-| agent_config.sh | 🔥 Critical | Global configuration used by all agents |
-| agent_helpers.sh | 🔥 Critical | Enhanced capabilities and utility functions used by agents |
+| backup_manager.sh   | 🔥 Critical | Used by build/UIUX agents for project backups                   |
+| agent_config.sh     | 🔥 Critical | Global configuration used by all agents                         |
+| agent_helpers.sh    | 🔥 Critical | Enhanced capabilities and utility functions used by agents      |
 
 ### 🚨 HIGH PRIORITY (System Stability - Auto-restart Agents)
+
 Critical for maintaining system uptime and agent reliability:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| .auto_restart_agent_analytics.sh | 🚨 High | Auto-restart for analytics agent |
-| .auto_restart_agent_backup.sh | 🚨 High | Auto-restart for backup agent |
-| .auto_restart_agent_build.sh | 🚨 High | Auto-restart for build agent |
-| .auto_restart_agent_cleanup.sh | 🚨 High | Auto-restart for cleanup agent |
-| .auto_restart_agent_codegen.sh | 🚨 High | Auto-restart for codegen agent |
-| .auto_restart_agent_control.sh | 🚨 High | Auto-restart for control agent |
-| .auto_restart_agent_debug.sh | 🚨 High | Auto-restart for debug agent |
-| .auto_restart_agent_integration.sh | 🚨 High | Auto-restart for integration agent |
-| .auto_restart_agent_notification.sh | 🚨 High | Auto-restart for notification agent |
-| .auto_restart_agent_optimization.sh | 🚨 High | Auto-restart for optimization agent |
-| .auto_restart_agent_performance_monitor.sh | 🚨 High | Auto-restart for performance monitor |
-| .auto_restart_agent_security.sh | 🚨 High | Auto-restart for security agent |
-| .auto_restart_agent_supervisor.sh | 🚨 High | Auto-restart for supervisor agent |
-| .auto_restart_agent_test_quality.sh | 🚨 High | Auto-restart for test quality agent |
-| .auto_restart_agent_testing.sh | 🚨 High | Auto-restart for testing agent |
-| .auto_restart_agent_todo.sh | 🚨 High | Auto-restart for todo agent |
-| .auto_restart_agent_uiux.sh | 🚨 High | Auto-restart for uiux agent |
-| .auto_restart_agent_validation.sh | 🚨 High | Auto-restart for validation agent |
-| .auto_restart_apple_pro_agent.sh | 🚨 High | Auto-restart for apple pro agent |
-| .auto_restart_auto_update_agent.sh | 🚨 High | Auto-restart for auto update agent |
-| .auto_restart_code_review_agent.sh | 🚨 High | Auto-restart for code review agent |
-| .auto_restart_collab_agent.sh | 🚨 High | Auto-restart for collab agent |
-| .auto_restart_deployment_agent.sh | 🚨 High | Auto-restart for deployment agent |
-| .auto_restart_documentation_agent.sh | 🚨 High | Auto-restart for documentation agent |
-| .auto_restart_knowledge_base_agent.sh | 🚨 High | Auto-restart for knowledge base agent |
-| .auto_restart_learning_agent.sh | 🚨 High | Auto-restart for learning agent |
-| .auto_restart_public_api_agent.sh | 🚨 High | Auto-restart for public api agent |
-| .auto_restart_pull_request_agent.sh | 🚨 High | Auto-restart for pull request agent |
-| .auto_restart_quality_agent.sh | 🚨 High | Auto-restart for quality agent |
-| .auto_restart_search_agent.sh | 🚨 High | Auto-restart for search agent |
-| .auto_restart_task_orchestrator.sh | 🚨 High | Auto-restart for task orchestrator |
-| .auto_restart_uiux_agent.sh | 🚨 High | Auto-restart for uiux agent |
-| .auto_restart_updater_agent.sh | 🚨 High | Auto-restart for updater agent |
+| Agent Script                               | Priority | Reason                                |
+| ------------------------------------------ | -------- | ------------------------------------- |
+| .auto_restart_agent_analytics.sh           | 🚨 High  | Auto-restart for analytics agent      |
+| .auto_restart_agent_backup.sh              | 🚨 High  | Auto-restart for backup agent         |
+| .auto_restart_agent_build.sh               | 🚨 High  | Auto-restart for build agent          |
+| .auto_restart_agent_cleanup.sh             | 🚨 High  | Auto-restart for cleanup agent        |
+| .auto_restart_agent_codegen.sh             | 🚨 High  | Auto-restart for codegen agent        |
+| .auto_restart_agent_control.sh             | 🚨 High  | Auto-restart for control agent        |
+| .auto_restart_agent_debug.sh               | 🚨 High  | Auto-restart for debug agent          |
+| .auto_restart_agent_integration.sh         | 🚨 High  | Auto-restart for integration agent    |
+| .auto_restart_agent_notification.sh        | 🚨 High  | Auto-restart for notification agent   |
+| .auto_restart_agent_optimization.sh        | 🚨 High  | Auto-restart for optimization agent   |
+| .auto_restart_agent_performance_monitor.sh | 🚨 High  | Auto-restart for performance monitor  |
+| .auto_restart_agent_security.sh            | 🚨 High  | Auto-restart for security agent       |
+| .auto_restart_agent_supervisor.sh          | 🚨 High  | Auto-restart for supervisor agent     |
+| .auto_restart_agent_test_quality.sh        | 🚨 High  | Auto-restart for test quality agent   |
+| .auto_restart_agent_testing.sh             | 🚨 High  | Auto-restart for testing agent        |
+| .auto_restart_agent_todo.sh                | 🚨 High  | Auto-restart for todo agent           |
+| .auto_restart_agent_uiux.sh                | 🚨 High  | Auto-restart for uiux agent           |
+| .auto_restart_agent_validation.sh          | 🚨 High  | Auto-restart for validation agent     |
+| .auto_restart_apple_pro_agent.sh           | 🚨 High  | Auto-restart for apple pro agent      |
+| .auto_restart_auto_update_agent.sh         | 🚨 High  | Auto-restart for auto update agent    |
+| .auto_restart_code_review_agent.sh         | 🚨 High  | Auto-restart for code review agent    |
+| .auto_restart_collab_agent.sh              | 🚨 High  | Auto-restart for collab agent         |
+| .auto_restart_deployment_agent.sh          | 🚨 High  | Auto-restart for deployment agent     |
+| .auto_restart_documentation_agent.sh       | 🚨 High  | Auto-restart for documentation agent  |
+| .auto_restart_knowledge_base_agent.sh      | 🚨 High  | Auto-restart for knowledge base agent |
+| .auto_restart_learning_agent.sh            | 🚨 High  | Auto-restart for learning agent       |
+| .auto_restart_public_api_agent.sh          | 🚨 High  | Auto-restart for public api agent     |
+| .auto_restart_pull_request_agent.sh        | 🚨 High  | Auto-restart for pull request agent   |
+| .auto_restart_quality_agent.sh             | 🚨 High  | Auto-restart for quality agent        |
+| .auto_restart_search_agent.sh              | 🚨 High  | Auto-restart for search agent         |
+| .auto_restart_task_orchestrator.sh         | 🚨 High  | Auto-restart for task orchestrator    |
+| .auto_restart_uiux_agent.sh                | 🚨 High  | Auto-restart for uiux agent           |
+| .auto_restart_updater_agent.sh             | 🚨 High  | Auto-restart for updater agent        |
 
 ### 🤖 MEDIUM PRIORITY (AI/ML Agents)
+
 High-value AI and machine learning capabilities:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| ai_client.sh | 🤖 Medium | Core AI client functionality |
-| ai_code_review_agent.sh | 🤖 Medium | AI-powered code review |
-| ai_docs_agent.sh | 🤖 Medium | AI documentation assistance |
-| ai_predictive_analytics_agent.sh | 🤖 Medium | AI predictive analytics |
-| predictive_analytics_agent.sh | 🤖 Medium | Predictive analytics |
+| Agent Script                     | Priority  | Reason                       |
+| -------------------------------- | --------- | ---------------------------- |
+| ai_client.sh                     | 🤖 Medium | Core AI client functionality |
+| ai_code_review_agent.sh          | 🤖 Medium | AI-powered code review       |
+| ai_docs_agent.sh                 | 🤖 Medium | AI documentation assistance  |
+| ai_predictive_analytics_agent.sh | 🤖 Medium | AI predictive analytics      |
+| predictive_analytics_agent.sh    | 🤖 Medium | Predictive analytics         |
 
 ### 🔬 MEDIUM PRIORITY (Specialized/Advanced Agents)
+
 Domain-specific advanced capabilities:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| apple_pro_agent.sh | 🔬 Medium | Apple-specific enhancements |
-| quantum_chemistry_agent.sh | 🔬 Medium | Quantum chemistry computations |
-| quantum_finance_agent.sh | 🔬 Medium | Quantum finance modeling |
-| quantum_learning_agent.sh | 🔬 Medium | Quantum machine learning |
+| Agent Script                  | Priority  | Reason                            |
+| ----------------------------- | --------- | --------------------------------- |
+| apple_pro_agent.sh            | 🔬 Medium | Apple-specific enhancements       |
+| quantum_chemistry_agent.sh    | 🔬 Medium | Quantum chemistry computations    |
+| quantum_finance_agent.sh      | 🔬 Medium | Quantum finance modeling          |
+| quantum_learning_agent.sh     | 🔬 Medium | Quantum machine learning          |
 | quantum_orchestrator_agent.sh | 🔬 Medium | Quantum computation orchestration |
-| collab_agent.sh | 🔬 Medium | Collaboration features |
-| code_analysis_agent.sh | 🔬 Medium | Advanced code analysis |
-| code_review_agent.sh | 🔬 Medium | Code review automation |
-| knowledge_base_agent.sh | 🔬 Medium | Knowledge base management |
-| learning_agent.sh | 🔬 Medium | Machine learning capabilities |
-| mcp_client.sh | 🔬 Medium | MCP protocol client |
+| collab_agent.sh               | 🔬 Medium | Collaboration features            |
+| code_analysis_agent.sh        | 🔬 Medium | Advanced code analysis            |
+| code_review_agent.sh          | 🔬 Medium | Code review automation            |
+| knowledge_base_agent.sh       | 🔬 Medium | Knowledge base management         |
+| learning_agent.sh             | 🔬 Medium | Machine learning capabilities     |
+| mcp_client.sh                 | 🔬 Medium | MCP protocol client               |
 
 ### 🛠️ MEDIUM PRIORITY (Development Tools)
+
 Development and build pipeline support:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| agent_keeper.sh | 🛠️ Medium | Agent lifecycle management |
-| agent_loop_utils.sh | 🛠️ Medium | Agent loop utilities |
-| agent_migration.sh | 🛠️ Medium | Agent migration tools |
-| agent_workflow_phase2.sh | 🛠️ Medium | Phase 2 workflow management |
-| agent_workflow_phase3.sh | 🛠️ Medium | Phase 3 workflow management |
-| auto_restart_code_analysis_agent.sh | 🛠️ Medium | Code analysis auto-restart |
-| auto_restart_monitor.sh | 🛠️ Medium | System monitoring auto-restart |
-| auto_restart_project_health_agent.sh | 🛠️ Medium | Project health auto-restart |
+| Agent Script                                | Priority  | Reason                             |
+| ------------------------------------------- | --------- | ---------------------------------- |
+| agent_keeper.sh                             | 🛠️ Medium | Agent lifecycle management         |
+| agent_loop_utils.sh                         | 🛠️ Medium | Agent loop utilities               |
+| agent_migration.sh                          | 🛠️ Medium | Agent migration tools              |
+| agent_workflow_phase2.sh                    | 🛠️ Medium | Phase 2 workflow management        |
+| agent_workflow_phase3.sh                    | 🛠️ Medium | Phase 3 workflow management        |
+| auto_restart_code_analysis_agent.sh         | 🛠️ Medium | Code analysis auto-restart         |
+| auto_restart_monitor.sh                     | 🛠️ Medium | System monitoring auto-restart     |
+| auto_restart_project_health_agent.sh        | 🛠️ Medium | Project health auto-restart        |
 | auto_restart_workflow_optimization_agent.sh | 🛠️ Medium | Workflow optimization auto-restart |
-| dependency_graph_agent.sh | 🛠️ Medium | Dependency analysis |
-| error_learning_agent.sh | 🛠️ Medium | Error learning system |
-| error_learning_agent_simple.sh | 🛠️ Medium | Simplified error learning |
-| error_learning_agent_v2.sh | 🛠️ Medium | Enhanced error learning |
-| error_learning_scan.sh | 🛠️ Medium | Error scanning |
-| fix_agent_system.sh | 🛠️ Medium | Agent system fixes |
-| plugin_api.sh | 🛠️ Medium | Plugin API |
-| proactive_monitor.sh | 🛠️ Medium | Proactive monitoring |
-| project_health_agent.sh | 🛠️ Medium | Project health monitoring |
-| quality_agent.sh | 🛠️ Medium | Quality assurance |
-| run_mcp_server.sh | 🛠️ Medium | MCP server runner |
-| run_task_orchestrator.sh | 🛠️ Medium | Task orchestration |
-| timeout_utils.sh | 🛠️ Medium | Timeout utilities |
+| dependency_graph_agent.sh                   | 🛠️ Medium | Dependency analysis                |
+| error_learning_agent.sh                     | 🛠️ Medium | Error learning system              |
+| error_learning_agent_simple.sh              | 🛠️ Medium | Simplified error learning          |
+| error_learning_agent_v2.sh                  | 🛠️ Medium | Enhanced error learning            |
+| error_learning_scan.sh                      | 🛠️ Medium | Error scanning                     |
+| fix_agent_system.sh                         | 🛠️ Medium | Agent system fixes                 |
+| plugin_api.sh                               | 🛠️ Medium | Plugin API                         |
+| proactive_monitor.sh                        | 🛠️ Medium | Proactive monitoring               |
+| project_health_agent.sh                     | 🛠️ Medium | Project health monitoring          |
+| quality_agent.sh                            | 🛠️ Medium | Quality assurance                  |
+| run_mcp_server.sh                           | 🛠️ Medium | MCP server runner                  |
+| run_task_orchestrator.sh                    | 🛠️ Medium | Task orchestration                 |
+| timeout_utils.sh                            | 🛠️ Medium | Timeout utilities                  |
 
 ### 📊 MEDIUM PRIORITY (Monitoring & Dashboards)
+
 System monitoring and visualization:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| monitoring_agent.sh | 📊 Medium | System monitoring |
-| performance_agent.sh | 📊 Medium | Performance monitoring |
-| dashboard_launcher.sh | 📊 Medium | Dashboard launcher |
-| launch_agent_dashboard.sh | 📊 Medium | Agent dashboard launcher |
-| minimal_dashboard.sh | 📊 Medium | Minimal dashboard |
-| monitor_agents.sh | 📊 Medium | Agent monitoring |
-| monitor_agents_fixed.sh | 📊 Medium | Fixed agent monitoring |
-| monitor_lock_timeouts.sh | 📊 Medium | Lock timeout monitoring |
-| serve_dashboard.sh | 📊 Medium | Dashboard server |
-| simple_dashboard.sh | 📊 Medium | Simple dashboard |
-| unified_dashboard_agent.sh | 📊 Medium | Unified dashboard |
-| working_dashboard.sh | 📊 Medium | Working dashboard |
+| Agent Script               | Priority  | Reason                   |
+| -------------------------- | --------- | ------------------------ |
+| monitoring_agent.sh        | 📊 Medium | System monitoring        |
+| performance_agent.sh       | 📊 Medium | Performance monitoring   |
+| dashboard_launcher.sh      | 📊 Medium | Dashboard launcher       |
+| launch_agent_dashboard.sh  | 📊 Medium | Agent dashboard launcher |
+| minimal_dashboard.sh       | 📊 Medium | Minimal dashboard        |
+| monitor_agents.sh          | 📊 Medium | Agent monitoring         |
+| monitor_agents_fixed.sh    | 📊 Medium | Fixed agent monitoring   |
+| monitor_lock_timeouts.sh   | 📊 Medium | Lock timeout monitoring  |
+| serve_dashboard.sh         | 📊 Medium | Dashboard server         |
+| simple_dashboard.sh        | 📊 Medium | Simple dashboard         |
+| unified_dashboard_agent.sh | 📊 Medium | Unified dashboard        |
+| working_dashboard.sh       | 📊 Medium | Working dashboard        |
 
 ### 🔧 MEDIUM PRIORITY (Utility Scripts)
+
 General utility and helper scripts:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| assign_once.sh | 🔧 Medium | Task assignment utility |
-| audit_agent.sh | 🔧 Medium | Audit functionality |
-| auto_rollback.sh | 🔧 Medium | Auto rollback capability |
-| auto_update_agent.sh | 🔧 Medium | Auto update functionality |
-| check_persistence.sh | 🔧 Medium | Persistence checking |
-| clear_alerts.sh | 🔧 Medium | Alert clearing |
-| configure_auto_restart.sh | 🔧 Medium | Auto-restart configuration |
-| context_loader.sh | 🔧 Medium | Context loading |
-| cron_setup.sh | 🔧 Medium | Cron job setup |
-| emergency_response.sh | 🔧 Medium | Emergency response |
-| encryption_agent.sh | 🔧 Medium | Encryption services |
-| enhanced_shared_functions.sh | 🔧 Medium | Enhanced shared functions |
-| execute_all_tasks.sh | 🔧 Medium | Task execution |
-| inject_todo.sh | 🔧 Medium | TODO injection |
-| knowledge_sync.sh | 🔧 Medium | Knowledge synchronization |
-| onboard.sh | 🔧 Medium | Onboarding functionality |
-| safe_shutdown.sh | 🔧 Medium | Safe shutdown |
-| scheduled_inventory.sh | 🔧 Medium | Scheduled inventory |
-| seed_demo_tasks.sh | 🔧 Medium | Demo task seeding |
-| show_alerts.sh | 🔧 Medium | Alert display |
-| speed_accelerator.sh | 🔧 Medium | Performance acceleration |
-| start_agents.sh | 🔧 Medium | Agent startup |
-| start_recommended_agents.sh | 🔧 Medium | Recommended agent startup |
-| stop_agents.sh | 🔧 Medium | Agent shutdown |
-| task_orchestrator.sh | 🔧 Medium | Task orchestration |
-| task_processor.sh | 🔧 Medium | Task processing |
-| test_script.sh | 🔧 Medium | Test script runner |
-| test_update.sh | 🔧 Medium | Test updates |
-| testing_agent.sh | 🔧 Medium | Testing agent |
-| todo_ai_config.sh | 🔧 Medium | AI TODO configuration |
-| uiux_agent.sh | 🔧 Medium | UI/UX agent |
-| update_all_agents.sh | 🔧 Medium | Agent updates |
-| updater_agent.sh | 🔧 Medium | Update services |
-| watch_supervisor.sh | 🔧 Medium | Supervisor monitoring |
-| workflow_optimization_agent.sh | 🔧 Medium | Workflow optimization |
+| Agent Script                   | Priority  | Reason                     |
+| ------------------------------ | --------- | -------------------------- |
+| assign_once.sh                 | 🔧 Medium | Task assignment utility    |
+| audit_agent.sh                 | 🔧 Medium | Audit functionality        |
+| auto_rollback.sh               | 🔧 Medium | Auto rollback capability   |
+| auto_update_agent.sh           | 🔧 Medium | Auto update functionality  |
+| check_persistence.sh           | 🔧 Medium | Persistence checking       |
+| clear_alerts.sh                | 🔧 Medium | Alert clearing             |
+| configure_auto_restart.sh      | 🔧 Medium | Auto-restart configuration |
+| context_loader.sh              | 🔧 Medium | Context loading            |
+| cron_setup.sh                  | 🔧 Medium | Cron job setup             |
+| emergency_response.sh          | 🔧 Medium | Emergency response         |
+| encryption_agent.sh            | 🔧 Medium | Encryption services        |
+| enhanced_shared_functions.sh   | 🔧 Medium | Enhanced shared functions  |
+| execute_all_tasks.sh           | 🔧 Medium | Task execution             |
+| inject_todo.sh                 | 🔧 Medium | TODO injection             |
+| knowledge_sync.sh              | 🔧 Medium | Knowledge synchronization  |
+| onboard.sh                     | 🔧 Medium | Onboarding functionality   |
+| safe_shutdown.sh               | 🔧 Medium | Safe shutdown              |
+| scheduled_inventory.sh         | 🔧 Medium | Scheduled inventory        |
+| seed_demo_tasks.sh             | 🔧 Medium | Demo task seeding          |
+| show_alerts.sh                 | 🔧 Medium | Alert display              |
+| speed_accelerator.sh           | 🔧 Medium | Performance acceleration   |
+| start_agents.sh                | 🔧 Medium | Agent startup              |
+| start_recommended_agents.sh    | 🔧 Medium | Recommended agent startup  |
+| stop_agents.sh                 | 🔧 Medium | Agent shutdown             |
+| task_orchestrator.sh           | 🔧 Medium | Task orchestration         |
+| task_processor.sh              | 🔧 Medium | Task processing            |
+| test_script.sh                 | 🔧 Medium | Test script runner         |
+| test_update.sh                 | 🔧 Medium | Test updates               |
+| testing_agent.sh               | 🔧 Medium | Testing agent              |
+| todo_ai_config.sh              | 🔧 Medium | AI TODO configuration      |
+| uiux_agent.sh                  | 🔧 Medium | UI/UX agent                |
+| update_all_agents.sh           | 🔧 Medium | Agent updates              |
+| updater_agent.sh               | 🔧 Medium | Update services            |
+| watch_supervisor.sh            | 🔧 Medium | Supervisor monitoring      |
+| workflow_optimization_agent.sh | 🔧 Medium | Workflow optimization      |
 
 ### 🔌 MEDIUM PRIORITY (Plugin Scripts)
+
 Extensibility and plugin system:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| plugins/apple_pro_apply.sh | 🔌 Medium | Apple Pro plugin - apply |
-| plugins/apple_pro_check.sh | 🔌 Medium | Apple Pro plugin - check |
-| plugins/apple_pro_suggest.sh | 🔌 Medium | Apple Pro plugin - suggest |
-| plugins/collab_analyze.sh | 🔌 Medium | Collaboration plugin - analyze |
-| plugins/sample_hello.sh | 🔌 Medium | Sample plugin |
-| plugins/uiux_analysis.sh | 🔌 Medium | UI/UX plugin - analysis |
-| plugins/uiux_apply.sh | 🔌 Medium | UI/UX plugin - apply |
-| plugins/uiux_suggest.sh | 🔌 Medium | UI/UX plugin - suggest |
+| Agent Script                 | Priority  | Reason                         |
+| ---------------------------- | --------- | ------------------------------ |
+| plugins/apple_pro_apply.sh   | 🔌 Medium | Apple Pro plugin - apply       |
+| plugins/apple_pro_check.sh   | 🔌 Medium | Apple Pro plugin - check       |
+| plugins/apple_pro_suggest.sh | 🔌 Medium | Apple Pro plugin - suggest     |
+| plugins/collab_analyze.sh    | 🔌 Medium | Collaboration plugin - analyze |
+| plugins/sample_hello.sh      | 🔌 Medium | Sample plugin                  |
+| plugins/uiux_analysis.sh     | 🔌 Medium | UI/UX plugin - analysis        |
+| plugins/uiux_apply.sh        | 🔌 Medium | UI/UX plugin - apply           |
+| plugins/uiux_suggest.sh      | 🔌 Medium | UI/UX plugin - suggest         |
 
 ### 📈 MEDIUM PRIORITY (API & Integration)
+
 External API and integration capabilities:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| public_api_agent.sh | 📈 Medium | Public API services |
+| Agent Script          | Priority  | Reason                  |
+| --------------------- | --------- | ----------------------- |
+| public_api_agent.sh   | 📈 Medium | Public API services     |
 | pull_request_agent.sh | 📈 Medium | Pull request management |
-| search_agent.sh | 📈 Medium | Search functionality |
-| security_agent.sh | 📈 Medium | Security services |
+| search_agent.sh       | 📈 Medium | Search functionality    |
+| security_agent.sh     | 📈 Medium | Security services       |
 
 ### 🧪 LOW PRIORITY (Integration Test Scripts)
+
 These are integration/setup scripts, not core agents:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| integrate_phase1.sh | 🧪 Low | Phase 1 integration setup |
-| integrate_phase2.sh | 🧪 Low | Phase 2 integration setup |
-| integrate_phase3.sh | 🧪 Low | Phase 3 integration setup |
-| integrate_phase4.sh | 🧪 Low | Phase 4 integration setup |
-| test_phase1_integration.sh | 🧪 Low | Phase 1 integration tests |
-| test_phase2_integration.sh | 🧪 Low | Phase 2 integration tests |
-| test_phase3_integration.sh | 🧪 Low | Phase 3 integration tests |
-| test_phase4_integration.sh | 🧪 Low | Phase 4 integration tests |
+| Agent Script               | Priority | Reason                    |
+| -------------------------- | -------- | ------------------------- |
+| integrate_phase1.sh        | 🧪 Low   | Phase 1 integration setup |
+| integrate_phase2.sh        | 🧪 Low   | Phase 2 integration setup |
+| integrate_phase3.sh        | 🧪 Low   | Phase 3 integration setup |
+| integrate_phase4.sh        | 🧪 Low   | Phase 4 integration setup |
+| test_phase1_integration.sh | 🧪 Low   | Phase 1 integration tests |
+| test_phase2_integration.sh | 🧪 Low   | Phase 2 integration tests |
+| test_phase3_integration.sh | 🧪 Low   | Phase 3 integration tests |
+| test_phase4_integration.sh | 🧪 Low   | Phase 4 integration tests |
 
 ### ⚡ LOW PRIORITY (Enhanced Versions)
+
 These are enhanced versions of already-tested agents:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| agent_build_enhanced.sh | ⚡ Low | Enhanced version of agent_build.sh (already tested) |
-| agent_debug_enhanced.sh | ⚡ Low | Enhanced version of agent_debug.sh (already tested) |
+| Agent Script            | Priority | Reason                                              |
+| ----------------------- | -------- | --------------------------------------------------- |
+| agent_build_enhanced.sh | ⚡ Low   | Enhanced version of agent_build.sh (already tested) |
+| agent_debug_enhanced.sh | ⚡ Low   | Enhanced version of agent_debug.sh (already tested) |
 
 ### 🔍 LOW PRIORITY (Test/Metric Scripts)
+
 Testing and metrics collection scripts:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| test_dashboard.sh | 🔍 Low | Test dashboard |
-| test_metrics.sh | 🔍 Low | Test metrics |
+| Agent Script      | Priority | Reason         |
+| ----------------- | -------- | -------------- |
+| test_dashboard.sh | 🔍 Low   | Test dashboard |
+| test_metrics.sh   | 🔍 Low   | Test metrics   |
 
 ### 🛡️ LOW PRIORITY (Security Enhancement Scripts)
+
 Security-specific enhancements:
 
-| Agent Script | Priority | Reason |
-|-------------|----------|--------|
-| enhancements/security_npm_audit.sh | 🛡️ Low | NPM security audit |
-| enhancements/security_secrets_scan.sh | 🛡️ Low | Secrets scanning |
-| enhancements/testing_coverage.sh | 🛡️ Low | Testing coverage |
-| enhancements/testing_flaky_detection.sh | 🛡️ Low | Flaky test detection |
+| Agent Script                            | Priority | Reason               |
+| --------------------------------------- | -------- | -------------------- |
+| enhancements/security_npm_audit.sh      | 🛡️ Low   | NPM security audit   |
+| enhancements/security_secrets_scan.sh   | 🛡️ Low   | Secrets scanning     |
+| enhancements/testing_coverage.sh        | 🛡️ Low   | Testing coverage     |
+| enhancements/testing_flaky_detection.sh | 🛡️ Low   | Flaky test detection |
 
 ## Enhanced Versions vs Original Agents
 
@@ -558,7 +571,7 @@ test_agent_monitoring() {
 2. ✅ Start with Phase 1 core agents (COMPLETE - 5/5 agents tested)
 3. ✅ Complete Phase 2 development agents (COMPLETE - 5/5 agents tested)
 4. 🚧 **Begin Phase 3 with CRITICAL PRIORITY agents first:**
-   - **Next:** `shared_functions.sh` (dependency for all agents)
+   - **Next:** `backup_manager.sh` (used by build/UIUX agents for project backups)
    - **Then:** `backup_manager.sh` (used by build/UIUX agents)
    - **Then:** `agent_config.sh` (global configuration)
    - **Then:** `agent_helpers.sh` (enhanced utilities)
