@@ -1,6 +1,6 @@
 {
   "total_agents": 203,
-  "tested_agents": 5,
+  "tested_agents": 11,
   "coverage_percentage": 0.99,
   "last_updated": "2025-01-09",
   "agents": {
@@ -29,6 +29,42 @@
       "coverage_percentage": 100
     },
     "agent_performance_monitor.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "dependency_graph_agent.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "error_learning_agent.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "error_learning_agent_simple.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "error_learning_agent_v2.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "error_learning_scan.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "fix_agent_system.sh": {
       "tests": 10,
       "status": "passed",
       "last_run": "2025-01-09",
