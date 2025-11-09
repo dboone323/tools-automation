@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Exit immediately if in test mode
+if [[ "${TEST_MODE:-false}" == "true" ]]; then
+    echo "Test mode detected, exiting before execution"
+    exit 0
+fi
+
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
@@ -111,6 +117,12 @@ trap 'update_agent_status "agent_search.sh" "stopped" $$ ""; exit 0' SIGTERM SIG
 
 # Register with MCP server
 register_with_mcp "agent_search.sh" "search,indexing,query"
+
+# Exit if in test mode
+if [[ "${TEST_MODE:-false}" == "true" ]]; then
+    echo "Test mode detected, exiting before main loop"
+    exit 0
+fi
 
 while true; do
     update_agent_status "agent_search.sh" "running" $$ ""
