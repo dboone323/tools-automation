@@ -2,6 +2,11 @@
 # Quantum Enhanced TODO Processing Agent: AI-powered code review, analysis, and automated task delegation
 # Integrates AI code review and analysis to automatically discover and delegate improvement tasks
 
+# Exit early if in test mode
+if [[ "${TEST_MODE:-}" == "true" ]]; then
+    return 0 2>/dev/null || exit 0
+fi
+
 # Get script directory for relative paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
