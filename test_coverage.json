@@ -1,6 +1,6 @@
 {
   "total_agents": 203,
-  "tested_agents": 3,
+  "tested_agents": 4,
   "coverage_percentage": 0.99,
   "last_updated": "2025-01-09",
   "agents": {
@@ -17,6 +17,12 @@
       "coverage_percentage": 100
     },
     "monitor_agents.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "monitoring_agent.sh": {
       "tests": 10,
       "status": "passed",
       "last_run": "2025-01-09",
