@@ -61,6 +61,11 @@ backup_if_needed() {
     backup "${project}"
 }
 
+# Exit early if in test mode (after function definitions)
+if [[ "${TEST_MODE:-}" == "true" ]]; then
+    return 0
+fi
+
 case "$1" in
 backup)
     project="$2"

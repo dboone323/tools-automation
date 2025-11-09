@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/opt/homebrew/bin/bash
 # Quantum Agent Keeper - Ensures all agents stay alive and processing
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -86,22 +86,21 @@ check_resource_limits() {
 }
 
 # Agent definitions with their capabilities
-declare -A AGENT_CAPABILITIES=(
-    ["agent_analytics.sh"]="analytics,metrics,reporting"
-    ["agent_build.sh"]="build,compilation,xcode"
-    ["agent_cleanup.sh"]="cleanup,maintenance,optimization"
-    ["agent_codegen.sh"]="codegen,generation,automation"
-    ["code_review_agent.sh"]="review,quality,standards"
-    ["deployment_agent.sh"]="deployment,distribution,release"
-    ["documentation_agent.sh"]="docs,documentation,readme"
-    ["learning_agent.sh"]="learning,adaptation,improvement"
-    ["monitoring_agent.sh"]="monitoring,health,alerts"
-    ["performance_agent.sh"]="performance,optimization,speed"
-    ["quality_agent.sh"]="quality,testing,validation"
-    ["search_agent.sh"]="search,discovery,analysis"
-    ["security_agent.sh"]="security,audit,protection"
-    ["testing_agent.sh"]="testing,validation,verification"
-)
+declare -A AGENT_CAPABILITIES
+AGENT_CAPABILITIES["agent_analytics.sh"]="analytics,metrics,reporting"
+AGENT_CAPABILITIES["agent_build.sh"]="build,compilation,xcode"
+AGENT_CAPABILITIES["agent_cleanup.sh"]="cleanup,maintenance,optimization"
+AGENT_CAPABILITIES["agent_codegen.sh"]="codegen,generation,automation"
+AGENT_CAPABILITIES["code_review_agent.sh"]="review,quality,standards"
+AGENT_CAPABILITIES["deployment_agent.sh"]="deployment,distribution,release"
+AGENT_CAPABILITIES["documentation_agent.sh"]="docs,documentation,readme"
+AGENT_CAPABILITIES["learning_agent.sh"]="learning,adaptation,improvement"
+AGENT_CAPABILITIES["monitoring_agent.sh"]="monitoring,health,alerts"
+AGENT_CAPABILITIES["performance_agent.sh"]="performance,optimization,speed"
+AGENT_CAPABILITIES["quality_agent.sh"]="quality,testing,validation"
+AGENT_CAPABILITIES["search_agent.sh"]="search,discovery,analysis"
+AGENT_CAPABILITIES["security_agent.sh"]="security,audit,protection"
+AGENT_CAPABILITIES["testing_agent.sh"]="testing,validation,verification"
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"
@@ -131,23 +130,23 @@ start_keeper() {
     (
         echo $$ >"$PID_FILE"
 
-        # Initial agent deployment with timeout protection
-        if ! run_with_timeout 300 "deploy_all_agents" "Initial agent deployment timed out"; then
-            log "Failed to deploy all agents within timeout"
+        # Initial agent deployment
+        if ! deploy_all_agents; then
+            log "Failed to deploy all agents"
         fi
 
         # Continuous monitoring loop
         while true; do
-            if ! run_with_timeout 60 "check_agent_health" "Health check timed out"; then
-                log "Health check failed or timed out"
+            if ! check_agent_health; then
+                log "Health check failed"
             fi
 
-            if ! run_with_timeout 60 "balance_workload" "Workload balancing timed out"; then
-                log "Workload balancing failed or timed out"
+            if ! balance_workload; then
+                log "Workload balancing failed"
             fi
 
-            if ! run_with_timeout 60 "optimize_performance" "Performance optimization timed out"; then
-                log "Performance optimization failed or timed out"
+            if ! optimize_performance; then
+                log "Performance optimization failed"
             fi
 
             sleep 15 # Check every 15 seconds
@@ -164,8 +163,8 @@ deploy_all_agents() {
     local deployed=0
     for agent_script in "${!AGENT_CAPABILITIES[@]}"; do
         if [[ -f "$agent_script" ]]; then
-            if ! run_with_timeout 30 "deploy_agent '$agent_script'" "Deployment of $agent_script timed out"; then
-                log "Failed to deploy $agent_script within timeout"
+            if ! deploy_agent "$agent_script"; then
+                log "Failed to deploy $agent_script"
             else
                 ((deployed++))
             fi

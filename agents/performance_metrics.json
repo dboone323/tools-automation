@@ -5071,6 +5071,38 @@
       "disk_usage": "13",
       "process_count": "     536",
       "agent_count": "       4"
+    },
+    {
+      "timestamp": "1762702151",
+      "cpu_usage": "263.1",
+      "memory_usage": "65.9",
+      "disk_usage": "13",
+      "process_count": "     651",
+      "agent_count": "0\n0"
+    },
+    {
+      "timestamp": "1762702205",
+      "cpu_usage": "138.5",
+      "memory_usage": "62.3",
+      "disk_usage": "13",
+      "process_count": "     649",
+      "agent_count": "0\n0"
+    },
+    {
+      "timestamp": "1762702237",
+      "cpu_usage": "202.1",
+      "memory_usage": "62",
+      "disk_usage": "13",
+      "process_count": "     651",
+      "agent_count": "0\n0"
+    },
+    {
+      "timestamp": "1762702264",
+      "cpu_usage": "156.4",
+      "memory_usage": "64.9",
+      "disk_usage": "13",
+      "process_count": "     652",
+      "agent_count": "0\n0"
     }
   ]
 }

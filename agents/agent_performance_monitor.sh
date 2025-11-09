@@ -434,7 +434,7 @@ main() {
 }
 
 # Run main function if script is executed directly
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+if [[ "${BASH_SOURCE[0]}" == "${0}" && "${TEST_MODE:-false}" != "true" ]]; then
     # Handle single run mode for testing
     if [[ "${1:-}" == "SINGLE_RUN" ]]; then
         log_message "INFO" "Running in SINGLE_RUN mode for testing"

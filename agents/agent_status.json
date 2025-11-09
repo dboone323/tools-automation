@@ -1,1 +1,25 @@
-{"agents":{},"last_update":0}
+{
+  "agents": {
+    "PerformanceMonitorAgent": {
+      "status": "completed",
+      "last_seen": 1762702151,
+      "pid": 47356
+    },
+    "ConfigAgent": {
+      "status": "running",
+      "last_seen": 1762703963,
+      "pid": 86062
+    },
+    "HelpersAgent": {
+      "status": "running",
+      "last_seen": 1762704054,
+      "pid": 89771
+    },
+    "KeeperAgent": {
+      "status": "running",
+      "last_seen": 1762726377,
+      "pid": 1972
+    }
+  },
+  "last_update": 1762726377
+}
