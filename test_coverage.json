@@ -1,6 +1,6 @@
 {
   "total_agents": 203,
-  "tested_agents": 26,
+  "tested_agents": 31,
   "coverage_percentage": 0.99,
   "last_updated": "2025-01-09",
   "agents": {
@@ -123,6 +123,36 @@
       "status": "passed",
       "last_run": "2025-01-09",
       "coverage_percentage": 100
+    },
+    "ai_client.sh": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "status": "passed"
+    },
+    "ai_code_review_agent.sh": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "status": "passed"
+    },
+    "ai_docs_agent.sh": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "status": "passed"
+    },
+    "ai_predictive_analytics_agent.sh": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "status": "passed"
+    },
+    "predictive_analytics_agent.sh": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "status": "passed"
     }
   }
 }
