@@ -10,7 +10,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def load_json(path: str, default):
@@ -41,7 +41,7 @@ def update_error_patterns(
     key = pattern_obj.get("hash") or pattern_obj.get("pattern")
     if not key:
         return
-    now = datetime.utcnow().isoformat() + "Z"
+    now = datetime.now(timezone.utc).isoformat() + "Z"
     entry = db.get(key) or {
         "pattern": pattern_obj.get("pattern", ""),
         "category": pattern_obj.get("category", "general"),

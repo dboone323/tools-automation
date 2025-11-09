@@ -155,7 +155,6 @@ class TestMcpServer:
         assert module.MCPHandler.server_version == "MCP-Local/0.1"
 
     @pytest.mark.skipif(not MODULE_AVAILABLE, reason="Module import failed")
-    @pytest.mark.skip(reason="Mocking issues with rate limiting logic")
     def test_rate_limiting_logic(self):
         """Test rate limiting functionality"""
         import mcp_server as module
@@ -179,18 +178,11 @@ class TestMcpServer:
             handler, module.MCPHandler
         )
 
-        # Mock os.environ.get to return low rate limit
-        def mock_environ_get(key, default=None):
-            if key == "RATE_LIMIT_MAX_REQS":
-                return "1"
-            elif key == "RATE_LIMIT_WINDOW_SEC":
-                return "60"
-            return default
+        # Mock the rate limiting constants
+        with patch.object(module, "RATE_LIMIT_MAX_REQS", 1), patch.object(
+            module, "RATE_LIMIT_WINDOW_SEC", 60
+        ), patch.object(module, "RATE_LIMIT_WHITELIST", []):
 
-        with patch.dict(
-            "mcp_server.os.environ",
-            {"RATE_LIMIT_MAX_REQS": "1", "RATE_LIMIT_WINDOW_SEC": "60"},
-        ):
             # First request should not be rate limited
             assert not handler._is_rate_limited()
             # Second request should be rate limited (exceeds max requests)

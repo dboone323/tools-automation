@@ -216,7 +216,7 @@ analyze_cicd_pipelines() {
                         "medium" "$project"
                 fi
             fi
-        done < <(find "$github_actions_dir" -name "*.yml" -o -name "*.yaml" -print0 2>/dev/null)
+        done < <(find "$github_actions_dir" \( -name "*.yml" -o -name "*.yaml" \) -print0 2>/dev/null)
     else
         create_todo ".github/workflows/" "1" "cicd_efficiency" \
             "Missing CI/CD workflows - project needs automated testing and deployment" \
@@ -241,7 +241,7 @@ analyze_cicd_pipelines() {
     # Check for long-running CI jobs
     if [[ -d "$github_actions_dir" ]]; then
         local long_jobs
-        long_jobs=$(find "$github_actions_dir" -name "*.yml" -o -name "*.yaml" -exec grep -l "timeout-minutes.*[5-9][0-9]*\|timeout-minutes.*[1-9][0-9][0-9]*" {} \; | wc -l)
+        long_jobs=$(find "$github_actions_dir" \( -name "*.yml" -o -name "*.yaml" \) -exec grep -l "timeout-minutes.*[5-9][0-9]*\|timeout-minutes.*[1-9][0-9][0-9]*" {} \; | wc -l)
         if [[ $long_jobs -gt 0 ]]; then
             create_todo ".github/workflows/" "1" "cicd_efficiency" \
                 "${long_jobs} CI jobs with long timeouts - consider optimization" \

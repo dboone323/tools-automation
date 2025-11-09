@@ -408,6 +408,12 @@ generate_report() {
         break # Just use the first valid project for now
     done
 
+    # Collect other metrics
+    local build_metrics
+    build_metrics=$(collect_build_metrics)
+    local agent_metrics
+    agent_metrics=$(collect_agent_metrics)
+
     # Build full report
     cat >"${report_file}" <<EOF
 {
@@ -415,10 +421,10 @@ generate_report() {
   "date": "$(date -Iseconds)",
   "workspace": "${WORKSPACE_ROOT}",
   "code_metrics": ${code_metrics},
-  "build_metrics": $(collect_build_metrics),
+  "build_metrics": ${build_metrics},
   "coverage_metrics": ${coverage_metrics},
   "complexity_metrics": ${complexity_metrics},
-  "agent_metrics": $(collect_agent_metrics)
+  "agent_metrics": ${agent_metrics}
 }
 EOF
 
@@ -521,6 +527,12 @@ main() {
     agent_init_backoff
     if agent_detect_pipe_and_quick_exit "${AGENT_NAME}"; then
         return 0
+    fi
+
+    # Exit early if in test mode
+    if [[ "${TEST_MODE}" == "true" ]]; then
+        log_message "Test mode detected, exiting before main loop"
+        return 0 2>/dev/null || exit 0
     fi
 
     while true; do

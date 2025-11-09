@@ -29,7 +29,7 @@ import json
 import os
 import statistics
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List
 
 
@@ -49,7 +49,7 @@ def _load_json(path: str, default: Any) -> Any:
 
 
 def _now_iso() -> str:
-    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _mean_safe(values: List[float], default: float = 0.0) -> float:
@@ -104,13 +104,15 @@ def collect_metrics() -> Dict[str, Any]:
                             "%Y-%m-%d",
                         ):
                             try:
-                                ts.append(datetime.strptime(raw, fmt))
+                                parsed = datetime.strptime(raw, fmt)
+                                # Make timezone-aware by assuming UTC
+                                ts.append(parsed.replace(tzinfo=timezone.utc))
                                 break
                             except Exception:
                                 continue
         return ts
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     week_ago = now - timedelta(days=7)
     fixes_ts = _timestamps(fix_history)
     fixes_last_week = (

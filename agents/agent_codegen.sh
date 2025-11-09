@@ -30,7 +30,13 @@ if [[ -p /dev/stdout ]] || [[ -p /dev/stderr ]]; then
     fi
 fi
 
-set -euo pipefail
+# Only enable strict mode when the script is executed directly. When the file
+# is sourced by tests we avoid forcing `set -e` globally which can change
+# test control flow and mask assertions. Tests can still enable strict mode
+# if they need to.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    set -euo pipefail
+fi
 
 # Agent throttling configuration
 MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}" # Maximum concurrent instances of this agent
@@ -78,11 +84,11 @@ ensure_within_limits() {
 # Ensure PROJECT_NAME is set for subprocess calls
 export PROJECT_NAME="${PROJECT_NAME:-CodingReviewer}"
 
-echo "[$(date)] codegen_agent: Script started, PID=$$" >>"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/codegen_agent.log"
 # CodeGen/Fix Agent: Triggers code generation and auto-fix routines
 
+# Respect any externally provided WORKSPACE (tests override it); otherwise default to repo root
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-WORKSPACE="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+WORKSPACE="${WORKSPACE:-$(cd "${SCRIPT_DIR}/../../.." && pwd)}"
 
 # Source AI enhancement modules
 ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"
@@ -94,7 +100,7 @@ fi
 
 AGENT_NAME="agent_codegen.sh"
 AGENT_LABEL="CodeGenAgent"
-LOG_FILE="${SCRIPT_DIR}/codegen_agent.log"
+LOG_FILE="${LOG_FILE:-${SCRIPT_DIR}/codegen_agent.log}"
 COMM_DIR="${SCRIPT_DIR}/communication"
 NOTIFICATION_FILE="${COMM_DIR}/agent_codegen.sh_notification.txt"
 COMPLETED_FILE="${COMM_DIR}/agent_codegen.sh_completed.txt"
@@ -126,12 +132,18 @@ CONSECUTIVE_FAILURES=0
 mkdir -p "${COMM_DIR}"
 touch "${NOTIFICATION_FILE}" "${COMPLETED_FILE}" "${PROCESSED_TASKS_FILE}"
 
-if [[ ! -f ${AGENT_STATUS_FILE} ]]; then
-    echo '{"agents":{},"last_update":0}' >"${AGENT_STATUS_FILE}"
+if [[ -n "${AGENT_STATUS_FILE:-}" ]]; then
+    mkdir -p "$(dirname "${AGENT_STATUS_FILE}")" 2>/dev/null || true
+    if [[ ! -f ${AGENT_STATUS_FILE} ]]; then
+        echo '{"agents":{},"last_update":0}' >"${AGENT_STATUS_FILE}" 2>/dev/null || true
+    fi
 fi
 
-if [[ ! -f ${TASK_QUEUE_FILE} ]]; then
-    echo '{"tasks":[]}' >"${TASK_QUEUE_FILE}"
+if [[ -n "${TASK_QUEUE_FILE:-}" ]]; then
+    mkdir -p "$(dirname "${TASK_QUEUE_FILE}")" 2>/dev/null || true
+    if [[ ! -f ${TASK_QUEUE_FILE} ]]; then
+        echo '{"tasks":[]}' >"${TASK_QUEUE_FILE}" 2>/dev/null || true
+    fi
 fi
 
 LAST_STATUS_UPDATE=0
@@ -154,18 +166,85 @@ run_with_timeout() {
         return $?
     fi
 
-    # Run command in background
-    (
-        "$@"
-    ) &
-    local cmd_pid=$!
+    # Start the command in background using a small wrapper so the launched process
+    # becomes the direct child (via bash -c 'exec ...') which makes killing reliable.
+    local cmd_pid
+    if command -v bash >/dev/null 2>&1; then
+        bash -c 'exec "$@"' bash "$@" &
+        cmd_pid=$!
+    elif command -v setsid >/dev/null 2>&1; then
+        setsid "$@" &
+        cmd_pid=$!
+    else
+        # Fallback: run in background and rely on killing the process group
+        ("$@") &
+        cmd_pid=$!
+    fi
 
-    # Watcher: sleep then kill if still running
+    # Watcher: sleep then kill the command and any children if still running
+    # Instead of using a file, signal the parent on timeout (SIGUSR1). Parent
+    # sets a trap which sets the timeout_occurred variable.
+    local -i timeout_occurred=0
+    trap 'timeout_occurred=1' SIGUSR1
+    # Capture parent PID explicitly to avoid PPID races when running in
+    # nested shells or test harnesses that may change PPID semantics.
+    local parent_pid=$$
+
     (
         sleep "${timeout_secs}"
         if kill -0 "${cmd_pid}" 2>/dev/null; then
-            log_message "WARN" "Command timed out after ${timeout_secs}s, killing pid ${cmd_pid}"
-            kill -9 "${cmd_pid}" 2>/dev/null || true
+            # notify parent that a timeout occurred
+            if [[ "${TEST_MODE:-}" == "true" ]]; then
+                echo "[TIMEOUT_DEBUG] sending SIGUSR1 to parent (parent_pid=${parent_pid})"
+            fi
+            kill -USR1 "${parent_pid}" 2>/dev/null || true
+
+            if [[ "${TEST_MODE:-}" == "true" ]]; then
+                echo "[TIMEOUT_DEBUG] timeout reached; attempting to kill pid ${cmd_pid}"
+                echo "[TIMEOUT_DEBUG] initial children: $(pgrep -P ${cmd_pid} 2>/dev/null || true)"
+            fi
+
+            log_message "WARN" "Command timed out after ${timeout_secs}s, killing pid ${cmd_pid} and its children"
+
+            # Try graceful termination first
+            kill -TERM "${cmd_pid}" 2>/dev/null || true
+            if [[ "${TEST_MODE:-}" == "true" ]]; then
+                echo "[TIMEOUT_DEBUG] sent TERM to ${cmd_pid}"
+            fi
+
+            # Try to kill direct children of the command (pkill -P)
+            if command -v pkill >/dev/null 2>&1; then
+                pkill -P "${cmd_pid}" 2>/dev/null || true
+                if [[ "${TEST_MODE:-}" == "true" ]]; then
+                    echo "[TIMEOUT_DEBUG] sent TERM to children of ${cmd_pid}: $(pgrep -P ${cmd_pid} 2>/dev/null || true)"
+                fi
+            fi
+
+            # Poll for process termination for a short window
+            for _ in 1 2 3 4 5; do
+                sleep 0.2
+                if ! kill -0 "${cmd_pid}" 2>/dev/null; then
+                    break
+                fi
+                # also check children
+                if [[ -n "$(pgrep -P ${cmd_pid} 2>/dev/null || true)" ]]; then
+                    # continue polling
+                    if [[ "${TEST_MODE:-}" == "true" ]]; then
+                        echo "[TIMEOUT_DEBUG] still has children: $(pgrep -P ${cmd_pid} 2>/dev/null || true)"
+                    fi
+                fi
+            done
+
+            # If still alive, escalate to KILL
+            if kill -0 "${cmd_pid}" 2>/dev/null; then
+                kill -KILL "${cmd_pid}" 2>/dev/null || true
+                if command -v pkill >/dev/null 2>&1; then
+                    pkill -KILL -P "${cmd_pid}" 2>/dev/null || true
+                fi
+                if [[ "${TEST_MODE:-}" == "true" ]]; then
+                    echo "[TIMEOUT_DEBUG] sent KILL to ${cmd_pid} and remaining children"
+                fi
+            fi
         fi
     ) &
     local watcher_pid=$!
@@ -173,6 +252,22 @@ run_with_timeout() {
     # Wait for command to finish
     wait "${cmd_pid}" 2>/dev/null
     local cmd_status=$?
+    if [[ "${TEST_MODE:-}" == "true" ]]; then
+        echo "[TIMEOUT_DEBUG] command (pid ${cmd_pid}) exited with status ${cmd_status}"
+        echo "[TIMEOUT_DEBUG] timeout_occurred=${timeout_occurred}"
+    fi
+
+    # Detect if the watcher recorded a timeout via SIGUSR1 trap and enforce a non-zero return
+    if [[ "${timeout_occurred}" == "1" ]]; then
+        if [[ "${TEST_MODE:-}" == "true" ]]; then
+            echo "[TIMEOUT_DEBUG] parent observed timeout_occurred=${timeout_occurred}; returning 124"
+        fi
+        # Clean up watcher
+        kill -9 "${watcher_pid}" 2>/dev/null || true
+        wait "${watcher_pid}" 2>/dev/null || true
+        # Use a conventional timeout exit code 124 (consistent with timeout(1))
+        return 124
+    fi
 
     # Clean up watcher
     kill -9 "${watcher_pid}" 2>/dev/null || true
@@ -462,17 +557,77 @@ main() {
 
 process_codegen_task() {
     local task_data="$1"
+    # TEST_MODE: Dump exact received argument for deterministic debugging
+    if [[ "${TEST_MODE:-}" == "true" ]]; then
+        echo "[PROC_TRACE] raw_arg_len=${#task_data}"
+        printf '[PROC_TRACE] raw_arg_q=%s\n' "$(printf '%q' "$task_data")"
+        printf '[PROC_TRACE] raw_arg_hex='
+        printf '%s' "$task_data" | od -An -tx1 | tr -d '\n' || true
+        echo
+    fi
+    # Record raw input for diagnostics in TEST_MODE
+    if [[ "${TEST_MODE:-}" == "true" ]]; then
+        echo "${task_data}" >/tmp/process_codegen_raw_input.txt 2>/dev/null || true
+    fi
 
-    # Extract task information directly from JSON
+    # Use jq to validate the JSON and presence of a non-empty id field
+    # Quick id extraction using a portable sed-based pattern (avoids relying solely on external jq)
+    local id_from_sed
+    id_from_sed=$(echo "$task_data" | sed -n 's/.*"id"[[:space:]]*:[[:space:]]*"\([^\"]*\)".*/\1/p' 2>/dev/null || true)
+    if [[ -z "${id_from_sed}" ]]; then
+        log_message "ERROR" "Invalid task data (missing id field): ${task_data}"
+        [[ "${TEST_MODE:-}" == "true" ]] && touch /tmp/process_codegen_invalid_missing_id 2>/dev/null || true
+        if [[ "${TEST_MODE:-}" == "true" ]]; then echo "[PROC_RETURN] missing_id -> return 1"; fi
+        return 1
+    fi
+
     local task_id
-    task_id=$(echo "$task_data" | jq -r '.id // empty')
-    local project
-    project=$(echo "$task_data" | jq -r '.project // empty')
-    local task_type
-    task_type=$(echo "$task_data" | jq -r '.type // "unknown"')
+    task_id="${id_from_sed}"
+    if [[ "${TEST_MODE:-}" == "true" ]]; then
+        echo "[TEST_DEBUG] extracted task_id='${task_id}' from raw input" >>"${LOG_FILE:-/tmp/test_agent.log}" 2>/dev/null || true
+        echo "[PROC_DEBUG] extracted_task_id=${task_id}"
+        echo "[TRACE] after sed-extract task_id='${task_id}'"
+    fi
 
+    # Use jq (if available) to extract other fields (project, type); fall back to simple parsing
+    local jq_bin
+    jq_bin=$(command -v jq 2>/dev/null || true)
+    if [[ -n "${jq_bin}" ]]; then
+        if [[ "${TEST_MODE:-}" == "true" ]]; then
+            echo "[PROC_DEBUG] using jq at: ${jq_bin}"
+        fi
+        local project
+        project=$(echo "$task_data" | "${jq_bin}" -r '.project // ""' 2>/dev/null || true)
+        local jq_proj_rc=$?
+        local task_type
+        task_type=$(echo "$task_data" | "${jq_bin}" -r '.type // "unknown"' 2>/dev/null || true)
+        local jq_type_rc=$?
+        if [[ "${TEST_MODE:-}" == "true" ]]; then
+            echo "[PROC_TRACE] jq_project_rc=${jq_proj_rc} jq_type_rc=${jq_type_rc} project='${project}' task_type='${task_type}'"
+        fi
+    else
+        # Fallback simple extraction
+        local project
+        project=$(echo "$task_data" | sed -n 's/.*"project"[[:space:]]*:[[:space:]]*"\([^\"]*\)".*/\1/p' 2>/dev/null || true)
+        local task_type
+        task_type=$(echo "$task_data" | sed -n 's/.*"type"[[:space:]]*:[[:space:]]*"\([^\"]*\)".*/\1/p' 2>/dev/null || true)
+        if [[ "${TEST_MODE:-}" == "true" ]]; then
+            echo "[PROC_TRACE] sed_project='${project}' sed_type='${task_type}'"
+        fi
+    fi
+
+    # Validate task_id format
     if [[ -z "$task_id" ]]; then
-        log_message "ERROR" "Invalid task data: $task_data"
+        log_message "ERROR" "Invalid task data (empty id): ${task_data}"
+        [[ "${TEST_MODE:-}" == "true" ]] && touch /tmp/process_codegen_invalid_missing_id 2>/dev/null || true
+        if [[ "${TEST_MODE:-}" == "true" ]]; then echo "[PROC_RETURN] empty_id -> return 1"; fi
+        return 1
+    fi
+
+    if ! [[ "$task_id" =~ ^[A-Za-z0-9._-]+$ ]]; then
+        log_message "ERROR" "Invalid task id format ('$task_id') in data: ${task_data}"
+        [[ "${TEST_MODE:-}" == "true" ]] && touch /tmp/process_codegen_invalid_bad_id 2>/dev/null || true
+        if [[ "${TEST_MODE:-}" == "true" ]]; then echo "[PROC_RETURN] bad_id_format -> return 1"; fi
         return 1
     fi
 

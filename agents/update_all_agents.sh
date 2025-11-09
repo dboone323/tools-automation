@@ -52,7 +52,8 @@ update_agents_to_use_shared_functions() {
     [[ "$agent_file" == *"start_"* ]] && continue
     [[ "$agent_file" == *"monitor_"* ]] && continue
 
-    local agent_name=$(basename "$agent_file")
+    local agent_name
+    agent_name=$(basename "$agent_file")
 
     # Check if already using shared functions
     if grep -q "shared_functions.sh" "$agent_file"; then
@@ -99,9 +100,11 @@ new_content = "\\n".join(new_lines)
 with open("$agent_file", "w") as f:
     f.write(new_content)
 
+    python3 <<PYEOF >/dev/null 2>&1
 print("Updated $agent_name")
 PYEOF
 
+    # shellcheck disable=SC2181
     if [[ $? -eq 0 ]]; then
       success "Updated $agent_name to use shared functions"
       agents_updated=$((agents_updated + 1))
@@ -120,7 +123,8 @@ PYEOF
 check_jq_errors() {
   log "Task 2: Monitoring logs for jq errors..."
 
-  local log_files=$(find "$AGENTS_DIR" -name "*.log" -type f 2>/dev/null)
+  local log_files
+  log_files=$(find "$AGENTS_DIR" -name "*.log" -type f 2>/dev/null)
   local error_count=0
 
   if [[ -z "$log_files" ]]; then
@@ -129,7 +133,8 @@ check_jq_errors() {
   fi
 
   while IFS= read -r log_file; do
-    local errors=$(grep -c "jq.*parse error" "$log_file" 2>/dev/null || echo "0")
+    local errors
+    errors=$(grep -c "jq.*parse error" "$log_file" 2>/dev/null || echo "0")
     if [[ $errors -gt 0 ]]; then
       warning "Found $errors jq errors in $(basename "$log_file")"
       error_count=$((error_count + errors))
@@ -173,7 +178,8 @@ verify_analytics_json() {
     return
   fi
 
-  local json_files=$(find "$metrics_dir" -name "*.json" -type f 2>/dev/null)
+  local json_files
+  json_files=$(find "$metrics_dir" -name "*.json" -type f 2>/dev/null)
 
   if [[ -z "$json_files" ]]; then
     warning "No JSON files found in metrics directory"

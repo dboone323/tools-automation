@@ -88,69 +88,37 @@
     "Scale automation infrastructure as needed"
   ],
   "ollama_metrics": {
-    "last_updated": 1762638217,
-    "total_calls": 674,
-    "successful_calls": 65,
+    "last_updated": 1762643357,
+    "total_calls": 702,
+    "successful_calls": 93,
     "failed_calls": 609,
-    "total_latency_ms": 208480,
-    "total_tokens": 3815,
+    "total_latency_ms": 491711,
+    "total_tokens": 4109,
     "task_usage": {
       "dashboardSummary": 283,
       "codeGen": 344,
-      "test": 47
+      "test": 75
     },
     "model_usage": {
       "llama3.2:3b": 105,
       "codellama:7b": 116,
       "mistral:7b": 89,
       "llama2:7b": 89,
-      "llama2": 47,
+      "llama2": 75,
       "qwen2.5-coder:1.5b": 114,
       "codellama:latest": 114
     },
     "recent_calls": [
       {
-        "timestamp": 1762561802,
-        "task": "dashboardSummary",
-        "model": "llama2:7b",
-        "latency_ms": 0,
-        "tokens_est": 0,
-        "status": "failed"
-      },
-      {
-        "timestamp": 1762561806,
-        "task": "dashboardSummary",
-        "model": "llama3.2:3b",
-        "latency_ms": 0,
-        "tokens_est": 0,
-        "status": "failed"
-      },
-      {
-        "timestamp": 1762561806,
-        "task": "dashboardSummary",
-        "model": "mistral:7b",
-        "latency_ms": 0,
-        "tokens_est": 0,
-        "status": "failed"
-      },
-      {
-        "timestamp": 1762561806,
-        "task": "dashboardSummary",
-        "model": "llama2:7b",
-        "latency_ms": 0,
-        "tokens_est": 0,
-        "status": "failed"
-      },
-      {
-        "timestamp": 1762637612,
+        "timestamp": 1762641011,
         "task": "test",
         "model": "llama2",
-        "latency_ms": 275,
-        "tokens_est": 4,
+        "latency_ms": 22706,
+        "tokens_est": 9,
         "status": "success"
       },
       {
-        "timestamp": 1762637612,
+        "timestamp": 1762641011,
         "task": "test",
         "model": "llama2",
         "latency_ms": 0,
@@ -158,15 +126,15 @@
         "status": "success"
       },
       {
-        "timestamp": 1762637927,
+        "timestamp": 1762641225,
         "task": "test",
         "model": "llama2",
-        "latency_ms": 77,
-        "tokens_est": 4,
+        "latency_ms": 27149,
+        "tokens_est": 11,
         "status": "success"
       },
       {
-        "timestamp": 1762637927,
+        "timestamp": 1762641225,
         "task": "test",
         "model": "llama2",
         "latency_ms": 0,
@@ -174,15 +142,47 @@
         "status": "success"
       },
       {
-        "timestamp": 1762638217,
+        "timestamp": 1762642917,
         "task": "test",
         "model": "llama2",
-        "latency_ms": 75,
+        "latency_ms": 178,
         "tokens_est": 4,
         "status": "success"
       },
       {
-        "timestamp": 1762638217,
+        "timestamp": 1762642917,
+        "task": "test",
+        "model": "llama2",
+        "latency_ms": 0,
+        "tokens_est": 3,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762643118,
+        "task": "test",
+        "model": "llama2",
+        "latency_ms": 305,
+        "tokens_est": 4,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762643118,
+        "task": "test",
+        "model": "llama2",
+        "latency_ms": 0,
+        "tokens_est": 3,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762643357,
+        "task": "test",
+        "model": "llama2",
+        "latency_ms": 81,
+        "tokens_est": 4,
+        "status": "success"
+      },
+      {
+        "timestamp": 1762643357,
         "task": "test",
         "model": "llama2",
         "latency_ms": 0,

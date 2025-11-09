@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-11-08T23:09:25Z",
+  "total_tests": 11,
+  "passed_tests": 10,
+  "failed_tests": 1,
+  "skipped_tests": 0,
+  "flaky_tests": 0,
+  "quarantined_tests": 0,
+  "success_rate": 90,
+  "config": {
+    "test_mode": 1,
+    "run_integration": false,
+    "coverage": 1,
+    "retry_flaky": 0,
+    "quarantine_mode": 0
+  }
+}

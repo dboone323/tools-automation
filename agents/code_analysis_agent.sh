@@ -287,7 +287,7 @@ scan_security_vulnerabilities() {
                 "high" "$project"
         fi
 
-    done < <(find "$WORKSPACE_ROOT" -name "*.swift" -o -name "*.py" -o -name "*.js" -print0 2>/dev/null)
+    done < <(find "$WORKSPACE_ROOT" \( -name "*.swift" -o -name "*.py" -o -name "*.js" \) -print0 2>/dev/null)
 }
 
 # Use AI for advanced code analysis

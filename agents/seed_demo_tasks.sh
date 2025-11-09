@@ -22,7 +22,7 @@ fi
 
 echo "Seeding ${COUNT} demo tasks..."
 
-for i in $(seq 1 ${COUNT}); do
+for i in $(seq 1 "${COUNT}"); do
   id=$(date +%s%N | cut -b1-13)$RANDOM
   # Rotate through a few task types to exercise agent selection
   case $((i % 6)) in

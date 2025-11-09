@@ -59,9 +59,9 @@ assert_not_contains() {
 }
 assert_success() {
     local message="$1"
-    local exit_code=$?
+    shift
     ((TESTS_RUN++))
-    if [[ $exit_code -eq 0 ]]; then
+    if "$@"; then
         ((TESTS_PASSED++))
         log_test "PASS" "$message"
         return 0
@@ -74,9 +74,9 @@ assert_success() {
 
 assert_failure() {
     local message="$1"
-    local exit_code=$?
+    shift
     ((TESTS_RUN++))
-    if [[ $exit_code -ne 0 ]]; then
+    if ! "$@"; then
         ((TESTS_PASSED++))
         log_test "PASS" "$message"
         return 0
@@ -157,6 +157,13 @@ EOF
 cleanup_mocks() {
     # Remove mock scripts
     rm -f /tmp/mock_*
+}
+
+# Remove a specific mock command created by `mock_command`
+unmock_command() {
+    local cmd="$1"
+    rm -f "/tmp/$cmd"
+    # If no mock files remain, restore PATH to original (best-effort)
 }
 
 # Setup and teardown
@@ -240,11 +247,29 @@ run_test_suite() {
             export TIMEOUT_SEC="$per_test_timeout"
         fi
 
-        # Run test
-        if "$test_func"; then
-            log_test "PASS" "Test $test_func completed successfully"
-        else
+        # Run test in the current shell with errexit temporarily disabled so
+        # assertions inside the test function can observe command exit codes
+        # and update the global counters. We determine pass/fail by checking
+        # whether any assertions incremented the failure counter.
+        local before_failed=${TESTS_FAILED}
+        # Save current errexit state
+        local errexit_state
+        errexit_state=$(set -o | awk '/errexit/ {print $2}')
+        set +e
+        "$test_func"
+        local test_ret=$?
+        # Restore errexit if it was previously on
+        if [[ "${errexit_state}" == "on" ]]; then
+            set -e
+        fi
+
+        local after_failed=${TESTS_FAILED}
+        if ((after_failed > before_failed)); then
             log_test "FAIL" "Test $test_func failed"
+        elif [[ $test_ret -ne 0 ]]; then
+            log_test "FAIL" "Test $test_func failed (non-zero exit: $test_ret)"
+        else
+            log_test "PASS" "Test $test_func completed successfully"
         fi
 
         # Teardown

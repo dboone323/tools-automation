@@ -4,7 +4,7 @@
 # Source shared functions for task management
 # shellcheck source=./shared_functions.sh
 # shellcheck disable=SC1091
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 source "${SCRIPT_DIR}/shared_functions.sh"
 if [[ -f "${SCRIPT_DIR}/agent_loop_utils.sh" ]]; then
     # shellcheck source=./agent_loop_utils.sh
@@ -72,7 +72,6 @@ echo "[$(date)] build_agent: Script started, PID=$$" >>"/Users/danielstevens/Des
 echo "[$(date)] build_agent: Auto-debug task creation enabled (max consecutive failures: ${MAX_CONSECUTIVE_FAILURES})" >>"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/build_agent.log"
 # Build Agent: Watches for changes and triggers builds automatically
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 WORKSPACE="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 
 # Source AI enhancement modules

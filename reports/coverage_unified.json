@@ -1,14 +1,14 @@
 {
   "python": {
-    "covered": 13993,
-    "total": 19926
+    "covered": 14163,
+    "total": 19837
   },
   "swift": {
     "covered": 0,
     "total": 0
   },
   "overall": {
-    "covered": 13993,
-    "total": 19926
+    "covered": 14163,
+    "total": 19837
   }
 }

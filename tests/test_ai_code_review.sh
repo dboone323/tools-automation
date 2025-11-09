@@ -16,28 +16,32 @@ AI_REVIEW_SCRIPT="$PROJECT_ROOT/ai_code_review.sh"
 test_ai_code_review_basic() {
     echo "Testing basic AI code review functionality..."
 
-    # Skip if Ollama is not available or no suitable models
-    if ! curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" >/dev/null 2>&1; then
-        echo "Skipping test: Ollama not available"
-        assert_success "Test skipped - Ollama not available"
-        return 0
-    fi
-
-    # Check if we have a suitable model
-    local available_models
-    available_models=$(curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" | jq -r '.models[]?.name' 2>/dev/null || echo "")
-    local has_model=false
-    for model in codellama:7b llama3.2:3b mistral:7b; do
-        if echo "$available_models" | grep -q "$model"; then
-            has_model=true
-            break
+    # Skip if Ollama is not available or no suitable models (unless TEST_MODE)
+    if [[ ${TEST_MODE:-0} != "1" ]]; then
+        if ! curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" >/dev/null 2>&1; then
+            echo "Skipping test: Ollama not available"
+            assert_success "Test skipped - Ollama not available"
+            return 0
         fi
-    done
 
-    if [[ "$has_model" != "true" ]]; then
-        echo "Skipping test: No suitable Ollama models available"
-        assert_success "Test skipped - No suitable models"
-        return 0
+        # Check if we have a suitable model
+        local available_models
+        available_models=$(curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" | jq -r '.models[]?.name' 2>/dev/null || echo "")
+        local has_model=false
+        for model in codellama:7b llama3.2:3b mistral:7b; do
+            if echo "$available_models" | grep -q "$model"; then
+                has_model=true
+                break
+            fi
+        done
+
+        if [[ "$has_model" != "true" ]]; then
+            echo "Skipping test: No suitable Ollama models available"
+            assert_success "Test skipped - No suitable models"
+            return 0
+        fi
+    else
+        echo "TEST_MODE: Skipping Ollama availability checks"
     fi
 
     # Create a temporary directory for testing
@@ -115,6 +119,12 @@ test_ai_code_review_no_changes() {
 test_ai_code_review_ollama_down() {
     echo "Testing AI code review with Ollama server down..."
 
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        echo "TEST_MODE: Skipping Ollama down test"
+        assert_success "Test skipped in TEST_MODE"
+        return 0
+    fi
+
     # Skip if Ollama is actually available
     if curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" >/dev/null 2>&1; then
         echo "Skipping test: Ollama is available"
@@ -187,28 +197,32 @@ test_ai_code_review_arguments() {
 test_ai_code_review_file_saving() {
     echo "Testing review file saving..."
 
-    # Skip if Ollama is not available or no suitable models
-    if ! curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" >/dev/null 2>&1; then
-        echo "Skipping test: Ollama not available"
-        assert_success "Test skipped - Ollama not available"
-        return 0
-    fi
-
-    # Check if we have a suitable model
-    local available_models
-    available_models=$(curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" | jq -r '.models[]?.name' 2>/dev/null || echo "")
-    local has_model=false
-    for model in codellama:7b llama3.2:3b mistral:7b; do
-        if echo "$available_models" | grep -q "$model"; then
-            has_model=true
-            break
+    # Skip if Ollama is not available or no suitable models (unless TEST_MODE)
+    if [[ ${TEST_MODE:-0} != "1" ]]; then
+        if ! curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" >/dev/null 2>&1; then
+            echo "Skipping test: Ollama not available"
+            assert_success "Test skipped - Ollama not available"
+            return 0
         fi
-    done
 
-    if [[ "$has_model" != "true" ]]; then
-        echo "Skipping test: No suitable Ollama models available"
-        assert_success "Test skipped - No suitable models"
-        return 0
+        # Check if we have a suitable model
+        local available_models
+        available_models=$(curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" | jq -r '.models[]?.name' 2>/dev/null || echo "")
+        local has_model=false
+        for model in codellama:7b llama3.2:3b mistral:7b; do
+            if echo "$available_models" | grep -q "$model"; then
+                has_model=true
+                break
+            fi
+        done
+
+        if [[ "$has_model" != "true" ]]; then
+            echo "Skipping test: No suitable Ollama models available"
+            assert_success "Test skipped - No suitable models"
+            return 0
+        fi
+    else
+        echo "TEST_MODE: Skipping Ollama availability checks"
     fi
 
     # Create a temporary directory for testing
@@ -252,28 +266,32 @@ test_ai_code_review_file_saving() {
 test_ai_code_review_approval_statuses() {
     echo "Testing different approval statuses..."
 
-    # Skip if Ollama is not available or no suitable models
-    if ! curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" >/dev/null 2>&1; then
-        echo "Skipping test: Ollama not available"
-        assert_success "Test skipped - Ollama not available"
-        return 0
-    fi
-
-    # Check if we have a suitable model
-    local available_models
-    available_models=$(curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" | jq -r '.models[]?.name' 2>/dev/null || echo "")
-    local has_model=false
-    for model in codellama:7b llama3.2:3b mistral:7b; do
-        if echo "$available_models" | grep -q "$model"; then
-            has_model=true
-            break
+    # Skip if Ollama is not available or no suitable models (unless TEST_MODE)
+    if [[ ${TEST_MODE:-0} != "1" ]]; then
+        if ! curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" >/dev/null 2>&1; then
+            echo "Skipping test: Ollama not available"
+            assert_success "Test skipped - Ollama not available"
+            return 0
         fi
-    done
 
-    if [[ "$has_model" != "true" ]]; then
-        echo "Skipping test: No suitable Ollama models available"
-        assert_success "Test skipped - No suitable models"
-        return 0
+        # Check if we have a suitable model
+        local available_models
+        available_models=$(curl -sf "${OLLAMA_URL:-http://localhost:11434}/api/tags" | jq -r '.models[]?.name' 2>/dev/null || echo "")
+        local has_model=false
+        for model in codellama:7b llama3.2:3b mistral:7b; do
+            if echo "$available_models" | grep -q "$model"; then
+                has_model=true
+                break
+            fi
+        done
+
+        if [[ "$has_model" != "true" ]]; then
+            echo "Skipping test: No suitable Ollama models available"
+            assert_success "Test skipped - No suitable models"
+            return 0
+        fi
+    else
+        echo "TEST_MODE: Skipping Ollama availability checks"
     fi
 
     # Create a temporary directory for testing

@@ -26,6 +26,27 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# TEST_MODE bypass: when enabled, return canned responses without real API calls
+if [[ ${TEST_MODE:-0} == "1" ]]; then
+    # Read input JSON to extract task for canned response
+    input_json=$(cat)
+    task=$(echo "$input_json" | jq -r '.task // "unknown"')
+
+    # Return canned response based on task
+    case "$task" in
+    dashboardSummary)
+        echo '{"text": "Dashboard summary: All systems operational. 5 active agents, 12 completed tasks, 2 pending items.", "model": "test-model", "latency_ms": 50, "tokens_est": 25, "fallback_used": false}'
+        ;;
+    codeReview)
+        echo '{"text": "Code review completed. No critical issues found. 3 minor suggestions for improvement.", "model": "test-model", "latency_ms": 100, "tokens_est": 45, "fallback_used": false}'
+        ;;
+    *)
+        echo '{"text": "Test mode response for task: '$task'", "model": "test-model", "latency_ms": 25, "tokens_est": 10, "fallback_used": false}'
+        ;;
+    esac
+    exit 0
+fi
+
 # Config paths
 MODEL_REGISTRY="${MODEL_REGISTRY:-model_registry.json}"
 RESOURCE_PROFILE="${RESOURCE_PROFILE:-resource_profile.json}"

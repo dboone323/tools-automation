@@ -13,11 +13,15 @@ echo "🚀 Quick Test Generation - MomentumFinance (First 5 Files)"
 echo "═══════════════════════════════════════════════════════════"
 
 # Check Ollama
-if ! curl -s "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then
-    echo "❌ Ollama not running"
-    exit 1
+if [[ ${TEST_MODE:-0} == "1" ]]; then
+    echo "✅ Ollama available (TEST_MODE)"
+else
+    if ! curl -s "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then
+        echo "❌ Ollama not running"
+        exit 1
+    fi
+    echo "✅ Ollama available"
 fi
-echo "✅ Ollama available"
 
 # Find first 5 high-priority files
 mapfile -t files < <(find "$MOMENTUM_PATH" -name "*.swift" \
@@ -56,7 +60,28 @@ for source_file in "${files[@]}"; do
     source_code=$(head -100 "$source_file" 2>/dev/null || true)
 
     # Generate with Ollama
-    prompt="Generate comprehensive XCTest unit tests for this Swift file.
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        test_code="// Generated test for ${filename}
+// TEST_MODE: Stubbed test implementation
+
+import XCTest
+@testable import MomentumFinance
+
+class ${filename}Tests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+    }
+
+    override func tearDown() {
+        super.tearDown()
+    }
+
+    func testExample() {
+        XCTAssertTrue(true, \"Example test\")
+    }
+}"
+    else
+        prompt="Generate comprehensive XCTest unit tests for this Swift file.
 
 File: ${filename}.swift
 Code preview:
@@ -69,19 +94,20 @@ Requirements:
 - Multiple assertions per test
 - Proper setup/tearDown"
 
-    response=$(curl -s -X POST "${OLLAMA_URL}/api/generate" \
-        -H "Content-Type: application/json" \
-        -d "{
-            \"model\": \"${OLLAMA_MODEL}\",
-            \"prompt\": $(jq -n --arg p "$prompt" '$p'),
-            \"stream\": false,
-            \"options\": {
-                \"temperature\": 0.2,
-                \"num_predict\": 800
-            }
-        }" 2>&1)
+        response=$(curl -s -X POST "${OLLAMA_URL}/api/generate" \
+            -H "Content-Type: application/json" \
+            -d "{
+                \"model\": \"${OLLAMA_MODEL}\",
+                \"prompt\": $(jq -n --arg p "$prompt" '$p'),
+                \"stream\": false,
+                \"options\": {
+                    \"temperature\": 0.2,
+                    \"num_predict\": 800
+                }
+            }" 2>&1)
 
-    test_code=$(echo "$response" | jq -r '.response' 2>/dev/null || echo "")
+        test_code=$(echo "$response" | jq -r '.response' 2>/dev/null || echo "")
+    fi
 
     if [[ -n "$test_code" ]] && [[ "$test_code" != "null" ]]; then
         # Clean and write

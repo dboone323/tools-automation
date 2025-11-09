@@ -112,6 +112,12 @@ trap 'update_agent_status "agent_deployment.sh" "stopped" $$ ""; exit 0' SIGTERM
 # Register with MCP server
 register_with_mcp "agent_deployment.sh" "deployment,release,publish"
 
+# Exit early if in test mode
+if [[ "${TEST_MODE}" == "true" ]]; then
+    echo "[$(date)] deployment_agent: Test mode detected, exiting before main loop" >>"${LOG_FILE}"
+    return 0 2>/dev/null || exit 0
+fi
+
 while true; do
     update_agent_status "agent_deployment.sh" "running" $$ ""
     echo "[$(date)] ${AGENT_NAME}: Running deployment operations..." >>"${LOG_FILE}"

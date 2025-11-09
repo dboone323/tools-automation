@@ -80,6 +80,11 @@ check_prerequisites() {
 
 # Verify Ollama is running
 check_ollama() {
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        success "Ollama is ready (TEST_MODE)"
+        return 0
+    fi
+
     info "Checking Ollama status..."
     if ! curl -s "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then
         warning "Ollama not running - starting..."

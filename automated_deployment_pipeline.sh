@@ -98,6 +98,11 @@ log_testflight() {
 
 # Check Ollama health for AI-powered deployment analysis
 check_ollama_health() {
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        log_info "AI deployment intelligence available (TEST_MODE)"
+        return 0
+    fi
+
     log_info "Checking Ollama for deployment intelligence..."
 
     if ! curl -sf "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then

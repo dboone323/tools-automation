@@ -30,6 +30,11 @@ log_error() { echo -e "${RED}❌ $*${NC}"; }
 
 # Check Ollama availability
 check_ollama() {
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        log_success "Ollama is available (TEST_MODE)"
+        return 0
+    fi
+
     if ! curl -s "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then
         log_error "Ollama is not running on ${OLLAMA_URL}"
         log_info "Start with: ollama serve"
@@ -184,17 +189,22 @@ CRITICAL - NO PLACEHOLDERS:
 
     # Call Ollama API
     local response
-    response=$(curl -s -X POST "${OLLAMA_URL}/api/generate" \
-        -H "Content-Type: application/json" \
-        -d "{
-            \"model\": \"${OLLAMA_MODEL}\",
-            \"prompt\": $(jq -n --arg p "$prompt" '$p'),
-            \"stream\": false,
-            \"options\": {
-                \"temperature\": 0.2,
-                \"top_p\": 0.9
-            }
-        }" 2>&1)
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        # TEST_MODE: Return stubbed test code
+        response='{"response": "import XCTest\n@testable import '${project_name}'\n\nclass '${filename}'Tests: XCTestCase {\n    override func setUp() {\n        super.setUp()\n    }\n\n    override func tearDown() {\n        super.tearDown()\n    }\n\n    func testExample() {\n        XCTAssertTrue(true, \"Example test\")\n    }\n}"}'
+    else
+        response=$(curl -s -X POST "${OLLAMA_URL}/api/generate" \
+            -H "Content-Type: application/json" \
+            -d "{
+                \"model\": \"${OLLAMA_MODEL}\",
+                \"prompt\": $(jq -n --arg p "$prompt" '$p'),
+                \"stream\": false,
+                \"options\": {
+                    \"temperature\": 0.2,
+                    \"top_p\": 0.9
+                }
+            }" 2>&1)
+    fi
 
     if [[ $? -ne 0 ]] || [[ -z "$response" ]]; then
         log_error "Ollama API call failed for $filename"

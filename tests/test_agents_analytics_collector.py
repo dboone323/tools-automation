@@ -5,7 +5,7 @@ import json
 import tempfile
 import shutil
 from unittest.mock import Mock, patch, MagicMock
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import io
 from contextlib import redirect_stdout
 
@@ -213,7 +213,7 @@ class TestAgentsAnalyticsCollector:
         """Test collect_metrics with fix history timestamps"""
         import agents.analytics_collector as module
 
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         week_ago = now - timedelta(days=8)
         recent_fixes = [
             {"timestamp": now.strftime("%Y-%m-%dT%H:%M:%SZ")},

@@ -121,6 +121,19 @@ collect_workspace_metrics() {
 collect_ai_usage_metrics() {
     print_ai "Collecting AI usage metrics..."
 
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        echo '{
+            "ollama_status": "online",
+            "model_count": 5,
+            "cloud_models": 2,
+            "ai_generated_files": 15,
+            "automation_runs": 8,
+            "quality_reports": 12,
+            "estimated_ai_time_seconds": 2400
+        }'
+        return 0
+    fi
+
     # Check Ollama status
     local ollama_status="offline"
     local model_count=0

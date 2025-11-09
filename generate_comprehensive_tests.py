@@ -94,9 +94,10 @@ class CodeAnalyzer:
             isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef))
             and node.body
             and isinstance(node.body[0], ast.Expr)
-            and isinstance(node.body[0].value, ast.Str)
+            and isinstance(node.body[0].value, ast.Constant)
+            and isinstance(node.body[0].value.value, str)
         ):
-            return node.body[0].value.s
+            return node.body[0].value.value
         return ""
 
 
