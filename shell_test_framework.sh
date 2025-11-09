@@ -137,9 +137,27 @@ assert_regex() {
     fi
 }
 
-# Reset test counters
-reset_test_counters() {
-    TOTAL_TESTS=0
-    PASSED_TESTS=0
-    FAILED_TESTS=0
+# Assertion: assert file is executable
+assert_file_executable() {
+    local file_path="$1"
+    local message="$2"
+    if [[ -x "$file_path" ]]; then
+        return 0
+    else
+        test_failed "assertion" "$message (file not executable: $file_path)"
+        return 1
+    fi
+}
+
+# Assertion: assert pattern in file
+assert_pattern_in_file() {
+    local pattern="$1"
+    local file_path="$2"
+    local message="$3"
+    if grep -q "$pattern" "$file_path" 2>/dev/null; then
+        return 0
+    else
+        test_failed "assertion" "$message (pattern '$pattern' not found in $file_path)"
+        return 1
+    fi
 }
