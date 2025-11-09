@@ -1,6 +1,6 @@
 {
   "total_agents": 203,
-  "tested_agents": 11,
+  "tested_agents": 16,
   "coverage_percentage": 0.99,
   "last_updated": "2025-01-09",
   "agents": {
@@ -65,6 +65,36 @@
       "coverage_percentage": 100
     },
     "fix_agent_system.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "agent_keeper.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "agent_loop_utils.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "agent_migration.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "auto_restart_workflow_optimization_agent.sh": {
+      "tests": 10,
+      "status": "passed",
+      "last_run": "2025-01-09",
+      "coverage_percentage": 100
+    },
+    "plugin_api.sh": {
       "tests": 10,
       "status": "passed",
       "last_run": "2025-01-09",
