@@ -1,14 +1,1 @@
-{
-  "version": "1.0",
-  "model_stats": {
-    "total_errors_learned": 0,
-    "total_fixes_recorded": 0,
-    "accuracy_rate": 0.0,
-    "learning_velocity": 0.0
-  },
-  "predictions": {
-    "enabled": true,
-    "confidence_threshold": 0.7
-  },
-  "last_trained": ""
-}
+{"version":"1.0","model_stats":{"total_errors_learned":0,"total_fixes_recorded":0},"last_trained":""}

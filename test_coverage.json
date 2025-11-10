@@ -1,6 +1,6 @@
 {
   "total_agents": 203,
-  "tested_agents": 36,
+  "tested_agents": 41,
   "coverage_percentage": 0.99,
   "last_updated": "2025-01-10",
   "agents": {
@@ -165,6 +165,22 @@
       "status": "passed"
     },
     "minimal_dashboard.sh": {
+      "tests": 10,
+      "status": "passed"
+    },
+    "audit_agent.sh": {
+      "tests": 10,
+      "status": "passed"
+    },
+    "auto_rollback.sh": {
+      "tests": 10,
+      "status": "passed"
+    },
+    "auto_update_agent.sh": {
+      "tests": 10,
+      "status": "passed"
+    },
+    "check_persistence.sh": {
       "tests": 10,
       "status": "passed"
     }
