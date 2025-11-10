@@ -1,0 +1,32 @@
+Test Results for configure_auto_restart.sh
+Generated: Mon Nov 10 08:08:34 CST 2025
+==========================================
+✅ Test 1 PASSED: configure_auto_restart.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Sources shared_functions.sh
+✅ Test 4 PASSED: Has usage function
+✅ Test 5 PASSED: Checks argument count
+✅ Test 6 PASSED: Handles enable command
+✅ Test 7 PASSED: Handles disable command
+✅ Test 8 PASSED: Handles status command
+✅ Test 9 PASSED: Validates agent name for enable
+✅ Test 10 PASSED: Validates agent name for disable
+✅ Test 11 PASSED: Calls enable_auto_restart function
+✅ Test 12 PASSED: Calls disable_auto_restart function
+✅ Test 13 PASSED: Calls should_auto_restart function
+✅ Test 14 PASSED: Iterates through agent files
+✅ Test 15 PASSED: Skips shared_functions.sh
+✅ Test 16 PASSED: Skips configure_auto_restart.sh
+✅ Test 17 PASSED: Uses basename to get agent name
+✅ Test 18 PASSED: Displays enabled status
+✅ Test 19 PASSED: Displays disabled status
+✅ Test 20 PASSED: Handles unknown commands
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

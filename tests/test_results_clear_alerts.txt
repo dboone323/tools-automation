@@ -1,0 +1,32 @@
+Test Results for clear_alerts.sh
+Generated: Mon Nov 10 08:06:39 CST 2025
+==========================================
+✅ Test 1 PASSED: clear_alerts.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 4 PASSED: Defines ALERT_LOG variable
+✅ Test 5 PASSED: Checks if task queue file exists
+✅ Test 6 PASSED: Uses python3 for JSON processing
+✅ Test 7 PASSED: Loads JSON data from task queue
+✅ Test 8 PASSED: Filters out alert tasks
+✅ Test 9 PASSED: Checks for assigned_agent user_attention
+✅ Test 10 PASSED: Uses tempfile for safe writing
+✅ Test 11 PASSED: Uses atomic file operations
+✅ Test 12 PASSED: Provides feedback on cleared tasks
+✅ Test 13 PASSED: Handles case when no alerts to clear
+✅ Test 14 PASSED: Handles missing tasks in queue
+✅ Test 15 PASSED: Handles missing task queue file
+✅ Test 16 PASSED: Archives alert log
+✅ Test 17 PASSED: Checks if alert log exists before archiving
+✅ Test 18 PASSED: Uses timestamp in backup filename
+✅ Test 19 PASSED: Provides confirmation when archiving
+✅ Test 20 PASSED: Ends with completion message
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

@@ -1,0 +1,116 @@
+❌ Test 1 FAILED: emergency_response.sh is not executable
+❌ Test 2 FAILED: Does not define SCRIPT_DIR variable
+❌ Test 3 FAILED: Does not define KNOWLEDGE_DIR variable
+❌ Test 4 FAILED: Does not define EMERGENCIES_FILE variable
+❌ Test 5 FAILED: Does not define ESCALATIONS_FILE variable
+❌ Test 6 FAILED: Does not define SAFE_MODE_FLAG variable
+❌ Test 7 FAILED: Does not define timeout variables
+❌ Test 8 FAILED: Does not define color variables
+❌ Test 9 FAILED: Does not define log function
+❌ Test 10 FAILED: Does not define initialize_emergency_system function
+❌ Test 11 FAILED: Does not define classify_severity function
+❌ Test 12 FAILED: Does not define declare_emergency function
+❌ Test 13 FAILED: Does not define handle_emergency function
+❌ Test 14 FAILED: Does not define escalate_level function
+❌ Test 15 FAILED: Does not define escalation level functions
+❌ Test 16 FAILED: Does not define check_emergency_resolved function
+❌ Test 17 FAILED: Does not define resolve_emergency function
+❌ Test 18 FAILED: Does not define safe mode functions
+❌ Test 19 FAILED: Does not define list_emergencies function
+❌ Test 20 FAILED: Does not have case statement for command dispatcher
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 0
+Failed: 20
+Success Rate: 0%
+==========================================
+⚠️  Some tests failed. Check the log for details.
+❌ Test 1 FAILED: emergency_response.sh is not executable
+❌ Test 2 FAILED: Does not define SCRIPT_DIR variable
+❌ Test 3 FAILED: Does not define KNOWLEDGE_DIR variable
+❌ Test 4 FAILED: Does not define EMERGENCIES_FILE variable
+❌ Test 5 FAILED: Does not define ESCALATIONS_FILE variable
+❌ Test 6 FAILED: Does not define SAFE_MODE_FLAG variable
+❌ Test 7 FAILED: Does not define timeout variables
+❌ Test 8 FAILED: Does not define color variables
+❌ Test 9 FAILED: Does not define log function
+❌ Test 10 FAILED: Does not define initialize_emergency_system function
+❌ Test 11 FAILED: Does not define classify_severity function
+❌ Test 12 FAILED: Does not define declare_emergency function
+❌ Test 13 FAILED: Does not define handle_emergency function
+❌ Test 14 FAILED: Does not define escalate_level function
+❌ Test 15 FAILED: Does not define escalation level functions
+❌ Test 16 FAILED: Does not define check_emergency_resolved function
+❌ Test 17 FAILED: Does not define resolve_emergency function
+❌ Test 18 FAILED: Does not define safe mode functions
+❌ Test 19 FAILED: Does not define list_emergencies function
+❌ Test 20 FAILED: Does not have case statement for command dispatcher
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 0
+Failed: 20
+Success Rate: 0%
+==========================================
+⚠️  Some tests failed. Check the log for details.
+✅ Test 1 PASSED: emergency_response.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines KNOWLEDGE_DIR variable
+✅ Test 4 PASSED: Defines EMERGENCIES_FILE variable
+✅ Test 5 PASSED: Defines ESCALATIONS_FILE variable
+✅ Test 6 PASSED: Defines SAFE_MODE_FLAG variable
+✅ Test 7 PASSED: Defines timeout variables
+✅ Test 8 PASSED: Defines color variables
+✅ Test 9 PASSED: Defines log function
+✅ Test 10 PASSED: Defines initialize_emergency_system function
+✅ Test 11 PASSED: Defines classify_severity function
+✅ Test 12 PASSED: Defines declare_emergency function
+✅ Test 13 PASSED: Defines handle_emergency function
+✅ Test 14 PASSED: Defines escalate_level function
+✅ Test 15 PASSED: Defines escalation level functions
+✅ Test 16 PASSED: Defines check_emergency_resolved function
+✅ Test 17 PASSED: Defines resolve_emergency function
+✅ Test 18 PASSED: Defines safe mode functions
+✅ Test 19 PASSED: Defines list_emergencies function
+❌ Test 20 FAILED: Does not have case statement for command dispatcher
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 19
+Failed: 1
+Success Rate: 95%
+==========================================
+⚠️  Some tests failed. Check the log for details.
+✅ Test 1 PASSED: emergency_response.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines KNOWLEDGE_DIR variable
+✅ Test 4 PASSED: Defines EMERGENCIES_FILE variable
+✅ Test 5 PASSED: Defines ESCALATIONS_FILE variable
+✅ Test 6 PASSED: Defines SAFE_MODE_FLAG variable
+✅ Test 7 PASSED: Defines timeout variables
+✅ Test 8 PASSED: Defines color variables
+✅ Test 9 PASSED: Defines log function
+✅ Test 10 PASSED: Defines initialize_emergency_system function
+✅ Test 11 PASSED: Defines classify_severity function
+✅ Test 12 PASSED: Defines declare_emergency function
+✅ Test 13 PASSED: Defines handle_emergency function
+✅ Test 14 PASSED: Defines escalate_level function
+✅ Test 15 PASSED: Defines escalation level functions
+✅ Test 16 PASSED: Defines check_emergency_resolved function
+✅ Test 17 PASSED: Defines resolve_emergency function
+✅ Test 18 PASSED: Defines safe mode functions
+✅ Test 19 PASSED: Defines list_emergencies function
+✅ Test 20 PASSED: Has case statement for command dispatcher
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

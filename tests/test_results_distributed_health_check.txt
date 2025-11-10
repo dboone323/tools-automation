@@ -1,0 +1,32 @@
+Test Results for distributed_health_check.sh
+Generated: Mon Nov 10 08:16:07 CST 2025
+==========================================
+✅ Test 1 PASSED: distributed_health_check.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Sources shared_functions.sh
+✅ Test 4 PASSED: Defines REMOTE_HOSTS array
+✅ Test 5 PASSED: Defines AGENTS_DIR variable
+✅ Test 6 PASSED: Uses for loop for remote hosts
+✅ Test 7 PASSED: Iterates over remote hosts array
+✅ Test 8 PASSED: Checks each host
+✅ Test 9 PASSED: Defines log_path variable
+✅ Test 10 PASSED: Uses ssh command
+✅ Test 11 PASSED: Uses tail command
+✅ Test 12 PASSED: Checks supervisor_remote.log
+✅ Test 13 PASSED: Uses logs directory
+✅ Test 14 PASSED: Uses AGENTS_DIR in log path
+✅ Test 15 PASSED: Uses dirname command
+✅ Test 16 PASSED: Uses echo for host checking message
+✅ Test 17 PASSED: Uses variable expansion for host
+✅ Test 18 PASSED: Uses double quotes for array elements
+✅ Test 19 PASSED: Uses parentheses for array declaration
+✅ Test 20 PASSED: Uses done to close for loop
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

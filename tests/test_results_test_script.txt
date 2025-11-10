@@ -1,0 +1,32 @@
+Test Results for test_script.sh
+Generated: Mon Nov 10 07:50:08 CST 2025
+==========================================
+✅ Test 1 PASSED: test_script.sh is executable
+✅ Test 2 PASSED: Has strict error handling
+✅ Test 3 PASSED: Echoes testing message
+✅ Test 4 PASSED: Defines swift_tests function
+✅ Test 5 PASSED: Checks if swift is installed
+✅ Test 6 PASSED: Skips if swift not installed
+✅ Test 7 PASSED: Echoes Swift found message
+✅ Test 8 PASSED: Calls swift_tests function
+✅ Test 9 PASSED: Echoes Done message
+✅ Test 10 PASSED: Has phase marker
+✅ Test 11 PASSED: Has skip marker
+✅ Test 12 PASSED: Returns 0 when skipping
+✅ Test 13 PASSED: Uses /usr/bin/env bash
+✅ Test 14 PASSED: Checks hash with error suppression
+✅ Test 15 PASSED: Has Swift tests phase message
+✅ Test 16 PASSED: Has skipping message
+✅ Test 17 PASSED: Has Swift found message
+✅ Test 18 PASSED: Has Done message
+✅ Test 19 PASSED: Has function definition
+✅ Test 20 PASSED: Calls function at end
+
+==========================================
+Test Summary:
+Total tests: 20
+Passed: 20
+Failed: 0
+Success rate: 100%
+==========================================
+✅ All tests PASSED for test_script.sh

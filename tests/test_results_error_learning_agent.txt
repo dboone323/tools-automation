@@ -1,0 +1,145 @@
+✅ Test 1 PASSED: error_learning_agent.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines ROOT_DIR variable
+✅ Test 4 PASSED: Defines PY_RECOGNIZER variable
+✅ Test 5 PASSED: Defines PY_UPDATER variable
+✅ Test 6 PASSED: Defines usage function
+✅ Test 7 PASSED: Defines is_error_line function
+✅ Test 8 PASSED: Defines process_file function
+✅ Test 9 PASSED: Defines scan_once function
+✅ Test 10 PASSED: Defines watch_dir function
+✅ Test 11 PASSED: Defines main function
+❌ Test 12 FAILED: Does not have --scan-once option
+❌ Test 13 FAILED: Does not have --watch option
+❌ Test 14 FAILED: Does not have --help option
+✅ Test 15 PASSED: Has case statement in main
+❌ Test 16 FAILED: Does not have [ERROR] pattern matching
+✅ Test 17 PASSED: Has ❌ pattern matching
+❌ Test 18 FAILED: Does not have failed pattern matching
+❌ Test 19 FAILED: Does not have Python recognizer calls
+❌ Test 20 FAILED: Does not have main execution guard
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 13
+Failed: 7
+Success Rate: 65%
+==========================================
+⚠️  Some tests failed. Check the log for details.
+✅ Test 1 PASSED: error_learning_agent.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines ROOT_DIR variable
+✅ Test 4 PASSED: Defines PY_RECOGNIZER variable
+✅ Test 5 PASSED: Defines PY_UPDATER variable
+✅ Test 6 PASSED: Defines usage function
+✅ Test 7 PASSED: Defines is_error_line function
+✅ Test 8 PASSED: Defines process_file function
+✅ Test 9 PASSED: Defines scan_once function
+✅ Test 10 PASSED: Defines watch_dir function
+✅ Test 11 PASSED: Defines main function
+❌ Test 12 FAILED: Does not have --scan-once option
+❌ Test 13 FAILED: Does not have --watch option
+❌ Test 14 FAILED: Does not have --help option
+✅ Test 15 PASSED: Has case statement in main
+❌ Test 16 FAILED: Does not have [ERROR] pattern matching
+✅ Test 17 PASSED: Has ❌ pattern matching
+✅ Test 18 PASSED: Has failed pattern matching
+❌ Test 19 FAILED: Does not have Python recognizer calls
+❌ Test 20 FAILED: Does not have main execution guard
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 14
+Failed: 6
+Success Rate: 70%
+==========================================
+⚠️  Some tests failed. Check the log for details.
+✅ Test 1 PASSED: error_learning_agent.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines ROOT_DIR variable
+✅ Test 4 PASSED: Defines PY_RECOGNIZER variable
+✅ Test 5 PASSED: Defines PY_UPDATER variable
+✅ Test 6 PASSED: Defines usage function
+✅ Test 7 PASSED: Defines is_error_line function
+✅ Test 8 PASSED: Defines process_file function
+✅ Test 9 PASSED: Defines scan_once function
+✅ Test 10 PASSED: Defines watch_dir function
+✅ Test 11 PASSED: Defines main function
+❌ Test 12 FAILED: Does not have --scan-once option
+❌ Test 13 FAILED: Does not have --watch option
+❌ Test 14 FAILED: Does not have --help option
+✅ Test 15 PASSED: Has case statement in main
+❌ Test 16 FAILED: Does not have [ERROR] pattern matching
+✅ Test 17 PASSED: Has ❌ pattern matching
+✅ Test 18 PASSED: Has failed pattern matching
+❌ Test 19 FAILED: Does not have Python recognizer calls
+❌ Test 20 FAILED: Does not have main execution guard
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 14
+Failed: 6
+Success Rate: 70%
+==========================================
+⚠️  Some tests failed. Check the log for details.
+✅ Test 1 PASSED: error_learning_agent.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines ROOT_DIR variable
+✅ Test 4 PASSED: Defines PY_RECOGNIZER variable
+✅ Test 5 PASSED: Defines PY_UPDATER variable
+✅ Test 6 PASSED: Defines usage function
+✅ Test 7 PASSED: Defines is_error_line function
+✅ Test 8 PASSED: Defines process_file function
+✅ Test 9 PASSED: Defines scan_once function
+✅ Test 10 PASSED: Defines watch_dir function
+✅ Test 11 PASSED: Defines main function
+❌ Test 12 FAILED: Does not have --scan-once option
+❌ Test 13 FAILED: Does not have --watch option
+❌ Test 14 FAILED: Does not have --help option
+✅ Test 15 PASSED: Has case statement in main
+✅ Test 16 PASSED: Has [ERROR] pattern matching
+✅ Test 17 PASSED: Has ❌ pattern matching
+✅ Test 18 PASSED: Has failed pattern matching
+✅ Test 19 PASSED: Has Python recognizer calls
+✅ Test 20 PASSED: Has main execution guard
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 17
+Failed: 3
+Success Rate: 85%
+==========================================
+⚠️  Some tests failed. Check the log for details.
+✅ Test 1 PASSED: error_learning_agent.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines ROOT_DIR variable
+✅ Test 4 PASSED: Defines PY_RECOGNIZER variable
+✅ Test 5 PASSED: Defines PY_UPDATER variable
+✅ Test 6 PASSED: Defines usage function
+✅ Test 7 PASSED: Defines is_error_line function
+✅ Test 8 PASSED: Defines process_file function
+✅ Test 9 PASSED: Defines scan_once function
+✅ Test 10 PASSED: Defines watch_dir function
+✅ Test 11 PASSED: Defines main function
+✅ Test 12 PASSED: Has --scan-once option
+✅ Test 13 PASSED: Has --watch option
+✅ Test 14 PASSED: Has --help option
+✅ Test 15 PASSED: Has case statement in main
+✅ Test 16 PASSED: Has [ERROR] pattern matching
+✅ Test 17 PASSED: Has ❌ pattern matching
+✅ Test 18 PASSED: Has failed pattern matching
+✅ Test 19 PASSED: Has Python recognizer calls
+✅ Test 20 PASSED: Has main execution guard
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

@@ -1,0 +1,32 @@
+Test Results for auto_rollback.sh
+Generated: Mon Nov 10 08:01:34 CST 2025
+==========================================
+✅ Test 1 PASSED: auto_rollback.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines ROOT_DIR variable
+✅ Test 4 PASSED: Defines CHECKPOINTS_DIR variable
+✅ Test 5 PASSED: Defines ROLLBACK_LOG variable
+✅ Test 6 PASSED: Defines color variables
+✅ Test 7 PASSED: Has log function
+✅ Test 8 PASSED: Has warn function
+✅ Test 9 PASSED: Has error function
+✅ Test 10 PASSED: Has init_checkpoints function
+✅ Test 11 PASSED: Has create_checkpoint function
+✅ Test 12 PASSED: Has restore_checkpoint function
+✅ Test 13 PASSED: Has monitor_validation function
+✅ Test 14 PASSED: Has try_alternative function
+✅ Test 15 PASSED: Has log_failure function
+✅ Test 16 PASSED: Has list_checkpoints function
+✅ Test 17 PASSED: Has clean_checkpoints function
+✅ Test 18 PASSED: Has main function
+✅ Test 19 PASSED: Has case statement for commands
+✅ Test 20 PASSED: Has help command
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

@@ -398,4 +398,3 @@ while true; do
     log_message "DEBUG" "Analysis cycle completed, sleeping for 60 seconds..."
     sleep 60
 done
-name="filePath" <parameter >/Users/danielstevens/Desktop/github-projects/tools-automation/agents/code_analysis_agent.sh

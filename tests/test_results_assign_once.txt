@@ -1,0 +1,32 @@
+Test Results for assign_once.sh
+Generated: Mon Nov 10 07:58:33 CST 2025
+==========================================
+✅ Test 1 PASSED: assign_once.sh is executable
+✅ Test 2 PASSED: Sources shared_functions.sh
+✅ Test 3 PASSED: Defines ROOT_DIR variable
+✅ Test 4 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 5 PASSED: Defines AGENT_STATUS_FILE variable
+✅ Test 6 PASSED: Defines COMM_DIR variable
+✅ Test 7 PASSED: Defines KNOWN_AGENTS array
+✅ Test 8 PASSED: Has is_known_agent function
+✅ Test 9 PASSED: Has map_alias function
+✅ Test 10 PASSED: Checks for jq command availability
+✅ Test 11 PASSED: Initializes assigned_count variable
+✅ Test 12 PASSED: Initializes skipped_count variable
+✅ Test 13 PASSED: Uses jq to get queued task IDs
+✅ Test 14 PASSED: Loops through queued task IDs
+✅ Test 15 PASSED: Gets assigned_agent from task data
+✅ Test 16 PASSED: Calls map_alias function to normalize agent names
+✅ Test 17 PASSED: Checks agent status from status file
+✅ Test 18 PASSED: Checks if agent status is available
+✅ Test 19 PASSED: Creates notification files for available agents
+✅ Test 20 PASSED: Updates task status to assigned
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

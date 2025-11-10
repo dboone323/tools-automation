@@ -1,0 +1,32 @@
+Test Results for check_persistence.sh
+Generated: Mon Nov 10 08:04:24 CST 2025
+==========================================
+✅ Test 1 PASSED: check_persistence.sh is executable
+✅ Test 2 PASSED: Sources shared_functions.sh
+✅ Test 3 PASSED: Defines SCRIPT_DIR variable
+✅ Test 4 PASSED: Defines LOG_FILE variable
+✅ Test 5 PASSED: Checks launch daemon status
+✅ Test 6 PASSED: Checks auto-restart monitor process
+✅ Test 7 PASSED: Checks core agent status
+✅ Test 8 PASSED: Checks task queue status
+✅ Test 9 PASSED: Uses jq for JSON parsing
+✅ Test 10 PASSED: Checks Ollama integration status
+✅ Test 11 PASSED: Checks available Ollama models
+✅ Test 12 PASSED: Generates status report
+✅ Test 13 PASSED: Displays summary to console
+✅ Test 14 PASSED: Checks for quantum launch daemons
+✅ Test 15 PASSED: Uses pgrep to check processes
+✅ Test 16 PASSED: Checks task status counts
+✅ Test 17 PASSED: Handles missing task queue file
+✅ Test 18 PASSED: Displays agent process count
+✅ Test 19 PASSED: Saves report to log file
+✅ Test 20 PASSED: Has end report marker
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

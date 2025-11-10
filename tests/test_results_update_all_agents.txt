@@ -1,0 +1,32 @@
+Test Results for update_all_agents.sh
+Generated: Mon Nov 10 08:28:47 CST 2025
+==========================================
+✅ Test 1 PASSED: update_all_agents.sh is executable
+✅ Test 2 PASSED: Has strict mode set -euo pipefail
+✅ Test 3 PASSED: Defines SCRIPT_DIR variable
+✅ Test 4 PASSED: Defines WORKSPACE_ROOT variable
+✅ Test 5 PASSED: Defines AGENTS_DIR variable
+✅ Test 6 PASSED: Defines BACKUP_DIR variable
+✅ Test 7 PASSED: Has log function
+✅ Test 8 PASSED: Has success function
+✅ Test 9 PASSED: Has warning function
+✅ Test 10 PASSED: Has error function
+✅ Test 11 PASSED: Has update_agents_to_use_shared_functions function
+✅ Test 12 PASSED: Has check_jq_errors function
+✅ Test 13 PASSED: Has verify_analytics_json function
+✅ Test 14 PASSED: Has check_agent_availability function
+✅ Test 15 PASSED: Has setup_lock_monitoring function
+✅ Test 16 PASSED: Has setup_auto_restart function
+✅ Test 17 PASSED: Has create_final_report function
+✅ Test 18 PASSED: Has main function
+✅ Test 19 PASSED: Calls main function with arguments
+✅ Test 20 PASSED: Uses color codes for output
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

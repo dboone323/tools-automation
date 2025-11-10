@@ -1,0 +1,29 @@
+✅ Test 1 PASSED: enhanced_shared_functions.sh is executable
+✅ Test 2 PASSED: Defines LOCK_FILE variable
+✅ Test 3 PASSED: Defines LOCK_TIMEOUT_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines MAX_RETRIES variable
+✅ Test 6 PASSED: Defines RETRY_DELAY variable
+✅ Test 7 PASSED: Defines LOCK_TIMEOUT variable
+✅ Test 8 PASSED: Defines init_monitoring function
+✅ Test 9 PASSED: Defines log_lock_timeout function
+✅ Test 10 PASSED: Defines update_agent_status function
+✅ Test 11 PASSED: Defines _update_agent_status_locked function
+✅ Test 12 PASSED: Defines increment_task_count function
+✅ Test 13 PASSED: Defines should_auto_restart function
+✅ Test 14 PASSED: Defines enable_auto_restart function
+✅ Test 15 PASSED: Defines disable_auto_restart function
+✅ Test 16 PASSED: Defines handle_agent_failure function
+✅ Test 17 PASSED: Defines get_lock_timeout_count function
+✅ Test 18 PASSED: Defines get_recent_lock_timeouts function
+✅ Test 19 PASSED: Defines clear_old_lock_logs function
+✅ Test 20 PASSED: Exports functions
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
