@@ -1,8 +1,8 @@
 {
   "total_agents": 203,
-  "tested_agents": 31,
+  "tested_agents": 36,
   "coverage_percentage": 0.99,
-  "last_updated": "2025-01-09",
+  "last_updated": "2025-01-10",
   "agents": {
     "proactive_monitor.sh": {
       "tests": 10,
@@ -24,9 +24,7 @@
     },
     "monitoring_agent.sh": {
       "tests": 10,
-      "status": "passed",
-      "last_run": "2025-01-09",
-      "coverage_percentage": 100
+      "status": "passed"
     },
     "agent_performance_monitor.sh": {
       "tests": 10,
@@ -152,6 +150,22 @@
       "tests": 10,
       "passed": 10,
       "failed": 0,
+      "status": "passed"
+    },
+    "performance_agent.sh": {
+      "tests": 10,
+      "status": "passed"
+    },
+    "dashboard_launcher.sh": {
+      "tests": 10,
+      "status": "passed"
+    },
+    "launch_agent_dashboard.sh": {
+      "tests": 10,
+      "status": "passed"
+    },
+    "minimal_dashboard.sh": {
+      "tests": 10,
       "status": "passed"
     }
   }
