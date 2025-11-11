@@ -5,7 +5,9 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../shell_test_framework.sh"
 
-AGENT_FILE="/Users/danielstevens/Desktop/github-projects/tools-automation/agents/minimal_dashboard.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && git rev-parse --show-toplevel 2>/dev/null || cd "$SCRIPT_DIR/.." && pwd)"
+AGENT_FILE="$REPO_ROOT/agents/minimal_dashboard.sh"
 
 # Test 1: Script should be executable
 test_minimal_dashboard_executable() {

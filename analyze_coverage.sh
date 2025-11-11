@@ -13,7 +13,8 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-WORKSPACE_ROOT="/Users/danielstevens/Desktop/github-projects/tools-automation"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(cd "$SCRIPT_DIR" && git rev-parse --show-toplevel 2>/dev/null || echo "$SCRIPT_DIR")}"
 COVERAGE_DIR="$WORKSPACE_ROOT/metrics/coverage"
 
 # Default to background mode if no arguments

@@ -370,7 +370,15 @@ class Test{module_name}:
 
 
 def main():
-    workspace_root = "/Users/danielstevens/Desktop/github-projects/tools-automation"
+    # Dynamically resolve workspace root (prefer git)
+    from pathlib import Path
+    candidate = Path(__file__).resolve().parent
+    for parent in [candidate] + list(candidate.parents):
+        if (parent / '.git').exists():
+            workspace_root = str(parent)
+            break
+    else:
+        workspace_root = str(candidate)
     tests_dir = os.path.join(workspace_root, "tests")
 
     print("🔍 Analyzing Python files and generating comprehensive tests...")

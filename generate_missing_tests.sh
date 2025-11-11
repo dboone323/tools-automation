@@ -4,7 +4,8 @@
 
 set -euo pipefail
 
-WORKSPACE_ROOT="/Users/danielstevens/Desktop/github-projects/tools-automation"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(cd "$SCRIPT_DIR" && git rev-parse --show-toplevel 2>/dev/null || echo "$SCRIPT_DIR")}"
 TESTS_DIR="$WORKSPACE_ROOT/tests"
 
 echo "🔍 Analyzing Python files for missing tests..."

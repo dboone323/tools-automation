@@ -7,7 +7,8 @@ source "${SCRIPT_DIR}/shared_functions.sh"
 
 AGENT_NAME="workflow_optimization_agent.sh"
 LOG_FILE="${SCRIPT_DIR}/workflow_optimization_agent.log"
-WORKSPACE_ROOT="/Users/danielstevens/Desktop/github-projects/tools-automation"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(cd "$SCRIPT_DIR" && git rev-parse --show-toplevel 2>/dev/null || echo "$SCRIPT_DIR")}"
 TODO_FILE="${WORKSPACE_ROOT}/todo_queue.json"
 OLLAMA_CLIENT="${SCRIPT_DIR}/../../../ollama_client.sh"
 

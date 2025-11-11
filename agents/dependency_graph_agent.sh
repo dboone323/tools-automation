@@ -3,7 +3,7 @@
 
 AGENT_NAME="dependency_graph_agent.sh"
 LOG_FILE="agents/dependency_graph_agent.log"
-WORKSPACE_ROOT="${WORKSPACE_ROOT:-/Users/danielstevens/Desktop/github-projects/tools-automation}"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(cd "${SCRIPT_DIR}/.." && git rev-parse --show-toplevel 2>/dev/null || cd "${SCRIPT_DIR}/.." && pwd)}"
 GRAPH_FILE="${GRAPH_FILE:-${WORKSPACE_ROOT}/dependency_graph.json}"
 SCAN_INTERVAL="${SCAN_INTERVAL:-600}" # 10 minutes
 

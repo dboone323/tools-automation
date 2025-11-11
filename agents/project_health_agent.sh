@@ -7,9 +7,10 @@ source "${SCRIPT_DIR}/shared_functions.sh"
 
 AGENT_NAME="project_health_agent.sh"
 LOG_FILE="${SCRIPT_DIR}/project_health_agent.log"
+# Resolve workspace root via env, git root, or fallback relative
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(cd "$SCRIPT_DIR/.." && git rev-parse --show-toplevel 2>/dev/null || cd "$SCRIPT_DIR/.." && pwd)}"
 TODO_FILE="${WORKSPACE_ROOT}/todo_queue.json"
-WORKSPACE_ROOT="/Users/danielstevens/Desktop/github-projects/tools-automation"
-OLLAMA_CLIENT="${SCRIPT_DIR}/../../../ollama_client.sh"
+OLLAMA_CLIENT="${WORKSPACE_ROOT}/ollama_client.sh"
 
 # Monitoring intervals (in seconds)
 COVERAGE_CHECK_INTERVAL="${COVERAGE_CHECK_INTERVAL:-300}"     # 5 minutes (reduced for testing)
