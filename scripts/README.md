@@ -9,13 +9,16 @@ This directory contains utility scripts for TODO management, AI-assisted automat
 ## Scripts
 
 ### TODO Management
+
 - **regenerate_todo_json.py**: Scans codebase for TODO/FIXME comments and generates structured output
 
 ### AI Integration
-- **ai_*.sh**: AI-assisted automation scripts for various tasks
-- **ai_*.py**: Python-based AI utilities
+
+- **ai\_\*.sh**: AI-assisted automation scripts for various tasks
+- **ai\_\*.py**: Python-based AI utilities
 
 ### General Utilities
+
 - **automate.sh**: General automation orchestration
 - **dashboard_unified.sh**: Unified dashboard for monitoring
 
@@ -24,12 +27,14 @@ This directory contains utility scripts for TODO management, AI-assisted automat
 Comprehensive TODO scanning across the codebase.
 
 **Usage:**
+
 ```bash
 cd /path/to/tools-automation
 python3 scripts/regenerate_todo_json.py
 ```
 
 **Features:**
+
 - Scans multiple file types: `.swift`, `.sh`, `.md`, `.py`, `.js`, `.ts`, `.json`, `.yml`, `.yaml`
 - Extracts TODO, FIXME, HACK, NOTE comments
 - Supports submodule scanning
@@ -40,6 +45,7 @@ Results saved to project-specific locations (configurable)
 
 **Configuration:**
 Edit script to customize:
+
 - File extensions to scan
 - Comment patterns
 - Output location
@@ -48,6 +54,7 @@ Edit script to customize:
 ## AI Scripts
 
 ### Available AI Utilities
+
 - AI-assisted code analysis
 - Automated code review
 - Smart refactoring suggestions
@@ -55,6 +62,7 @@ Edit script to customize:
 - Test generation
 
 **Common Usage Pattern:**
+
 ```bash
 ./scripts/ai_<task>.sh --project <name> --mode <mode>
 ```
@@ -62,13 +70,16 @@ Edit script to customize:
 ## Dashboard
 
 ### dashboard_unified.sh
+
 Unified monitoring dashboard providing:
+
 - Agent status overview
 - Task queue visualization
 - System health metrics
 - Recent activity logs
 
 **Launch:**
+
 ```bash
 ./scripts/dashboard_unified.sh
 ```
@@ -78,6 +89,7 @@ Unified monitoring dashboard providing:
 General automation orchestration script.
 
 **Usage:**
+
 ```bash
 ./scripts/automate.sh --action <action> --target <target>
 ```
@@ -85,6 +97,7 @@ General automation orchestration script.
 ## Integration with Agents
 
 Utilities are called by agents:
+
 - `agent_todo.sh` uses `regenerate_todo_json.py`
 - `agent_codegen.sh` uses AI scripts
 - `agent_monitoring.sh` uses dashboard utilities

@@ -9,41 +9,50 @@ This directory contains shared configuration files used by agents, workflows, an
 ## Configuration Files
 
 ### Agent System
+
 - **agent_status.json**: Tracks current status of all running agents (running, idle, busy, crashed)
 - **task_queue.json**: Queue of tasks for agents to process
 - **agent_assignments.json**: Mapping of TODO items to agents (66,972 assignments)
 
 ### Automation
+
 - **automation_config.yaml**: General automation settings
 - **deployment_config.json**: Deployment pipeline configuration
 - **monitoring_config.json**: Monitoring and alerting settings
 - **audit_config.json**: Audit logging configuration
 
 ### Security
+
 - **security.yaml**: Security policies and settings
 - **security_monitoring.json**: Security monitoring rules
 - **encryption_config.json**: Encryption settings
 
 ### Reliability
+
 - **alerting.yaml**: Alert definitions and thresholds
 - **error_recovery.yaml**: Error recovery strategies
 - **integration_testing.yaml**: Integration test configuration
 
 ### Cloud
+
 - **cloud_fallback_config.json**: Cloud backup and fallback settings
 
 ### Code Quality
+
 - **UNIFIED_EDITORCONFIG_ROOT**: EditorConfig settings for all projects
 - **UNIFIED_SWIFTFORMAT_ROOT**: Swift formatting rules
 - **UNIFIED_SWIFTLINT_ROOT.yml**: Swift linting configuration
 
 ### Projects
+
 - **projects/**: Project-specific configurations
 
 ## Usage
 
 ### From Agents
+
 Agents access config via `agent_config.sh`:
+
 ```bash
 source agents/agent_config.sh
 # STATUS_FILE points to config/agent_status.json
@@ -51,13 +60,16 @@ source agents/agent_config.sh
 ```
 
 ### From Workflows
+
 Workflows reference configs:
+
 ```bash
 CONFIG_DIR="/path/to/tools-automation/config"
 source "$CONFIG_DIR/automation_config.yaml"
 ```
 
 ### From Submodules
+
 ```bash
 export TOOLS_AUTOMATION_ROOT="/path/to/tools-automation"
 CONFIG_PATH="$TOOLS_AUTOMATION_ROOT/config/automation_config.yaml"
@@ -66,7 +78,9 @@ CONFIG_PATH="$TOOLS_AUTOMATION_ROOT/config/automation_config.yaml"
 ## Key Files
 
 ### agent_status.json
+
 Tracks agent state:
+
 ```json
 {
   "agent_build": {
@@ -78,7 +92,9 @@ Tracks agent state:
 ```
 
 ### task_queue.json
+
 Manages task queue:
+
 ```json
 {
   "tasks": [
@@ -93,7 +109,9 @@ Manages task queue:
 ```
 
 ### agent_assignments.json
+
 Maps TODOs to agents (66,972 entries):
+
 ```json
 {
   "todo_001": {
@@ -107,6 +125,7 @@ Maps TODOs to agents (66,972 entries):
 ## Path Resolution
 
 Configuration files are accessed relative to the agents directory:
+
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STATUS_FILE="${SCRIPT_DIR}/../config/agent_status.json"
@@ -123,11 +142,13 @@ TASK_QUEUE="${SCRIPT_DIR}/../config/task_queue.json"
 ## Maintenance
 
 ### Backing Up Configurations
+
 ```bash
 cp -r config/ config.backup.$(date +%Y%m%d)
 ```
 
 ### Validating Configs
+
 ```bash
 # Validate JSON
 jq . config/agent_status.json
@@ -138,6 +159,7 @@ yamllint config/automation_config.yaml
 ```
 
 ### Cleaning Up
+
 ```bash
 # Remove old task queue entries
 jq '.tasks |= map(select(.status != "completed"))' task_queue.json > task_queue.tmp.json
@@ -147,12 +169,14 @@ mv task_queue.tmp.json task_queue.json
 ## Security
 
 ### Sensitive Data
+
 - Do NOT commit secrets or tokens to this directory
 - Use environment variables for sensitive values
 - Keep `.env` files out of git
 - Use encrypted config files when needed
 
 ### Permissions
+
 ```bash
 # Protect sensitive configs
 chmod 600 config/encryption_config.json
@@ -162,6 +186,7 @@ chmod 600 config/security_monitoring.json
 ## Monitoring
 
 Check configuration health:
+
 ```bash
 # Verify files exist
 ls -la config/*.json config/*.yaml
@@ -185,6 +210,7 @@ watch -n 5 'ls -lt config/*.json | head'
 Configuration files were moved here on 2025-11-11 from the root directory to create a centralized config location. All agent and workflow scripts have been updated to use the new paths.
 
 **Benefits:**
+
 - Centralized configuration management
 - Easier to backup and restore
 - Clear separation from code

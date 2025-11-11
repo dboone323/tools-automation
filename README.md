@@ -12,7 +12,7 @@ This repository serves as the superproject for all automation infrastructure, pr
 tools-automation/
 ├── agents/          # 111 shared agent scripts for automation
 ├── mcp/            # MCP servers and AI integration
-├── workflows/      # CI/CD orchestration scripts  
+├── workflows/      # CI/CD orchestration scripts
 ├── config/         # Shared configuration files
 ├── scripts/        # Utility scripts (TODO scanning, etc.)
 ├── docs/           # Documentation
@@ -42,6 +42,7 @@ cd mcp/
 ```
 
 View MCP dashboard:
+
 ```bash
 ./mcp_dashboard.sh
 ```
@@ -58,6 +59,7 @@ cd agents/
 ```
 
 Check agent status:
+
 ```bash
 cat config/agent_status.json
 ```
@@ -82,11 +84,13 @@ python3 scripts/regenerate_todo_json.py
 ## Configuration
 
 Global agent configuration in `agents/agent_config.sh`:
+
 - `MAX_CONCURRENCY=2` - Max concurrent agent instances
 - `LOAD_THRESHOLD=4.0` - System load threshold
 - `GLOBAL_AGENT_CAP=10` - Max total agents
 
 Configuration files in `config/`:
+
 - `agent_status.json` - Agent status tracking
 - `task_queue.json` - Task queue
 - `agent_assignments.json` - TODO assignments (66,972 entries)
@@ -105,6 +109,7 @@ source "$TOOLS_AUTOMATION_ROOT/agents/agent_config.sh"
 ```
 
 Agent symlink in CodingReviewer:
+
 ```bash
 cd CodingReviewer/Tools/Automation/agents  # → symlink to ../../../agents
 ```
@@ -118,6 +123,7 @@ cd CodingReviewer/Tools/Automation/agents  # → symlink to ../../../agents
 - `docs/AI_MONITORING_GUIDE.md` - AI integration monitoring
 
 Each directory has its own README:
+
 - `agents/README.md`
 - `mcp/README.md`
 - `workflows/README.md`
@@ -129,6 +135,7 @@ Each directory has its own README:
 By default artifacts saved to `~/mcp_artifacts` (configurable via `ARTIFACT_DIR`).
 
 For remote uploads, set `ARTIFACT_DEST`:
+
 ```bash
 export ARTIFACT_DEST="s3://my-bucket/path"
 ```
@@ -226,5 +233,6 @@ make validate
 ```
 
 Scripts:
+
 - `.ci/agent_validate.sh`: sets AI env and runs validation
 - `.ci/run_validation.sh`: performs lint/format, tests, and best‑effort remediation via Tools/Automation
