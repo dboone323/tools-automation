@@ -4,8 +4,8 @@
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Allow environment overrides for testability
-STATUS_FILE="${STATUS_FILE:-${SCRIPT_DIR}/agent_status.json}"
-TASK_QUEUE_FILE="${TASK_QUEUE_FILE:-${SCRIPT_DIR}/task_queue.json}"
+STATUS_FILE="${STATUS_FILE:-${SCRIPT_DIR}/../config/agent_status.json}"
+TASK_QUEUE_FILE="${TASK_QUEUE_FILE:-${SCRIPT_DIR}/../config/task_queue.json}"
 
 # Initialize monitoring
 

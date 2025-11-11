@@ -4,7 +4,23 @@
       "status": "busy",
       "last_seen": 1762534393,
       "pid": 77777
+    },
+    "agent_debug.sh": {
+      "status": "stopped",
+      "last_seen": 1762873617,
+      "pid": 61839
+    },
+    "agent_build.sh": {
+      "status": "starting",
+      "last_seen": 1762874649,
+      "pid": 78658
+    },
+    "agent_codegen.sh": {
+      "status": "busy",
+      "last_seen": 1762874390,
+      "pid": 74952,
+      "current_task_id": "todo_20251111_080747_5a690eac"
     }
   },
-  "last_update": 1762534393
+  "last_update": 1762874649
 }

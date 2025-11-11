@@ -29,8 +29,8 @@ CORE_AGENTS=(
 # Logging configuration
 AGENT_NAME="ControlAgent"
 LOG_FILE="${SCRIPT_DIR}/control_agent.log"
-export STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
-export TASK_QUEUE="${SCRIPT_DIR}/task_queue.json"
+export STATUS_FILE="${SCRIPT_DIR}/../config/agent_status.json"
+export TASK_QUEUE="${SCRIPT_DIR}/../config/task_queue.json"
 export PID=$$
 
 # Timeout protection function

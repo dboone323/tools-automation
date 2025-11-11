@@ -1,0 +1,55 @@
+{
+  "learning_patterns": {
+    "success_patterns": {},
+    "failure_patterns": {},
+    "agent_performance": {
+      "agent_2": {
+        "utilization_samples": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "avg_utilization": 0.0,
+        "performance_score": 0.5
+      }
+    },
+    "task_completion_times": {
+      "avg_completion_time": "estimated",
+      "complexity_correlations": {},
+      "priority_patterns": {}
+    }
+  },
+  "optimization_rules": [
+    {
+      "rule_id": "agent_assignment_optimization",
+      "type": "assignment",
+      "condition": "high_priority_task",
+      "action": "prefer_agent_agent_2",
+      "reason": "agent_2 shows highest performance score",
+      "confidence": 0.8
+    }
+  ],
+  "last_updated": "2025-11-11T08:34:50.933158",
+  "learning_statistics": {
+    "patterns_learned": 0,
+    "optimizations_applied": 59987,
+    "performance_improvements": 0
+  }
+}

@@ -5,8 +5,9 @@
 **Objective**: Centralize shared tools (agents, MCP servers, workflows) in the `tools-automation` superproject, eliminate duplication across submodules, and establish best practices for monorepo structure.
 
 **Key Findings**:
+
 - **72 duplicate agents** between `./agents/` and `./CodingReviewer/Tools/Automation/agents/`
-- **7 unique agents** in root only (auto_restart_*, workflow_optimization_agent, etc.)
+- **7 unique agents** in root only (auto*restart*\*, workflow_optimization_agent, etc.)
 - **0 agents** in other 4 submodules (AvoidObstaclesGame, HabitQuest, MomentumFinance, PlannerApp, shared-kit)
 - **Multiple MCP config files**: 1 in root + 6 in submodule `.tools-automation/` directories
 - **Scattered workflows**: 3 root + 1-4 per submodule GitHub Actions
@@ -17,6 +18,7 @@
 ## Current State Analysis
 
 ### Agent Distribution
+
 ```
 Location                                        | Count | Status
 ------------------------------------------------|-------|------------------
@@ -30,12 +32,14 @@ Location                                        | Count | Status
 ```
 
 **72 Common Agents** (duplicated):
+
 - agent_analytics.sh, agent_backup.sh, agent_build.sh, agent_codegen.sh, agent_debug.sh
 - agent_deployment.sh, agent_documentation.sh, agent_monitoring.sh, agent_optimization.sh
 - agent_security.sh, agent_testing.sh, agent_todo.sh, auto_update_agent.sh
-- *(full list in appendix)*
+- _(full list in appendix)_
 
 **7 Unique Agents** (root only):
+
 1. auto_restart_code_analysis_agent.sh
 2. auto_restart_project_health_agent.sh
 3. auto_restart_workflow_optimization_agent.sh
@@ -45,6 +49,7 @@ Location                                        | Count | Status
 7. workflow_optimization_agent.sh
 
 ### MCP Server Distribution
+
 ```
 Root MCP Files:
 - ./mcp_config.json
@@ -71,6 +76,7 @@ Submodule MCP Files:
 ```
 
 ### GitHub Workflows
+
 ```
 Location                                | Workflow Files
 ----------------------------------------|---------------
@@ -84,6 +90,7 @@ Location                                | Workflow Files
 ```
 
 ### Configuration Files
+
 ```
 Root Configuration:
 - agent_config.sh (MAX_CONCURRENCY, LOAD_THRESHOLD, paths)
@@ -175,6 +182,7 @@ shared-kit/                                # Similar structure
 ### Path Resolution Strategy
 
 **Agent Execution**: All agents run from `tools-automation/agents/`
+
 ```bash
 # In any submodule or superproject
 export TOOLS_AUTOMATION_ROOT="/Users/danielstevens/Desktop/github-projects/tools-automation"
@@ -183,6 +191,7 @@ source "$TOOLS_AUTOMATION_ROOT/agents/shared_functions.sh"
 ```
 
 **MCP Server Access**:
+
 ```bash
 # Primary config
 "$TOOLS_AUTOMATION_ROOT/mcp/mcp_config.json"
@@ -192,6 +201,7 @@ source "$TOOLS_AUTOMATION_ROOT/agents/shared_functions.sh"
 ```
 
 **Workflow Usage**:
+
 ```yaml
 # In submodule .github/workflows/build.yml
 jobs:
@@ -208,6 +218,7 @@ jobs:
 ### Phase 1: Preparation & Backup (Safety First)
 
 **1.1 Create Backup Branch**
+
 ```bash
 cd /Users/danielstevens/Desktop/github-projects/tools-automation
 git checkout -b backup-before-reorganization
@@ -217,6 +228,7 @@ git push origin backup-before-reorganization
 ```
 
 **1.2 Document Current State**
+
 ```bash
 # Create comprehensive file manifest
 find . -type f \( -name "*agent*.sh" -o -name "*mcp*" -o -name "*workflow*.sh" \) \
@@ -224,6 +236,7 @@ find . -type f \( -name "*agent*.sh" -o -name "*mcp*" -o -name "*workflow*.sh" \
 ```
 
 **1.3 Verify Submodule Integrity**
+
 ```bash
 git submodule status
 git submodule foreach 'git status'
@@ -232,6 +245,7 @@ git submodule foreach 'git status'
 ### Phase 2: Create New Directory Structure
 
 **2.1 Create Centralized Directories**
+
 ```bash
 cd /Users/danielstevens/Desktop/github-projects/tools-automation
 
@@ -250,6 +264,7 @@ mv AI_MONITORING_GUIDE.md docs/
 ```
 
 **2.2 Move MCP Files**
+
 ```bash
 # Move MCP core files
 mv mcp_config.json mcp/
@@ -269,6 +284,7 @@ mv agents/run_mcp_server.sh mcp/servers/
 ```
 
 **2.3 Move Workflow Scripts**
+
 ```bash
 mv ci_orchestrator.sh workflows/
 mv enhanced_workflow.sh workflows/
@@ -279,6 +295,7 @@ mv ci/ci_orchestrator.sh workflows/ci_orchestrator_old.sh  # Handle duplicate
 ```
 
 **2.4 Move Configuration Files**
+
 ```bash
 # Keep agent_config.sh in ./agents/ but move status/queue files
 mv agent_status.json config/
@@ -287,6 +304,7 @@ mv agent_assignments.json config/
 ```
 
 **2.5 Move Utility Scripts**
+
 ```bash
 mv regenerate_todo_json.py scripts/
 mv ai_*.sh scripts/
@@ -296,6 +314,7 @@ mv dashboard_unified.sh scripts/
 ```
 
 **2.6 Update agent_config.sh Paths**
+
 ```bash
 # Edit agents/agent_config.sh to update paths
 sed -i '' 's|./agent_status.json|../config/agent_status.json|g' agents/agent_config.sh
@@ -305,6 +324,7 @@ sed -i '' 's|./task_queue.json|../config/task_queue.json|g' agents/agent_config.
 ### Phase 3: Remove Duplicates from CodingReviewer
 
 **3.1 Verify Files Are Identical**
+
 ```bash
 # Compare checksums of common agents
 for agent in $(comm -12 /tmp/root_agents.txt /tmp/cr_agents.txt); do
@@ -317,6 +337,7 @@ done > agent_differences.txt
 ```
 
 **3.2 Remove Duplicate Agents from CodingReviewer**
+
 ```bash
 cd CodingReviewer
 git checkout -b remove-duplicate-agents
@@ -331,6 +352,7 @@ git commit -m "Remove 72 duplicate agents - now centralized in superproject tool
 ```
 
 **3.3 Create Symlink or Path Configuration**
+
 ```bash
 # Option A: Symlink (if filesystem supports)
 cd CodingReviewer/Tools/Automation
@@ -347,6 +369,7 @@ EOF
 ### Phase 4: Update Path References
 
 **4.1 Fix agent_codegen.sh WORKSPACE Path**
+
 ```bash
 # Line ~101 in agents/agent_codegen.sh
 # OLD: WORKSPACE="${WORKSPACE:-$(cd "${SCRIPT_DIR}/../../.." && pwd)}"
@@ -356,6 +379,7 @@ sed -i '' 's|cd "${SCRIPT_DIR}/\.\./\.\./\.\."|cd "${SCRIPT_DIR}/\.\."|g' agents
 ```
 
 **4.2 Update All Agent Scripts to Use Relative Paths**
+
 ```bash
 # Search for hardcoded paths
 grep -r "/Desktop/github-projects/tools-automation" ./agents/ > hardcoded_paths.txt
@@ -366,6 +390,7 @@ find ./agents -name "*.sh" -exec sed -i '' \
 ```
 
 **4.3 Update MCP Scripts**
+
 ```bash
 # Update mcp_workflow.sh to use new mcp/ directory structure
 cd mcp
@@ -373,6 +398,7 @@ cd mcp
 ```
 
 **4.4 Update GitHub Workflows to Use Shared Workflows**
+
 ```yaml
 # Example: AvoidObstaclesGame/.github/workflows/build.yml
 name: Build
@@ -390,6 +416,7 @@ jobs:
 ### Phase 5: Testing & Validation
 
 **5.1 Test Agent System**
+
 ```bash
 cd /Users/danielstevens/Desktop/github-projects/tools-automation
 
@@ -408,6 +435,7 @@ cat config/agent_status.json
 ```
 
 **5.2 Test MCP System**
+
 ```bash
 cd mcp
 ./mcp_workflow.sh --check-config
@@ -415,6 +443,7 @@ python3 mcp_controller.py --status
 ```
 
 **5.3 Test from Submodule**
+
 ```bash
 cd CodingReviewer
 
@@ -428,6 +457,7 @@ agent_build.sh --version  # Should work
 ```
 
 **5.4 Verify No Broken Links**
+
 ```bash
 # Find any remaining references to old paths
 grep -r "Tools/Automation/agents" . --exclude-dir=".git" > old_path_references.txt
@@ -438,7 +468,8 @@ grep -r "Tools/Automation/agents" . --exclude-dir=".git" > old_path_references.t
 **6.1 Create README Files**
 
 Create `agents/README.md`:
-```markdown
+
+````markdown
 # Shared Agent System
 
 All agents for tools-automation and submodules are centralized here.
@@ -450,13 +481,16 @@ export TOOLS_AUTOMATION_ROOT="/path/to/tools-automation"
 source "$TOOLS_AUTOMATION_ROOT/agents/agent_config.sh"
 source "$TOOLS_AUTOMATION_ROOT/agents/shared_functions.sh"
 ```
+````
 
 ## Agent List
+
 - agent_build.sh: Automated build and test execution
 - agent_codegen.sh: Code generation and improvement
 - agent_debug.sh: Debugging and issue analysis
-... (111 agents total)
-```
+  ... (111 agents total)
+
+````
 
 Create `mcp/README.md`, `workflows/README.md`, `config/README.md`
 
@@ -481,9 +515,10 @@ Centralized automation tools for all projects.
 - MomentumFinance
 - PlannerApp
 - shared-kit
-```
+````
 
 **6.3 Commit Changes**
+
 ```bash
 cd /Users/danielstevens/Desktop/github-projects/tools-automation
 
@@ -504,6 +539,7 @@ git push origin main
 ```
 
 **6.4 Update Submodule CodingReviewer**
+
 ```bash
 cd CodingReviewer
 git add -A
@@ -645,21 +681,22 @@ test_agent_system.sh
 
 ## Timeline
 
-| Phase | Duration | Status |
-|-------|----------|--------|
-| 1. Preparation & Backup | 30 min | ✅ **COMPLETED** |
-| 2. Create New Structure | 1 hour | ✅ **COMPLETED** |
-| 3. Remove CodingReviewer Duplicates | 30 min | ✅ **COMPLETED** |
-| 4. Update Path References | 1 hour | ✅ **COMPLETED** |
-| 5. Testing & Validation | 1 hour | ✅ **COMPLETED** |
-| 6. Documentation & Cleanup | 1 hour | ✅ **COMPLETED** |
-| **Total Estimated Time** | **5 hours** | **100% Complete** |
+| Phase                               | Duration    | Status            |
+| ----------------------------------- | ----------- | ----------------- |
+| 1. Preparation & Backup             | 30 min      | ✅ **COMPLETED**  |
+| 2. Create New Structure             | 1 hour      | ✅ **COMPLETED**  |
+| 3. Remove CodingReviewer Duplicates | 30 min      | ✅ **COMPLETED**  |
+| 4. Update Path References           | 1 hour      | ✅ **COMPLETED**  |
+| 5. Testing & Validation             | 1 hour      | ✅ **COMPLETED**  |
+| 6. Documentation & Cleanup          | 1 hour      | ✅ **COMPLETED**  |
+| **Total Estimated Time**            | **5 hours** | **100% Complete** |
 
 ---
 
 ## Approval & Next Steps
 
 **Before proceeding**, confirm:
+
 - [x] Backup branch created and verified
 - [x] All submodules have committed changes (no uncommitted work)
 - [x] Team members notified of pending reorganization
@@ -671,6 +708,6 @@ test_agent_system.sh
 
 ---
 
-*Document created: 2025-01-27*  
-*Last updated: 2025-11-11*  
-*Version: 2.0 - COMPLETED*
+_Document created: 2025-01-27_  
+_Last updated: 2025-11-11_  
+_Version: 2.0 - COMPLETED_

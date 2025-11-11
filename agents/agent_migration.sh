@@ -10,7 +10,7 @@ if [[ -f "${SCRIPT_DIR}/../project_config.sh" ]]; then
 fi
 
 # Set task queue file path
-export TASK_QUEUE_FILE="${SCRIPT_DIR}/../task_queue.json"
+export TASK_QUEUE_FILE="${SCRIPT_DIR}/../config/task_queue.json"
 
 # Ensure PROJECT_NAME is set for subprocess calls
 export PROJECT_NAME="${PROJECT_NAME:-CodingReviewer}"
@@ -31,8 +31,8 @@ SLEEP_INTERVAL=300 # Start with 5 minutes
 MIN_INTERVAL=120
 MAX_INTERVAL=1800
 
-STATUS_FILE="$(dirname "$0")/agent_status.json"
-TASK_QUEUE="$(dirname "$0")/task_queue.json"
+STATUS_FILE="$(dirname "$0")/../config/agent_status.json"
+TASK_QUEUE="$(dirname "$0")/../config/task_queue.json"
 PID=$$
 
 # Timeout protection function

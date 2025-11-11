@@ -11,7 +11,7 @@ fi
 
 # Agent throttling configuration
 MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}" # Maximum concurrent instances of this agent
-LOAD_THRESHOLD="${LOAD_THRESHOLD:-4.0}" # System load threshold (1.0 = 100% on single core)
+LOAD_THRESHOLD="${LOAD_THRESHOLD:-8.0}" # System load threshold (1.0 = 100% on single core)
 WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"  # Seconds to wait when system is busy
 
 # Function to check if we should proceed with task processing
@@ -46,7 +46,7 @@ ensure_within_limits() {
 }
 
 # Set task queue file path
-export TASK_QUEUE_FILE="${SCRIPT_DIR}/../task_queue.json"
+export TASK_QUEUE_FILE="${SCRIPT_DIR}/../config/task_queue.json"
 
 # Ensure PROJECT_NAME is set for subprocess calls
 export PROJECT_NAME="${PROJECT_NAME:-CodingReviewer}"
@@ -187,8 +187,8 @@ SLEEP_INTERVAL=120 # Start with 2 minutes
 MIN_INTERVAL=60
 MAX_INTERVAL=600
 
-STATUS_FILE="$(dirname "$0")/agent_status.json"
-TASK_QUEUE="$(dirname "$0")/task_queue.json"
+STATUS_FILE="$(dirname "$0")/../config/agent_status.json"
+TASK_QUEUE="$(dirname "$0")/../config/task_queue.json"
 PID=$$
 
 # Export variables for shared functions

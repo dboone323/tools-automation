@@ -25,8 +25,8 @@ SLEEP_INTERVAL=${SLEEP_INTERVAL:-2} # Start small; exponential backoff will grow
 MAX_INTERVAL=${MAX_INTERVAL:-3600}
 
 # Respect external overrides for status and task queue locations
-STATUS_FILE="${STATUS_FILE:-${SCRIPT_DIR}/agent_status.json}"
-TASK_QUEUE="${TASK_QUEUE:-${SCRIPT_DIR}/task_queue.json}"
+STATUS_FILE="${STATUS_FILE:-${SCRIPT_DIR}/../config/agent_status.json}"
+TASK_QUEUE="${TASK_QUEUE:-${SCRIPT_DIR}/../config/task_queue.json}"
 PID=$$
 
 # Timeout protection function (prefers gtimeout/timeout, with fallbacks)

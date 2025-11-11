@@ -7,7 +7,7 @@ source "${SCRIPT_DIR}/shared_functions.sh"
 
 # Agent throttling configuration
 MAX_CONCURRENCY="${MAX_CONCURRENCY:-1}" # Maximum concurrent instances of this agent
-LOAD_THRESHOLD="${LOAD_THRESHOLD:-4.0}" # System load threshold
+LOAD_THRESHOLD="${LOAD_THRESHOLD:-8.0}" # System load threshold
 WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-45}"  # Seconds to wait when system is busy
 
 # Function to check if we should proceed with task processing

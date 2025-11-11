@@ -117,7 +117,7 @@ WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 AGENTS_DIR="${SCRIPT_DIR}"
 AGENT_NAME="agent_analytics"
 LOG_FILE="${AGENTS_DIR}/${AGENT_NAME}.log"
-STATUS_FILE="${AGENTS_DIR}/agent_status.json"
+STATUS_FILE="${AGENTS_DIR}/../config/agent_status.json"
 METRICS_DIR="${WORKSPACE_ROOT}/.metrics"
 ANALYTICS_DATA="${METRICS_DIR}/analytics_$(date +%Y%m).json"
 
@@ -129,7 +129,7 @@ log_message() {
 # Throttling and load management
 ensure_within_limits() {
     local max_concurrency=${MAX_CONCURRENCY:-3}
-    local load_threshold=${LOAD_THRESHOLD:-4.0}
+    local load_threshold=${LOAD_THRESHOLD:-8.0}
     local wait_time=${THROTTLE_WAIT_TIME:-30}
 
     # Check concurrent agent instances

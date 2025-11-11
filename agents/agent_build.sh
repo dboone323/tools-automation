@@ -30,6 +30,11 @@ PROJECTS_DIR="${WORKSPACE_ROOT}/Projects"
 AGENT_NAME="agent_build.sh"
 LOG_FILE="${SCRIPT_DIR}/build_agent.log"
 
+# Agent throttling configuration
+MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}" # Maximum concurrent instances of this agent
+LOAD_THRESHOLD="${LOAD_THRESHOLD:-8.0}" # System load threshold (1.0 = 100% on single core)
+WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"  # Seconds to wait when system is busy
+
 # Function to check if we should proceed with task processing
 ensure_within_limits() {
     local agent_name="agent_build.sh"
@@ -96,6 +101,8 @@ STATUS_UPDATE_INTERVAL=60
 
 # Resource limits (matching security agent standards)
 MAX_FILES=1000
+MAX_MEMORY_USAGE="${MAX_MEMORY_USAGE:-80}" # Maximum memory usage percentage
+MAX_CPU_USAGE="${MAX_CPU_USAGE:-90}"       # Maximum CPU usage percentage
 
 # Function to check resource usage and limits
 check_resource_limits() {

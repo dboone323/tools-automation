@@ -16,7 +16,7 @@ MIN_INTERVAL=120
 MAX_INTERVAL=2400
 # Safety knobs
 MAX_CONCURRENCY=2  # max number of uiux_agent.sh processes allowed concurrently
-LOAD_THRESHOLD=4.0 # system 1-minute load average threshold to pause work
+LOAD_THRESHOLD=8.0 # system 1-minute load average threshold to pause work
 WAIT_WHEN_BUSY=30  # seconds to wait before re-checking limits
 
 # Function to determine project from task or use default

@@ -1,0 +1,76 @@
+{
+  "agent_codegen": {
+    "file_types": [
+      ".swift",
+      ".py",
+      ".js",
+      ".ts",
+      ".java",
+      ".cpp",
+      ".c",
+      ".h"
+    ],
+    "task_types": [
+      "code_generation",
+      "code_fix",
+      "implementation"
+    ],
+    "priority": 8
+  },
+  "agent_build": {
+    "file_types": [
+      ".json",
+      ".yml",
+      ".yaml",
+      ".xml",
+      ".gradle",
+      ".pom"
+    ],
+    "task_types": [
+      "build",
+      "configuration",
+      "deployment"
+    ],
+    "priority": 7
+  },
+  "agent_test": {
+    "file_types": [
+      ".py",
+      ".js",
+      ".ts",
+      ".java",
+      ".swift"
+    ],
+    "task_types": [
+      "testing",
+      "validation",
+      "quality_assurance"
+    ],
+    "priority": 9
+  },
+  "agent_docs": {
+    "file_types": [
+      ".md",
+      ".txt",
+      ".rst",
+      ".adoc"
+    ],
+    "task_types": [
+      "documentation",
+      "readme",
+      "comments"
+    ],
+    "priority": 5
+  },
+  "agent_debug": {
+    "file_types": [
+      "*"
+    ],
+    "task_types": [
+      "debugging",
+      "troubleshooting",
+      "analysis"
+    ],
+    "priority": 9
+  }
+}

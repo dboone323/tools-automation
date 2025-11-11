@@ -1,103 +1,27 @@
 {
   "agents": {
-    "PerformanceMonitorAgent": {
-      "status": "stopped",
-      "last_seen": 1762728433,
-      "pid": 57575
-    },
-    "ConfigAgent": {
+    "build_agent": {
       "status": "running",
-      "last_seen": 1762703963,
-      "pid": 86062
+      "pid": 28726
     },
-    "HelpersAgent": {
+    "debug_agent": {
       "status": "running",
-      "last_seen": 1762704054,
-      "pid": 89771
+      "pid": 28739
     },
-    "KeeperAgent": {
+    "codegen_agent": {
       "status": "running",
-      "last_seen": 1762726377,
-      "pid": 1972
+      "pid": 28756
     },
-    "auto_restart_monitor.sh": {
-      "status": "idle",
-      "last_seen": 1762728472,
-      "pid": 71599
+    "agent_debug.sh": {
+      "status": "starting",
+      "last_seen": 1762871969,
+      "pid": 28739
     },
     "agent_build.sh": {
       "status": "starting",
-      "last_seen": 1762728471,
-      "pid": 71684
-    },
-    "agent_debug.sh": {
-      "status": "stopped",
-      "last_seen": 1762728474,
-      "pid": 71817
-    },
-    "IntegrationAgent": {
-      "status": "starting",
-      "last_seen": 1762728471,
-      "pid": 71839
-    },
-    "NotificationAgent": {
-      "status": "starting",
-      "last_seen": 1762728471,
-      "pid": 71865
-    },
-    "OptimizationAgent": {
-      "status": "starting",
-      "last_seen": 1762728471,
-      "pid": 71896
-    },
-    "agent_supervisor.sh": {
-      "status": "active",
-      "last_seen": 1762728472,
-      "pid": 71965
-    },
-    "testing_agent": {
-      "status": "stopped",
-      "pid": 72010
-    },
-    "AppleProAgent": {
-      "status": "idle",
-      "last_seen": 1762728472,
-      "pid": 72075
-    },
-    "task_orchestrator.sh": {
-      "status": "active",
-      "last_seen": 1762728472,
-      "tasks_completed": 0
-    },
-    "agent_cleanup.sh": {
-      "status": "stopped",
-      "last_seen": 1762728471,
-      "pid": 70118
-    },
-    "agent_security.sh": {
-      "status": "stopped",
-      "last_seen": 1762728433,
-      "pid": 57604
-    },
-    "UIUXAgent": {
-      "status": "idle",
-      "last_seen": 1762728431,
-      "pid": 57783
-    },
-    "agent_validation.sh": {
-      "status": "stopped",
-      "last_seen": 1762728433,
-      "pid": 57803
+      "last_seen": 1762871969,
+      "pid": 28726
     }
   },
-  "last_update": 1762728474,
-  "orchestrator": {
-    "status": "available",
-    "last_seen": 1762728472,
-    "pid": 72440,
-    "is_running": true,
-    "tasks_queued": 0,
-    "tasks_in_progress": 0,
-    "tasks_completed": 0
-  }
+  "last_update": 1762871969
 }

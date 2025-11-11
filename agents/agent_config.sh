@@ -6,7 +6,7 @@
 # Agent Throttling Configuration
 # These can be overridden by environment variables
 export MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}" # Maximum concurrent instances per agent
-export LOAD_THRESHOLD="${LOAD_THRESHOLD:-4.0}" # System load threshold (1.0 = 100% on single core)
+export LOAD_THRESHOLD="${LOAD_THRESHOLD:-8.0}" # System load threshold (1.0 = 100% on single core)
 export WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"  # Initial seconds to wait when system is busy
 
 # Centralized TODO Processing Configuration

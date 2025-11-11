@@ -14,7 +14,7 @@ LAST_TRIGGER_FILE="${SCRIPT_DIR}/last_todo_trigger.txt"
 
 # Centralized throttling configuration for TODO monitoring
 MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}"    # Maximum concurrent monitor instances
-LOAD_THRESHOLD="${LOAD_THRESHOLD:-4.0}"    # System load threshold (1.0 = 100% on single core)
+LOAD_THRESHOLD="${LOAD_THRESHOLD:-8.0}"    # System load threshold (1.0 = 100% on single core)
 WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"     # Seconds to wait when system is busy
 GLOBAL_AGENT_CAP="${GLOBAL_AGENT_CAP:-10}" # Maximum total agents that can be assigned tasks
 
