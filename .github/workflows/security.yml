@@ -52,12 +52,10 @@ jobs:
           path: ./
           extra_args: --debug --only-verified
 
-      - name: CodeQL Analysis
-        uses: github/codeql-action/init@v3
-        with:
-          languages: javascript, python, shell
-
-      - name: Perform CodeQL Analysis
+            - name: CodeQL Analysis
+              uses: github/codeql-action/init@v3
+              with:
+                  languages: javascript, python      - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
       - name: Run ShellCheck
