@@ -7,13 +7,13 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 CHECK_SCRIPT="$REPO_ROOT/path_sanity_check.sh"
 if [[ -x "$CHECK_SCRIPT" ]]; then
-  echo "[pre-push] Running path_sanity_check.sh"
-  if ! bash "$CHECK_SCRIPT" >/dev/null; then
-    echo "[pre-push] Path sanity check failed; aborting push" >&2
-    exit 1
-  fi
+    echo "[pre-push] Running path_sanity_check.sh"
+    if ! bash "$CHECK_SCRIPT" >/dev/null; then
+        echo "[pre-push] Path sanity check failed; aborting push" >&2
+        exit 1
+    fi
 else
-  echo "[pre-push] Skip path check (script missing or not executable)"
+    echo "[pre-push] Skip path check (script missing or not executable)"
 fi
 
 exit 0
