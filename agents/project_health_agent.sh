@@ -1,14 +1,19 @@
 #!/bin/bash
 # Project Health Agent: Monitors test coverage gaps, outdated dependencies, build failures, and documentation completeness
 
-# Source shared functions for file locking and monitoring
+# Source shared functions and common env/path helpers
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+source "${ROOT_DIR}/env.sh" 2>/dev/null || true
+source "${ROOT_DIR}/paths.sh" 2>/dev/null || true
 source "${SCRIPT_DIR}/shared_functions.sh"
 
 AGENT_NAME="project_health_agent.sh"
 LOG_FILE="${SCRIPT_DIR}/project_health_agent.log"
-# Resolve workspace root via env, git root, or fallback relative
-WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(cd "$SCRIPT_DIR/.." && git rev-parse --show-toplevel 2>/dev/null || cd "$SCRIPT_DIR/.." && pwd)}"
+# Use WORKSPACE_ROOT provided by env.sh; fallback if missing
+if [[ -z "${WORKSPACE_ROOT}" ]]; then
+    WORKSPACE_ROOT="$(cd "$ROOT_DIR" && git rev-parse --show-toplevel 2>/dev/null || echo "$ROOT_DIR")"
+fi
 TODO_FILE="${WORKSPACE_ROOT}/todo_queue.json"
 OLLAMA_CLIENT="${WORKSPACE_ROOT}/ollama_client.sh"
 
@@ -485,4 +490,3 @@ while true; do
     log_message "DEBUG" "Health check cycle completed, sleeping for 60 seconds..."
     sleep 60
 done
-name="filePath" <parameter >/Users/danielstevens/Desktop/github-projects/tools-automation/agents/project_health_agent.sh

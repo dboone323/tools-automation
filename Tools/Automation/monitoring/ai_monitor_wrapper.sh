@@ -14,16 +14,16 @@ MONITOR_SCRIPT="$MONITOR_DIR/ai_monitor.sh"
 mkdir -p "$MONITOR_DIR"
 
 while true; do
-    echo "Starting AI monitor at $(date)" >> "$LOG_FILE"
+    echo "Starting AI monitor at $(date)" >>"$LOG_FILE"
     "$MONITOR_SCRIPT" || true
     exit_code=$?
-    echo "AI monitor exited with code ${exit_code} at $(date)" >> "$LOG_FILE"
+    echo "AI monitor exited with code ${exit_code} at $(date)" >>"$LOG_FILE"
 
     if [[ ${exit_code} -eq 0 ]]; then
-        echo "Clean exit, not restarting" >> "$LOG_FILE"
+        echo "Clean exit, not restarting" >>"$LOG_FILE"
         break
     else
-        echo "Restarting in 10 seconds..." >> "$LOG_FILE"
+        echo "Restarting in 10 seconds..." >>"$LOG_FILE"
         sleep 10
     fi
 done

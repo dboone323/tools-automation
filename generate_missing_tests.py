@@ -10,14 +10,16 @@ from pathlib import Path
 
 from pathlib import Path
 
+
 # Resolve workspace root dynamically: prefer git, else parent of this file
 def _resolve_workspace_root() -> str:
     here = Path(__file__).resolve().parent
     # Walk up looking for .git
     for parent in [here] + list(here.parents):
-        if (parent / '.git').exists():
+        if (parent / ".git").exists():
             return str(parent)
     return str(here)
+
 
 WORKSPACE_ROOT = _resolve_workspace_root()
 TESTS_DIR = os.path.join(WORKSPACE_ROOT, "tests")

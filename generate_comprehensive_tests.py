@@ -372,9 +372,10 @@ class Test{module_name}:
 def main():
     # Dynamically resolve workspace root (prefer git)
     from pathlib import Path
+
     candidate = Path(__file__).resolve().parent
     for parent in [candidate] + list(candidate.parents):
-        if (parent / '.git').exists():
+        if (parent / ".git").exists():
             workspace_root = str(parent)
             break
     else:
