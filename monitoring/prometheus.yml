@@ -1,0 +1,44 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+
+  - job_name: 'uptime-kuma'
+    static_configs:
+      - targets: ['uptime-kuma:3001']
+
+  # Agent monitoring endpoints (add these as agents come online)
+  - job_name: 'agent-dashboard'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  - job_name: 'agent-api'
+    static_configs:
+      - targets: ['host.docker.internal:3002']
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+
+  # GitHub Actions runner metrics (if available)
+  - job_name: 'github-actions'
+    static_configs:
+      - targets: ['host.docker.internal:9091']
+    scrape_interval: 60s

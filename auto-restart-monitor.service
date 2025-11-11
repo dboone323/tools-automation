@@ -1,0 +1,20 @@
+[Unit]
+Description=Tools Automation Auto-Restart Monitor
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=dboone323
+WorkingDirectory=/Users/danielstevens/Desktop/github-projects/tools-automation
+ExecStart=/Users/danielstevens/Desktop/github-projects/tools-automation/auto_restart_monitor.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Environment variables
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+
+[Install]
+WantedBy=multi-user.target

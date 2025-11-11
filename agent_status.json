@@ -1,0 +1,50 @@
+{
+  "agent_dashboard": {
+    "name": "agent_dashboard",
+    "type": "monitoring",
+    "status": "running",
+    "tasks_completed": 42,
+    "tasks_failed": 2,
+    "tasks_queued": 3,
+    "tasks_processing": 1,
+    "memory_usage": 85,
+    "cpu_usage": 12.5,
+    "last_seen": "2025-11-11T12:00:00Z"
+  },
+  "agent_code_review": {
+    "name": "agent_code_review",
+    "type": "code_quality",
+    "status": "running",
+    "tasks_completed": 156,
+    "tasks_failed": 8,
+    "tasks_queued": 5,
+    "tasks_processing": 2,
+    "memory_usage": 120,
+    "cpu_usage": 8.3,
+    "last_seen": "2025-11-11T12:00:00Z"
+  },
+  "agent_automation": {
+    "name": "agent_automation",
+    "type": "workflow",
+    "status": "running",
+    "tasks_completed": 89,
+    "tasks_failed": 1,
+    "tasks_queued": 7,
+    "tasks_processing": 3,
+    "memory_usage": 95,
+    "cpu_usage": 15.2,
+    "last_seen": "2025-11-11T12:00:00Z"
+  },
+  "agent_deployment": {
+    "name": "agent_deployment",
+    "type": "infrastructure",
+    "status": "stopped",
+    "tasks_completed": 23,
+    "tasks_failed": 0,
+    "tasks_queued": 0,
+    "tasks_processing": 0,
+    "memory_usage": 0,
+    "cpu_usage": 0,
+    "last_seen": "2025-11-11T11:30:00Z"
+  }
+}

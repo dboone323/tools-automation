@@ -2,6 +2,57 @@
 
 **Centralized automation tools, agents, and infrastructure for all projects**
 
+## 🆓 Free Tools Stack - System Observability
+
+A comprehensive suite of free, open-source tools for monitoring, security, quality assurance, and documentation to provide detailed visibility into your automation system's health and functionality.
+
+### Quick Setup & Validation
+
+```bash
+# Install all free tools
+./setup_tools.sh --all
+
+# Validate installation
+./test_tools.sh
+
+# Start monitoring stack
+./monitoring.sh start
+
+# Start quality tools
+./quality.sh start
+
+# View documentation
+./docs.sh serve
+```
+
+### Implemented Tools
+
+| Category          | Tools                            | Status      |
+| ----------------- | -------------------------------- | ----------- |
+| **Monitoring**    | Prometheus, Grafana, Uptime Kuma | ✅ Complete |
+| **Quality**       | SonarQube, PostgreSQL            | ✅ Complete |
+| **Security**      | Trivy, Snyk                      | ✅ Complete |
+| **Documentation** | MkDocs, Material Theme           | ✅ Complete |
+| **Development**   | Pre-commit, HTTPie, jq           | ✅ Complete |
+
+### Access Points
+
+- **Grafana**: http://localhost:3000 (admin/admin)
+- **Prometheus**: http://localhost:9090
+- **Uptime Kuma**: http://localhost:3001
+- **SonarQube**: http://localhost:9000 (admin/admin)
+- **Documentation**: http://localhost:8000 (after `./docs.sh serve`)
+
+### Key Features
+
+- **Real-time Monitoring**: Track agent health, system metrics, and service status
+- **Code Quality**: Automated analysis with technical debt tracking
+- **Security Scanning**: Container and dependency vulnerability detection
+- **Professional Documentation**: Auto-generated docs with search and versioning
+- **Development Workflow**: Pre-commit hooks and API testing tools
+
+---
+
 ## Overview
 
 This repository serves as the superproject for all automation infrastructure, providing shared tools, agents, MCP servers, and workflows to all project submodules. Everything is organized for maximum reusability and minimal duplication.

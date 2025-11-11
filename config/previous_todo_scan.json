@@ -100055,6 +100055,146 @@
     "text": "TODO: _text} -lt 10 ]]; then"
   },
   {
+    "file": "temp_shared_kit/Phase6/MultiModalAIAssistant.swift",
+    "line": 844,
+    "text": "TODO: Implement \\(language)-specific code generation"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/AI_CODE_REVIEW_20250923.md",
+    "line": 1601,
+    "text": "TODO: Add tests for:"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewer/ContentView.swift",
+    "line": 85,
+    "text": "TODO: Handle error properly"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewer/ContentView.swift",
+    "line": 96,
+    "text": "TODO: Handle error properly"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewer/ContentView.swift",
+    "line": 117,
+    "text": "TODO: Handle error properly"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewer/ContentView.swift",
+    "line": 134,
+    "text": "TODO: Handle error properly"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewer/ContentView.swift",
+    "line": 151,
+    "text": "TODO: Handle error properly"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewer/MainApp/CodingReviewer.swift",
+    "line": 71,
+    "text": "TODO: Implement actual save functionality"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewer/NewReviewView.swift",
+    "line": 27,
+    "text": "TODO: Implement review creation logic"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/BugDetectionServiceTests.swift",
+    "line": 47,
+    "text": "TODO: Implement error handling"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/BugDetectionServiceTests.swift",
+    "line": 68,
+    "text": "FIXME: This method needs refactoring"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/BugDetectionServiceTests.swift",
+    "line": 161,
+    "text": "TODO: Add validation"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/BugDetectionServiceTests.swift",
+    "line": 212,
+    "text": "TODO: First task"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/BugDetectionServiceTests.swift",
+    "line": 213,
+    "text": "TODO: Second task"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/BugDetectionServiceTests.swift",
+    "line": 227,
+    "text": "TODO: Add implementation"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/BugDetectionServiceTests.swift",
+    "line": 236,
+    "text": "TODO: comment on line 1"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift",
+    "line": 29,
+    "text": "TODO: Fix this later"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift",
+    "line": 79,
+    "text": "TODO: Implement security check"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift",
+    "line": 135,
+    "text": "TODO: Fix later"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift",
+    "line": 165,
+    "text": "TODO: Fix this\""
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift",
+    "line": 180,
+    "text": "TODO: Fix this\""
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift",
+    "line": 192,
+    "text": "TODO: is typically medium severity"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift",
+    "line": 199,
+    "text": "TODO: Fix force unwrap\""
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift",
+    "line": 301,
+    "text": "TODO: Complete implementation"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift",
+    "line": 394,
+    "text": "TODO: Fix this"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/CodingReviewerTests/CodingReviewerTests.swift",
+    "line": 75,
+    "text": "TODO: Add error handling"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/temp_avoid_obstacles_game/temp_habitquest/temp_habitquest/AI_CODE_REVIEW_20250924.md",
+    "line": 762,
+    "text": "TODO: Add comprehensive test cases for ContentViewTests"
+  },
+  {
+    "file": "temp_shared_kit/temp_coding_reviewer/temp_avoid_obstacles_game/temp_habitquest/temp_habitquest/temp_momentum_finance/ARCHITECTURAL_IMPROVEMENTS.md",
+    "line": 73,
+    "text": "TODO: Replace with proper file inclusion in Xcode project"
+  },
+  {
     "file": "todo_analysis_20250930.md",
     "line": 1,
     "text": "TODO: JSON Analysis Report"

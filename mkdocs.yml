@@ -1,0 +1,167 @@
+site_name: Tools Automation Project
+site_description: Comprehensive automation tools and workflows for development teams
+site_author: Tools Automation Team
+site_url: https://dboone323.github.io/tools-automation
+
+# Repository
+repo_name: dboone323/tools-automation
+repo_url: https://github.com/dboone323/tools-automation
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2025 Tools Automation Project
+
+# Theme configuration
+theme:
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.footnote.tooltips
+    - content.tabs.link
+    - content.tooltips
+    - header.autohide
+    - navigation.expand
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.prune
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+    - toc.integrate
+
+# Plugins
+plugins:
+  - search
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+  - git-committers:
+      repository: dboone323/tools-automation
+      branch: main
+
+# Customization
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/dboone323/tools-automation
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com
+  generator: false
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - meta
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      user: dboone323
+      repo: tools-automation
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Page tree
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Quick Start: getting-started/quick-start.md
+      - Installation: getting-started/installation.md
+      - Configuration: getting-started/configuration.md
+  - Tools & Features:
+      - Monitoring Stack: tools/monitoring.md
+      - Quality Tools: tools/quality.md
+      - Security Scanning: tools/security.md
+      - Development Tools: tools/development.md
+  - API Documentation:
+      - Metrics API: api/metrics.md
+      - Agent API: api/agents.md
+      - Webhooks: api/webhooks.md
+  - Tutorials:
+      - Setting up Monitoring: tutorials/monitoring-setup.md
+      - Code Quality Analysis: tutorials/code-quality.md
+      - Security Scanning: tutorials/security-scanning.md
+      - Custom Dashboards: tutorials/custom-dashboards.md
+  - Reference:
+      - Configuration Files: reference/configuration.md
+      - Environment Variables: reference/environment.md
+      - Troubleshooting: reference/troubleshooting.md
+      - FAQ: reference/faq.md
+  - About:
+      - Contributing: about/contributing.md
+      - Changelog: about/changelog.md
+      - License: about/license.md

@@ -1,0 +1,32 @@
+{
+  "name": "tools-automation",
+  "version": "1.0.0",
+  "description": "**Centralized automation tools, agents, and infrastructure for all projects**",
+  "main": "server.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dboone323/tools-automation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dboone323/tools-automation/issues"
+  },
+  "homepage": "https://github.com/dboone323/tools-automation#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "jest": "^30.2.0"
+  }
+}
