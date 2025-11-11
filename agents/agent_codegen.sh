@@ -88,7 +88,7 @@ export PROJECT_NAME="${PROJECT_NAME:-CodingReviewer}"
 
 # Respect any externally provided WORKSPACE (tests override it); otherwise default to repo root
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-WORKSPACE="${WORKSPACE:-$(cd "${SCRIPT_DIR}/../../.." && pwd)}"
+WORKSPACE="${WORKSPACE:-$(cd "${SCRIPT_DIR}/.." && pwd)}"
 
 # Source AI enhancement modules
 ENHANCEMENTS_DIR="${SCRIPT_DIR}/../enhancements"

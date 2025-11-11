@@ -1,33 +1,141 @@
-# Tools/Automation - MCP quickstart
+# tools-automation
 
-This folder contains a minimal MCP (Micro-Coordinator Protocol) local server and helper agents used to coordinate automation across the workspace.
+**Centralized automation tools, agents, and infrastructure for all projects**
 
-Quick start
+## Overview
 
-1. Start the MCP server (from this directory):
+This repository serves as the superproject for all automation infrastructure, providing shared tools, agents, MCP servers, and workflows to all project submodules. Everything is organized for maximum reusability and minimal duplication.
 
-```bash
-python3 mcp_server.py &
+## Structure
+
+```
+tools-automation/
+├── agents/          # 111 shared agent scripts for automation
+├── mcp/            # MCP servers and AI integration
+├── workflows/      # CI/CD orchestration scripts  
+├── config/         # Shared configuration files
+├── scripts/        # Utility scripts (TODO scanning, etc.)
+├── docs/           # Documentation
+└── [submodules]    # Project submodules (see below)
 ```
 
-2. (Optional) Run the controller agent which polls for queued tasks and executes them:
+### Submodules
+
+- **AvoidObstaclesGame** - Game project
+- **CodingReviewer** - Code review tool
+- **HabitQuest** - Habit tracking app
+- **MomentumFinance** - Finance app
+- **PlannerApp** - Planning tool
+- **shared-kit** - Shared Swift utilities
+
+All submodules access centralized tools via symlinks and environment variables.
+
+## Quick Start
+
+### MCP Server
+
+Start the MCP server for AI integration:
 
 ```bash
-python3 mcp_controller.py &
+cd mcp/
+./servers/start_mcp_server.sh
 ```
 
-3. Use the dashboard to list tasks:
+View MCP dashboard:
+```bash
+./mcp_dashboard.sh
+```
+
+### Agents
+
+Run an agent:
 
 ```bash
-./mcp_dashboard.sh list
+cd agents/
+./agent_build.sh    # Build automation
+./agent_codegen.sh  # Code generation
+./agent_debug.sh    # Debugging assistance
 ```
 
-Artifacts
+Check agent status:
+```bash
+cat config/agent_status.json
+```
 
-- By default artifacts are saved under `~/mcp_artifacts` (configurable via `ARTIFACT_DIR`).
-- To enable remote uploads, set `ARTIFACT_DEST` (e.g. `export ARTIFACT_DEST="s3://my-bucket/path"`) and ensure `aws` CLI is configured.
+### Workflows
 
-Web dashboard
+Run CI orchestration:
+
+```bash
+cd workflows/
+./ci_orchestrator.sh --project CodingReviewer
+```
+
+### Utilities
+
+Scan for TODOs:
+
+```bash
+python3 scripts/regenerate_todo_json.py
+```
+
+## Configuration
+
+Global agent configuration in `agents/agent_config.sh`:
+- `MAX_CONCURRENCY=2` - Max concurrent agent instances
+- `LOAD_THRESHOLD=4.0` - System load threshold
+- `GLOBAL_AGENT_CAP=10` - Max total agents
+
+Configuration files in `config/`:
+- `agent_status.json` - Agent status tracking
+- `task_queue.json` - Task queue
+- `agent_assignments.json` - TODO assignments (66,972 entries)
+- Plus deployment, monitoring, security configs
+
+## Using from Submodules
+
+Submodules access tools via environment variable:
+
+```bash
+export TOOLS_AUTOMATION_ROOT="/path/to/tools-automation"
+source "$TOOLS_AUTOMATION_ROOT/agents/agent_config.sh"
+
+# Run agents
+"$TOOLS_AUTOMATION_ROOT/agents/agent_build.sh"
+```
+
+Agent symlink in CodingReviewer:
+```bash
+cd CodingReviewer/Tools/Automation/agents  # → symlink to ../../../agents
+```
+
+## Documentation
+
+- `docs/AGENT_HEALTH_REPORT.md` - Agent diagnostics and health monitoring
+- `docs/TODO_SYSTEM_ENHANCEMENT_PLAN.md` - TODO automation enhancement
+- `docs/REPOSITORY_REORGANIZATION_PLAN.md` - Migration and structure details
+- `docs/AGENT_ENHANCEMENT_MASTER_PLAN.md` - Agent improvement roadmap
+- `docs/AI_MONITORING_GUIDE.md` - AI integration monitoring
+
+Each directory has its own README:
+- `agents/README.md`
+- `mcp/README.md`
+- `workflows/README.md`
+- `config/README.md`
+- `scripts/README.md`
+
+## Artifacts
+
+By default artifacts saved to `~/mcp_artifacts` (configurable via `ARTIFACT_DIR`).
+
+For remote uploads, set `ARTIFACT_DEST`:
+```bash
+export ARTIFACT_DEST="s3://my-bucket/path"
+```
+
+Ensure AWS CLI is configured.
+
+## Web Dashboard
 
 Start a minimal web dashboard that proxies the MCP server and provides a simple UI:
 

@@ -25,8 +25,8 @@ export TODO_MIN_IDLE_TIME="${TODO_MIN_IDLE_TIME:-300}"      # Agents must be idl
 AGENT_NAME="ConfigAgent"
 LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/config_agent.log"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
-export TASK_QUEUE="${SCRIPT_DIR}/task_queue.json"
+export STATUS_FILE="${SCRIPT_DIR}/../config/agent_status.json"
+export TASK_QUEUE="${SCRIPT_DIR}/../config/task_queue.json"
 export PID=$$
 
 # Source shared functions for file locking and monitoring
