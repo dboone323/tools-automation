@@ -1,0 +1,24 @@
+# Code owners for automated review assignments
+# https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/managing-repository-settings/about-code-owners
+
+# Global owners - get notified for all changes
+* @dboone323
+
+# Security-related files - require security review
+.github/SECURITY.md @dboone323
+.github/workflows/security.yml @dboone323
+agents/agent_security.sh @dboone323
+agents/security_agent.sh @dboone323
+
+# Configuration files - require careful review
+config/agent_capabilities.json @dboone323
+config/task_queue.json @dboone323
+.github/dependabot.yml @dboone323
+
+# Agent system files - require review
+agents/*.sh @dboone323
+scripts/agent_*.py @dboone323
+
+# Documentation
+docs/*.md @dboone323
+*.md @dboone323
