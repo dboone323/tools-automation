@@ -151,3 +151,7 @@ DerivedData/
 **/*.xcuserstate
 **/*.xcuserdatad
 
+
+# Archives (top-level github-projects)
+archives/
+

@@ -1,0 +1,20 @@
+name: Verify Submodules
+
+on:
+  schedule:
+    - cron: '17 5 * * *'  # Daily at 05:17 UTC
+  workflow_dispatch: {}
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          fetch-depth: 0
+      - name: Run verification script
+        shell: bash
+        run: |
+          bash tools-automation/maintenance/verify_submodules.sh
