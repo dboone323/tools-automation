@@ -13,6 +13,12 @@ EXECUTABLE="quantum_ai_consciousness"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 REPORT_FILE="quantum_ai_consciousness_report_${TIMESTAMP}.md"
 
+# Background mode configuration
+BACKGROUND_MODE="${BACKGROUND_MODE:-false}"
+DEMO_INTERVAL="${DEMO_INTERVAL:-3600}" # Default 1 hour
+MAX_RESTARTS="${MAX_RESTARTS:-5}"
+RESTART_COUNT=0
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -380,7 +386,36 @@ cleanup() {
 }
 
 # Main execution
+run_background() {
+    print_info "Starting quantum AI consciousness demonstration in background mode (interval: ${DEMO_INTERVAL}s)"
+
+    while true; do
+        if [[ ${RESTART_COUNT} -ge ${MAX_RESTARTS} ]]; then
+            print_error "Maximum restart attempts (${MAX_RESTARTS}) reached. Exiting."
+            exit 1
+        fi
+
+        # Run demonstration cycle
+        if main; then
+            print_success "Demonstration cycle completed successfully"
+            RESTART_COUNT=0 # Reset on success
+        else
+            ((RESTART_COUNT++)) || true
+            print_warning "Demonstration cycle failed (attempt ${RESTART_COUNT}/${MAX_RESTARTS})"
+        fi
+
+        # Wait for next demonstration
+        sleep "${DEMO_INTERVAL}"
+    done
+}
+
 main() {
+    # Handle background mode
+    if [[ "${BACKGROUND_MODE}" == "true" ]]; then
+        run_background
+        return
+    fi
+
     print_header
 
     check_swift_compiler

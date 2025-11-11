@@ -3,6 +3,7 @@
 # analyze_coverage.sh
 # Comprehensive coverage analysis for Quantum workspace
 # Analyzes Swift projects, Python scripts, and Shell scripts
+# Can run in background mode for continuous monitoring
 
 set -euo pipefail
 
@@ -14,17 +15,24 @@ NC='\033[0m' # No Color
 
 WORKSPACE_ROOT="/Users/danielstevens/Desktop/github-projects/tools-automation"
 COVERAGE_DIR="$WORKSPACE_ROOT/metrics/coverage"
-REPORT_FILE="$COVERAGE_DIR/coverage_report_$(date +%Y%m%d_%H%M%S).md"
+
+# Default to background mode if no arguments
+BACKGROUND_MODE="${1:-true}"
+INTERVAL="${2:-3600}" # Default 1 hour
 
 mkdir -p "$COVERAGE_DIR"
 
-echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║         📊 Quantum Workspace Coverage Analysis                ║${NC}"
-echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
-echo ""
+# Function to run coverage analysis
+run_coverage_analysis() {
+    local REPORT_FILE="$COVERAGE_DIR/coverage_report_$(date +%Y%m%d_%H%M%S).md"
 
-# Initialize report
-cat >"$REPORT_FILE" <<'EOF'
+    echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║         📊 Quantum Workspace Coverage Analysis                ║${NC}"
+    echo -e "${BLUE}╚════════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+
+    # Initialize report
+    cat >"$REPORT_FILE" <<'EOF'
 # Quantum Workspace Coverage Report
 Generated: $(date)
 
@@ -37,47 +45,47 @@ Generated: $(date)
 
 EOF
 
-# Function to count Swift files and tests
-analyze_swift_project() {
-    local project_name=$1
-    local project_path=$2
+    # Function to count Swift files and tests
+    analyze_swift_project() {
+        local project_name=$1
+        local project_path=$2
 
-    echo -e "${YELLOW}📱 Analyzing $project_name...${NC}"
+        echo -e "${YELLOW}📱 Analyzing $project_name...${NC}"
 
-    # Count source files
-    local source_files
-    source_files=$(find "$project_path" -name "*.swift" ! -path "*/Tests/*" ! -path "*/UITests/*" ! -name "*Tests.swift" 2>/dev/null | wc -l | tr -d ' ')
+        # Count source files
+        local source_files
+        source_files=$(find "$project_path" -name "*.swift" ! -path "*/Tests/*" ! -path "*/UITests/*" ! -name "*Tests.swift" 2>/dev/null | wc -l | tr -d ' ')
 
-    # Count test files
-    local test_files
-    test_files=$(find "$project_path" -name "*Tests.swift" 2>/dev/null | wc -l | tr -d ' ')
+        # Count test files
+        local test_files
+        test_files=$(find "$project_path" -name "*Tests.swift" 2>/dev/null | wc -l | tr -d ' ')
 
-    # Calculate test ratio (rough proxy for coverage)
-    local test_ratio=0
-    if [ "$source_files" -gt 0 ]; then
-        test_ratio=$((test_files * 100 / source_files))
-    fi
-
-    # List untested files (files without corresponding test files)
-    local untested_files
-    untested_files=$(find "$project_path" -name "*.swift" ! -path "*/Tests/*" ! -path "*/UITests/*" ! -name "*Tests.swift" ! -name "App.swift" ! -name "ContentView.swift" 2>/dev/null | while read -r file; do
-        local filename
-        filename=$(basename "$file" .swift)
-        local test_file="${filename}Tests.swift"
-        if ! find "$project_path" -name "$test_file" 2>/dev/null | grep -q .; then
-            echo "  - $(basename "$file")"
+        # Calculate test ratio (rough proxy for coverage)
+        local test_ratio=0
+        if [ "$source_files" -gt 0 ]; then
+            test_ratio=$((test_files * 100 / source_files))
         fi
-    done)
 
-    local status_icon="❌"
-    [ "$test_ratio" -ge 85 ] && status_icon="✅"
-    [ "$test_ratio" -ge 70 ] && [ "$test_ratio" -lt 85 ] && status_icon="⚠️"
+        # List untested files (files without corresponding test files)
+        local untested_files
+        untested_files=$(find "$project_path" -name "*.swift" ! -path "*/Tests/*" ! -path "*/UITests/*" ! -name "*Tests.swift" ! -name "App.swift" ! -name "ContentView.swift" 2>/dev/null | while read -r file; do
+            local filename
+            filename=$(basename "$file" .swift)
+            local test_file="${filename}Tests.swift"
+            if ! find "$project_path" -name "$test_file" 2>/dev/null | grep -q .; then
+                echo "  - $(basename "$file")"
+            fi
+        done)
 
-    echo -e "  Source files: $source_files"
-    echo -e "  Test files: $test_files"
-    echo -e "  Test ratio: ${test_ratio}% $status_icon"
+        local status_icon="❌"
+        [ "$test_ratio" -ge 85 ] && status_icon="✅"
+        [ "$test_ratio" -ge 70 ] && [ "$test_ratio" -lt 85 ] && status_icon="⚠️"
 
-    cat >>"$REPORT_FILE" <<EOF
+        echo -e "  Source files: $source_files"
+        echo -e "  Test files: $test_files"
+        echo -e "  Test ratio: ${test_ratio}% $status_icon"
+
+        cat >>"$REPORT_FILE" <<EOF
 
 ### $project_name
 - **Source Files**: $source_files
@@ -89,38 +97,38 @@ analyze_swift_project() {
 $untested_files
 
 EOF
-}
+    }
 
-# Function to analyze Python scripts
-analyze_python_coverage() {
-    echo -e "${YELLOW}🐍 Analyzing Python scripts...${NC}"
+    # Function to analyze Python scripts
+    analyze_python_coverage() {
+        echo -e "${YELLOW}🐍 Analyzing Python scripts...${NC}"
 
-    # Collect python files and test files once to avoid nested scans
-    local tmp_all py_modules tmp_tests test_modules
-    tmp_all=$(mktemp)
-    py_modules=$(mktemp)
-    tmp_tests=$(mktemp)
-    test_modules=$(mktemp)
+        # Collect python files and test files once to avoid nested scans
+        local tmp_all py_modules tmp_tests test_modules
+        tmp_all=$(mktemp)
+        py_modules=$(mktemp)
+        tmp_tests=$(mktemp)
+        test_modules=$(mktemp)
 
-    # All Python files under Tools (excluding __init__.py for module list)
-    find "$WORKSPACE_ROOT" -type f -name "*.py" 2>/dev/null >"$tmp_all"
-    # Derive non-test module basenames
-    grep -v "/__init__\.py$" "$tmp_all" | grep -v "/test_.*\.py$" | grep -v "/_test\.py$" | xargs -I{} basename {} | sed 's/\.py$//' | sort -u >"$py_modules"
+        # All Python files under Tools (excluding __init__.py for module list)
+        find "$WORKSPACE_ROOT" -type f -name "*.py" 2>/dev/null >"$tmp_all"
+        # Derive non-test module basenames
+        grep -v "/__init__\.py$" "$tmp_all" | grep -v "/test_.*\.py$" | grep -v "/_test\.py$" | xargs -I{} basename {} | sed 's/\.py$//' | sort -u >"$py_modules"
 
-    # Test files list
-    grep -E "/(test_.*\.py|.*_test\.py)$" "$tmp_all" | xargs -I{} basename {} | sort -u >"$tmp_tests"
-    # Normalize test names to the module names they test
-    # Strip leading 'test_' or trailing '_test' and .py
-    awk '{n=$0; sub(/^test_/, "", n); sub(/\.py$/, "", n); sub(/_test$/, "", n); print n}' "$tmp_tests" | sort -u >"$test_modules"
+        # Test files list
+        grep -E "/(test_.*\.py|.*_test\.py)$" "$tmp_all" | xargs -I{} basename {} | sort -u >"$tmp_tests"
+        # Normalize test names to the module names they test
+        # Strip leading 'test_' or trailing '_test' and .py
+        awk '{n=$0; sub(/^test_/, "", n); sub(/\.py$/, "", n); sub(/_test$/, "", n); print n}' "$tmp_tests" | sort -u >"$test_modules"
 
-    local python_files python_tests
-    python_files=$(wc -l <"$tmp_all" | tr -d ' ')
-    python_tests=$(wc -l <"$tmp_tests" | tr -d ' ')
+        local python_files python_tests
+        python_files=$(wc -l <"$tmp_all" | tr -d ' ')
+        python_tests=$(wc -l <"$tmp_tests" | tr -d ' ')
 
-    echo -e "  Python files: $python_files"
-    echo -e "  Python tests: $python_tests"
+        echo -e "  Python files: $python_files"
+        echo -e "  Python tests: $python_tests"
 
-    cat >>"$REPORT_FILE" <<EOF
+        cat >>"$REPORT_FILE" <<EOF
 
 ### Python Scripts (Tools/Automation)
 - **Python Files**: $python_files
@@ -130,32 +138,32 @@ analyze_python_coverage() {
 #### Python Files Requiring Tests
 EOF
 
-    # Compute non-test modules minus tested modules
-    comm -23 "$py_modules" "$test_modules" | while read -r mod; do
-        # Reconstruct possible source filename
-        # Find first match of module name under Tools
-        src=$(grep -E "/${mod}\.py$" "$tmp_all" | head -1)
-        if [ -n "$src" ]; then
-            echo "- $(basename "$src")" >>"$REPORT_FILE"
-        fi
-    done
+        # Compute non-test modules minus tested modules
+        comm -23 "$py_modules" "$test_modules" | while read -r mod; do
+            # Reconstruct possible source filename
+            # Find first match of module name under Tools
+            src=$(grep -E "/${mod}\.py$" "$tmp_all" | head -1)
+            if [ -n "$src" ]; then
+                echo "- $(basename "$src")" >>"$REPORT_FILE"
+            fi
+        done
 
-    rm -f "$tmp_all" "$py_modules" "$tmp_tests" "$test_modules"
-}
+        rm -f "$tmp_all" "$py_modules" "$tmp_tests" "$test_modules"
+    }
 
-# Function to analyze Shell scripts
-analyze_shell_coverage() {
-    echo -e "${YELLOW}🔧 Analyzing Shell scripts...${NC}"
+    # Function to analyze Shell scripts
+    analyze_shell_coverage() {
+        echo -e "${YELLOW}🔧 Analyzing Shell scripts...${NC}"
 
-    local shell_files
-    shell_files=$(find "$WORKSPACE_ROOT" -name "*.sh" ! -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
-    local shell_tests
-    shell_tests=$(find "$WORKSPACE_ROOT" -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
+        local shell_files
+        shell_files=$(find "$WORKSPACE_ROOT" -name "*.sh" ! -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
+        local shell_tests
+        shell_tests=$(find "$WORKSPACE_ROOT" -name "test_*.sh" 2>/dev/null | wc -l | tr -d ' ')
 
-    echo -e "  Shell files: $shell_files"
-    echo -e "  Shell tests: $shell_tests"
+        echo -e "  Shell files: $shell_files"
+        echo -e "  Shell tests: $shell_tests"
 
-    cat >>"$REPORT_FILE" <<EOF
+        cat >>"$REPORT_FILE" <<EOF
 
 ### Shell Scripts (Tools/Automation)
 - **Shell Files**: $shell_files
@@ -165,36 +173,36 @@ analyze_shell_coverage() {
 #### Critical Shell Scripts Requiring Tests
 EOF
 
-    # List critical scripts
-    critical_scripts=(
-        "ci_orchestrator.sh"
-        "agent_monitoring.sh"
-        "dashboard_unified.sh"
-        "mcp_server.py"
-    )
+        # List critical scripts
+        critical_scripts=(
+            "ci_orchestrator.sh"
+            "agent_monitoring.sh"
+            "dashboard_unified.sh"
+            "mcp_server.py"
+        )
 
-    for script in "${critical_scripts[@]}"; do
-        if [ -f "$WORKSPACE_ROOT/$script" ]; then
-            echo "- $script (100% coverage required)" >>"$REPORT_FILE"
-        fi
-    done
-}
+        for script in "${critical_scripts[@]}"; do
+            if [ -f "$WORKSPACE_ROOT/$script" ]; then
+                echo "- $script (100% coverage required)" >>"$REPORT_FILE"
+            fi
+        done
+    }
 
-# Function to analyze agent scripts
-analyze_agents() {
-    echo -e "${YELLOW}🤖 Analyzing agent scripts...${NC}"
+    # Function to analyze agent scripts
+    analyze_agents() {
+        echo -e "${YELLOW}🤖 Analyzing agent scripts...${NC}"
 
-    local agent_dir="$WORKSPACE_ROOT/agents"
-    if [ -d "$agent_dir" ]; then
-        local agent_files
-        agent_files=$(find "$agent_dir" -type f \( -name "*.sh" -o -name "*.py" \) 2>/dev/null | wc -l | tr -d ' ')
-        local agent_tests
-        agent_tests=$(find "$agent_dir" -type f -name "test_*" 2>/dev/null | wc -l | tr -d ' ')
+        local agent_dir="$WORKSPACE_ROOT/agents"
+        if [ -d "$agent_dir" ]; then
+            local agent_files
+            agent_files=$(find "$agent_dir" -type f \( -name "*.sh" -o -name "*.py" \) 2>/dev/null | wc -l | tr -d ' ')
+            local agent_tests
+            agent_tests=$(find "$agent_dir" -type f -name "test_*" 2>/dev/null | wc -l | tr -d ' ')
 
-        echo -e "  Agent files: $agent_files"
-        echo -e "  Agent tests: $agent_tests"
+            echo -e "  Agent files: $agent_files"
+            echo -e "  Agent tests: $agent_tests"
 
-        cat >>"$REPORT_FILE" <<EOF
+            cat >>"$REPORT_FILE" <<EOF
 
 ### Agent Scripts (100% Coverage Required)
 - **Agent Files**: $agent_files
@@ -204,44 +212,44 @@ analyze_agents() {
 #### Agent Files Requiring Tests
 EOF
 
-        find "$agent_dir" -type f \( -name "*.sh" -o -name "*.py" \) ! -name "test_*" 2>/dev/null | while read -r file; do
-            echo "- $(basename "$file")" >>"$REPORT_FILE"
-        done
-    else
-        echo -e "  ${YELLOW}No agent directory found${NC}"
-        cat >>"$REPORT_FILE" <<EOF
+            find "$agent_dir" -type f \( -name "*.sh" -o -name "*.py" \) ! -name "test_*" 2>/dev/null | while read -r file; do
+                echo "- $(basename "$file")" >>"$REPORT_FILE"
+            done
+        else
+            echo -e "  ${YELLOW}No agent directory found${NC}"
+            cat >>"$REPORT_FILE" <<EOF
 
 ### Agent Scripts
 - **Status**: ⚠️ No agent directory found
 
 EOF
-    fi
-}
+        fi
+    }
 
-# Analyze each Swift project
-echo ""
-analyze_swift_project "HabitQuest" "$WORKSPACE_ROOT/HabitQuest"
-echo ""
-analyze_swift_project "MomentumFinance" "$WORKSPACE_ROOT/MomentumFinance"
-echo ""
-analyze_swift_project "PlannerApp" "$WORKSPACE_ROOT/PlannerApp"
-echo ""
-analyze_swift_project "AvoidObstaclesGame" "$WORKSPACE_ROOT/AvoidObstaclesGame"
-echo ""
-analyze_swift_project "CodingReviewer" "$WORKSPACE_ROOT/CodingReviewer"
-echo ""
-analyze_swift_project "shared-kit" "$WORKSPACE_ROOT/shared-kit"
+    # Analyze each Swift project
+    echo ""
+    analyze_swift_project "HabitQuest" "$WORKSPACE_ROOT/HabitQuest"
+    echo ""
+    analyze_swift_project "MomentumFinance" "$WORKSPACE_ROOT/MomentumFinance"
+    echo ""
+    analyze_swift_project "PlannerApp" "$WORKSPACE_ROOT/PlannerApp"
+    echo ""
+    analyze_swift_project "AvoidObstaclesGame" "$WORKSPACE_ROOT/AvoidObstaclesGame"
+    echo ""
+    analyze_swift_project "CodingReviewer" "$WORKSPACE_ROOT/CodingReviewer"
+    echo ""
+    analyze_swift_project "shared-kit" "$WORKSPACE_ROOT/shared-kit"
 
-# Analyze Python and Shell scripts
-echo ""
-analyze_python_coverage
-echo ""
-analyze_shell_coverage
-echo ""
-analyze_agents
+    # Analyze Python and Shell scripts
+    echo ""
+    analyze_python_coverage
+    echo ""
+    analyze_shell_coverage
+    echo ""
+    analyze_agents
 
-# Add recommendations section
-cat >>"$REPORT_FILE" <<'EOF'
+    # Add recommendations section
+    cat >>"$REPORT_FILE" <<'EOF'
 
 ## Recommendations
 
@@ -270,16 +278,31 @@ cat >>"$REPORT_FILE" <<'EOF'
 
 EOF
 
-echo ""
-echo -e "${GREEN}✅ Coverage analysis complete!${NC}"
-echo -e "${BLUE}📄 Report saved to: $REPORT_FILE${NC}"
-echo ""
-echo -e "${YELLOW}View report: cat $REPORT_FILE${NC}"
-echo ""
+    echo ""
+    echo -e "${GREEN}✅ Coverage analysis complete!${NC}"
+    echo -e "${BLUE}📄 Report saved to: $REPORT_FILE${NC}"
+    echo ""
+    echo -e "${YELLOW}View report: cat $REPORT_FILE${NC}"
+    echo ""
 
-# Display summary
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-echo -e "${BLUE}                    Coverage Summary${NC}"
-echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-cat "$REPORT_FILE" | grep -A 4 "^### " | head -50
-echo ""
+    # Display summary
+    echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${BLUE}                    Coverage Summary${NC}"
+    echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
+    cat "$REPORT_FILE" | grep -A 4 "^### " | head -50
+    echo ""
+}
+
+# Main execution
+if [[ "$BACKGROUND_MODE" == "true" ]]; then
+    echo -e "${BLUE}Starting coverage analysis in background mode (interval: ${INTERVAL}s)${NC}"
+
+    while true; do
+        echo -e "${YELLOW}Running coverage analysis at $(date)${NC}"
+        run_coverage_analysis
+        echo -e "${GREEN}Sleeping for ${INTERVAL} seconds...${NC}"
+        sleep "$INTERVAL"
+    done
+else
+    run_coverage_analysis
+fi

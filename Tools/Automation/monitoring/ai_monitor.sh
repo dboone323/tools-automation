@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Real-time AI monitoring script
+# Real-time AI monitoring script with autorestart
 MONITORING_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(cd "${MONITORING_DIR}/../../.." && pwd)"
 LOG_FILE="${MONITORING_DIR}/logs/ai_monitor_$(date +%Y%m%d).log"
@@ -19,6 +19,10 @@ log() {
 }
 
 check_ollama_health() {
+    if [[ ${TEST_MODE:-0} == "1" ]]; then
+        log "✅ (TEST_MODE) Ollama assumed healthy"
+        return 0
+    fi
     if command -v ollama &> /dev/null; then
         if ollama list &> /dev/null; then
             local model_count=$(ollama list | tail -n +2 | wc -l)
@@ -51,21 +55,33 @@ monitor_disk_usage() {
 }
 
 main_monitoring_loop() {
-    log "Starting AI monitoring loop..."
+    log "Starting AI monitoring loop with autorestart..."
 
-    while true; do
-        check_ollama_health
-        monitor_ai_activity
-        monitor_disk_usage
-
-        # Check for automation processes
-        local running_automations=$(pgrep -f "ai_enhanced_automation\|ai_quality_gates" | wc -l)
-        if [[ ${running_automations} -gt 0 ]]; then
-            log "⚙️ Active AI automations: ${running_automations}"
+    local restart_count=0
+    local max_restarts=10
+    
+    while [[ ${restart_count} -lt ${max_restarts} ]]; do
+        log "Monitoring cycle ${restart_count}/${max_restarts} started"
+        
+        # Run monitoring tasks
+        if check_ollama_health && monitor_ai_activity && monitor_disk_usage; then
+            # Check for automation processes
+            local running_automations=$(pgrep -f "ai_enhanced_automation\|ai_quality_gates" | wc -l)
+            if [[ ${running_automations} -gt 0 ]]; then
+                log "⚙️ Active AI automations: ${running_automations}"
+            fi
+        else
+            log "❌ Monitoring cycle failed, will retry"
+            restart_count=$((restart_count + 1))
+            sleep 30  # Wait before retry
+            continue
         fi
-
+        
         sleep 300  # Check every 5 minutes
+        restart_count=0  # Reset on successful cycle
     done
+    
+    log "❌ Maximum restart attempts reached, stopping monitoring"
 }
 
 # Handle signals

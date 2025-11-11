@@ -1,12 +1,29 @@
 #!/usr/bin/env bash
 # Lightweight agent monitoring wrapper
 # Usage: agent_monitoring.sh <agent-name> <command> [args...]
+# If no arguments provided, runs in self-monitoring mode
 
 set -euo pipefail
 
-AGENT_NAME="$1"
-shift || true
-COMMAND=("$@")
+# Check if arguments provided
+BACKGROUND_MODE="${BACKGROUND_MODE:-false}"
+MONITOR_INTERVAL="${MONITOR_INTERVAL:-300}" # 5 minutes default
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $0 <agent-name> <command> [args...]"
+    echo "Or run without arguments for self-monitoring mode"
+    echo ""
+    echo "Self-monitoring mode will monitor this script's own execution"
+    echo "Press Ctrl+C to exit"
+
+    # Self-monitoring mode: monitor this script itself
+    AGENT_NAME="agent_monitoring_self"
+    COMMAND=("sleep" "infinity")
+else
+    AGENT_NAME="$1"
+    shift || true
+    COMMAND=("$@")
+fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MON_DIR="$ROOT_DIR/monitoring"
@@ -80,5 +97,35 @@ echo "[MONITOR] Final snapshot: $(date -u)" >>"$LOGFILE"
 ps -o pid,ppid,%cpu,%mem,etime,stat,command -p "$AGENT_PID" >>"$LOGFILE" 2>&1 || true
 
 echo "[MONITOR] Log saved to: $LOGFILE"
+
+# Background monitoring mode
+if [[ "$BACKGROUND_MODE" == "true" ]]; then
+    echo "[MONITOR] Starting background monitoring mode (interval: ${MONITOR_INTERVAL}s)"
+
+    while true; do
+        echo "[MONITOR] Background check at $(date)" >>"$LOGFILE"
+
+        # Check system resources
+        echo "[SYSTEM_RESOURCES]" >>"$LOGFILE"
+        ps aux --sort=-%cpu | head -10 >>"$LOGFILE" 2>&1 || true
+        echo "" >>"$LOGFILE"
+        ps aux --sort=-%mem | head -10 >>"$LOGFILE" 2>&1 || true
+
+        # Check for running agents
+        echo "[RUNNING_AGENTS]" >>"$LOGFILE"
+        pgrep -f "ai_code_review\|analyze_coverage\|ai_dashboard_monitor\|agent_monitoring" | while read -r pid; do
+            ps -p "$pid" -o pid,ppid,%cpu,%mem,etime,stat,command >>"$LOGFILE" 2>&1 || true
+        done
+
+        # Ollama health check
+        echo "[OLLAMA_HEALTH]" >>"$LOGFILE"
+        if command -v ./ollama_health.sh &>/dev/null; then
+            ./ollama_health.sh >>"$LOGFILE" 2>&1 || echo "Health check failed" >>"$LOGFILE"
+        fi
+
+        echo "[MONITOR] Sleeping for ${MONITOR_INTERVAL} seconds..." >>"$LOGFILE"
+        sleep "$MONITOR_INTERVAL"
+    done
+fi
 
 exit "$AG_EXIT_CODE"

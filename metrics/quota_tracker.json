@@ -35,10 +35,10 @@
       "opened_at": null
     },
     "low": {
-      "failure_count": 267,
-      "last_failure": "2025-11-08T00:30:06Z",
+      "failure_count": 287,
+      "last_failure": "2025-11-10T21:10:50Z",
       "state": "open",
-      "opened_at": "2025-11-08T00:30:06Z"
+      "opened_at": "2025-11-10T21:10:50Z"
     },
     "test_value_0": {
       "state": "closed",

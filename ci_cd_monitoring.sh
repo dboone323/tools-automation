@@ -12,6 +12,12 @@ REPORTS_DIR="${MONITORING_DIR}/reports"
 ALERTS_DIR="${MONITORING_DIR}/alerts"
 DASHBOARD_FILE="${MONITORING_DIR}/dashboard.html"
 
+# Background mode configuration
+BACKGROUND_MODE="${BACKGROUND_MODE:-false}"
+MONITOR_INTERVAL="${MONITOR_INTERVAL:-3600}" # Default 1 hour
+MAX_RESTARTS="${MAX_RESTARTS:-5}"
+RESTART_COUNT=0
+
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -473,7 +479,36 @@ show_help() {
 }
 
 # Main script logic
+run_background() {
+    print_status "Starting CI/CD monitoring agent in background mode (interval: ${MONITOR_INTERVAL}s)"
+
+    while true; do
+        if [[ ${RESTART_COUNT} -ge ${MAX_RESTARTS} ]]; then
+            print_error "Maximum restart attempts (${MAX_RESTARTS}) reached. Exiting."
+            exit 1
+        fi
+
+        # Run monitoring cycle
+        if run_monitoring >/dev/null 2>&1; then
+            print_success "Background monitoring cycle completed successfully"
+            RESTART_COUNT=0 # Reset on success
+        else
+            ((RESTART_COUNT++)) || true
+            print_warning "Monitoring cycle failed (attempt ${RESTART_COUNT}/${MAX_RESTARTS})"
+        fi
+
+        # Wait for next cycle
+        sleep "${MONITOR_INTERVAL}"
+    done
+}
+
 main() {
+    # Handle background mode
+    if [[ "${BACKGROUND_MODE}" == "true" ]]; then
+        run_background
+        return
+    fi
+
     case "${1-}" in
     -h | --help)
         show_help

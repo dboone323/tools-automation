@@ -608,14 +608,14 @@ EOF
 
 # Start real-time monitoring
 start_monitoring() {
-    print_dashboard "Starting real-time AI monitoring..."
+    print_dashboard "Starting real-time AI monitoring with autorestart..."
 
     local monitor_script="${MONITORING_DIR}/ai_monitor.sh"
 
     cat >"${monitor_script}" <<'EOF'
 #!/bin/bash
 
-# Real-time AI monitoring script
+# Real-time AI monitoring script with autorestart
 MONITORING_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(cd "${MONITORING_DIR}/../../.." && pwd)"
 LOG_FILE="${MONITORING_DIR}/logs/ai_monitor_$(date +%Y%m%d).log"
@@ -670,21 +670,33 @@ monitor_disk_usage() {
 }
 
 main_monitoring_loop() {
-    log "Starting AI monitoring loop..."
+    log "Starting AI monitoring loop with autorestart..."
 
-    while true; do
-        check_ollama_health
-        monitor_ai_activity
-        monitor_disk_usage
-
-        # Check for automation processes
-        local running_automations=$(pgrep -f "ai_enhanced_automation\|ai_quality_gates" | wc -l)
-        if [[ ${running_automations} -gt 0 ]]; then
-            log "⚙️ Active AI automations: ${running_automations}"
+    local restart_count=0
+    local max_restarts=10
+    
+    while [[ ${restart_count} -lt ${max_restarts} ]]; do
+        log "Monitoring cycle ${restart_count}/${max_restarts} started"
+        
+        # Run monitoring tasks
+        if check_ollama_health && monitor_ai_activity && monitor_disk_usage; then
+            # Check for automation processes
+            local running_automations=$(pgrep -f "ai_enhanced_automation\|ai_quality_gates" | wc -l)
+            if [[ ${running_automations} -gt 0 ]]; then
+                log "⚙️ Active AI automations: ${running_automations}"
+            fi
+        else
+            log "❌ Monitoring cycle failed, will retry"
+            restart_count=$((restart_count + 1))
+            sleep 30  # Wait before retry
+            continue
         fi
-
+        
         sleep 300  # Check every 5 minutes
+        restart_count=0  # Reset on successful cycle
     done
+    
+    log "❌ Maximum restart attempts reached, stopping monitoring"
 }
 
 # Handle signals
@@ -696,14 +708,39 @@ EOF
 
     chmod +x "${monitor_script}"
 
-    # Start monitoring in background
-    nohup "${monitor_script}" >"${MONITORING_DIR}/ai_monitor.out" 2>&1 &
+    # Start monitoring in background with autorestart wrapper
+    local wrapper_script="${MONITORING_DIR}/ai_monitor_wrapper.sh"
+    cat >"${wrapper_script}" <<EOF
+#!/bin/bash
+# Autorestart wrapper for AI monitoring
+
+while true; do
+    echo "Starting AI monitor at \$(date)" >> "${MONITORING_DIR}/autorestart.log"
+    "${monitor_script}"
+    exit_code=\$?
+    echo "AI monitor exited with code \${exit_code} at \$(date)" >> "${MONITORING_DIR}/autorestart.log"
+    
+    if [[ \${exit_code} -eq 0 ]]; then
+        echo "Clean exit, not restarting" >> "${MONITORING_DIR}/autorestart.log"
+        break
+    else
+        echo "Restarting in 10 seconds..." >> "${MONITORING_DIR}/autorestart.log"
+        sleep 10
+    fi
+done
+EOF
+
+    chmod +x "${wrapper_script}"
+
+    # Start wrapper in background
+    nohup "${wrapper_script}" >"${MONITORING_DIR}/ai_monitor.out" 2>&1 &
     local monitor_pid=$!
 
     echo "${monitor_pid}" >"${MONITORING_DIR}/ai_monitor.pid"
 
-    print_success "AI monitoring started (PID: ${monitor_pid})"
+    print_success "AI monitoring started with autorestart (PID: ${monitor_pid})"
     print_ai "Monitor logs: ${MONITORING_DIR}/logs/"
+    print_ai "Autorestart log: ${MONITORING_DIR}/autorestart.log"
 }
 
 # Stop monitoring
@@ -910,7 +947,9 @@ show_usage() {
 
 # Main execution
 main() {
-    case "${1-}" in
+    local command="${1:-start-monitor}" # Default to start-monitor for background operation
+
+    case "${command}" in
     "init")
         init_dashboard
         ;;

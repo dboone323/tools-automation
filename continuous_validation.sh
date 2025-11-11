@@ -8,6 +8,12 @@ PROJECTS_DIR="${CODE_DIR}/Projects"
 MCP_URL="${MCP_URL:-http://127.0.0.1:5005}"
 VALIDATION_REPORT_DIR="${CODE_DIR}/validation_reports"
 
+# Background mode configuration
+BACKGROUND_MODE="${BACKGROUND_MODE:-false}"
+VALIDATION_INTERVAL="${VALIDATION_INTERVAL:-1800}" # Default 30 minutes
+MAX_RESTARTS="${MAX_RESTARTS:-5}"
+RESTART_COUNT=0
+
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -335,7 +341,36 @@ watch_mode() {
 }
 
 # Main execution
+run_background() {
+    print_status "Starting continuous validation agent in background mode (interval: ${VALIDATION_INTERVAL}s)"
+
+    while true; do
+        if [[ ${RESTART_COUNT} -ge ${MAX_RESTARTS} ]]; then
+            print_error "Maximum restart attempts (${MAX_RESTARTS}) reached. Exiting."
+            exit 1
+        fi
+
+        # Run validation cycle
+        if validate_all; then
+            print_success "Background validation cycle completed successfully"
+            RESTART_COUNT=0 # Reset on success
+        else
+            ((RESTART_COUNT++)) || true
+            print_warning "Validation cycle failed (attempt ${RESTART_COUNT}/${MAX_RESTARTS})"
+        fi
+
+        # Wait for next cycle
+        sleep "${VALIDATION_INTERVAL}"
+    done
+}
+
 main() {
+    # Handle background mode
+    if [[ "${BACKGROUND_MODE}" == "true" ]]; then
+        run_background
+        return
+    fi
+
     case "${1-}" in
     "project" | "validate")
         if [[ -z ${2-} ]]; then

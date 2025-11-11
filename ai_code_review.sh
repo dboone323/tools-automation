@@ -464,6 +464,9 @@ EOF
 }
 
 # Parse command line arguments
+BACKGROUND_MODE="${BACKGROUND_MODE:-false}"
+INTERVAL="${INTERVAL:-300}" # 5 minutes default
+
 BASE_REF="HEAD~1"
 HEAD_REF="HEAD"
 
@@ -489,6 +492,14 @@ while [[ $# -gt 0 ]]; do
         REVIEW_DIR="$2"
         shift 2
         ;;
+    --background)
+        BACKGROUND_MODE="true"
+        shift
+        ;;
+    --interval)
+        INTERVAL="$2"
+        shift 2
+        ;;
     -*)
         log_error "Unknown option: $1"
         usage
@@ -509,5 +520,17 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Run review
-review_changes "$BASE_REF" "$HEAD_REF"
+# Main execution
+if [[ "$BACKGROUND_MODE" == "true" ]]; then
+    log_info "Starting AI code review in background mode (interval: ${INTERVAL}s)"
+
+    while true; do
+        log_info "Running code review check at $(date)"
+        review_changes "$BASE_REF" "$HEAD_REF"
+        log_info "Sleeping for ${INTERVAL} seconds..."
+        sleep "$INTERVAL"
+    done
+else
+    # Run review
+    review_changes "$BASE_REF" "$HEAD_REF"
+fi

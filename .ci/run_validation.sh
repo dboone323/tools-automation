@@ -4,13 +4,13 @@ REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 cd "$REPO_ROOT"
 
 : "${OLLAMA_CLOUD_URL:=}"
-export OLLAMA_ENDPOINT="${OLLAMA_CLOUD_URL:-http://127.0.0.1:11434}"
-export CR_USE_AI=1
-export CR_USE_OLLAMA=1
+export "OLLAMA_ENDPOINT="${OLLAMA_CLOUD_URL:-http://127.0.0.1:11434}""
+export "CR_USE_AI=1"
+export "CR_USE_OLLAMA=1"
 
 if [[ -z "${OLLAMA_CLOUD_URL}" ]]; then
   if command -v ollama >/dev/null 2>&1; then
-    PID_FILE="/tmp/ollama_ci_${RANDOM}.pid"
+    "PID_FILE="/tmp/ollama_ci_${RANDOM}.pid""
     trap '[[ -f "$PID_FILE" ]] && kill "$(cat "$PID_FILE" 2>/dev/null)" 2>/dev/null || true' EXIT
     nohup ollama serve >/dev/null 2>&1 & echo $! > "$PID_FILE"
     sleep 2
@@ -29,9 +29,9 @@ else
   if [ -f Package.swift ]; then
     swift test --parallel
   else
-    proj=$(ls -1 *.xcodeproj 2>/dev/null | head -n1)
+    "proj=$(ls" -1 *.xcodeproj 2>/dev/null | head -n1)
     if [ -n "$proj" ]; then
-      scheme=${proj%.xcodeproj}
+      "scheme=${proj%.xcodeproj}"
       if command -v xcpretty >/dev/null 2>&1; then
         xcodebuild -scheme "$scheme" -destination 'platform=macOS' build | xcpretty || xcodebuild -scheme "$scheme" -destination 'platform=macOS' build || true
       else

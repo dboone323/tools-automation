@@ -9,6 +9,12 @@ set -euo pipefail
 WORKSPACE_ROOT="/Users/danielstevens/Desktop/Quantum-workspace"
 PROJECTS_DIR="${WORKSPACE_ROOT}/Projects"
 
+# Background mode configuration
+BACKGROUND_MODE="${BACKGROUND_MODE:-false}"
+DASHBOARD_INTERVAL="${DASHBOARD_INTERVAL:-300}" # Default 5 minutes
+MAX_RESTARTS="${MAX_RESTARTS:-5}"
+RESTART_COUNT=0
+
 # Colors for consistent output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -436,7 +442,39 @@ show_dashboard() {
 }
 
 # Main execution
+run_background() {
+  print_status "Starting dashboard agent in background mode (interval: ${DASHBOARD_INTERVAL}s)"
+
+  while true; do
+    if [[ ${RESTART_COUNT} -ge ${MAX_RESTARTS} ]]; then
+      print_error "Maximum restart attempts (${MAX_RESTARTS}) reached. Exiting."
+      exit 1
+    fi
+
+    # Clear screen and show dashboard
+    clear
+    if show_dashboard; then
+      print_success "Dashboard update completed successfully"
+      RESTART_COUNT=0 # Reset on success
+    else
+      ((RESTART_COUNT++)) || true
+      print_warning "Dashboard update failed (attempt ${RESTART_COUNT}/${MAX_RESTARTS})"
+    fi
+
+    # Wait for next update
+    sleep "${DASHBOARD_INTERVAL}"
+  done
+}
+
+# Handle background mode
+if [[ "${BACKGROUND_MODE}" == "true" ]]; then
+  run_background
+fi
+
 case "${1-}" in
+"background")
+  run_background
+  ;;
 "summary")
   show_workflow_summary
   ;;

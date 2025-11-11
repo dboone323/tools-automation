@@ -48,7 +48,7 @@ def verify_github_signature(secret, payload, sig):
     return False
 
 
-CODE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+CODE_DIR = os.path.abspath(os.path.dirname(__file__))
 HOST = os.environ.get("MCP_HOST", "127.0.0.1")
 PORT = int(os.environ.get("MCP_PORT", "5005"))
 TASK_TTL_DAYS = int(os.environ.get("TASK_TTL_DAYS", "7"))

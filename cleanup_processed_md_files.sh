@@ -10,6 +10,12 @@ LOG_FILE="${WORKSPACE_DIR}/Tools/Automation/md_cleanup.log"
 PROCESSED_MD_LOG="${WORKSPACE_DIR}/Tools/Automation/processed_md_files.log"
 RETENTION_DAYS="${MD_RETENTION_DAYS:-7}" # Default 7 days retention
 
+# Background mode configuration
+BACKGROUND_MODE="${BACKGROUND_MODE:-false}"
+CLEANUP_INTERVAL="${CLEANUP_INTERVAL:-3600}" # Default 1 hour
+MAX_RESTARTS="${MAX_RESTARTS:-5}"
+RESTART_COUNT=0
+
 # Color codes for output
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
@@ -44,6 +50,11 @@ is_eligible_for_deletion() {
     local file_timestamp
     local current_timestamp
     local age_days
+
+    # Check if processed log file exists
+    if [[ ! -f "${PROCESSED_MD_LOG}" ]]; then
+        return 1 # No log file, can't determine eligibility
+    fi
 
     # Check if file exists in processed log
     if ! grep -q ":${md_file}$" "${PROCESSED_MD_LOG}"; then
@@ -237,7 +248,38 @@ show_status() {
 }
 
 # Main execution
+run_background() {
+    log "Starting MD cleanup agent in background mode (interval: ${CLEANUP_INTERVAL}s)"
+
+    while true; do
+        if [[ ${RESTART_COUNT} -ge ${MAX_RESTARTS} ]]; then
+            print_error "Maximum restart attempts (${MAX_RESTARTS}) reached. Exiting."
+            log "Background agent stopped due to maximum restart attempts"
+            exit 1
+        fi
+
+        # Run cleanup operations
+        if cleanup_old_md_files && cleanup_specific_types; then
+            log "Background cleanup cycle completed successfully"
+            RESTART_COUNT=0 # Reset on success
+        else
+            ((RESTART_COUNT++)) || true
+            print_warning "Cleanup cycle failed (attempt ${RESTART_COUNT}/${MAX_RESTARTS})"
+            log "Cleanup cycle failed, restart count: ${RESTART_COUNT}"
+        fi
+
+        # Wait for next cycle
+        sleep "${CLEANUP_INTERVAL}"
+    done
+}
+
 main() {
+    # Handle background mode
+    if [[ "${BACKGROUND_MODE}" == "true" ]]; then
+        run_background
+        return
+    fi
+
     case "${1:-cleanup}" in
     "cleanup")
         cleanup_old_md_files
@@ -274,6 +316,9 @@ Examples:
 Configuration:
   MD_RETENTION_DAYS    # Days to keep processed MD files (default: 7)
   PROCESSED_MD_LOG     # Path to processed files log (default: processed_md_files.log)
+  BACKGROUND_MODE      # Run in background mode (default: false)
+  CLEANUP_INTERVAL     # Background cleanup interval in seconds (default: 3600)
+  MAX_RESTARTS         # Maximum restart attempts on failure (default: 5)
 
 EOF
         ;;

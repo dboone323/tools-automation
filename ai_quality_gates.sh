@@ -9,6 +9,12 @@ set -euo pipefail
 WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PROJECTS_DIR="${WORKSPACE_ROOT}/Projects"
 
+# Background mode configuration
+BACKGROUND_MODE="${BACKGROUND_MODE:-false}"
+QUALITY_INTERVAL="${QUALITY_INTERVAL:-86400}" # Default 24 hours
+MAX_RESTARTS="${MAX_RESTARTS:-5}"
+RESTART_COUNT=0
+
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -746,7 +752,36 @@ show_usage() {
 }
 
 # Main execution
+run_background() {
+    print_ai "Starting AI quality gates agent in background mode (interval: ${QUALITY_INTERVAL}s)"
+
+    while true; do
+        if [[ ${RESTART_COUNT} -ge ${MAX_RESTARTS} ]]; then
+            print_error "Maximum restart attempts (${MAX_RESTARTS}) reached. Exiting."
+            exit 1
+        fi
+
+        # Run quality pipeline for all projects
+        if run_quality_pipeline_all; then
+            print_success "Background quality analysis cycle completed successfully"
+            RESTART_COUNT=0 # Reset on success
+        else
+            ((RESTART_COUNT++)) || true
+            print_warning "Quality analysis cycle failed (attempt ${RESTART_COUNT}/${MAX_RESTARTS})"
+        fi
+
+        # Wait for next cycle
+        sleep "${QUALITY_INTERVAL}"
+    done
+}
+
 main() {
+    # Handle background mode
+    if [[ "${BACKGROUND_MODE}" == "true" ]]; then
+        run_background
+        return
+    fi
+
     case "${1-}" in
     "check")
         check_prerequisites
