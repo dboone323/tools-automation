@@ -487,6 +487,115 @@ cat task_queue.json | jq '.tasks[].id'
 
 **Benefits**: Process and analyze JSON data from your task queues
 
+## 🤖 AI/ML Tools
+
+### 24. Ollama
+
+**Purpose**: Run large language models locally
+
+**Installation**:
+
+```bash
+# macOS
+brew install ollama
+
+# Start service
+ollama serve
+```
+
+**Usage**:
+
+```bash
+# Pull a model
+ollama pull llama2
+
+# Run chat
+ollama run llama2
+
+# Use in scripts
+ollama run llama2 "Generate a summary of this code"
+```
+
+**Benefits**: Local AI inference for agent intelligence without API costs
+
+### 25. Hugging Face Transformers
+
+**Purpose**: Access pre-trained models for NLP and ML tasks
+
+**Installation**:
+
+```bash
+pip install transformers
+```
+
+**Example Usage**:
+
+```python
+from transformers import pipeline
+
+# Sentiment analysis for code review
+classifier = pipeline("sentiment-analysis")
+result = classifier("This code looks good!")
+
+# Text generation for documentation
+generator = pipeline("text-generation", model="gpt2")
+doc = generator("Write a function to", max_length=50)
+```
+
+**Benefits**: Leverage state-of-the-art models for code analysis and generation
+
+### 26. LangChain
+
+**Purpose**: Framework for building applications with LLMs
+
+**Installation**:
+
+```bash
+pip install langchain
+```
+
+**Example Usage**:
+
+```python
+from langchain.llms import Ollama
+from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
+
+llm = Ollama(model="llama2")
+prompt = PromptTemplate(
+    input_variables=["code"],
+    template="Review this code for bugs: {code}"
+)
+chain = LLMChain(llm=llm, prompt=prompt)
+result = chain.run(code="def hello(): print('world')")
+```
+
+**Benefits**: Chain multiple AI operations for complex agent workflows
+
+### 27. scikit-learn
+
+**Purpose**: Machine learning library for Python
+
+**Installation**:
+
+```bash
+pip install scikit-learn
+```
+
+**Example Usage**:
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# Train model on agent performance data
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+clf = RandomForestClassifier()
+clf.fit(X_train, y_train)
+```
+
+**Benefits**: Predictive analytics for agent performance optimization
+
 ## 🎯 Recommended Implementation Order
 
 ### Phase 1: Essential Development Tools
@@ -515,6 +624,13 @@ cat task_queue.json | jq '.tasks[].id'
 
 11. **ngrok** - External integrations
 12. **HTTPie + jq** - API testing and data processing
+
+### Phase 6: AI/ML Integration
+
+13. **Ollama** - Local LLM inference
+14. **Hugging Face Transformers** - Pre-trained models
+15. **LangChain** - LLM application framework
+16. **scikit-learn** - Machine learning for analytics
 
 ## 💡 Integration Examples
 
@@ -571,6 +687,39 @@ mkdocs serve
 
 # Deploy to GitHub Pages
 mkdocs gh-deploy
+```
+
+### AI-Powered Agent Enhancement
+
+```python
+# Example: Using Ollama for code review
+import subprocess
+import json
+
+def review_code_with_ai(code_snippet):
+    """Use local LLM to review code"""
+    prompt = f"Review this code for bugs and improvements:\n\n{code_snippet}"
+    
+    result = subprocess.run(
+        ["ollama", "run", "llama2", prompt],
+        capture_output=True, text=True
+    )
+    
+    return result.stdout.strip()
+
+# Integrate with agent system
+def enhanced_code_review_agent():
+    # Get task from queue
+    task = get_next_task("code_review")
+    
+    if task:
+        code = task.get("code")
+        ai_review = review_code_with_ai(code)
+        
+        # Combine AI review with traditional analysis
+        final_review = combine_reviews(ai_review, traditional_analysis(code))
+        
+        complete_task(task["id"], final_review)
 ```
 
 ## 📚 Additional Resources
