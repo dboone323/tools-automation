@@ -46,6 +46,7 @@ process_task() {
 
     # Mark task as completed
     update_task_status "${task_id}" "completed"
+    increment_task_count "${AGENT_NAME}"
     echo "[$(date)] ${AGENT_NAME}: Task ${task_id} completed" >>"${LOG_FILE}"
   fi
 }

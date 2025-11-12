@@ -23,7 +23,7 @@ class AgentMatcher:
 
         # Agent capability mappings
         self.agent_capabilities = {
-            "agent_codegen": {
+            "agent_codegen.sh": {
                 "file_types": [
                     ".swift",
                     ".py",
@@ -60,7 +60,7 @@ class AgentMatcher:
                 ],
                 "workload_capacity": 10,
             },
-            "agent_build": {
+            "agent_build.sh": {
                 "file_types": [
                     ".json",
                     ".yml",
@@ -93,7 +93,7 @@ class AgentMatcher:
                 "specialties": ["automation", "infrastructure", "containers", "ci_cd"],
                 "workload_capacity": 8,
             },
-            "agent_test": {
+            "agent_test.sh": {
                 "file_types": [
                     ".py",
                     ".js",
@@ -126,7 +126,7 @@ class AgentMatcher:
                 ],
                 "workload_capacity": 12,
             },
-            "agent_docs": {
+            "agent_documentation.sh": {
                 "file_types": [
                     ".md",
                     ".txt",
@@ -153,7 +153,7 @@ class AgentMatcher:
                 ],
                 "workload_capacity": 6,
             },
-            "agent_debug": {
+            "agent_debug.sh": {
                 "file_types": ["*"],  # All file types
                 "task_types": [
                     "debugging",
@@ -180,7 +180,7 @@ class AgentMatcher:
                 ],
                 "workload_capacity": 15,
             },
-            "agent_security": {
+            "agent_security.sh": {
                 "file_types": [".py", ".js", ".ts", ".java", ".swift", ".json", ".yml"],
                 "task_types": ["security", "auth", "encryption", "vulnerability_fix"],
                 "content_keywords": [
@@ -200,7 +200,7 @@ class AgentMatcher:
                 ],
                 "workload_capacity": 5,
             },
-            "agent_performance": {
+            "agent_performance_monitor.sh": {
                 "file_types": [".swift", ".py", ".js", ".ts", ".java", ".cpp", ".c"],
                 "task_types": ["optimization", "performance", "profiling", "caching"],
                 "content_keywords": [
@@ -220,6 +220,14 @@ class AgentMatcher:
                     "profiling",
                 ],
                 "workload_capacity": 7,
+            },
+            "pull_request_agent.sh": {
+                "file_types": ["*"],
+                "task_types": ["pull_request", "code_review", "merge"],
+                "content_keywords": ["pr", "pull", "request", "review", "merge"],
+                "priority": 6,
+                "specialties": ["code_review", "collaboration", "version_control"],
+                "workload_capacity": 8,
             },
         }
 
@@ -369,30 +377,30 @@ class AgentMatcher:
         # Security tasks always go to security agent if available
         if (
             any(word in text for word in ["security", "auth", "encrypt", "vulnerable"])
-            and agent_name == "agent_security"
+            and agent_name == "agent_security.sh"
         ):
             return base_score * 2.0
 
         # Performance tasks get boost for performance agent
         if (
             any(word in text for word in ["performance", "speed", "optimize", "memory"])
-            and agent_name == "agent_performance"
+            and agent_name == "agent_performance_monitor.sh"
         ):
             return base_score * 1.8
 
         # FIXME tasks get priority boost for debug agent
-        if "fixme" in text and agent_name == "agent_debug":
+        if "fixme" in text and agent_name == "agent_debug.sh":
             return base_score * 1.5
 
         # Test files strongly prefer test agent
-        if "test" in file_path and agent_name == "agent_test":
+        if "test" in file_path and agent_name == "agent_test.sh":
             return base_score * 1.7
 
         return base_score
 
     def match_agent(self, todo: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
         """Find the best agent match for a TODO task"""
-        best_agent = "agent_debug"  # Default fallback
+        best_agent = "agent_debug.sh"  # Default fallback
         best_score = 0.0
         best_breakdown = {}
 

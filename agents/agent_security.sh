@@ -185,6 +185,7 @@ process_security_task() {
 
     # Mark task as completed
     update_task_status "$task_id" "completed"
+    increment_task_count "${AGENT_NAME}"
     update_agent_status "${AGENT_NAME}" "available" $$ ""
 
     log_message "INFO" "Security task $task_id completed successfully"

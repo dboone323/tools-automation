@@ -1,5 +1,5 @@
 {
-  "agent_codegen": {
+  "agent_codegen.sh": {
     "file_types": [
       ".swift",
       ".py",
@@ -17,7 +17,7 @@
     ],
     "priority": 8
   },
-  "agent_build": {
+  "agent_build.sh": {
     "file_types": [
       ".json",
       ".yml",
@@ -33,7 +33,7 @@
     ],
     "priority": 7
   },
-  "agent_test": {
+  "agent_test.sh": {
     "file_types": [
       ".py",
       ".js",
@@ -48,7 +48,7 @@
     ],
     "priority": 9
   },
-  "agent_docs": {
+  "agent_documentation.sh": {
     "file_types": [
       ".md",
       ".txt",
@@ -62,7 +62,7 @@
     ],
     "priority": 5
   },
-  "agent_debug": {
+  "agent_debug.sh": {
     "file_types": [
       "*"
     ],
@@ -72,5 +72,49 @@
       "analysis"
     ],
     "priority": 9
+  },
+  "agent_security.sh": {
+    "file_types": [
+      ".py",
+      ".js",
+      ".ts",
+      ".java",
+      ".swift",
+      ".json",
+      ".yml"
+    ],
+    "task_types": [
+      "security",
+      "auth",
+      "encryption",
+      "vulnerability_fix"
+    ],
+    "priority": 10
+  },
+  "agent_performance_monitor.sh": {
+    "file_types": [
+      ".py",
+      ".js",
+      ".ts",
+      ".swift",
+      ".sh"
+    ],
+    "task_types": [
+      "performance",
+      "optimization",
+      "monitoring"
+    ],
+    "priority": 8
+  },
+  "pull_request_agent.sh": {
+    "file_types": [
+      "*"
+    ],
+    "task_types": [
+      "pull_request",
+      "code_review",
+      "merge"
+    ],
+    "priority": 6
   }
 }

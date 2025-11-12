@@ -395,6 +395,8 @@ vercel domains add mydomain.com
 docker run -d -p 3000:3000 ghcr.io/umami-software/umami
 ```
 
+**Implementation**: See `umami_analytics.py` for agent system integration and tracking
+
 **Benefits**: Privacy-focused analytics for your dashboards
 
 ## 🔧 Development Utilities
@@ -516,6 +518,8 @@ ollama run llama2
 ollama run llama2 "Generate a summary of this code"
 ```
 
+**Implementation**: See `langchain_agent_orchestrator.py` for integrated usage with LangChain
+
 **Benefits**: Local AI inference for agent intelligence without API costs
 
 ### 25. Hugging Face Transformers
@@ -541,6 +545,8 @@ result = classifier("This code looks good!")
 generator = pipeline("text-generation", model="gpt2")
 doc = generator("Write a function to", max_length=50)
 ```
+
+**Implementation**: See `ai_code_reviewer.py` for code quality analysis using sentiment analysis
 
 **Benefits**: Leverage state-of-the-art models for code analysis and generation
 
@@ -570,6 +576,8 @@ chain = LLMChain(llm=llm, prompt=prompt)
 result = chain.run(code="def hello(): print('world')")
 ```
 
+**Implementation**: See `langchain_agent_orchestrator.py` for agent task processing and workflow optimization
+
 **Benefits**: Chain multiple AI operations for complex agent workflows
 
 ### 27. scikit-learn
@@ -593,6 +601,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y)
 clf = RandomForestClassifier()
 clf.fit(X_train, y_train)
 ```
+
+**Implementation**: See `agent_performance_analyzer.py` for predictive analytics and performance optimization
 
 **Benefits**: Predictive analytics for agent performance optimization
 
@@ -699,26 +709,26 @@ import json
 def review_code_with_ai(code_snippet):
     """Use local LLM to review code"""
     prompt = f"Review this code for bugs and improvements:\n\n{code_snippet}"
-    
+
     result = subprocess.run(
         ["ollama", "run", "llama2", prompt],
         capture_output=True, text=True
     )
-    
+
     return result.stdout.strip()
 
 # Integrate with agent system
 def enhanced_code_review_agent():
     # Get task from queue
     task = get_next_task("code_review")
-    
+
     if task:
         code = task.get("code")
         ai_review = review_code_with_ai(code)
-        
+
         # Combine AI review with traditional analysis
         final_review = combine_reviews(ai_review, traditional_analysis(code))
-        
+
         complete_task(task["id"], final_review)
 ```
 

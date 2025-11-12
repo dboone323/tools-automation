@@ -340,6 +340,7 @@ while true; do
         update_agent_status "${AGENT_NAME}" "busy" $$ "${task}"
         if process_control_task "$task"; then
             update_task_status "$task" "completed"
+    increment_task_count "${AGENT_NAME}"
             log_message "INFO" "Control task ${task} completed successfully"
         else
             update_task_status "$task" "failed"

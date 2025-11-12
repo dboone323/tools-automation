@@ -481,6 +481,7 @@ main() {
             # Process the task
             if process_backup_task "$task"; then
                 update_task_status "$task" "completed" "agent_backup"
+    increment_task_count "agent_backup"
                 log_message "Task $task completed successfully"
             else
                 update_task_status "$task" "failed" "agent_backup"

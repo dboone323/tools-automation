@@ -697,6 +697,7 @@ process_codegen_task() {
 
     # Mark task as completed
     update_task_status "$task_id" "completed"
+    increment_task_count "${AGENT_NAME}"
     update_agent_status "${AGENT_NAME}" "available" $$ ""
 
     log_message "INFO" "Codegen task $task_id completed successfully"
@@ -743,6 +744,14 @@ perform_full_codegen() {
     # Run automated tests after codegen/enhancement
     if ! run_step false "Running automated tests after codegen/enhancement" run_with_timeout 600 "${AUTOMATE_BIN}" test; then
         success_flag="false"
+    fi
+
+    # INTEGRATION: Run AI code review on generated/modified files
+    if [[ ${success_flag} == "true" ]]; then
+        log_message "INFO" "Running AI code review on generated/modified files..."
+        if ! run_ai_code_review "${project}"; then
+            log_message "WARN" "AI code review completed with warnings"
+        fi
     fi
 
     if [[ ${success_flag} == "true" ]]; then
@@ -842,6 +851,99 @@ perform_codegen_tests() {
 
     log_message "INFO" "Codegen tests completed for ${project}"
     return 0
+}
+
+# INTEGRATION: Function to run AI code review on generated/modified files
+run_ai_code_review() {
+    local project="$1"
+    local ai_reviewer_script="${SCRIPT_DIR}/../ai_code_reviewer.py"
+
+    log_message "INFO" "Running AI code review for project: ${project}"
+
+    if [[ ! -f "${ai_reviewer_script}" ]]; then
+        log_message "WARN" "AI code reviewer script not found: ${ai_reviewer_script}"
+        return 1
+    fi
+
+    # Find recently modified files in the project (last 30 minutes)
+    local project_dir="${WORKSPACE}/Projects/${project}"
+    if [[ ! -d "${project_dir}" ]]; then
+        log_message "WARN" "Project directory not found: ${project_dir}"
+        return 1
+    fi
+
+    # Get list of recently modified files
+    local modified_files
+    modified_files=$(find "${project_dir}" -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.swift" -o -name "*.java" -o -name "*.cpp" -o -name "*.c" -o -name "*.h" -o -name "*.sh" -o -name "*.md" | head -20)
+
+    if [[ -z "${modified_files}" ]]; then
+        log_message "INFO" "No recent code files found to review"
+        return 0
+    fi
+
+    local review_count=0
+    local total_score=0
+
+    # Run AI code review on each modified file
+    while IFS= read -r file; do
+        if [[ -f "${file}" && -s "${file}" ]]; then
+            log_message "INFO" "Reviewing file: ${file}"
+
+            # Run the AI code reviewer
+            local review_output
+            review_output=$(python3 "${ai_reviewer_script}" "${file}" 2>&1)
+
+            if [[ $? -eq 0 ]]; then
+                # Extract score from output (assuming format like "Score: 8.5/10")
+                local score
+                score=$(echo "${review_output}" | grep -o "Score: [0-9.]*" | grep -o "[0-9.]*" | head -1)
+
+                if [[ -n "${score}" ]]; then
+                    total_score=$((total_score + score))
+                    review_count=$((review_count + 1))
+                    log_message "INFO" "AI Code Review Score for ${file}: ${score}/10"
+                fi
+
+                # Log any issues found
+                if echo "${review_output}" | grep -qi "issue\|warning\|error"; then
+                    log_message "WARN" "Issues found in ${file}"
+                fi
+            else
+                log_message "ERROR" "AI code review failed for ${file}: ${review_output}"
+            fi
+        fi
+    done <<<"${modified_files}"
+
+    # Calculate average score
+    if [[ ${review_count} -gt 0 ]]; then
+        local avg_score
+        avg_score=$(echo "scale=1; ${total_score} / ${review_count}" | bc 2>/dev/null || echo "0")
+        log_message "INFO" "AI Code Review completed. Average score: ${avg_score}/10 (${review_count} files reviewed)"
+
+        # INTEGRATION: Track analytics event
+        track_analytics_event "code_review" "${project}" "${avg_score}" "${review_count}"
+    else
+        log_message "INFO" "AI Code Review completed. No files were reviewed."
+    fi
+
+    return 0
+}
+
+# INTEGRATION: Function to track analytics events
+track_analytics_event() {
+    local event_type="$1"
+    local project="$2"
+    local score="$3"
+    local count="$4"
+    local analytics_script="${SCRIPT_DIR}/../umami_analytics.py"
+
+    if [[ -f "${analytics_script}" ]]; then
+        log_message "INFO" "Tracking analytics event: ${event_type}"
+        python3 "${analytics_script}" track "${event_type}" \
+            --project "${project}" \
+            --score "${score}" \
+            --count "${count}" 2>/dev/null || true
+    fi
 }
 
 # Run main function if script is executed directly

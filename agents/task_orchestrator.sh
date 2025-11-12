@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/opt/homebrew/bin/bash
 # Task Orchestrator Agent: Central coordinator for all agents with intelligent task distribution
 
 # Source shared functions for file locking and monitoring
@@ -9,7 +9,7 @@ AGENT_NAME="TaskOrchestrator"
 SCRIPT_DIR="$(dirname "$0")"
 LOG_FILE="${SCRIPT_DIR}/task_orchestrator.log"
 TASK_QUEUE_FILE="${SCRIPT_DIR}/task_queue.json"
-AGENT_STATUS_FILE="${SCRIPT_DIR}/agent_status.json"
+AGENT_STATUS_FILE="${SCRIPT_DIR}/../config/agent_status.json"
 COMMUNICATION_DIR="${SCRIPT_DIR}/communication"
 LOOP_INTERVAL="${LOOP_INTERVAL:-30}" # Configurable main loop sleep
 
@@ -396,6 +396,7 @@ process_completed_tasks() {
                 success=$(echo "${task_info}" | cut -d'|' -f3)
 
                 update_task_status "${task_id}" "completed" "${success}"
+    increment_task_count "${AGENT_NAME}"
                 update_agent_status "${agent_name}" "available"
 
                 log_message "INFO" "Task ${task_id} completed by ${agent_name} (success: ${success})"
@@ -590,6 +591,7 @@ advance_task_progress() {
     to_complete=$(jq -r '.tasks[] | select(.status=="in_progress" and ((now - (.started_at // now)) > 5)) | .id' "${TASK_QUEUE_FILE}" 2>/dev/null)
     for tid in ${to_complete}; do
         update_task_status "${tid}" "completed" "true"
+    increment_task_count "${AGENT_NAME}"
     done
 }
 

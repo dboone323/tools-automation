@@ -359,6 +359,7 @@ main_agent_loop() {
             update_agent_status "${AGENT_NAME}" "busy" $$ "$(echo "$task_data" | jq -r '.id')"
             if process_helper_task "$task_data"; then
                 update_task_status "$(echo "$task_data" | jq -r '.id')" "completed"
+    increment_task_count "${AGENT_NAME}"
                 echo "[$(date)] ${AGENT_NAME}: Task completed successfully" >>"${LOG_FILE}"
             else
                 update_task_status "$(echo "$task_data" | jq -r '.id')" "failed"

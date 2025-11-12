@@ -101,6 +101,50 @@ python3 metrics_exporter.py
 
 Metrics will be available at: http://localhost:8080/metrics
 
+## 📈 Analytics Setup (Umami)
+
+### 1. Install Umami Analytics
+
+Umami is a privacy-focused, self-hosted web analytics platform that integrates with your agent dashboard.
+
+```bash
+# Start Umami with PostgreSQL
+python3 umami_analytics.py
+```
+
+This will:
+
+- Start PostgreSQL database container
+- Initialize Umami database schema
+- Launch Umami web interface on http://localhost:3002
+
+### 2. Configure Analytics Tracking
+
+```python
+# In your agent_dashboard_api.py or tracking script
+from umami_analytics import track_event
+
+# Track agent actions
+track_event('agent_action', {
+    'agent_name': 'agent_codegen',
+    'action': 'code_review',
+    'status': 'completed'
+})
+
+# Track user interactions
+track_event('dashboard_view', {
+    'page': 'agent_status',
+    'user_agent': 'dashboard_user'
+})
+```
+
+### 3. Access Analytics Dashboard
+
+1. Open http://localhost:3002
+2. Create admin account on first visit
+3. Add your website (use localhost URLs for development)
+4. View real-time analytics and user behavior
+
 ## 🔧 Development Tools Setup
 
 ### 1. Install Node.js (for various tools)
@@ -144,6 +188,373 @@ pre-commit install
 
 # Run on all files initially
 pre-commit run --all-files
+```
+
+## 🚀 CI/CD with GitHub Actions
+
+### 1. Create GitHub Actions Workflow
+
+Create `.github/workflows/ci-cd.yml`:
+
+```yaml
+name: Agent System CI/CD
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests
+        run: python3 -m pytest tests/ -v
+      - name: Security scan
+        run: |
+          pip install safety
+          safety check
+      - name: Deploy to staging
+        if: github.ref == 'refs/heads/develop'
+        run: ./deploy_staging.sh
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main'
+        run: ./deploy_production.sh
+```
+
+### 2. Add Required Files
+
+Create `requirements.txt` with your dependencies:
+
+```
+flask==2.3.3
+prometheus-client==0.17.1
+requests==2.31.0
+pytest==7.4.0
+```
+
+Create basic test structure:
+
+```python
+# tests/test_agent_api.py
+import pytest
+from agent_dashboard_api import app
+
+@pytest.fixture
+def client():
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        yield client
+
+def test_health_endpoint(client):
+    response = client.get('/health')
+    assert response.status_code == 200
+    assert b'healthy' in response.data
+```
+
+## 🔒 Security & Quality Tools
+
+### 1. SonarQube Code Quality Analysis
+
+```bash
+# Start SonarQube container
+docker run -d -p 9000:9000 sonarqube:community
+
+# Install sonar-scanner
+# macOS
+brew install sonar-scanner
+
+# Ubuntu
+wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+export PATH=$PATH:$(pwd)/sonar-scanner-4.8.0.2856-linux/bin
+```
+
+Create `sonar-project.properties`:
+
+```properties
+sonar.projectKey=tools-automation
+sonar.projectName=Tools Automation
+sonar.projectVersion=1.0
+sonar.sources=.
+sonar.language=py
+sonar.sourceEncoding=UTF-8
+sonar.python.coverage.reportPaths=coverage.xml
+```
+
+Run analysis:
+
+```bash
+sonar-scanner
+```
+
+### 2. Trivy Container Vulnerability Scanning
+
+```bash
+# Install Trivy
+# macOS
+brew install trivy
+
+# Ubuntu
+sudo apt-get install wget apt-transport-https gnupg lsb-release
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy
+
+# Scan container images
+trivy image your-docker-image
+
+# Scan filesystem
+trivy fs /path/to/project
+
+# CI/CD integration
+trivy fs --exit-code 1 --no-progress .
+```
+
+### 3. Snyk Dependency Vulnerability Management
+
+```bash
+# Install Snyk CLI
+npm install -g snyk
+
+# Authenticate (get API token from snyk.io)
+snyk auth
+
+# Test for vulnerabilities
+snyk test
+
+# Monitor dependencies
+snyk monitor
+
+# Fix vulnerabilities
+snyk wizard
+```
+
+## 📚 Documentation with MkDocs
+
+### 1. Install and Setup MkDocs
+
+```bash
+# Install MkDocs and Material theme
+pip3 install mkdocs mkdocs-material
+
+# Create documentation site
+mkdocs new docs
+
+# Start development server
+cd docs
+mkdocs serve
+```
+
+### 2. Configure Documentation
+
+Edit `mkdocs.yml`:
+
+```yaml
+site_name: Tools Automation System
+nav:
+  - Home: index.md
+  - API Reference: api.md
+  - Agent Guide: agents.md
+  - Deployment: deployment.md
+  - Monitoring: monitoring.md
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+plugins:
+  - search
+```
+
+### 3. Deploy Documentation
+
+```bash
+# Build static site
+mkdocs build
+
+# Deploy to GitHub Pages
+mkdocs gh-deploy
+```
+
+## 🧪 Testing Frameworks
+
+### 1. Jest for JavaScript Testing
+
+```bash
+# Install Jest
+npm install --save-dev jest
+
+# Add to package.json
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+
+# Create test file
+// __tests__/agentMatcher.test.js
+const { matchAgent } = require('../agentMatcher');
+
+describe('Agent Matcher', () => {
+  test('matches codegen tasks correctly', () => {
+    const task = { type: 'code_improvement' };
+    expect(matchAgent(task)).toBe('agent_codegen');
+  });
+});
+```
+
+### 2. Playwright for End-to-End Testing
+
+```bash
+# Install Playwright
+npm install --save-dev @playwright/test
+npx playwright install
+
+# Create test
+// tests/dashboard.spec.js
+const { test, expect } = require('@playwright/test');
+
+test('agent dashboard loads', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+  await expect(page.locator('text=Agent Status')).toBeVisible();
+});
+```
+
+## 🤖 AI/ML Tools Integration
+
+### 1. Ollama Local LLM Inference
+
+```bash
+# Install Ollama
+# macOS
+brew install ollama
+
+# Ubuntu
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Start Ollama service
+ollama serve
+
+# Pull models
+ollama pull llama2
+ollama pull codellama
+
+# Use in Python scripts
+from langchain.llms import Ollama
+
+llm = Ollama(model="llama2")
+response = llm("Generate a summary of this code")
+```
+
+### 2. Hugging Face Transformers
+
+```bash
+# Install transformers
+pip3 install transformers torch
+
+# Use for code analysis
+from transformers import pipeline
+
+# Sentiment analysis for code review
+classifier = pipeline("sentiment-analysis")
+result = classifier("This code looks good!")
+
+# Text generation for documentation
+generator = pipeline("text-generation", model="gpt2")
+doc = generator("Write a function to", max_length=50)
+```
+
+### 3. LangChain for LLM Applications
+
+```bash
+# Install LangChain
+pip3 install langchain
+
+# Create agent workflow
+from langchain.llms import Ollama
+from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
+
+llm = Ollama(model="llama2")
+prompt = PromptTemplate(
+    input_variables=["code"],
+    template="Review this code for bugs: {code}"
+)
+chain = LLMChain(llm=llm, prompt=prompt)
+result = chain.run(code="def hello(): print('world')")
+```
+
+### 4. scikit-learn for Machine Learning
+
+```bash
+# Install scikit-learn
+pip3 install scikit-learn pandas numpy
+
+# Train model on agent performance
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+# Load agent performance data
+# X = features, y = performance scores
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+clf = RandomForestClassifier()
+clf.fit(X_train, y_train)
+predictions = clf.predict(X_test)
+```
+
+## 🌐 External Integrations with ngrok
+
+### 1. Install and Setup ngrok
+
+```bash
+# Install ngrok
+# macOS
+brew install ngrok
+
+# Ubuntu
+snap install ngrok
+
+# Authenticate
+ngrok config add-authtoken YOUR_AUTH_TOKEN
+
+# Expose local services
+# Expose dashboard
+ngrok http 3000
+
+# Expose API
+ngrok http 5001
+
+# Custom subdomain
+ngrok http 3000 --subdomain=my-agent-dashboard
+```
+
+### 2. Webhook Integration
+
+```python
+# Example webhook handler
+from flask import Flask, request
+import json
+
+app = Flask(__name__)
+
+@app.route('/webhook/github', methods=['POST'])
+def github_webhook():
+    data = request.json
+    if data['action'] == 'push':
+        # Trigger agent tasks
+        trigger_agent_task('code_review', data['head_commit'])
+    return {'status': 'ok'}
+
+if __name__ == '__main__':
+    app.run(port=5002)
 ```
 
 ## 📈 Using the Monitoring Tools
@@ -307,21 +718,35 @@ repos:
 
 ## 🎯 Next Steps
 
-### Phase 2: Security & Quality Tools
+### Phase 2: Advanced Security & Quality (Implemented)
 
-1. **SonarQube** for code quality analysis
-2. **Trivy** for container vulnerability scanning
-3. **Snyk** for dependency vulnerability management
+✅ **SonarQube** - Code quality analysis setup above  
+✅ **Trivy** - Container vulnerability scanning setup above  
+✅ **Snyk** - Dependency vulnerability management setup above
 
-### Phase 3: Documentation & Testing
+### Phase 3: Documentation & Testing (Implemented)
 
-1. **MkDocs** for project documentation
-2. **Jest/Playwright** for testing frameworks
+✅ **MkDocs** - Project documentation setup above  
+✅ **Jest/Playwright** - Testing frameworks setup above
 
-### Phase 4: Advanced Features
+### Phase 4: AI/ML Integration (Implemented)
 
-1. **ngrok** for external integrations
-2. **HTTPie + jq** for API testing
+✅ **Ollama** - Local LLM inference setup above  
+✅ **Hugging Face Transformers** - ML models for code analysis  
+✅ **LangChain** - LLM application framework  
+✅ **scikit-learn** - Machine learning for analytics
+
+### Phase 5: Deployment & External Tools
+
+1. **Railway/Vercel/Netlify** - Cloud deployment platforms
+2. **GitHub Actions** - CI/CD automation (setup above)
+3. **ngrok** - External integrations (setup above)
+
+### Phase 6: Advanced Monitoring
+
+1. **Plausible Analytics** - Alternative privacy-focused analytics
+2. **Custom Grafana Dashboards** - Advanced visualization
+3. **Alert Manager** - Automated alerting system
 
 ## 📞 Support
 
@@ -344,4 +769,4 @@ When adding new tools:
 ---
 
 _Implementation Date: November 11, 2025_
-_Tools Version: 1.0.0_
+_Tools Version: 1.1.0_

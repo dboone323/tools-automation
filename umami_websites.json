@@ -1,0 +1,9 @@
+{
+  "site_agent_system_dashboard": {
+    "id": "site_agent_system_dashboard",
+    "name": "Agent System Dashboard",
+    "domain": "localhost:8000",
+    "created_at": "2025-11-11T19:55:45.579699",
+    "tracking_code": "<!-- Umami Analytics -->\n<script\n  defer\n  src=\"http://localhost:3002/script.js\"\n  data-website-id=\"site_agent_system_dashboard\"\n></script>"
+  }
+}

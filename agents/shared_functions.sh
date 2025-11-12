@@ -120,16 +120,28 @@ try:
     with open(task_queue_file, 'r') as f:
         data = json.load(f)
     
+    # Ensure completed and failed arrays exist
+    if 'completed' not in data:
+        data['completed'] = []
+    if 'failed' not in data:
+        data['failed'] = []
+    
     if 'tasks' in data:
-        for task in data['tasks']:
+        for i, task in enumerate(data['tasks']):
             if task.get('id') == task_id:
                 task['status'] = new_status
                 if new_status == 'in_progress':
                     task['started_at'] = timestamp
                 elif new_status == 'completed':
                     task['completed_at'] = timestamp
+                    # Move task to completed array
+                    completed_task = data['tasks'].pop(i)
+                    data['completed'].append(completed_task)
                 elif new_status == 'failed':
                     task['failed_at'] = timestamp
+                    # Move task to failed array
+                    failed_task = data['tasks'].pop(i)
+                    data['failed'].append(failed_task)
                 break
     
     # Write to temporary file first, then atomically move
@@ -238,10 +250,60 @@ with_resource_limits() {
     "
 }
 
+# Increment task count for agent
+increment_task_count() {
+    local agent_name="$1"
+
+    echo "DEBUG: increment_task_count called for $agent_name" >&2
+
+    # Use Python to increment the count atomically
+    python3 -c "
+import json
+import sys
+import os
+import tempfile
+import fcntl
+
+agent_name = sys.argv[1]
+status_file = os.environ.get('STATUS_FILE', '${SCRIPT_DIR}/config/agent_status.json')
+
+# Read current status
+try:
+    with open(status_file, 'r') as f:
+        data = json.load(f)
+except (FileNotFoundError, json.JSONDecodeError):
+    data = {'agents': {}, 'last_update': 0}
+
+# Ensure agents dict exists
+if 'agents' not in data:
+    data['agents'] = {}
+
+# Get or create agent entry
+if agent_name not in data['agents']:
+    data['agents'][agent_name] = {'status': 'unknown', 'last_seen': 0, 'tasks_completed': 0}
+
+# Increment tasks_completed
+if 'tasks_completed' not in data['agents'][agent_name]:
+    data['agents'][agent_name]['tasks_completed'] = 0
+data['agents'][agent_name]['tasks_completed'] += 1
+
+# Write back atomically
+with tempfile.NamedTemporaryFile(mode='w', dir=os.path.dirname(status_file), delete=False) as temp_file:
+    json.dump(data, temp_file, indent=2)
+    temp_file.flush()
+    os.fsync(temp_file.fileno())
+    temp_path = temp_file.name
+
+os.rename(temp_path, status_file)
+print(f'Task count incremented for {agent_name}')
+" "$agent_name" 2>&1
+}
+
 # Export functions
 export -f update_agent_status
 export -f get_next_task
 export -f update_task_status
 export -f add_task_to_queue
+export -f increment_task_count
 export -f set_resource_limits
 export -f with_resource_limits

@@ -448,6 +448,7 @@ process_task() {
 
     if [[ ${success} == "true" ]]; then
         update_task_status "${task_id}" "completed"
+    increment_task_count "${AGENT_NAME}"
         echo "${task_id}" >>"${PROCESSED_TASKS_FILE}"
     else
         update_task_status "${task_id}" "failed"

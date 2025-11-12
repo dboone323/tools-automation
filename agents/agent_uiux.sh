@@ -177,6 +177,7 @@ process_assigned_tasks() {
     if perform_ui_enhancements "${project}" "${task}"; then
         echo "[$(date)] ${AGENT_NAME}: UI/UX enhancements completed successfully for ${project}" >>"${LOG_FILE}"
         update_task_status "${task_id}" "completed"
+    increment_task_count "${AGENT_NAME}"
         update_agent_status "${AGENT_NAME}" "idle"
         return 0
     else

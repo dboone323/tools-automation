@@ -459,6 +459,7 @@ process_cleanup_task() {
 
     # Mark task as completed
     update_task_status "${task_id}" "completed"
+    increment_task_count "${AGENT_NAME}"
     update_agent_status "agent_cleanup.sh" "available" $$ ""
 
     log_message "INFO" "Cleanup task ${task_id} completed successfully"

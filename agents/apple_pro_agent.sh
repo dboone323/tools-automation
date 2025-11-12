@@ -163,6 +163,7 @@ process_assigned_tasks() {
         if run_apple_pro_checks "${project}" "${task}"; then
             echo "[$(date)] ${AGENT_NAME}: Apple Pro checks completed successfully for ${project}" >>"${LOG_FILE}"
             update_task_status "${task_id}" "completed"
+    increment_task_count "${AGENT_NAME}"
             update_agent_status "${AGENT_NAME}" "idle"
             return 0
         else
@@ -176,6 +177,7 @@ process_assigned_tasks() {
         if apply_apple_best_practices "${project}" "${task}"; then
             echo "[$(date)] ${AGENT_NAME}: Apple best practices applied successfully for ${project}" >>"${LOG_FILE}"
             update_task_status "${task_id}" "completed"
+    increment_task_count "${AGENT_NAME}"
             update_agent_status "${AGENT_NAME}" "idle"
             return 0
         else

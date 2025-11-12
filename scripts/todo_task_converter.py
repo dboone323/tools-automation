@@ -24,7 +24,9 @@ class TodoTaskConverter:
     def __init__(self, workspace_root: Path):
         self.workspace_root = workspace_root
         self.config_dir = workspace_root / "config"
-        self.task_queue_file = self.config_dir / "task_queue.json"
+        self.task_queue_file = (
+            workspace_root / "agents" / "task_queue.json"
+        )  # Use agents task queue
         self.todo_output_file = workspace_root / "config" / "todo-tree-output.json"
         self.agent_capabilities_file = self.config_dir / "agent_capabilities.json"
 
@@ -43,7 +45,7 @@ class TodoTaskConverter:
         """Initialize agent capabilities mapping"""
         if not self.agent_capabilities_file.exists():
             capabilities = {
-                "agent_codegen": {
+                "agent_codegen.sh": {
                     "file_types": [
                         ".swift",
                         ".py",
@@ -57,25 +59,53 @@ class TodoTaskConverter:
                     "task_types": ["code_generation", "code_fix", "implementation"],
                     "priority": 8,
                 },
-                "agent_build": {
+                "agent_build.sh": {
                     "file_types": [".json", ".yml", ".yaml", ".xml", ".gradle", ".pom"],
                     "task_types": ["build", "configuration", "deployment"],
                     "priority": 7,
                 },
-                "agent_test": {
+                "agent_test.sh": {
                     "file_types": [".py", ".js", ".ts", ".java", ".swift"],
                     "task_types": ["testing", "validation", "quality_assurance"],
                     "priority": 9,
                 },
-                "agent_docs": {
+                "agent_documentation.sh": {
                     "file_types": [".md", ".txt", ".rst", ".adoc"],
                     "task_types": ["documentation", "readme", "comments"],
                     "priority": 5,
                 },
-                "agent_debug": {
+                "agent_debug.sh": {
                     "file_types": ["*"],  # All file types
                     "task_types": ["debugging", "troubleshooting", "analysis"],
                     "priority": 9,
+                },
+                "agent_security.sh": {
+                    "file_types": [
+                        ".py",
+                        ".js",
+                        ".ts",
+                        ".java",
+                        ".swift",
+                        ".json",
+                        ".yml",
+                    ],
+                    "task_types": [
+                        "security",
+                        "auth",
+                        "encryption",
+                        "vulnerability_fix",
+                    ],
+                    "priority": 10,
+                },
+                "agent_performance_monitor.sh": {
+                    "file_types": [".py", ".js", ".ts", ".swift", ".sh"],
+                    "task_types": ["performance", "optimization", "monitoring"],
+                    "priority": 8,
+                },
+                "pull_request_agent.sh": {
+                    "file_types": ["*"],
+                    "task_types": ["pull_request", "code_review", "merge"],
+                    "priority": 6,
                 },
             }
 
@@ -136,6 +166,7 @@ class TodoTaskConverter:
     def match_agent(self, todo: Dict[str, Any]) -> str:
         """Match TODO to appropriate agent using advanced matcher"""
         agent, _ = self.agent_matcher.match_agent(todo)
+        # Agent matcher now returns agents with .sh extensions
         return agent
 
     def convert_todo_to_task(
@@ -265,25 +296,56 @@ class TodoTaskConverter:
         except (FileNotFoundError, json.JSONDecodeError):
             return []
 
+    def load_existing_queue(self) -> Dict[str, Any]:
+        """Load the entire existing queue structure"""
+        if not self.task_queue_file.exists():
+            return {"tasks": [], "completed": [], "failed": []}
+
+        try:
+            with open(self.task_queue_file, "r") as f:
+                data = json.load(f)
+                # Ensure all required arrays exist
+                if "tasks" not in data:
+                    data["tasks"] = []
+                if "completed" not in data:
+                    data["completed"] = []
+                if "failed" not in data:
+                    data["failed"] = []
+                return data
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {"tasks": [], "completed": [], "failed": []}
+
     def save_tasks(self, tasks: List[Dict[str, Any]]):
-        """Save tasks to queue file"""
+        """Save tasks to queue file while preserving completed/failed arrays"""
         # Ensure directory exists
         self.task_queue_file.parent.mkdir(exist_ok=True)
 
-        data = {"tasks": tasks}
+        # Load existing queue to preserve completed/failed arrays
+        existing_data = self.load_existing_queue()
+        existing_data["tasks"] = tasks
 
         # Atomic write with temporary file
         temp_file = self.task_queue_file.with_suffix(".tmp")
         with open(temp_file, "w") as f:
-            json.dump(data, f, indent=2)
+            json.dump(existing_data, f, indent=2)
 
         temp_file.replace(self.task_queue_file)
-        print(f"💾 Saved {len(tasks)} tasks to {self.task_queue_file}")
+        print(
+            f"💾 Saved {len(tasks)} tasks to {self.task_queue_file} (preserved {len(existing_data.get('completed', []))} completed, {len(existing_data.get('failed', []))} failed)"
+        )
 
     def add_todo_tasks(self, todos: List[Dict[str, Any]]) -> int:
         """Add TODO-derived tasks to the queue with intelligent analysis"""
-        existing_tasks = self.load_existing_tasks()
+        existing_queue = self.load_existing_queue()
+        existing_tasks = existing_queue["tasks"]
+        completed_tasks = existing_queue.get("completed", [])
+        failed_tasks = existing_queue.get("failed", [])
+
+        # Don't re-add tasks that are already completed or failed
+        completed_task_ids = {task["id"] for task in completed_tasks}
+        failed_task_ids = {task["id"] for task in failed_tasks}
         existing_task_ids = {task["id"] for task in existing_tasks}
+        all_processed_ids = completed_task_ids | failed_task_ids | existing_task_ids
 
         # Analyze dependencies across all TODOs
         print("🔍 Analyzing TODO dependencies and relationships...")
@@ -301,8 +363,8 @@ class TodoTaskConverter:
         for todo in todos:
             task = self.convert_todo_to_task(todo, dependency_info)
 
-            # Skip if task already exists
-            if task["id"] not in existing_task_ids:
+            # Skip if task already exists (in tasks, completed, or failed)
+            if task["id"] not in all_processed_ids:
                 new_tasks.append(task)
                 existing_tasks.append(task)
 
@@ -404,9 +466,14 @@ class TodoTaskConverter:
         new_task_count = self.add_todo_tasks(todos)
 
         # Summary
-        total_tasks = len(self.load_existing_tasks())
+        existing_queue = self.load_existing_queue()
+        total_tasks = len(existing_queue["tasks"])
+        completed_tasks = len(existing_queue["completed"])
+        failed_tasks = len(existing_queue["failed"])
         print(f"\n📊 Task Queue Status:")
         print(f"  📋 Total tasks in queue: {total_tasks}")
+        print(f"  ✅ Completed tasks: {completed_tasks}")
+        print(f"  ❌ Failed tasks: {failed_tasks}")
         print(f"  ✨ New TODO tasks added: {new_task_count}")
         print(
             f"  🎯 Intelligence features: ✅ Priority scoring, ✅ Agent matching, ✅ Dependency analysis"

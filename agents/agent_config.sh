@@ -236,6 +236,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
             " "Configuration task timed out"; then
                 echo "[$(date)] ${AGENT_NAME}: Configuration task ${TASK_ID} completed successfully" >>"${LOG_FILE}"
                 update_task_status "${TASK_ID}" "completed"
+    increment_task_count "${AGENT_NAME}"
             else
                 echo "[$(date)] ${AGENT_NAME}: Configuration task ${TASK_ID} failed or timed out" >>"${LOG_FILE}"
                 update_task_status "${TASK_ID}" "failed"

@@ -554,6 +554,7 @@ main() {
             # Process the task
             if process_analytics_task "$task"; then
                 update_task_status "$task" "completed" "agent_analytics"
+    increment_task_count "${AGENT_NAME}"
                 log_message "Task $task completed successfully"
             else
                 update_task_status "$task" "failed" "agent_analytics"

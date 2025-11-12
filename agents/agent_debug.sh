@@ -33,6 +33,10 @@ MAX_CPU_USAGE=90    # 90% CPU usage threshold
 
 PROJECTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Projects"
 
+# Communication setup
+COMM_DIR="${SCRIPT_DIR}/communication"
+COMPLETED_FILE="${COMM_DIR}/agent_debug.sh_completed.txt"
+
 # Logging configuration
 AGENT_NAME="agent_debug.sh"
 LOG_FILE="${SCRIPT_DIR}/debug_agent.log"
@@ -41,6 +45,13 @@ log_message() {
     local level="$1"
     local message="$2"
     echo "[$(date)] [${AGENT_NAME}] [${level}] ${message}" | tee -a "${LOG_FILE}"
+}
+
+notify_completion() {
+    local task_id="$1"
+    local success="$2"
+    mkdir -p "${COMM_DIR}"
+    echo "$(date +%s)|${task_id}|${success}" >>"${COMPLETED_FILE}"
 }
 
 # Function to check resource usage and limits
@@ -153,6 +164,9 @@ ensure_within_limits() {
 main() {
     log_message "INFO" "Debug Agent starting..."
 
+    # Create communication directory
+    mkdir -p "${COMM_DIR}"
+
     # Initialize agent status
     update_agent_status "${AGENT_NAME}" "starting" $$ ""
 
@@ -242,6 +256,8 @@ process_debug_task() {
 
     # Mark task as completed
     update_task_status "$task_id" "completed"
+    increment_task_count "${AGENT_NAME}"
+    notify_completion "$task_id" "true"
     update_agent_status "${AGENT_NAME}" "available" $$ ""
 
     log_message "INFO" "Debug task $task_id completed successfully"
