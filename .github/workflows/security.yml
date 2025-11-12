@@ -64,7 +64,7 @@ jobs:
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
         with:
-          severity: error
+          severity: warning
           ignore_paths: node_modules
 
       - name: Security audit for Python dependencies
