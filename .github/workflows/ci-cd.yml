@@ -50,6 +50,8 @@ jobs:
 
       - name: Security scan
         run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+          curl -sfL \
+            https://raw.githubusercontent.com/aquasecurity/trivy/main/ \
+            contrib/install.sh \
             | sh -s -- -b /usr/local/bin
           trivy fs --exit-code 0 --no-progress .

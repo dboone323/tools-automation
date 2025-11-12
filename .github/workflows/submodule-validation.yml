@@ -1,3 +1,4 @@
+---
 name: Submodule Fast Validation
 on:
     push:
@@ -38,7 +39,8 @@ jobs:
 
             - name: Fast validate submodule
               run: |
-                  bash scripts/submodule_fast_validate.sh "${{ matrix.submodule }}"
+                  bash scripts/submodule_fast_validate.sh \
+                    "${{ matrix.submodule }}"
 
             - name: Upload validation artifact
               uses: actions/upload-artifact@v4
@@ -66,7 +68,8 @@ jobs:
 
             - name: Upload combined summary
               run: |
-                  jq -s '[.[]]' metrics/validation/*.json > metrics/validation/combined.json
+                  jq -s '[.[]]' metrics/validation/*.json > \
+                    metrics/validation/combined.json
               shell: bash
 
             - name: Store combined summary

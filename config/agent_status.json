@@ -6,10 +6,10 @@
       "pid": 77777
     },
     "agent_debug.sh": {
-      "status": "idle",
-      "last_seen": 1762913214,
-      "tasks_completed": 1,
-      "current_task_id": "todo_assign_1761156279801160000"
+      "status": "available",
+      "last_seen": 1762913724,
+      "pid": 97973,
+      "tasks_completed": 1
     },
     "agent_build.sh": {
       "status": "starting",
@@ -18,9 +18,9 @@
       "tasks_completed": 0
     },
     "agent_codegen.sh": {
-      "status": "idle",
-      "last_seen": 1762913029,
-      "pid": 89312
+      "status": "available",
+      "last_seen": 1762913935,
+      "pid": 97862
     },
     "ConfigAgent": {
       "status": "running",
@@ -76,7 +76,7 @@
     },
     "UIUXAgent": {
       "status": "idle",
-      "last_seen": 1762913032,
+      "last_seen": 1762914595,
       "pid": 39150
     },
     "AppleProAgent": {
@@ -165,7 +165,7 @@
       "tasks_completed": 0
     }
   },
-  "last_update": 1762913305,
+  "last_update": 1762914595,
   "orchestrator": {
     "status": "available",
     "last_seen": 1762913305,

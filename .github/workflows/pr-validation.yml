@@ -1,8 +1,9 @@
+---
 name: PR Validation (Tools Automation)
 
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   lint-scripts:
@@ -10,6 +11,14 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - name: Install Linters
+        run: |
+          pip install yamllint
+          brew install actionlint
+      - name: Lint Workflows
+        run: |
+          yamllint .github/workflows/
+          actionlint .github/workflows/
       - name: Install ShellCheck
         run: |
           sudo apt-get update
@@ -25,13 +34,10 @@ jobs:
           shellcheck **/*.sh || true
       - name: Python Syntax Check
         run: |
-          set -e
-          python3 -m pip install --upgrade pip
-          python3 - <<'PY'
-import os, py_compile
-for root, _, files in os.walk('.'):
-    for f in files:
-        if f.endswith('.py'):
-            py_compile.compile(os.path.join(root, f), doraise=True)
-print('Python syntax OK')
-PY
+          python3 -c "
+          import os, py_compile
+          [py_compile.compile(os.path.join(root, f), doraise=True) \
+           for root, _, files in os.walk('.') \
+           for f in files if f.endswith('.py')]
+          print('Python syntax OK')
+          "

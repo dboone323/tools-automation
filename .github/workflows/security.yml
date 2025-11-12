@@ -1,3 +1,4 @@
+---
 name: 🔒 Security Scan
 
 on:
@@ -79,11 +80,15 @@ jobs:
       - name: Validate repository structure
         run: |
           # Check for required security files
-          [[ -f ".github/SECURITY.md" ]] || (echo "SECURITY.md missing" && exit 1)
-          [[ -f ".github/dependabot.yml" ]] || (echo "dependabot.yml missing" && exit 1)
+          [[ -f ".github/SECURITY.md" ]] || \
+            (echo "SECURITY.md missing" && exit 1)
+          [[ -f ".github/dependabot.yml" ]] || \
+            (echo "dependabot.yml missing" && exit 1)
 
-          # Check for sensitive files that shouldn't be committed
-          if find . -name "*.key" -o -name "*.pem" -o -name "*secret*" -o -name ".env*" | grep -v node_modules | grep -v .git; then
+          if find . -name "*.key" -o -name "*.pem" \
+              -o -name "*secret*" \
+              -o -name ".env*" \
+              | grep -v node_modules | grep -v .git; then
             echo "Potential sensitive files found!"
             exit 1
           fi

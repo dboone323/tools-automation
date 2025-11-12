@@ -1,3 +1,4 @@
+---
 name: Container CI
 
 on:
@@ -20,7 +21,10 @@ jobs:
       - name: SwiftPM tests (Shared)
         run: docker compose -f Tools/docker-compose.yml run --rm swift
       - name: cspell
-        run: docker compose -f Tools/docker-compose.yml run --rm cspell
+        run: |
+          docker compose -f Tools/docker-compose.yml \
+            run --rm \
+            cspell
 
   # Optional job that assumes a self-hosted macOS runner with Ollama installed and running locally.
   ollama-selfhosted:
