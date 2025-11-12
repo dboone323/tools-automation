@@ -3421,3 +3421,5 @@ jq: parse error: Invalid numeric literal at line 1, column 8
 jq: parse error: Invalid numeric literal at line 1, column 8
 jq: parse error: Invalid numeric literal at line 1, column 8
 jq: parse error: Invalid numeric literal at line 1, column 8
+jq: parse error: Invalid numeric literal at line 1, column 8
+./task_orchestrator.sh: line 747: 08: value too great for base (error token is "08")

@@ -2,804 +2,6 @@
   "monitoring_start": "2025-11-11T08:18:08.536373",
   "snapshots": [
     {
-      "timestamp": "2025-11-11T19:12:56.484256",
-      "total_tasks": 100133,
-      "tasks_by_status": {
-        "pending": 100098,
-        "completed": 29,
-        "in_progress": 6
-      },
-      "tasks_by_agent": {
-        "agent_debug": 4329,
-        "agent_codegen": 59488,
-        "agent_testing": 1471,
-        "agent_documentation": 99,
-        "agent_build": 31965,
-        "agent_docs": 37,
-        "agent_test": 1094,
-        "agent_security": 800,
-        "agent_performance": 850
-      },
-      "tasks_by_priority": {
-        "5": 12,
-        "7": 40,
-        "8": 17617,
-        "10": 82447,
-        "6": 10,
-        "4": 3,
-        "9": 4
-      },
-      "agent_workload": {
-        "agent_2": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "agent_debug.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "available"
-        },
-        "agent_build.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "stopped"
-        },
-        "agent_codegen.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "available"
-        },
-        "ConfigAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "IntegrationAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "agent_migration.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "agent_documentation.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "busy"
-        },
-        "NotificationAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "OptimizationAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "agent_security.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "agent_supervisor.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "active"
-        },
-        "testing_agent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "agent_validation.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "UIUXAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "AppleProAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "task_orchestrator.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "available"
-        },
-        "auto_update_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "performance_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "uiux_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "public_api_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "unresponsive"
-        },
-        "security_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "search_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "apple_pro_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "updater_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "pull_request_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "knowledge_base_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "collab_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "documentation_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "quality_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "agent_cleanup.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "testing_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "unknown"
-        }
-      },
-      "system_health": {
-        "overall_status": "warning",
-        "issues": [],
-        "warnings": [
-          "Agent agent_2 has no active tasks",
-          "Agent agent_debug.sh has no active tasks",
-          "Agent agent_build.sh has no active tasks",
-          "Agent agent_codegen.sh has no active tasks",
-          "Agent ConfigAgent has no active tasks",
-          "Agent IntegrationAgent has no active tasks",
-          "Agent agent_migration.sh has no active tasks",
-          "Agent agent_documentation.sh has no active tasks",
-          "Agent NotificationAgent has no active tasks",
-          "Agent OptimizationAgent has no active tasks",
-          "Agent agent_security.sh has no active tasks",
-          "Agent agent_supervisor.sh has no active tasks",
-          "Agent testing_agent has no active tasks",
-          "Agent agent_validation.sh has no active tasks",
-          "Agent UIUXAgent has no active tasks",
-          "Agent AppleProAgent has no active tasks",
-          "Agent task_orchestrator.sh has no active tasks",
-          "Agent auto_update_agent.sh has no active tasks",
-          "Agent performance_agent.sh has no active tasks",
-          "Agent uiux_agent.sh has no active tasks",
-          "Agent public_api_agent.sh has no active tasks",
-          "Agent security_agent.sh has no active tasks",
-          "Agent search_agent.sh has no active tasks",
-          "Agent apple_pro_agent.sh has no active tasks",
-          "Agent updater_agent.sh has no active tasks",
-          "Agent pull_request_agent.sh has no active tasks",
-          "Agent knowledge_base_agent.sh has no active tasks",
-          "Agent collab_agent.sh has no active tasks",
-          "Agent documentation_agent.sh has no active tasks",
-          "Agent quality_agent.sh has no active tasks",
-          "Agent agent_cleanup.sh has no active tasks",
-          "Agent testing_agent.sh has no active tasks",
-          "Low agent utilization (0.0%)"
-        ],
-        "metrics": {
-          "average_agent_utilization": 0.0
-        }
-      },
-      "recent_activity": []
-    },
-    {
-      "timestamp": "2025-11-11T19:13:30.275663",
-      "total_tasks": 100133,
-      "tasks_by_status": {
-        "pending": 100098,
-        "completed": 29,
-        "in_progress": 6
-      },
-      "tasks_by_agent": {
-        "agent_debug": 4329,
-        "agent_codegen": 59488,
-        "agent_testing": 1471,
-        "agent_documentation": 99,
-        "agent_build": 31965,
-        "agent_docs": 37,
-        "agent_test": 1094,
-        "agent_security": 800,
-        "agent_performance": 850
-      },
-      "tasks_by_priority": {
-        "5": 12,
-        "7": 40,
-        "8": 17617,
-        "10": 82447,
-        "6": 10,
-        "4": 3,
-        "9": 4
-      },
-      "agent_workload": {
-        "agent_2": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "agent_debug.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "available"
-        },
-        "agent_build.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "stopped"
-        },
-        "agent_codegen.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "available"
-        },
-        "ConfigAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "IntegrationAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "agent_migration.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "agent_documentation.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "busy"
-        },
-        "NotificationAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "OptimizationAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "agent_security.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "agent_supervisor.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "active"
-        },
-        "testing_agent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "agent_validation.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "UIUXAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "AppleProAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "task_orchestrator.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "available"
-        },
-        "auto_update_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "performance_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "uiux_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "public_api_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "unresponsive"
-        },
-        "security_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "search_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "apple_pro_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "updater_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "pull_request_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "knowledge_base_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "collab_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "documentation_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "quality_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "agent_cleanup.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "testing_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "unknown"
-        }
-      },
-      "system_health": {
-        "overall_status": "warning",
-        "issues": [],
-        "warnings": [
-          "Agent agent_2 has no active tasks",
-          "Agent agent_debug.sh has no active tasks",
-          "Agent agent_build.sh has no active tasks",
-          "Agent agent_codegen.sh has no active tasks",
-          "Agent ConfigAgent has no active tasks",
-          "Agent IntegrationAgent has no active tasks",
-          "Agent agent_migration.sh has no active tasks",
-          "Agent agent_documentation.sh has no active tasks",
-          "Agent NotificationAgent has no active tasks",
-          "Agent OptimizationAgent has no active tasks",
-          "Agent agent_security.sh has no active tasks",
-          "Agent agent_supervisor.sh has no active tasks",
-          "Agent testing_agent has no active tasks",
-          "Agent agent_validation.sh has no active tasks",
-          "Agent UIUXAgent has no active tasks",
-          "Agent AppleProAgent has no active tasks",
-          "Agent task_orchestrator.sh has no active tasks",
-          "Agent auto_update_agent.sh has no active tasks",
-          "Agent performance_agent.sh has no active tasks",
-          "Agent uiux_agent.sh has no active tasks",
-          "Agent public_api_agent.sh has no active tasks",
-          "Agent security_agent.sh has no active tasks",
-          "Agent search_agent.sh has no active tasks",
-          "Agent apple_pro_agent.sh has no active tasks",
-          "Agent updater_agent.sh has no active tasks",
-          "Agent pull_request_agent.sh has no active tasks",
-          "Agent knowledge_base_agent.sh has no active tasks",
-          "Agent collab_agent.sh has no active tasks",
-          "Agent documentation_agent.sh has no active tasks",
-          "Agent quality_agent.sh has no active tasks",
-          "Agent agent_cleanup.sh has no active tasks",
-          "Agent testing_agent.sh has no active tasks",
-          "Low agent utilization (0.0%)"
-        ],
-        "metrics": {
-          "average_agent_utilization": 0.0
-        }
-      },
-      "recent_activity": []
-    },
-    {
-      "timestamp": "2025-11-11T19:14:02.914795",
-      "total_tasks": 100133,
-      "tasks_by_status": {
-        "pending": 100098,
-        "completed": 29,
-        "in_progress": 6
-      },
-      "tasks_by_agent": {
-        "agent_debug": 4329,
-        "agent_codegen": 59488,
-        "agent_testing": 1471,
-        "agent_documentation": 99,
-        "agent_build": 31965,
-        "agent_docs": 37,
-        "agent_test": 1094,
-        "agent_security": 800,
-        "agent_performance": 850
-      },
-      "tasks_by_priority": {
-        "5": 12,
-        "7": 40,
-        "8": 17617,
-        "10": 82447,
-        "6": 10,
-        "4": 3,
-        "9": 4
-      },
-      "agent_workload": {
-        "agent_2": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "agent_debug.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "available"
-        },
-        "agent_build.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "stopped"
-        },
-        "agent_codegen.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "available"
-        },
-        "ConfigAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "IntegrationAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "agent_migration.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "agent_documentation.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "busy"
-        },
-        "NotificationAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "OptimizationAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "agent_security.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "starting"
-        },
-        "agent_supervisor.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "active"
-        },
-        "testing_agent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "agent_validation.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "UIUXAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "AppleProAgent": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "task_orchestrator.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "available"
-        },
-        "auto_update_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "performance_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "uiux_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "public_api_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "unresponsive"
-        },
-        "security_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "search_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "apple_pro_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "updater_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "pull_request_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "knowledge_base_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "collab_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "documentation_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "quality_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "restarting"
-        },
-        "agent_cleanup.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "idle"
-        },
-        "testing_agent.sh": {
-          "current_tasks": 0,
-          "capacity": 10,
-          "utilization_percent": 0.0,
-          "status": "unknown"
-        }
-      },
-      "system_health": {
-        "overall_status": "warning",
-        "issues": [],
-        "warnings": [
-          "Agent agent_2 has no active tasks",
-          "Agent agent_debug.sh has no active tasks",
-          "Agent agent_build.sh has no active tasks",
-          "Agent agent_codegen.sh has no active tasks",
-          "Agent ConfigAgent has no active tasks",
-          "Agent IntegrationAgent has no active tasks",
-          "Agent agent_migration.sh has no active tasks",
-          "Agent agent_documentation.sh has no active tasks",
-          "Agent NotificationAgent has no active tasks",
-          "Agent OptimizationAgent has no active tasks",
-          "Agent agent_security.sh has no active tasks",
-          "Agent agent_supervisor.sh has no active tasks",
-          "Agent testing_agent has no active tasks",
-          "Agent agent_validation.sh has no active tasks",
-          "Agent UIUXAgent has no active tasks",
-          "Agent AppleProAgent has no active tasks",
-          "Agent task_orchestrator.sh has no active tasks",
-          "Agent auto_update_agent.sh has no active tasks",
-          "Agent performance_agent.sh has no active tasks",
-          "Agent uiux_agent.sh has no active tasks",
-          "Agent public_api_agent.sh has no active tasks",
-          "Agent security_agent.sh has no active tasks",
-          "Agent search_agent.sh has no active tasks",
-          "Agent apple_pro_agent.sh has no active tasks",
-          "Agent updater_agent.sh has no active tasks",
-          "Agent pull_request_agent.sh has no active tasks",
-          "Agent knowledge_base_agent.sh has no active tasks",
-          "Agent collab_agent.sh has no active tasks",
-          "Agent documentation_agent.sh has no active tasks",
-          "Agent quality_agent.sh has no active tasks",
-          "Agent agent_cleanup.sh has no active tasks",
-          "Agent testing_agent.sh has no active tasks",
-          "Low agent utilization (0.0%)"
-        ],
-        "metrics": {
-          "average_agent_utilization": 0.0
-        }
-      },
-      "recent_activity": []
-    },
-    {
       "timestamp": "2025-11-11T19:14:35.136532",
       "total_tasks": 100133,
       "tasks_by_status": {
@@ -26441,6 +25643,804 @@
           "capacity": 10,
           "utilization_percent": 0.0,
           "status": "running"
+        },
+        "agent_validation.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "UIUXAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "AppleProAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "task_orchestrator.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "active"
+        },
+        "auto_update_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "performance_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "uiux_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "public_api_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "security_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "search_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "apple_pro_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "updater_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "pull_request_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "knowledge_base_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "collab_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "documentation_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "quality_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "agent_cleanup.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "testing_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        }
+      },
+      "system_health": {
+        "overall_status": "warning",
+        "issues": [],
+        "warnings": [
+          "Agent agent_2 has no active tasks",
+          "Agent agent_debug.sh has no active tasks",
+          "Agent agent_build.sh has no active tasks",
+          "Agent agent_codegen.sh has no active tasks",
+          "Agent ConfigAgent has no active tasks",
+          "Agent IntegrationAgent has no active tasks",
+          "Agent agent_migration.sh has no active tasks",
+          "Agent agent_documentation.sh has no active tasks",
+          "Agent NotificationAgent has no active tasks",
+          "Agent OptimizationAgent has no active tasks",
+          "Agent agent_security.sh has no active tasks",
+          "Agent agent_supervisor.sh has no active tasks",
+          "Agent testing_agent has no active tasks",
+          "Agent agent_validation.sh has no active tasks",
+          "Agent UIUXAgent has no active tasks",
+          "Agent AppleProAgent has no active tasks",
+          "Agent task_orchestrator.sh has no active tasks",
+          "Agent auto_update_agent.sh has no active tasks",
+          "Agent performance_agent.sh has no active tasks",
+          "Agent uiux_agent.sh has no active tasks",
+          "Agent public_api_agent.sh has no active tasks",
+          "Agent security_agent.sh has no active tasks",
+          "Agent search_agent.sh has no active tasks",
+          "Agent apple_pro_agent.sh has no active tasks",
+          "Agent updater_agent.sh has no active tasks",
+          "Agent pull_request_agent.sh has no active tasks",
+          "Agent knowledge_base_agent.sh has no active tasks",
+          "Agent collab_agent.sh has no active tasks",
+          "Agent documentation_agent.sh has no active tasks",
+          "Agent quality_agent.sh has no active tasks",
+          "Agent agent_cleanup.sh has no active tasks",
+          "Agent testing_agent.sh has no active tasks",
+          "Low agent utilization (0.0%)"
+        ],
+        "metrics": {
+          "average_agent_utilization": 0.0
+        }
+      },
+      "recent_activity": []
+    },
+    {
+      "timestamp": "2025-11-11T20:08:22.596541",
+      "total_tasks": 100133,
+      "tasks_by_status": {
+        "pending": 100094,
+        "completed": 33,
+        "in_progress": 6
+      },
+      "tasks_by_agent": {
+        "agent_debug": 4329,
+        "agent_codegen": 59488,
+        "agent_testing": 1471,
+        "agent_documentation": 99,
+        "agent_build": 31965,
+        "agent_docs": 37,
+        "agent_test": 1094,
+        "agent_security": 800,
+        "agent_performance": 850
+      },
+      "tasks_by_priority": {
+        "5": 12,
+        "7": 40,
+        "8": 17617,
+        "10": 82447,
+        "6": 10,
+        "4": 3,
+        "9": 4
+      },
+      "agent_workload": {
+        "agent_2": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_debug.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_build.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_codegen.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "ConfigAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "running"
+        },
+        "IntegrationAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_migration.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_documentation.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "NotificationAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "OptimizationAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_security.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_supervisor.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "active"
+        },
+        "testing_agent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_validation.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "UIUXAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "AppleProAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "task_orchestrator.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "active"
+        },
+        "auto_update_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "performance_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "uiux_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "public_api_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "security_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "search_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "apple_pro_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "updater_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "pull_request_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "knowledge_base_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "collab_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "documentation_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "quality_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "agent_cleanup.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "testing_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        }
+      },
+      "system_health": {
+        "overall_status": "warning",
+        "issues": [],
+        "warnings": [
+          "Agent agent_2 has no active tasks",
+          "Agent agent_debug.sh has no active tasks",
+          "Agent agent_build.sh has no active tasks",
+          "Agent agent_codegen.sh has no active tasks",
+          "Agent ConfigAgent has no active tasks",
+          "Agent IntegrationAgent has no active tasks",
+          "Agent agent_migration.sh has no active tasks",
+          "Agent agent_documentation.sh has no active tasks",
+          "Agent NotificationAgent has no active tasks",
+          "Agent OptimizationAgent has no active tasks",
+          "Agent agent_security.sh has no active tasks",
+          "Agent agent_supervisor.sh has no active tasks",
+          "Agent testing_agent has no active tasks",
+          "Agent agent_validation.sh has no active tasks",
+          "Agent UIUXAgent has no active tasks",
+          "Agent AppleProAgent has no active tasks",
+          "Agent task_orchestrator.sh has no active tasks",
+          "Agent auto_update_agent.sh has no active tasks",
+          "Agent performance_agent.sh has no active tasks",
+          "Agent uiux_agent.sh has no active tasks",
+          "Agent public_api_agent.sh has no active tasks",
+          "Agent security_agent.sh has no active tasks",
+          "Agent search_agent.sh has no active tasks",
+          "Agent apple_pro_agent.sh has no active tasks",
+          "Agent updater_agent.sh has no active tasks",
+          "Agent pull_request_agent.sh has no active tasks",
+          "Agent knowledge_base_agent.sh has no active tasks",
+          "Agent collab_agent.sh has no active tasks",
+          "Agent documentation_agent.sh has no active tasks",
+          "Agent quality_agent.sh has no active tasks",
+          "Agent agent_cleanup.sh has no active tasks",
+          "Agent testing_agent.sh has no active tasks",
+          "Low agent utilization (0.0%)"
+        ],
+        "metrics": {
+          "average_agent_utilization": 0.0
+        }
+      },
+      "recent_activity": []
+    },
+    {
+      "timestamp": "2025-11-11T20:08:55.387616",
+      "total_tasks": 100133,
+      "tasks_by_status": {
+        "pending": 100094,
+        "completed": 33,
+        "in_progress": 6
+      },
+      "tasks_by_agent": {
+        "agent_debug": 4329,
+        "agent_codegen": 59488,
+        "agent_testing": 1471,
+        "agent_documentation": 99,
+        "agent_build": 31965,
+        "agent_docs": 37,
+        "agent_test": 1094,
+        "agent_security": 800,
+        "agent_performance": 850
+      },
+      "tasks_by_priority": {
+        "5": 12,
+        "7": 40,
+        "8": 17617,
+        "10": 82447,
+        "6": 10,
+        "4": 3,
+        "9": 4
+      },
+      "agent_workload": {
+        "agent_2": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_debug.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_build.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_codegen.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "ConfigAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "running"
+        },
+        "IntegrationAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_migration.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_documentation.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "NotificationAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "OptimizationAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_security.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_supervisor.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "active"
+        },
+        "testing_agent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_validation.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "UIUXAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "AppleProAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "task_orchestrator.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "active"
+        },
+        "auto_update_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "performance_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "uiux_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "public_api_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "security_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "search_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "apple_pro_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "updater_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "pull_request_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "knowledge_base_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "collab_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "documentation_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "quality_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        },
+        "agent_cleanup.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "testing_agent.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "restarting"
+        }
+      },
+      "system_health": {
+        "overall_status": "warning",
+        "issues": [],
+        "warnings": [
+          "Agent agent_2 has no active tasks",
+          "Agent agent_debug.sh has no active tasks",
+          "Agent agent_build.sh has no active tasks",
+          "Agent agent_codegen.sh has no active tasks",
+          "Agent ConfigAgent has no active tasks",
+          "Agent IntegrationAgent has no active tasks",
+          "Agent agent_migration.sh has no active tasks",
+          "Agent agent_documentation.sh has no active tasks",
+          "Agent NotificationAgent has no active tasks",
+          "Agent OptimizationAgent has no active tasks",
+          "Agent agent_security.sh has no active tasks",
+          "Agent agent_supervisor.sh has no active tasks",
+          "Agent testing_agent has no active tasks",
+          "Agent agent_validation.sh has no active tasks",
+          "Agent UIUXAgent has no active tasks",
+          "Agent AppleProAgent has no active tasks",
+          "Agent task_orchestrator.sh has no active tasks",
+          "Agent auto_update_agent.sh has no active tasks",
+          "Agent performance_agent.sh has no active tasks",
+          "Agent uiux_agent.sh has no active tasks",
+          "Agent public_api_agent.sh has no active tasks",
+          "Agent security_agent.sh has no active tasks",
+          "Agent search_agent.sh has no active tasks",
+          "Agent apple_pro_agent.sh has no active tasks",
+          "Agent updater_agent.sh has no active tasks",
+          "Agent pull_request_agent.sh has no active tasks",
+          "Agent knowledge_base_agent.sh has no active tasks",
+          "Agent collab_agent.sh has no active tasks",
+          "Agent documentation_agent.sh has no active tasks",
+          "Agent quality_agent.sh has no active tasks",
+          "Agent agent_cleanup.sh has no active tasks",
+          "Agent testing_agent.sh has no active tasks",
+          "Low agent utilization (0.0%)"
+        ],
+        "metrics": {
+          "average_agent_utilization": 0.0
+        }
+      },
+      "recent_activity": []
+    },
+    {
+      "timestamp": "2025-11-11T20:09:27.490616",
+      "total_tasks": 100133,
+      "tasks_by_status": {
+        "pending": 100094,
+        "completed": 33,
+        "in_progress": 6
+      },
+      "tasks_by_agent": {
+        "agent_debug": 4329,
+        "agent_codegen": 59488,
+        "agent_testing": 1471,
+        "agent_documentation": 99,
+        "agent_build": 31965,
+        "agent_docs": 37,
+        "agent_test": 1094,
+        "agent_security": 800,
+        "agent_performance": 850
+      },
+      "tasks_by_priority": {
+        "5": 12,
+        "7": 40,
+        "8": 17617,
+        "10": 82447,
+        "6": 10,
+        "4": 3,
+        "9": 4
+      },
+      "agent_workload": {
+        "agent_2": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_debug.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_build.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_codegen.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "ConfigAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "running"
+        },
+        "IntegrationAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_migration.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "agent_documentation.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
+        },
+        "NotificationAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "OptimizationAgent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_security.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "starting"
+        },
+        "agent_supervisor.sh": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "active"
+        },
+        "testing_agent": {
+          "current_tasks": 0,
+          "capacity": 10,
+          "utilization_percent": 0.0,
+          "status": "idle"
         },
         "agent_validation.sh": {
           "current_tasks": 0,

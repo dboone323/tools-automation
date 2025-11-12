@@ -86,7 +86,7 @@
     },
     "task_orchestrator.sh": {
       "status": "active",
-      "last_seen": 1762913274,
+      "last_seen": 1762913305,
       "tasks_completed": 0
     },
     "auto_update_agent.sh": {
@@ -165,10 +165,10 @@
       "tasks_completed": 0
     }
   },
-  "last_update": 1762913274,
+  "last_update": 1762913305,
   "orchestrator": {
     "status": "available",
-    "last_seen": 1762913274,
+    "last_seen": 1762913305,
     "pid": 9991,
     "is_running": true,
     "tasks_queued": 0,
