@@ -1,0 +1,145 @@
+name: Semantic Versioning
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    versioning:
+        runs-on: ubuntu-latest
+        outputs:
+            new_version: ${{ steps.versioning.outputs.new_version }}
+            new_tag: ${{ steps.versioning.outputs.new_tag }}
+            release_type: ${{ steps.versioning.outputs.release_type }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+
+            - name: Install semantic-release
+              run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git
+
+            - name: Run semantic-release (dry-run)
+              id: versioning
+              run: |
+                  # Get the last tag
+                  LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+                  echo "Last tag: $LAST_TAG"
+
+                  # Analyze commits since last tag
+                  if [ "$LAST_TAG" = "v0.0.0" ]; then
+                    COMMITS=$(git log --oneline --pretty=format:"%s")
+                  else
+                    COMMITS=$(git log ${LAST_TAG}..HEAD --oneline --pretty=format:"%s")
+                  fi
+
+                  echo "Commits since last tag:"
+                  echo "$COMMITS"
+
+                  # Determine release type
+                  if echo "$COMMITS" | grep -q "BREAKING CHANGE\|feat!:"; then
+                    RELEASE_TYPE="major"
+                  elif echo "$COMMITS" | grep -q "^feat:"; then
+                    RELEASE_TYPE="minor"
+                  elif echo "$COMMITS" | grep -q "^fix:"; then
+                    RELEASE_TYPE="patch"
+                  else
+                    RELEASE_TYPE="none"
+                  fi
+
+                  echo "Release type: $RELEASE_TYPE"
+
+                  # Calculate new version
+                  if [ "$RELEASE_TYPE" = "none" ]; then
+                    NEW_VERSION=""
+                    NEW_TAG=""
+                  else
+                    # Parse current version
+                    CURRENT_VERSION=$(echo $LAST_TAG | sed 's/v//')
+                    IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+
+                    case $RELEASE_TYPE in
+                      "major")
+                        NEW_MAJOR=$((MAJOR + 1))
+                        NEW_VERSION="$NEW_MAJOR.0.0"
+                        ;;
+                      "minor")
+                        NEW_MINOR=$((MINOR + 1))
+                        NEW_VERSION="$MAJOR.$NEW_MINOR.0"
+                        ;;
+                      "patch")
+                        NEW_PATCH=$((PATCH + 1))
+                        NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+                        ;;
+                    esac
+
+                    NEW_TAG="v$NEW_VERSION"
+                  fi
+
+                  echo "New version: $NEW_VERSION"
+                  echo "New tag: $NEW_TAG"
+
+                  # Set outputs
+                  echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+                  echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+                  echo "release_type=$RELEASE_TYPE" >> $GITHUB_OUTPUT
+
+    update-version:
+        needs: versioning
+        if: needs.versioning.outputs.release_type != 'none'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Update Python SDK version
+              run: |
+                  VERSION="${{ needs.versioning.outputs.new_version }}"
+                  sed -i "s/version=\"[^\"]*\"/version=\"$VERSION\"/" sdk/python/setup.py
+
+            - name: Update TypeScript SDK version
+              run: |
+                  VERSION="${{ needs.versioning.outputs.new_version }}"
+                  cd sdk/typescript
+                  npm version $VERSION --no-git-tag-version
+
+            - name: Update Go SDK version
+              run: |
+                  # Go modules use git tags, so no file updates needed
+                  echo "Go SDK version managed via git tags"
+
+            - name: Commit version updates
+              run: |
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+                  git add .
+                  git commit -m "chore: bump version to ${{ needs.versioning.outputs.new_version }}"
+
+            - name: Create git tag
+              run: |
+                  git tag ${{ needs.versioning.outputs.new_tag }}
+                  git push origin ${{ needs.versioning.outputs.new_tag }}
+
+            - name: Trigger SDK publishing
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      github.rest.actions.createWorkflowDispatch({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        workflow_id: 'publish-sdks.yml',
+                        ref: 'main',
+                        inputs: {
+                          sdk: 'all',
+                          version: '${{ needs.versioning.outputs.new_version }}'
+                        }
+                      })

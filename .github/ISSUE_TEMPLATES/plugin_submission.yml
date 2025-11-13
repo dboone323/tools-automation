@@ -1,0 +1,212 @@
+---
+name: Plugin Submission
+description: Submit a new plugin to the marketplace
+title: "[PLUGIN] "
+labels: ["plugin-submission", "community"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Plugin Submission
+
+        Thanks for contributing to the Tools Automation plugin ecosystem! Please fill out the information below to submit your plugin.
+
+  - type: input
+    id: plugin-name
+    attributes:
+      label: Plugin Name
+      description: The name of your plugin
+      placeholder: e.g., File Backup Automator
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin Version
+      description: Current version of your plugin
+      placeholder: e.g., 1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what your plugin does
+      placeholder: This plugin provides automated file backup with cloud storage integration...
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      description: Your name or organization
+      placeholder: e.g., John Doe, Acme Corp
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which category best fits your plugin?
+      options:
+        - automation
+        - monitoring
+        - ai-assistance
+        - data-processing
+        - integration
+        - utilities
+    validations:
+      required: true
+
+  - type: input
+    id: repository-url
+    attributes:
+      label: Repository URL
+      description: Link to your plugin's GitHub repository
+      placeholder: https://github.com/username/plugin-name
+    validations:
+      required: true
+
+  - type: input
+    id: documentation-url
+    attributes:
+      label: Documentation URL
+      description: Link to your plugin's documentation
+      placeholder: https://github.com/username/plugin-name/README.md
+    validations:
+      required: false
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: List of Python packages or system dependencies required
+      placeholder: |
+        boto3>=1.28.0
+        schedule>=1.2.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: permissions
+    attributes:
+      label: Permissions Required
+      description: What permissions does your plugin need?
+      placeholder: |
+        - file_system
+        - network_access
+        - system_info
+    validations:
+      required: true
+
+  - type: textarea
+    id: hooks
+    attributes:
+      label: Supported Hooks
+      description: Which plugin hooks does your plugin support?
+      placeholder: |
+        - startup
+        - shutdown
+        - backup_schedule
+    validations:
+      required: true
+
+  - type: input
+    id: min-version
+    attributes:
+      label: Minimum Tools Automation Version
+      description: Minimum version of Tools Automation required
+      placeholder: e.g., 1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: max-version
+    attributes:
+      label: Maximum Tools Automation Version
+      description: Maximum version of Tools Automation supported (leave empty for no limit)
+      placeholder: e.g., 2.0.0
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: files-included
+    attributes:
+      label: Files Included
+      description: Which files are included in your plugin submission?
+      options:
+        - label: plugin.json (metadata file)
+          required: true
+        - label: Main plugin file(s)
+          required: true
+        - label: README.md with documentation
+          required: true
+        - label: requirements.txt
+          required: true
+        - label: Test files
+          required: true
+        - label: LICENSE file
+          required: true
+        - label: Additional documentation
+        - label: Example configuration files
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: Testing
+      description: What testing have you done?
+      options:
+        - label: Unit tests included and passing
+          required: true
+        - label: Integration tests included
+        - label: Manual testing completed
+        - label: Tested on multiple operating systems
+        - label: Security review completed
+    validations:
+      required: true
+
+  - type: textarea
+    id: installation-notes
+    attributes:
+      label: Installation Notes
+      description: Any special installation instructions or configuration requirements
+      placeholder: |
+        1. Install dependencies: pip install -r requirements.txt
+        2. Configure AWS credentials for S3 access
+        3. Update plugin.json with your settings
+    validations:
+      required: false
+
+  - type: textarea
+    id: demo
+    attributes:
+      label: Demo/Screenshots
+      description: Links to demos, screenshots, or examples of your plugin in action
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please check the following before submitting.
+      options:
+        - label: My plugin follows the [contribution guidelines](https://github.com/tools-automation/tools-automation/blob/main/community/CONTRIBUTING.md)
+          required: true
+        - label: My plugin is open source with an appropriate license
+          required: true
+        - label: My plugin does not contain malicious code
+          required: true
+        - label: My plugin has been tested and works as described
+          required: true
+        - label: I have included comprehensive documentation
+          required: true
+        - label: I understand that my plugin will be reviewed before approval
+          required: true

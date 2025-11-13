@@ -1,0 +1,9 @@
+{
+  "generated_at": 1763004047.349396,
+  "sample_count": 10,
+  "response_time_avg": 548.1,
+  "throughput_avg": 310.9,
+  "error_rate_avg": 1.6,
+  "response_time_p95": 951,
+  "throughput_p95": 490
+}

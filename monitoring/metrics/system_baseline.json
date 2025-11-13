@@ -1,0 +1,10 @@
+{
+  "generated_at": 1763004045.517655,
+  "sample_count": 10,
+  "cpu_avg": 8.557,
+  "memory_avg": 277927.8,
+  "disk_avg": 14,
+  "cpu_p95": 23.2,
+  "memory_p95": 292135,
+  "disk_p95": 14
+}

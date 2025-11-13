@@ -1,0 +1,38 @@
+{
+  "name": "File Backup Automator",
+  "version": "1.0.0",
+  "description": "Automatically backs up important files to cloud storage with configurable schedules",
+  "author": "Tools Automation Community",
+  "email": "community@tools-automation.dev",
+  "homepage": "https://github.com/tools-automation/file-backup-automator",
+  "license": "MIT",
+  "category": "automation",
+  "compatibility": {
+    "min_version": "1.0.0",
+    "max_version": "2.0.0"
+  },
+  "dependencies": {
+    "boto3": "^1.28.0",
+    "schedule": "^1.2.0"
+  },
+  "permissions": [
+    "read_files",
+    "write_files",
+    "network_access"
+  ],
+  "hooks": [
+    "startup",
+    "shutdown",
+    "scheduled_backup"
+  ],
+  "configuration": {
+    "backup_paths": [
+      "~/Documents",
+      "~/Desktop"
+    ],
+    "backup_schedule": "daily",
+    "retention_days": 30,
+    "cloud_provider": "aws_s3",
+    "bucket_name": "my-backups"
+  }
+}

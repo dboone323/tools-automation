@@ -1,0 +1,217 @@
+name: Publish SDKs
+
+on:
+    push:
+        tags:
+            - "v*"
+    workflow_dispatch:
+        inputs:
+            sdk:
+                description: "SDK to publish (python, typescript, go, or all)"
+                required: true
+                default: "all"
+                type: choice
+                options:
+                    - all
+                    - python
+                    - typescript
+                    - go
+            version:
+                description: "Version to publish (leave empty for auto-detection)"
+                required: false
+                type: string
+
+jobs:
+    publish-python:
+        if: ${{ inputs.sdk == 'all' || inputs.sdk == 'python' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.11"
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install build twine
+
+            - name: Build package
+              run: |
+                  cd sdk/python
+                  python -m build
+
+            - name: Publish to PyPI
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+              env:
+                  TWINE_USERNAME: __token__
+                  TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+              run: |
+                  cd sdk/python
+                  python -m twine upload dist/*
+
+            - name: Publish to Test PyPI
+              if: github.event_name == 'workflow_dispatch'
+              env:
+                  TWINE_USERNAME: __token__
+                  TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+              run: |
+                  cd sdk/python
+                  python -m twine upload --repository testpypi dist/*
+
+    publish-typescript:
+        if: ${{ inputs.sdk == 'all' || inputs.sdk == 'typescript' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+                  registry-url: "https://registry.npmjs.org"
+
+            - name: Install dependencies
+              run: |
+                  cd sdk/typescript
+                  npm ci
+
+            - name: Run tests
+              run: |
+                  cd sdk/typescript
+                  npm test
+
+            - name: Build package
+              run: |
+                  cd sdk/typescript
+                  npm run build
+
+            - name: Publish to npm
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: |
+                  cd sdk/typescript
+                  npm publish
+
+            - name: Publish to npm (beta)
+              if: github.event_name == 'workflow_dispatch'
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: |
+                  cd sdk/typescript
+                  npm publish --tag beta
+
+    publish-go:
+        if: ${{ inputs.sdk == 'all' || inputs.sdk == 'go' }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version: "1.21"
+
+            - name: Run tests
+              run: |
+                  cd sdk/go
+                  go test ./...
+
+            - name: Create release tag
+              if: github.event_name == 'workflow_dispatch' && inputs.version != ''
+              run: |
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+                  git tag "v${{ inputs.version }}"
+                  git push origin "v${{ inputs.version }}"
+
+            - name: Verify Go module
+              run: |
+                  cd sdk/go
+                  go mod tidy
+                  go mod verify
+
+    generate-docs:
+        needs: [publish-python, publish-typescript, publish-go]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.11"
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "18"
+
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version: "1.21"
+
+            - name: Generate documentation
+              run: |
+                  ./docs/sdk/generate_docs.sh all
+
+            - name: Deploy to GitHub Pages
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./docs/sdk
+                  destination_dir: sdk
+
+    create-release:
+        needs: [publish-python, publish-typescript, publish-go, generate-docs]
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Get version
+              id: get_version
+              run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+            - name: Create GitHub Release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Release v${{ steps.get_version.outputs.version }}
+                  body: |
+                      ## SDK Release v${{ steps.get_version.outputs.version }}
+
+                      This release includes updates to all SDKs with the latest features and bug fixes.
+
+                      ### What's New
+                      - Updated all SDK implementations
+                      - Enhanced documentation
+                      - Improved error handling
+                      - Performance optimizations
+
+                      ### SDK Downloads
+                      - **Python**: `pip install mcp-sdk`
+                      - **TypeScript**: `npm install @tools-automation/mcp-sdk`
+                      - **Go**: `go get github.com/dboone323/tools-automation/sdk/go`
+
+                      ### Documentation
+                      📖 [SDK Documentation](https://dboone323.github.io/tools-automation/sdk/)
+
+                      ### Installation Examples
+                      See the [SDK overview](https://dboone323.github.io/tools-automation/sdk/) for detailed installation instructions and examples.
+                  draft: false
+                  prerelease: false

@@ -6,7 +6,6 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TRACKER_FILE="${SCRIPT_DIR}/ENHANCEMENT_PLAN_TRACKER.md"
-TEMP_FILE="${TRACKER_FILE}.tmp"
 
 echo "🔄 Updating Enhancement Plan Tracker..."
 

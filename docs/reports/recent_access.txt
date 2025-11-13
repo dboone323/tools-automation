@@ -1,0 +1,10 @@
+1763001285 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/getting-started/onboarding.md
+1763001285 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/reference/configuration.md
+1763001285 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/reference/troubleshooting.md
+1763003013 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/sdk/go/api.md
+1763003016 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/sdk/sdk/README.md
+1763003017 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/sdk/sdk/COMPARISON.md
+1763004487 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/README.md
+1763005430 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/api_documentation.md
+1763005430 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/examples/basic_usage.md
+1763005430 /Users/danielstevens/Desktop/github-projects/tools-automation/docs/reports/docs_validation_20251112.md

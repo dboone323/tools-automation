@@ -1,0 +1,184 @@
+{
+  "monitoring": {
+    "enabled": true,
+    "intervals": {
+      "system_check": 60,
+      "performance_check": 300,
+      "service_check": 30,
+      "baseline_update": 86400
+    },
+    "thresholds": {
+      "cpu_usage_percent": 80,
+      "memory_usage_percent": 85,
+      "disk_usage_percent": 90,
+      "response_time_ms": 500,
+      "error_rate_percent": 5,
+      "network_latency_ms": 100
+    },
+    "retention": {
+      "metrics_days": 30,
+      "alerts_days": 7,
+      "reports_days": 90
+    }
+  },
+  "alerting": {
+    "enabled": true,
+    "channels": {
+      "email": {
+        "enabled": false,
+        "recipients": ["admin@tools-automation.local"],
+        "smtp_server": "smtp.gmail.com",
+        "smtp_port": 587
+      },
+      "slack": {
+        "enabled": false,
+        "webhook_url": "",
+        "channel": "#alerts",
+        "username": "Health Monitor"
+      },
+      "webhook": {
+        "enabled": false,
+        "url": "",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    "escalation": {
+      "warning_threshold": 3,
+      "critical_threshold": 5,
+      "escalation_delay_minutes": 15
+    }
+  },
+  "services": {
+    "core_services": [
+      {
+        "name": "agent_dashboard",
+        "type": "http",
+        "url": "http://localhost:8080/health",
+        "timeout_ms": 5000,
+        "expected_status": 200
+      },
+      {
+        "name": "monitoring_api",
+        "type": "http",
+        "url": "http://localhost:8081/health",
+        "timeout_ms": 5000,
+        "expected_status": 200
+      }
+    ],
+    "external_services": [
+      {
+        "name": "github_api",
+        "type": "http",
+        "url": "https://api.github.com/zen",
+        "timeout_ms": 10000,
+        "expected_status": 200
+      },
+      {
+        "name": "pypi_api",
+        "type": "http",
+        "url": "https://pypi.org/",
+        "timeout_ms": 10000,
+        "expected_status": 200
+      }
+    ]
+  },
+  "performance": {
+    "baselines": {
+      "enabled": true,
+      "collection_period_hours": 24,
+      "update_interval_hours": 168,
+      "anomaly_detection": {
+        "enabled": true,
+        "sensitivity": 0.95,
+        "min_samples": 100
+      }
+    },
+    "metrics": {
+      "response_time_percentiles": [50, 95, 99],
+      "throughput_window_seconds": 60,
+      "error_rate_window_seconds": 300
+    }
+  },
+  "dashboard": {
+    "enabled": true,
+    "port": 8081,
+    "host": "localhost",
+    "auth": {
+      "enabled": false,
+      "username": "admin",
+      "password_hash": ""
+    },
+    "refresh_interval_seconds": 30,
+    "charts": {
+      "system_resources": true,
+      "performance_metrics": true,
+      "alert_history": true,
+      "service_status": true
+    }
+  },
+  "reporting": {
+    "daily_reports": {
+      "enabled": true,
+      "schedule": "00 00 * * *",
+      "format": "markdown",
+      "include_charts": true,
+      "recipients": []
+    },
+    "weekly_reports": {
+      "enabled": true,
+      "schedule": "00 00 * * 1",
+      "format": "html",
+      "include_trends": true,
+      "recipients": []
+    },
+    "alerts_report": {
+      "enabled": true,
+      "schedule": "00 08 * * *",
+      "include_resolved": true,
+      "max_age_days": 7
+    }
+  },
+  "logging": {
+    "level": "info",
+    "file": "monitoring.log",
+    "max_size_mb": 100,
+    "max_files": 5,
+    "format": "json"
+  },
+  "maintenance": {
+    "cleanup": {
+      "enabled": true,
+      "schedule": "00 02 * * *",
+      "max_metric_age_days": 30,
+      "max_alert_age_days": 7,
+      "max_report_age_days": 90
+    },
+    "backup": {
+      "enabled": true,
+      "schedule": "00 03 * * 7",
+      "destination": "../backups/monitoring",
+      "compression": true,
+      "retention_days": 30
+    }
+  },
+  "integrations": {
+    "prometheus": {
+      "enabled": false,
+      "endpoint": "/metrics",
+      "port": 9090
+    },
+    "grafana": {
+      "enabled": false,
+      "dashboard_uid": "",
+      "api_key": ""
+    },
+    "datadog": {
+      "enabled": false,
+      "api_key": "",
+      "app_key": "",
+      "tags": ["env:production", "service:tools-automation"]
+    }
+  }
+}

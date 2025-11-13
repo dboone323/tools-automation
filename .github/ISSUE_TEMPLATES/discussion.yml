@@ -1,0 +1,76 @@
+---
+name: Community Discussion
+description: Start a discussion or Q&A
+title: "[DISCUSSION] "
+labels: ["discussion", "community"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Community Discussion
+
+        Use this template to start discussions, ask questions, or share ideas with the community.
+
+  - type: dropdown
+    id: discussion-type
+    attributes:
+      label: Discussion Type
+      description: What type of discussion is this?
+      options:
+        - Question (I need help or clarification)
+        - Idea (I have a suggestion or concept to share)
+        - Show and Tell (I want to share something I've built)
+        - General Discussion (Open conversation)
+        - Best Practices (Sharing knowledge or experience)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: topic
+    attributes:
+      label: Topic
+      description: What would you like to discuss?
+      placeholder: Briefly describe the topic or question you want to discuss
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Provide more details about your topic or question
+      placeholder: |
+        - What have you tried so far?
+        - What are your goals?
+        - What challenges are you facing?
+        - What would success look like?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Any additional context that might be helpful
+      placeholder: |
+        - Tools Automation version
+        - Operating system
+        - Plugins you're using
+        - Related issues or discussions
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please check the following before submitting.
+      options:
+        - label: I have searched for similar discussions and didn't find any
+          required: true
+        - label: This discussion is relevant to Tools Automation
+          required: true
+        - label: I have included all relevant information
+          required: true

@@ -1,0 +1,40 @@
+{
+  "name": "System Monitor",
+  "version": "1.0.0",
+  "description": "Comprehensive system monitoring with alerts and performance tracking",
+  "author": "Tools Automation Community",
+  "email": "community@tools-automation.dev",
+  "homepage": "https://github.com/tools-automation/system-monitor",
+  "license": "MIT",
+  "main": "system_monitor.py",
+  "category": "monitoring",
+  "compatibility": {
+    "min_version": "1.0.0",
+    "max_version": "2.0.0"
+  },
+  "dependencies": {
+    "psutil": "^5.9.0",
+    "requests": "^2.31.0"
+  },
+  "permissions": [
+    "system_info",
+    "network_access"
+  ],
+  "hooks": [
+    "startup",
+    "shutdown",
+    "health_check",
+    "performance_alert"
+  ],
+  "configuration": {
+    "check_interval": 60,
+    "alert_thresholds": {
+      "cpu_percent": 80,
+      "memory_percent": 85,
+      "disk_percent": 90
+    },
+    "webhook_url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+    "enable_prometheus": false,
+    "prometheus_port": 9091
+  }
+}

@@ -1,180 +1,319 @@
-# Tools Automation Monitoring Setup
+# System Health Monitoring
 
-This directory contains the monitoring stack for the Tools Automation project, providing comprehensive observability and health monitoring.
+A comprehensive system health monitoring and alerting platform for the Tools Automation ecosystem. This system provides real-time monitoring, performance regression detection, predictive maintenance, and automated reporting.
 
-## 🏗️ Architecture
+## Features
 
-The monitoring stack consists of:
+- **Real-time System Monitoring**: CPU, memory, disk, and network metrics
+- **Performance Tracking**: Response times, throughput, and error rates
+- **Automated Alerting**: Configurable thresholds with multiple notification channels
+- **Performance Regression Detection**: Statistical analysis to detect performance degradation
+- **Predictive Maintenance**: Trend analysis and maintenance predictions
+- **Health Dashboards**: Web-based dashboard for visualizing system health
+- **Automated Reporting**: Daily and weekly health reports with notifications
+- **REST API**: Programmatic access to monitoring data
 
-- **Prometheus**: Metrics collection and storage
-- **Grafana**: Visualization and dashboards
-- **Uptime Kuma**: Service uptime monitoring
-- **Node Exporter**: System metrics collection
-- **Metrics Exporter**: Custom Python application for agent metrics
+## Quick Start
 
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Docker and Docker Compose
-- Python 3.8+ (for metrics exporter)
-
-### Start Monitoring Stack
+### 1. Initialize the System
 
 ```bash
-# Start all monitoring services
-./monitoring.sh start
-
-# Or use docker-compose directly
-docker-compose -f docker-compose.monitoring.yml up -d
+cd monitoring/
+./start_monitoring.sh init
 ```
 
-### Access Services
-
-- **Grafana**: http://localhost:3000 (admin/admin)
-- **Prometheus**: http://localhost:9090
-- **Uptime Kuma**: http://localhost:3001
-- **Node Exporter**: http://localhost:9100
-
-### Start Metrics Exporter
+### 2. Start Monitoring
 
 ```bash
-# Install dependencies
-pip install flask prometheus_client
-
-# Start the metrics exporter
-python metrics_exporter.py
+./start_monitoring.sh start
 ```
 
-Metrics will be available at: http://localhost:8080/metrics
+This will start:
 
-## 📊 Dashboards
+- Monitoring daemon (collects metrics every 60 seconds)
+- API server (serves dashboard and data on port 8081)
+- Automated tasks (daily reports, maintenance analysis)
 
-### System Overview Dashboard
+### 3. Access Dashboard
 
-Pre-configured dashboard showing:
+Open your browser to: http://localhost:8081
 
-- System CPU and memory usage
-- Disk usage statistics
-- Network traffic
-- Agent status indicators
+## Architecture
 
-### Custom Dashboards
-
-Create additional dashboards in Grafana for:
-
-- Agent performance metrics
-- Task completion rates
-- Error tracking
-- Resource utilization
-
-## 🔧 Configuration
-
-### Prometheus Configuration
-
-Edit `monitoring/prometheus.yml` to add new scrape targets:
-
-```yaml
-- job_name: "my-new-service"
-  static_configs:
-    - targets: ["localhost:9091"]
-  scrape_interval: 30s
+```
+monitoring/
+├── health_monitor.sh          # Main monitoring daemon
+├── monitoring_api.py          # REST API server
+├── performance_regression.py  # Regression detection
+├── predictive_maintenance.py  # Maintenance predictions
+├── health_reporter.py         # Automated reporting
+├── start_monitoring.sh        # Startup script
+├── config.json                # Configuration
+├── metrics/                   # Collected metrics
+├── alerts/                    # Generated alerts
+├── reports/                   # Health reports
+├── dashboard/                 # Web dashboard files
+└── predictions/               # Maintenance predictions
 ```
 
-### Grafana Data Sources
+## Configuration
 
-Additional data sources can be configured in `monitoring/grafana/provisioning/datasources/`
-
-### Agent Status
-
-Update `agent_status.json` to reflect current agent states:
+Edit `config.json` to customize:
 
 ```json
 {
-  "agent_name": {
-    "status": "running|stopped",
-    "tasks_completed": 0,
-    "tasks_failed": 0,
-    "memory_usage": 0,
-    "cpu_usage": 0.0
+  "monitoring": {
+    "intervals": {
+      "system_check": 60,
+      "performance_check": 300
+    },
+    "thresholds": {
+      "cpu_usage_percent": 80,
+      "memory_usage_percent": 85,
+      "response_time_ms": 500
+    }
+  },
+  "alerting": {
+    "channels": {
+      "email": {
+        "enabled": true,
+        "recipients": ["admin@example.com"]
+      },
+      "slack": {
+        "enabled": true,
+        "webhook_url": "https://hooks.slack.com/..."
+      }
+    }
   }
 }
 ```
 
-## 📈 Metrics
+## API Endpoints
 
-### Agent Metrics
+- `GET /api/health` - Health check
+- `GET /api/metrics` - Latest system metrics
+- `GET /api/metrics/history?hours=24` - Historical metrics
+- `GET /api/alerts` - Active alerts
+- `GET /api/baselines` - Performance baselines
+- `GET /api/reports` - Available reports
+- `GET /api/services` - Service status
+- `GET /api/stats` - Monitoring statistics
 
-- `agent_status{agent_name, agent_type}`: Agent operational status (0=down, 1=up)
-- `agent_tasks_completed_total{agent_name, task_type}`: Tasks completed
-- `agent_tasks_failed_total{agent_name, task_type}`: Tasks failed
-- `agent_memory_usage_bytes{agent_name}`: Memory usage in bytes
-- `agent_cpu_usage_percent{agent_name}`: CPU usage percentage
+## Command Line Tools
 
-### System Metrics
-
-- `system_agents_total`: Total registered agents
-- `system_tasks_queued`: Tasks waiting in queue
-- `system_tasks_processing`: Tasks currently being processed
-
-## 🛠️ Management Commands
+### Monitoring Daemon
 
 ```bash
-# Start monitoring stack
-./monitoring.sh start
-
-# Stop monitoring stack
-./monitoring.sh stop
-
-# Restart monitoring stack
-./monitoring.sh restart
-
-# Check service status
-./monitoring.sh status
-
-# View logs
-./monitoring.sh logs [service]
-
-# Clean up (removes all data)
-./monitoring.sh cleanup
+./health_monitor.sh status     # Show status
+./health_monitor.sh start      # Start daemon
+./health_monitor.sh stop       # Stop daemon
+./health_monitor.sh collect    # Collect metrics manually
+./health_monitor.sh baseline   # Generate baselines
+./health_monitor.sh report     # Generate daily report
 ```
 
-## 🔍 Troubleshooting
+### Performance Analysis
 
-### Services Not Starting
+```bash
+python3 performance_regression.py analyze    # Detect regressions
+python3 performance_regression.py report     # Generate regression report
+```
 
-1. Check Docker is running: `docker info`
-2. Check port conflicts: `lsof -i :3000,9090,3001,9100`
-3. View logs: `./monitoring.sh logs`
+### Predictive Maintenance
 
-### Metrics Not Appearing
+```bash
+python3 predictive_maintenance.py analyze    # Analyze maintenance needs
+```
 
-1. Verify metrics exporter is running: `curl http://localhost:8080/metrics`
-2. Check Prometheus targets: http://localhost:9090/targets
-3. Validate JSON format in `agent_status.json`
+### Health Reporting
 
-### Grafana Not Loading
+```bash
+python3 health_reporter.py generate 2024-01-15  # Generate specific date report
+python3 health_reporter.py send                 # Generate and send today's report
+```
 
-1. Wait 30 seconds after startup for initialization
-2. Check Grafana logs: `./monitoring.sh logs grafana`
-3. Reset admin password if needed
+## Automated Tasks
 
-## 📚 Additional Resources
+The system sets up automated tasks via cron:
 
-- [Prometheus Documentation](https://prometheus.io/docs/)
-- [Grafana Documentation](https://grafana.com/docs/)
-- [Uptime Kuma Documentation](https://github.com/louislam/uptime-kuma/wiki)
-- [Prometheus Python Client](https://github.com/prometheus/client_python)
+- **Daily Reports**: 6:00 AM - Generate and send daily health reports
+- **Weekly Maintenance**: 7:00 AM Monday - Predictive maintenance analysis
+- **Performance Checks**: 8:00 AM - Regression detection
+- **Data Cleanup**: 2:00 AM - Remove old monitoring data
 
-## 🤝 Contributing
+## Alert Types
 
-When adding new metrics:
+### System Alerts
 
-1. Define metrics in `metrics_exporter.py`
-2. Update `agent_status.json` structure if needed
-3. Add visualizations to Grafana dashboards
-4. Update this documentation
+- High CPU usage (>80%)
+- High memory usage (>85%)
+- High disk usage (>90%)
+- Network connectivity issues
 
----
+### Performance Alerts
 
-_Last updated: November 11, 2025_
+- Slow response times (>500ms)
+- High error rates (>5%)
+- Throughput degradation
+- Service unavailability
+
+### Predictive Alerts
+
+- Performance regression trends
+- Maintenance predictions
+- Capacity warnings
+
+## Health Score
+
+The system calculates a health score (0-100) based on:
+
+- **System Health (40%)**: CPU, memory, disk usage
+- **Performance (40%)**: Response times, error rates
+- **Alerts (20%)**: Number and severity of alerts
+
+## Integration
+
+### Slack Notifications
+
+Configure webhook in `config.json`:
+
+```json
+{
+  "alerting": {
+    "channels": {
+      "slack": {
+        "enabled": true,
+        "webhook_url": "https://hooks.slack.com/...",
+        "channel": "#alerts"
+      }
+    }
+  }
+}
+```
+
+### Email Notifications
+
+Configure SMTP in `config.json`:
+
+```json
+{
+  "alerting": {
+    "channels": {
+      "email": {
+        "enabled": true,
+        "smtp_server": "smtp.gmail.com",
+        "smtp_port": 587,
+        "recipients": ["admin@example.com"]
+      }
+    }
+  }
+}
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Dashboard not loading**
+
+   - Check if API server is running: `ps aux | grep monitoring_api.py`
+   - Check port 8081 availability: `lsof -i :8081`
+   - Check logs: `tail -f monitoring/api.log`
+
+2. **No metrics being collected**
+
+   - Check monitoring daemon: `./health_monitor.sh status`
+   - Check permissions for metric directories
+   - Check system monitoring tools availability
+
+3. **Alerts not sending**
+   - Verify configuration in `config.json`
+   - Check webhook URLs and credentials
+   - Check network connectivity
+
+### Logs
+
+- `monitoring.log` - Main monitoring daemon logs
+- `api.log` - API server logs
+- `alerts/` - JSON alert files with timestamps
+- `reports/` - Generated health reports
+
+### Manual Data Collection
+
+```bash
+# Collect current metrics
+./health_monitor.sh collect
+
+# Check current status
+./health_monitor.sh status
+
+# Generate manual report
+./health_monitor.sh report
+```
+
+## Performance Baselines
+
+The system automatically generates performance baselines after collecting sufficient data (minimum 100 samples). Baselines include:
+
+- Average values for all metrics
+- 95th percentile values
+- Standard deviations
+- Trend analysis confidence
+
+## Maintenance Mode
+
+To perform maintenance on the monitoring system:
+
+```bash
+# Stop all components
+./start_monitoring.sh stop
+
+# Perform maintenance tasks
+# ... maintenance work ...
+
+# Restart all components
+./start_monitoring.sh restart
+```
+
+## Backup and Recovery
+
+Monitoring data can be backed up:
+
+```bash
+# Manual backup
+tar -czf monitoring_backup_$(date +%Y%m%d).tar.gz monitoring/
+
+# Automated backup (configured in config.json)
+# Backs up to ../backups/monitoring/ weekly
+```
+
+## Security Considerations
+
+- API server runs on localhost by default
+- Configure authentication in `config.json` for production use
+- Regularly rotate alert webhook tokens
+- Monitor access to monitoring data
+- Use HTTPS for production deployments
+
+## Contributing
+
+When adding new monitoring features:
+
+1. Update `config.json` schema
+2. Add API endpoints in `monitoring_api.py`
+3. Update dashboard if needed
+4. Add CLI commands to appropriate scripts
+5. Update this documentation
+
+## Support
+
+For issues and questions:
+
+1. Check logs in the `monitoring/` directory
+2. Review configuration in `config.json`
+3. Check system resources and permissions
+4. Review automated task schedules
+
+## License
+
+This monitoring system is part of the Tools Automation project.
