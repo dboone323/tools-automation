@@ -1,0 +1,16 @@
+{
+  "id": "6f3b7419-9d8f-42cf-b6be-436ffc6e034c",
+  "agent": "github-webhook",
+  "command": "ci-check",
+  "project": "main",
+  "status": "queued",
+  "meta": {
+    "event": "repository_dispatch",
+    "action": "custom_action",
+    "payload": {
+      "command": "ci-check",
+      "project": "main",
+      "execute": false
+    }
+  }
+}

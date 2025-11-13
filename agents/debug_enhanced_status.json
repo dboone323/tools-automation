@@ -1,0 +1,14 @@
+{
+  "name": "debug_enhanced",
+  "type": "automation",
+  "status": "unknown",
+  "script_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/agents/agent_debug_enhanced.sh",
+  "tasks_completed": 0,
+  "tasks_failed": 0,
+  "tasks_queued": 0,
+  "tasks_processing": 0,
+  "memory_usage": 0,
+  "cpu_usage": 0,
+  "last_seen": "2025-11-12T21:42:13Z",
+  "registered_at": "2025-11-12T21:42:13Z"
+}

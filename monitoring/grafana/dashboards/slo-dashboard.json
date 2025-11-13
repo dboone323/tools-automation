@@ -1,0 +1,474 @@
+{
+  "title": "Service Level Objectives (SLO) Dashboard",
+  "tags": ["tools-automation", "slo", "monitoring"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Overall System SLO Compliance",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "(1 - (sum(rate(alerts_triggered_total{severity=\"critical\"}[7d])) / sum(rate(alerts_triggered_total[7d])))) * 100",
+          "legendFormat": "SLO Compliance %"
+        }
+      ],
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 95
+              },
+              {
+                "color": "green",
+                "value": 99
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "System Health Score",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "system_health_score",
+          "legendFormat": "Health Score"
+        }
+      ],
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.8
+              },
+              {
+                "color": "green",
+                "value": 0.95
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Agent Uptime SLO",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "agent_status{agent_name=~\".+\"}",
+          "legendFormat": "{{agent_name}}"
+        },
+        {
+          "expr": "agent_slo_uptime_percent{agent_name=~\".+\"}",
+          "legendFormat": "{{agent_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "fieldConfig": {
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_name"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Agent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_status"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Current Status"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "text": "DOWN",
+                        "color": "red"
+                      },
+                      "1": {
+                        "text": "UP",
+                        "color": "green"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_slo_uptime_percent"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "SLO Target %"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "title": "Agent Health Scores",
+      "type": "bargauge",
+      "targets": [
+        {
+          "expr": "agent_health_score{agent_name=~\".+\"}",
+          "legendFormat": "{{agent_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.7
+              },
+              {
+                "color": "yellow",
+                "value": 0.85
+              },
+              {
+                "color": "green",
+                "value": 0.95
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Error Rate vs SLO Target",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "(rate(agent_tasks_failed_total{agent_name=~\"$agent\"}[5m]) / (rate(agent_tasks_completed_total{agent_name=~\"$agent\"}[5m]) + rate(agent_tasks_failed_total{agent_name=~\"$agent\"}[5m]))) * 100",
+          "legendFormat": "{{agent_name}} error rate %"
+        },
+        {
+          "expr": "agent_slo_error_rate_percent{agent_name=~\"$agent\"}",
+          "legendFormat": "{{agent_name}} SLO target %"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Task Success Rate Trend",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "(rate(agent_tasks_completed_total{agent_name=~\"$agent\"}[5m]) / (rate(agent_tasks_completed_total{agent_name=~\"$agent\"}[5m]) + rate(agent_tasks_failed_total{agent_name=~\"$agent\"}[5m]))) * 100",
+          "legendFormat": "{{agent_name}} success rate %"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "SLO Burn Rate",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "increase(alerts_triggered_total{severity=\"critical\"}[1h])",
+          "legendFormat": "Critical alerts last hour"
+        }
+      ],
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 16
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 2
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 8,
+      "title": "Alert Trends",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "increase(alerts_triggered_total{severity=\"critical\"}[1h])",
+          "legendFormat": "Critical"
+        },
+        {
+          "expr": "increase(alerts_triggered_total{severity=\"high\"}[1h])",
+          "legendFormat": "High"
+        },
+        {
+          "expr": "increase(alerts_triggered_total{severity=\"medium\"}[1h])",
+          "legendFormat": "Medium"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      }
+    },
+    {
+      "id": 9,
+      "title": "Agent Performance vs SLO",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "agent_health_score{agent_name=~\".+\"}",
+          "legendFormat": "{{agent_name}}"
+        },
+        {
+          "expr": "agent_slo_uptime_percent{agent_name=~\".+\"}",
+          "legendFormat": "{{agent_name}}"
+        },
+        {
+          "expr": "(rate(agent_tasks_failed_total{agent_name=~\".+\"}[1h]) / (rate(agent_tasks_completed_total{agent_name=~\".+\"}[1h]) + rate(agent_tasks_failed_total{agent_name=~\".+\"}[1h]))) * 100",
+          "legendFormat": "{{agent_name}}"
+        },
+        {
+          "expr": "agent_slo_error_rate_percent{agent_name=~\".+\"}",
+          "legendFormat": "{{agent_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "fieldConfig": {
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_name"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Agent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_health_score"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Health Score"
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_slo_uptime_percent"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Uptime SLO %"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Error Rate %"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_slo_error_rate_percent"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Error SLO %"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(agent_name)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Agent",
+        "multi": true,
+        "name": "agent",
+        "options": [],
+        "query": "label_values(agent_name)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "annotations": {
+    "list": []
+  },
+  "refresh": "1m",
+  "schemaVersion": 27,
+  "version": 0,
+  "links": []
+}

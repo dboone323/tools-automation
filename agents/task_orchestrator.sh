@@ -1,5 +1,5 @@
 #!/opt/homebrew/bin/bash
-# Task Orchestrator Agent: Central coordinator for all agents with intelligent task distribution
+# Task Orchestrator Agent: Central coordinator for all agents with intelligent task distribution and parallel processing
 
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,6 +12,11 @@ TASK_QUEUE_FILE="${SCRIPT_DIR}/task_queue.json"
 AGENT_STATUS_FILE="${SCRIPT_DIR}/../config/agent_status.json"
 COMMUNICATION_DIR="${SCRIPT_DIR}/communication"
 LOOP_INTERVAL="${LOOP_INTERVAL:-30}" # Configurable main loop sleep
+
+# Parallel processing configuration
+MAX_PARALLEL_TASKS="${MAX_PARALLEL_TASKS:-3}"   # Maximum concurrent tasks
+PARALLEL_JOBS_DIR="${SCRIPT_DIR}/parallel_jobs" # Directory to track parallel jobs
+PARALLEL_ENABLED="${PARALLEL_ENABLED:-true}"    # Enable/disable parallel processing
 
 # Agent capabilities and priorities
 declare -A AGENT_CAPABILITIES
@@ -92,6 +97,7 @@ TASK_REQUIREMENTS=(
 
 # Initialize directories and files
 mkdir -p "${COMMUNICATION_DIR}"
+mkdir -p "${PARALLEL_JOBS_DIR}"
 
 # Initialize task queue if it doesn't exist
 if [[ ! -f ${TASK_QUEUE_FILE} ]]; then
@@ -396,7 +402,7 @@ process_completed_tasks() {
                 success=$(echo "${task_info}" | cut -d'|' -f3)
 
                 update_task_status "${task_id}" "completed" "${success}"
-    increment_task_count "${AGENT_NAME}"
+                increment_task_count "${AGENT_NAME}"
                 update_agent_status "${agent_name}" "available"
 
                 log_message "INFO" "Task ${task_id} completed by ${agent_name} (success: ${success})"
@@ -591,7 +597,7 @@ advance_task_progress() {
     to_complete=$(jq -r '.tasks[] | select(.status=="in_progress" and ((now - (.started_at // now)) > 5)) | .id' "${TASK_QUEUE_FILE}" 2>/dev/null)
     for tid in ${to_complete}; do
         update_task_status "${tid}" "completed" "true"
-    increment_task_count "${AGENT_NAME}"
+        increment_task_count "${AGENT_NAME}"
     done
 }
 
@@ -673,6 +679,11 @@ generate_status_report() {
             echo "- Completed: ${completed_count}"
             echo "- Failed: ${failed_count}"
 
+            # Add parallel processing status
+            local running_parallel
+            running_parallel=$(get_running_parallel_jobs_count)
+            echo "- Parallel Jobs Running: ${running_parallel}/${MAX_PARALLEL_TASKS}"
+
             if [[ ${queued_count} -gt 0 ]]; then
                 echo ""
                 echo "### Queued Tasks"
@@ -681,6 +692,35 @@ generate_status_report() {
 
                 jq -r '.tasks[] | select(.status == "queued") | "\(.id)|\(.type)|\(.description)|\(.assigned_agent)|\(.priority)"' "${TASK_QUEUE_FILE}" | while IFS='|' read -r id type desc agent priority; do
                     echo "| ${id} | ${type} | ${desc} | ${agent} | ${priority} |"
+                done
+            fi
+
+            # Add parallel jobs status
+            if [[ ${running_parallel} -gt 0 ]]; then
+                echo ""
+                echo "### Running Parallel Jobs"
+                echo "| Task ID | Agent | Start Time |"
+                echo "|---------|-------|------------|"
+
+                for job_file in "${PARALLEL_JOBS_DIR}"/*.job; do
+                    if [[ -f ${job_file} ]]; then
+                        local pid
+                        pid=$(head -1 "${job_file}" 2>/dev/null)
+                        if [[ -n ${pid} ]] && kill -0 "${pid}" 2>/dev/null; then
+                            local task_id
+                            task_id=$(sed -n '2p' "${job_file}" 2>/dev/null)
+                            local agent
+                            agent=$(sed -n '3p' "${job_file}" 2>/dev/null)
+                            local start_time
+                            start_time=$(sed -n '4p' "${job_file}" 2>/dev/null)
+
+                            if [[ -n ${start_time} ]]; then
+                                local start_formatted
+                                start_formatted=$(date -r "${start_time}" 2>/dev/null || echo "Unknown")
+                                echo "| ${task_id} | ${agent} | ${start_formatted} |"
+                            fi
+                        fi
+                    fi
                 done
             fi
         fi
@@ -722,8 +762,203 @@ check_external_tasks() {
     fi
 }
 
+# Parallel job management functions
+
+# Get count of currently running parallel jobs
+get_running_parallel_jobs_count() {
+    local count=0
+    for job_file in "${PARALLEL_JOBS_DIR}"/*.job; do
+        if [[ -f ${job_file} ]]; then
+            local pid
+            pid=$(head -1 "${job_file}" 2>/dev/null)
+            if [[ -n ${pid} ]] && kill -0 "${pid}" 2>/dev/null; then
+                ((count++))
+            else
+                # Clean up dead job files
+                rm -f "${job_file}"
+            fi
+        fi
+    done
+    echo "${count}"
+}
+
+# Start a task in parallel background job
+start_parallel_task() {
+    local task_id="$1"
+    local agent="$2"
+
+    if [[ "${PARALLEL_ENABLED}" != "true" ]]; then
+        return 1
+    fi
+
+    local running_jobs
+    running_jobs=$(get_running_parallel_jobs_count)
+
+    if [[ ${running_jobs} -ge ${MAX_PARALLEL_TASKS} ]]; then
+        log_message "DEBUG" "Maximum parallel jobs (${MAX_PARALLEL_TASKS}) reached, cannot start task ${task_id}"
+        return 1
+    fi
+
+    # Create job tracking file
+    local job_file="${PARALLEL_JOBS_DIR}/${task_id}.job"
+    local log_file="${PARALLEL_JOBS_DIR}/${task_id}.log"
+
+    # Start task in background
+    (
+        log_message "INFO" "Starting parallel task ${task_id} with agent ${agent}"
+
+        # Execute the task
+        execute_task_background "${task_id}" "${agent}"
+
+        # Clean up job file when done
+        rm -f "${job_file}"
+    ) >"${log_file}" 2>&1 &
+
+    local job_pid=$!
+    echo "${job_pid}" >"${job_file}"
+    echo "${task_id}" >>"${job_file}"
+    echo "${agent}" >>"${job_file}"
+    echo "$(date +%s)" >>"${job_file}"
+
+    log_message "INFO" "Started parallel job for task ${task_id} (PID: ${job_pid})"
+    return 0
+}
+
+# Execute task in background (called by parallel job)
+execute_task_background() {
+    local task_id="$1"
+    local agent="$2"
+
+    # Mark task as in progress
+    if command -v jq &>/dev/null; then
+        tmp_file="${TASK_QUEUE_FILE}.tmp$$"
+        if jq --arg id "${task_id}" '(.tasks[] | select(.id==$id)) |= (.status="in_progress" | .started_at=(now|floor))' "${TASK_QUEUE_FILE}" >"${tmp_file}" 2>/dev/null; then
+            mv "${tmp_file}" "${TASK_QUEUE_FILE}"
+        fi
+    fi
+
+    # Update agent status
+    update_agent_status "${agent}" "busy"
+
+    # Notify agent to execute task
+    notify_agent "${agent}" "execute_task" "${task_id}"
+
+    # Wait for completion or timeout
+    local timeout=300 # 5 minutes timeout
+    local start_time=$(date +%s)
+    local completed=false
+
+    while [[ $(($(date +%s) - start_time)) -lt ${timeout} ]]; do
+        # Check if task is completed
+        if command -v jq &>/dev/null; then
+            local status
+            status=$(jq -r ".tasks[] | select(.id==\"${task_id}\") | .status" "${TASK_QUEUE_FILE}" 2>/dev/null)
+            if [[ "${status}" == "completed" ]]; then
+                completed=true
+                break
+            fi
+        fi
+        sleep 5
+    done
+
+    if [[ "${completed}" != "true" ]]; then
+        log_message "WARNING" "Parallel task ${task_id} timed out, marking as failed"
+        update_task_status "${task_id}" "failed" "timeout"
+    fi
+
+    # Update agent status back to available
+    update_agent_status "${agent}" "available"
+
+    log_message "INFO" "Parallel task ${task_id} execution completed"
+}
+
+# Clean up completed parallel jobs
+cleanup_parallel_jobs() {
+    for job_file in "${PARALLEL_JOBS_DIR}"/*.job; do
+        if [[ -f ${job_file} ]]; then
+            local pid
+            pid=$(head -1 "${job_file}" 2>/dev/null)
+            if [[ -n ${pid} ]] && ! kill -0 "${pid}" 2>/dev/null; then
+                # Job process is dead, clean up
+                local task_id
+                task_id=$(sed -n '2p' "${job_file}" 2>/dev/null)
+                local agent
+                agent=$(sed -n '3p' "${job_file}" 2>/dev/null)
+
+                log_message "INFO" "Cleaning up completed parallel job for task ${task_id}"
+                rm -f "${job_file}"
+                rm -f "${PARALLEL_JOBS_DIR}/${task_id}.log"
+
+                # Ensure agent status is updated
+                if [[ -n ${agent} ]]; then
+                    update_agent_status "${agent}" "available"
+                fi
+            fi
+        fi
+    done
+}
+
+# Enhanced distribute_tasks with parallel processing
+distribute_tasks_parallel() {
+    if [[ "${PARALLEL_ENABLED}" != "true" ]]; then
+        distribute_tasks
+        return
+    fi
+
+    local available_tasks
+    local running_jobs
+
+    if command -v jq &>/dev/null; then
+        available_tasks=$(jq -r '.tasks[] | select(.status == "queued") | .id' "${TASK_QUEUE_FILE}")
+    else
+        available_tasks=$(grep -o '"id": "[^"]*"' "${TASK_QUEUE_FILE}" | cut -d'"' -f4)
+    fi
+
+    running_jobs=$(get_running_parallel_jobs_count)
+    local slots_available=$((MAX_PARALLEL_TASKS - running_jobs))
+
+    log_message "DEBUG" "Parallel distribution: ${running_jobs} running jobs, ${slots_available} slots available"
+
+    for task_id in ${available_tasks}; do
+        if [[ ${slots_available} -le 0 ]]; then
+            log_message "DEBUG" "No parallel slots available, stopping distribution"
+            break
+        fi
+
+        local task_info
+        task_info=$(get_task_info "${task_id}")
+        local assigned_agent
+        assigned_agent=$(echo "${task_info}" | cut -d'|' -f1)
+        local task_type
+        task_type=$(echo "${task_info}" | cut -d'|' -f2)
+
+        if [[ -z ${task_type} || ${task_type} == "unknown" ]]; then
+            continue
+        fi
+
+        if [[ -z ${assigned_agent} ]]; then
+            assigned_agent=$(select_best_agent "${task_type}")
+            [[ -z ${assigned_agent} ]] && continue
+        fi
+
+        local agent_status
+        agent_status=$(get_agent_status "${assigned_agent}")
+        if [[ ${agent_status} == "available" || ${agent_status} == "idle" ]]; then
+            if start_parallel_task "${task_id}" "${assigned_agent}"; then
+                mark_task_assigned "${task_id}" "${assigned_agent}"
+                log_message "INFO" "Assigned parallel task ${task_id} -> ${assigned_agent}"
+                ((slots_available--))
+            else
+                log_message "DEBUG" "Failed to start parallel task ${task_id}"
+            fi
+        else
+            log_message "DEBUG" "Agent ${assigned_agent} not available for task ${task_id} (status: ${agent_status})"
+        fi
+    done
+}
+
 # Main orchestration loop
-log_message "INFO" "Task Orchestrator starting..."
+log_message "INFO" "Task Orchestrator starting with parallel processing (max: ${MAX_PARALLEL_TASKS})..."
 
 while true; do
     # Update orchestrator status
@@ -735,14 +970,17 @@ while true; do
     refresh_agent_heartbeats
     release_stale_busy_agents
 
+    # Clean up completed parallel jobs
+    cleanup_parallel_jobs
+
     # Process completed tasks
     process_completed_tasks
 
     # Monitor agent health
     monitor_agent_health
 
-    # Distribute queued tasks
-    distribute_tasks
+    # Distribute queued tasks (with parallel processing)
+    distribute_tasks_parallel
 
     # Generate periodic status report (every 5 minutes)
     current_minute=$(date +%M)

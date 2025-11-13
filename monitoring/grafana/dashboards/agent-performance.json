@@ -1,0 +1,359 @@
+{
+  "title": "Agent Performance & SLO Dashboard",
+  "tags": ["tools-automation", "agents", "slo"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Agent Health Overview",
+      "type": "table",
+      "targets": [
+        {
+          "expr": "agent_status{agent_name=~\".+\"}",
+          "legendFormat": "{{agent_name}}"
+        },
+        {
+          "expr": "agent_health_score{agent_name=~\".+\"}",
+          "legendFormat": "{{agent_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_name"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Agent Name"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_type"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Type"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_status"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Status"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "text": "DOWN",
+                        "color": "red"
+                      },
+                      "1": {
+                        "text": "UP",
+                        "color": "green"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "agent_health_score"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Health Score"
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 0.7
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.9
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "title": "Agent CPU Usage",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "agent_cpu_usage_percent{agent_name=~\"$agent\"}",
+          "legendFormat": "{{agent_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      }
+    },
+    {
+      "id": 3,
+      "title": "Agent Memory Usage",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "agent_memory_usage_bytes{agent_name=~\"$agent\"} / 1024 / 1024",
+          "legendFormat": "{{agent_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "MB"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Task Completion Rate",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "rate(agent_tasks_completed_total{agent_name=~\"$agent\"}[5m])",
+          "legendFormat": "{{agent_name}} completed"
+        },
+        {
+          "expr": "rate(agent_tasks_failed_total{agent_name=~\"$agent\"}[5m])",
+          "legendFormat": "{{agent_name}} failed"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      }
+    },
+    {
+      "id": 5,
+      "title": "Queue Status",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "agent_tasks_queued{agent_name=~\"$agent\"}",
+          "legendFormat": "{{agent_name}} queued"
+        },
+        {
+          "expr": "agent_tasks_processing{agent_name=~\"$agent\"}",
+          "legendFormat": "{{agent_name}} processing"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      }
+    },
+    {
+      "id": 6,
+      "title": "SLO Compliance - Uptime",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "agent_slo_uptime_percent{agent_name=~\"$agent\"}",
+          "legendFormat": "{{agent_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 24
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "SLO Compliance - Latency",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "agent_slo_latency_ms{agent_name=~\"$agent\"}",
+          "legendFormat": "{{agent_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 24
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "title": "SLO Compliance - Error Rate",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "agent_slo_error_rate_percent{agent_name=~\"$agent\"}",
+          "legendFormat": "{{agent_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 24
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "System Health Score",
+      "type": "gauge",
+      "targets": [
+        {
+          "expr": "system_health_score",
+          "legendFormat": "System Health"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 28
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+    {
+      "id": 10,
+      "title": "Active Alerts by Severity",
+      "type": "bargauge",
+      "targets": [
+        {
+          "expr": "alerts_active{severity=\"critical\"}",
+          "legendFormat": "Critical"
+        },
+        {
+          "expr": "alerts_active{severity=\"high\"}",
+          "legendFormat": "High"
+        },
+        {
+          "expr": "alerts_active{severity=\"medium\"}",
+          "legendFormat": "Medium"
+        },
+        {
+          "expr": "alerts_active{severity=\"low\"}",
+          "legendFormat": "Low"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 8,
+        "y": 28
+      }
+    }
+  ],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(agent_name)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Agent",
+        "multi": true,
+        "name": "agent",
+        "options": [],
+        "query": "label_values(agent_name)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "annotations": {
+    "list": []
+  },
+  "refresh": "30s",
+  "schemaVersion": 27,
+  "version": 0,
+  "links": []
+}

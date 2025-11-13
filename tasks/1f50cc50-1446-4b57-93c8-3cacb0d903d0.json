@@ -1,0 +1,8 @@
+{
+  "id": "1f50cc50-1446-4b57-93c8-3cacb0d903d0",
+  "agent": "test_agent",
+  "command": "ci-check",
+  "project": "test_project",
+  "status": "error",
+  "stderr": "[Errno 2] No such file or directory: './Tools/Automation/mcp_workflow.sh'"
+}

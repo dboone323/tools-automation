@@ -1,0 +1,10 @@
+{
+  "id": "43d02ba1-885d-49f3-8661-fe9005658211",
+  "agent": "e2e-test-agent",
+  "command": "status",
+  "project": null,
+  "status": "success",
+  "returncode": 0,
+  "stdout": "MCP server status: OK\n",
+  "stderr": ""
+}

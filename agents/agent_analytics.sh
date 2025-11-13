@@ -1,3 +1,58 @@
+#!/usr/bin/env bash
+# Auto-injected health & reliability shim
+# Adds: standardized --health handler, strict mode, and a graceful shutdown trap
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Prefer shared helpers when available
+if [[ -f "$DIR/shared_functions.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$DIR/shared_functions.sh"
+fi
+
+if [[ -f "$DIR/agent_helpers.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$DIR/agent_helpers.sh"
+fi
+
+# Enable strict mode for safer scripts
+set -euo pipefail
+
+# Default agent logging vars if not present
+AGENT_NAME="agent_analytics.sh"
+LOG_FILE="${LOG_FILE:-$DIR/${AGENT_NAME}.log}"
+PID=$$
+
+# Ensure we update status on termination if helper available
+if type update_agent_status >/dev/null 2>&1; then
+  trap 'update_agent_status "${AGENT_NAME}" "stopped" $$ ""; exit 0' SIGTERM SIGINT
+else
+  trap 'exit 0' SIGTERM SIGINT
+fi
+
+# Health handler
+if [[ "${1-}" == "--health" || "${1-}" == "health" || "${1-}" == "-h" ]]; then
+  if type agent_health_check >/dev/null 2>&1; then
+    agent_health_check
+    exit $?
+  fi
+  # Best-effort lightweight checks
+  issues=()
+  if [[ ! -w "/tmp" ]]; then
+    issues+=("tmp_not_writable")
+  fi
+  if [[ ! -d "$DIR" ]]; then
+    issues+=("cwd_missing")
+  fi
+  if [[ ${#issues[@]} -gt 0 ]]; then
+    printf '{"ok":false,"issues":["%s"]}\n' "${issues[*]}"
+    exit 2
+  fi
+  printf '{"ok":true}\n'
+  exit 0
+fi
+
+# Original agent script continues below
 #!/bin/bash
 # Agent Analytics - Project metrics collection & analysis
 # Tracks code complexity, build times, test coverage, and agent performance

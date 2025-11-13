@@ -1,0 +1,45 @@
+{
+  "name": "sample_plugin",
+  "version": "1.0.0",
+  "description": "Sample plugin demonstrating the MCP plugin architecture",
+  "author": "Tools Automation Team",
+  "license": "MIT",
+  "entry_point": "sample_plugin",
+  "capabilities": [
+    "monitoring",
+    "notification",
+    "data_processing"
+  ],
+  "tags": [
+    "sample",
+    "demo",
+    "monitoring"
+  ],
+  "homepage": "https://github.com/dboone323/tools-automation",
+  "repository": "https://github.com/dboone323/tools-automation",
+  "config_schema": {
+    "type": "object",
+    "properties": {
+      "enabled_features": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["monitoring", "notification", "data_processing"]
+        },
+        "default": ["monitoring"]
+      },
+      "notification_interval": {
+        "type": "integer",
+        "minimum": 30,
+        "maximum": 3600,
+        "default": 300
+      },
+      "max_retries": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10,
+        "default": 3
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41446,
+    "text": "TODO: Add validation\","
+  },
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41453,
+    "text": "TODO: First task\","
+  },
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41460,
+    "text": "TODO: Second task\","
+  },
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41467,
+    "text": "TODO: Add implementation\","
+  },
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41474,
+    "text": "TODO: comment on line 1\","
+  },
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41481,
+    "text": "TODO: Fix this later\","
+  },
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41488,
+    "text": "TODO: Implement security check\","
+  },
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41495,
+    "text": "TODO: Fix later\","
+  },
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41502,
+    "text": "TODO: is typically medium severity\","
+  },
+  {
+    "file": "CodingReviewer/Tools/Automation/agent_assignments.json",
+    "line": 41509,
+    "text": "TODO: Complete implementation\","
+  }
+]

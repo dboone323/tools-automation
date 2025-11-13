@@ -1,0 +1,109 @@
+groups:
+  - name: agent_alerts
+    rules:
+      # Agent down alerts
+      - alert: AgentDown
+        expr: agent_status{agent_name=~".+"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          service: agent
+        annotations:
+          summary: "Agent {{ $labels.agent_name }} is down"
+          description: "Agent {{ $labels.agent_name }} of type {{ $labels.agent_type }} has been down for more than 5 minutes."
+
+      # Agent health score alerts
+      - alert: AgentUnhealthy
+        expr: agent_health_score{agent_name=~".+"} < 0.7
+        for: 10m
+        labels:
+          severity: high
+          service: agent
+        annotations:
+          summary: "Agent {{ $labels.agent_name }} is unhealthy"
+          description: "Agent {{ $labels.agent_name }} health score is {{ $value | printf \"%.2f\" }} (below 0.7 threshold)."
+
+      # High error rate alerts
+      - alert: AgentHighErrorRate
+        expr: (rate(agent_tasks_failed_total{agent_name=~".+"}[5m]) / (rate(agent_tasks_completed_total{agent_name=~".+"}[5m]) + rate(agent_tasks_failed_total{agent_name=~".+"}[5m]))) > 0.1
+        for: 5m
+        labels:
+          severity: high
+          service: agent
+        annotations:
+          summary: "High error rate for agent {{ $labels.agent_name }}"
+          description: "Agent {{ $labels.agent_name }} has an error rate of {{ $value | printf \"%.2f%%\" }} over the last 5 minutes."
+
+      # Resource usage alerts
+      - alert: AgentHighCPUUsage
+        expr: agent_cpu_usage_percent{agent_name=~".+"} > 90
+        for: 5m
+        labels:
+          severity: medium
+          service: agent
+        annotations:
+          summary: "High CPU usage for agent {{ $labels.agent_name }}"
+          description: "Agent {{ $labels.agent_name }} is using {{ $value | printf \"%.1f%%\" }} CPU."
+
+      - alert: AgentHighMemoryUsage
+        expr: agent_memory_usage_bytes{agent_name=~".+"} / 1024 / 1024 > 500
+        for: 5m
+        labels:
+          severity: medium
+          service: agent
+        annotations:
+          summary: "High memory usage for agent {{ $labels.agent_name }}"
+          description: "Agent {{ $labels.agent_name }} is using {{ $value | printf \"%.0f\" }} MB of memory."
+
+      # Queue alerts
+      - alert: AgentQueueBacklog
+        expr: agent_tasks_queued{agent_name=~".+"} > 50
+        for: 10m
+        labels:
+          severity: medium
+          service: agent
+        annotations:
+          summary: "Large task queue backlog for agent {{ $labels.agent_name }}"
+          description: "Agent {{ $labels.agent_name }} has {{ $value }} tasks queued for more than 10 minutes."
+
+      # System-wide alerts
+      - alert: SystemLowHealthScore
+        expr: system_health_score < 0.8
+        for: 5m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "System health score is low"
+          description: "Overall system health score is {{ $value | printf \"%.2f\" }} (below 0.8 threshold)."
+
+      - alert: ManyAgentsDown
+        expr: (system_agents_total - system_agents_running) / system_agents_total > 0.3
+        for: 5m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "Many agents are down"
+          description: "{{ $value | printf \"%.1f%%\" }} of agents are currently down."
+
+      # SLO breach alerts
+      - alert: SLOUptimeBreach
+        expr: (1 - (rate(agent_status{agent_name=~".+"}[1h]) == 0)) * 100 < agent_slo_uptime_percent{agent_name=~".+"}
+        for: 15m
+        labels:
+          severity: high
+          service: slo
+        annotations:
+          summary: "SLO uptime breach for agent {{ $labels.agent_name }}"
+          description: "Agent {{ $labels.agent_name }} uptime ({{ $value | printf \"%.1f%%\" }}) is below SLO target."
+
+      - alert: SLOErrorRateBreach
+        expr: (rate(agent_tasks_failed_total{agent_name=~".+"}[1h]) / (rate(agent_tasks_completed_total{agent_name=~".+"}[1h]) + rate(agent_tasks_failed_total{agent_name=~".+"}[1h]))) * 100 > agent_slo_error_rate_percent{agent_name=~".+"}
+        for: 15m
+        labels:
+          severity: high
+          service: slo
+        annotations:
+          summary: "SLO error rate breach for agent {{ $labels.agent_name }}"
+          description: "Agent {{ $labels.agent_name }} error rate ({{ $value | printf \"%.1f%%\" }}) exceeds SLO target."

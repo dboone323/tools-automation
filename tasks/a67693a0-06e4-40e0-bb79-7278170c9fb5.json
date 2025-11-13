@@ -1,0 +1,8 @@
+{
+  "id": "a67693a0-06e4-40e0-bb79-7278170c9fb5",
+  "agent": "e2e-test-agent",
+  "command": "status",
+  "project": null,
+  "status": "error",
+  "stderr": "[Errno 2] No such file or directory: './Tools/Automation/master_automation.sh'"
+}

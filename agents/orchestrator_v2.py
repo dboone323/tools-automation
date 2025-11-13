@@ -26,6 +26,7 @@ import json
 import os
 import random
 import time
+import uuid
 from typing import Any, Dict, List
 
 
@@ -34,6 +35,7 @@ AGENTS_DIR = os.path.join(ROOT, "Tools", "Automation", "agents")
 KNOWLEDGE_DIR = os.path.join(AGENTS_DIR, "knowledge")
 AGENT_STATUS_PATH = os.path.join(AGENTS_DIR, "agent_status.json")
 TASK_QUEUE_PATH = os.path.join(AGENTS_DIR, "task_queue.json")
+DLQ_PATH = os.path.join(AGENTS_DIR, "dead_letter_queue.json")
 STRATEGIES_PATH = os.path.join(KNOWLEDGE_DIR, "strategies.json")
 
 
@@ -138,6 +140,16 @@ def assign_task(task: Dict[str, Any]) -> Dict[str, Any]:
         ]
     strategies = _load_json(STRATEGIES_PATH, []) or []
 
+    # Ensure task has correlation id and retry metadata
+    if not isinstance(task, dict):
+        task = {"id": str(uuid.uuid4()), "meta": {}}
+    if "correlation_id" not in task:
+        task["correlation_id"] = str(uuid.uuid4())
+    if "retries" not in task:
+        task["retries"] = int(task.get("retries", 0))
+    if "max_retries" not in task:
+        task["max_retries"] = int(task.get("max_retries", 3))
+
     # Support both list and object schemas for task_queue.json
     queue_data = _load_json(TASK_QUEUE_PATH, [])
     if isinstance(queue_data, dict):
@@ -225,7 +237,60 @@ def assign_task(task: Dict[str, Any]) -> Dict[str, Any]:
             _write_json(TASK_QUEUE_PATH, queue_data)
         else:
             _write_json(TASK_QUEUE_PATH, queue_list)
+        # persist a lightweight DLQ structure (ensure file exists)
+        _write_json(DLQ_PATH, _load_json(DLQ_PATH, []))
         return {"result": "queued", "task": task}
+
+
+def move_to_dlq(task: Dict[str, Any], reason: str = "moved_to_dlq") -> None:
+    """Move a task to the dead-letter-queue with reason metadata."""
+    try:
+        dlq = _load_json(DLQ_PATH, []) or []
+        entry = task.copy()
+        entry["dlq_reason"] = reason
+        entry["moved_at"] = int(time.time())
+        dlq.append(entry)
+        _write_json(DLQ_PATH, dlq)
+    except Exception:
+        # best-effort: if DLQ can't be persisted, write to a file per task
+        try:
+            fallback = os.path.join(AGENTS_DIR, "dlq_fallback")
+            os.makedirs(fallback, exist_ok=True)
+            fname = os.path.join(fallback, f"{entry.get('id', str(uuid.uuid4()))}.json")
+            with open(fname, "w", encoding="utf-8") as f:
+                json.dump(entry, f, indent=2)
+        except Exception:
+            pass
+
+
+def retry_or_dlq(task: Dict[str, Any]) -> None:
+    """Increment retries and move to DLQ when max_retries exceeded."""
+    try:
+        task["retries"] = int(task.get("retries", 0)) + 1
+        if int(task.get("retries", 0)) > int(task.get("max_retries", 3)):
+            move_to_dlq(task, reason="max_retries_exceeded")
+        else:
+            # persist updated retry count back to task queue
+            queue_data = _load_json(TASK_QUEUE_PATH, [])
+            if isinstance(queue_data, dict):
+                q = queue_data.get("tasks") or []
+                for i, t in enumerate(q):
+                    if isinstance(t, dict) and t.get("id") == task.get("id"):
+                        q[i] = task
+                        break
+                queue_data["tasks"] = q
+                _write_json(TASK_QUEUE_PATH, queue_data)
+            elif isinstance(queue_data, list):
+                for i, t in enumerate(queue_data):
+                    if isinstance(t, dict) and t.get("id") == task.get("id"):
+                        queue_data[i] = task
+                        break
+                _write_json(TASK_QUEUE_PATH, queue_data)
+    except Exception:
+        try:
+            move_to_dlq(task, reason="retry_error")
+        except Exception:
+            pass
 
 
 def balance_load() -> Dict[str, Any]:

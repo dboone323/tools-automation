@@ -139,29 +139,21 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started:
+      - Onboarding Guide: getting-started/onboarding.md
       - Quick Start: getting-started/quick-start.md
-      - Installation: getting-started/installation.md
-      - Configuration: getting-started/configuration.md
-  - Tools & Features:
-      - Monitoring Stack: tools/monitoring.md
-      - Quality Tools: tools/quality.md
-      - Security Scanning: tools/security.md
-      - Development Tools: tools/development.md
-  - API Documentation:
-      - Metrics API: api/metrics.md
-      - Agent API: api/agents.md
-      - Webhooks: api/webhooks.md
-  - Tutorials:
-      - Setting up Monitoring: tutorials/monitoring-setup.md
-      - Code Quality Analysis: tutorials/code-quality.md
-      - Security Scanning: tutorials/security-scanning.md
-      - Custom Dashboards: tutorials/custom-dashboards.md
   - Reference:
-      - Configuration Files: reference/configuration.md
-      - Environment Variables: reference/environment.md
-      - Troubleshooting: reference/troubleshooting.md
-      - FAQ: reference/faq.md
-  - About:
-      - Contributing: about/contributing.md
-      - Changelog: about/changelog.md
-      - License: about/license.md
+      - Configuration Reference: reference/configuration.md
+      - Troubleshooting Guide: reference/troubleshooting.md
+  - API Documentation:
+      - Interactive API Docs: api/index.html
+  - Development:
+      - Architecture: ARCHITECTURE.md
+      - MCP Endpoints: MCP_ENDPOINTS.md
+      - Scheduling: SCHEDULING.md
+      - Runbook: RUNBOOK.md
+  - Planning & Enhancement:
+      - Agent Enhancement Plan: AGENT_ENHANCEMENT_MASTER_PLAN.md
+      - AI Monitoring Guide: AI_MONITORING_GUIDE.md
+      - Repository Reorganization: REPOSITORY_REORGANIZATION_PLAN.md
+      - TODO System Enhancement: TODO_SYSTEM_ENHANCEMENT_PLAN.md
+      - Reorganization Summary: REORGANIZATION_EXECUTION_SUMMARY.md

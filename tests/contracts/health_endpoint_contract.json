@@ -1,0 +1,55 @@
+{
+  "endpoint": "/health",
+  "method": "GET",
+  "response_schema": {
+    "type": "object",
+    "required": [
+      "ok",
+      "status",
+      "timestamp"
+    ],
+    "properties": {
+      "ok": {
+        "type": "boolean"
+      },
+      "status": {
+        "enum": [
+          "healthy",
+          "degraded",
+          "error"
+        ]
+      },
+      "timestamp": {
+        "type": "number"
+      },
+      "uptime": {
+        "type": "boolean"
+      },
+      "agents": {
+        "type": "object",
+        "properties": {
+          "registered": {
+            "type": "integer"
+          },
+          "controllers": {
+            "type": "integer"
+          }
+        }
+      },
+      "tasks": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "queued": {
+            "type": "integer"
+          },
+          "running": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

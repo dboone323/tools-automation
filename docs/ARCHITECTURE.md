@@ -39,14 +39,365 @@
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Component Interactions
+## MCP↔Agent↔Workflow Integration Flows
 
-### Data Flow
+### Agent Registration & Task Execution Sequence
 
 ```
-User Request → MCP Server → Task Orchestrator → Agent Execution
-       ↓              ↓              ↓              ↓
-   Dashboard ← Metrics Collection ← Agent Monitoring ← Results
+sequenceDiagram
+    participant User
+    participant MCP as MCP Server
+    participant Agent as Agent Orchestrator
+    participant TaskQ as Task Queue
+    participant Worker as Agent Worker
+    participant Workflow as Workflow Orchestrator
+
+    User->>MCP: POST /v1/register
+    MCP->>Agent: Register Agent
+    Agent->>MCP: Agent Capabilities
+    MCP->>User: Registration Success
+
+    User->>MCP: POST /v1/run
+    MCP->>Agent: Match Agent to Task
+    Agent->>TaskQ: Queue Task
+    TaskQ->>Worker: Assign Task
+    Worker->>Workflow: Execute Task
+    Workflow->>Worker: Task Result
+    Worker->>TaskQ: Complete Task
+    TaskQ->>Agent: Task Status
+    Agent->>MCP: Update Status
+    MCP->>User: Task Result
+```
+
+### Submodule MCP Client Integration Sequence
+
+```
+sequenceDiagram
+    participant Submodule as Submodule (.tools-automation/)
+    participant MCPClient as MCP Client Shim
+    participant MCP as Root MCP Server
+    participant Agent as Agent Orchestrator
+    participant Worker as Agent Worker
+
+    Submodule->>MCPClient: Local Task Request
+    MCPClient->>MCP: Forward Request (HTTP)
+    MCP->>Agent: Route to Agent
+    Agent->>Worker: Execute Task
+    Worker->>Agent: Task Result
+    Agent->>MCP: Return Result
+    MCP->>MCPClient: Response
+    MCPClient->>Submodule: Local Result
+```
+
+### Health Monitoring & Auto-Restart Sequence
+
+```
+sequenceDiagram
+    participant Monitor as Agent Monitor
+    participant MCP as MCP Server
+    participant Agent as Agent Orchestrator
+    participant Launchd as Launchd Service
+    participant Dashboard as Dashboard API
+
+    loop Every 30s
+        Monitor->>MCP: GET /v1/health
+        MCP->>Monitor: Health Status
+        Monitor->>Agent: Check Agent Status
+        Agent->>Monitor: Agent Metrics
+
+        alt Agent Unhealthy
+            Monitor->>Launchd: Restart Agent Service
+            Launchd->>Agent: Service Restart
+            Agent->>Monitor: Ready Status
+        end
+
+        Monitor->>Dashboard: Update Metrics
+        Dashboard->>Monitor: Metrics Stored
+    end
+```
+
+### Git Hook Integration Sequence
+
+```
+sequenceDiagram
+    participant Git as Git Client
+    participant Hook as Pre-commit Hook
+    participant MCP as MCP Server
+    participant Agent as Agent Orchestrator
+    participant Linter as Code Linter Agent
+    participant Tester as Test Runner Agent
+
+    Git->>Hook: Pre-commit Trigger
+    Hook->>MCP: POST /v1/execute_task
+    Note over MCP,Agent: Task: code_quality_check
+    MCP->>Agent: Route Task
+    Agent->>Linter: Run Linting
+    Linter->>Agent: Lint Results
+    Agent->>Tester: Run Fast Tests
+    Tester->>Agent: Test Results
+    Agent->>MCP: Combined Results
+    MCP->>Hook: Quality Status
+
+    alt Quality Check Failed
+        Hook->>Git: Block Commit
+        Git->>User: Commit Rejected
+    else Quality Check Passed
+        Hook->>Git: Allow Commit
+        Git->>User: Commit Allowed
+    end
+```
+
+### Error Handling & Circuit Breaker Sequence
+
+```
+sequenceDiagram
+    participant Client
+    participant MCP as MCP Server
+    participant Circuit as Circuit Breaker
+    participant Agent as Agent Orchestrator
+    participant Fallback as Cloud Fallback
+    participant Logger as Error Logger
+
+    Client->>MCP: API Request
+    MCP->>Circuit: Check State
+
+    alt Circuit CLOSED
+        Circuit->>Agent: Forward Request
+        Agent-->>Circuit: Success
+        Circuit->>MCP: Allow Response
+        MCP->>Client: Success Response
+
+    else Circuit OPEN
+        Circuit->>MCP: Fail Fast
+        MCP->>Client: Circuit Open Error
+
+    else Circuit HALF-OPEN
+        Circuit->>Agent: Test Request
+        alt Test Success
+            Circuit->>Circuit: Reset to CLOSED
+            Circuit->>MCP: Allow Response
+            MCP->>Client: Success Response
+        else Test Failure
+            Circuit->>Circuit: Back to OPEN
+            Circuit->>Logger: Log Failure
+            MCP->>Client: Circuit Open Error
+        end
+    end
+
+    alt Local Failure
+        Agent->>Circuit: Report Failure
+        Circuit->>Fallback: Check Cloud Available
+        alt Cloud Allowed
+            Fallback->>Circuit: Cloud Response
+            Circuit->>MCP: Cloud Result
+            MCP->>Client: Response
+        else Cloud Not Allowed
+            Circuit->>Logger: Log Escalation
+            MCP->>Client: Local Failure
+        end
+    end
+```
+
+### Workflow Orchestrator Integration Sequence
+
+```
+sequenceDiagram
+    participant CI as CI/CD Pipeline
+    participant Workflow as Workflow Orchestrator
+    participant MCP as MCP Server
+    participant Agent as Agent Orchestrator
+    participant TaskQ as Task Queue
+    participant Workers as Agent Workers
+
+    CI->>Workflow: Trigger Build
+    Workflow->>MCP: POST /v1/controllers
+    Note over MCP,Agent: Request: build_orchestration
+    MCP->>Agent: Route Controller Task
+    Agent->>TaskQ: Queue Build Tasks
+    TaskQ->>Workers: Distribute Tasks
+    Workers->>TaskQ: Task Completion
+    TaskQ->>Agent: Build Status
+    Agent->>MCP: Controller Result
+    MCP->>Workflow: Build Complete
+    Workflow->>CI: Pipeline Status
+
+    alt Build Success
+        Workflow->>CI: Deploy
+    else Build Failure
+        Workflow->>CI: Rollback
+        CI->>Workflow: Rollback Complete
+    end
+```
+
+### Quantum-Enhanced Processing Sequence
+
+```
+sequenceDiagram
+    participant Client
+    participant MCP as MCP Server
+    participant Quantum as Quantum Processor
+    participant Agent as Agent Orchestrator
+    participant AI as AI Layer
+    participant Cache as Result Cache
+
+    Client->>MCP: POST /v1/quantum/analyze
+    MCP->>Cache: Check Cached Result
+    alt Cache Hit
+        Cache->>MCP: Return Cached
+        MCP->>Client: Cached Result
+    else Cache Miss
+        MCP->>Quantum: Initialize Quantum State
+        Quantum->>Agent: Request AI Enhancement
+        Agent->>AI: Process with AI
+        AI->>Agent: Enhanced Result
+        Agent->>Quantum: Apply Quantum Processing
+        Quantum->>Cache: Store Result
+        Cache->>MCP: Processing Complete
+        MCP->>Client: Quantum Result
+    end
+```
+
+### API Contract Testing Flow
+
+```
+sequenceDiagram
+    participant Test as Integration Test
+    participant MCP as MCP Server
+    participant Contract as Contract Validator
+    participant Schema as Response Schema
+    participant Logger as Test Logger
+
+    Test->>MCP: API Request
+    MCP->>Test: Response
+    Test->>Contract: Validate Contract
+    Contract->>Schema: Check Schema Compliance
+    Schema->>Contract: Schema Valid
+
+    alt Contract Valid
+        Contract->>Test: Pass
+        Test->>Logger: Log Success
+    else Contract Invalid
+        Contract->>Test: Fail Details
+        Test->>Logger: Log Failure
+        Logger->>Test: Alert Developer
+    end
+```
+
+## Integration Testing Coverage
+
+### End-to-End Test Scenarios
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Integration Test Matrix                                     │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ MCP Server Health                                        │ │
+│ │ • Health endpoint response                                │ │
+│ │ • Service availability                                    │ │
+│ │ • Error handling                                          │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Agent Registration                                       │ │
+│ │ • Agent capability matching                               │ │
+│ │ • Registration persistence                                │ │
+│ │ • Duplicate handling                                      │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Task Execution Flows                                      │ │
+│ │ • Task submission to completion                           │ │
+│ │ • Concurrent task handling                                │ │
+│ │ • Task timeout handling                                   │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Orchestrator Integration                                 │ │
+│ │ • Command routing                                         │ │
+│ │ • Status synchronization                                  │ │
+│ │ • Error propagation                                       │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Workflow Integration                                      │ │
+│ │ • CI/CD pipeline triggers                                 │ │
+│ │ • Build orchestration                                      │ │
+│ │ • Deployment coordination                                 │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Submodule MCP Clients                                     │ │
+│ │ • Request forwarding                                       │ │
+│ │ • Response handling                                       │ │
+│ │ • Error isolation                                         │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Error Scenarios                                          │ │
+│ │ • Network failures                                        │ │
+│ │ • Service unavailability                                  │ │
+│ │ • Data corruption                                         │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Performance & Load                                       │ │
+│ │ • Concurrent request handling                             │ │
+│ │ • Resource utilization                                    │ │
+│ │ • Scalability testing                                     │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Contract Testing Validation
+
+```
+Contract Test Coverage
+┌─────────────────────────────────────────────────────────────┐
+│ Endpoint Contracts                                          │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ /v1/health                                               │ │
+│ │ • Response schema validation                             │ │
+│ │ • Status code contracts                                   │ │
+│ │ • Response time SLAs                                      │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ /v1/register                                             │ │
+│ │ • Request schema validation                              │ │
+│ │ • Response contracts                                      │ │
+│ │ • Error response formats                                 │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ /v1/run                                                  │ │
+│ │ • Task submission contracts                              │ │
+│ │ • Async response handling                                │ │
+│ │ • Status update schemas                                  │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ /v1/status                                               │ │
+│ │ • Status response schemas                                │ │
+│ │ • Historical data contracts                              │ │
+│ │ • Metrics format validation                              │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ /v1/controllers                                          │ │
+│ │ • Controller routing contracts                           │ │
+│ │ • Command validation                                      │ │
+│ │ • Result format standards                                │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ /v1/execute_task                                         │ │
+│ │ • Task execution contracts                               │ │
+│ │ • Workflow integration                                    │ │
+│ │ • Error handling standards                               │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ### AI Request Flow

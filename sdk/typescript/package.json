@@ -1,0 +1,61 @@
+{
+  "name": "@tools-automation/mcp-sdk",
+  "version": "1.0.0",
+  "description": "TypeScript SDK for MCP (Model Context Protocol) server",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts",
+    "prepublishOnly": "npm run clean && npm run build && npm run test",
+    "docs": "typedoc src/index.ts"
+  },
+  "keywords": [
+    "mcp",
+    "sdk",
+    "api",
+    "automation",
+    "typescript"
+  ],
+  "author": "Tools Automation",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dboone323/tools-automation.git",
+    "directory": "sdk/typescript"
+  },
+  "bugs": {
+    "url": "https://github.com/dboone323/tools-automation/issues"
+  },
+  "homepage": "https://github.com/dboone323/tools-automation#readme",
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.1.0",
+    "typedoc": "^0.25.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ]
+}

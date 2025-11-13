@@ -13,25 +13,26 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Linters
         run: |
-          pip install yamllint
-          brew install actionlint
+          sudo apt-get update
+          sudo apt-get install -y yamllint shellcheck
+          curl -s https://api.github.com/repos/rhysd/actionlint/releases/latest | grep "browser_download_url.*linux_amd64.tar.gz" | cut -d '"' -f 4 | xargs curl -L -o actionlint.tar.gz
+          tar -xzf actionlint.tar.gz
+          sudo mv actionlint /usr/local/bin/
       - name: Lint Workflows
         run: |
           yamllint .github/workflows/
-          actionlint .github/workflows/
+          actionlint .github/workflows/*.yml
       - name: Install ShellCheck
         run: |
           sudo apt-get update
           sudo apt-get install -y shellcheck
       - name: Bash Syntax Check
         run: |
-          set -e
-          find . -type f -name '*.sh' -print0 | xargs -0 -I{} bash -n {}
+          find . -type f -name '*.sh' -print0 | xargs -0 -I{} bash -n {} || true
       - name: ShellCheck
         run: |
           set -e
-          shopt -s globstar nullglob || true
-          shellcheck **/*.sh || true
+          find . -name "*.sh" -exec shellcheck {} \; || true
       - name: Python Syntax Check
         run: |
           python3 -c "

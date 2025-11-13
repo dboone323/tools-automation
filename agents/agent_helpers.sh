@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Agent Helper Functions - Phase 1 Enhanced Capabilities
 # Source this file in your agents to enable enhanced features
 
@@ -84,6 +86,52 @@ check_resource_limits() {
 
     echo "[$(date)] ${AGENT_NAME}: ✅ Resource limits OK for ${operation_name}" >>"${LOG_FILE}"
     return 0
+}
+
+# Canonical health check used by the patcher/boilerplate
+agent_health_check() {
+    local status_ok=true
+    local -a issues
+
+    # Basic writable checks
+    if [[ ! -w "${AGENT_LIB_DIR:-/tmp}" ]]; then
+        issues+=("libdir_not_writable")
+        status_ok=false
+    fi
+
+    # Ensure log file directory is writable
+    local logdir
+    logdir=$(dirname "${LOG_FILE:-/tmp/agent.log}")
+    if [[ ! -d "$logdir" || ! -w "$logdir" ]]; then
+        issues+=("logdir_unwritable")
+        status_ok=false
+    fi
+
+    # Reuse resource limits check if available
+    if ! check_resource_limits "health_check" >/dev/null 2>&1; then
+        issues+=("resource_limits_fail")
+        status_ok=false
+    fi
+
+    # Optional: check presence of required binaries
+    if ! command -v jq >/dev/null 2>&1; then
+        issues+=("missing_jq")
+        status_ok=false
+    fi
+
+    if [[ "$status_ok" == true ]]; then
+        printf '{"ok":true}\n'
+        return 0
+    else
+        # join issues by comma
+        local joined
+        joined=$(
+            IFS=","
+            echo "${issues[*]}"
+        )
+        printf '{"ok":false,"issues":["%s"]}\n' "$joined"
+        return 2
+    fi
 }
 
 # Suggest fix for an error
@@ -359,7 +407,7 @@ main_agent_loop() {
             update_agent_status "${AGENT_NAME}" "busy" $$ "$(echo "$task_data" | jq -r '.id')"
             if process_helper_task "$task_data"; then
                 update_task_status "$(echo "$task_data" | jq -r '.id')" "completed"
-    increment_task_count "${AGENT_NAME}"
+                increment_task_count "${AGENT_NAME}"
                 echo "[$(date)] ${AGENT_NAME}: Task completed successfully" >>"${LOG_FILE}"
             else
                 update_task_status "$(echo "$task_data" | jq -r '.id')" "failed"

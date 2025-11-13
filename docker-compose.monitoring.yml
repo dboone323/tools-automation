@@ -106,10 +106,78 @@ services:
       retries: 3
       start_period: 30s
 
+  # MCP Server for autonomous agent coordination
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tools-automation-mcp-server
+    ports:
+      - "5005:5005"
+    volumes:
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - MCP_PORT=5005
+      - REDIS_URL=redis://redis:6379
+    networks:
+      - monitoring
+    depends_on:
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Agent Dashboard API
+  agent-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tools-automation-agent-dashboard
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=production
+    networks:
+      - monitoring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Redis for caching and coordination
+  redis:
+    image: redis:7-alpine
+    container_name: tools-automation-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - monitoring
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
 volumes:
   prometheus_data:
   grafana_data:
   uptime_kuma_data:
+  redis_data:
 
 networks:
   monitoring:

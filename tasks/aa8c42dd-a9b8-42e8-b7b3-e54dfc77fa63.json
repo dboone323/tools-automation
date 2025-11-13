@@ -1,0 +1,14 @@
+{
+  "id": "aa8c42dd-a9b8-42e8-b7b3-e54dfc77fa63",
+  "agent": "workflow-monitor",
+  "command": "ci-check",
+  "project": "test-branch",
+  "status": "queued",
+  "meta": {
+    "workflow": "workflow_9630e53e",
+    "conclusion": "failure",
+    "url": "https://github.com/test/repo/actions/runs/123",
+    "run_id": null,
+    "action": null
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ghwf_82",
+  "agent": "github-webhook",
+  "command": "ci-check",
+  "project": "feature-branch",
+  "status": "queued",
+  "meta": {
+    "workflow": "CI Pipeline",
+    "conclusion": "failure",
+    "url": "https://github.com/test/repo/actions/runs/123"
+  }
+}

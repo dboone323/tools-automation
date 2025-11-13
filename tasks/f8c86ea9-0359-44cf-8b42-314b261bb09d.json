@@ -1,0 +1,8 @@
+{
+  "id": "f8c86ea9-0359-44cf-8b42-314b261bb09d",
+  "agent": "contract-test-agent",
+  "command": "status",
+  "project": null,
+  "status": "error",
+  "stderr": "[Errno 2] No such file or directory: './Tools/Automation/master_automation.sh'"
+}

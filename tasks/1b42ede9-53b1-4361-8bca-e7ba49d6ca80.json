@@ -1,0 +1,12 @@
+{
+  "id": "1b42ede9-53b1-4361-8bca-e7ba49d6ca80",
+  "agent": "github-webhook",
+  "command": "ci-check",
+  "project": "feature-branch",
+  "status": "queued",
+  "meta": {
+    "workflow": "CI Pipeline",
+    "conclusion": "failure",
+    "url": "https://github.com/test/repo/actions/runs/123"
+  }
+}

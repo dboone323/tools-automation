@@ -3,8 +3,7 @@ global:
   evaluation_interval: 15s
 
 rule_files:
-  # - "first_rules.yml"
-  # - "second_rules.yml"
+  - "alert_rules.yml"
 
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
@@ -42,3 +41,10 @@ scrape_configs:
     static_configs:
       - targets: ['host.docker.internal:9091']
     scrape_interval: 60s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # Alertmanager is not configured yet, but this is where it would go
+          # - alertmanager:9093

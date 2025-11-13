@@ -1,0 +1,15 @@
+{
+  "github_webhook": {
+    "enabled": true,
+    "webhook_secret": "your_webhook_secret_here",
+    "repository_filter": [],
+    "event_filter": [
+      "push",
+      "pull_request",
+      "issues",
+      "release",
+      "create",
+      "delete"
+    ]
+  }
+}

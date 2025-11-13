@@ -1,0 +1,980 @@
+openapi: 3.0.3
+info:
+  title: MCP Server API
+  description: |
+    Model Context Protocol Server API for coordinating AI agents and workflows.
+
+    This API provides endpoints for agent registration, task management, health monitoring,
+    and workflow orchestration across the tools-automation system.
+  version: 1.0.0
+  contact:
+    name: Tools Automation Team
+    url: https://github.com/dboone323/tools-automation
+
+servers:
+  - url: http://127.0.0.1:5005
+    description: Local MCP Server
+  - url: http://localhost:5005
+    description: Local MCP Server (alternative)
+
+paths:
+  /health:
+    get:
+      summary: Get server health status
+      description: |
+        Returns detailed health information about the MCP server, including
+        system metrics, agent counts, and task queue status.
+      operationId: getHealth
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Server is in degraded state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /status:
+    get:
+      summary: Get server status overview
+      description: Returns a high-level overview of server state, registered agents, and queued tasks.
+      operationId: getStatus
+      tags:
+        - Status
+      responses:
+        '200':
+          description: Status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+  /controllers:
+    get:
+      summary: Get registered controllers
+      description: Returns information about all registered agent controllers and their last heartbeat.
+      operationId: getControllers
+      tags:
+        - Controllers
+      responses:
+        '200':
+          description: Controllers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ControllersResponse'
+
+  /register:
+    post:
+      summary: Register an agent
+      description: Register a new agent with the MCP server, specifying its capabilities.
+      operationId: registerAgent
+      tags:
+        - Agents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Agent registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Invalid registration request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /run:
+    post:
+      summary: Submit a task for execution
+      description: |
+        Submit a task to be executed by an agent. The task can be queued for later execution
+        or executed immediately if execute=true.
+      operationId: runTask
+      tags:
+        - Tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunRequest'
+      responses:
+        '200':
+          description: Task submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+        '400':
+          description: Invalid task request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Command not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /execute_task:
+    post:
+      summary: Execute a queued task
+      description: Execute a previously queued task by its ID.
+      operationId: executeTask
+      tags:
+        - Tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteTaskRequest'
+      responses:
+        '200':
+          description: Task execution started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecuteTaskResponse'
+        '400':
+          description: Invalid execution request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Task not in queued state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /workflow_alert:
+    post:
+      summary: Handle workflow alerts
+      description: |
+        Receive alerts from CI/CD workflows (e.g., GitHub Actions) and enqueue
+        appropriate follow-up tasks.
+      operationId: handleWorkflowAlert
+      tags:
+        - Workflows
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowAlertRequest'
+      responses:
+        '200':
+          description: Alert processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowAlertResponse'
+        '400':
+          description: Invalid alert request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /github_webhook:
+    post:
+      summary: Handle GitHub webhooks
+      description: |
+        Process GitHub webhook events for repository dispatch and workflow run completions.
+        Supports automatic task creation based on webhook payloads.
+      operationId: handleGitHubWebhook
+      tags:
+        - Webhooks
+      parameters:
+        - name: X-GitHub-Event
+          in: header
+          required: true
+          schema:
+            type: string
+            enum: [repository_dispatch, workflow_run]
+        - name: X-Hub-Signature-256
+          in: header
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GitHubWebhookPayload'
+      responses:
+        '200':
+          description: Webhook processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+                  enqueued:
+                    type: boolean
+                    example: true
+                  task_id:
+                    type: string
+                    example: "abc-123-def"
+                  ignored_event:
+                    type: string
+                    example: "push"
+        '401':
+          description: Webhook signature verification failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /quantum_status:
+    get:
+      summary: Get quantum system status
+      description: Returns status information about quantum-enhanced components.
+      operationId: getQuantumStatus
+      tags:
+        - Quantum
+      responses:
+        '200':
+          description: Quantum status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuantumStatusResponse'
+
+  /quantum_entangle:
+    post:
+      summary: Create quantum entanglement
+      description: Create quantum entanglement between two agents for coordinated execution.
+      operationId: createEntanglement
+      tags:
+        - Quantum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntanglementRequest'
+      responses:
+        '200':
+          description: Entanglement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntanglementResponse'
+
+  /multiverse_navigate:
+    post:
+      summary: Navigate to parallel universe
+      description: Execute workflow in a parallel universe context.
+      operationId: navigateUniverse
+      tags:
+        - Quantum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniverseNavigationRequest'
+      responses:
+        '200':
+          description: Navigation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniverseNavigationResponse'
+
+  /consciousness_expand:
+    post:
+      summary: Expand consciousness frameworks
+      description: Expand AI consciousness capabilities for enhanced decision making.
+      operationId: expandConsciousness
+      tags:
+        - Quantum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsciousnessExpansionRequest'
+      responses:
+        '200':
+          description: Consciousness expanded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsciousnessExpansionResponse'
+
+  /dimensional_compute:
+    post:
+      summary: Execute dimensional computation
+      description: Execute computation across multiple dimensions.
+      operationId: executeDimensionalComputation
+      tags:
+        - Quantum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DimensionalComputationRequest'
+      responses:
+        '200':
+          description: Computation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DimensionalComputationResponse'
+
+  /quantum_orchestrate:
+    post:
+      summary: Execute quantum orchestration
+      description: Orchestrate complex workflows using quantum principles.
+      operationId: quantumOrchestrate
+      tags:
+        - Quantum
+      requestBody:
+        required: true
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/QuantumOrchestrationRequest'
+      responses:
+        '200':
+          description: Orchestration completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuantumOrchestrationResponse'
+
+  /reality_simulate:
+    post:
+      summary: Execute reality simulation
+      description: Simulate reality scenarios for testing and validation.
+      operationId: simulateReality
+      tags:
+        - Quantum
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealitySimulationRequest'
+      responses:
+        '200':
+          description: Simulation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealitySimulationResponse'
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - ok
+        - status
+        - timestamp
+      properties:
+        ok:
+          type: boolean
+          description: Whether the server is healthy
+        status:
+          type: string
+          enum: [healthy, degraded, error]
+          description: Current server status
+        timestamp:
+          type: number
+          description: Unix timestamp of health check
+        uptime:
+          type: boolean
+          description: Whether server has been up since start
+        agents:
+          type: object
+          properties:
+            registered:
+              type: integer
+              description: Number of registered agents
+            controllers:
+              type: integer
+              description: Number of active controllers
+        tasks:
+          type: object
+          properties:
+            total:
+              type: integer
+              description: Total tasks in queue
+            queued:
+              type: integer
+              description: Tasks waiting for execution
+            running:
+              type: integer
+              description: Tasks currently executing
+        dependencies:
+          type: object
+          properties:
+            ollama:
+              type: object
+              properties:
+                available:
+                  type: boolean
+                endpoint:
+                  type: string
+        system:
+          type: object
+          properties:
+            disk_free_gb:
+              type: number
+            disk_total_gb:
+              type: number
+            disk_percent:
+              type: number
+            cpu_percent:
+              type: number
+            memory_percent:
+              type: number
+            memory_available_gb:
+              type: number
+        issues:
+          type: array
+          items:
+            type: string
+          description: List of current issues if any
+
+    StatusResponse:
+      type: object
+      required:
+        - ok
+        - agents
+        - tasks
+        - controllers
+      properties:
+        ok:
+          type: boolean
+        agents:
+          type: array
+          items:
+            type: string
+          description: List of registered agent IDs
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+          description: List of queued/running tasks
+        controllers:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ControllerInfo'
+          description: Map of controller information
+
+    ControllersResponse:
+      type: object
+      required:
+        - ok
+        - controllers
+      properties:
+        ok:
+          type: boolean
+        controllers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ControllerInfo'
+
+    ControllerInfo:
+      type: object
+      required:
+        - agent
+        - project
+        - last_heartbeat
+      properties:
+        agent:
+          type: string
+          description: Agent identifier
+        project:
+          type: string
+          description: Associated project
+        last_heartbeat:
+          type: number
+          description: Unix timestamp of last heartbeat
+
+    RegisterRequest:
+      type: object
+      required:
+        - agent
+      properties:
+        agent:
+          type: string
+          description: Agent identifier
+        capabilities:
+          type: array
+          items:
+            type: string
+          description: List of agent capabilities
+          default: []
+
+    RegisterResponse:
+      type: object
+      required:
+        - ok
+        - registered
+      properties:
+        ok:
+          type: boolean
+        registered:
+          type: string
+          description: Registered agent identifier
+
+    RunRequest:
+      type: object
+      required:
+        - agent
+        - command
+      properties:
+        agent:
+          type: string
+          description: Target agent identifier
+        command:
+          type: string
+          description: Command to execute
+          enum:
+            - analyze
+            - analyze-all
+            - auto-apply
+            - ci-check
+            - fix
+            - fix-all
+            - status
+            - validate
+            - optimize-performance
+            - enhance-review-engine
+            - implement-feature
+            - integrate-api
+            - enhance-ui
+            - implement-todo
+        project:
+          type: string
+          description: Target project (optional)
+        execute:
+          type: boolean
+          description: Whether to execute immediately
+          default: false
+
+    RunResponse:
+      type: object
+      required:
+        - ok
+        - task_id
+        - queued
+      properties:
+        ok:
+          type: boolean
+        task_id:
+          type: string
+          description: Unique task identifier
+        queued:
+          type: boolean
+          description: Whether task was queued
+
+    ExecuteTaskRequest:
+      type: object
+      required:
+        - task_id
+      properties:
+        task_id:
+          type: string
+          description: Task identifier to execute
+
+    ExecuteTaskResponse:
+      type: object
+      required:
+        - ok
+        - executing
+        - task_id
+      properties:
+        ok:
+          type: boolean
+        executing:
+          type: boolean
+        task_id:
+          type: string
+
+    Task:
+      type: object
+      required:
+        - id
+        - agent
+        - command
+        - status
+      properties:
+        id:
+          type: string
+          description: Unique task identifier
+        agent:
+          type: string
+          description: Assigned agent
+        command:
+          type: string
+          description: Command to execute
+        project:
+          type: string
+          description: Target project
+        status:
+          type: string
+          enum: [queued, running, success, failed, error]
+          description: Current task status
+        assigned_agent:
+          type: string
+          description: Agent assigned to task
+        correlation_id:
+          type: string
+          description: Request correlation identifier
+
+    WorkflowAlertRequest:
+      type: object
+      required:
+        - workflow
+        - conclusion
+      properties:
+        workflow:
+          type: string
+          description: Workflow name
+        conclusion:
+          type: string
+          enum: [success, failure, cancelled, skipped]
+          description: Workflow conclusion
+        url:
+          type: string
+          format: uri
+          description: Workflow run URL
+        head_branch:
+          type: string
+          description: Branch that triggered the workflow
+        run_id:
+          type: string
+          description: Workflow run identifier
+        action:
+          type: string
+          enum: [open-issue, rerun-workflow]
+          description: Action to take
+
+    WorkflowAlertResponse:
+      type: object
+      required:
+        - ok
+        - enqueued
+        - task_id
+      properties:
+        ok:
+          type: boolean
+        enqueued:
+          type: boolean
+        task_id:
+          type: string
+
+    GitHubWebhookPayload:
+      type: object
+      description: GitHub webhook payload (varies by event type)
+      additionalProperties: true
+
+    QuantumStatusResponse:
+      type: object
+      required:
+        - ok
+        - quantum_status
+      properties:
+        ok:
+          type: boolean
+        quantum_status:
+          type: object
+          properties:
+            entanglement_network:
+              $ref: '#/components/schemas/EntanglementStatus'
+            multiverse_navigation:
+              $ref: '#/components/schemas/MultiverseStatus'
+            consciousness_frameworks:
+              $ref: '#/components/schemas/ConsciousnessStatus'
+            dimensional_computing:
+              $ref: '#/components/schemas/DimensionalStatus'
+            quantum_orchestrator:
+              $ref: '#/components/schemas/OrchestratorStatus'
+
+    EntanglementStatus:
+      type: object
+      properties:
+        active:
+          type: boolean
+        entangled_agents:
+          type: integer
+        network_health:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    MultiverseStatus:
+      type: object
+      properties:
+        active:
+          type: boolean
+        parallel_universes:
+          type: integer
+        current_universe:
+          type: string
+        multiverse_stability:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    ConsciousnessStatus:
+      type: object
+      properties:
+        active:
+          type: boolean
+        active_frameworks:
+          type: integer
+        consciousness_level:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    DimensionalStatus:
+      type: object
+      properties:
+        active:
+          type: boolean
+        supported_dimensions:
+          type: array
+          items:
+            type: integer
+        dimensional_stability:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    OrchestratorStatus:
+      type: object
+      properties:
+        active:
+          type: boolean
+        queued_jobs:
+          type: integer
+        orchestration_cycles:
+          type: integer
+
+    EntanglementRequest:
+      type: object
+      required:
+        - agent1
+        - agent2
+      properties:
+        agent1:
+          type: string
+        agent2:
+          type: string
+
+    EntanglementResponse:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
+        entanglement_created:
+          type: boolean
+        entanglement_id:
+          type: string
+
+    UniverseNavigationRequest:
+      type: object
+      required:
+        - universe_id
+      properties:
+        universe_id:
+          type: string
+        workflow_type:
+          type: string
+          default: computation
+
+    UniverseNavigationResponse:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
+        navigation_completed:
+          type: boolean
+        universe:
+          type: string
+        workflow_type:
+          type: string
+
+    ConsciousnessExpansionRequest:
+      type: object
+      required:
+        - expansion_type
+      properties:
+        expansion_type:
+          type: string
+          enum: [basic, advanced, maximum]
+          default: maximum
+        target_agent:
+          type: string
+
+    ConsciousnessExpansionResponse:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
+        consciousness_expanded:
+          type: boolean
+        expansion_details:
+          type: object
+          additionalProperties: true
+
+    DimensionalComputationRequest:
+      type: object
+      required:
+        - dimensions
+        - computation_type
+      properties:
+        dimensions:
+          type: array
+          items:
+            type: integer
+          minItems: 1
+        computation_type:
+          type: string
+          default: optimization
+
+    DimensionalComputationResponse:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
+        computation_completed:
+          type: boolean
+        results:
+          type: object
+          additionalProperties: true
+
+    QuantumOrchestrationRequest:
+      type: object
+      required:
+        - workflow_name
+      properties:
+        workflow_name:
+          type: string
+        execution_mode:
+          type: string
+          enum: [parallel, sequential]
+          default: parallel
+
+    QuantumOrchestrationResponse:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
+        orchestration_started:
+          type: boolean
+        task_id:
+          type: string
+        workflow:
+          type: string
+
+    RealitySimulationRequest:
+      type: object
+      required:
+        - universe_config
+        - duration
+      properties:
+        universe_config:
+          type: object
+          additionalProperties: true
+        duration:
+          type: integer
+          minimum: 1
+          description: Simulation duration in time units
+
+    RealitySimulationResponse:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
+        simulation_completed:
+          type: boolean
+        results:
+          type: object
+          additionalProperties: true
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+        allowed:
+          type: array
+          items:
+            type: string
+          description: List of allowed values (for 403 errors)
+        status:
+          type: string
+          description: Current status (for 409 errors)
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-Token
+    ClientIdAuth:
+      type: apiKey
+      in: header
+      name: X-Client-Id
+    GitHubWebhookAuth:
+      type: apiKey
+      in: header
+      name: X-Hub-Signature-256
+
+security:
+  - ApiKeyAuth: []
+  - ClientIdAuth: []
+  - GitHubWebhookAuth: []

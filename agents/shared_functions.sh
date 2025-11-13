@@ -265,7 +265,7 @@ import tempfile
 import fcntl
 
 agent_name = sys.argv[1]
-status_file = os.environ.get('STATUS_FILE', '${SCRIPT_DIR}/config/agent_status.json')
+status_file = sys.argv[2] if len(sys.argv) > 2 else '${SCRIPT_DIR}/config/agent_status.json'
 
 # Read current status
 try:
@@ -296,7 +296,7 @@ with tempfile.NamedTemporaryFile(mode='w', dir=os.path.dirname(status_file), del
 
 os.rename(temp_path, status_file)
 print(f'Task count incremented for {agent_name}')
-" "$agent_name" 2>&1
+" "$agent_name" "${SCRIPT_DIR}/config/agent_status.json" 2>&1
 }
 
 # Export functions
