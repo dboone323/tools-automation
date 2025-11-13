@@ -1,0 +1,63 @@
+{
+  "services": {
+    "mcp_server": {
+      "enabled": true,
+      "auto_restart": true,
+      "max_restarts": 5,
+      "health_check_url": "http://127.0.0.1:5005/health",
+      "start_command": "bash mcp/servers/start_mcp_server.sh",
+      "restart_delay": 30,
+      "critical": true
+    },
+    "todo_dashboard": {
+      "enabled": true,
+      "auto_restart": true,
+      "max_restarts": 3,
+      "health_check_url": "http://localhost:5001/api/todo/dashboard",
+      "start_command": "bash launch_todo_system.sh start",
+      "restart_delay": 15,
+      "critical": false
+    },
+    "ollama": {
+      "enabled": false,
+      "auto_restart": true,
+      "max_restarts": 2,
+      "health_check_url": "http://localhost:11434/api/tags",
+      "start_command": "bash ollama_service.sh start",
+      "restart_delay": 60,
+      "critical": false
+    }
+  },
+  "agents": {
+    "unified_todo_agent": {
+      "enabled": true,
+      "auto_restart": true,
+      "max_restarts": 3,
+      "check_command": "pgrep -f unified_todo_agent.sh",
+      "start_command": "bash agents/unified_todo_agent.sh",
+      "restart_delay": 20
+    },
+    "auto_restart_agents": {
+      "enabled": true,
+      "auto_restart": true,
+      "max_restarts": 2,
+      "check_command": "bash agents/start_recommended_agents.sh status",
+      "start_command": "bash agents/start_recommended_agents.sh start",
+      "restart_delay": 45
+    }
+  },
+  "orchestration": {
+    "cycle_interval": 300,
+    "intelligence_enabled": true,
+    "auto_scaling": true,
+    "resource_monitoring": true,
+    "predictive_actions": true
+  },
+  "autonomy": {
+    "level": "full",
+    "decision_making": "ai_assisted",
+    "emergency_protocols": true,
+    "self_healing": true,
+    "adaptive_scheduling": true
+  }
+}

@@ -30,19 +30,19 @@ log_security_issue() {
 
     case "$severity" in
     "CRITICAL")
-        ((CRITICAL_ISSUES++))
+        CRITICAL_ISSUES=$((CRITICAL_ISSUES + 1))
         echo -e "${RED}🚨 CRITICAL${NC}: $issue"
         ;;
     "HIGH")
-        ((HIGH_ISSUES++))
+        HIGH_ISSUES=$((HIGH_ISSUES + 1))
         echo -e "${RED}🔴 HIGH${NC}: $issue"
         ;;
     "MEDIUM")
-        ((MEDIUM_ISSUES++))
+        MEDIUM_ISSUES=$((MEDIUM_ISSUES + 1))
         echo -e "${YELLOW}🟡 MEDIUM${NC}: $issue"
         ;;
     "LOW")
-        ((LOW_ISSUES++))
+        LOW_ISSUES=$((LOW_ISSUES + 1))
         echo -e "${BLUE}🔵 LOW${NC}: $issue"
         ;;
     esac
@@ -55,7 +55,7 @@ log_security_issue() {
 log_security_pass() {
     local check="$1"
     echo -e "${GREEN}✅ PASS${NC}: $check"
-    ((PASSED_CHECKS++))
+    PASSED_CHECKS=$((PASSED_CHECKS + 1))
 }
 
 echo "🔍 Running Security Audit Checks..."
@@ -75,7 +75,8 @@ fi
 
 # Check for executable scripts without proper permissions
 # Only check scripts that are likely meant to be executable (not backup/test files)
-EXECUTABLE_SCRIPTS=$(find . -name "*.sh" -type f -executable -not -name "*.bak" -not -name "*.backup" -not -name "*~" | wc -l)
+# Use macOS-compatible find syntax
+EXECUTABLE_SCRIPTS=$(find . -name "*.sh" -type f -perm +111 -not -name "*.bak" -not -name "*.backup" -not -name "*~" | wc -l)
 TOTAL_SCRIPTS=$(find . -name "*.sh" -type f -not -name "*.bak" -not -name "*.backup" -not -name "*~" | wc -l)
 if [ "$EXECUTABLE_SCRIPTS" -eq "$TOTAL_SCRIPTS" ] && [ "$TOTAL_SCRIPTS" -gt 0 ]; then
     log_security_pass "All shell scripts have execute permissions"
@@ -163,11 +164,11 @@ echo ""
 if command -v python3 >/dev/null 2>&1 && [ -f "requirements.txt" ]; then
     echo "Checking Python dependencies for vulnerabilities..."
     if command -v safety >/dev/null 2>&1; then
-        VULN_COUNT=$(safety check --file requirements.txt 2>/dev/null | grep -c "vulnerability" || echo "0")
-        if [ "$VULN_COUNT" -gt 0 ]; then
-            log_security_issue "HIGH" "Python dependencies have known vulnerabilities" "$VULN_COUNT vulnerabilities found"
-        else
+        # Use timeout to prevent hanging, and check exit code
+        if timeout 30 safety check --file requirements.txt >/dev/null 2>&1; then
             log_security_pass "Python dependencies appear secure"
+        else
+            log_security_issue "HIGH" "Python dependencies may have known vulnerabilities" "Safety check failed or found issues - manual review recommended"
         fi
     else
         log_security_issue "MEDIUM" "Cannot check Python vulnerabilities" "safety tool not installed"

@@ -1,0 +1,15 @@
+{
+  "timestamp": 1763041965,
+  "cpu_usage_percent": 8.15,
+  "memory_usage_percent": 271470,
+  "disk_usage_percent": 15,
+  "network_rx_bytes": 5332027696,
+  "network_tx_bytes": 687891684,
+  "process_count":      721,
+  "load_average": 6.52,
+  "system_info": {
+    "hostname": "MacBook-Pro.local",
+    "os_version": "26.2",
+    "kernel_version": "25.2.0"
+  }
+}

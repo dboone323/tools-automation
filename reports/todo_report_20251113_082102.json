@@ -1,0 +1,83 @@
+{
+  "generated_at": "2025-11-13T08:21:03.202322",
+  "summary": {
+    "total_todos": 8,
+    "by_status": {
+      "pending": 8,
+      "in_progress": 0,
+      "completed": 0,
+      "blocked": 0,
+      "cancelled": 0
+    },
+    "by_category": {
+      "security": 0,
+      "performance": 2,
+      "maintenance": 2,
+      "features": 4,
+      "bugs": 0,
+      "documentation": 0,
+      "testing": 0,
+      "infrastructure": 0,
+      "debt": 0
+    },
+    "by_priority": {
+      "critical": 0,
+      "high": 0,
+      "medium": 8,
+      "low": 0,
+      "backlog": 0
+    },
+    "overdue": 0,
+    "recent_activity": [
+      {
+        "id": "27607679-ccf7-441b-a172-c5152a7a73fe",
+        "title": "Enhance MCP Capabilities",
+        "status": "pending",
+        "updated_at": "2025-11-13T08:21:02.255421"
+      },
+      {
+        "id": "a2403836-7e4b-4fe2-b751-690fd59a1e44",
+        "title": "Implement Advanced Agent Orchestration",
+        "status": "pending",
+        "updated_at": "2025-11-13T08:21:02.254864"
+      },
+      {
+        "id": "88dc8232-eb3e-456f-a387-2e73fcabd208",
+        "title": "Update Outdated Dependencies",
+        "status": "pending",
+        "updated_at": "2025-11-13T08:21:00.773693"
+      },
+      {
+        "id": "58a93cdc-29ba-4510-bb0d-6e47a50e31bb",
+        "title": "Optimize System Performance",
+        "status": "pending",
+        "updated_at": "2025-11-13T08:21:00.773078"
+      },
+      {
+        "id": "3ead1091-a063-4995-b579-83b88da7051d",
+        "title": "Enhance MCP Capabilities",
+        "status": "pending",
+        "updated_at": "2025-11-13T08:20:29.392697"
+      },
+      {
+        "id": "f1077597-b94b-4eff-840b-2a4588a24f61",
+        "title": "Implement Advanced Agent Orchestration",
+        "status": "pending",
+        "updated_at": "2025-11-13T08:20:29.392239"
+      },
+      {
+        "id": "17a22a75-d282-42a9-90f0-0740dbf45cda",
+        "title": "Update Outdated Dependencies",
+        "status": "pending",
+        "updated_at": "2025-11-13T08:20:27.093832"
+      },
+      {
+        "id": "0a741f8a-c96e-496e-8656-1c9cd2d9ec25",
+        "title": "Optimize System Performance",
+        "status": "pending",
+        "updated_at": "2025-11-13T08:20:27.093432"
+      }
+    ]
+  },
+  "recommendations": []
+}
