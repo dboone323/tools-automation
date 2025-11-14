@@ -18,7 +18,7 @@ if [[ $# -eq 0 ]]; then
 
     # Self-monitoring mode: monitor this script itself
     AGENT_NAME="agent_monitoring_self"
-    COMMAND=("sleep" "infinity")
+    COMMAND=("sleep" "31536000") # Sleep for 1 year
 else
     AGENT_NAME="$1"
     shift || true

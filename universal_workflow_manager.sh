@@ -12,10 +12,17 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Project directories
-PROJECTS_DIR="/Users/danielstevens/Desktop/Code/Projects"
-SHARED_DIR="/Users/danielstevens/Desktop/Code/Shared"
-TOOLS_DIR="/Users/danielstevens/Desktop/Code/Tools"
+# Load workspace envs for portability
+SETUP_PATH="$(git rev-parse --show-toplevel 2>/dev/null)/scripts/setup_paths.sh"
+if [[ -f "${SETUP_PATH}" ]]; then
+    # shellcheck disable=SC1090
+    source "${SETUP_PATH}"
+fi
+
+# Project directories (override with envs if needed)
+PROJECTS_DIR="${PROJECTS_DIR:-${WORKSPACE_ROOT}/Projects}"
+SHARED_DIR="${SHARED_DIR:-${WORKSPACE_ROOT}/Shared}"
+TOOLS_DIR="${TOOLS_DIR:-${WORKSPACE_ROOT}/Tools}"
 
 print_header() {
     echo -e "${BLUE}╔════════════════════════════════════════╗${NC}"

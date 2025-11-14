@@ -37,6 +37,8 @@ A comprehensive suite of free, open-source tools for monitoring, security, quali
 
 ### Access Points
 
+ - `scripts/add_github_view_remotes.sh` helps you add 'view' remotes for sibling repositories (useful for quick browsing).
+	 See `docs/REMOTE_ACCESS.md` for usage options.
 - **Grafana**: http://localhost:3000 (admin/admin)
 - **Prometheus**: http://localhost:9090
 - **Uptime Kuma**: http://localhost:3001

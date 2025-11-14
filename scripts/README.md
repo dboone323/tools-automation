@@ -21,6 +21,7 @@ This directory contains utility scripts for TODO management, AI-assisted automat
 
 - **automate.sh**: General automation orchestration
 - **dashboard_unified.sh**: Unified dashboard for monitoring
+ - **add_github_view_remotes.sh**: Add a `view` read-only remote for common repos under `dboone323` to make browsing easier; see `docs/REMOTE_ACCESS.md` for details.
 
 ## regenerate_todo_json.py
 

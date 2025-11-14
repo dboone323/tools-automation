@@ -97,6 +97,10 @@ Tools/Automation/agents/*.tmp.*
 Tools/Automation/agents/task_queue.json.old
 Tools/Automation/export_todos.pid
 
+# Large data files (should not be in git)
+config/task_queue.json
+**/task_queue.json
+
 # Temporary TODO export files
 Projects/todo-tree-output.json.broken
 Projects/todo-tree-output.json.fixed

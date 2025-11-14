@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-WORKSPACE_ROOT="/Users/danielstevens/Desktop/Quantum-workspace"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(git rev-parse --show-toplevel 2>/dev/null)}"
 IOS_SIMULATOR="iPhone 16 Test"
 COVERAGE_RESULTS_DIR="${WORKSPACE_ROOT}/coverage_results"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)

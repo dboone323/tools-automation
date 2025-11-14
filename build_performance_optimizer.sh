@@ -10,7 +10,7 @@
 set -e
 
 # Configuration
-WORKSPACE_ROOT="/Users/danielstevens/Desktop/Quantum-workspace"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(git rev-parse --show-toplevel 2>/dev/null)}"
 PROJECTS_DIR="$WORKSPACE_ROOT/Projects"
 CACHE_DIR="$WORKSPACE_ROOT/.build_cache"
 LOG_FILE="$WORKSPACE_ROOT/build_performance.log"

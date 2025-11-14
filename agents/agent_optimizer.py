@@ -13,7 +13,11 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 class AgentOptimizer:
-    def __init__(self, workspace_root="/Users/danielstevens/Desktop/Quantum-workspace"):
+    def __init__(self, workspace_root=None):
+        # Resolve workspace root from env if not passed in
+        workspace_root = (
+            workspace_root or os.environ.get("WORKSPACE_ROOT") or os.getcwd()
+        )
         self.workspace_root = workspace_root
         self.agents_dir = f"{workspace_root}/Tools/Automation/agents"
         self.agent_status_file = f"{self.agents_dir}/agent_status.json"

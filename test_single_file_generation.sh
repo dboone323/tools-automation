@@ -14,7 +14,13 @@ readonly NC='\033[0m'
 # Configuration
 readonly OLLAMA_URL="http://localhost:11434"
 readonly OLLAMA_MODEL="qwen2.5-coder:1.5b"
-readonly SOURCE_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Projects/MomentumFinance/Sources/MomentumFinanceCore/DataExporter.swift"
+SETUP_PATH="$(git rev-parse --show-toplevel 2>/dev/null)/scripts/setup_paths.sh"
+if [[ -f "${SETUP_PATH}" ]]; then
+    # shellcheck disable=SC1090
+    source "${SETUP_PATH}"
+fi
+
+readonly SOURCE_FILE="${SOURCE_FILE:-${WORKSPACE_ROOT}/Projects/MomentumFinance/Sources/MomentumFinanceCore/DataExporter.swift}"
 readonly OUTPUT_FILE="/tmp/DataExporterTests_generated.swift"
 
 echo -e "${BLUE}╔═══════════════════════════════════════════════════╗${NC}"

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.tools.automation.dashboard-server</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>${WORKSPACE_ROOT}/dashboard_server.py</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>${WORKSPACE_ROOT}</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>${WORKSPACE_ROOT}/dashboard_server.log</string>
+    <key>StandardErrorPath</key>
+    <string>${WORKSPACE_ROOT}/dashboard_server_error.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+        <key>PYTHONPATH</key>
+        <string>${WORKSPACE_ROOT}</string>
+    </dict>
+    <key>StartInterval</key>
+    <integer>30</integer>
+</dict>
+</plist>
+
+# Usage:
+#   WORKSPACE_ROOT=$(git rev-parse --show-toplevel) && \
+#       envsubst < com.tools.automation.dashboard-server.plist.template > ~/Library/LaunchAgents/com.tools.automation.dashboard-server.plist

@@ -4,7 +4,7 @@
 # Usage: bash path_sanity_check.sh [root_dir]
 set -euo pipefail
 
-ROOT_DIR="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && git rev-parse --show-toplevel 2>/dev/null || cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+ROOT_DIR="${1:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
 
 # Patterns to flag: customize as needed
 PATTERNS=(
@@ -36,17 +36,21 @@ EXCLUDES=(
 
 exclude_args=()
 for ex in "${EXCLUDES[@]}"; do
-  exclude_args+=( -path "$ex" -prune -o )
-fi
+  exclude_args+=(-path "$ex" -prune -o)
+done
 
 # Build find command dynamically
 # shellcheck disable=SC2016
-cmd=(find . \( )
+cmd=(find . \()
 cmd+=("${exclude_args[@]}")
-cmd+=( -type f -regex ".*\.(${INCLUDE_EXT})$" -print )
-cmd+=( \) )
+cmd+=(-type f -regex ".*\.(${INCLUDE_EXT})$" -print)
+cmd+=(\))
 
-mapfile -t files < <("${cmd[@]}")
+# Use a simpler approach to collect files
+files=()
+while IFS= read -r -d '' file; do
+  files+=("$file")
+done < <("${cmd[@]}" -print0)
 
 violations=()
 for f in "${files[@]}"; do

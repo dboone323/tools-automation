@@ -1,16 +1,16 @@
-        #!/usr/bin/env bash
-        # Auto-injected health & reliability shim
+#!/usr/bin/env bash
+# Auto-injected health & reliability shim
 
-        DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Prefer shared helpers when available
 if [[ -f "$DIR/shared_functions.sh" ]]; then
-  # shellcheck disable=SC1091
-  source "$DIR/shared_functions.sh"
+    # shellcheck disable=SC1091
+    source "$DIR/shared_functions.sh"
 fi
 
 if [[ -f "$DIR/agent_helpers.sh" ]]; then
-  # shellcheck disable=SC1091
-  source "$DIR/agent_helpers.sh"
+    # shellcheck disable=SC1091
+    WORKSPACE="${WORKSPACE:-$(git rev-parse --show-toplevel 2>/dev/null)}"
 fi
 
 set -euo pipefail
@@ -20,29 +20,29 @@ LOG_FILE="${LOG_FILE:-$DIR/${AGENT_NAME}.log}"
 PID=$$
 
 if type update_agent_status >/dev/null 2>&1; then
-  trap 'update_agent_status "${AGENT_NAME}" "stopped" $$ ""; exit 0' SIGTERM SIGINT
+    trap 'update_agent_status "${AGENT_NAME}" "stopped" $$ ""; exit 0' SIGTERM SIGINT
 else
-  trap 'exit 0' SIGTERM SIGINT
+    trap 'exit 0' SIGTERM SIGINT
 fi
 
 if [[ "${1-}" == "--health" || "${1-}" == "health" || "${1-}" == "-h" ]]; then
-  if type agent_health_check >/dev/null 2>&1; then
-    agent_health_check
-    exit $?
-  fi
-  issues=()
-  if [[ ! -w "/tmp" ]]; then
-    issues+=("tmp_not_writable")
-  fi
-  if [[ ! -d "$DIR" ]]; then
-    issues+=("cwd_missing")
-  fi
-  if [[ ${#issues[@]} -gt 0 ]]; then
-    printf '{"ok":false,"issues":["%s"]}\n' "${issues[*]}"
-    exit 2
-  fi
-  printf '{"ok":true}\n'
-  exit 0
+    if type agent_health_check >/dev/null 2>&1; then
+        agent_health_check
+        exit $?
+    fi
+    issues=()
+    if [[ ! -w "/tmp" ]]; then
+        issues+=("tmp_not_writable")
+    fi
+    if [[ ! -d "$DIR" ]]; then
+        issues+=("cwd_missing")
+    fi
+    if [[ ${#issues[@]} -gt 0 ]]; then
+        printf '{"ok":false,"issues":["%s"]}\n' "${issues[*]}"
+        exit 2
+    fi
+    printf '{"ok":true}\n'
+    exit 0
 fi
 
 # Original agent script continues below
@@ -126,7 +126,7 @@ check_resource_limits() {
 
     # Check available disk space (require at least 1GB)
     local available_space
-    available_space=$(df -k "/Users/danielstevens/Desktop/Quantum-workspace" | tail -1 | awk '{print $4}')
+    available_space=$(df -k "${WORKSPACE}" | tail -1 | awk '{print $4}')
     if [[ ${available_space} -lt 1048576 ]]; then # 1GB in KB
         echo "[$(date)] ${AGENT_NAME}: ❌ Insufficient disk space for ${operation_name}" >>"${LOG_FILE}"
         return 1
@@ -142,7 +142,7 @@ check_resource_limits() {
 
     # Check file count limits (prevent runaway documentation operations)
     local file_count
-    file_count=$(find "/Users/danielstevens/Desktop/Quantum-workspace" -type f 2>/dev/null | wc -l)
+    file_count=$(find "${WORKSPACE}" -type f 2>/dev/null | wc -l)
     if [[ ${file_count} -gt 50000 ]]; then
         echo "[$(date)] ${AGENT_NAME}: ❌ Too many files in workspace for ${operation_name}" >>"${LOG_FILE}"
         return 1

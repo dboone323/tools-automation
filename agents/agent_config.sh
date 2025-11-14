@@ -9,6 +9,7 @@ if [[ -f "$DIR/shared_functions.sh" ]]; then
 fi
 
 if [[ -f "$DIR/agent_helpers.sh" ]]; then
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(git rev-parse --show-toplevel 2>/dev/null)}"
   # shellcheck disable=SC1091
   source "$DIR/agent_helpers.sh"
 fi
@@ -28,8 +29,8 @@ fi
 if [[ "${1-}" == "--health" || "${1-}" == "health" || "${1-}" == "-h" ]]; then
   if type agent_health_check >/dev/null 2>&1; then
     agent_health_check
-    exit $?
-  fi
+    local available_space
+    available_space=$(df -k "${WORKSPACE_ROOT}" | tail -1 | awk '{print $4}')
   issues=()
   if [[ ! -w "/tmp" ]]; then
     issues+=("tmp_not_writable")
@@ -141,7 +142,7 @@ check_resource_limits() {
 
     # Check file count limits (prevent runaway config operations)
     local file_count
-    file_count=$(find "/Users/danielstevens/Desktop/Quantum-workspace" -type f 2>/dev/null | wc -l)
+    file_count=$(find "${WORKSPACE_ROOT}" -type f 2>/dev/null | wc -l)
     if [[ ${file_count} -gt 50000 ]]; then
         echo "[$(date)] ${AGENT_NAME}: ❌ Too many files in workspace for ${operation_name}" >>"${LOG_FILE}"
         return 1

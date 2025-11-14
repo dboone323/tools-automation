@@ -3238,5 +3238,13 @@
     "cpu_usage": 0,
     "last_seen": "2025-11-12T21:42:20Z",
     "registered_at": "2025-11-12T21:42:20Z"
-  }
+  },
+  "agents": {
+    "test_agent": {
+      "status": "running",
+      "last_seen": 1763142043,
+      "pid": 12345
+    }
+  },
+  "last_update": 1763142043
 }

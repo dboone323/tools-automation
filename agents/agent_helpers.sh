@@ -9,9 +9,9 @@ AGENT_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Agent configuration
 AGENT_NAME="${AGENT_NAME:-HelpersAgent}"
-LOG_FILE="${LOG_FILE:-/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/helpers_agent.log}"
-export STATUS_FILE="${AGENT_LIB_DIR}/agent_status.json"
-export TASK_QUEUE="${AGENT_LIB_DIR}/task_queue.json"
+LOG_FILE="${LOG_FILE:-/Users/danielstevens/Desktop/github-projects/tools-automation/agents/helpers_agent.log}"
+export STATUS_FILE="${AGENT_LIB_DIR}/../config/agent_status.json"
+export TASK_QUEUE="${AGENT_LIB_DIR}/../config/task_queue.json"
 export PID=$$
 
 # Source shared functions for task management
@@ -112,7 +112,7 @@ check_resource_limits() {
 
     # Check available disk space (require at least 1GB)
     local available_space
-    available_space=$(df -k "/Users/danielstevens/Desktop/Quantum-workspace" | tail -1 | awk '{print $4}')
+    available_space=$(df -k "/Users/danielstevens/Desktop/github-projects/tools-automation" | tail -1 | awk '{print $4}')
     if [[ ${available_space} -lt 1048576 ]]; then # 1GB in KB
         echo "[$(date)] ${AGENT_NAME}: ❌ Insufficient disk space for ${operation_name}" >>"${LOG_FILE}"
         return 1
@@ -121,15 +121,15 @@ check_resource_limits() {
     # Check memory usage (require less than 90% usage)
     local mem_usage
     mem_usage=$(vm_stat | grep "Pages free" | awk '{print $3}' | tr -d '.')
-    if [[ ${mem_usage} -lt 100000 ]]; then # Rough check for memory pressure
+    if [[ ${mem_usage} -lt 2000 ]]; then # Rough check for memory pressure (about 8MB)
         echo "[$(date)] ${AGENT_NAME}: ❌ High memory usage detected for ${operation_name}" >>"${LOG_FILE}"
         return 1
     fi
 
     # Check file count limits (prevent runaway helper operations)
     local file_count
-    file_count=$(find "/Users/danielstevens/Desktop/Quantum-workspace" -type f 2>/dev/null | wc -l)
-    if [[ ${file_count} -gt 50000 ]]; then
+    file_count=$(find "/Users/danielstevens/Desktop/github-projects/tools-automation" -type f 2>/dev/null | wc -l)
+    if [[ ${file_count} -gt 100000 ]]; then
         echo "[$(date)] ${AGENT_NAME}: ❌ Too many files in workspace for ${operation_name}" >>"${LOG_FILE}"
         return 1
     fi
@@ -390,7 +390,7 @@ process_helper_task() {
 
     # Create backup before helper operations
     echo "[$(date)] ${AGENT_NAME}: Creating backup before helper operations..." >>"${LOG_FILE}"
-    /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup "global" "helper_operation_${task_id}" >>"${LOG_FILE}" 2>&1 || true
+    /Users/danielstevens/Desktop/github-projects/tools-automation/agents/backup_manager.sh backup "global" "helper_operation_${task_id}" >>"${LOG_FILE}" 2>&1 || true
 
     case "$task_type" in
     "suggest_fix")

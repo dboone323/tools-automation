@@ -1,16 +1,16 @@
-        #!/usr/bin/env bash
-        # Auto-injected health & reliability shim
+#!/usr/bin/env bash
+# Auto-injected health & reliability shim
 
-        DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Prefer shared helpers when available
 if [[ -f "$DIR/shared_functions.sh" ]]; then
-  # shellcheck disable=SC1091
-  source "$DIR/shared_functions.sh"
+    # shellcheck disable=SC1091
+    source "$DIR/shared_functions.sh"
 fi
 
 if [[ -f "$DIR/agent_helpers.sh" ]]; then
-  # shellcheck disable=SC1091
-  source "$DIR/agent_helpers.sh"
+    # shellcheck disable=SC1091
+    source "$DIR/agent_helpers.sh"
 fi
 
 set -euo pipefail
@@ -20,29 +20,29 @@ LOG_FILE="${LOG_FILE:-$DIR/${AGENT_NAME}.log}"
 PID=$$
 
 if type update_agent_status >/dev/null 2>&1; then
-  trap 'update_agent_status "${AGENT_NAME}" "stopped" $$ ""; exit 0' SIGTERM SIGINT
+    trap 'update_agent_status "${AGENT_NAME}" "stopped" $$ ""; exit 0' SIGTERM SIGINT
 else
-  trap 'exit 0' SIGTERM SIGINT
+    trap 'exit 0' SIGTERM SIGINT
 fi
 
 if [[ "${1-}" == "--health" || "${1-}" == "health" || "${1-}" == "-h" ]]; then
-  if type agent_health_check >/dev/null 2>&1; then
-    agent_health_check
-    exit $?
-  fi
-  issues=()
-  if [[ ! -w "/tmp" ]]; then
-    issues+=("tmp_not_writable")
-  fi
-  if [[ ! -d "$DIR" ]]; then
-    issues+=("cwd_missing")
-  fi
-  if [[ ${#issues[@]} -gt 0 ]]; then
-    printf '{"ok":false,"issues":["%s"]}\n' "${issues[*]}"
-    exit 2
-  fi
-  printf '{"ok":true}\n'
-  exit 0
+    if type agent_health_check >/dev/null 2>&1; then
+        agent_health_check
+        exit $?
+    fi
+    issues=()
+    if [[ ! -w "/tmp" ]]; then
+        issues+=("tmp_not_writable")
+    fi
+    if [[ ! -d "$DIR" ]]; then
+        issues+=("cwd_missing")
+    fi
+    if [[ ${#issues[@]} -gt 0 ]]; then
+        printf '{"ok":false,"issues":["%s"]}\n' "${issues[*]}"
+        exit 2
+    fi
+    printf '{"ok":true}\n'
+    exit 0
 fi
 
 # Original agent script continues below
@@ -89,13 +89,13 @@ ensure_within_limits() {
 }
 
 AGENT_NAME="ai_code_review_agent.sh"
-WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
-LOG_FILE="${WORKSPACE}/Tools/Automation/agents/ai_code_review_agent.log"
-NOTIFICATION_FILE="${WORKSPACE}/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
-AGENT_STATUS_FILE="${WORKSPACE}/Tools/Automation/agents/agent_status.json"
-TASK_QUEUE_FILE="${WORKSPACE}/Tools/Automation/agents/task_queue.json"
+WORKSPACE="/Users/danielstevens/Desktop/github-projects/tools-automation"
+LOG_FILE="${WORKSPACE}/agents/ai_code_review_agent.log"
+NOTIFICATION_FILE="${WORKSPACE}/agents/communication/${AGENT_NAME}_notification.txt"
+AGENT_STATUS_FILE="${WORKSPACE}/config/agent_status.json"
+TASK_QUEUE_FILE="${WORKSPACE}/config/task_queue.json"
 OLLAMA_ENDPOINT="http://localhost:11434"
-RESULTS_DIR="${WORKSPACE}/Tools/Automation/results"
+RESULTS_DIR="${WORKSPACE}/results"
 
 # Logging function
 log() {
@@ -114,10 +114,7 @@ ollama_query() {
 # Update agent status
 update_status() {
     local status="$1"
-    if command -v jq &>/dev/null; then
-        jq "(.[] | select(.id == \"${AGENT_NAME}\") | .status) = \"${status}\" | (.[] | select(.id == \"${AGENT_NAME}\") | .last_seen) = $(date +%s)" "${AGENT_STATUS_FILE}" >"${AGENT_STATUS_FILE}.tmp" && mv "${AGENT_STATUS_FILE}.tmp" "${AGENT_STATUS_FILE}"
-    fi
-    echo "[$(date)] ${AGENT_NAME}: Status updated to ${status}" >>"${LOG_FILE}"
+    update_agent_status "${AGENT_NAME}" "$status" "$$"
 }
 
 # Process a specific task
@@ -146,7 +143,7 @@ process_task() {
 
         # Mark task as completed
         update_task_status "${task_id}" "completed"
-    increment_task_count "${AGENT_NAME}"
+        increment_task_count "${AGENT_NAME}"
         echo "[$(date)] ${AGENT_NAME}: Task ${task_id} completed" >>"${LOG_FILE}"
     fi
 }
@@ -155,9 +152,7 @@ process_task() {
 update_task_status() {
     local task_id="$1"
     local status="$2"
-    if command -v jq &>/dev/null; then
-        jq "(.tasks[] | select(.id == \"${task_id}\") | .status) = \"${status}\"" "${TASK_QUEUE_FILE}" >"${TASK_QUEUE_FILE}.tmp" && mv "${TASK_QUEUE_FILE}.tmp" "${TASK_QUEUE_FILE}"
-    fi
+    update_task_status "$task_id" "$status"
 }
 
 # Main AI code review function
