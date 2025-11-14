@@ -28,5 +28,8 @@
   "devDependencies": {
     "@playwright/test": "^1.56.1",
     "jest": "^30.2.0"
+  },
+  "overrides": {
+    "js-yaml": "^4.1.1"
   }
 }
