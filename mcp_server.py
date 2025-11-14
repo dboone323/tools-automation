@@ -28,6 +28,7 @@ from functools import wraps
 import redis
 import sys
 import importlib.util
+import shutil
 
 # AI Service Manager Integration
 try:
@@ -274,7 +275,6 @@ class RedisCache:
                 password=REDIS_PASSWORD,
                 socket_timeout=5,
                 socket_connect_timeout=5,
-                retry_on_timeout=True,
                 decode_responses=True,
             )
             # Test connection
@@ -531,8 +531,12 @@ class MCPHandler(BaseHTTPRequestHandler):
 
     def _is_rate_limited(self):
         # simple per-IP sliding window rate limit using server.request_counters
-        # Don't rate limit GET /health requests
-        if self.command == "GET" and self.path == "/health":
+        # Don't rate limit GET /health requests, POST /heartbeat requests, or AI status endpoints
+        if (
+            (self.command == "GET" and self.path == "/health")
+            or (self.command == "POST" and self.path == "/heartbeat")
+            or (self.command == "GET" and self.path.startswith("/api/ai/"))
+        ):
             return False
         ip = self.client_address[0]
         # if client identifies itself via header and is whitelisted, bypass rate limiting
@@ -772,13 +776,279 @@ class MCPHandler(BaseHTTPRequestHandler):
         if parsed.path == "/health" or parsed.path == "/v1/health":
             # Detailed health check for external supervisors
             health_data = self._get_health_data()
+            if health_data is None:
+                health_data = {
+                    "ok": False,
+                    "status": "error",
+                    "error": "health_check_failed",
+                }
             status_code = 200 if health_data.get("ok") else 503
             self._send_json(health_data, status=status_code)
+            return
+
+        if parsed.path == "/api/todo/dashboard":
+            # Get TODO dashboard data
+            try:
+                # This would typically read from a TODO database or file
+                # For now, return mock data based on current tasks
+                total_todos = len(self.server.tasks)
+                pending = sum(
+                    1 for t in self.server.tasks if t.get("status") == "queued"
+                )
+                in_progress = sum(
+                    1 for t in self.server.tasks if t.get("status") == "running"
+                )
+                completed = sum(
+                    1
+                    for t in self.server.tasks
+                    if t.get("status") in ["success", "completed"]
+                )
+                failed = sum(
+                    1
+                    for t in self.server.tasks
+                    if t.get("status") in ["failed", "error"]
+                )
+
+                # Get recent activity
+                recent_tasks = []
+                for task in self.server.tasks[-5:]:  # Last 5 tasks
+                    recent_tasks.append(
+                        {
+                            "title": f"{task.get('command', 'Unknown')} - {task.get('project', 'N/A')}",
+                            "status": task.get("status", "unknown"),
+                            "updated_at": time.time(),  # Would be actual timestamp
+                        }
+                    )
+
+                todo_dashboard = {
+                    "total_todos": total_todos,
+                    "by_status": {
+                        "pending": pending,
+                        "in_progress": in_progress,
+                        "completed": completed,
+                        "failed": failed,
+                    },
+                    "by_category": {
+                        "code_analysis": sum(
+                            1
+                            for t in self.server.tasks
+                            if t.get("command") == "analyze"
+                        ),
+                        "testing": sum(
+                            1
+                            for t in self.server.tasks
+                            if "test" in t.get("command", "")
+                        ),
+                        "deployment": sum(
+                            1
+                            for t in self.server.tasks
+                            if "deploy" in t.get("command", "")
+                        ),
+                        "documentation": sum(
+                            1
+                            for t in self.server.tasks
+                            if "doc" in t.get("command", "")
+                        ),
+                        "other": sum(
+                            1
+                            for t in self.server.tasks
+                            if t.get("command")
+                            not in ["analyze", "test", "deploy", "doc"]
+                        ),
+                    },
+                    "by_priority": {
+                        "high": max(1, total_todos // 3),
+                        "medium": max(1, total_todos // 3),
+                        "low": max(1, total_todos // 3),
+                    },
+                    "overdue": failed,  # Consider failed tasks as overdue
+                    "recent_activity": recent_tasks,
+                    "last_update": time.time(),
+                }
+                self._send_json({"ok": True, "todo_dashboard": todo_dashboard})
+                return
+            except Exception as e:
+                self._send_json(
+                    {"error": f"todo_dashboard_failed: {str(e)}"}, status=500
+                )
+                return
+
+        if parsed.path == "/api/system/status":
+            # Get comprehensive system status
+            try:
+                import psutil
+
+                psutil_available = True
+            except ImportError:
+                psutil_available = False
+
+            # Get agent count
+            agent_count = len(self.server.agents)
+
+            # Get queue depth
+            queue_depth = len(self.server.tasks)
+            queued_tasks = sum(
+                1 for t in self.server.tasks if t.get("status") == "queued"
+            )
+            running_tasks = sum(
+                1 for t in self.server.tasks if t.get("status") == "running"
+            )
+
+            # Check disk space
+            disk_usage = shutil.disk_usage(CODE_DIR)
+            disk_free_gb = disk_usage.free / (1024**3)
+            disk_total_gb = disk_usage.total / (1024**3)
+            disk_percent = (disk_usage.used / disk_usage.total) * 100
+
+            # System metrics
+            cpu_percent = 0.0
+            memory_percent = 0.0
+            memory_available_gb = 0.0
+
+            if psutil_available:
+                try:
+                    cpu_percent = psutil.cpu_percent(interval=0.1)
+                    memory = psutil.virtual_memory()
+                    memory_percent = memory.percent
+                    memory_available_gb = memory.available / (1024**3)
+                except Exception:
+                    pass
+
+            system_status = {
+                "status": "ok",
+                "message": "Comprehensive automation ecosystem running",
+                "timestamp": time.time(),
+                "version": "2.0.0",
+                "cpu_usage": round(cpu_percent, 1),
+                "memory_usage": round(memory_percent, 1),
+                "disk_usage": round(disk_percent, 1),
+                "agent_count": agent_count,
+                "tasks_total": queue_depth,
+                "tasks_queued": queued_tasks,
+                "tasks_running": running_tasks,
+                "disk_free_gb": round(disk_free_gb, 2),
+                "disk_total_gb": round(disk_total_gb, 2),
+                "memory_available_gb": round(memory_available_gb, 2),
+                "uptime": time.time() - getattr(self.server, "start_time", time.time()),
+            }
+            self._send_json({"ok": True, "system": system_status})
             return
 
         if parsed.path == "/controllers":
             # return registered controllers with last heartbeat
             return self._get_controllers_data()
+
+    def _get_health_data(self):
+        """Get comprehensive health data for the MCP server"""
+        try:
+            import psutil
+
+            psutil_available = True
+        except ImportError:
+            psutil_available = False
+
+        # Basic health checks
+        agent_count = len(self.server.agents)
+        controller_count = len(self.server.controllers)
+        task_count = len(self.server.tasks)
+
+        # Check for any critical issues
+        critical_issues = []
+
+        # Check if Redis is available (if configured)
+        redis_ok = True
+        try:
+            if hasattr(self.server, "redis_cache") and self.server.redis_cache:
+                # Try a simple Redis ping
+                self.server.redis_cache._connect().ping()
+        except Exception:
+            redis_ok = False
+            critical_issues.append("Redis connection failed")
+
+        # Check plugin system
+        plugins_ok = True
+        try:
+            # Check if plugin manager is loaded
+            import plugin_integrator
+
+            plugins_ok = True
+        except Exception:
+            plugins_ok = False
+            critical_issues.append("Plugin system failed")
+
+        # System metrics
+        cpu_percent = 0.0
+        memory_percent = 0.0
+        disk_percent = 0.0
+
+        if psutil_available:
+            try:
+                cpu_percent = psutil.cpu_percent(interval=0.1)
+                memory = psutil.virtual_memory()
+                memory_percent = memory.percent
+                disk_usage = psutil.disk_usage("/")
+                disk_percent = disk_usage.percent
+            except Exception:
+                pass
+
+        # Determine overall health
+        overall_ok = (
+            redis_ok
+            and plugins_ok
+            and cpu_percent < 95  # CPU not critically high
+            and memory_percent < 95  # Memory not critically high
+            and disk_percent < 95  # Disk not critically full
+        )
+
+        health_data = {
+            "ok": overall_ok,
+            "status": "healthy" if overall_ok else "degraded",
+            "timestamp": time.time(),
+            "version": "2.0.0",
+            "uptime": time.time() - getattr(self.server, "start_time", time.time()),
+            "agents": {
+                "count": agent_count,
+                "active": agent_count > 0,
+            },
+            "controllers": {
+                "count": controller_count,
+                "active": controller_count > 0,
+            },
+            "tasks": {
+                "total": task_count,
+                "queued": sum(
+                    1 for t in self.server.tasks if t.get("status") == "queued"
+                ),
+                "running": sum(
+                    1 for t in self.server.tasks if t.get("status") == "running"
+                ),
+                "completed": sum(
+                    1
+                    for t in self.server.tasks
+                    if t.get("status") in ["success", "completed"]
+                ),
+                "failed": sum(
+                    1
+                    for t in self.server.tasks
+                    if t.get("status") in ["failed", "error"]
+                ),
+            },
+            "system": {
+                "cpu_usage": round(cpu_percent, 1),
+                "memory_usage": round(memory_percent, 1),
+                "disk_usage": round(disk_percent, 1),
+                "psutil_available": psutil_available,
+            },
+            "services": {
+                "redis": redis_ok,
+                "plugins": plugins_ok,
+            },
+        }
+
+        if critical_issues:
+            health_data["critical_issues"] = critical_issues
+
+        return health_data
 
         # Quantum-enhanced GET endpoints
         if parsed.path == "/quantum_status":
@@ -952,6 +1222,67 @@ class MCPHandler(BaseHTTPRequestHandler):
                     {"error": f"extensions_status_failed: {str(e)}"}, status=500
                 )
                 return
+
+        if parsed.path == "/api/system/status":
+            # Get comprehensive system status
+            try:
+                import psutil
+
+                psutil_available = True
+            except ImportError:
+                psutil_available = False
+
+            # Get agent count
+            agent_count = len(self.server.agents)
+
+            # Get queue depth
+            queue_depth = len(self.server.tasks)
+            queued_tasks = sum(
+                1 for t in self.server.tasks if t.get("status") == "queued"
+            )
+            running_tasks = sum(
+                1 for t in self.server.tasks if t.get("status") == "running"
+            )
+
+            # Check disk space
+            disk_usage = shutil.disk_usage(CODE_DIR)
+            disk_free_gb = disk_usage.free / (1024**3)
+            disk_total_gb = disk_usage.total / (1024**3)
+            disk_percent = (disk_usage.used / disk_usage.total) * 100
+
+            # System metrics
+            cpu_percent = 0.0
+            memory_percent = 0.0
+            memory_available_gb = 0.0
+
+            if psutil_available:
+                try:
+                    cpu_percent = psutil.cpu_percent(interval=0.1)
+                    memory = psutil.virtual_memory()
+                    memory_percent = memory.percent
+                    memory_available_gb = memory.available / (1024**3)
+                except Exception:
+                    pass
+
+            system_status = {
+                "status": "ok",
+                "message": "Comprehensive automation ecosystem running",
+                "timestamp": time.time(),
+                "version": "2.0.0",
+                "cpu_usage": round(cpu_percent, 1),
+                "memory_usage": round(memory_percent, 1),
+                "disk_usage": round(disk_percent, 1),
+                "agent_count": agent_count,
+                "tasks_total": queue_depth,
+                "tasks_queued": queued_tasks,
+                "tasks_running": running_tasks,
+                "disk_free_gb": round(disk_free_gb, 2),
+                "disk_total_gb": round(disk_total_gb, 2),
+                "memory_available_gb": round(memory_available_gb, 2),
+                "uptime": time.time() - getattr(self.server, "start_time", time.time()),
+            }
+            self._send_json({"ok": True, "system": system_status})
+            return
 
         else:
             self._send_json({"error": "not_found"}, status=404)

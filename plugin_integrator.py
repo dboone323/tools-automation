@@ -77,24 +77,11 @@ class MCPPluginIntegrator:
             self.plugin_manager.emit_event(event_type, data)
 
         if self.webhook_manager:
-            # Run webhook notifications asynchronously
-            import asyncio
-            import threading
-
-            def run_async():
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-                try:
-                    loop.run_until_complete(
-                        self.webhook_manager.notify_event(event_type, data)
-                    )
-                except Exception as e:
-                    self.logger.error(f"Error in webhook notification: {e}")
-                finally:
-                    loop.close()
-
-            thread = threading.Thread(target=run_async, daemon=True)
-            thread.start()
+            # Emit event to webhooks (webhook manager handles async internally)
+            try:
+                self.webhook_manager.emit_event(event_type, data)
+            except Exception as e:
+                self.logger.error(f"Error in webhook notification: {e}")
 
     def get_plugin_status(self) -> Dict[str, Any]:
         """Get status of loaded plugins"""

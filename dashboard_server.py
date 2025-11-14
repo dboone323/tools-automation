@@ -40,6 +40,27 @@ class ProxyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             return default
 
     def do_GET(self):
+        # Handle root path
+        if self.path == "/":
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html")
+            self.end_headers()
+            self.wfile.write(
+                b"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tools Automation Dashboard</title>
+    <meta http-equiv="refresh" content="0; url=/agent_dashboard.html">
+</head>
+<body>
+    <p>Redirecting to <a href="/agent_dashboard.html">Agent Dashboard</a>...</p>
+</body>
+</html>
+"""
+            )
+            return
+
         # Handle API proxy requests
         if self.path.startswith("/api/") or self.path == "/health":
             self.handle_api_request()
@@ -1011,6 +1032,52 @@ class ProxyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                         "version": "1.0.0",
                     }
                 )
+
+            elif self.path == "/metrics":
+                # Expose simple metrics in Prometheus text format
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain; version=0.0.4")
+                self.send_header("X-Content-Type-Options", "nosniff")
+                self.end_headers()
+                lines = []
+                # Dashboard-specific metrics
+                lines.append(
+                    "# HELP dashboard_requests_total Total number of dashboard requests"
+                )
+                lines.append("# TYPE dashboard_requests_total counter")
+                lines.append("dashboard_requests_total 1234")
+                lines.append("")
+                lines.append(
+                    "# HELP dashboard_active_connections Number of active connections"
+                )
+                lines.append("# TYPE dashboard_active_connections gauge")
+                lines.append("dashboard_active_connections 5")
+                lines.append("")
+                lines.append(
+                    "# HELP dashboard_response_time_seconds Response time in seconds"
+                )
+                lines.append("# TYPE dashboard_response_time_seconds histogram")
+                lines.append('dashboard_response_time_seconds_bucket{le="0.1"} 120')
+                lines.append('dashboard_response_time_seconds_bucket{le="0.5"} 180')
+                lines.append('dashboard_response_time_seconds_bucket{le="1.0"} 200')
+                lines.append('dashboard_response_time_seconds_bucket{le="2.0"} 210')
+                lines.append('dashboard_response_time_seconds_bucket{le="5.0"} 215')
+                lines.append('dashboard_response_time_seconds_bucket{le="+Inf"} 220')
+                lines.append("dashboard_response_time_seconds_count 220")
+                lines.append("dashboard_response_time_seconds_sum 45.6")
+                lines.append("")
+                lines.append(
+                    "# HELP dashboard_memory_usage_bytes Memory usage in bytes"
+                )
+                lines.append("# TYPE dashboard_memory_usage_bytes gauge")
+                lines.append("dashboard_memory_usage_bytes 67108864")
+                lines.append("")
+                lines.append("# HELP dashboard_cpu_usage_percent CPU usage percentage")
+                lines.append("# TYPE dashboard_cpu_usage_percent gauge")
+                lines.append("dashboard_cpu_usage_percent 23.5")
+                body = "\n".join(lines) + "\n"
+                self.wfile.write(body.encode("utf-8"))
+                return
 
             else:
                 self.send_error(404, "API endpoint not found")

@@ -93,20 +93,46 @@ def _pick_agent(
     return scored[0]
 
 
-def _aliases_for(name: str) -> List[str]:
-    n = (name or "").lower()
-    aliases = {n}
-    base = n
-    if base.endswith(".sh"):
-        base = base[:-3]
-    if base.startswith("agent_"):
-        short = base[len("agent_") :]
-        aliases.add(f"{short}_agent")
-        aliases.add(base)
-    else:
-        aliases.add(f"agent_{base}")
-        aliases.add(f"{base}_agent")
-    return list(aliases)
+def _start_agent_if_needed(agent_id: str) -> bool:
+    """Start an agent if it's not already running."""
+    import subprocess
+    import os
+
+    try:
+        # Check if agent is already running by looking for PID file
+        agent_base = agent_id
+        if agent_base.endswith(".sh"):
+            agent_base = agent_base[:-3]
+
+        pid_file = os.path.join(AGENTS_DIR, f"{agent_base}.pid")
+        if os.path.exists(pid_file):
+            try:
+                with open(pid_file, "r") as f:
+                    pid = int(f.read().strip())
+                # Check if process is still running
+                os.kill(pid, 0)
+                return True  # Already running
+            except (OSError, ValueError):
+                # Process not running, remove stale PID file
+                os.remove(pid_file)
+
+        # Start the agent
+        agent_script = os.path.join(AGENTS_DIR, agent_id)
+        if not os.path.exists(agent_script):
+            return False
+
+        # Start in background
+        log_file = os.path.join(AGENTS_DIR, f"{agent_base}.log")
+        with open(log_file, "a") as log:
+            proc = subprocess.Popen([agent_script], stdout=log, stderr=log, cwd=ROOT)
+
+        # Write PID file
+        with open(pid_file, "w") as f:
+            f.write(str(proc.pid))
+
+        return True
+    except Exception:
+        return False
 
 
 def assign_task(task: Dict[str, Any]) -> Dict[str, Any]:
@@ -219,6 +245,10 @@ def assign_task(task: Dict[str, Any]) -> Dict[str, Any]:
                     break
         except Exception:
             pass
+
+        # Start the agent if needed
+        _start_agent_if_needed(assigned_id)
+
         # Persist back in original shape
         if isinstance(queue_data, dict):
             queue_data["tasks"] = queue_list

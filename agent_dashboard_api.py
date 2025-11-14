@@ -290,6 +290,95 @@ class AgentDashboardAPI:
                 }
             )
 
+        @self.app.route("/metrics", methods=["GET"])
+        def get_metrics():
+            """Get metrics in Prometheus format"""
+            try:
+                # Get system metrics
+                system_metrics = {}
+                if os.path.exists(self.performance_log):
+                    with open(self.performance_log, "r") as f:
+                        data = json.load(f)
+                        metrics = data.get("metrics", [])
+                        if metrics:
+                            latest = metrics[-1]
+                            system_metrics = {
+                                "cpu_usage": float(latest.get("cpu_usage", 0)),
+                                "memory_usage": float(latest.get("memory_usage", 0)),
+                                "disk_usage": float(latest.get("disk_usage", 0)),
+                                "process_count": self._safe_int_parse(
+                                    latest.get("process_count", 0)
+                                ),
+                                "agent_count": self._safe_int_parse(
+                                    latest.get("agent_count", 0)
+                                ),
+                            }
+
+                # Get agent status
+                agent_count = 0
+                if os.path.exists(self.agent_status):
+                    with open(self.agent_status, "r") as f:
+                        data = json.load(f)
+                        agent_count = len(data.get("agents", {}))
+
+                # Get task analytics
+                task_completed = 0
+                task_failed = 0
+                if os.path.exists(self.task_history):
+                    with open(self.task_history, "r") as f:
+                        data = json.load(f)
+                        history = data.get("execution_history", [])
+                        task_completed = len(
+                            [t for t in history if t.get("status") == "completed"]
+                        )
+                        task_failed = len(
+                            [t for t in history if t.get("status") == "failed"]
+                        )
+
+                # Format as Prometheus metrics
+                metrics_output = f"""# HELP agent_dashboard_cpu_usage CPU usage percentage
+# TYPE agent_dashboard_cpu_usage gauge
+agent_dashboard_cpu_usage {system_metrics.get('cpu_usage', 0)}
+
+# HELP agent_dashboard_memory_usage Memory usage percentage
+# TYPE agent_dashboard_memory_usage gauge
+agent_dashboard_memory_usage {system_metrics.get('memory_usage', 0)}
+
+# HELP agent_dashboard_disk_usage Disk usage percentage
+# TYPE agent_dashboard_disk_usage gauge
+agent_dashboard_disk_usage {system_metrics.get('disk_usage', 0)}
+
+# HELP agent_dashboard_process_count Number of processes
+# TYPE agent_dashboard_process_count gauge
+agent_dashboard_process_count {system_metrics.get('process_count', 0)}
+
+# HELP agent_dashboard_agent_count Number of agents
+# TYPE agent_dashboard_agent_count gauge
+agent_dashboard_agent_count {agent_count}
+
+# HELP agent_dashboard_tasks_completed Number of completed tasks
+# TYPE agent_dashboard_tasks_completed counter
+agent_dashboard_tasks_completed {task_completed}
+
+# HELP agent_dashboard_tasks_failed Number of failed tasks
+# TYPE agent_dashboard_tasks_failed counter
+agent_dashboard_tasks_failed {task_failed}
+"""
+
+                return (
+                    metrics_output,
+                    200,
+                    {"Content-Type": "text/plain; version=0.0.4"},
+                )
+
+            except Exception as e:
+                logger.error(f"Error getting metrics: {e}")
+                return (
+                    f"# Error getting metrics: {str(e)}\n",
+                    500,
+                    {"Content-Type": "text/plain"},
+                )
+
     def run(self, host="0.0.0.0", port=5000, debug=False):
         """Run the Flask application"""
         logger.info(f"Starting Agent Dashboard API on {host}:{port}")

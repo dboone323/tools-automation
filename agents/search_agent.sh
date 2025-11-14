@@ -1,16 +1,16 @@
-        #!/usr/bin/env bash
-        # Auto-injected health & reliability shim
+#!/usr/bin/env bash
+# Auto-injected health & reliability shim
 
-        DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Prefer shared helpers when available
 if [[ -f "$DIR/shared_functions.sh" ]]; then
-  # shellcheck disable=SC1091
-  source "$DIR/shared_functions.sh"
+    # shellcheck disable=SC1091
+    source "$DIR/shared_functions.sh"
 fi
 
 if [[ -f "$DIR/agent_helpers.sh" ]]; then
-  # shellcheck disable=SC1091
-  source "$DIR/agent_helpers.sh"
+    # shellcheck disable=SC1091
+    source "$DIR/agent_helpers.sh"
 fi
 
 set -euo pipefail
@@ -20,29 +20,29 @@ LOG_FILE="${LOG_FILE:-$DIR/${AGENT_NAME}.log}"
 PID=$$
 
 if type update_agent_status >/dev/null 2>&1; then
-  trap 'update_agent_status "${AGENT_NAME}" "stopped" $$ ""; exit 0' SIGTERM SIGINT
+    trap 'update_agent_status "${AGENT_NAME}" "stopped" $$ ""; exit 0' SIGTERM SIGINT
 else
-  trap 'exit 0' SIGTERM SIGINT
+    trap 'exit 0' SIGTERM SIGINT
 fi
 
 if [[ "${1-}" == "--health" || "${1-}" == "health" || "${1-}" == "-h" ]]; then
-  if type agent_health_check >/dev/null 2>&1; then
-    agent_health_check
-    exit $?
-  fi
-  issues=()
-  if [[ ! -w "/tmp" ]]; then
-    issues+=("tmp_not_writable")
-  fi
-  if [[ ! -d "$DIR" ]]; then
-    issues+=("cwd_missing")
-  fi
-  if [[ ${#issues[@]} -gt 0 ]]; then
-    printf '{"ok":false,"issues":["%s"]}\n' "${issues[*]}"
-    exit 2
-  fi
-  printf '{"ok":true}\n'
-  exit 0
+    if type agent_health_check >/dev/null 2>&1; then
+        agent_health_check
+        exit $?
+    fi
+    issues=()
+    if [[ ! -w "/tmp" ]]; then
+        issues+=("tmp_not_writable")
+    fi
+    if [[ ! -d "$DIR" ]]; then
+        issues+=("cwd_missing")
+    fi
+    if [[ ${#issues[@]} -gt 0 ]]; then
+        printf '{"ok":false,"issues":["%s"]}\n' "${issues[*]}"
+        exit 2
+    fi
+    printf '{"ok":true}\n'
+    exit 0
 fi
 
 # Original agent script continues below
@@ -56,7 +56,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-WORKSPACE="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+WORKSPACE="$(cd "${SCRIPT_DIR}/.." && pwd)"
 AGENT_NAME="search_agent"
 AGENT_LABEL="SearchAgent"
 LOG_FILE="${SCRIPT_DIR}/search_agent.log"
@@ -496,7 +496,7 @@ process_task() {
 
     if [[ ${success} == "true" ]]; then
         update_task_status "${task_id}" "completed"
-    increment_task_count "${AGENT_NAME}"
+        increment_task_count "${AGENT_NAME}"
         echo "${task_id}" >>"${PROCESSED_TASKS_FILE}"
     else
         update_task_status "${task_id}" "failed"
@@ -640,7 +640,7 @@ run_discovery_cycle() {
 log_message "INFO" "Search agent starting..."
 update_status "starting"
 update_agent_pid "$$"
-run_discovery_cycle
+run_discovery_cycle || true # Don't exit if no queries to process
 update_status "available"
 
 sleep_interval=${BASE_SLEEP_INTERVAL}

@@ -287,3 +287,69 @@ Scripts:
 
 - `.ci/agent_validate.sh`: sets AI env and runs validation
 - `.ci/run_validation.sh`: performs lint/format, tests, and best‑effort remediation via Tools/Automation
+
+## 🔒 Security Best Practices
+
+This repository implements comprehensive security measures to protect your automation infrastructure.
+
+### Automated Security Scanning
+
+The repository includes automated security scanning that runs on every commit and in CI/CD pipelines:
+
+```bash
+# Run security audit (pre-commit hook)
+./ci_security_gate.sh
+
+# Run full security scan with reports
+./ci_security_gate.sh --report-only
+
+# Install security hooks
+./setup_security_hooks.sh
+```
+
+### Security Features
+
+- **Pre-commit Hooks**: Automatic secret detection and vulnerability scanning
+- **CI/CD Security Gates**: Comprehensive security checks before deployment
+- **Dependency Scanning**: Automated vulnerability detection in Python packages
+- **File Permission Checks**: Ensures sensitive files have proper permissions
+- **Backup Security**: Encrypted backups with no sensitive data exposure
+
+### Security Configuration
+
+- **MCP Server**: Bound to localhost only (127.0.0.1:5005)
+- **API Keys**: Never stored in code; use environment variables or secure keychain
+- **Secrets Management**: Use system keychain or secure environment variables
+- **Network Security**: All services configured for local access only
+
+### Best Practices for Contributors
+
+1. **Never commit secrets**: Use `.env` files (gitignored) or secure keychain storage
+2. **Run security scans**: Execute `./ci_security_gate.sh` before pushing changes
+3. **Review dependencies**: Check for vulnerabilities before adding new packages
+4. **Secure file permissions**: Sensitive files should be `chmod 600`
+5. **Environment isolation**: Use virtual environments and avoid system-wide installations
+
+### Security Monitoring
+
+- **Automated Alerts**: Security issues trigger notifications via MCP
+- **Regular Audits**: Weekly security scans and monthly comprehensive audits
+- **Incident Response**: Automated rollback procedures for security incidents
+- **Access Control**: Role-based access with audit logging
+
+### Emergency Procedures
+
+If a security issue is detected:
+
+```bash
+# Immediate response
+./emergency_response.sh
+
+# Rollback to secure state
+./rollback.sh
+
+# Security audit
+./security_audit.sh
+```
+
+**Security is everyone's responsibility.** Report any security concerns immediately.

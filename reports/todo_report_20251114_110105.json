@@ -1,0 +1,97 @@
+{
+  "generated_at": "2025-11-14T11:01:05.348039",
+  "summary": {
+    "total_todos": 565,
+    "by_status": {
+      "pending": 565,
+      "in_progress": 0,
+      "completed": 0,
+      "blocked": 0,
+      "cancelled": 0
+    },
+    "by_category": {
+      "security": 0,
+      "performance": 140,
+      "maintenance": 145,
+      "features": 280,
+      "bugs": 0,
+      "documentation": 0,
+      "testing": 0,
+      "infrastructure": 0,
+      "debt": 0
+    },
+    "by_priority": {
+      "critical": 0,
+      "high": 0,
+      "medium": 560,
+      "low": 5,
+      "backlog": 0
+    },
+    "overdue": 0,
+    "recent_activity": [
+      {
+        "id": "bc889420-d636-47bb-bb08-39bddd5161eb",
+        "title": "Enhance MCP Capabilities",
+        "status": "pending",
+        "updated_at": "2025-11-14T11:01:04.266767"
+      },
+      {
+        "id": "281c8fe8-6db5-4f9c-b0df-6b0a96440ce2",
+        "title": "Implement Advanced Agent Orchestration",
+        "status": "pending",
+        "updated_at": "2025-11-14T11:01:04.254130"
+      },
+      {
+        "id": "cfb58bde-4c32-4a0e-889b-ccd859b8b8a0",
+        "title": "Update Outdated Dependencies",
+        "status": "pending",
+        "updated_at": "2025-11-14T11:01:03.160618"
+      },
+      {
+        "id": "db11d299-f7da-4c18-979b-a7723a689fc5",
+        "title": "Optimize System Performance",
+        "status": "pending",
+        "updated_at": "2025-11-14T11:01:03.149451"
+      },
+      {
+        "id": "265421aa-8399-4ae5-8e24-8ddd859e0aa5",
+        "title": "Enhance MCP Capabilities",
+        "status": "pending",
+        "updated_at": "2025-11-14T10:56:01.862944"
+      },
+      {
+        "id": "6f7f2279-7d9a-481d-b3d4-29eb23ce949e",
+        "title": "Implement Advanced Agent Orchestration",
+        "status": "pending",
+        "updated_at": "2025-11-14T10:56:01.851838"
+      },
+      {
+        "id": "24881487-67cc-4c5c-93f9-56819c75900e",
+        "title": "Update Outdated Dependencies",
+        "status": "pending",
+        "updated_at": "2025-11-14T10:56:00.781952"
+      },
+      {
+        "id": "230c3dcb-8eb3-481e-9fed-34a7faaa269e",
+        "title": "Optimize System Performance",
+        "status": "pending",
+        "updated_at": "2025-11-14T10:56:00.769934"
+      },
+      {
+        "id": "882da0b8-d29d-4b8b-bc54-23eb47dd9b8d",
+        "title": "Enhance MCP Capabilities",
+        "status": "pending",
+        "updated_at": "2025-11-14T10:50:59.385061"
+      },
+      {
+        "id": "75d5df72-382f-4a8d-aad0-bf8bef238c58",
+        "title": "Implement Advanced Agent Orchestration",
+        "status": "pending",
+        "updated_at": "2025-11-14T10:50:59.373280"
+      }
+    ]
+  },
+  "recommendations": [
+    "High pending todo count - consider prioritization"
+  ]
+}

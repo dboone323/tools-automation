@@ -9,7 +9,10 @@ PORT = 8090
 PLUGINS_DIR = os.path.join(os.path.dirname(__file__), "plugins")
 AUDIT_LOG = os.path.join(os.path.dirname(__file__), "audit.log")
 POLICY_CONF = os.path.join(os.path.dirname(__file__), "policy.conf")
-API_TOKEN = os.environ.get("API_TOKEN", None)
+API_TOKEN = os.environ.get("API_TOKEN")
+if not API_TOKEN:
+    print("ERROR: API_TOKEN environment variable must be set for security")
+    exit(1)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -67,7 +70,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                         f"[{now}] user={user} action=api_run_plugin plugin={plugin} result=fail reason=policy_not_allowed\n"
                     )
                 return
-            if token != (API_TOKEN or "changeme"):
+            if not token or token != API_TOKEN:
                 self.send_response(403)
                 self.end_headers()
                 with open(AUDIT_LOG, "a") as f:

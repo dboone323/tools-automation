@@ -1,0 +1,97 @@
+{
+  "generated_at": "2025-11-14T08:59:27.859675",
+  "summary": {
+    "total_todos": 461,
+    "by_status": {
+      "pending": 461,
+      "in_progress": 0,
+      "completed": 0,
+      "blocked": 0,
+      "cancelled": 0
+    },
+    "by_category": {
+      "security": 0,
+      "performance": 115,
+      "maintenance": 116,
+      "features": 230,
+      "bugs": 0,
+      "documentation": 0,
+      "testing": 0,
+      "infrastructure": 0,
+      "debt": 0
+    },
+    "by_priority": {
+      "critical": 0,
+      "high": 0,
+      "medium": 460,
+      "low": 1,
+      "backlog": 0
+    },
+    "overdue": 0,
+    "recent_activity": [
+      {
+        "id": "aa2fdb11-df54-4d61-8f2b-b05fcc7561ac",
+        "title": "Enhance MCP Capabilities",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:59:26.927980"
+      },
+      {
+        "id": "c59f38bc-42ae-40ee-b425-1b59cd7c7bca",
+        "title": "Implement Advanced Agent Orchestration",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:59:26.911577"
+      },
+      {
+        "id": "33140259-5afc-44fe-ae8e-a2ce7f079625",
+        "title": "Clean Up Backup Files",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:59:26.900420"
+      },
+      {
+        "id": "516e49b6-d3f4-4936-a1b2-e4466ccec52f",
+        "title": "Update Outdated Dependencies",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:59:25.633661"
+      },
+      {
+        "id": "a9123c7d-4f1c-4f27-93ff-5ffa04a5291e",
+        "title": "Optimize System Performance",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:59:25.624507"
+      },
+      {
+        "id": "c996dcdc-b939-46b0-a0b1-2c5df53d73d8",
+        "title": "Enhance MCP Capabilities",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:54:24.432650"
+      },
+      {
+        "id": "ee1c94fc-488d-4fcd-8437-ab7646f72894",
+        "title": "Implement Advanced Agent Orchestration",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:54:24.422139"
+      },
+      {
+        "id": "6892bc2a-0011-4517-92e2-6ce636ea8683",
+        "title": "Update Outdated Dependencies",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:54:22.679996"
+      },
+      {
+        "id": "c44d2325-8d75-4375-a704-d6da3ca03751",
+        "title": "Optimize System Performance",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:54:22.670583"
+      },
+      {
+        "id": "56da0d64-7eb5-4382-844c-8ca5528973e8",
+        "title": "Enhance MCP Capabilities",
+        "status": "pending",
+        "updated_at": "2025-11-14T08:49:21.427087"
+      }
+    ]
+  },
+  "recommendations": [
+    "High pending todo count - consider prioritization"
+  ]
+}

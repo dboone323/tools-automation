@@ -8,11 +8,61 @@ set -euo pipefail
 AGENT_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Agent configuration
-AGENT_NAME="HelpersAgent"
-LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/helpers_agent.log"
+AGENT_NAME="${AGENT_NAME:-HelpersAgent}"
+LOG_FILE="${LOG_FILE:-/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/helpers_agent.log}"
 export STATUS_FILE="${AGENT_LIB_DIR}/agent_status.json"
 export TASK_QUEUE="${AGENT_LIB_DIR}/task_queue.json"
 export PID=$$
+
+# Source shared functions for task management
+if [[ -f "${AGENT_LIB_DIR}/shared_functions.sh" ]]; then
+    source "${AGENT_LIB_DIR}/shared_functions.sh"
+fi
+
+# Exponential backoff variables
+AGENT_BACKOFF_BASE=5
+AGENT_BACKOFF_MAX=300
+AGENT_BACKOFF_MULTIPLIER=2
+AGENT_BACKOFF_CURRENT=0
+
+# Initialize exponential backoff
+agent_init_backoff() {
+    AGENT_BACKOFF_CURRENT=$AGENT_BACKOFF_BASE
+    echo "DEBUG: Initialized backoff with base=${AGENT_BACKOFF_BASE}s" >&2
+}
+
+# Sleep with exponential backoff
+agent_sleep_with_backoff() {
+    local sleep_time=$AGENT_BACKOFF_CURRENT
+    echo "DEBUG: Sleeping for ${sleep_time}s (backoff)" >&2
+    sleep "$sleep_time"
+
+    # Increase backoff for next time, but cap at max
+    AGENT_BACKOFF_CURRENT=$((AGENT_BACKOFF_CURRENT * AGENT_BACKOFF_MULTIPLIER))
+    if [[ $AGENT_BACKOFF_CURRENT -gt $AGENT_BACKOFF_MAX ]]; then
+        AGENT_BACKOFF_CURRENT=$AGENT_BACKOFF_MAX
+    fi
+}
+
+# Reset backoff on successful task processing
+agent_reset_backoff() {
+    AGENT_BACKOFF_CURRENT=$AGENT_BACKOFF_BASE
+    echo "DEBUG: Reset backoff to base=${AGENT_BACKOFF_BASE}s" >&2
+}
+
+# Detect if running in a pipeline and exit quickly if no tasks
+agent_detect_pipe_and_quick_exit() {
+    local agent_name="$1"
+
+    # If stdin is not a terminal and no data, exit quickly
+    if [[ ! -t 0 ]] && [[ ! -s /dev/stdin ]]; then
+        echo "DEBUG: No stdin data, exiting quickly for pipeline" >&2
+        update_agent_status "$agent_name" "stopped" $$ ""
+        exit 0
+    fi
+
+    return 0
+}
 
 # Source shared functions for task management
 if [[ -f "${AGENT_LIB_DIR}/shared_functions.sh" ]]; then

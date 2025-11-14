@@ -10,7 +10,7 @@ import json
 import subprocess
 import sys
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class HealthCheckHandler(http.server.BaseHTTPRequestHandler):
@@ -33,7 +33,7 @@ class HealthCheckHandler(http.server.BaseHTTPRequestHandler):
         """Check the health of various system components."""
         health = {
             "status": "healthy",
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "checks": {},
         }
 

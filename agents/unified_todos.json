@@ -7523,6 +7523,3369 @@
       "dependencies": [],
       "subtasks": [],
       "metadata": {}
+    },
+    {
+      "id": "8f194ddc-c84f-4728-8eb9-34f3462b652c",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T21:50:27.322453",
+      "updated_at": "2025-11-13T21:50:27.322457",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "34a0de75-cd49-4245-9edc-cd62e27f45d4",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T21:50:27.332163",
+      "updated_at": "2025-11-13T21:50:27.332165",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "fae2030d-face-4206-bfde-229eab897cc0",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T21:50:29.399070",
+      "updated_at": "2025-11-13T21:50:29.399080",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "fdfe351c-8925-416f-8635-ce206e750e0a",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T21:50:29.410593",
+      "updated_at": "2025-11-13T21:50:29.410596",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "d834faaa-8cf8-4a91-8c7d-cce1e18d40e7",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T00:53:23.631499",
+      "updated_at": "2025-11-14T00:53:23.631503",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "d1ef43a1-db21-4573-8f99-e1cc60e463a2",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T00:53:23.643558",
+      "updated_at": "2025-11-14T00:53:23.643563",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "37ece90b-ea3a-4afa-b374-22f0307b6c69",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T00:53:29.372486",
+      "updated_at": "2025-11-14T00:53:29.372503",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "988ad98f-d997-4ede-80be-b05d56bc7cc0",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T00:53:29.398286",
+      "updated_at": "2025-11-14T00:53:29.398297",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "a58c0759-a480-455b-a0d4-9dd91b60ff15",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T03:46:09.939341",
+      "updated_at": "2025-11-14T03:46:09.939345",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "9b9cf473-486c-4c2b-8697-e6fa02d13641",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T03:46:09.949391",
+      "updated_at": "2025-11-14T03:46:09.949393",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "4d545419-4b7c-4e07-bbdd-8d952e947234",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T03:46:11.927303",
+      "updated_at": "2025-11-14T03:46:11.927307",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "6fa5ffa1-8695-4108-b3bf-006fadb3fc92",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T03:46:11.936915",
+      "updated_at": "2025-11-14T03:46:11.936916",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "4fc957bd-8923-47bb-b4ca-b8f94d3278ee",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T06:33:32.948936",
+      "updated_at": "2025-11-14T06:33:32.948942",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "b413ccc3-b324-46f7-baf6-57c2b5fa11fc",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T06:33:32.959653",
+      "updated_at": "2025-11-14T06:33:32.959659",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "c2fc1521-22df-4a74-a373-49ffcd1687b4",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T06:33:34.500662",
+      "updated_at": "2025-11-14T06:33:34.500668",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "a9675f76-02cb-4b34-8c53-756bc75c14c7",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T06:33:34.510869",
+      "updated_at": "2025-11-14T06:33:34.510878",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "6c9d2ffa-a168-426f-85e0-61f2a83d083c",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T07:07:41.789928",
+      "updated_at": "2025-11-14T07:07:41.789932",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "fa100df1-0afa-47e9-a9cf-ef8078f9be98",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T07:07:41.803672",
+      "updated_at": "2025-11-14T07:07:41.803676",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "aa316d0d-b740-459b-b539-5ba1fa0a87b4",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:00:28.406475",
+      "updated_at": "2025-11-14T08:00:28.406480",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "fa4181f9-6b38-4d70-847c-ea08f4c751be",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:00:28.416685",
+      "updated_at": "2025-11-14T08:00:28.416689",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "9d711bf0-cc13-456a-85b2-8d9846f21a55",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:08:55.819569",
+      "updated_at": "2025-11-14T08:08:55.819573",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "4d303b15-ffb6-4bb0-95b6-a0d098b6e3be",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:08:55.827873",
+      "updated_at": "2025-11-14T08:08:55.827874",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "3b90384d-1a9c-43b4-a4f5-787c52da87c3",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:08:57.462163",
+      "updated_at": "2025-11-14T08:08:57.462168",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "63268ecb-209d-46da-be9f-295f2464696a",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:08:57.470428",
+      "updated_at": "2025-11-14T08:08:57.470432",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "4d3da847-6272-479d-80db-b2915fb1c776",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:13:58.766324",
+      "updated_at": "2025-11-14T08:13:58.766329",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "4c1e4dc4-28c4-4f0e-8aee-a24d1d7a62ec",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:13:58.807853",
+      "updated_at": "2025-11-14T08:13:58.807859",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "e39e2c6b-d7bb-4aa5-85aa-b2ecb62dab13",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:14:00.744071",
+      "updated_at": "2025-11-14T08:14:00.744076",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "cff02ac5-d963-4672-928f-d58633024843",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:14:00.753256",
+      "updated_at": "2025-11-14T08:14:00.753259",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "df74765d-21df-4a51-8acc-99c0b660112f",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:19:01.976524",
+      "updated_at": "2025-11-14T08:19:01.976528",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "ec0ae60e-e508-48a2-bf37-30609b7b2b63",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:19:01.985615",
+      "updated_at": "2025-11-14T08:19:01.985617",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "da2bdafc-56d8-4b74-a7b8-978709aaddd2",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:19:03.202442",
+      "updated_at": "2025-11-14T08:19:03.202446",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "12ff6193-04dd-4b35-9110-76d1686b3237",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:19:03.211204",
+      "updated_at": "2025-11-14T08:19:03.211207",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "9e4efd15-3b41-4d61-af33-6004a84ecad0",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:24:04.503839",
+      "updated_at": "2025-11-14T08:24:04.503845",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "f7b412b7-bd70-454c-a298-e5b39950c6af",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:24:04.512760",
+      "updated_at": "2025-11-14T08:24:04.512761",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "3d192c82-09f8-4705-b8d6-1e652938b3d4",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:24:05.643839",
+      "updated_at": "2025-11-14T08:24:05.643852",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "1ccb15c4-00cb-4f40-8e09-3c765a824a77",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:24:05.653423",
+      "updated_at": "2025-11-14T08:24:05.653424",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "2d93ee82-ebdf-4ee8-9d8c-bc33b4a095d3",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:29:06.856762",
+      "updated_at": "2025-11-14T08:29:06.856770",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "1ff44c09-8155-4961-b1fd-d45e1d3df66c",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:29:06.866783",
+      "updated_at": "2025-11-14T08:29:06.866789",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "0b3e3e0f-b6cf-4f9c-bb84-f788d3c8336a",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:29:08.648281",
+      "updated_at": "2025-11-14T08:29:08.648286",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "7f6d83eb-0422-40a9-86a1-0d394895188c",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:29:08.657872",
+      "updated_at": "2025-11-14T08:29:08.657873",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "86d5beed-3196-48f0-bfce-ffda4ec3f803",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:34:09.973887",
+      "updated_at": "2025-11-14T08:34:09.973891",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "816a939a-cf3b-4797-9345-9f7d62ab8f1c",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:34:09.983165",
+      "updated_at": "2025-11-14T08:34:09.983167",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "d7721e52-2b30-4ab9-9254-38d29cce5754",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:34:11.830214",
+      "updated_at": "2025-11-14T08:34:11.830221",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "e603c47c-0893-48fb-bb30-5ec8def578d2",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:34:11.840542",
+      "updated_at": "2025-11-14T08:34:11.840548",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "e1bf643c-ba9d-4500-b96a-ef6d8d92a850",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:39:13.219184",
+      "updated_at": "2025-11-14T08:39:13.219193",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "4de647cf-1407-4de3-8126-fd710caed334",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:39:13.230072",
+      "updated_at": "2025-11-14T08:39:13.230073",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "f48cd582-1265-4920-b034-4c0b9637caf5",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:39:15.172879",
+      "updated_at": "2025-11-14T08:39:15.172884",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "f029a7db-bb4d-4575-883f-7d0d681aec13",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:39:15.184466",
+      "updated_at": "2025-11-14T08:39:15.184468",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "21375841-6847-46ff-a66d-ca9d6c96019d",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:44:16.584299",
+      "updated_at": "2025-11-14T08:44:16.584303",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "d3d7ee2a-0e3c-426d-9d9e-ce3ce7654449",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:44:16.593384",
+      "updated_at": "2025-11-14T08:44:16.593385",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "af5aa728-8b9a-4ea5-934d-7187ef7422bc",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:44:18.443276",
+      "updated_at": "2025-11-14T08:44:18.443281",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "7f249eb1-0615-40e4-91d1-cb5e5e4f5cfa",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:44:18.453539",
+      "updated_at": "2025-11-14T08:44:18.453540",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "e488d5d2-fe9b-4fff-9203-7e6883758356",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:49:19.680465",
+      "updated_at": "2025-11-14T08:49:19.680472",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "09006c10-2852-4c16-b0fd-d2a071ff6414",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:49:19.690430",
+      "updated_at": "2025-11-14T08:49:19.690435",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "1bddd146-3bdc-4351-a258-25e3d3350497",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:49:21.417898",
+      "updated_at": "2025-11-14T08:49:21.417904",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "56da0d64-7eb5-4382-844c-8ca5528973e8",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:49:21.427079",
+      "updated_at": "2025-11-14T08:49:21.427087",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "c44d2325-8d75-4375-a704-d6da3ca03751",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:54:22.670577",
+      "updated_at": "2025-11-14T08:54:22.670583",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "6892bc2a-0011-4517-92e2-6ce636ea8683",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:54:22.679995",
+      "updated_at": "2025-11-14T08:54:22.679996",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "ee1c94fc-488d-4fcd-8437-ab7646f72894",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:54:24.422128",
+      "updated_at": "2025-11-14T08:54:24.422139",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "c996dcdc-b939-46b0-a0b1-2c5df53d73d8",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:54:24.432649",
+      "updated_at": "2025-11-14T08:54:24.432650",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "a9123c7d-4f1c-4f27-93ff-5ffa04a5291e",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:59:25.624503",
+      "updated_at": "2025-11-14T08:59:25.624507",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "516e49b6-d3f4-4936-a1b2-e4466ccec52f",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:59:25.633660",
+      "updated_at": "2025-11-14T08:59:25.633661",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "33140259-5afc-44fe-ae8e-a2ce7f079625",
+      "title": "Clean Up Backup Files",
+      "description": "Remove 1 unnecessary backup files to reduce repository size",
+      "category": "maintenance",
+      "priority": "low",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:59:26.900416",
+      "updated_at": "2025-11-14T08:59:26.900420",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "cleanup"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "c59f38bc-42ae-40ee-b425-1b59cd7c7bca",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:59:26.911575",
+      "updated_at": "2025-11-14T08:59:26.911577",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "aa2fdb11-df54-4d61-8f2b-b05fcc7561ac",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T08:59:26.927976",
+      "updated_at": "2025-11-14T08:59:26.927980",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "ddcf7c4d-90ef-4f6f-86a1-42b7b1b9f51e",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:04:28.183051",
+      "updated_at": "2025-11-14T09:04:28.183058",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "4a6a157e-932f-407c-8bb0-94e87957cbf3",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:04:28.193289",
+      "updated_at": "2025-11-14T09:04:28.193293",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "e0ecad2e-e137-4eb8-85e5-07b5661f9239",
+      "title": "Clean Up Backup Files",
+      "description": "Remove 1 unnecessary backup files to reduce repository size",
+      "category": "maintenance",
+      "priority": "low",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:04:29.972309",
+      "updated_at": "2025-11-14T09:04:29.972313",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "cleanup"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "ebef0785-4ac9-43ae-ae91-9eaae35e9be9",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:04:29.982936",
+      "updated_at": "2025-11-14T09:04:29.982938",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "288768b8-f540-44b1-885b-f696a0ad8d87",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:04:29.998051",
+      "updated_at": "2025-11-14T09:04:29.998055",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "3b56dad0-da72-4118-9280-a4a9381fc30f",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:09:31.249657",
+      "updated_at": "2025-11-14T09:09:31.249662",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "a30dc193-9abf-4d33-b072-62bca65e1862",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:09:31.262421",
+      "updated_at": "2025-11-14T09:09:31.262431",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "2861e591-0fca-44e5-8ca4-393fcf4100cb",
+      "title": "Clean Up Backup Files",
+      "description": "Remove 1 unnecessary backup files to reduce repository size",
+      "category": "maintenance",
+      "priority": "low",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:09:33.300741",
+      "updated_at": "2025-11-14T09:09:33.300748",
+      "due_date": null,
+      "tags": [
+        "cleanup",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "645312c8-fac7-47f6-b581-6a8d8fedb1ed",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:09:33.313703",
+      "updated_at": "2025-11-14T09:09:33.313709",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "ef065ec9-f9f5-486e-8ac3-3a338d846e7c",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:09:33.332092",
+      "updated_at": "2025-11-14T09:09:33.332097",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "a6c5d403-52c8-4f81-8d08-62f270652125",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:14:34.808741",
+      "updated_at": "2025-11-14T09:14:34.808750",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "44f31022-a3e2-4324-958f-02f3c7e50902",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:14:34.820409",
+      "updated_at": "2025-11-14T09:14:34.820410",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "f0d6c943-dfc3-489d-a529-ff192fc1a357",
+      "title": "Clean Up Backup Files",
+      "description": "Remove 1 unnecessary backup files to reduce repository size",
+      "category": "maintenance",
+      "priority": "low",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:14:36.757810",
+      "updated_at": "2025-11-14T09:14:36.757817",
+      "due_date": null,
+      "tags": [
+        "cleanup",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "5cf4b9ef-e2f7-42d9-a29e-0108deaff666",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:14:36.770030",
+      "updated_at": "2025-11-14T09:14:36.770033",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "d251dfc4-430d-45ca-b18f-52048e7f078c",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:14:36.781518",
+      "updated_at": "2025-11-14T09:14:36.781520",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "44f3bb22-324d-41b1-a90f-f2530fc160e8",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:19:38.194749",
+      "updated_at": "2025-11-14T09:19:38.194754",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "8c12a624-db2b-4175-af0d-18ffe9e18819",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:19:38.211107",
+      "updated_at": "2025-11-14T09:19:38.211114",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "399bf66b-6936-4090-881e-425434d2ac54",
+      "title": "Clean Up Backup Files",
+      "description": "Remove 1 unnecessary backup files to reduce repository size",
+      "category": "maintenance",
+      "priority": "low",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:19:40.445239",
+      "updated_at": "2025-11-14T09:19:40.445246",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "cleanup"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "757816f7-a987-41d5-b5b4-1ff90373b869",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:19:40.457588",
+      "updated_at": "2025-11-14T09:19:40.457591",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "db2a72cf-5cd0-4983-99fd-6ea38fe29f7b",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:19:40.476346",
+      "updated_at": "2025-11-14T09:19:40.476352",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "8db13b9d-91c8-4389-b801-0884aa0faa5e",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:24:42.114127",
+      "updated_at": "2025-11-14T09:24:42.114133",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "841c258d-94e4-468e-ab11-4abb8c97966b",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:24:42.127341",
+      "updated_at": "2025-11-14T09:24:42.127344",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "ec024276-a1e4-4b9f-a501-a02623006ef2",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:24:43.521423",
+      "updated_at": "2025-11-14T09:24:43.521428",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "9d4b6faf-3336-4282-a17f-22846d51741d",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:24:43.533293",
+      "updated_at": "2025-11-14T09:24:43.533297",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "43b2d15f-8812-471c-aaf8-ce46af51fb5f",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:29:44.989623",
+      "updated_at": "2025-11-14T09:29:44.989627",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "1be29d86-91a5-4480-a696-9b7360f2b7c0",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:29:45.001430",
+      "updated_at": "2025-11-14T09:29:45.001438",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "b5c90f15-2a27-4835-b230-3e97743fe68b",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:29:46.536649",
+      "updated_at": "2025-11-14T09:29:46.536656",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "d31747cd-31bc-4b02-8871-9f8cda3f73e7",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:29:46.548907",
+      "updated_at": "2025-11-14T09:29:46.548911",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "4b08fe1d-da11-45ef-ae9f-7cd1b3a59867",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:34:48.099186",
+      "updated_at": "2025-11-14T09:34:48.099191",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "22125d43-e3f7-41e4-a0da-785cb92cebb3",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:34:48.110890",
+      "updated_at": "2025-11-14T09:34:48.110893",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "07a87dcd-ae7d-456f-8f79-c3b79125182d",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:34:49.567905",
+      "updated_at": "2025-11-14T09:34:49.567916",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "071ae237-2621-4ae9-b402-d582ac87e948",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:34:49.580353",
+      "updated_at": "2025-11-14T09:34:49.580363",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "bcca9849-8d27-4233-a76b-6c1c4a0362b5",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:39:51.315668",
+      "updated_at": "2025-11-14T09:39:51.315673",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "21ea7ab6-a7b9-4655-8a62-95b372b45ca0",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:39:51.330433",
+      "updated_at": "2025-11-14T09:39:51.330439",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "9121974f-c7f0-4dcf-80aa-7d09ded34c6d",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:39:53.560627",
+      "updated_at": "2025-11-14T09:39:53.560632",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "e6f11512-9afe-44be-8e1d-68d82f59d69c",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:39:53.572441",
+      "updated_at": "2025-11-14T09:39:53.572443",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "908c9d68-c451-400b-aa0c-7604ab445df9",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:44:55.042002",
+      "updated_at": "2025-11-14T09:44:55.042006",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "8ca35064-17d9-4f74-a749-a666a696ed92",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:44:55.053849",
+      "updated_at": "2025-11-14T09:44:55.053850",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "42cb7417-c7ea-4c6f-b58b-1317dea23ea9",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:44:56.871448",
+      "updated_at": "2025-11-14T09:44:56.871453",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "952f9d87-c3c8-43c8-b737-c314cb776971",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:44:56.883289",
+      "updated_at": "2025-11-14T09:44:56.883291",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "6f845481-1349-49f6-b20e-6ac68f936a09",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:49:58.326313",
+      "updated_at": "2025-11-14T09:49:58.326318",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "18ff28e2-21a4-46ea-8e64-d61759688538",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:49:58.338323",
+      "updated_at": "2025-11-14T09:49:58.338324",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "a4ad541d-b84c-4a05-83f3-ad85cb497730",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:50:00.146430",
+      "updated_at": "2025-11-14T09:50:00.146435",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "fb530619-8418-4ed0-94a7-89942a4e22c6",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:50:00.158284",
+      "updated_at": "2025-11-14T09:50:00.158286",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "a12a1504-7874-48c4-87d6-ce62d28475f2",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:55:01.687470",
+      "updated_at": "2025-11-14T09:55:01.687477",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "335ae4df-129d-4c5c-934f-bcb60736b7bc",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:55:01.700603",
+      "updated_at": "2025-11-14T09:55:01.700608",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "49372536-cd53-4be6-9488-13cd152e5e09",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:55:03.711968",
+      "updated_at": "2025-11-14T09:55:03.711973",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "b2f829d4-f6b8-4ba7-8912-9115188357fd",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T09:55:03.724951",
+      "updated_at": "2025-11-14T09:55:03.724955",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "0796679a-f23a-490d-a5d2-05352c85c45b",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:00:05.284959",
+      "updated_at": "2025-11-14T10:00:05.284964",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "7bdd8800-bdaa-427e-b44e-dfd7f8488c6b",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:00:05.297751",
+      "updated_at": "2025-11-14T10:00:05.297754",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "08a78fa4-6cc1-4eb4-b996-2eefd54cd0a5",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:00:07.322199",
+      "updated_at": "2025-11-14T10:00:07.322203",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "bb76df81-8926-4b3f-bca2-558e1b45f06a",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:00:07.334622",
+      "updated_at": "2025-11-14T10:00:07.334625",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "2e6d0917-c4b5-4a1e-ac01-5f7dcb94ac31",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:00:28.129661",
+      "updated_at": "2025-11-14T10:00:28.129668",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "dd0de193-229a-4552-95c1-215d80e43759",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:00:28.142212",
+      "updated_at": "2025-11-14T10:00:28.142217",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "189d3c82-dee6-45b5-b71d-d87d3f3684c2",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:00:29.528246",
+      "updated_at": "2025-11-14T10:00:29.528252",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "69f5b6ae-d4ba-4e0e-b91a-08a724c233e5",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:00:29.540839",
+      "updated_at": "2025-11-14T10:00:29.540843",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "77ce2ce6-a5dc-412f-b65f-cc8ae57cade4",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:05:31.056802",
+      "updated_at": "2025-11-14T10:05:31.056807",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "b05a6d52-7b63-4675-83db-7bdbb740f1b9",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:05:31.069698",
+      "updated_at": "2025-11-14T10:05:31.069704",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "cfd5b40e-6ae2-4b76-a72b-7366a891932f",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:05:33.044007",
+      "updated_at": "2025-11-14T10:05:33.044012",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "67d3ed86-3c7f-4e25-93a2-f8c34bc5342d",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:05:33.057021",
+      "updated_at": "2025-11-14T10:05:33.057024",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "9f4d525c-15c1-4739-813d-648288afbb68",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:10:34.521723",
+      "updated_at": "2025-11-14T10:10:34.521735",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "258f7235-74d3-49fe-adf9-a25c3451ed71",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:10:34.534697",
+      "updated_at": "2025-11-14T10:10:34.534699",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "89af107e-af68-4b2c-8397-77d6e54478be",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:10:35.883757",
+      "updated_at": "2025-11-14T10:10:35.883763",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "bd426f5b-09df-4e97-8779-5fdaabcbb8f1",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:10:35.896304",
+      "updated_at": "2025-11-14T10:10:35.896307",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "52e21b84-954b-46c3-aeec-eb5aad0fdef1",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:15:37.452587",
+      "updated_at": "2025-11-14T10:15:37.452592",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "64dbf589-acee-4b87-b889-4fb48d078c1b",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:15:37.465477",
+      "updated_at": "2025-11-14T10:15:37.465480",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "7a253fcb-3837-4a34-87d4-8a151f33a8a2",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:15:38.871814",
+      "updated_at": "2025-11-14T10:15:38.871820",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "ffb40553-0f0b-4b54-8271-6cf8a0cf536e",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:15:38.885136",
+      "updated_at": "2025-11-14T10:15:38.885140",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "79621b6f-9f1e-4f51-8c7d-6d332b3bce37",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:20:40.507937",
+      "updated_at": "2025-11-14T10:20:40.507941",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "e5524acb-c81a-49e3-9027-f53075ce32fb",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:20:40.521041",
+      "updated_at": "2025-11-14T10:20:40.521044",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "97b58f3b-d310-40ec-8eaf-1fda2b22ba8e",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:20:42.038723",
+      "updated_at": "2025-11-14T10:20:42.038727",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "6d161839-86c7-4aaa-995a-d71d4f2550c0",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:20:42.052296",
+      "updated_at": "2025-11-14T10:20:42.052300",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "61d6dc5c-e096-4539-af35-290f334ff152",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:25:43.678192",
+      "updated_at": "2025-11-14T10:25:43.678197",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "bda36c87-3105-444f-8e42-937c8870e5be",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:25:43.691629",
+      "updated_at": "2025-11-14T10:25:43.691631",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "58833131-2373-413c-83eb-f5a226695b67",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:25:45.066254",
+      "updated_at": "2025-11-14T10:25:45.066264",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "8c5dfa7f-7960-45a9-b96f-54654b614368",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:25:45.079377",
+      "updated_at": "2025-11-14T10:25:45.079380",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "ae67cb3c-0355-4ac7-b9c7-9ddd061b437e",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:30:46.627482",
+      "updated_at": "2025-11-14T10:30:46.627487",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "724b7796-b062-4488-8d20-40c36f6dd807",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:30:46.638972",
+      "updated_at": "2025-11-14T10:30:46.638975",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "2e304c11-1f60-4090-88f8-9037bab96a63",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:30:47.811400",
+      "updated_at": "2025-11-14T10:30:47.811405",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "a9000d51-00c0-4618-ba5b-ff1a401126b2",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:30:47.823368",
+      "updated_at": "2025-11-14T10:30:47.823375",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "f79d78e9-0ff1-44ba-882d-7f58b167ce06",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:35:49.185173",
+      "updated_at": "2025-11-14T10:35:49.185179",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "eb6f6752-240c-460b-9630-5d180cb65873",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:35:49.196949",
+      "updated_at": "2025-11-14T10:35:49.196952",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "f25e9805-7e23-4795-92a2-6cc56a4499ee",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:35:50.355907",
+      "updated_at": "2025-11-14T10:35:50.355912",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "c0dd2e88-7489-48da-9113-f87735a9b666",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:35:50.367374",
+      "updated_at": "2025-11-14T10:35:50.367377",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "d13ed1bb-9a8c-4496-bbd4-16a971812e62",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:40:51.738957",
+      "updated_at": "2025-11-14T10:40:51.738964",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "d64a9989-9fe3-41b8-bcae-9677224a5dfe",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:40:51.751041",
+      "updated_at": "2025-11-14T10:40:51.751044",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "93a22021-a713-47fd-842a-5bd536e5b2a6",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:40:52.963755",
+      "updated_at": "2025-11-14T10:40:52.963763",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "c2b46b99-4d4f-456a-9682-eae183cff7cf",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:40:52.975634",
+      "updated_at": "2025-11-14T10:40:52.975639",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "e356f800-8113-4840-8133-0b2853a3c043",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:45:54.845688",
+      "updated_at": "2025-11-14T10:45:54.845694",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "790daf02-fa3d-4995-bfd2-0d4814e3cd20",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:45:54.859988",
+      "updated_at": "2025-11-14T10:45:54.859995",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "b3179b04-e3b2-424f-ad51-aca91c9ff03f",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:45:56.553252",
+      "updated_at": "2025-11-14T10:45:56.553258",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "be456942-a0d9-471d-803d-3fa5352b0861",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:45:56.572529",
+      "updated_at": "2025-11-14T10:45:56.572555",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "e3cf8089-0f3f-47d7-b9aa-ba29021cc150",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:50:58.168606",
+      "updated_at": "2025-11-14T10:50:58.168612",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "aaedeb65-ec9d-417b-9f32-b2aa0e55f893",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:50:58.180302",
+      "updated_at": "2025-11-14T10:50:58.180307",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "75d5df72-382f-4a8d-aad0-bf8bef238c58",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:50:59.373275",
+      "updated_at": "2025-11-14T10:50:59.373280",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "882da0b8-d29d-4b8b-bc54-23eb47dd9b8d",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:50:59.385055",
+      "updated_at": "2025-11-14T10:50:59.385061",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "230c3dcb-8eb3-481e-9fed-34a7faaa269e",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:56:00.769929",
+      "updated_at": "2025-11-14T10:56:00.769934",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "24881487-67cc-4c5c-93f9-56819c75900e",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:56:00.781949",
+      "updated_at": "2025-11-14T10:56:00.781952",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "6f7f2279-7d9a-481d-b3d4-29eb23ce949e",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:56:01.851829",
+      "updated_at": "2025-11-14T10:56:01.851838",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "265421aa-8399-4ae5-8e24-8ddd859e0aa5",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T10:56:01.862943",
+      "updated_at": "2025-11-14T10:56:01.862944",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "db11d299-f7da-4c18-979b-a7723a689fc5",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:01:03.149445",
+      "updated_at": "2025-11-14T11:01:03.149451",
+      "due_date": null,
+      "tags": [
+        "monitoring",
+        "performance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "cfb58bde-4c32-4a0e-889b-ccd859b8b8a0",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:01:03.160616",
+      "updated_at": "2025-11-14T11:01:03.160618",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "281c8fe8-6db5-4f9c-b0df-6b0a96440ce2",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:01:04.254125",
+      "updated_at": "2025-11-14T11:01:04.254130",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "bc889420-d636-47bb-bb08-39bddd5161eb",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:01:04.266765",
+      "updated_at": "2025-11-14T11:01:04.266767",
+      "due_date": null,
+      "tags": [
+        "distributed",
+        "mcp"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "37223565-0fe5-4ef6-b889-b7fe79d7b208",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:06:05.728494",
+      "updated_at": "2025-11-14T11:06:05.728498",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "1f248b66-b327-4734-a861-723a6f940bf0",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:06:05.741333",
+      "updated_at": "2025-11-14T11:06:05.741337",
+      "due_date": null,
+      "tags": [
+        "maintenance",
+        "dependencies"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "eedc8787-829d-4889-890e-f484dfc4c9b1",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:06:06.917581",
+      "updated_at": "2025-11-14T11:06:06.917592",
+      "due_date": null,
+      "tags": [
+        "agents",
+        "orchestration"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "217ebd41-9c1d-4730-869f-289e5677db00",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:06:06.930431",
+      "updated_at": "2025-11-14T11:06:06.930437",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "d02586ce-e6ac-44bf-a37c-f62ee020f451",
+      "title": "Optimize System Performance",
+      "description": "Review monitoring data and optimize performance bottlenecks",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:11:08.460129",
+      "updated_at": "2025-11-14T11:11:08.460138",
+      "due_date": null,
+      "tags": [
+        "performance",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "7c485d52-6f74-4b21-98d4-e236beb3d83b",
+      "title": "Update Outdated Dependencies",
+      "description": "Review and update outdated Python packages to latest secure versions",
+      "category": "maintenance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:11:08.471732",
+      "updated_at": "2025-11-14T11:11:08.471733",
+      "due_date": null,
+      "tags": [
+        "dependencies",
+        "maintenance"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "941b5989-e60f-47d9-a03e-75b16f490474",
+      "title": "Implement Advanced Agent Orchestration",
+      "description": "Create sophisticated agent coordination and load balancing system",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:11:10.159600",
+      "updated_at": "2025-11-14T11:11:10.159605",
+      "due_date": null,
+      "tags": [
+        "orchestration",
+        "agents"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
+    },
+    {
+      "id": "976e104d-4176-4a6b-9071-a219bd59e3d2",
+      "title": "Enhance MCP Capabilities",
+      "description": "Add advanced MCP features like distributed execution and cross-project coordination",
+      "category": "features",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-14T11:11:10.172649",
+      "updated_at": "2025-11-14T11:11:10.172652",
+      "due_date": null,
+      "tags": [
+        "mcp",
+        "distributed"
+      ],
+      "dependencies": [],
+      "subtasks": [],
+      "metadata": {}
     }
   ]
 }

@@ -669,6 +669,16 @@
       "status": "queued",
       "created": 1762990660,
       "dependencies": []
+    },
+    {
+      "id": "test_search_task_001",
+      "type": "search",
+      "description": "Test search task for agent validation",
+      "priority": 1,
+      "assigned_agent": "search_agent",
+      "status": "assigned",
+      "created": 1762990661,
+      "dependencies": []
     }
   ]
 }

@@ -79,11 +79,14 @@ jobs:
           pip install safety
           safety check --output text || true
 
+      - name: Run CI Security Gate
+        run: |
+          chmod +x ci_security_gate.sh
+          ./ci_security_gate.sh ${{ github.event_name == 'pull_request' && '--strict' || '' }}
+
       - name: Check for large files
         run: |
-          find . -type f -size +50M -not -path './.git/*' | head -10 || echo "No large files found"
-
-      - name: Validate repository structure
+          find . -type f -size +50M -not -path './.git/*' | head -10 || echo "No large files found"      - name: Validate repository structure
         run: |
           # Check for required security files
           [[ -f ".github/SECURITY.md" ]] || \

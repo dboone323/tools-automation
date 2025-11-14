@@ -52,9 +52,9 @@
       "status": "stopped"
     },
     "agent_codegen.sh": {
-      "last_seen": 1762966085,
-      "pid": 17405,
       "status": "stopped",
+      "last_seen": 1763132077,
+      "pid": 87916,
       "tasks_completed": 0
     },
     "agent_debug.sh": {
@@ -197,9 +197,9 @@
       "task": ""
     },
     "search_agent": {
-      "last_seen": 1762992021,
-      "pid": 68456,
-      "status": "starting"
+      "status": "stopped",
+      "last_seen": 1763132519,
+      "pid": 2656
     },
     "search_agent.sh": {
       "last_seen": 1762992021,
@@ -244,7 +244,7 @@
       "status": "stopped"
     }
   },
-  "last_update": 1762992417,
+  "last_update": 1763132519,
   "orchestrator": {
     "is_running": true,
     "last_seen": 1762905888,
