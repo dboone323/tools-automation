@@ -7,10 +7,10 @@
     <key>ProgramArguments</key>
     <array>
         <string>/usr/bin/python3</string>
-        <string>/Users/danielstevens/Desktop/github-projects/tools-automation/dashboard_server.py</string>
+        <string>${WORKSPACE_ROOT}/dashboard_server.py</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/Users/danielstevens/Desktop/github-projects/tools-automation</string>
+    <string>${WORKSPACE_ROOT}</string>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
@@ -19,15 +19,15 @@
         <false/>
     </dict>
     <key>StandardOutPath</key>
-    <string>/Users/danielstevens/Desktop/github-projects/tools-automation/dashboard_server.log</string>
+    <string>${WORKSPACE_ROOT}/dashboard_server.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/danielstevens/Desktop/github-projects/tools-automation/dashboard_server_error.log</string>
+    <string>${WORKSPACE_ROOT}/dashboard_server_error.log</string>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
         <string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
         <key>PYTHONPATH</key>
-        <string>/Users/danielstevens/Desktop/github-projects/tools-automation</string>
+        <string>${WORKSPACE_ROOT}</string>
     </dict>
     <key>StartInterval</key>
     <integer>30</integer>

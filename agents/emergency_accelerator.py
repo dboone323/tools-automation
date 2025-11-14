@@ -11,7 +11,12 @@ import threading
 
 
 class FinalAccelerator:
-    def __init__(self, workspace_root="/Users/danielstevens/Desktop/Quantum-workspace"):
+    def __init__(self, workspace_root=None):
+        if workspace_root is None:
+            workspace_root = os.environ.get(
+                "WORKSPACE_ROOT",
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            )
         self.workspace_root = workspace_root
         self.agents_dir = f"{workspace_root}/Tools/Automation/agents"
 

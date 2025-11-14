@@ -5,6 +5,7 @@ Fix platform deployment targets for projects according to spec.
 
 import re
 import sys
+import os
 from pathlib import Path
 
 
@@ -76,7 +77,10 @@ def fix_momentumfinance(pbxproj_path):
 
 
 def main():
-    projects_dir = Path("/Users/danielstevens/Desktop/Quantum-workspace/Projects")
+    workspace_root = os.environ.get(
+        "WORKSPACE_ROOT", os.path.dirname(os.path.abspath(__file__))
+    )
+    projects_dir = Path(workspace_root) / "Projects"
 
     # Fix HabitQuest - remove macOS support
     habitquest_pbxproj = (
