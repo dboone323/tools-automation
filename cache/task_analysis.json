@@ -1,8 +1,8 @@
 {
-  "timestamp": 1763156691,
+  "timestamp": 1763156751,
   "pending_todos": Advanced,
   "critical_todos": plugin system loaded successfully,
   "agent_tasks": 0,
   "mcp_load": 0,
-  "system_load": 5.82
+  "system_load": 6.57
 }
