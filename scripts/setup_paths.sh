@@ -9,7 +9,7 @@ WORKSPACE_ROOT="${WORKSPACE_ROOT:-$(git rev-parse --show-toplevel 2>/dev/null ||
 CODE_DIR="${CODE_DIR:-${WORKSPACE_ROOT}}"
 
 # Projects root inside workspace
-PROJECT_DIR="${PROJECT_DIR:-${WORKSPACE_ROOT}/Projects}"
+PROJECT_DIR="${PROJECT_DIR:-${WORKSPACE_ROOT}}"
 
 # Agent status path
 AGENT_STATUS_PATH="${AGENT_STATUS_PATH:-${WORKSPACE_ROOT}/config/agent_status.json}"
