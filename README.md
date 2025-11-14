@@ -2,6 +2,104 @@
 
 **Centralized automation tools, agents, and infrastructure for all projects**
 
+## 🚀 Quick Setup
+
+### Prerequisites
+
+- **macOS/Linux**: Primary development environment
+- **Git**: Version control
+- **Python 3.9+**: For agent scripts and utilities
+- **Ollama** (optional): For AI-enhanced features
+- **SwiftLint/SwiftFormat** (optional): For Swift code quality
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/dboone323/tools-automation.git
+   cd tools-automation
+   ```
+
+2. **Set up Python environment**:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On macOS/Linux
+   pip install -r requirements.txt
+   ```
+
+3. **Configure environment**:
+   ```bash
+   # Set workspace root (required)
+   export WORKSPACE_ROOT="$(pwd)"
+
+   # Optional: Configure Ollama for AI features
+   export OLLAMA_CLOUD_URL="https://your-cloud-endpoint"  # or leave unset for local
+   ```
+
+4. **Initialize submodules** (if using project submodules):
+   ```bash
+   git submodule update --init --recursive
+   ```
+
+5. **Run initial validation**:
+   ```bash
+   ./master_automation.sh status
+   ```
+
+### Development Setup
+
+For contributors and developers:
+
+```bash
+# Install pre-commit hooks
+pip install pre-commit
+pre-commit install
+
+# Install development dependencies
+pip install -r requirements-dev.txt
+
+# Run full validation
+make validate
+```
+
+### CI/CD Setup
+
+The repository includes comprehensive CI/CD pipelines:
+
+- **GitHub Actions**: Automated testing, security scanning, and deployment
+- **Pre-commit Hooks**: Code quality checks before commits
+- **Security Gates**: Automated security validation
+
+To set up CI/CD:
+
+1. Enable GitHub Actions in your repository settings
+2. Configure required secrets (if any)
+3. Push to trigger initial CI run
+
+### Troubleshooting
+
+**Common Issues:**
+
+- **Permission denied**: Run `chmod +x *.sh` to make scripts executable
+- **Python import errors**: Ensure virtual environment is activated
+- **Ollama connection failed**: Check if Ollama is running (`ollama serve`)
+- **Submodule issues**: Run `git submodule sync && git submodule update`
+
+**Validation Commands:**
+
+```bash
+# Check system status
+./master_automation.sh status
+
+# Validate all components
+./ci_security_gate.sh --validate
+
+# Test AI integration
+./setup_ai_integration.sh
+```
+
+---
+
 ## 🆓 Free Tools Stack - System Observability
 
 A comprehensive suite of free, open-source tools for monitoring, security, quality assurance, and documentation to provide detailed visibility into your automation system's health and functionality.
