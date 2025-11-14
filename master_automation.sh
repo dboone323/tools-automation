@@ -3,7 +3,7 @@
 # Master Automation Controller for Unified Code Architecture
 # Enhanced with AI-Powered Ollama Integration
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PROJECTS_DIR="${CODE_DIR}/Projects"
+PROJECTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="${CODE_DIR}"
 DOCS_DIR="${CODE_DIR}/Documentation"
 
@@ -120,10 +120,12 @@ list_projects_with_ai_insights() {
     local ai_enhanced_projects=0
     local total_swift_files=0
 
-    for project in "${PROJECTS_DIR}"/*; do
+    # Define the known Swift projects
+    local known_projects=("AvoidObstaclesGame" "CodingReviewer" "HabitQuest" "MomentumFinance" "PlannerApp")
+
+    for project_name in "${known_projects[@]}"; do
+        local project="${PROJECTS_DIR}/${project_name}"
         if [[ -d ${project} ]]; then
-            local project_name
-            project_name=$(basename "${project}")
             local swift_files
             swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
             total_swift_files=$((total_swift_files + swift_files))
@@ -641,7 +643,16 @@ show_status() {
     print_section "Quantum Workspace Status"
 
     echo "📍 Location: ${WORKSPACE_ROOT}"
-    echo "📊 Projects: $(find "${PROJECTS_DIR}" -maxdepth 1 -type d | tail -n +2 | wc -l | tr -d ' ')"
+
+    # Count only known Swift projects
+    local known_projects=("AvoidObstaclesGame" "CodingReviewer" "HabitQuest" "MomentumFinance" "PlannerApp")
+    local project_count=0
+    for project_name in "${known_projects[@]}"; do
+        if [[ -d "${PROJECTS_DIR}/${project_name}" ]]; then
+            project_count=$((project_count + 1))
+        fi
+    done
+    echo "📊 Projects: ${project_count}"
 
     # Check tool availability
     echo ""
@@ -681,17 +692,20 @@ check_tool() {
 
 list_projects() {
     print_section "Available Projects"
-    for project in "${PROJECTS_DIR}"/*; do
+
+    # Define the known Swift projects
+    local known_projects=("AvoidObstaclesGame" "CodingReviewer" "HabitQuest" "MomentumFinance" "PlannerApp")
+
+    for project_name in "${known_projects[@]}"; do
+        local project="${PROJECTS_DIR}/${project_name}"
         if [[ -d ${project} ]]; then
-            local project_name
-            project_name=$(basename "${project}")
             local swift_files
             swift_files=$(find "${project}" -name "*.swift" 2>/dev/null | wc -l | tr -d ' ')
             local has_automation=""
             local has_tests=""
             local has_docs=""
 
-            if [[ -d "${project}/automation" ]] || [[ -f "${project}/automation/run_automation.sh" ]]; then
+            if [[ -d "${project}/automation" ]] || [[ -d "${project}/Tools/Automation" ]]; then
                 has_automation=" (✅ automation)"
             else
                 has_automation=" (❌ no automation)"

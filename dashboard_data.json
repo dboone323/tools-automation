@@ -88,106 +88,106 @@
     "Scale automation infrastructure as needed"
   ],
   "ollama_metrics": {
-    "last_updated": 1762809050,
-    "total_calls": 722,
+    "last_updated": 1763156301,
+    "total_calls": 785,
     "successful_calls": 93,
-    "failed_calls": 609,
+    "failed_calls": 672,
     "total_latency_ms": 491711,
     "total_tokens": 4109,
     "task_usage": {
-      "dashboardSummary": 303,
+      "dashboardSummary": 366,
       "codeGen": 344,
       "test": 75
     },
     "model_usage": {
-      "llama3.2:3b": 113,
+      "llama3.2:3b": 134,
       "codellama:7b": 116,
-      "mistral:7b": 95,
-      "llama2:7b": 95,
+      "mistral:7b": 116,
+      "llama2:7b": 116,
       "llama2": 75,
       "qwen2.5-coder:1.5b": 114,
       "codellama:latest": 114
     },
     "recent_calls": [
       {
-        "timestamp": 1762808508,
-        "task": "dashboardSummary",
-        "model": "llama3.2:3b",
-        "latency_ms": 0,
-        "tokens_est": 0,
-        "status": "timeout"
-      },
-      {
-        "timestamp": 1762808568,
-        "task": "dashboardSummary",
-        "model": "mistral:7b",
-        "latency_ms": 0,
-        "tokens_est": 0,
-        "status": "timeout"
-      },
-      {
-        "timestamp": 1762808629,
+        "timestamp": 1763156277,
         "task": "dashboardSummary",
         "model": "llama2:7b",
         "latency_ms": 0,
         "tokens_est": 0,
-        "status": "timeout"
+        "status": "failed"
       },
       {
-        "timestamp": 1762808689,
+        "timestamp": 1763156280,
         "task": "dashboardSummary",
         "model": "llama3.2:3b",
         "latency_ms": 0,
         "tokens_est": 0,
-        "status": "timeout"
+        "status": "failed"
       },
       {
-        "timestamp": 1762808749,
+        "timestamp": 1763156281,
         "task": "dashboardSummary",
         "model": "mistral:7b",
         "latency_ms": 0,
         "tokens_est": 0,
-        "status": "timeout"
+        "status": "failed"
       },
       {
-        "timestamp": 1762808809,
+        "timestamp": 1763156283,
         "task": "dashboardSummary",
         "model": "llama2:7b",
         "latency_ms": 0,
         "tokens_est": 0,
-        "status": "timeout"
+        "status": "failed"
       },
       {
-        "timestamp": 1762808870,
+        "timestamp": 1763156287,
         "task": "dashboardSummary",
         "model": "llama3.2:3b",
         "latency_ms": 0,
         "tokens_est": 0,
-        "status": "timeout"
+        "status": "failed"
       },
       {
-        "timestamp": 1762808930,
+        "timestamp": 1763156287,
         "task": "dashboardSummary",
         "model": "mistral:7b",
         "latency_ms": 0,
         "tokens_est": 0,
-        "status": "timeout"
+        "status": "failed"
       },
       {
-        "timestamp": 1762808990,
+        "timestamp": 1763156290,
         "task": "dashboardSummary",
         "model": "llama2:7b",
         "latency_ms": 0,
         "tokens_est": 0,
-        "status": "timeout"
+        "status": "failed"
       },
       {
-        "timestamp": 1762809050,
+        "timestamp": 1763156297,
         "task": "dashboardSummary",
         "model": "llama3.2:3b",
         "latency_ms": 0,
         "tokens_est": 0,
-        "status": "timeout"
+        "status": "failed"
+      },
+      {
+        "timestamp": 1763156298,
+        "task": "dashboardSummary",
+        "model": "mistral:7b",
+        "latency_ms": 0,
+        "tokens_est": 0,
+        "status": "failed"
+      },
+      {
+        "timestamp": 1763156301,
+        "task": "dashboardSummary",
+        "model": "llama2:7b",
+        "latency_ms": 0,
+        "tokens_est": 0,
+        "status": "failed"
       }
     ]
   },

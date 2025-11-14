@@ -77,11 +77,21 @@ collect_system_metrics() {
     local cpu_usage
     cpu_usage=$(top -l 1 | grep "CPU usage" | awk '{print $3}' | sed 's/%//')
 
-    # Memory metrics
+    # Memory metrics - calculate percentage properly
     local mem_usage
-    mem_usage=$(vm_stat | grep "Pages active" | awk '{print $3}' | tr -d '.')
+    local total_mem
+    local used_mem
 
-    # Disk metrics
+    # Get memory info in MB
+    total_mem=$(echo "scale=2; $(sysctl -n hw.memsize) / 1024 / 1024" | bc 2>/dev/null || echo "16384")
+    used_mem=$(ps -A -o rss= | awk '{sum+=$1} END {print sum/1024}' 2>/dev/null || echo "0")
+
+    # Calculate percentage (ensure it's between 0-100)
+    if (($(echo "$total_mem > 0" | bc -l 2>/dev/null || echo "0"))); then
+        mem_usage=$(echo "scale=2; ($used_mem / $total_mem) * 100" | bc 2>/dev/null | awk '{if($1>100) print 100; else if($1<0) print 0; else print int($1+0.5)}' 2>/dev/null || echo "0")
+    else
+        mem_usage=0
+    fi # Disk metrics
     local disk_usage
     disk_usage=$(df -h / | tail -1 | awk '{print $5}' | sed 's/%//')
 

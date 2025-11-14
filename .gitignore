@@ -159,3 +159,23 @@ DerivedData/
 # Archives (top-level github-projects)
 archives/
 
+# Monitoring system generated files
+monitoring/metrics/*.json
+monitoring/alerts/*.json
+monitoring/reports/*.md
+monitoring/baselines/*.json
+
+# Ollama backups and registries
+ollama_backups/*.json
+
+# Generated reports
+reports/*.json
+reports/*.md
+
+# Dependency reports
+Tools/Automation/services/dependency_report_*.md
+
+# Agent communication files (temporary)
+agents/communication/*.notification.txt
+agents/communication/task_queue.json.tmp
+
