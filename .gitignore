@@ -57,6 +57,12 @@ Carthage/Build/
 *.tmp
 *.swp
 
+# Process ID files
+*.pid
+
+# Resource usage logs
+logs/resource_usage.csv
+
 # Tools snapshots and imports
 Tools/Imported/
 Tools/Automation/Imported_Tools_snapshot-*/
