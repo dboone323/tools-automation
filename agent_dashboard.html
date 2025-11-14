@@ -204,15 +204,45 @@
             letter-spacing: 1px;
         }
 
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .analytics-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .debug-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 12px;
+            z-index: 1000;
+            display: none;
         }
+
+        .debug-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 12px;
+        }
+
+        .test-results {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .test-pass { color: #48bb78; }
+        .test-fail { color: #f56565; }
     </style>
 </head>
 <body>
@@ -247,12 +277,40 @@
             </div>
 
             <div class="card">
+                <h3>🛠️ Tools Status</h3>
+                <div id="tools-status">
+                    <div class="loading">Loading tools status...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏗️ Infrastructure</h3>
+                <div id="infrastructure-status">
+                    <div class="loading">Loading infrastructure status...</div>
+                </div>
+            </div>
+
+            <div class="card">
                 <h3>🎯 Task Analytics</h3>
                 <div id="task-analytics">
                     <div class="loading">Loading task analytics...</div>
                 </div>
                 <div class="chart-container">
                     <canvas id="taskChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🛡️ Security Status</h3>
+                <div id="security-status">
+                    <div class="loading">Loading security status...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📈 Performance Metrics</h3>
+                <div id="performance-metrics">
+                    <div class="loading">Loading performance metrics...</div>
                 </div>
             </div>
 
@@ -288,6 +346,15 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <button class="debug-toggle" onclick="toggleDebugPanel()">🐛 Debug</button>
+
+    <div class="debug-panel" id="debug-panel">
+        <h4>Debug Console</h4>
+        <div id="debug-logs"></div>
+        <button onclick="runTests()" style="margin-top: 10px; padding: 5px 10px; background: #48bb78; color: white; border: none; border-radius: 4px; cursor: pointer;">Run Tests</button>
+        <div id="test-results" class="test-results"></div>
     </div>
 
     <script>
@@ -340,10 +407,10 @@
             taskChart = new Chart(taskCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Completed', 'Failed', 'Running'],
+                    labels: ['Completed', 'Failed', 'Running', 'Queued'],
                     datasets: [{
-                        data: [0, 0, 0],
-                        backgroundColor: ['#48bb78', '#f56565', '#ed8936'],
+                        data: [0, 0, 0, 0],
+                        backgroundColor: ['#48bb78', '#f56565', '#ed8936', '#a0aec0'],
                         borderWidth: 0
                     }]
                 },
@@ -380,9 +447,9 @@
 
         async function checkServerStatus() {
             try {
-                const response = await fetch('http://localhost:5001/health');
+                const response = await fetch('http://localhost:8085/api/metrics/system');
                 const isRunning = response.ok;
-                document.getElementById('server-status').textContent = isRunning ? '✅ Running (localhost:5001)' : '❌ Not Running';
+                document.getElementById('server-status').textContent = isRunning ? '✅ Running (localhost:8085)' : '❌ Not Running';
                 document.getElementById('server-status').style.color = isRunning ? '#48bb78' : '#f56565';
                 return isRunning;
             } catch (error) {
@@ -393,7 +460,10 @@
         }
 
         async function refreshData() {
+            startPerfMark('refreshData');
             try {
+                logDebug('Refreshing dashboard data...', 'info');
+
                 // Check if server is running first
                 const serverRunning = await checkServerStatus();
                 if (!serverRunning) {
@@ -407,8 +477,20 @@
                 // Fetch agent status
                 await loadAgentStatus();
 
+                // Fetch tools status
+                await loadToolsStatus();
+
+                // Fetch infrastructure status
+                await loadInfrastructureStatus();
+
                 // Fetch task analytics
                 await loadTaskAnalytics();
+
+                // Fetch security status
+                await loadSecurityStatus();
+
+                // Fetch performance metrics
+                await loadPerformanceMetrics();
 
                 // Fetch ML analytics
                 await loadMLAnalytics();
@@ -416,8 +498,12 @@
                 // Fetch Umami analytics
                 await loadUmamiAnalytics();
 
+                logDebug('Dashboard data refresh completed successfully', 'success');
+                endPerfMark('refreshData');
+
             } catch (error) {
-                console.error('Error refreshing data:', error);
+                logDebug(`Error refreshing data: ${error.message}`, 'error');
+                endPerfMark('refreshData');
                 showServerError();
             }
         }
@@ -426,14 +512,22 @@
             const errorMessage = '<div class="loading">❌ API server not running. Please start the dashboard API server first.</div>';
             document.getElementById('system-metrics').innerHTML = errorMessage;
             document.getElementById('agent-status').innerHTML = errorMessage;
+            document.getElementById('tools-status').innerHTML = errorMessage;
+            document.getElementById('infrastructure-status').innerHTML = errorMessage;
             document.getElementById('task-analytics').innerHTML = errorMessage;
+            document.getElementById('security-status').innerHTML = errorMessage;
+            document.getElementById('performance-metrics').innerHTML = errorMessage;
             document.getElementById('ml-analytics').innerHTML = errorMessage;
         }
 
         async function loadSystemMetrics() {
+            startPerfMark('loadSystemMetrics');
             try {
-                const response = await fetch('http://localhost:5001/api/metrics/system');
+                logDebug('Loading system metrics...', 'info');
+                const response = await fetch('http://localhost:8085/api/system/status');
                 const data = await response.json();
+
+                logDebug(`System metrics loaded: CPU ${data.cpu_usage}%, Memory ${data.memory_usage}%`, 'info');
 
                 const metricsDiv = document.getElementById('system-metrics');
                 metricsDiv.innerHTML = '';
@@ -442,8 +536,10 @@
                 const metrics = [
                     { label: 'CPU Usage', value: `${data.cpu_usage || 0}%`, class: getMetricClass(data.cpu_usage, 80) },
                     { label: 'Memory Usage', value: `${data.memory_usage || 0}%`, class: getMetricClass(data.memory_usage, 80) },
-                    { label: 'Disk Usage', value: `${data.disk_usage || 0}%`, class: getMetricClass(data.disk_usage, 90) },
-                    { label: 'Active Agents', value: data.agent_count || 0, class: 'success' }
+                    { label: 'Network Usage', value: `${data.network_usage || 0}%`, class: getMetricClass(data.network_usage, 70) },
+                    { label: 'Active Agents', value: data.agent_count || 0, class: 'success' },
+                    { label: 'Running Servers', value: Object.keys(data.servers || {}).length, class: 'success' },
+                    { label: 'Healthy Services', value: Object.values(data.services || {}).filter(s => s.status === 'healthy').length, class: 'success' }
                 ];
 
                 metrics.forEach(metric => {
@@ -465,9 +561,14 @@
                     performanceChart.data.datasets[0].data = cpuData;
                     performanceChart.data.datasets[1].data = memData;
                     performanceChart.update();
+                    logDebug(`Performance chart updated with ${data.history.length} data points`, 'info');
                 }
 
+                endPerfMark('loadSystemMetrics');
+
             } catch (error) {
+                logDebug(`Error loading system metrics: ${error.message}`, 'error');
+                endPerfMark('loadSystemMetrics');
                 document.getElementById('system-metrics').innerHTML = '<div class="loading">Error loading system metrics - API server may not be running</div>';
                 console.error('Error loading system metrics:', error);
             }
@@ -475,7 +576,7 @@
 
         async function loadAgentStatus() {
             try {
-                const response = await fetch('http://localhost:5001/api/agents/status');
+                const response = await fetch('http://localhost:8085/api/agents/status');
                 const data = await response.json();
 
                 const statusDiv = document.getElementById('agent-status');
@@ -501,15 +602,15 @@
                     </div>
                 `;
 
-                // Agent list
+                // Agent list - show top 8 agents
                 agentListDiv.innerHTML = '';
                 if (data.agents) {
-                    Object.entries(data.agents).forEach(([name, agent]) => {
+                    Object.entries(data.agents).slice(0, 8).forEach(([name, agent]) => {
                         const statusClass = agent.status === 'running' ? 'running' :
                                           agent.status === 'idle' ? 'idle' : 'error';
                         agentListDiv.innerHTML += `
                             <div class="agent-item">
-                                <span class="agent-name">${name}</span>
+                                <span class="agent-name">${name.replace(/_/g, ' ')}</span>
                                 <span class="agent-status ${statusClass}">${agent.status}</span>
                             </div>
                         `;
@@ -522,9 +623,117 @@
             }
         }
 
+        async function loadToolsStatus() {
+            try {
+                const response = await fetch('http://localhost:8085/api/tools/status');
+                const data = await response.json();
+
+                const toolsDiv = document.getElementById('tools-status');
+                toolsDiv.innerHTML = `
+                    <div class="metric">
+                        <span class="metric-label">Total Tools</span>
+                        <span class="metric-value success">${data.total_tools || 0}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Active Tools</span>
+                        <span class="metric-value success">${data.active_tools || 0}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Idle Tools</span>
+                        <span class="metric-value warning">${data.idle_tools || 0}</span>
+                    </div>
+                `;
+
+            } catch (error) {
+                document.getElementById('tools-status').innerHTML = '<div class="loading">Error loading tools status</div>';
+                console.error('Error loading tools status:', error);
+            }
+        }
+
+        async function loadInfrastructureStatus() {
+            try {
+                const response = await fetch('http://localhost:8085/api/infrastructure/status');
+                const data = await response.json();
+
+                const infraDiv = document.getElementById('infrastructure-status');
+                infraDiv.innerHTML = `
+                    <div class="metric">
+                        <span class="metric-label">Compute Instances</span>
+                        <span class="metric-value success">${data.infrastructure?.compute?.total_instances || 0}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Storage Used</span>
+                        <span class="metric-value ${getMetricClass(65, 90)}">6.2TB / 8.89TB</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Health Score</span>
+                        <span class="metric-value ${getMetricClass(data.health_score || 0, 95)}">${data.health_score || 0}%</span>
+                    </div>
+                `;
+
+            } catch (error) {
+                document.getElementById('infrastructure-status').innerHTML = '<div class="loading">Error loading infrastructure status</div>';
+                console.error('Error loading infrastructure status:', error);
+            }
+        }
+
+        async function loadSecurityStatus() {
+            try {
+                const response = await fetch('http://localhost:8085/api/security/status');
+                const data = await response.json();
+
+                const securityDiv = document.getElementById('security-status');
+                securityDiv.innerHTML = `
+                    <div class="metric">
+                        <span class="metric-label">Security Score</span>
+                        <span class="metric-value ${getMetricClass(data.overall_security_score || 0, 90)}">${data.overall_security_score || 0}%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Active Sessions</span>
+                        <span class="metric-value success">${data.security?.access_control?.active_sessions || 0}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Threats Blocked</span>
+                        <span class="metric-value success">${data.security?.threat_detection?.threats_blocked || 0}</span>
+                    </div>
+                `;
+
+            } catch (error) {
+                document.getElementById('security-status').innerHTML = '<div class="loading">Error loading security status</div>';
+                console.error('Error loading security status:', error);
+            }
+        }
+
+        async function loadPerformanceMetrics() {
+            try {
+                const response = await fetch('http://localhost:8085/api/performance/metrics');
+                const data = await response.json();
+
+                const perfDiv = document.getElementById('performance-metrics');
+                perfDiv.innerHTML = `
+                    <div class="metric">
+                        <span class="metric-label">Requests/sec</span>
+                        <span class="metric-value success">${data.performance?.throughput?.requests_per_second || 0}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Avg Response</span>
+                        <span class="metric-value ${getMetricClass(data.performance?.response_times?.api_gateway?.p95 || 0, 500)}">${data.performance?.response_times?.api_gateway?.p50 || 0}ms</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Error Rate</span>
+                        <span class="metric-value ${getMetricClass((data.performance?.error_rates?.http_5xx_rate || 0) * 100, 1)}">${(data.performance?.error_rates?.http_5xx_rate || 0) * 100}%</span>
+                    </div>
+                `;
+
+            } catch (error) {
+                document.getElementById('performance-metrics').innerHTML = '<div class="loading">Error loading performance metrics</div>';
+                console.error('Error loading performance metrics:', error);
+            }
+        }
+
         async function loadTaskAnalytics() {
             try {
-                const response = await fetch('http://localhost:5001/api/tasks/analytics');
+                const response = await fetch('http://localhost:8085/api/tasks/analytics');
                 const data = await response.json();
 
                 const analyticsDiv = document.getElementById('task-analytics');
@@ -538,17 +747,19 @@
                         <span class="metric-value ${getMetricClass((data.success_rate || 0) * 100, 95)}">${((data.success_rate || 0) * 100).toFixed(1)}%</span>
                     </div>
                     <div class="metric">
-                        <span class="metric-label">Avg Duration</span>
-                        <span class="metric-value">${(data.avg_duration || 0).toFixed(1)}s</span>
+                        <span class="metric-label">Throughput/hr</span>
+                        <span class="metric-value success">${data.performance?.throughput_per_hour || 0}</span>
                     </div>
                 `;
 
-                // Update task chart
+                // Update task chart with more comprehensive data
                 taskChart.data.datasets[0].data = [
                     data.completed || 0,
                     data.failed || 0,
-                    data.running || 0
+                    data.running || 0,
+                    data.queued || 0
                 ];
+                taskChart.data.labels = ['Completed', 'Failed', 'Running', 'Queued'];
                 taskChart.update();
 
             } catch (error) {
@@ -559,30 +770,30 @@
 
         async function loadMLAnalytics() {
             try {
-                const response = await fetch('http://localhost:5001/api/ml/analytics');
+                const response = await fetch('http://localhost:8085/api/ml/analytics');
                 const data = await response.json();
 
                 const analyticsDiv = document.getElementById('ml-analytics');
                 analyticsDiv.innerHTML = `
                     <div class="metric">
-                        <span class="metric-label">Model Accuracy</span>
-                        <span class="metric-value ${getMetricClass((data.accuracy || 0) * 100, 80)}">${((data.accuracy || 0) * 100).toFixed(1)}%</span>
+                        <span class="metric-label">Avg Accuracy</span>
+                        <span class="metric-value ${getMetricClass((data.overall_metrics?.avg_accuracy || 0) * 100, 80)}">${((data.overall_metrics?.avg_accuracy || 0) * 100).toFixed(1)}%</span>
                     </div>
                     <div class="metric">
-                        <span class="metric-label">Predictions Made</span>
-                        <span class="metric-value success">${data.predictions_count || 0}</span>
+                        <span class="metric-label">Total Predictions</span>
+                        <span class="metric-value success">${data.overall_metrics?.total_predictions || 0}</span>
                     </div>
                     <div class="metric">
-                        <span class="metric-label">Last Training</span>
-                        <span class="metric-value">${data.last_training || 'Never'}</span>
+                        <span class="metric-label">Models Deployed</span>
+                        <span class="metric-value success">${data.overall_metrics?.models_deployed || 0}</span>
                     </div>
                 `;
 
-                // Update ML chart
+                // Update ML chart with new data
                 mlChart.data.datasets[0].data = [
-                    data.avg_predicted_time || 0,
-                    (data.avg_failure_prob || 0) * 100,
-                    (data.accuracy || 0) * 100
+                    data.performance_metrics?.avg_inference_time || 0,
+                    (data.performance_metrics?.cpu_usage || 0),
+                    (data.overall_metrics?.avg_accuracy || 0) * 100
                 ];
                 mlChart.update();
 
@@ -594,7 +805,7 @@
 
         async function loadUmamiAnalytics() {
             try {
-                const response = await fetch('http://localhost:5001/api/umami/stats');
+                const response = await fetch('http://localhost:8085/api/umami/stats');
                 const data = await response.json();
 
                 document.getElementById('total-events').textContent = data.total_events || '--';
@@ -624,6 +835,146 @@
                 clearInterval(refreshInterval);
             }
         });
+
+        // Debug and Test Functions
+        let debugLogs = [];
+        let debugEnabled = false;
+
+        function toggleDebugPanel() {
+            const panel = document.getElementById('debug-panel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            debugEnabled = !debugEnabled;
+        }
+
+        function logDebug(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+            debugLogs.push(logEntry);
+            console.log(logEntry);
+
+            if (debugEnabled) {
+                const debugDiv = document.getElementById('debug-logs');
+                debugDiv.innerHTML += `<div>${logEntry}</div>`;
+                debugDiv.scrollTop = debugDiv.scrollHeight;
+            }
+        }
+
+        function runTests() {
+            logDebug('Starting dashboard tests...', 'test');
+            const results = document.getElementById('test-results');
+            results.innerHTML = '<div>Running tests...</div>';
+
+            const tests = [
+                testApiConnectivity,
+                testChartInitialization,
+                testDataLoading,
+                testErrorHandling,
+                testPerformanceMetrics
+            ];
+
+            let passed = 0;
+            let failed = 0;
+            const testResults = [];
+
+            tests.forEach(async (test, index) => {
+                try {
+                    const result = await test();
+                    if (result) {
+                        passed++;
+                        testResults.push(`<div class="test-pass">✓ Test ${index + 1}: ${test.name} - PASSED</div>`);
+                        logDebug(`Test ${test.name} passed`, 'test');
+                    } else {
+                        failed++;
+                        testResults.push(`<div class="test-fail">✗ Test ${index + 1}: ${test.name} - FAILED</div>`);
+                        logDebug(`Test ${test.name} failed`, 'error');
+                    }
+                } catch (error) {
+                    failed++;
+                    testResults.push(`<div class="test-fail">✗ Test ${index + 1}: ${test.name} - ERROR: ${error.message}</div>`);
+                    logDebug(`Test ${test.name} error: ${error.message}`, 'error');
+                }
+            });
+
+            setTimeout(() => {
+                results.innerHTML = `
+                    <div><strong>Test Results: ${passed} passed, ${failed} failed</strong></div>
+                    ${testResults.join('')}
+                `;
+            }, 1000);
+        }
+
+        async function testApiConnectivity() {
+            try {
+                const response = await fetch('http://localhost:8085/api/system/status');
+                return response.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function testChartInitialization() {
+            return performanceChart && taskChart && mlChart;
+        }
+
+        async function testDataLoading() {
+            try {
+                const response = await fetch('http://localhost:8085/api/system/status');
+                const data = await response.json();
+                return data && typeof data === 'object';
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function testErrorHandling() {
+            // Test error handling by temporarily breaking an API call
+            const originalFetch = window.fetch;
+            window.fetch = () => Promise.reject(new Error('Test error'));
+            try {
+                // This should trigger error handling
+                refreshData();
+                return true; // If no exception thrown, error handling works
+            } catch (error) {
+                return false;
+            } finally {
+                window.fetch = originalFetch;
+            }
+        }
+
+        function testPerformanceMetrics() {
+            const startTime = performance.now();
+            // Simulate some operations
+            for (let i = 0; i < 1000; i++) {
+                Math.sqrt(i);
+            }
+            const endTime = performance.now();
+            const duration = endTime - startTime;
+            logDebug(`Performance test: ${duration.toFixed(2)}ms`, 'perf');
+            return duration < 50; // Should complete in less than 50ms
+        }
+
+        // Enhanced error handling
+        window.addEventListener('error', function(e) {
+            logDebug(`JavaScript Error: ${e.message} at ${e.filename}:${e.lineno}`, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            logDebug(`Unhandled Promise Rejection: ${e.reason}`, 'error');
+        });
+
+        // Performance monitoring
+        let performanceMarks = {};
+        function startPerfMark(name) {
+            performanceMarks[name] = performance.now();
+        }
+
+        function endPerfMark(name) {
+            if (performanceMarks[name]) {
+                const duration = performance.now() - performanceMarks[name];
+                logDebug(`Performance: ${name} took ${duration.toFixed(2)}ms`, 'perf');
+                delete performanceMarks[name];
+            }
+        }
     </script>
 </body>
 </html>

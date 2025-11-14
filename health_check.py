@@ -71,7 +71,7 @@ class HealthCheckHandler(http.server.BaseHTTPRequestHandler):
         # Check if web server is responding
         try:
             result = subprocess.run(
-                ["curl", "-f", "http://localhost:8000", "--max-time", "5"],
+                ["curl", "-f", "http://localhost:8085", "--max-time", "5"],
                 capture_output=True,
                 timeout=10,
             )

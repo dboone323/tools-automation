@@ -315,7 +315,7 @@ class AgentAnalyticsTracker:
         # Create website for agent system
         self.agent_website_id = self.umami.create_website(
             "Agent System Dashboard",
-            "localhost:8000",  # Assuming dashboard runs on port 8000
+            "localhost:8085",  # Assuming dashboard runs on port 8085
         )
 
         return self.agent_website_id is not None

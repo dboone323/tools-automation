@@ -10,7 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DASHBOARD_DIR="${SCRIPT_DIR}/dashboard"
 LOG_FILE="${SCRIPT_DIR}/logs/serve_dashboard.log"
 STATUS_FILE="${SCRIPT_DIR}/status/serve_dashboard.status"
-PORT=${PORT:-8080}
+PORT=${PORT:-8082}
 HOST=${HOST:-localhost}
 
 # Create directories

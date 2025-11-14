@@ -50,10 +50,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-const PORT = 8080;
+const PORT = 8082;
 server.listen(PORT, () => {
   console.log(`Dashboard server running at http://localhost:${PORT}`);
-  console.log(
-    `Access the dashboard at: http://localhost:${PORT}/dashboard.html`,
-  );
 });

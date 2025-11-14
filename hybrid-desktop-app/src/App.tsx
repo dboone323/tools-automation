@@ -8,6 +8,8 @@ interface SystemStatus {
   health_monitor_active: boolean;
   web_dashboards_available: boolean;
   last_health_check: string;
+  autonomous_uptime?: string;
+  mcp_uptime?: string;
 }
 
 function App() {
@@ -30,7 +32,7 @@ function App() {
 
   async function checkSystemStatus() {
     try {
-      const status = await invoke("get_system_status") as SystemStatus;
+      const status = await invoke("get_detailed_status") as SystemStatus;
       setSystemStatus(status);
     } catch (error) {
       console.error("Failed to get system status:", error);
@@ -54,6 +56,16 @@ function App() {
   async function stopAutonomousSystem() {
     await runSystemCommand("stop_autonomous");
     await checkSystemStatus();
+  }
+
+  async function startDashboardServer() {
+    try {
+      const result = await invoke("start_dashboard_server") as string;
+      setCommandOutput(result);
+      await checkSystemStatus(); // Refresh status after starting
+    } catch (error) {
+      setCommandOutput(`Error starting dashboard server: ${error}`);
+    }
   }
 
   async function restartMcpServer() {
@@ -113,6 +125,7 @@ function App() {
               <div className="dashboard-card">
                 <h3>🤖 Autonomous System</h3>
                 <p>Status: {systemStatus.autonomous_running ? '🟢 Running' : '🔴 Stopped'}</p>
+                {systemStatus.autonomous_uptime && <p>Uptime: {systemStatus.autonomous_uptime}</p>}
                 <p>Last Check: {systemStatus.last_health_check || 'Never'}</p>
                 <div className="card-actions">
                   <button onClick={startAutonomousSystem} disabled={systemStatus.autonomous_running}>
@@ -127,6 +140,7 @@ function App() {
               <div className="dashboard-card">
                 <h3>🔧 MCP Server</h3>
                 <p>Status: {systemStatus.mcp_server_running ? '🟢 Active' : '🔴 Inactive'}</p>
+                {systemStatus.mcp_uptime && <p>Uptime: {systemStatus.mcp_uptime}</p>}
                 <div className="card-actions">
                   <button onClick={restartMcpServer}>
                     Restart
@@ -148,10 +162,13 @@ function App() {
                 <h3>🌐 Web Dashboards</h3>
                 <p>Status: {systemStatus.web_dashboards_available ? '🟢 Available' : '🔴 Unavailable'}</p>
                 <div className="card-actions">
-                  <button onClick={() => window.open('http://localhost:8000/todo_dashboard.html', '_blank')}>
+                  <button onClick={startDashboardServer} disabled={systemStatus.web_dashboards_available}>
+                    Start Server
+                  </button>
+                  <button onClick={() => window.open('http://localhost:8085/todo_dashboard.html', '_blank')}>
                     Todo Dashboard
                   </button>
-                  <button onClick={() => window.open('http://localhost:8000/agent_dashboard.html', '_blank')}>
+                  <button onClick={() => window.open('http://localhost:8085/agent_dashboard.html', '_blank')}>
                     Agent Dashboard
                   </button>
                 </div>
@@ -196,7 +213,7 @@ function App() {
               <button className="dashboard-btn" onClick={() => runSystemCommand("generate_report")}>
                 📊 Generate Report
               </button>
-              <button className="dashboard-btn secondary" onClick={() => window.open('http://localhost:8000/todo_dashboard.html', '_blank')}>
+              <button className="dashboard-btn secondary" onClick={() => window.open('http://localhost:8085/todo_dashboard.html', '_blank')}>
                 🌐 Open Full Dashboard
               </button>
             </div>
