@@ -1,0 +1,10 @@
+{
+  "webhook_url": "",
+  "email_enabled": false,
+  "email_to": "",
+  "email_from": "",
+  "smtp_server": "smtp.gmail.com",
+  "smtp_port": 587,
+  "smtp_user": "",
+  "smtp_password": ""
+}

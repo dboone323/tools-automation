@@ -1,0 +1,13 @@
+{
+  "timestamp": 1763052874,
+  "response_time_ms": 439,
+  "throughput_rps": 461,
+  "error_rate_percent": 2,
+  "active_connections": 49,
+  "database_connections": 18,
+  "performance_indicators": {
+    "p50_response_time": 219,
+    "p95_response_time": 439,
+    "p99_response_time": 878
+  }
+}

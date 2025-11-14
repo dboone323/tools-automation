@@ -1,0 +1,84 @@
+{
+  "error_patterns": {
+    "ModuleNotFoundError": 30,
+    "TimeoutError": 3,
+    "OSError": 12,
+    "command not found": 22,
+    "Connection refused": 3
+  },
+  "failure_predictions": [
+    {
+      "type": "dependency_failure",
+      "component": "redis",
+      "confidence": 0.9,
+      "prediction": "Redis dependency issues likely to continue",
+      "recommended_action": "Ensure Redis is installed and accessible",
+      "timeframe": "next_24_hours"
+    }
+  ],
+  "self_healing_actions": {
+    "2025-11-13T16:54:29.835663": [
+      "Network connectivity verified"
+    ],
+    "2025-11-13T17:08:06.723202": [
+      "Network connectivity verified",
+      "Attempting restart of redis-server",
+      "Restarted redis-server"
+    ],
+    "2025-11-13T17:58:25.036426": [
+      "Network connectivity verified",
+      "Attempting restart of redis-server",
+      "Restarted redis-server"
+    ]
+  },
+  "system_health_trends": {
+    "last_updated": "2025-11-13T17:58:24.573992",
+    "error_frequency": {
+      "ModuleNotFoundError": 30,
+      "TimeoutError": 3,
+      "OSError": 12,
+      "command not found": 22,
+      "Connection refused": 3
+    },
+    "recovery_times": {},
+    "system_load": []
+  },
+  "learning_data": {
+    "successful_fixes": [
+      {
+        "id": "mcp_server_error.log_ModuleNotFoundError__No_module_named_redis",
+        "category": "infrastructure",
+        "root_cause": "missing_dependency",
+        "time_to_resolution_seconds": 22588.504562,
+        "outcome": "success",
+        "timestamp": "2025-11-13T23:06:14.119923Z"
+      },
+      {
+        "id": "mcp_server_error.log_ModuleNotFoundError__No_module_named_redis",
+        "category": "infrastructure",
+        "root_cause": "missing_dependency",
+        "time_to_resolution_seconds": 22588.504562,
+        "outcome": "success",
+        "timestamp": "2025-11-13T23:06:14.119923Z"
+      }
+    ],
+    "failed_fixes": [],
+    "pattern_correlations": {
+      "ModuleNotFoundError: No module named 'redis'": {
+        "missing_dependency": 2
+      }
+    }
+  },
+  "ml_risk_scores": {
+    "generated_at": "2025-11-13T23:58:24.613093Z",
+    "pattern_risk_scores": {
+      "ModuleNotFoundError": 0.8176,
+      "TimeoutError": 0.2315,
+      "OSError": 0.4256,
+      "command not found": 0.6682,
+      "Connection refused": 0.2315
+    },
+    "component_risk_scores": {},
+    "max_pattern_frequency": 30
+  }
+}

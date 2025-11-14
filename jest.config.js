@@ -1,7 +1,7 @@
 module.exports = {
   testEnvironment: 'node',
-  testMatch: ['**/tests/unit/**/*.js', '**/?(*.)+(spec|test).js'],
-  testPathIgnorePatterns: ['tests/e2e', 'node_modules'],
+  testMatch: ['**/__tests__/**/*.js', '**/?(*.)+(spec|test).js'],
+  testPathIgnorePatterns: ['tests/e2e'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],

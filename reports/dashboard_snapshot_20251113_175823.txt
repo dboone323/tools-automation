@@ -1,0 +1,86 @@
+[0;36m
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           AUTONOMY DASHBOARD                              ║
+║                     System Health & Self-Management                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+[0m
+[1;37mGenerated: Thu Nov 13 17:58:25 CST 2025[0m
+
+[0;34m⚙️ TASK MANAGEMENT METRICS[0m
+[0;34m────────────────────────────────────────────────────────────[0m
+[1;37mTotal Tasks:[0m         17
+[1;37mPending Tasks:[0m       16
+[1;37mCompleted Tasks:[0m     1
+[1;37mAssigned Tasks:[0m      6
+[1;37mAuto-Generated:[0m      12
+
+[1;37mCompletion Rate:[0m     [0;32m5%[0m
+[1;37mAssignment Rate:[0m     [0;34m35%[0m
+
+[1;37mTasks by Category:[0m
+  [0;36m•[0m infrastructure: 16
+  [0;36m•[0m performance: 1
+
+[1;37mMean Time To Resolution (s):[0m 22588.504562
+
+[0;34m🛡️ SYSTEM HEALTH STATUS[0m
+[0;34m────────────────────────────────────────────────────────────[0m
+[1;37mTest Results:[0m        [0;32m7 passed[0m, [0;31m0 failed[0m ([1;37m7 total[0m)
+[1;37mSuccess Rate:[0m        [0;32m100%[0m
+[1;37mHealth Status:[0m       [0;32m✅ EXCELLENT[0m
+
+[1;37mSystem Resources:[0m
+  [0;32m✅[0m Disk Space: 19% used
+  [0;32m✅[0m Memory: Normal usage
+  [0;32m✅[0m Network: Connected
+
+[0;34m📊 PREDICTIVE ANALYTICS[0m
+[0;34m────────────────────────────────────────────────────────────[0m
+[1;37mActive Predictions:[0m   1
+[1;37mHigh Confidence:[0m      [0;31m1[0m
+[1;37mSelf-Healing Actions:[0m 3
+
+[1;37mRecent Predictions:[0m
+[1;33m⚠️[0m redis: Redis dependency issues likely to continue (90%)
+
+[1;37mRecent Self-Healing:[0m
+  [0;32m✅[0m Network connectivity verified
+  [1;33mℹ️[0m Attempting restart of redis-server
+  [1;33mℹ️[0m Restarted redis-server
+
+[1;37mTop Risk Patterns:[0m
+[0;31m🔥[0m ModuleNotFoundError: 81%
+[0;31m🔥[0m command not found: 66%
+[0;31m🔥[0m OSError: 42%
+[0;31m🔥[0m Connection refused: 23%
+[0;31m🔥[0m TimeoutError: 23%
+
+[0;34m⏰ AUTONOMY SCORE[0m
+[0;34m────────────────────────────────────────────────────────────[0m
+[1;37mOverall Autonomy Score:[0m [0;32m85/100[0m ✅
+[0;32mStatus: HIGH AUTONOMY - System is largely self-managing[0m
+
+[1;37mScore Breakdown:[0m
+  • Task Management:     26/30 points
+  • System Health:       30/30 points
+  • Predictive Analytics: 45/25 points
+  • MTTR: 22588.50s (lower is better)
+
+[0;34mℹ️ RECENT ACTIVITY[0m
+[0;34m────────────────────────────────────────────────────────────[0m
+[1;37mLatest Reports:[0m
+  [0;36m•[0m success_metrics_20251113_235825.md (17:58:25)
+  [0;36m•[0m predictive_analysis_20251113_175825.md (17:58:25)
+  [0;36m•[0m autonomy_analysis_20251113_175824.md (17:58:24)
+  [0;36m•[0m success_metrics_20251113_230806.md (17:08:06)
+  [0;36m•[0m predictive_analysis_20251113_170806.md (17:08:06)
+
+[1;37mActive Agents:[0m
+  [0;35m🤖[0m infrastructure_agent: 5 active tasks
+  [0;35m🤖[0m performance_agent: 1 active tasks
+
+[0;36m
+═══════════════════════════════════════════════════════════════════════════════
+                            Dashboard Complete                             
+═══════════════════════════════════════════════════════════════════════════════
+[0m

@@ -1,0 +1,15 @@
+{
+  "timestamp": 1763066114,
+  "cpu_usage_percent": 27.80,
+  "memory_usage_percent": 257052,
+  "disk_usage_percent": 14,
+  "network_rx_bytes": 6007105136,
+  "network_tx_bytes": 1047353647,
+  "process_count":      721,
+  "load_average": 3.08,
+  "system_info": {
+    "hostname": "MacBookPro.lan",
+    "os_version": "26.2",
+    "kernel_version": "25.2.0"
+  }
+}

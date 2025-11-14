@@ -1,0 +1,412 @@
+{
+  "todos": [
+    {
+      "id": "smoke_test_20251112_150411.log_ModuleNotFoundError__No_module_named_flask",
+      "title": "Install Flask dependency",
+      "description": "Web services require Flask framework (occurred 1 times in smoke_test_20251112_150411.log)",
+      "category": "infrastructure",
+      "priority": "high",
+      "status": "pending",
+      "assignee": "infrastructure_agent",
+      "created_at": "2025-11-13T16:49:45.615143",
+      "updated_at": "2025-11-13T23:08:06.882287Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "smoke_test_20251112_150411.log"
+      ],
+      "metadata": {
+        "source_log": "smoke_test_20251112_150411.log",
+        "error_pattern": "ModuleNotFoundError: No module named 'flask'",
+        "occurrences": 1,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/smoke_test_20251112_150411.log"
+      },
+      "root_cause": "missing_dependency"
+    },
+    {
+      "id": "mcp_server_error.log_ModuleNotFoundError__No_module_named_redis",
+      "title": "Install Redis dependency for MCP server",
+      "description": "MCP server cannot start due to missing redis module (occurred 28 times in mcp_server_error.log)",
+      "category": "infrastructure",
+      "priority": "high",
+      "status": "completed",
+      "assignee": "infrastructure_agent",
+      "created_at": "2025-11-13T16:49:45.615361",
+      "updated_at": "2025-11-13T23:06:14.119923Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "mcp_server_error.log"
+      ],
+      "metadata": {
+        "source_log": "mcp_server_error.log",
+        "error_pattern": "ModuleNotFoundError: No module named 'redis'",
+        "occurrences": 28,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/mcp_server_error.log"
+      },
+      "completed_at": "2025-11-13T23:06:14.119923Z",
+      "resolution_notes": "Installed redis-py in venv and validated import",
+      "resolution_outcome": "success",
+      "attempts": 1,
+      "time_to_resolution_seconds": 22588.504562,
+      "root_cause": "missing_dependency"
+    },
+    {
+      "id": "health_check_error.log_OSError__[Errno_98]_Address_already_in_use",
+      "title": "Resolve port binding conflicts",
+      "description": "Health check service cannot bind to port - address already in use (occurred 12 times in health_check_error.log)",
+      "category": "infrastructure",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": "infrastructure_agent",
+      "created_at": "2025-11-13T16:49:45.617695",
+      "updated_at": "2025-11-13T23:08:06.882519Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "health_check_error.log"
+      ],
+      "metadata": {
+        "source_log": "health_check_error.log",
+        "error_pattern": "OSError: [Errno 98] Address already in use",
+        "occurrences": 12,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/health_check_error.log"
+      },
+      "root_cause": "port_conflict"
+    },
+    {
+      "id": "autonomous_error.log_bc__command_not_found",
+      "title": "Install bc calculator utility",
+      "description": "Autonomous orchestrator requires bc command for calculations (occurred 11 times in autonomous_error.log)",
+      "category": "infrastructure",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": "infrastructure_agent",
+      "created_at": "2025-11-13T16:49:45.621176",
+      "updated_at": "2025-11-13T23:08:06.882524Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "autonomous_error.log"
+      ],
+      "metadata": {
+        "source_log": "autonomous_error.log",
+        "error_pattern": "bc: command not found",
+        "occurrences": 11,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/autonomous_error.log"
+      },
+      "root_cause": "missing_system_package"
+    },
+    {
+      "id": "smoke_test_20251112_150420.log_ModuleNotFoundError__No_module_named_flask",
+      "title": "Install Flask dependency",
+      "description": "Web services require Flask framework (occurred 1 times in smoke_test_20251112_150420.log)",
+      "category": "infrastructure",
+      "priority": "high",
+      "status": "pending",
+      "assignee": "infrastructure_agent",
+      "created_at": "2025-11-13T16:49:45.622000",
+      "updated_at": "2025-11-13T23:08:06.882529Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "smoke_test_20251112_150420.log"
+      ],
+      "metadata": {
+        "source_log": "smoke_test_20251112_150420.log",
+        "error_pattern": "ModuleNotFoundError: No module named 'flask'",
+        "occurrences": 1,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/smoke_test_20251112_150420.log"
+      },
+      "root_cause": "missing_dependency"
+    },
+    {
+      "id": "smoke_test_20251112_150411_ModuleNotFoundError__No_module_named_flask",
+      "title": "Install Flask dependency",
+      "description": "Web framework required for API services (occurred 1 times in smoke_test_20251112_150411.log)",
+      "category": "infrastructure",
+      "priority": "high",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:51:24.013757",
+      "updated_at": "2025-11-13T23:08:06.882532Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "smoke_test_20251112_150411"
+      ],
+      "metadata": {
+        "source_log": "smoke_test_20251112_150411.log",
+        "error_pattern": "ModuleNotFoundError: No module named 'flask'",
+        "occurrences": 1,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/smoke_test_20251112_150411.log",
+        "auto_generated": true
+      },
+      "root_cause": "missing_dependency"
+    },
+    {
+      "id": "mcp_server_error_ModuleNotFoundError__No_module_named_redis",
+      "title": "Install Redis dependency for MCP server",
+      "description": "Redis module required for MCP server functionality (occurred 28 times in mcp_server_error.log)",
+      "category": "infrastructure",
+      "priority": "high",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:51:24.013980",
+      "updated_at": "2025-11-13T23:08:06.882534Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "mcp_server_error"
+      ],
+      "metadata": {
+        "source_log": "mcp_server_error.log",
+        "error_pattern": "ModuleNotFoundError: No module named 'redis'",
+        "occurrences": 28,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/mcp_server_error.log",
+        "auto_generated": true
+      },
+      "root_cause": "missing_dependency"
+    },
+    {
+      "id": "mcp_server_error_TimeoutError",
+      "title": "Address timeout issues",
+      "description": "Operations timing out unexpectedly (occurred 3 times in mcp_server_error.log)",
+      "category": "performance",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": "performance_agent",
+      "created_at": "2025-11-13T16:51:24.014023",
+      "updated_at": "2025-11-13T23:08:06.882536Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "mcp_server_error"
+      ],
+      "metadata": {
+        "source_log": "mcp_server_error.log",
+        "error_pattern": "TimeoutError",
+        "occurrences": 3,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/mcp_server_error.log",
+        "auto_generated": true
+      },
+      "root_cause": "network_latency_or_service_hang"
+    },
+    {
+      "id": "health_check_error_OSError__[Errno_98]_Address_already_in_use",
+      "title": "Resolve port binding conflicts",
+      "description": "Service cannot bind to port due to conflicts (occurred 12 times in health_check_error.log)",
+      "category": "infrastructure",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:51:24.016985",
+      "updated_at": "2025-11-13T23:08:06.882538Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "health_check_error"
+      ],
+      "metadata": {
+        "source_log": "health_check_error.log",
+        "error_pattern": "OSError: [Errno 98] Address already in use",
+        "occurrences": 12,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/health_check_error.log",
+        "auto_generated": true
+      },
+      "root_cause": "port_conflict"
+    },
+    {
+      "id": "autonomous_error_bc__command_not_found",
+      "title": "Install bc calculator utility",
+      "description": "Required for mathematical operations in scripts (occurred 12 times in autonomous_error.log)",
+      "category": "infrastructure",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:51:24.022682",
+      "updated_at": "2025-11-13T23:08:06.882540Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "autonomous_error"
+      ],
+      "metadata": {
+        "source_log": "autonomous_error.log",
+        "error_pattern": "bc: command not found",
+        "occurrences": 12,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/autonomous_error.log",
+        "auto_generated": true
+      },
+      "root_cause": "missing_system_package"
+    },
+    {
+      "id": "autonomous_error_command_not_found",
+      "title": "Install missing system dependencies",
+      "description": "Required system commands are not available (occurred 12 times in autonomous_error.log)",
+      "category": "infrastructure",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:51:24.022714",
+      "updated_at": "2025-11-13T23:08:06.882542Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "autonomous_error"
+      ],
+      "metadata": {
+        "source_log": "autonomous_error.log",
+        "error_pattern": "command not found",
+        "occurrences": 12,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/autonomous_error.log",
+        "auto_generated": true
+      },
+      "root_cause": "missing_system_package"
+    },
+    {
+      "id": "smoke_test_20251112_150420_ModuleNotFoundError__No_module_named_flask",
+      "title": "Install Flask dependency",
+      "description": "Web framework required for API services (occurred 1 times in smoke_test_20251112_150420.log)",
+      "category": "infrastructure",
+      "priority": "high",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:51:24.024254",
+      "updated_at": "2025-11-13T23:08:06.882545Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "smoke_test_20251112_150420"
+      ],
+      "metadata": {
+        "source_log": "smoke_test_20251112_150420.log",
+        "error_pattern": "ModuleNotFoundError: No module named 'flask'",
+        "occurrences": 1,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/smoke_test_20251112_150420.log",
+        "auto_generated": true
+      },
+      "root_cause": "missing_dependency"
+    },
+    {
+      "id": "nginx_error_Connection_refused",
+      "title": "Fix service connectivity",
+      "description": "Services cannot connect to required endpoints (occurred 3 times in nginx_error.log)",
+      "category": "infrastructure",
+      "priority": "high",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:51:24.026096",
+      "updated_at": "2025-11-13T23:08:06.882547Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "nginx_error"
+      ],
+      "metadata": {
+        "source_log": "nginx_error.log",
+        "error_pattern": "Connection refused",
+        "occurrences": 3,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/nginx_error.log",
+        "auto_generated": true
+      },
+      "root_cause": "service_down_or_firewall"
+    },
+    {
+      "id": "smoke_test_20251112_150411_ModuleNotFoundError",
+      "title": "Install missing Python dependencies",
+      "description": "Required Python modules are not installed (occurred 1 times in smoke_test_20251112_150411.log)",
+      "category": "infrastructure",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:54:03.910354",
+      "updated_at": "2025-11-13T23:08:06.882549Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "smoke_test_20251112_150411"
+      ],
+      "metadata": {
+        "source_log": "smoke_test_20251112_150411.log",
+        "error_pattern": "ModuleNotFoundError",
+        "occurrences": 1,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/smoke_test_20251112_150411.log",
+        "auto_generated": true
+      },
+      "root_cause": "missing_dependency"
+    },
+    {
+      "id": "mcp_server_error_ModuleNotFoundError",
+      "title": "Install missing Python dependencies",
+      "description": "Required Python modules are not installed (occurred 28 times in mcp_server_error.log)",
+      "category": "infrastructure",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:54:03.910739",
+      "updated_at": "2025-11-13T23:08:06.882550Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "mcp_server_error"
+      ],
+      "metadata": {
+        "source_log": "mcp_server_error.log",
+        "error_pattern": "ModuleNotFoundError",
+        "occurrences": 28,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/mcp_server_error.log",
+        "auto_generated": true
+      },
+      "root_cause": "missing_dependency"
+    },
+    {
+      "id": "dashboard_unified_Cannot_connect_to_the_Docker_daemon",
+      "title": "Start Docker daemon",
+      "description": "Docker daemon is not running (occurred 1 times in dashboard_unified.log)",
+      "category": "infrastructure",
+      "priority": "high",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:54:03.936531",
+      "updated_at": "2025-11-13T23:08:06.882553Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "dashboard_unified"
+      ],
+      "metadata": {
+        "source_log": "dashboard_unified.log",
+        "error_pattern": "Cannot connect to the Docker daemon",
+        "occurrences": 1,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/dashboard_unified.log",
+        "auto_generated": true
+      },
+      "root_cause": "docker_daemon_inactive"
+    },
+    {
+      "id": "smoke_test_20251112_150420_ModuleNotFoundError",
+      "title": "Install missing Python dependencies",
+      "description": "Required Python modules are not installed (occurred 1 times in smoke_test_20251112_150420.log)",
+      "category": "infrastructure",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": null,
+      "created_at": "2025-11-13T16:54:03.937165",
+      "updated_at": "2025-11-13T23:08:06.882554Z",
+      "tags": [
+        "log_analysis",
+        "error_fix",
+        "smoke_test_20251112_150420"
+      ],
+      "metadata": {
+        "source_log": "smoke_test_20251112_150420.log",
+        "error_pattern": "ModuleNotFoundError",
+        "occurrences": 1,
+        "log_path": "/Users/danielstevens/Desktop/github-projects/tools-automation/logs/smoke_test_20251112_150420.log",
+        "auto_generated": true
+      },
+      "root_cause": "missing_dependency"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "timestamp": 1763047498,
+  "severity": "warning",
+  "alerts": [
+    "High memory usage: 302549% (threshold: 85%)"
+  ],
+  "system_metrics": {
+    "timestamp": 1763047497,
+    "cpu_usage_percent": 5.45,
+    "memory_usage_percent": 302549,
+    "disk_usage_percent": 14,
+    "network_rx_bytes": 5482959793,
+    "network_tx_bytes": 918656295,
+    "process_count": 817,
+    "load_average": 2.37,
+    "system_info": {
+      "hostname": "MacBook-Pro.local",
+      "os_version": "26.2",
+      "kernel_version": "25.2.0"
+    }
+  }
+}

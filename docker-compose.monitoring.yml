@@ -36,7 +36,7 @@ services:
     image: grafana/grafana:latest
     container_name: tools-automation-grafana
     ports:
-      - "3000:3000"
+      - "3002:3000"
     volumes:
       - grafana_data:/var/lib/grafana
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
@@ -61,7 +61,7 @@ services:
     image: louislam/uptime-kuma:latest
     container_name: tools-automation-uptime-kuma
     ports:
-      - "3001:3001"
+      - "3003:3001"
     volumes:
       - uptime_kuma_data:/app/data
     networks:
@@ -105,54 +105,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-
-  # MCP Server for autonomous agent coordination
-  mcp-server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: tools-automation-mcp-server
-    ports:
-      - "5005:5005"
-    volumes:
-      - .:/app
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - MCP_PORT=5005
-      - REDIS_URL=redis://redis:6379
-    networks:
-      - monitoring
-    depends_on:
-      - redis
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5005/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-  # Agent Dashboard API
-  agent-dashboard:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: tools-automation-agent-dashboard
-    ports:
-      - "5000:5000"
-    volumes:
-      - .:/app
-    environment:
-      - FLASK_ENV=production
-    networks:
-      - monitoring
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
 
   # Redis for caching and coordination
   redis:

@@ -5,8 +5,13 @@ global:
 rule_files:
   - "alert_rules.yml"
 
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
 scrape_configs:
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
@@ -15,36 +20,34 @@ scrape_configs:
     static_configs:
       - targets: ['node-exporter:9100']
 
+  - job_name: 'autonomy-system'
+    static_configs:
+      - targets: ['autonomy-system:80']
+    metrics_path: '/api/metrics/system'
+    scrape_interval: 30s
+
+  - job_name: 'mcp-server'
+    static_configs:
+      - targets: ['host.docker.internal:5005']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'agent-dashboard'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+
   - job_name: 'grafana'
     static_configs:
       - targets: ['grafana:3000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
 
   - job_name: 'uptime-kuma'
     static_configs:
       - targets: ['uptime-kuma:3001']
-
-  # Agent monitoring endpoints (add these as agents come online)
-  - job_name: 'agent-dashboard'
-    static_configs:
-      - targets: ['host.docker.internal:8080']
-    scrape_interval: 30s
-    metrics_path: '/metrics'
-
-  - job_name: 'agent-api'
-    static_configs:
-      - targets: ['host.docker.internal:3002']
-    scrape_interval: 30s
-    metrics_path: '/metrics'
-
-  # GitHub Actions runner metrics (if available)
-  - job_name: 'github-actions'
-    static_configs:
-      - targets: ['host.docker.internal:9091']
-    scrape_interval: 60s
-
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-          # Alertmanager is not configured yet, but this is where it would go
-          # - alertmanager:9093

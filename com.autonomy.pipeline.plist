@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.autonomy.pipeline</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/danielstevens/Desktop/github-projects/tools-automation/autonomy_pipeline.sh</string>
+  </array>
+  <key>WorkingDirectory</key><string>/Users/danielstevens/Desktop/github-projects/tools-automation</string>
+  <key>StartInterval</key><integer>1800</integer>
+  <key>StandardOutPath</key><string>/Users/danielstevens/Desktop/github-projects/tools-automation/reports/pipeline_stdout.log</string>
+  <key>StandardErrorPath</key><string>/Users/danielstevens/Desktop/github-projects/tools-automation/reports/pipeline_stderr.log</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/danielstevens/Desktop/github-projects/tools-automation/.venv/bin</string>
+  </dict>
+  <key>RunAtLoad</key><true/>
+</dict>
+</plist>

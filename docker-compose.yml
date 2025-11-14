@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  autonomy-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80" # Web dashboards
+      - "3000:3000" # API port (if needed)
+    volumes:
+      - ./logs:/app/logs
+      - ./config:/app/config
+      - ./agents:/app/agents
+      - ./monitoring:/app/monitoring
+    environment:
+      - PYTHONPATH=/app
+      - AUTONOMOUS_MODE=container
+      - LOG_LEVEL=INFO
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - autonomy-network
+
+  # Optional: PostgreSQL for data persistence
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: autonomy
+      POSTGRES_USER: autonomy
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-autonomy123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - autonomy-network
+    profiles:
+      - db
+
+  # Optional: Redis for caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - autonomy-network
+    profiles:
+      - cache
+
+networks:
+  autonomy-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,17 @@
+{
+  "agents": [
+    {"name": "infrastructure_agent", "domains": ["infrastructure", "network", "deployment"], "max_concurrent": 5},
+    {"name": "performance_agent", "domains": ["performance", "scalability"], "max_concurrent": 3},
+    {"name": "security_agent", "domains": ["security", "compliance"], "max_concurrent": 4},
+    {"name": "bug_fix_agent", "domains": ["bugs", "code_quality"], "max_concurrent": 6},
+    {"name": "documentation_agent", "domains": ["documentation"], "max_concurrent": 2},
+    {"name": "data_engineering_agent", "domains": ["data_pipeline", "ETL"], "max_concurrent": 2},
+    {"name": "reliability_agent", "domains": ["infrastructure", "performance", "monitoring"], "max_concurrent": 3},
+    {"name": "ml_ops_agent", "domains": ["ml_pipeline", "model_monitoring"], "max_concurrent": 2},
+    {"name": "qa_validation_agent", "domains": ["testing", "quality_assurance"], "max_concurrent": 4},
+    {"name": "observability_agent", "domains": ["monitoring", "metrics", "logging"], "max_concurrent": 4},
+    {"name": "self_healing_agent", "domains": ["automation", "remediation"], "max_concurrent": 3},
+    {"name": "predictive_agent", "domains": ["analytics", "prediction"], "max_concurrent": 2},
+    {"name": "compliance_agent", "domains": ["governance", "security", "audit"], "max_concurrent": 2}
+  ]
+}

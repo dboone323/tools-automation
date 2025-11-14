@@ -398,10 +398,9 @@ def cached_response(ttl_seconds, cache_key_prefix="api"):
             cached_result = cache.get(cache_key)
             if cached_result:
                 try:
-                    # Parse cached JSON and return as response
                     cached_data = json.loads(cached_result)
-                    self._send_json(cached_data)
-                    return
+                    if cached_data is not None:
+                        return cached_data
                 except Exception:
                     # Invalid cache, continue to generate fresh response
                     pass

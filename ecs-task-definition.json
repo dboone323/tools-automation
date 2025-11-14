@@ -1,0 +1,112 @@
+{
+  "family": "autonomy-system-task",
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "containerDefinitions": [
+    {
+      "name": "autonomy-system",
+      "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/autonomy-system:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp"
+        },
+        {
+          "containerPort": 3000,
+          "hostPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "AUTONOMOUS_MODE",
+          "value": "cloud"
+        },
+        {
+          "name": "LOG_LEVEL",
+          "value": "INFO"
+        },
+        {
+          "name": "PYTHONPATH",
+          "value": "/app"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/autonomy-system",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      },
+      "mountPoints": [
+        {
+          "sourceVolume": "logs",
+          "containerPath": "/app/logs",
+          "readOnly": false
+        },
+        {
+          "sourceVolume": "config",
+          "containerPath": "/app/config",
+          "readOnly": false
+        },
+        {
+          "sourceVolume": "agents",
+          "containerPath": "/app/agents",
+          "readOnly": false
+        },
+        {
+          "sourceVolume": "monitoring",
+          "containerPath": "/app/monitoring",
+          "readOnly": false
+        }
+      ]
+    }
+  ],
+  "volumes": [
+    {
+      "name": "logs",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-12345678",
+        "rootDirectory": "/logs"
+      }
+    },
+    {
+      "name": "config",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-12345678",
+        "rootDirectory": "/config"
+      }
+    },
+    {
+      "name": "agents",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-12345678",
+        "rootDirectory": "/agents"
+      }
+    },
+    {
+      "name": "monitoring",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-12345678",
+        "rootDirectory": "/monitoring"
+      }
+    }
+  ]
+}
