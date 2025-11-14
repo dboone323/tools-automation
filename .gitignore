@@ -10,6 +10,10 @@ Tools/Automation/process_todos.log
 Tools/logs/
 Tools/Automation/agents/.dashboard_metrics_state.json
 
+# Cache and analysis files
+cache/
+agents/unified_todos.json
+
 # macOS junk
 .DS_Store
 */.DS_Store
