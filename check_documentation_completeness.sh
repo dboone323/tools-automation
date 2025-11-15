@@ -201,6 +201,20 @@ if [ $FAILED_CHECKS -eq 0 ]; then
 
     # Generate documentation report
     echo "Generating documentation report..."
+
+    # Prepare required-docs status block and simple quality checks to avoid complex
+    # command substitutions inside a heredoc which can confuse parsers.
+    REQUIRED_DOCS_STATUS=$(for doc_spec in "${REQUIRED_DOCS[@]}"; do
+        doc_file=$(echo "$doc_spec" | cut -d':' -f1)
+        if [ -f "$doc_file" ] && [ -s "$doc_file" ]; then
+            echo "- ✅ $doc_file - Present"
+        else
+            echo "- ❌ $doc_file - Missing"
+        fi
+    done)
+
+    CODE_EXAMPLES_STATUS=$(grep -r '```' docs/ README.md >/dev/null 2>&1 && echo "Found" || echo "Missing")
+
     cat > docs_completeness_report_$(date +%Y%m%d_%H%M%S).md << EOF
 # Documentation Completeness Report
 Generated: $(date)
@@ -212,19 +226,12 @@ Generated: $(date)
 - **Success Rate**: ${SUCCESS_RATE}%
 
 ## Required Documents Status
-$(for doc_spec in "${REQUIRED_DOCS[@]}"; do
-    doc_file=$(echo "$doc_spec" | cut -d':' -f1)
-    if [ -f "$doc_file" ] && [ -s "$doc_file" ]; then
-        echo "- ✅ $doc_file - Present"
-    else
-        echo "- ❌ $doc_file - Missing"
-    fi
-done)
+${REQUIRED_DOCS_STATUS}
 
 ## Quality Checks
 - README Structure: $([ -f "README.md" ] && echo "Good" || echo "Missing")
 - API Documentation: $([ -f "docs/API_REFERENCE.md" ] && echo "Present" || echo "Missing")
-- Code Examples: $(grep -r "```" docs/ README.md >/dev/null 2>&1 && echo "Found" || echo "Missing")
+- Code Examples: ${CODE_EXAMPLES_STATUS}
 - Troubleshooting: $([ -f "docs/TROUBLESHOOTING.md" ] && echo "Present" || echo "Missing")
 
 ---
