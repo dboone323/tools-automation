@@ -1,25 +1,36 @@
 name: Audit Integration Tests
 
 on:
-  push:
-    branches: [ main, feature/** ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [main, feature/**]
+    pull_request:
+        branches: [main]
 
 jobs:
-  audit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    audit-tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq python3 python3-venv
+            - name: Install dependencies
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y jq python3 python3-venv
 
-      - name: Make test script executable
-        run: chmod +x ./tests/test_audit_compliance_integration.sh
+            - name: Make test script executable
+              run: chmod +x ./tests/test_audit_compliance_integration.sh
 
-      - name: Run audit integration tests
-        run: ./tests/test_audit_compliance_integration.sh
+            - name: Make unit tests executable
+              run: |
+                  chmod +x ./tests/unit/*.sh || true
+
+            - name: Run unit tests
+              run: |
+                  for f in ./tests/unit/*.sh; do
+                    echo "Running $f";
+                    bash "$f";
+                  done
+
+            - name: Run audit integration tests
+              run: ./tests/test_audit_compliance_integration.sh

@@ -61,7 +61,8 @@ log_audit_event() {
 generate_compliance_report() {
     local framework="$1" start_date="${2:-}" end_date="${3:-}"
     if [[ -z "$start_date" ]]; then
-        start_date=$(python3 <<PY
+        start_date=$(
+            python3 <<PY
 from datetime import datetime, timedelta, timezone
 import sys
 sys.stdout.write((datetime.now(timezone.utc)-timedelta(days=30)).strftime('%Y-%m-%d') + "\n")
@@ -88,12 +89,14 @@ PY
             cnt=$(echo "$events" | jq -s "[.[] | select(.event_type == \"$r\")] | length")
             if ((cnt == 0)); then
                 violations+=("Missing required event: $r")
-                ((score-=20))
+                ((score -= 20))
             fi
         done <<<"$reqs"
     fi
     local violations_json
-    if [[ ${#violations[@]:-0} -eq 0 ]]; then
+    local violations_count
+    violations_count=${#violations[@]}
+    if [[ $violations_count -eq 0 ]]; then
         violations_json='[]'
     else
         violations_json=$(printf '%s\n' "${violations[@]}" | jq -R -s -c 'split("\n")[:-1]')
@@ -120,7 +123,8 @@ cleanup_audit_logs() {
     local days="${1:-365}"
     local cutoff
     # Use environment variable to pass days into the python helper (avoids heredoc argv issues)
-    cutoff=$(DAYS="$days" python3 - <<PY
+    cutoff=$(
+        DAYS="$days" python3 - <<PY
 from datetime import datetime, timedelta, timezone
 import os, sys
 d = int(os.environ.get('DAYS', '365'))

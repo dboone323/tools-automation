@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-WORKSPACE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="${RBAC_WORKSPACE_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 SESSIONS_DB="$WORKSPACE_ROOT/rbac_config/sessions.json"
 LOGFILE="$WORKSPACE_ROOT/logs/rbac_maintenance.log"
 
@@ -80,20 +80,24 @@ prune_expired() {
 }
 
 migrate_sessions() {
-    local dry_run="${1:-false}"
+    local raw_flag="${1:-false}"
+    local dry_run="false"
+    if [[ "$raw_flag" == "--dry-run" || "$raw_flag" == "-n" || "$raw_flag" == "true" ]]; then
+        dry_run="true"
+    fi
     log "Starting sessions migration (normalizing legacy entries) dry_run=$dry_run"
     if [[ ! -f "$SESSIONS_DB" ]]; then
         log "No sessions DB found at $SESSIONS_DB"
         return 0
     fi
 
-    # Default expiry: now + 8 hours
+    # Default expiry: now + 24 hours
     local default_expires
     default_expires=$(
         python3 - <<PY
 from datetime import datetime, timedelta, timezone
 import sys
-sys.stdout.write((datetime.now(timezone.utc)+timedelta(hours=8)).strftime('%Y-%m-%dT%H:%M:%SZ') + "\n")
+sys.stdout.write((datetime.now(timezone.utc)+timedelta(hours=24)).strftime('%Y-%m-%dT%H:%M:%SZ') + "\n")
 PY
     )
 
@@ -111,9 +115,9 @@ PY
     for sid in $ids; do
         # ensure active exists
         if ! jq -e ".sessions.\"$sid\".active" "$SESSIONS_DB" >/dev/null 2>&1; then
-                    if [[ "$dry_run" == "true" ]]; then
-                        log "DRY-RUN: would set active=true for $sid"
-                    else
+            if [[ "$dry_run" == "true" ]]; then
+                log "DRY-RUN: would set active=true for $sid"
+            else
                 jq ".sessions.\"$sid\".active = true" "$SESSIONS_DB" >"${SESSIONS_DB}.tmp" && mv "${SESSIONS_DB}.tmp" "$SESSIONS_DB"
                 log "Set active=true for $sid"
             fi
@@ -168,7 +172,7 @@ prune)
     prune_expired
     ;;
 migrate-sessions)
-    migrate_sessions
+    migrate_sessions "${@:2}"
     ;;
 revoke)
     if [[ $# -lt 2 ]]; then
