@@ -193,7 +193,7 @@ python_tests() {
         # Build pytest command
         local cmd=("$PY" -m pytest)
         if [[ "${COVERAGE:-0}" == "1" ]] && "$PY" -c "import coverage" >/dev/null 2>&1; then
-            cmd=("$PY" -m coverage run -m pytest")
+            cmd=("$PY" -m coverage run -m pytest)
         fi
 
         # Add parallel execution in CI
