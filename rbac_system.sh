@@ -40,14 +40,14 @@ iso_to_epoch() {
 
   # Pass the ISO string to Python via stdin to ensure correct parsing
   printf '%s' "$iso" | python3 - <<'PY'
-import sys,datetime
-s=sys.stdin.read().strip()
-s=s.replace('Z','+00:00')
-try:
+  import sys,datetime
+  s=sys.stdin.read().strip()
+  s=s.replace('Z','+00:00')
+  try:
     dt=datetime.datetime.fromisoformat(s)
-    print(int(dt.timestamp()))
-except Exception:
-    print(0)
+    sys.stdout.write(str(int(dt.timestamp())) + "\n")
+  except Exception:
+    sys.stdout.write("0\n")
 PY
 }
 
@@ -358,9 +358,10 @@ authenticate_user() {
       local lock_until
       lock_until=$(
         python3 - <<PY
-from datetime import datetime, timedelta, timezone
-print((datetime.now(timezone.utc)+timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ'))
-PY
+    from datetime import datetime, timedelta, timezone
+    import sys
+    sys.stdout.write((datetime.now(timezone.utc)+timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ') + "\n")
+    PY
       )
       jq ".users.\"$username\".locked_until = \"$lock_until\"" "$USERS_DB" >"${USERS_DB}.tmp" && mv "${USERS_DB}.tmp" "$USERS_DB"
     fi
@@ -384,7 +385,8 @@ PY
   expires_iso=$(
     python3 - <<PY
 from datetime import datetime, timedelta, timezone
-print((datetime.now(timezone.utc)+timedelta(hours=8)).strftime('%Y-%m-%dT%H:%M:%SZ'))
+import sys
+sys.stdout.write((datetime.now(timezone.utc)+timedelta(hours=8)).strftime('%Y-%m-%dT%H:%M:%SZ') + "\n")
 PY
   )
 

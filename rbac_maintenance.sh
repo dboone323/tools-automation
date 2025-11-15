@@ -32,9 +32,9 @@ s=sys.stdin.read().strip()
 s=s.replace('Z','+00:00')
 try:
     dt=datetime.datetime.fromisoformat(s)
-    print(int(dt.timestamp()))
+    sys.stdout.write(str(int(dt.timestamp())) + "\n")
 except Exception:
-    print(0)
+    sys.stdout.write("0\n")
 PY
 }
 
@@ -92,7 +92,8 @@ migrate_sessions() {
     default_expires=$(
         python3 - <<PY
 from datetime import datetime, timedelta, timezone
-print((datetime.now(timezone.utc)+timedelta(hours=8)).strftime('%Y-%m-%dT%H:%M:%SZ'))
+import sys
+sys.stdout.write((datetime.now(timezone.utc)+timedelta(hours=8)).strftime('%Y-%m-%dT%H:%M:%SZ') + "\n")
 PY
     )
 
@@ -110,9 +111,9 @@ PY
     for sid in $ids; do
         # ensure active exists
         if ! jq -e ".sessions.\"$sid\".active" "$SESSIONS_DB" >/dev/null 2>&1; then
-            if [[ "$dry_run" == "true" ]]; then
-                echo "DRY-RUN: would set active=true for $sid"
-            else
+                    if [[ "$dry_run" == "true" ]]; then
+                        log "DRY-RUN: would set active=true for $sid"
+                    else
                 jq ".sessions.\"$sid\".active = true" "$SESSIONS_DB" >"${SESSIONS_DB}.tmp" && mv "${SESSIONS_DB}.tmp" "$SESSIONS_DB"
                 log "Set active=true for $sid"
             fi
@@ -121,7 +122,7 @@ PY
         # ensure expires_at exists
         if ! jq -e ".sessions.\"$sid\".expires_at" "$SESSIONS_DB" >/dev/null 2>&1 || [[ $(jq -r ".sessions.\"$sid\".expires_at" "$SESSIONS_DB") == "" || $(jq -r ".sessions.\"$sid\".expires_at" "$SESSIONS_DB") == "null" ]]; then
             if [[ "$dry_run" == "true" ]]; then
-                echo "DRY-RUN: would populate expires_at for $sid -> $default_expires"
+                log "DRY-RUN: would populate expires_at for $sid -> $default_expires"
             else
                 jq ".sessions.\"$sid\".expires_at = \"$default_expires\"" "$SESSIONS_DB" >"${SESSIONS_DB}.tmp" && mv "${SESSIONS_DB}.tmp" "$SESSIONS_DB"
                 log "Populated expires_at for $sid -> $default_expires"

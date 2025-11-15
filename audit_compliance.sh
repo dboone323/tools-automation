@@ -61,10 +61,10 @@ log_audit_event() {
 generate_compliance_report() {
     local framework="$1" start_date="${2:-}" end_date="${3:-}"
     if [[ -z "$start_date" ]]; then
-        start_date=$(
-                python3 - <<PY
+        start_date=$(python3 <<PY
 from datetime import datetime, timedelta, timezone
-print((datetime.now(timezone.utc)-timedelta(days=30)).strftime('%Y-%m-%d'))
+import sys
+sys.stdout.write((datetime.now(timezone.utc)-timedelta(days=30)).strftime('%Y-%m-%d') + "\n")
 PY
         )
     fi
@@ -122,9 +122,9 @@ cleanup_audit_logs() {
     # Use environment variable to pass days into the python helper (avoids heredoc argv issues)
     cutoff=$(DAYS="$days" python3 - <<PY
 from datetime import datetime, timedelta, timezone
-import os
+import os, sys
 d = int(os.environ.get('DAYS', '365'))
-print((datetime.now(timezone.utc)-timedelta(days=d)).strftime('%Y-%m-%dT%H:%M:%SZ'))
+sys.stdout.write((datetime.now(timezone.utc)-timedelta(days=d)).strftime('%Y-%m-%dT%H:%M:%SZ') + "\n")
 PY
     )
     jq "select(.timestamp >= \"$cutoff\")" "$AUDIT_EVENTS_DB" >"${AUDIT_EVENTS_DB}.tmp" 2>/dev/null || true
