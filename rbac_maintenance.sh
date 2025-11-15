@@ -26,10 +26,11 @@ iso_to_epoch() {
         return
     fi
 
-    printf '%s' "$iso" | python3 - <<'PY'
+    # Pass the ISO string as argv to the python helper (avoids stdin/heredoc conflicts)
+    python3 - "$iso" <<'PY'
 import sys,datetime
-s=sys.stdin.read().strip()
-s=s.replace('Z','+00:00')
+s = sys.argv[1].strip()
+s = s.replace('Z','+00:00')
 try:
     dt=datetime.datetime.fromisoformat(s)
     sys.stdout.write(str(int(dt.timestamp())) + "\n")

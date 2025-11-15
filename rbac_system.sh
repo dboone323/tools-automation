@@ -45,7 +45,9 @@ resolve_role_permissions() {
         break
       fi
     done
-    $skip && continue
+    if [[ "$skip" == "true" ]]; then
+      continue
+    fi
     seen+=("$r")
 
     # fetch permissions for this role
@@ -83,11 +85,11 @@ iso_to_epoch() {
     return
   fi
 
-  # Pass the ISO string to Python via stdin to ensure correct parsing
-  printf '%s' "$iso" | python3 - <<'PY'
+  # Pass the ISO string as an argument to the Python helper to avoid stdin/heredoc conflicts
+  python3 - "$iso" <<'PY'
 import sys,datetime
-s=sys.stdin.read().strip()
-s=s.replace('Z','+00:00')
+s = sys.argv[1].strip()
+s = s.replace('Z','+00:00')
 try:
     dt=datetime.datetime.fromisoformat(s)
     sys.stdout.write(str(int(dt.timestamp())) + "\n")
@@ -389,8 +391,6 @@ authenticate_user() {
   fi
 
   # Simple password check (in production, use proper hashing)
-  local stored_hash
-  stored_hash=$(echo "$user_data" | jq -r '.password_hash')
   if [[ "$password" != "admin123" && "$password" != "dev123" && "$password" != "op123" && "$password" != "audit123" ]]; then
     # Increment failed attempts
     local failed_attempts
@@ -632,53 +632,55 @@ get_user_permissions() {
         }'
 }
 
-# CLI interface
-case "${1:-help}" in
-"init")
-  init_rbac_system
-  ;;
-"auth")
-  if [[ $# -lt 3 ]]; then
-    echo "Usage: $0 auth <username> <password>"
-    exit 1
-  fi
-  authenticate_user "$2" "$3"
-  ;;
-"check")
-  if [[ $# -lt 3 ]]; then
-    echo "Usage: $0 check <session_id> <permission> [action]"
-    exit 1
-  fi
-  check_permission "$2" "$3" "${4:-}"
-  ;;
-"permissions")
-  if [[ $# -lt 2 ]]; then
-    echo "Usage: $0 permissions <session_id>"
-    exit 1
-  fi
-  get_user_permissions "$2"
-  ;;
-"validate")
-  if [[ $# -lt 2 ]]; then
-    echo "Usage: $0 validate <session_id>"
-    exit 1
-  fi
-  validate_session "$2"
-  ;;
-"help" | *)
-  echo "Enterprise RBAC System v1.0"
-  echo ""
-  echo "Usage: $0 <command> [options]"
-  echo ""
-  echo "Commands:"
-  echo "  init                    - Initialize RBAC system"
-  echo "  auth <user> <pass>      - Authenticate user"
-  echo "  check <session> <perm>  - Check permission"
-  echo "  permissions <session>   - Get user permissions"
-  echo "  validate <session>      - Validate session"
-  echo "  help                    - Show this help"
-  echo ""
-  echo "Default users: admin/admin123, developer/dev123,"
-  echo "               operator/op123, auditor/audit123"
-  ;;
-esac
+# CLI interface - only run dispatch when script is executed directly (not sourced)
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  case "${1:-help}" in
+  "init")
+    init_rbac_system
+    ;;
+  "auth")
+    if [[ $# -lt 3 ]]; then
+      echo "Usage: $0 auth <username> <password>"
+      exit 1
+    fi
+    authenticate_user "$2" "$3"
+    ;;
+  "check")
+    if [[ $# -lt 3 ]]; then
+      echo "Usage: $0 check <session_id> <permission> [action]"
+      exit 1
+    fi
+    check_permission "$2" "$3" "${4:-}"
+    ;;
+  "permissions")
+    if [[ $# -lt 2 ]]; then
+      echo "Usage: $0 permissions <session_id>"
+      exit 1
+    fi
+    get_user_permissions "$2"
+    ;;
+  "validate")
+    if [[ $# -lt 2 ]]; then
+      echo "Usage: $0 validate <session_id>"
+      exit 1
+    fi
+    validate_session "$2"
+    ;;
+  "help" | *)
+    echo "Enterprise RBAC System v1.0"
+    echo ""
+    echo "Usage: $0 <command> [options]"
+    echo ""
+    echo "Commands:"
+    echo "  init                    - Initialize RBAC system"
+    echo "  auth <user> <pass>      - Authenticate user"
+    echo "  check <session> <perm>  - Check permission"
+    echo "  permissions <session>   - Get user permissions"
+    echo "  validate <session>      - Validate session"
+    echo "  help                    - Show this help"
+    echo ""
+    echo "Default users: admin/admin123, developer/dev123,"
+    echo "               operator/op123, auditor/audit123"
+    ;;
+  esac
+fi

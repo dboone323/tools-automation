@@ -113,7 +113,8 @@ query_audit_events() {
         IFS=',' read -ra fa <<<"$filters"
         for kv in "${fa[@]}"; do
             IFS='=' read -ra p <<<"$kv"
-            fjq="$fjq | select(.$(echo ${p[0]}) == \"${p[1]}\")"
+            # Use bracket/key access in jq and properly quote variables to avoid word-splitting
+            fjq="$fjq | select(.\"${p[0]}\" == \"${p[1]}\")"
         done
         jq "$fjq" "$AUDIT_EVENTS_DB"
     fi
