@@ -11,7 +11,7 @@ chmod +x "$TMPDIR/rbac_system.sh"
 pushd "$TMPDIR" >/dev/null
 ./rbac_system.sh init >/dev/null
 
-# Authenticate admin (super_admin with '*')
+# Authenticate admin (super_admin with `*`)
 auth_out=$(./rbac_system.sh auth admin admin123)
 session_id=$(echo "$auth_out" | jq -r '.session_id')
 

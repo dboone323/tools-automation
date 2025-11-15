@@ -61,13 +61,13 @@ session_id=$(echo "$auth_out" | jq -r '.session_id')
 # Check permission that would be granted via inheritance if implemented
 check_out=$(./rbac_system.sh check "$session_id" "reports.view")
 
-# Current implementation does NOT apply inheritance; expect unauthorized
-if echo "$check_out" | jq -e '.authorized == false' >/dev/null 2>&1; then
-    echo "PASS: inheritance not applied (expected current behavior)"
+# Now that inheritance is implemented, expect authorized via parent role
+if echo "$check_out" | jq -e '.authorized == true' >/dev/null 2>&1; then
+    echo "PASS: inherited permission granted"
     popd >/dev/null
     exit 0
 else
-    echo "FAIL: inheritance behavior differs from expectation"
+    echo "FAIL: inherited permission not granted"
     echo "check output: $check_out"
     popd >/dev/null
     exit 2

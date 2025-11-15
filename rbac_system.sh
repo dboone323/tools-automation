@@ -24,6 +24,51 @@ log() {
   echo "[$ts] $*" >&2
 }
 
+# Resolve a role's permissions including inherited roles (handles cycles)
+resolve_role_permissions() {
+  local root_role="$1"
+  local queue seen perms
+
+  queue=("$root_role")
+  seen=()
+  perms=()
+
+  while ((${#queue[@]})); do
+    local r="${queue[0]}"
+    queue=("${queue[@]:1}")
+
+    # skip if already processed
+    local skip=false
+    for s in "${seen[@]:-}"; do
+      if [[ "$s" == "$r" ]]; then
+        skip=true
+        break
+      fi
+    done
+    $skip && continue
+    seen+=("$r")
+
+    # fetch permissions for this role
+    local p_raw
+    p_raw=$(jq -r ".roles.\"$r\".permissions[]? // empty" "$ROLES_DB" 2>/dev/null || true)
+    while read -r p; do
+      [[ -n "$p" ]] && perms+=("$p")
+    done <<<"$p_raw"
+
+    # enqueue inherited roles
+    local inh_raw
+    inh_raw=$(jq -r ".roles.\"$r\".inherits_from[]? // empty" "$ROLES_DB" 2>/dev/null || true)
+    while read -r ir; do
+      [[ -n "$ir" ]] && queue+=("$ir")
+    done <<<"$inh_raw"
+  done
+
+  # print unique permissions
+  if ((${#perms[@]})); then
+    printf '%s\n' "${perms[@]}" | sort -u
+  fi
+}
+
 # Convert ISO8601 timestamp to epoch seconds (portable)
 iso_to_epoch() {
   local iso="$1"
@@ -40,13 +85,13 @@ iso_to_epoch() {
 
   # Pass the ISO string to Python via stdin to ensure correct parsing
   printf '%s' "$iso" | python3 - <<'PY'
-  import sys,datetime
-  s=sys.stdin.read().strip()
-  s=s.replace('Z','+00:00')
-  try:
+import sys,datetime
+s=sys.stdin.read().strip()
+s=s.replace('Z','+00:00')
+try:
     dt=datetime.datetime.fromisoformat(s)
     sys.stdout.write(str(int(dt.timestamp())) + "\n")
-  except Exception:
+except Exception:
     sys.stdout.write("0\n")
 PY
 }
@@ -481,45 +526,41 @@ check_permission() {
 
   # Check if any role has the required permission
   for role in "${roles[@]}"; do
-    local role_data
-    role_data=$(jq -r ".roles.\"$role\" // empty" "$ROLES_DB")
+    # Resolve permissions including inherited roles
+    local permissions
+    permissions=$(resolve_role_permissions "$role" )
 
-    if [[ -n "$role_data" && "$role_data" != "null" ]]; then
-      local permissions
-      permissions=$(echo "$role_data" | jq -r '.permissions[]')
+    # Check for wildcard permission
+    if echo "$permissions" | grep -q "^\*$"; then
+      jq -n \
+        --arg username "$username" \
+        --arg permission "$permission" \
+        --arg action "$action" \
+        '{
+                      authorized: true,
+                      username: $username,
+                      permission: $permission,
+                      action: $action,
+                      granted_by: "wildcard"
+                  }'
+      return 0
+    fi
 
-      # Check for wildcard permission
-      if echo "$permissions" | grep -q "^\\*$"; then
-        jq -n \
-          --arg username "$username" \
-          --arg permission "$permission" \
-          --arg action "$action" \
-          '{
-                        authorized: true,
-                        username: $username,
-                        permission: $permission,
-                        action: $action,
-                        granted_by: "wildcard"
-                    }'
-        return 0
-      fi
-
-      # Check specific permission
-      if echo "$permissions" | grep -q "^$permission$"; then
-        jq -n \
-          --arg username "$username" \
-          --arg permission "$permission" \
-          --arg action "$action" \
-          --arg role "$role" \
-          '{
-                        authorized: true,
-                        username: $username,
-                        permission: $permission,
-                        action: $action,
-                        granted_by: $role
-                    }'
-        return 0
-      fi
+    # Check specific permission
+    if echo "$permissions" | grep -q "^$permission$"; then
+      jq -n \
+        --arg username "$username" \
+        --arg permission "$permission" \
+        --arg action "$action" \
+        --arg role "$role" \
+        '{
+                      authorized: true,
+                      username: $username,
+                      permission: $permission,
+                      action: $action,
+                      granted_by: $role
+                  }'
+      return 0
     fi
   done
 
@@ -563,10 +604,10 @@ get_user_permissions() {
   for role in "${roles[@]}"; do
     local role_data
     role_data=$(jq -r ".roles.\"$role\" // empty" "$ROLES_DB")
-
     if [[ -n "$role_data" && "$role_data" != "null" ]]; then
+      # Resolve permissions including inherited roles
       local permissions
-      permissions=$(echo "$role_data" | jq -r '.permissions[]' 2>/dev/null || echo "")
+      permissions=$(resolve_role_permissions "$role")
 
       while read -r perm; do
         if [[ -n "$perm" ]]; then
