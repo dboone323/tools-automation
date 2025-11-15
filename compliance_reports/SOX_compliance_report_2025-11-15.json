@@ -1,0 +1,25 @@
+{
+  "framework": "SOX",
+  "report_period": {
+    "start_date": "2025-10-16",
+    "end_date": "2025-11-15"
+  },
+  "summary": {
+    "total_audit_events": 14,
+    "compliance_score": 30,
+    "status": "non_compliant"
+  },
+  "violations": [
+    "Missing required event type: authentication",
+    "Missing required event type: system_config",
+    "Missing required event type: code_changes",
+    "Insufficient data retention: 0 days (required: 2555)"
+  ],
+  "recommendations": [
+    "Ensure authentication events are being logged",
+    "Ensure system_config events are being logged",
+    "Ensure code_changes events are being logged",
+    "Implement proper data retention policies"
+  ],
+  "generated_at": "2025-11-15T02:47:47Z"
+}

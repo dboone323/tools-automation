@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

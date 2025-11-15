@@ -156,8 +156,10 @@ load_config() {
 
 # Check if service is healthy
 check_service_health() {
-    local service_name=$1
-    local health_url=$2
+    local service_name;
+    service_name=$1
+    local health_url;
+    health_url=$2
 
     SERVICE_LAST_CHECK[$service_name]=$(date +%s)
 
@@ -174,8 +176,10 @@ check_service_health() {
 
 # Check if process is running
 check_process_health() {
-    local service_name=$1
-    local check_command=$2
+    local service_name;
+    service_name=$1
+    local check_command;
+    check_command=$2
 
     SERVICE_LAST_CHECK[$service_name]=$(date +%s)
 
@@ -192,8 +196,10 @@ check_process_health() {
 
 # Start a service
 start_service() {
-    local service_name=$1
-    local start_command=$2
+    local service_name;
+    service_name=$1
+    local start_command;
+    start_command=$2
 
     log_action "Starting service: $service_name"
 
@@ -209,12 +215,18 @@ start_service() {
 
 # Restart a service with backoff
 restart_service() {
-    local service_name=$1
-    local start_command=$2
-    local restart_delay=$3
-    local max_restarts=$4
+    local service_name;
+    service_name=$1
+    local start_command;
+    start_command=$2
+    local restart_delay;
+    restart_delay=$3
+    local max_restarts;
+    max_restarts=$4
 
-    local current_restarts=${SERVICE_RESTART_COUNT[$service_name]:-0}
+    local current_restarts;
+
+    current_restarts=${SERVICE_RESTART_COUNT[$service_name]:-0}
 
     if [[ $current_restarts -ge $max_restarts ]]; then
         log_error "Service $service_name has exceeded max restart attempts ($max_restarts)"
@@ -239,7 +251,8 @@ restart_service() {
 
 # Stop a service
 stop_service() {
-    local service_name=$1
+    local service_name;
+    service_name=$1
 
     log_action "Stopping service: $service_name"
 
@@ -247,7 +260,8 @@ stop_service() {
     case "$service_name" in
     "mcp_server")
         if [[ -f "$PROJECT_ROOT/services/mcp.pid" ]]; then
-            local pid=$(cat "$PROJECT_ROOT/services/mcp.pid")
+            local pid;
+            pid=$(cat "$PROJECT_ROOT/services/mcp.pid")
             kill -TERM "$pid" 2>/dev/null || true
             sleep 5
             if kill -0 "$pid" 2>/dev/null; then
@@ -339,15 +353,19 @@ make_orchestration_decisions() {
     log_decision "Making intelligent orchestration decisions..."
 
     # Get system metrics
-    local cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+    local cpu_usage;
+    cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
     if command -v free >/dev/null 2>&1; then
         # Linux
-        local mem_usage=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')
+        local mem_usage;
+        mem_usage=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')
     else
         # macOS - use vm_stat (rough estimate)
-        local mem_usage=$(vm_stat | grep "Pages active" | awk '{print $3}' | tr -d '.' | awk '{print $1 * 4096 / 1024 / 1024 / 1024 * 100}') # Rough percentage
+        local mem_usage;
+        mem_usage=$(vm_stat | grep "Pages active" | awk '{print $3}' | tr -d '.' | awk '{print $1 * 4096 / 1024 / 1024 / 1024 * 100}') # Rough percentage
     fi
-    local disk_usage=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
+    local disk_usage;
+    disk_usage=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
 
     log_info "System metrics - CPU: ${cpu_usage}%, Memory: ${mem_usage}%, Disk: ${disk_usage}%"
 
@@ -362,7 +380,8 @@ make_orchestration_decisions() {
     fi
 
     # Decision: Check for pending todos and trigger processing
-    local pending_todos=$(python3 -c "
+    local pending_todos;
+    pending_todos=$(python3 -c "
 import sys
 sys.path.insert(0, '$PROJECT_ROOT')
 try:
@@ -382,12 +401,14 @@ except:
     # Decision: Check MCP server load and consider scaling
     if check_service_health "mcp_server" "http://${MCP_HOST}:${MCP_PORT}/health"; then
         # Get MCP server metrics
-        local mcp_metrics=$(curl -s "http://${MCP_HOST}:${MCP_PORT}/api/metrics/system" 2>/dev/null || echo "{}")
+        local mcp_metrics;
+        mcp_metrics=$(curl -s "http://${MCP_HOST}:${MCP_PORT}/api/metrics/system" 2>/dev/null || echo "{}")
         # Could analyze metrics and make scaling decisions
     fi
 
     # Decision: Predictive maintenance
-    local current_hour=$(date +%H)
+    local current_hour;
+    current_hour=$(date +%H)
     if [[ $current_hour -eq 2 ]]; then # 2 AM maintenance window
         log_decision "Maintenance window - performing system optimization"
         # Could trigger maintenance tasks here
@@ -442,7 +463,8 @@ emergency_response() {
     log_error "EMERGENCY: System instability detected!"
 
     # Critical service check
-    local critical_services_down=0
+    local critical_services_down;
+    critical_services_down=0
 
     if ! check_service_health "mcp_server" "http://${MCP_HOST}:${MCP_PORT}/health"; then
         ((critical_services_down++))
@@ -484,7 +506,8 @@ orchestration_loop() {
     set +euo pipefail
 
     while true; do
-        local cycle_start=$(date +%s)
+        local cycle_start;
+        cycle_start=$(date +%s)
 
         # Monitor all services
         monitor_services
@@ -496,7 +519,8 @@ orchestration_loop() {
         execute_autonomous_actions
 
         # Emergency response check
-        local unhealthy_count=0
+        local unhealthy_count;
+        unhealthy_count=0
         for status in "${SERVICE_STATUS[@]}"; do
             if [[ "$status" == "unhealthy" ]]; then
                 ((unhealthy_count++))
@@ -508,9 +532,12 @@ orchestration_loop() {
         fi
 
         # Calculate sleep time to maintain cycle interval
-        local cycle_end=$(date +%s)
-        local cycle_duration=$((cycle_end - cycle_start))
-        local sleep_time=$((ORCHESTRATION_CYCLE - cycle_duration))
+        local cycle_end;
+        cycle_end=$(date +%s)
+        local cycle_duration;
+        cycle_duration=$((cycle_end - cycle_start))
+        local sleep_time;
+        sleep_time=$((ORCHESTRATION_CYCLE - cycle_duration))
 
         if [[ $sleep_time -gt 0 ]]; then
             log_info "Orchestration cycle complete. Sleeping for ${sleep_time}s..."
@@ -527,7 +554,8 @@ start_orchestrator() {
 
     # Check if already running
     if [[ -f "$ORCHESTRATOR_PID" ]]; then
-        local existing_pid=$(cat "$ORCHESTRATOR_PID")
+        local existing_pid;
+        existing_pid=$(cat "$ORCHESTRATOR_PID")
         if kill -0 "$existing_pid" 2>/dev/null; then
             log_success "Orchestrator already running (PID: $existing_pid)"
             return 0
@@ -543,7 +571,8 @@ start_orchestrator() {
 
     # Start orchestration loop in background
     nohup bash -c "source '$0'; orchestration_loop" >/dev/null 2>&1 &
-    local orchestrator_pid=$!
+    local orchestrator_pid;
+    orchestrator_pid=$!
 
     # Save PID
     echo "$orchestrator_pid" >"$ORCHESTRATOR_PID"
@@ -556,7 +585,8 @@ stop_orchestrator() {
     log_info "Stopping Autonomous System Orchestrator..."
 
     if [[ -f "$ORCHESTRATOR_PID" ]]; then
-        local pid=$(cat "$ORCHESTRATOR_PID")
+        local pid;
+        pid=$(cat "$ORCHESTRATOR_PID")
         if kill -0 "$pid" 2>/dev/null; then
             kill -TERM "$pid" 2>/dev/null || true
             sleep 5
@@ -575,10 +605,13 @@ status_orchestrator() {
     echo
     log_info "=== Autonomous System Orchestrator Status ==="
 
-    local is_running=0
+    local is_running;
+
+    is_running=0
 
     if [[ -f "$ORCHESTRATOR_PID" ]]; then
-        local pid=$(cat "$ORCHESTRATOR_PID")
+        local pid;
+        pid=$(cat "$ORCHESTRATOR_PID")
         if kill -0 "$pid" 2>/dev/null; then
             echo -e "${GREEN}✓${NC} Orchestrator running (PID: $pid)"
             is_running=1
@@ -592,9 +625,12 @@ status_orchestrator() {
     echo
     log_info "=== Service Status ==="
     for service in "${!SERVICE_STATUS[@]}"; do
-        local status="${SERVICE_STATUS[$service]}"
-        local last_check="${SERVICE_LAST_CHECK[$service]:-never}"
-        local restarts="${SERVICE_RESTART_COUNT[$service]:-0}"
+        local status;
+        status="${SERVICE_STATUS[$service]}"
+        local last_check;
+        last_check="${SERVICE_LAST_CHECK[$service]:-never}"
+        local restarts;
+        restarts="${SERVICE_RESTART_COUNT[$service]:-0}"
 
         if [[ "$status" == "healthy" ]]; then
             echo -e "${GREEN}✓${NC} $service (restarts: $restarts, last check: $last_check)"

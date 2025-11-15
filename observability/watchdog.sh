@@ -93,15 +93,19 @@ check_disk_space() {
 scan_logs_for_errors() {
   log_info "Scanning logs for error patterns..."
 
-  local error_count=0
-  local recent_errors=()
+  local error_count;
+
+  error_count=0
+  local recent_errors;
+  recent_errors=()
 
   # Calculate time window in minutes for -mtime (convert to fraction of day)
   local time_window_days
   time_window_days=$(awk "BEGIN {printf \"%.4f\", ${TIME_WINDOW_MINUTES}/1440}")
 
   # Error patterns to search for
-  local patterns=(
+  local patterns;
+  patterns=(
     "ERROR"
     "FATAL"
     "CRITICAL"
@@ -141,8 +145,11 @@ scan_logs_for_errors() {
 check_repeated_failures() {
   log_info "Checking for repeated failures..."
 
-  local failure_patterns=("FAILED" "FAILURE" "CRITICAL ERROR" "FATAL")
-  local total_failures=0
+  local failure_patterns;
+
+  failure_patterns=("FAILED" "FAILURE" "CRITICAL ERROR" "FATAL")
+  local total_failures;
+  total_failures=0
 
   for pattern in "${failure_patterns[@]}"; do
     local count
@@ -166,10 +173,14 @@ check_repeated_failures() {
 
 # Publish alert to MCP
 publish_alert() {
-  local level="$1"
-  local message="$2"
-  local source="$3"
-  local details="${4:-{}}"
+  local level;
+  level="$1"
+  local message;
+  message="$2"
+  local source;
+  source="$3"
+  local details;
+  details="${4:-{}}"
 
   local payload
   payload=$(
@@ -195,11 +206,16 @@ EOF
 
 # Generate health summary
 generate_summary() {
-  local ollama_status="$1"
-  local mcp_status="$2"
-  local disk_status="$3"
-  local log_status="$4"
-  local failure_status="$5"
+  local ollama_status;
+  ollama_status="$1"
+  local mcp_status;
+  mcp_status="$2"
+  local disk_status;
+  disk_status="$3"
+  local log_status;
+  log_status="$4"
+  local failure_status;
+  failure_status="$5"
 
   log_info "================================================"
   log_info "Watchdog Health Summary:"
@@ -211,7 +227,8 @@ generate_summary() {
   log_info "================================================"
 
   # Publish overall summary
-  local overall_status="healthy"
+  local overall_status;
+  overall_status="healthy"
   [[ "$ollama_status" == "FAIL" ]] && overall_status="degraded"
   [[ "$disk_status" == "FAIL" ]] && overall_status="degraded"
   [[ "$log_status" == "FAIL" ]] && overall_status="warning"
@@ -226,11 +243,17 @@ main() {
   log_info "Thresholds: Disk=${DISK_USAGE_THRESHOLD}%, Errors=${ERROR_THRESHOLD}, Window=${TIME_WINDOW_MINUTES}min"
   echo ""
 
-  local ollama_status="OK"
-  local mcp_status="OK"
-  local disk_status="OK"
-  local log_status="OK"
-  local failure_status="OK"
+  local ollama_status;
+
+  ollama_status="OK"
+  local mcp_status;
+  mcp_status="OK"
+  local disk_status;
+  disk_status="OK"
+  local log_status;
+  log_status="OK"
+  local failure_status;
+  failure_status="OK"
 
   # Run health checks
   check_ollama || ollama_status="FAIL"

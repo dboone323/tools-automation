@@ -1,0 +1,107 @@
+{
+  "permissions": {
+    "users.manage": {
+      "name": "users.manage",
+      "description": "Manage user accounts",
+      "resource_type": "users",
+      "actions": ["create", "read", "update", "delete"]
+    },
+    "roles.manage": {
+      "name": "roles.manage",
+      "description": "Manage roles and permissions",
+      "resource_type": "roles",
+      "actions": ["create", "read", "update", "delete"]
+    },
+    "system.config": {
+      "name": "system.config",
+      "description": "System configuration management",
+      "resource_type": "system",
+      "actions": ["read", "update"]
+    },
+    "agents.manage": {
+      "name": "agents.manage",
+      "description": "Full agent management",
+      "resource_type": "agents",
+      "actions": ["create", "read", "update", "delete", "execute"]
+    },
+    "agents.view": {
+      "name": "agents.view",
+      "description": "View agent status and logs",
+      "resource_type": "agents",
+      "actions": ["read"]
+    },
+    "agents.control": {
+      "name": "agents.control",
+      "description": "Start/stop agents",
+      "resource_type": "agents",
+      "actions": ["start", "stop", "restart"]
+    },
+    "code.read": {
+      "name": "code.read",
+      "description": "Read source code",
+      "resource_type": "code",
+      "actions": ["read"]
+    },
+    "code.write": {
+      "name": "code.write",
+      "description": "Modify source code",
+      "resource_type": "code",
+      "actions": ["create", "update", "delete"]
+    },
+    "build.execute": {
+      "name": "build.execute",
+      "description": "Execute build processes",
+      "resource_type": "build",
+      "actions": ["execute"]
+    },
+    "deploy.execute": {
+      "name": "deploy.execute",
+      "description": "Execute deployments",
+      "resource_type": "deploy",
+      "actions": ["execute"]
+    },
+    "monitoring.view": {
+      "name": "monitoring.view",
+      "description": "View monitoring data",
+      "resource_type": "monitoring",
+      "actions": ["read"]
+    },
+    "monitoring.manage": {
+      "name": "monitoring.manage",
+      "description": "Manage monitoring configuration",
+      "resource_type": "monitoring",
+      "actions": ["create", "read", "update", "delete"]
+    },
+    "alerts.manage": {
+      "name": "alerts.manage",
+      "description": "Manage alerts and notifications",
+      "resource_type": "alerts",
+      "actions": ["create", "read", "update", "delete", "acknowledge"]
+    },
+    "logs.view": {
+      "name": "logs.view",
+      "description": "View system logs",
+      "resource_type": "logs",
+      "actions": ["read"]
+    },
+    "audit.view": {
+      "name": "audit.view",
+      "description": "View audit logs",
+      "resource_type": "audit",
+      "actions": ["read"]
+    },
+    "reports.view": {
+      "name": "reports.view",
+      "description": "View reports and analytics",
+      "resource_type": "reports",
+      "actions": ["read"]
+    },
+    "status.view": {
+      "name": "status.view",
+      "description": "View basic system status",
+      "resource_type": "status",
+      "actions": ["read"]
+    }
+  },
+  "last_updated": null
+}

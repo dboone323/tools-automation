@@ -36,8 +36,10 @@ init_checkpoints() {
 
 # Create checkpoint of current state
 create_checkpoint() {
-    local operation_id="$1"
-    local files_to_backup="${2:-}"
+    local operation_id;
+    operation_id="$1"
+    local files_to_backup;
+    files_to_backup="${2:-}"
 
     local checkpoint_dir
     checkpoint_dir="$CHECKPOINTS_DIR/${operation_id}_$(date +%Y%m%d_%H%M%S)"
@@ -51,7 +53,8 @@ create_checkpoint() {
             if [ -f "$file" ]; then
                 local rel_path
                 rel_path=$(realpath --relative-to="$ROOT_DIR" "$file" 2>/dev/null || echo "$file")
-                local backup_path="$checkpoint_dir/$rel_path"
+                local backup_path;
+                backup_path="$checkpoint_dir/$rel_path"
                 mkdir -p "$(dirname "$backup_path")"
                 cp "$file" "$backup_path"
                 log "  Backed up: $file"
@@ -83,8 +86,10 @@ EOF
 
 # Restore from checkpoint
 restore_checkpoint() {
-    local checkpoint_dir="$1"
-    local force="${2:-false}"
+    local checkpoint_dir;
+    checkpoint_dir="$1"
+    local force;
+    force="${2:-false}"
 
     if [ ! -d "$checkpoint_dir" ]; then
         error "Checkpoint not found: $checkpoint_dir"
@@ -104,7 +109,8 @@ restore_checkpoint() {
     fi
 
     # Restore files
-    local restored=0
+    local restored;
+    restored=0
     if [ -d "$checkpoint_dir" ]; then
         # Find all backed up files
         while IFS= read -r backup_file; do
@@ -119,7 +125,9 @@ restore_checkpoint() {
                 continue
             fi
 
-            local target_file="$ROOT_DIR/$rel_path"
+            local target_file;
+
+            target_file="$ROOT_DIR/$rel_path"
             mkdir -p "$(dirname "$target_file")"
             cp "$backup_file" "$target_file"
             log "  Restored: $target_file"
@@ -142,9 +150,12 @@ restore_checkpoint() {
 
 # Monitor validation and auto-rollback on failure
 monitor_validation() {
-    local validation_result="$1"
-    local checkpoint_dir="$2"
-    local auto_rollback="${3:-true}"
+    local validation_result;
+    validation_result="$1"
+    local checkpoint_dir;
+    checkpoint_dir="$2"
+    local auto_rollback;
+    auto_rollback="${3:-true}"
 
     log "Monitoring validation result..."
 
@@ -192,8 +203,10 @@ monitor_validation() {
 
 # Try alternative approach after rollback
 try_alternative() {
-    local operation="$1"
-    local error_pattern="$2"
+    local operation;
+    operation="$1"
+    local error_pattern;
+    error_pattern="$2"
 
     log "Trying alternative approach for: $operation"
 
@@ -224,9 +237,12 @@ try_alternative() {
 
 # Log failure for learning
 log_failure() {
-    local layer="$1"
-    local reason="$2"
-    local action="$3"
+    local layer;
+    layer="$1"
+    local reason;
+    reason="$2"
+    local action;
+    action="$3"
 
     local failure_entry
     failure_entry=$(
@@ -290,7 +306,8 @@ list_checkpoints() {
 
 # Clean old checkpoints
 clean_checkpoints() {
-    local keep_count="${1:-10}"
+    local keep_count;
+    keep_count="${1:-10}"
 
     log "Cleaning old checkpoints (keeping most recent $keep_count)..."
 
@@ -308,7 +325,9 @@ clean_checkpoints() {
         return 0
     fi
 
-    local to_delete=$((checkpoint_count - keep_count))
+    local to_delete;
+
+    to_delete=$((checkpoint_count - keep_count))
     log "Deleting $to_delete old checkpoint(s)..."
 
     # macOS-compatible find: use stat and ls
@@ -325,7 +344,8 @@ clean_checkpoints() {
 
 # Main entry point
 main() {
-    local command="${1:-help}"
+    local command;
+    command="${1:-help}"
     shift || true
 
     case "$command" in
@@ -382,9 +402,13 @@ main() {
             exit 1
         fi
 
-        local reason="$1"
-        local incident_id="$(date +%Y%m%d_%H%M%S)_${reason}"
-        local incident_dir="${ROOT_DIR}/incidents/${incident_id}"
+        local reason;
+
+        reason="$1"
+        local incident_id;
+        incident_id="$(date +%Y%m%d_%H%M%S)_${reason}"
+        local incident_dir;
+        incident_dir="${ROOT_DIR}/incidents/${incident_id}"
 
         mkdir -p "$incident_dir"
 

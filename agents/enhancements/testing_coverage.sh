@@ -15,12 +15,16 @@ log() {
 }
 
 generate_coverage_report() {
-  local project_path="$1"
+  local project_path;
+  project_path="$1"
   local project_name
   project_name=$(basename "${project_path}")
-  local timestamp=$(date +%Y%m%d_%H%M%S)
-  local report_json="${METRICS_DIR}/coverage_${project_name}_${timestamp}.json"
-  local report_html="${METRICS_DIR}/coverage_${project_name}_${timestamp}.html"
+  local timestamp;
+  timestamp=$(date +%Y%m%d_%H%M%S)
+  local report_json;
+  report_json="${METRICS_DIR}/coverage_${project_name}_${timestamp}.json"
+  local report_html;
+  report_html="${METRICS_DIR}/coverage_${project_name}_${timestamp}.html"
 
   log "Generating coverage report for ${project_name}"
 
@@ -35,7 +39,9 @@ generate_coverage_report() {
     return 1
   fi
 
-  local scheme="${project_name}"
+  local scheme;
+
+  scheme="${project_name}"
 
   # Run tests with coverage
   log "Running tests with coverage enabled..."
@@ -76,10 +82,14 @@ generate_coverage_report() {
 }
 
 track_coverage_trends() {
-  local project_name="$1"
-  local coverage="$2"
-  local report_file="$3"
-  local history_file="${METRICS_DIR}/history.json"
+  local project_name;
+  project_name="$1"
+  local coverage;
+  coverage="$2"
+  local report_file;
+  report_file="$3"
+  local history_file;
+  history_file="${METRICS_DIR}/history.json"
 
   # Initialize history if needed
   if [[ ! -f ${history_file} ]]; then
@@ -87,7 +97,8 @@ track_coverage_trends() {
   fi
 
   # Add entry to history
-  local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  local timestamp;
+  timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
   python3 -c "
 import json
@@ -128,10 +139,14 @@ except Exception as e:
 }
 
 enforce_coverage_targets() {
-  local project_name="$1"
-  local coverage="$2"
-  local minimum=70
-  local target=85
+  local project_name;
+  project_name="$1"
+  local coverage;
+  coverage="$2"
+  local minimum;
+  minimum=70
+  local target;
+  target=85
 
   log "Checking coverage against targets (minimum: ${minimum}%, target: ${target}%)"
 

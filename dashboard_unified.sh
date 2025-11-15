@@ -63,9 +63,12 @@ get_system_info() {
 
 # Check service status
 check_service_status() {
-    local service_name="$1"
-    local port="$2"
-    local endpoint="${3:-/health}"
+    local service_name;
+    service_name="$1"
+    local port;
+    port="$2"
+    local endpoint;
+    endpoint="${3:-/health}"
 
     if curl -s -f "http://localhost:${port}${endpoint}" >/dev/null 2>&1; then
         echo -e "${GREEN}✅${NC} ${service_name} - RUNNING (Port ${port})"
@@ -83,15 +86,19 @@ get_agent_metrics() {
 
     # Try to get data from metrics exporter first
     if curl -s "http://localhost:8080/slo" >/dev/null 2>&1; then
-        local slo_data=$(curl -s "http://localhost:8080/slo")
-        local agent_count=$(echo "$slo_data" | jq '.agents | length' 2>/dev/null || echo "0")
-        local healthy_count=$(echo "$slo_data" | jq '[.agents[] | select(.health_score >= 0.8)] | length' 2>/dev/null || echo "0")
+        local slo_data;
+        slo_data=$(curl -s "http://localhost:8080/slo")
+        local agent_count;
+        agent_count=$(echo "$slo_data" | jq '.agents | length' 2>/dev/null || echo "0")
+        local healthy_count;
+        healthy_count=$(echo "$slo_data" | jq '[.agents[] | select(.health_score >= 0.8)] | length' 2>/dev/null || echo "0")
 
         echo "Total Agents: ${agent_count}"
         echo "Healthy Agents: ${healthy_count}"
 
         if [[ ${agent_count} -gt 0 ]]; then
-            local health_percentage=$(((healthy_count * 100) / agent_count))
+            local health_percentage;
+            health_percentage=$(((healthy_count * 100) / agent_count))
             echo "Health Score: ${health_percentage}%"
         fi
 
@@ -102,10 +109,14 @@ get_agent_metrics() {
     else
         # Fallback to JSON file
         if [[ -f "${PROJECT_ROOT}/agent_status.json" ]]; then
-            local total_agents=$(jq '. | length' "${PROJECT_ROOT}/agent_status.json" 2>/dev/null || echo "0")
-            local running_agents=$(jq '[.[] | select(.status == "running")] | length' "${PROJECT_ROOT}/agent_status.json" 2>/dev/null || echo "0")
-            local total_tasks=$(jq '[.[] | .tasks_completed // 0] | add' "${PROJECT_ROOT}/agent_status.json" 2>/dev/null || echo "0")
-            local failed_tasks=$(jq '[.[] | .tasks_failed // 0] | add' "${PROJECT_ROOT}/agent_status.json" 2>/dev/null || echo "0")
+            local total_agents;
+            total_agents=$(jq '. | length' "${PROJECT_ROOT}/agent_status.json" 2>/dev/null || echo "0")
+            local running_agents;
+            running_agents=$(jq '[.[] | select(.status == "running")] | length' "${PROJECT_ROOT}/agent_status.json" 2>/dev/null || echo "0")
+            local total_tasks;
+            total_tasks=$(jq '[.[] | .tasks_completed // 0] | add' "${PROJECT_ROOT}/agent_status.json" 2>/dev/null || echo "0")
+            local failed_tasks;
+            failed_tasks=$(jq '[.[] | .tasks_failed // 0] | add' "${PROJECT_ROOT}/agent_status.json" 2>/dev/null || echo "0")
 
             echo "Total Agents: ${total_agents}"
             echo "Running Agents: ${running_agents}"
@@ -113,7 +124,8 @@ get_agent_metrics() {
             echo "Total Tasks Failed: ${failed_tasks}"
 
             if [[ ${total_agents} -gt 0 ]]; then
-                local success_rate=$(((total_tasks * 100) / (total_tasks + failed_tasks)))
+                local success_rate;
+                success_rate=$(((total_tasks * 100) / (total_tasks + failed_tasks)))
                 echo "Success Rate: ${success_rate}%"
             fi
         else
@@ -150,16 +162,21 @@ get_recent_alerts() {
     echo "=============="
 
     if [[ -d "${PROJECT_ROOT}/alerts" ]]; then
-        local alert_count=$(find "${PROJECT_ROOT}/alerts" -name "*.json" -type f 2>/dev/null | wc -l)
+        local alert_count;
+        alert_count=$(find "${PROJECT_ROOT}/alerts" -name "*.json" -type f 2>/dev/null | wc -l)
         if [[ ${alert_count} -gt 0 ]]; then
             echo "Total alerts in last 24h: ${alert_count}"
             # Show last 5 alerts
             find "${PROJECT_ROOT}/alerts" -name "*.json" -type f -mtime -1 2>/dev/null |
                 head -5 | while read -r alert_file; do
-                local alert_data=$(cat "${alert_file}")
-                local level=$(echo "${alert_data}" | jq -r '.level // "unknown"' 2>/dev/null || echo "unknown")
-                local message=$(echo "${alert_data}" | jq -r '.message // "No message"' 2>/dev/null || echo "No message")
-                local timestamp=$(echo "${alert_data}" | jq -r '.timestamp // "unknown"' 2>/dev/null || echo "unknown")
+                local alert_data;
+                alert_data=$(cat "${alert_file}")
+                local level;
+                level=$(echo "${alert_data}" | jq -r '.level // "unknown"' 2>/dev/null || echo "unknown")
+                local message;
+                message=$(echo "${alert_data}" | jq -r '.message // "No message"' 2>/dev/null || echo "No message")
+                local timestamp;
+                timestamp=$(echo "${alert_data}" | jq -r '.timestamp // "unknown"' 2>/dev/null || echo "unknown")
                 echo "[${level}] ${timestamp}: ${message}"
             done
         else
@@ -181,10 +198,13 @@ get_performance_metrics() {
         echo "Prometheus is responding"
 
         # Get system metrics
-        local cpu_usage=$(curl -s "http://localhost:${PROMETHEUS_PORT}/api/v1/query?query=100%20-%20(avg%20by%20(instance)%20(irate(node_cpu_seconds_total%7Bmode%3D%22idle%22%7D%5B5m%5D))%20*%20100)" |
+        local cpu_usage;
+        cpu_usage=$(curl -s "http://localhost:${PROMETHEUS_PORT}/api/v1/query?query=100%20-%20(avg%20by%20(instance)%20(irate(node_cpu_seconds_total%7Bmode%3D%22idle%22%7D%5B5m%5D))%20*%20100)" |
             jq -r '.data.result[0].value[1] // "N/A"' 2>/dev/null || echo "N/A")
 
-        local mem_usage=$(curl -s "http://localhost:${PROMETHEUS_PORT}/api/v1/query?query=100%20-%20((node_memory_MemAvailable_bytes%20%2F%20node_memory_MemTotal_bytes)%20*%20100)" |
+        local mem_usage;
+
+        mem_usage=$(curl -s "http://localhost:${PROMETHEUS_PORT}/api/v1/query?query=100%20-%20((node_memory_MemAvailable_bytes%20%2F%20node_memory_MemTotal_bytes)%20*%20100)" |
             jq -r '.data.result[0].value[1] // "N/A"' 2>/dev/null || echo "N/A")
 
         echo "System CPU Usage: ${cpu_usage}%"
@@ -195,8 +215,10 @@ get_performance_metrics() {
 
     # Get agent-specific metrics
     if curl -s "http://localhost:${METRICS_PORT}/metrics" >/dev/null 2>&1; then
-        local agent_count=$(curl -s "http://localhost:${METRICS_PORT}/metrics" | grep "system_agents_total" | awk '{print $2}' || echo "N/A")
-        local tasks_queued=$(curl -s "http://localhost:${METRICS_PORT}/metrics" | grep "system_tasks_queued" | awk '{print $2}' || echo "N/A")
+        local agent_count;
+        agent_count=$(curl -s "http://localhost:${METRICS_PORT}/metrics" | grep "system_agents_total" | awk '{print $2}' || echo "N/A")
+        local tasks_queued;
+        tasks_queued=$(curl -s "http://localhost:${METRICS_PORT}/metrics" | grep "system_tasks_queued" | awk '{print $2}' || echo "N/A")
 
         echo "Monitored Agents: ${agent_count}"
         echo "Queued Tasks: ${tasks_queued}"
@@ -210,7 +232,8 @@ get_slo_status() {
     echo "==============================="
 
     if [[ -f "${PROJECT_ROOT}/alert_config.json" ]]; then
-        local environment=$(jq -r '.custom_thresholds.current_environment // "development"' "${PROJECT_ROOT}/alert_config.json" 2>/dev/null || echo "development")
+        local environment;
+        environment=$(jq -r '.custom_thresholds.current_environment // "development"' "${PROJECT_ROOT}/alert_config.json" 2>/dev/null || echo "development")
 
         echo "Current Environment: ${environment}"
         echo ""
@@ -354,7 +377,8 @@ interactive_menu() {
 
 # Main function
 main() {
-    local mode="${1:-interactive}"
+    local mode;
+    mode="${1:-interactive}"
 
     case $mode in
     status)

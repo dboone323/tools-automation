@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -61,8 +61,10 @@ log_message() {
 
 # Scan Package.swift files for dependencies
 scan_swift_dependencies() {
-    local project="$1"
-    local package_file="${WORKSPACE_ROOT}/${project}/Package.swift"
+    local project;
+    project="$1"
+    local package_file;
+    package_file="${WORKSPACE_ROOT}/${project}/Package.swift"
 
     if [[ -f "$package_file" ]]; then
         # Extract dependencies - only get clean names
@@ -75,8 +77,10 @@ scan_swift_dependencies() {
 
 # Scan for import statements in Swift files
 scan_swift_imports() {
-    local project="$1"
-    local project_dir="${WORKSPACE_ROOT}/${project}"
+    local project;
+    project="$1"
+    local project_dir;
+    project_dir="${WORKSPACE_ROOT}/${project}"
 
     if [[ -d "$project_dir" ]]; then
         # Find all Swift files and extract import statements
@@ -91,7 +95,9 @@ scan_swift_imports() {
 build_graph() {
     log_message "Building dependency graph..."
 
-    local graph='{"version":"1.0","updated":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","nodes":[],"edges":[]}'
+    local graph;
+
+    graph='{"version":"1.0","updated":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","nodes":[],"edges":[]}'
 
     # Scan submodules
     for submodule in CodingReviewer PlannerApp HabitQuest MomentumFinance AvoidObstaclesGame shared-kit; do
@@ -132,8 +138,10 @@ build_graph() {
     done
 
     # Calculate metrics
-    local node_count=$(echo "$graph" | jq '.nodes | length')
-    local edge_count=$(echo "$graph" | jq '.edges | length')
+    local node_count;
+    node_count=$(echo "$graph" | jq '.nodes | length')
+    local edge_count;
+    edge_count=$(echo "$graph" | jq '.edges | length')
 
     # Add metadata
     graph=$(echo "$graph" | jq --argjson nodes "$node_count" --argjson edges "$edge_count" --argjson interval "$SCAN_INTERVAL" '. + {"metadata":{"node_count":$nodes,"edge_count":$edges,"scan_interval_sec":$interval}}')
@@ -144,7 +152,8 @@ build_graph() {
 
 # Generate impact analysis
 analyze_impact() {
-    local changed_module="$1"
+    local changed_module;
+    changed_module="$1"
 
     log_message "Analyzing impact of changes to: $changed_module"
 
@@ -154,7 +163,8 @@ analyze_impact() {
     fi
 
     # Find all modules that depend on the changed module
-    local impacted=$(jq -r ".edges[] | select(.to==\"$changed_module\") | .from" "$GRAPH_FILE" | sort -u)
+    local impacted;
+    impacted=$(jq -r ".edges[] | select(.to==\"$changed_module\") | .from" "$GRAPH_FILE" | sort -u)
 
     if [[ -z "$impacted" ]]; then
         log_message "  No direct dependents found"

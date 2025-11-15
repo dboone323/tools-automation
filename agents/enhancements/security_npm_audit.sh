@@ -15,8 +15,10 @@ log() {
 }
 
 run_npm_audit() {
-  local project_path="$1"
-  local report_file="${METRICS_DIR}/npm_audit_$(date +%Y%m%d_%H%M%S).json"
+  local project_path;
+  project_path="$1"
+  local report_file;
+  report_file="${METRICS_DIR}/npm_audit_$(date +%Y%m%d_%H%M%S).json"
 
   log "Running npm audit for ${project_path}"
 
@@ -56,8 +58,10 @@ run_npm_audit() {
 }
 
 run_spm_audit() {
-  local project_path="$1"
-  local report_file="${METRICS_DIR}/spm_audit_$(date +%Y%m%d_%H%M%S).txt"
+  local project_path;
+  project_path="$1"
+  local report_file;
+  report_file="${METRICS_DIR}/spm_audit_$(date +%Y%m%d_%H%M%S).txt"
 
   log "Running SPM dependency check for ${project_path}"
 

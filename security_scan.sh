@@ -92,8 +92,10 @@ check_trivy() {
 
 # Scan filesystem for vulnerabilities
 scan_filesystem() {
-    local path="${1:-.}"
-    local severity="${2:-HIGH,CRITICAL}"
+    local path;
+    path="${1:-.}"
+    local severity;
+    severity="${2:-HIGH,CRITICAL}"
 
     print_status "Scanning filesystem: ${path}"
 
@@ -110,8 +112,10 @@ scan_filesystem() {
 
 # Scan container image
 scan_image() {
-    local image="$1"
-    local severity="${2:-HIGH,CRITICAL}"
+    local image;
+    image="$1"
+    local severity;
+    severity="${2:-HIGH,CRITICAL}"
 
     if [[ -z "${image}" ]]; then
         print_error "Please specify an image to scan"
@@ -173,8 +177,10 @@ scan_containers() {
 
 # Scan Docker Compose services
 scan_compose() {
-    local compose_file="${1:-docker-compose.monitoring.yml}"
-    local severity="${2:-HIGH,CRITICAL}"
+    local compose_file;
+    compose_file="${1:-docker-compose.monitoring.yml}"
+    local severity;
+    severity="${2:-HIGH,CRITICAL}"
 
     if [[ ! -f "${compose_file}" ]]; then
         print_error "Docker Compose file not found: ${compose_file}"
@@ -208,8 +214,11 @@ scan_compose() {
 scan_hardcoded_secrets() {
     header "HARDCODED SECRETS SCAN"
 
-    local secrets_found=0
-    local report_file="$REPORTS_DIR/secrets_scan_$(date +%Y%m%d_%H%M%S).txt"
+    local secrets_found;
+
+    secrets_found=0
+    local report_file;
+    report_file="$REPORTS_DIR/secrets_scan_$(date +%Y%m%d_%H%M%S).txt"
 
     {
         echo "=== HARDCODED SECRETS SCAN ==="
@@ -254,8 +263,11 @@ scan_hardcoded_secrets() {
 scan_python_security() {
     header "PYTHON CODE SECURITY SCAN"
 
-    local vuln_found=0
-    local report_file="$REPORTS_DIR/python_security_$(date +%Y%m%d_%H%M%S).txt"
+    local vuln_found;
+
+    vuln_found=0
+    local report_file;
+    report_file="$REPORTS_DIR/python_security_$(date +%Y%m%d_%H%M%S).txt"
 
     {
         echo "=== PYTHON CODE SECURITY SCAN ==="
@@ -263,7 +275,8 @@ scan_python_security() {
         echo ""
 
         echo "=== DANGEROUS FUNCTION USAGE ==="
-        local dangerous_functions=("eval" "exec" "input" "pickle.loads" "subprocess.call" "os.system")
+        local dangerous_functions;
+        dangerous_functions=("eval" "exec" "input" "pickle.loads" "subprocess.call" "os.system")
 
         for func in "${dangerous_functions[@]}"; do
             grep -r "$func" "$PROJECT_ROOT" \
@@ -301,8 +314,11 @@ scan_python_security() {
 scan_file_permissions() {
     header "FILE PERMISSIONS SCAN"
 
-    local issues_found=0
-    local report_file="$REPORTS_DIR/permissions_scan_$(date +%Y%m%d_%H%M%S).txt"
+    local issues_found;
+
+    issues_found=0
+    local report_file;
+    report_file="$REPORTS_DIR/permissions_scan_$(date +%Y%m%d_%H%M%S).txt"
 
     {
         echo "=== FILE PERMISSIONS SECURITY SCAN ==="
@@ -319,7 +335,8 @@ scan_file_permissions() {
         echo ""
 
         echo "=== SENSITIVE FILES WITH LOOSE PERMISSIONS ==="
-        local sensitive_files=("agents.db" "*.key" "*.pem" "*secret*" "*password*")
+        local sensitive_files;
+        sensitive_files=("agents.db" "*.key" "*.pem" "*secret*" "*password*")
         for pattern in "${sensitive_files[@]}"; do
             find "$PROJECT_ROOT" -name "$pattern" -type f -exec ls -la {} \; 2>/dev/null |
                 awk '$1 ~ /^-..w/ {print "⚠️  SENSITIVE FILE WITH GROUP/OTHER WRITE: " $9}' | while read -r line; do
@@ -343,8 +360,10 @@ scan_file_permissions() {
 
 # Generate comprehensive security report
 generate_report() {
-    local output_file="${1:-security_report_$(date +%Y%m%d_%H%M%S).md}"
-    local total_issues=0
+    local output_file;
+    output_file="${1:-security_report_$(date +%Y%m%d_%H%M%S).md}"
+    local total_issues;
+    total_issues=0
 
     header "SECURITY SCAN REPORT GENERATION"
 
@@ -502,9 +521,12 @@ show_usage() {
 
 # Main execution
 main() {
-    local command="${1:-}"
-    local arg1="${2:-}"
-    local arg2="${3:-}"
+    local command;
+    command="${1:-}"
+    local arg1;
+    arg1="${2:-}"
+    local arg2;
+    arg2="${3:-}"
 
     case "${command}" in
     "fs")

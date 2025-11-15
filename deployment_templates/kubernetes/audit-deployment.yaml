@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-system
+  namespace: tools-automation-audit
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: audit-system
+  template:
+    metadata:
+      labels:
+        app: audit-system
+    spec:
+      containers:
+      - name: audit
+        image: tools-automation/audit:latest
+        ports:
+        - containerPort: 8081
+        env:
+        - name: AUDIT_CONFIG_PATH
+          value: "/app/audit_config"
+        volumeMounts:
+        - name: audit-events-volume
+          mountPath: /app/audit_config
+        - name: compliance-reports-volume
+          mountPath: /app/compliance_reports
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8081
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: audit-events-volume
+        persistentVolumeClaim:
+          claimName: audit-events-pvc
+      - name: compliance-reports-volume
+        persistentVolumeClaim:
+          claimName: compliance-reports-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audit-service
+  namespace: tools-automation-audit
+spec:
+  selector:
+    app: audit-system
+  ports:
+  - port: 80
+    targetPort: 8081
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: audit-events-pvc
+  namespace: tools-automation-audit
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: compliance-reports-pvc
+  namespace: tools-automation-audit
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi

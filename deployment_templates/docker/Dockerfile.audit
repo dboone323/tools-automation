@@ -1,0 +1,36 @@
+FROM ubuntu:22.04
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    jq \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy application files
+COPY audit_compliance.sh ./
+COPY audit_config/ ./audit_config/
+
+# Make scripts executable
+RUN chmod +x audit_compliance.sh
+
+# Create directories
+RUN mkdir -p compliance_reports logs
+
+# Create non-root user
+RUN useradd -r -s /bin/false audituser && \
+    chown -R audituser:audituser /app
+
+USER audituser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD ./audit_compliance.sh query | jq empty || exit 1
+
+# Expose port
+EXPOSE 8081
+
+# Start command
+CMD ["./audit_compliance.sh", "serve"]

@@ -67,10 +67,13 @@ declare -A COMPONENT_STATUS
 check_system_health() {
     log_status "Performing system health check..."
 
-    local issues_found=0
+    local issues_found;
+
+    issues_found=0
 
     # Check disk space
-    local disk_usage=$(df "$PROJECT_ROOT" | tail -1 | awk '{print $5}' | sed 's/%//')
+    local disk_usage;
+    disk_usage=$(df "$PROJECT_ROOT" | tail -1 | awk '{print $5}' | sed 's/%//')
     if [[ $disk_usage -gt 90 ]]; then
         log_warning "Low disk space: ${disk_usage}% used"
         ((issues_found++))
@@ -79,14 +82,16 @@ check_system_health() {
     # Check available memory
     if command -v free >/dev/null 2>&1; then
         # Linux
-        local mem_available=$(free | grep Mem | awk '{print $7}')
+        local mem_available;
+        mem_available=$(free | grep Mem | awk '{print $7}')
         if [[ $mem_available -lt 100000 ]]; then # Less than ~100MB
             log_warning "Low available memory: ${mem_available} KB"
             ((issues_found++))
         fi
     else
         # macOS - use vm_stat
-        local mem_available=$(vm_stat | grep "Pages free" | awk '{print $3}' | tr -d '.')
+        local mem_available;
+        mem_available=$(vm_stat | grep "Pages free" | awk '{print $3}' | tr -d '.')
         if [[ $mem_available -lt 10000 ]]; then # Rough estimate for low memory
             log_warning "Low available memory (macOS)"
             ((issues_found++))
@@ -94,7 +99,8 @@ check_system_health() {
     fi
 
     # Check if required scripts exist
-    local required_scripts=("$AUTONOMOUS_ORCHESTRATOR" "$MCP_AUTO_RESTART" "$INTELLIGENT_ORCHESTRATOR")
+    local required_scripts;
+    required_scripts=("$AUTONOMOUS_ORCHESTRATOR" "$MCP_AUTO_RESTART" "$INTELLIGENT_ORCHESTRATOR")
     for script in "${required_scripts[@]}"; do
         if [[ ! -x "$script" ]]; then
             log_error "Required script not found or not executable: $script"
@@ -113,15 +119,19 @@ check_system_health() {
 
 # Start component with health verification
 start_component() {
-    local component_name=$1
-    local start_command=$2
-    local health_check_command=$3
+    local component_name;
+    component_name=$1
+    local start_command;
+    start_command=$2
+    local health_check_command;
+    health_check_command=$3
 
     log_startup "Starting $component_name..."
 
     # Start the component
     eval "$start_command" >/dev/null 2>&1 &
-    local component_pid=$!
+    local component_pid;
+    component_pid=$!
 
     COMPONENT_PIDS[$component_name]=$component_pid
     COMPONENT_STATUS[$component_name]="starting"
@@ -130,7 +140,8 @@ start_component() {
     sleep "$COMPONENT_START_DELAY"
 
     # Verify startup with retries
-    local retries=0
+    local retries;
+    retries=0
     while [[ $retries -lt $HEALTH_CHECK_RETRIES ]]; do
         if eval "$health_check_command" >/dev/null 2>&1; then
             COMPONENT_STATUS[$component_name]="healthy"
@@ -178,7 +189,8 @@ start_autonomous_systems() {
 
     # Check if already running
     if [[ -f "$LAUNCHER_PID" ]]; then
-        local existing_pid=$(cat "$LAUNCHER_PID")
+        local existing_pid;
+        existing_pid=$(cat "$LAUNCHER_PID")
         if kill -0 "$existing_pid" 2>/dev/null; then
             log_success "Autonomous launcher already running (PID: $existing_pid)"
             return 0
@@ -194,13 +206,16 @@ start_autonomous_systems() {
     fi
 
     # Start components in order
-    local startup_failures=0
+    local startup_failures;
+    startup_failures=0
 
     log_startup "Starting autonomous components..."
 
     # 1. Start MCP auto-restart manager first (handles MCP server lifecycle) - only if MCP env available
-    local mcp_venv="$PROJECT_ROOT/.venv"
-    local mcp_server_script="$PROJECT_ROOT/mcp_server.py"
+    local mcp_venv;
+    mcp_venv="$PROJECT_ROOT/.venv"
+    local mcp_server_script;
+    mcp_server_script="$PROJECT_ROOT/mcp_server.py"
     if [[ -d "$mcp_venv" ]] && [[ -f "$mcp_server_script" ]]; then
         if ! start_mcp_auto_restart; then
             ((startup_failures++))
@@ -245,7 +260,8 @@ autonomous_monitoring_loop() {
     log_info "Starting autonomous system monitoring..."
 
     while true; do
-        local all_healthy=true
+        local all_healthy;
+        all_healthy=true
 
         # Check each component
         for component in "${!COMPONENT_STATUS[@]}"; do
@@ -261,8 +277,10 @@ autonomous_monitoring_loop() {
                 ;;
             "mcp_auto_restart")
                 # Only check MCP auto-restart if MCP environment is available
-                local mcp_venv="$PROJECT_ROOT/.venv"
-                local mcp_server_script="$PROJECT_ROOT/mcp_server.py"
+                local mcp_venv;
+                mcp_venv="$PROJECT_ROOT/.venv"
+                local mcp_server_script;
+                mcp_server_script="$PROJECT_ROOT/mcp_server.py"
                 if [[ -d "$mcp_venv" ]] && [[ -f "$mcp_server_script" ]]; then
                     if ! "$MCP_AUTO_RESTART" status >/dev/null 2>&1; then
                         COMPONENT_STATUS[$component]="unhealthy"
@@ -321,7 +339,8 @@ status_autonomous_systems() {
     log_status "=== Autonomous System Status ==="
 
     if [[ -f "$LAUNCHER_PID" ]]; then
-        local pid=$(cat "$LAUNCHER_PID")
+        local pid;
+        pid=$(cat "$LAUNCHER_PID")
         if kill -0 "$pid" 2>/dev/null; then
             echo -e "${GREEN}✓${NC} Autonomous launcher running (PID: $pid)"
         else
@@ -343,8 +362,10 @@ status_autonomous_systems() {
     fi
 
     # MCP Auto-Restart
-    local mcp_venv="$PROJECT_ROOT/.venv"
-    local mcp_server_script="$PROJECT_ROOT/mcp_server.py"
+    local mcp_venv;
+    mcp_venv="$PROJECT_ROOT/.venv"
+    local mcp_server_script;
+    mcp_server_script="$PROJECT_ROOT/mcp_server.py"
     echo -n "MCP Auto-Restart: "
     if [[ -d "$mcp_venv" ]] && [[ -f "$mcp_server_script" ]]; then
         if "$MCP_AUTO_RESTART" status >/dev/null 2>&1; then
@@ -367,12 +388,16 @@ status_autonomous_systems() {
     echo
     log_status "=== System Health History ==="
     if [[ -f "$PROJECT_ROOT/logs/system_health.log" ]]; then
-        local healthy_count=$(grep ":healthy" "$PROJECT_ROOT/logs/system_health.log" | wc -l)
-        local degraded_count=$(grep ":degraded" "$PROJECT_ROOT/logs/system_health.log" | wc -l)
-        local total_checks=$((healthy_count + degraded_count))
+        local healthy_count;
+        healthy_count=$(grep ":healthy" "$PROJECT_ROOT/logs/system_health.log" | wc -l)
+        local degraded_count;
+        degraded_count=$(grep ":degraded" "$PROJECT_ROOT/logs/system_health.log" | wc -l)
+        local total_checks;
+        total_checks=$((healthy_count + degraded_count))
 
         if [[ $total_checks -gt 0 ]]; then
-            local health_percentage=$((healthy_count * 100 / total_checks))
+            local health_percentage;
+            health_percentage=$((healthy_count * 100 / total_checks))
             echo "Health checks: $total_checks total"
             echo "Healthy: $healthy_count ($health_percentage%)"
             echo "Degraded: $degraded_count ($((100 - health_percentage))%)"

@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbac-system
+  namespace: tools-automation-rbac
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rbac-system
+  template:
+    metadata:
+      labels:
+        app: rbac-system
+    spec:
+      containers:
+      - name: rbac
+        image: tools-automation/rbac:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: RBAC_CONFIG_PATH
+          value: "/app/config"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+        - name: logs-volume
+          mountPath: /app/logs
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: rbac-config-pvc
+      - name: logs-volume
+        persistentVolumeClaim:
+          claimName: rbac-logs-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rbac-service
+  namespace: tools-automation-rbac
+spec:
+  selector:
+    app: rbac-system
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rbac-config-pvc
+  namespace: tools-automation-rbac
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rbac-logs-pvc
+  namespace: tools-automation-rbac
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

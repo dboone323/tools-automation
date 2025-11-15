@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -60,10 +60,12 @@ WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"  # Seconds to wait when system is busy
 
 # Function to check if we should proceed with task processing
 ensure_within_limits() {
-    local agent_name="security_agent.sh"
+    local agent_name;
+    agent_name="security_agent.sh"
 
     # Check concurrent instances
-    local running_count=$(pgrep -f "${agent_name}" | wc -l)
+    local running_count;
+    running_count=$(pgrep -f "${agent_name}" | wc -l)
     if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
         log "Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..."
         return 1
@@ -103,8 +105,10 @@ log() {
 
 # Ollama Integration Functions
 ollama_query() {
-    local prompt="$1"
-    local model="${2:-codellama}"
+    local prompt;
+    prompt="$1"
+    local model;
+    model="${2:-codellama}"
 
     curl -s -X POST "${OLLAMA_ENDPOINT}/api/generate" \
         -H "Content-Type: application/json" \
@@ -113,10 +117,14 @@ ollama_query() {
 }
 
 analyze_security_vulnerabilities() {
-    local code_content="$1"
-    local file_path="$2"
+    local code_content;
+    code_content="$1"
+    local file_path;
+    file_path="$2"
 
-    local prompt="Analyze this code for security vulnerabilities:
+    local prompt;
+
+    prompt="Analyze this code for security vulnerabilities:
 
 File: ${file_path}
 Code:
@@ -148,7 +156,8 @@ Provide specific vulnerability findings with severity levels and fix recommendat
 
 # Update agent status to available when starting
 update_status() {
-    local status="$1"
+    local status;
+    status="$1"
     if command -v jq &>/dev/null; then
         # Update status in array format
         jq "(.[] | select(.id == \"${AGENT_NAME}\") | .status) = \"${status}\" | (.[] | select(.id == \"${AGENT_NAME}\") | .last_seen) = $(date +%s)" "${AGENT_STATUS_FILE}" >"${AGENT_STATUS_FILE}.tmp" && mv "${AGENT_STATUS_FILE}.tmp" "${AGENT_STATUS_FILE}"
@@ -158,7 +167,8 @@ update_status() {
 
 # Process a specific task
 process_task() {
-    local task_id="$1"
+    local task_id;
+    task_id="$1"
     echo "[$(date)] ${AGENT_NAME}: Processing task ${task_id}" >>"${LOG_FILE}"
 
     # Get task details
@@ -189,8 +199,10 @@ process_task() {
 
 # Update task status
 update_task_status() {
-    local task_id="$1"
-    local status="$2"
+    local task_id;
+    task_id="$1"
+    local status;
+    status="$2"
     if command -v jq &>/dev/null; then
         jq "(.tasks[] | select(.id == \"${task_id}\") | .status) = \"${status}\"" "${TASK_QUEUE_FILE}" >"${TASK_QUEUE_FILE}.tmp" && mv "${TASK_QUEUE_FILE}.tmp" "${TASK_QUEUE_FILE}"
     fi
@@ -198,11 +210,13 @@ update_task_status() {
 
 # Enhanced security analysis with compliance checks
 run_security_analysis() {
-    local task_desc="$1"
+    local task_desc;
+    task_desc="$1"
     echo "[$(date)] ${AGENT_NAME}: Running enhanced security analysis for: ${task_desc}" >>"${LOG_FILE}"
 
     # Extract project name from task description
-    local projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
+    local projects;
+    projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
 
     for project in "${projects[@]}"; do
         if [[ -d "${WORKSPACE}/Projects/${project}" ]]; then
@@ -223,11 +237,15 @@ run_security_analysis() {
 
 # Vulnerability scanning with AI analysis
 run_vulnerability_scanning() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Running vulnerability scanning for ${project}..."
 
-    local vulnerabilities_found=0
-    local security_issues=""
+    local vulnerabilities_found;
+
+    vulnerabilities_found=0
+    local security_issues;
+    security_issues=""
 
     # Enhanced vulnerability checks
     while IFS= read -r -d '' file; do
@@ -301,7 +319,8 @@ run_vulnerability_scanning() {
     log "Using Ollama for intelligent security analysis..."
 
     # Sample code for AI analysis
-    local sample_code=""
+    local sample_code;
+    sample_code=""
     local suspicious_files
     suspicious_files=$(find . -name "*.swift" -exec grep -lE "(password|secret|SELECT.*\\+|MD5|SHA1|http://)" {} \; | head -3)
 
@@ -312,7 +331,8 @@ run_vulnerability_scanning() {
     done
 
     if [[ -n "${sample_code}" ]]; then
-        local vuln_prompt="Analyze this Swift code for security vulnerabilities:
+        local vuln_prompt;
+        vuln_prompt="Analyze this Swift code for security vulnerabilities:
 
 ${sample_code}
 
@@ -337,7 +357,8 @@ Provide specific findings with severity levels and remediation steps."
     fi
 
     # Save vulnerability scan results
-    local vuln_file="${WORKSPACE}/Tools/Automation/results/${project}_vulnerability_scan.txt"
+    local vuln_file;
+    vuln_file="${WORKSPACE}/Tools/Automation/results/${project}_vulnerability_scan.txt"
     mkdir -p "${WORKSPACE}/Tools/Automation/results"
 
     {
@@ -357,11 +378,15 @@ Provide specific findings with severity levels and remediation steps."
 
 # Compliance checks for GDPR, privacy, and data protection
 run_compliance_checks() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Running compliance checks for ${project}..."
 
-    local compliance_issues=0
-    local compliance_report=""
+    local compliance_issues;
+
+    compliance_issues=0
+    local compliance_report;
+    compliance_report=""
 
     # GDPR compliance checks
     local personal_data_handling
@@ -410,7 +435,8 @@ run_compliance_checks() {
     fi
 
     # Use Ollama for compliance analysis
-    local compliance_prompt="Analyze this Swift iOS application for compliance requirements:
+    local compliance_prompt;
+    compliance_prompt="Analyze this Swift iOS application for compliance requirements:
 
 Project: ${project}
 Personal Data Handling: ${personal_data_handling} files
@@ -435,7 +461,8 @@ Provide specific compliance recommendations and required implementations."
     fi
 
     # Save compliance check results
-    local compliance_file="${WORKSPACE}/Tools/Automation/results/${project}_compliance_check.txt"
+    local compliance_file;
+    compliance_file="${WORKSPACE}/Tools/Automation/results/${project}_compliance_check.txt"
 
     {
         echo "Compliance Check Report"
@@ -454,11 +481,15 @@ Provide specific compliance recommendations and required implementations."
 
 # Encryption and data protection audit
 run_encryption_audit() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Running encryption audit for ${project}..."
 
-    local encryption_issues=0
-    local encryption_report=""
+    local encryption_issues;
+
+    encryption_issues=0
+    local encryption_report;
+    encryption_report=""
 
     # Check for encryption usage
     local crypto_usage
@@ -493,7 +524,8 @@ run_encryption_audit() {
     fi
 
     # Use Ollama for encryption analysis
-    local encryption_prompt="Analyze this Swift application for encryption and data protection:
+    local encryption_prompt;
+    encryption_prompt="Analyze this Swift application for encryption and data protection:
 
 Project: ${project}
 Encryption Usage: ${crypto_usage} files
@@ -520,7 +552,8 @@ Provide specific encryption improvements and security recommendations."
     fi
 
     # Save encryption audit results
-    local encryption_file="${WORKSPACE}/Tools/Automation/results/${project}_encryption_audit.txt"
+    local encryption_file;
+    encryption_file="${WORKSPACE}/Tools/Automation/results/${project}_encryption_audit.txt"
 
     {
         echo "Encryption & Data Protection Audit"
@@ -539,11 +572,13 @@ Provide specific encryption improvements and security recommendations."
 
 # Dependency security check
 run_dependency_security_check() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Running dependency security check for ${project}..."
 
     # Check for Package.swift or Podfile
-    local dependency_file=""
+    local dependency_file;
+    dependency_file=""
     if [[ -f "Package.swift" ]]; then
         dependency_file="Package.swift"
     elif [[ -f "Podfile" ]]; then
@@ -557,7 +592,9 @@ run_dependency_security_check() {
         local dependencies
         dependencies=$(grep -cE "^.*package|^.*pod" "${dependency_file}" || echo "0")
 
-        local dependency_report="Dependencies Found: ${dependencies}\n"
+        local dependency_report;
+
+        dependency_report="Dependencies Found: ${dependencies}\n"
 
         # Check for known vulnerable versions (basic check)
         local outdated_deps
@@ -571,7 +608,9 @@ run_dependency_security_check() {
         local dep_content
         dep_content=$(cat "${dependency_file}")
 
-        local dependency_prompt="Analyze this Swift package dependencies for security:
+        local dependency_prompt;
+
+        dependency_prompt="Analyze this Swift package dependencies for security:
 
 ${dep_content}
 
@@ -592,7 +631,8 @@ Provide specific dependency security recommendations."
         fi
 
         # Save dependency check results
-        local dep_file="${WORKSPACE}/Tools/Automation/results/${project}_dependency_security.txt"
+        local dep_file;
+        dep_file="${WORKSPACE}/Tools/Automation/results/${project}_dependency_security.txt"
 
         {
             echo "Dependency Security Check"
@@ -614,16 +654,23 @@ Provide specific dependency security recommendations."
 
 # Generate comprehensive security report
 generate_security_report() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Generating comprehensive security report for ${project}..."
 
-    local report_file="${WORKSPACE}/Tools/Automation/results/${project}_security_report.md"
+    local report_file;
+
+    report_file="${WORKSPACE}/Tools/Automation/results/${project}_security_report.md"
 
     # Gather all security analysis results
-    local vuln_file="${WORKSPACE}/Tools/Automation/results/${project}_vulnerability_scan.txt"
-    local compliance_file="${WORKSPACE}/Tools/Automation/results/${project}_compliance_check.txt"
-    local encryption_file="${WORKSPACE}/Tools/Automation/results/${project}_encryption_audit.txt"
-    local dep_file="${WORKSPACE}/Tools/Automation/results/${project}_dependency_security.txt"
+    local vuln_file;
+    vuln_file="${WORKSPACE}/Tools/Automation/results/${project}_vulnerability_scan.txt"
+    local compliance_file;
+    compliance_file="${WORKSPACE}/Tools/Automation/results/${project}_compliance_check.txt"
+    local encryption_file;
+    encryption_file="${WORKSPACE}/Tools/Automation/results/${project}_encryption_audit.txt"
+    local dep_file;
+    dep_file="${WORKSPACE}/Tools/Automation/results/${project}_dependency_security.txt"
 
     {
         echo "# Comprehensive Security Report"
@@ -721,7 +768,8 @@ setup_security_monitoring() {
     log "Setting up security monitoring and alerting systems..."
 
     # Create security monitoring configuration
-    local monitoring_config="${WORKSPACE}/Tools/Automation/config/security_monitoring.json"
+    local monitoring_config;
+    monitoring_config="${WORKSPACE}/Tools/Automation/config/security_monitoring.json"
 
     cat >"${monitoring_config}" <<EOF
 {
@@ -765,7 +813,8 @@ EOF
     log "Security monitoring configuration created"
 
     # Create security alert log
-    local alert_log="${WORKSPACE}/Tools/Automation/logs/security_alerts.log"
+    local alert_log;
+    alert_log="${WORKSPACE}/Tools/Automation/logs/security_alerts.log"
     mkdir -p "${WORKSPACE}/Tools/Automation/logs"
 
     echo "[$(date)] Security monitoring system initialized" >"${alert_log}"
@@ -775,7 +824,8 @@ EOF
     log "Security alert log initialized"
 
     # Generate monitoring dashboard
-    local dashboard_file="${WORKSPACE}/Tools/Automation/results/security_monitoring_dashboard.md"
+    local dashboard_file;
+    dashboard_file="${WORKSPACE}/Tools/Automation/results/security_monitoring_dashboard.md"
 
     {
         echo "# Security Monitoring Dashboard"

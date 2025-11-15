@@ -1,0 +1,157 @@
+{
+  "sessions": {
+    "session_1763164475_23666": {
+      "session_id": "session_1763164475_23666",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-14T23:54:35Z",
+      "expires_at": "2025-11-15T11:05:09Z",
+      "active": true
+    },
+    "session_1763164496_11622": {
+      "session_id": "session_1763164496_11622",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-14T23:54:56Z",
+      "expires_at": "2025-11-15T11:05:09Z",
+      "active": true
+    },
+    "session_1763164502_13149": {
+      "session_id": "session_1763164502_13149",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-14T23:55:02Z",
+      "expires_at": "2025-11-15T11:05:09Z",
+      "active": true
+    },
+    "session_1763164652_16476": {
+      "session_id": "session_1763164652_16476",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-14T23:57:32Z",
+      "expires_at": "2025-11-15T11:05:09Z",
+      "active": true
+    },
+    "session_1763173350_4232": {
+      "session_id": "session_1763173350_4232",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:22:30Z",
+      "expires_at": "2025-11-15T10:22:30Z",
+      "active": true
+    },
+    "session_1763173367_2183": {
+      "session_id": "session_1763173367_2183",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:22:47Z",
+      "expires_at": "2025-11-15T10:22:47Z",
+      "active": true
+    },
+    "session_1763173575_10072": {
+      "session_id": "session_1763173575_10072",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:26:15Z",
+      "expires_at": "2025-11-15T10:26:15Z",
+      "active": true
+    },
+    "session_1763173615_32266": {
+      "session_id": "session_1763173615_32266",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:26:55Z",
+      "expires_at": "2025-11-15T10:26:55Z",
+      "active": true
+    },
+    "session_1763173615_29965": {
+      "session_id": "session_1763173615_29965",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:26:55Z",
+      "expires_at": "2025-11-15T10:26:55Z",
+      "active": true
+    },
+    "session_1763173621_1508": {
+      "session_id": "session_1763173621_1508",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:27:01Z",
+      "expires_at": "2025-11-15T10:27:01Z",
+      "active": true
+    },
+    "session_1763173636_25809": {
+      "session_id": "session_1763173636_25809",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:27:16Z",
+      "expires_at": "2025-11-15T10:27:16Z",
+      "active": true
+    },
+    "session_1763173655_28245": {
+      "session_id": "session_1763173655_28245",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:27:35Z",
+      "expires_at": "2025-11-15T10:27:35Z",
+      "active": true
+    },
+    "session_1763173714_25423": {
+      "session_id": "session_1763173714_25423",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:28:34Z",
+      "expires_at": "2025-11-15T10:28:34Z",
+      "active": true
+    },
+    "session_1763173714_5743": {
+      "session_id": "session_1763173714_5743",
+      "username": "developer",
+      "roles": "developer",
+      "created_at": "2025-11-15T02:28:34Z",
+      "expires_at": "2025-11-15T10:28:34Z",
+      "active": true
+    },
+    "session_1763173762_20185": {
+      "session_id": "session_1763173762_20185",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T02:29:22Z",
+      "expires_at": "2025-11-15T10:29:22Z",
+      "active": true
+    },
+    "session_1763173763_18252": {
+      "session_id": "session_1763173763_18252",
+      "username": "developer",
+      "roles": "developer",
+      "created_at": "2025-11-15T02:29:23Z",
+      "expires_at": "2025-11-15T10:29:23Z",
+      "active": true
+    },
+    "session_1763173764_32075": {
+      "session_id": "session_1763173764_32075",
+      "username": "developer",
+      "roles": "developer",
+      "created_at": "2025-11-15T02:29:24Z",
+      "expires_at": "2025-11-15T10:29:24Z",
+      "active": true
+    },
+    "session_1763175702_3651": {
+      "session_id": "session_1763175702_3651",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T03:01:42Z",
+      "expires_at": "2025-11-15T11:01:42Z",
+      "active": true
+    },
+    "session_1763175896_12643": {
+      "session_id": "session_1763175896_12643",
+      "username": "admin",
+      "roles": "super_admin",
+      "created_at": "2025-11-15T03:04:56Z",
+      "expires_at": "2025-11-15T11:04:56Z",
+      "active": true
+    }
+  },
+  "last_updated": null
+}

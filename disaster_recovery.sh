@@ -73,7 +73,9 @@ init_recovery() {
 assess_damage() {
     header "SYSTEM DAMAGE ASSESSMENT"
 
-    local damage_report="$PROJECT_ROOT/recovery/damage_assessment_$(date +%Y%m%d_%H%M%S).txt"
+    local damage_report;
+
+    damage_report="$PROJECT_ROOT/recovery/damage_assessment_$(date +%Y%m%d_%H%M%S).txt"
 
     {
         echo "=== SYSTEM DAMAGE ASSESSMENT ==="
@@ -86,7 +88,8 @@ assess_damage() {
         echo ""
 
         echo "=== CRITICAL FILES STATUS ==="
-        local critical_files=(
+        local critical_files;
+        critical_files=(
             "agent_dashboard_api.py"
             "agents.db"
             "agent_status.json"
@@ -135,7 +138,8 @@ assess_damage() {
 
         echo "=== BACKUP STATUS ==="
         if [ -d "$BACKUP_DIR" ] && [ "$(ls -A "$BACKUP_DIR" 2>/dev/null)" ]; then
-            local tar_gz_count=$(ls "$BACKUP_DIR"/*.tar.gz 2>/dev/null | wc -l)
+            local tar_gz_count;
+            tar_gz_count=$(ls "$BACKUP_DIR"/*.tar.gz 2>/dev/null | wc -l)
             echo "✅ Local backups available: $tar_gz_count .tar.gz files"
             if [ $tar_gz_count -gt 0 ]; then
                 ls -la "$BACKUP_DIR"/*.tar.gz | head -5
@@ -157,14 +161,18 @@ assess_damage() {
 
 # Determine appropriate recovery strategy
 determine_recovery_strategy() {
-    local damage_report="$1"
+    local damage_report;
+    damage_report="$1"
 
     header "RECOVERY STRATEGY DETERMINATION"
 
     # Analyze damage report to determine strategy
-    local missing_critical=0
-    local services_down=0
-    local backups_available=0
+    local missing_critical;
+    missing_critical=0
+    local services_down;
+    services_down=0
+    local backups_available;
+    backups_available=0
 
     if grep -q "MISSING" "$damage_report"; then
         missing_critical=$(grep "MISSING" "$damage_report" | wc -l)
@@ -343,7 +351,9 @@ retrieve_remote_backup() {
 
     info "Attempting to retrieve backup from remote servers..."
 
-    local remote_servers=("$PRIMARY_BACKUP_SERVER" "$SECONDARY_BACKUP_SERVER")
+    local remote_servers;
+
+    remote_servers=("$PRIMARY_BACKUP_SERVER" "$SECONDARY_BACKUP_SERVER")
 
     for server in "${remote_servers[@]}"; do
         if [ "$server" = "backup.example.com" ]; then
@@ -376,10 +386,13 @@ validate_recovery() {
 
     info "Validating recovery success..."
 
-    local validation_passed=true
+    local validation_passed;
+
+    validation_passed=true
 
     # Check critical files
-    local critical_files=("agent_dashboard_api.py" "requirements.txt" "smoke_tests.sh")
+    local critical_files;
+    critical_files=("agent_dashboard_api.py" "requirements.txt" "smoke_tests.sh")
     for file in "${critical_files[@]}"; do
         if [ ! -f "$PROJECT_ROOT/$file" ]; then
             error "Critical file missing: $file"
@@ -429,8 +442,11 @@ except Exception as e:
 generate_recovery_report() {
     header "RECOVERY REPORT GENERATION"
 
-    local recovery_time=$(($(date +%s) - RECOVERY_START_TIME))
-    local report_file="$PROJECT_ROOT/recovery/recovery_report_$(date +%Y%m%d_%H%M%S).md"
+    local recovery_time;
+
+    recovery_time=$(($(date +%s) - RECOVERY_START_TIME))
+    local report_file;
+    report_file="$PROJECT_ROOT/recovery/recovery_report_$(date +%Y%m%d_%H%M%S).md"
 
     {
         echo "# Disaster Recovery Report"
@@ -475,7 +491,8 @@ generate_recovery_report() {
 
 # Main disaster recovery orchestration
 perform_disaster_recovery() {
-    local scenario="${1:-auto}"
+    local scenario;
+    scenario="${1:-auto}"
 
     init_recovery
 
@@ -528,7 +545,8 @@ perform_disaster_recovery() {
     generate_recovery_report
 
     # Calculate total recovery time
-    local total_time=$(($(date +%s) - RECOVERY_START_TIME))
+    local total_time;
+    total_time=$(($(date +%s) - RECOVERY_START_TIME))
     info "Total disaster recovery time: ${total_time} seconds"
 }
 
@@ -580,7 +598,8 @@ interactive_recovery() {
 
 # Command line interface
 main() {
-    local command="${1:-interactive}"
+    local command;
+    command="${1:-interactive}"
 
     case "$command" in
     "auto")

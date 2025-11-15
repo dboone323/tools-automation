@@ -36,9 +36,12 @@ DEFAULT_HASH="sha256"
 
 # Log function
 log() {
-    local level="$1"
-    local message="$2"
-    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    local level;
+    level="$1"
+    local message;
+    message="$2"
+    local timestamp;
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     echo "[${timestamp}] [${level}] ${message}" >>"${LOG_FILE}"
     echo -e "${BLUE}[${level}]${NC} ${message}"
 }
@@ -97,8 +100,10 @@ generate_master_key() {
 
 # Encrypt data using AES-256-GCM
 encrypt_data() {
-    local input="${1:-/dev/stdin}"
-    local output="${2:-/dev/stdout}"
+    local input;
+    input="${1:-/dev/stdin}"
+    local output;
+    output="${2:-/dev/stdout}"
 
     if command -v openssl >/dev/null 2>&1; then
         openssl enc -${DEFAULT_CIPHER} -salt -pbkdf2 -iter 10000 -pass file:<(echo "encryption_agent_key") -in "${input}" -out "${output}" 2>/dev/null || {
@@ -113,8 +118,10 @@ encrypt_data() {
 
 # Decrypt data
 decrypt_data() {
-    local input="${1:-/dev/stdin}"
-    local output="${2:-/dev/stdout}"
+    local input;
+    input="${1:-/dev/stdin}"
+    local output;
+    output="${2:-/dev/stdout}"
 
     if command -v openssl >/dev/null 2>&1; then
         openssl enc -d -${DEFAULT_CIPHER} -pbkdf2 -iter 10000 -pass file:<(echo "encryption_agent_key") -in "${input}" -out "${output}" 2>/dev/null || {
@@ -129,8 +136,10 @@ decrypt_data() {
 
 # Encrypt file
 encrypt_file() {
-    local input_file="$1"
-    local output_file="${2:-${input_file}.enc}"
+    local input_file;
+    input_file="$1"
+    local output_file;
+    output_file="${2:-${input_file}.enc}"
 
     if [[ ! -f "${input_file}" ]]; then
         log "ERROR" "Input file does not exist: ${input_file}"
@@ -144,7 +153,8 @@ encrypt_file() {
 
         # Create backup if configured
         if [[ "$(get_config_value "backup_encrypted")" == "true" ]]; then
-            local backup_file="${BACKUP_DIR}/$(basename "${input_file}").$(date +%Y%m%d_%H%M%S).enc"
+            local backup_file;
+            backup_file="${BACKUP_DIR}/$(basename "${input_file}").$(date +%Y%m%d_%H%M%S).enc"
             cp "${output_file}" "${backup_file}"
             log "INFO" "Encrypted file backed up: ${backup_file}"
         fi
@@ -158,8 +168,10 @@ encrypt_file() {
 
 # Decrypt file
 decrypt_file() {
-    local input_file="$1"
-    local output_file="${2:-${input_file%.enc}}"
+    local input_file;
+    input_file="$1"
+    local output_file;
+    output_file="${2:-${input_file%.enc}}"
 
     if [[ ! -f "${input_file}" ]]; then
         log "ERROR" "Input file does not exist: ${input_file}"
@@ -179,8 +191,10 @@ decrypt_file() {
 
 # Generate encryption key for specific purpose
 generate_key() {
-    local purpose="$1"
-    local key_file="${ENCRYPTION_DIR}/${purpose}_key.enc"
+    local purpose;
+    purpose="$1"
+    local key_file;
+    key_file="${ENCRYPTION_DIR}/${purpose}_key.enc"
 
     log "INFO" "Generating encryption key for: ${purpose}"
 
@@ -201,8 +215,10 @@ generate_key() {
 
 # Encrypt directory recursively
 encrypt_directory() {
-    local input_dir="$1"
-    local output_dir="${2:-${input_dir}_encrypted}"
+    local input_dir;
+    input_dir="$1"
+    local output_dir;
+    output_dir="${2:-${input_dir}_encrypted}"
 
     if [[ ! -d "${input_dir}" ]]; then
         log "ERROR" "Input directory does not exist: ${input_dir}"
@@ -215,8 +231,10 @@ encrypt_directory() {
 
     # Find all files and encrypt them
     find "${input_dir}" -type f -not -name "*.enc" | while read -r file; do
-        local relative_path="${file#${input_dir}/}"
-        local output_file="${output_dir}/${relative_path}.enc"
+        local relative_path;
+        relative_path="${file#${input_dir}/}"
+        local output_file;
+        output_file="${output_dir}/${relative_path}.enc"
 
         mkdir -p "$(dirname "${output_file}")"
 
@@ -232,8 +250,10 @@ encrypt_directory() {
 
 # Decrypt directory recursively
 decrypt_directory() {
-    local input_dir="$1"
-    local output_dir="${2:-${input_dir}_decrypted}"
+    local input_dir;
+    input_dir="$1"
+    local output_dir;
+    output_dir="${2:-${input_dir}_decrypted}"
 
     if [[ ! -d "${input_dir}" ]]; then
         log "ERROR" "Input directory does not exist: ${input_dir}"
@@ -246,8 +266,10 @@ decrypt_directory() {
 
     # Find all encrypted files and decrypt them
     find "${input_dir}" -type f -name "*.enc" | while read -r file; do
-        local relative_path="${file#${input_dir}/}"
-        local output_file="${output_dir}/${relative_path%.enc}"
+        local relative_path;
+        relative_path="${file#${input_dir}/}"
+        local output_file;
+        output_file="${output_dir}/${relative_path%.enc}"
 
         mkdir -p "$(dirname "${output_file}")"
 
@@ -263,7 +285,8 @@ decrypt_directory() {
 
 # Get configuration value
 get_config_value() {
-    local key="$1"
+    local key;
+    key="$1"
     if command -v jq >/dev/null 2>&1 && [[ -f "${CONFIG_FILE}" ]]; then
         jq -r ".${key}" "${CONFIG_FILE}" 2>/dev/null || echo ""
     else
@@ -276,7 +299,9 @@ get_config_value() {
 check_encryption_health() {
     log "INFO" "Checking encryption system health..."
 
-    local issues=0
+    local issues;
+
+    issues=0
 
     # Check if keystore exists and is readable
     if [[ ! -f "${KEYSTORE_FILE}" ]]; then
@@ -299,7 +324,8 @@ check_encryption_health() {
     local key_age_days
     if [[ -f "${KEYSTORE_FILE}" ]]; then
         key_age_days=$((($(date +%s) - $(stat -f %m "${KEYSTORE_FILE}" 2>/dev/null || stat -c %Y "${KEYSTORE_FILE}" 2>/dev/null || echo 0)) / 86400))
-        local max_age=$(get_config_value "key_rotation_days")
+        local max_age;
+        max_age=$(get_config_value "key_rotation_days")
         if [[ "${key_age_days}" -gt "${max_age:-90}" ]]; then
             log "WARNING" "Master key is ${key_age_days} days old, consider rotation"
         fi
@@ -319,7 +345,8 @@ rotate_master_key() {
     log "INFO" "Rotating master encryption key..."
 
     # Backup old keystore
-    local backup_keystore="${KEYSTORE_FILE}.backup.$(date +%Y%m%d_%H%M%S)"
+    local backup_keystore;
+    backup_keystore="${KEYSTORE_FILE}.backup.$(date +%Y%m%d_%H%M%S)"
     cp "${KEYSTORE_FILE}" "${backup_keystore}"
     log "INFO" "Old keystore backed up: ${backup_keystore}"
 
@@ -331,20 +358,24 @@ rotate_master_key() {
 
 # List encrypted files
 list_encrypted_files() {
-    local search_dir="${1:-${ENCRYPTION_DIR}}"
+    local search_dir;
+    search_dir="${1:-${ENCRYPTION_DIR}}"
 
     log "INFO" "Listing encrypted files in: ${search_dir}"
 
     find "${search_dir}" -name "*.enc" -type f | while read -r file; do
-        local size=$(stat -f %z "${file}" 2>/dev/null || stat -c %s "${file}" 2>/dev/null || echo "unknown")
-        local mtime=$(stat -f %Sm -t "%Y-%m-%d %H:%M:%S" "${file}" 2>/dev/null || stat -c "%y" "${file}" 2>/dev/null || echo "unknown")
+        local size;
+        size=$(stat -f %z "${file}" 2>/dev/null || stat -c %s "${file}" 2>/dev/null || echo "unknown")
+        local mtime;
+        mtime=$(stat -f %Sm -t "%Y-%m-%d %H:%M:%S" "${file}" 2>/dev/null || stat -c "%y" "${file}" 2>/dev/null || echo "unknown")
         echo "${file} (${size} bytes, modified: ${mtime})"
     done
 }
 
 # Clean up old encrypted backups
 cleanup_old_backups() {
-    local days_to_keep="${1:-30}"
+    local days_to_keep;
+    days_to_keep="${1:-30}"
 
     log "INFO" "Cleaning up encrypted backups older than ${days_to_keep} days..."
 
@@ -355,7 +386,8 @@ cleanup_old_backups() {
 
 # Main function
 main() {
-    local command="${1:-help}"
+    local command;
+    command="${1:-help}"
 
     case "${command}" in
     "init")

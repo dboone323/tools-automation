@@ -124,8 +124,11 @@ list_backups() {
 create_pre_rollback_backup() {
     info "Creating pre-rollback backup..."
 
-    local backup_name="backup_$(date +%Y%m%d_%H%M%S)_prerollback.tar.gz"
-    local backup_path="$BACKUP_DIR/$backup_name"
+    local backup_name;
+
+    backup_name="backup_$(date +%Y%m%d_%H%M%S)_prerollback.tar.gz"
+    local backup_path;
+    backup_path="$BACKUP_DIR/$backup_name"
 
     # Create backup of current state
     if tar -czf "$backup_path" \
@@ -178,10 +181,12 @@ start_services() {
     # Start MCP server
     info "Starting MCP server..."
     nohup python "$PROJECT_ROOT/agent_dashboard_api.py" >"$LOG_DIR/mcp_server.log" 2>&1 &
-    local mcp_pid=$!
+    local mcp_pid;
+    mcp_pid=$!
 
     # Wait for server to start
-    local retries=30
+    local retries;
+    retries=30
     while [ $retries -gt 0 ]; do
         if curl -f -s http://localhost:5005/health >/dev/null 2>&1; then
             success "MCP server started (PID: $mcp_pid)"
@@ -206,7 +211,8 @@ start_services() {
 
 # Perform rollback to specific backup
 rollback_to_backup() {
-    local backup_file="$1"
+    local backup_file;
+    backup_file="$1"
 
     if [ ! -f "$backup_file" ]; then
         error "Backup file not found: $backup_file"
@@ -218,7 +224,8 @@ rollback_to_backup() {
     # Extract backup to temporary location first
     local temp_dir
     temp_dir=$(mktemp -d)
-    local extract_success=false
+    local extract_success;
+    extract_success=false
 
     if tar -tzf "$backup_file" >/dev/null 2>&1; then
         if tar -xzf "$backup_file" -C "$temp_dir"; then
@@ -243,7 +250,8 @@ rollback_to_backup() {
     info "Applying rollback..."
 
     # Backup current database and critical files
-    local critical_backup="$BACKUP_DIR/critical_pre_rollback_$(date +%Y%m%d_%H%M%S).tar.gz"
+    local critical_backup;
+    critical_backup="$BACKUP_DIR/critical_pre_rollback_$(date +%Y%m%d_%H%M%S).tar.gz"
     if [ -f "$PROJECT_ROOT/agents.db" ]; then
         tar -czf "$critical_backup" -C "$PROJECT_ROOT" agents.db 2>/dev/null || true
     fi
@@ -278,8 +286,10 @@ verify_rollback() {
     info "Verifying rollback success..."
 
     # Check if files were restored
-    local critical_files=("agent_dashboard_api.py" "smoke_tests.sh" "requirements.txt")
-    local missing_files=()
+    local critical_files;
+    critical_files=("agent_dashboard_api.py" "smoke_tests.sh" "requirements.txt")
+    local missing_files;
+    missing_files=()
 
     for file in "${critical_files[@]}"; do
         if [ ! -f "$PROJECT_ROOT/$file" ]; then
@@ -326,8 +336,10 @@ emergency_rollback() {
 
 # Main rollback function
 perform_rollback() {
-    local backup_file="$1"
-    local skip_validation="${2:-false}"
+    local backup_file;
+    backup_file="$1"
+    local skip_validation;
+    skip_validation="${2:-false}"
 
     log "Starting rollback procedure"
     log "Backup file: $backup_file"
@@ -438,9 +450,12 @@ interactive_rollback() {
 
 # Command line interface
 main() {
-    local command="${1:-interactive}"
-    local backup_file="${2:-}"
-    local skip_validation="${3:-false}"
+    local command;
+    command="${1:-interactive}"
+    local backup_file;
+    backup_file="${2:-}"
+    local skip_validation;
+    skip_validation="${3:-false}"
 
     case "$command" in
     "list")

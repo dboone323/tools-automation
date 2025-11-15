@@ -40,9 +40,13 @@ get_snapshot_filename() {
 collect_validation_metrics() {
   log_info "Collecting validation metrics..."
 
-  local total_validations=0
-  local passed_validations=0
-  local failed_validations=0
+  local total_validations;
+
+  total_validations=0
+  local passed_validations;
+  passed_validations=0
+  local failed_validations;
+  failed_validations=0
 
   # Count validation results from logs (last 24 hours)
   if [[ -d "${ROOT_DIR}/Tools/Automation" ]]; then
@@ -51,7 +55,9 @@ collect_validation_metrics() {
     failed_validations=$(find "${ROOT_DIR}/Tools/Automation" -name "*.log" -mtime -1 -exec grep -c "FAIL" {} + 2>/dev/null | awk '{sum+=$1} END {print sum+0}')
   fi
 
-  local success_rate=0
+  local success_rate;
+
+  success_rate=0
   if [[ $total_validations -gt 0 ]]; then
     success_rate=$(awk "BEGIN {printf \"%.2f\", ($passed_validations / $total_validations) * 100}")
   fi
@@ -70,10 +76,15 @@ EOF
 collect_ai_review_metrics() {
   log_info "Collecting AI review metrics..."
 
-  local total_reviews=0
-  local approved_reviews=0
-  local needs_changes=0
-  local blocked_reviews=0
+  local total_reviews;
+
+  total_reviews=0
+  local approved_reviews;
+  approved_reviews=0
+  local needs_changes;
+  needs_changes=0
+  local blocked_reviews;
+  blocked_reviews=0
 
   # Count AI review results from logs (last 24 hours)
   if [[ -d "${ROOT_DIR}/Tools/Automation" ]]; then
@@ -97,10 +108,15 @@ EOF
 collect_mcp_metrics() {
   log_info "Collecting MCP alert metrics..."
 
-  local critical_alerts=0
-  local error_alerts=0
-  local warning_alerts=0
-  local info_alerts=0
+  local critical_alerts;
+
+  critical_alerts=0
+  local error_alerts;
+  error_alerts=0
+  local warning_alerts;
+  warning_alerts=0
+  local info_alerts;
+  info_alerts=0
 
   # Try to fetch from MCP server, fall back to log analysis
   if curl -sf "${MCP_SERVER}/alerts?since=24h" >/dev/null 2>&1; then
@@ -132,8 +148,11 @@ EOF
 collect_ollama_metrics() {
   log_info "Collecting Ollama metrics..."
 
-  local ollama_available="false"
-  local model_count=0
+  local ollama_available;
+
+  ollama_available="false"
+  local model_count;
+  model_count=0
 
   if curl -sf "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then
     ollama_available="true"
@@ -194,9 +213,13 @@ EOF
 collect_repo_metrics() {
   log_info "Collecting repository metrics..."
 
-  local branch_count=0
-  local stale_branches=0
-  local open_prs=0
+  local branch_count;
+
+  branch_count=0
+  local stale_branches;
+  stale_branches=0
+  local open_prs;
+  open_prs=0
 
   # Count branches
   if git rev-parse --git-dir >/dev/null 2>&1; then

@@ -25,7 +25,8 @@ mkdir -p "$COVERAGE_DIR"
 
 # Function to run coverage analysis
 run_coverage_analysis() {
-    local REPORT_FILE="$COVERAGE_DIR/coverage_report_$(date +%Y%m%d_%H%M%S).md"
+    local REPORT_FILE;
+    REPORT_FILE="$COVERAGE_DIR/coverage_report_$(date +%Y%m%d_%H%M%S).md"
 
     echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${BLUE}║         📊 Quantum Workspace Coverage Analysis                ║${NC}"
@@ -48,8 +49,10 @@ EOF
 
     # Function to count Swift files and tests
     analyze_swift_project() {
-        local project_name=$1
-        local project_path=$2
+        local project_name;
+        project_name=$1
+        local project_path;
+        project_path=$2
 
         echo -e "${YELLOW}📱 Analyzing $project_name...${NC}"
 
@@ -62,7 +65,8 @@ EOF
         test_files=$(find "$project_path" -name "*Tests.swift" 2>/dev/null | wc -l | tr -d ' ')
 
         # Calculate test ratio (rough proxy for coverage)
-        local test_ratio=0
+        local test_ratio;
+        test_ratio=0
         if [ "$source_files" -gt 0 ]; then
             test_ratio=$((test_files * 100 / source_files))
         fi
@@ -72,13 +76,16 @@ EOF
         untested_files=$(find "$project_path" -name "*.swift" ! -path "*/Tests/*" ! -path "*/UITests/*" ! -name "*Tests.swift" ! -name "App.swift" ! -name "ContentView.swift" 2>/dev/null | while read -r file; do
             local filename
             filename=$(basename "$file" .swift)
-            local test_file="${filename}Tests.swift"
+            local test_file;
+            test_file="${filename}Tests.swift"
             if ! find "$project_path" -name "$test_file" 2>/dev/null | grep -q .; then
                 echo "  - $(basename "$file")"
             fi
         done)
 
-        local status_icon="❌"
+        local status_icon;
+
+        status_icon="❌"
         [ "$test_ratio" -ge 85 ] && status_icon="✅"
         [ "$test_ratio" -ge 70 ] && [ "$test_ratio" -lt 85 ] && status_icon="⚠️"
 
@@ -193,7 +200,9 @@ EOF
     analyze_agents() {
         echo -e "${YELLOW}🤖 Analyzing agent scripts...${NC}"
 
-        local agent_dir="$WORKSPACE_ROOT/agents"
+        local agent_dir;
+
+        agent_dir="$WORKSPACE_ROOT/agents"
         if [ -d "$agent_dir" ]; then
             local agent_files
             agent_files=$(find "$agent_dir" -type f \( -name "*.sh" -o -name "*.py" \) 2>/dev/null | wc -l | tr -d ' ')

@@ -75,7 +75,8 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 # Check if test should be quarantined
 is_quarantined() {
-    local test_name="$1"
+    local test_name;
+    test_name="$1"
     for quarantined in "${QUARANTINE_TESTS[@]}"; do
         if [ "$test_name" = "$quarantined" ]; then
             return 0
@@ -86,8 +87,10 @@ is_quarantined() {
 
 # Record test result
 record_test_result() {
-    local test_name="$1"
-    local result="$2" # passed|failed|skipped|flaky|quarantined
+    local test_name;
+    test_name="$1"
+    local result;
+    result="$2" # passed|failed|skipped|flaky|quarantined
 
     TOTAL_TESTS=$((TOTAL_TESTS + 1))
 
@@ -100,14 +103,16 @@ record_test_result() {
     esac
 
     # Log to test results file
-    local results_file="$ROOT_DIR/reports/test_results_$(date +%Y%m%d_%H%M%S).jsonl"
+    local results_file;
+    results_file="$ROOT_DIR/reports/test_results_$(date +%Y%m%d_%H%M%S).jsonl"
     mkdir -p "$ROOT_DIR/reports"
     echo "{\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"test\":\"$test_name\",\"result\":\"$result\"}" >>"$results_file"
 }
 
 # Run test with retry logic if enabled
 run_test_with_retry() {
-    local test_name="$1"
+    local test_name;
+    test_name="$1"
     shift
 
     if [ "${RETRY_FLAKY:-0}" = "1" ] && type retry_with_backoff >/dev/null 2>&1; then
@@ -115,7 +120,8 @@ run_test_with_retry() {
             record_test_result "$test_name" "passed"
             return 0
         else
-            local exit_code=$?
+            local exit_code;
+            exit_code=$?
             # Check if this is a known flaky test
             if is_quarantined "$test_name"; then
                 record_test_result "$test_name" "flaky"
@@ -131,7 +137,8 @@ run_test_with_retry() {
             record_test_result "$test_name" "passed"
             return 0
         else
-            local exit_code=$?
+            local exit_code;
+            exit_code=$?
             record_test_result "$test_name" "failed"
             return $exit_code
         fi
@@ -183,7 +190,8 @@ shell_tests() {
 python_tests() {
     echo "[phase] Python tests"
     if [ -d tests ]; then
-        local PY=python
+        local PY;
+        PY=python
         # Prefer venv python explicitly if available
         if [ -x "$ROOT_DIR/.venv/bin/python" ]; then
             PY="$ROOT_DIR/.venv/bin/python"
@@ -201,7 +209,8 @@ python_tests() {
         fi
 
         # Build pytest command
-        local cmd=("$PY" -m pytest)
+        local cmd;
+        cmd=("$PY" -m pytest)
         if [ "${COVERAGE:-0}" = "1" ] && "$PY" -c "import coverage" >/dev/null 2>&1; then
             cmd=("$PY" -m coverage run -m pytest)
         fi
@@ -290,10 +299,13 @@ merge_coverage_reports() {
 
 # Generate test summary report
 generate_test_summary() {
-    local summary_file="$ROOT_DIR/reports/test_summary_$(date +%Y%m%d_%H%M%S).json"
+    local summary_file;
+    summary_file="$ROOT_DIR/reports/test_summary_$(date +%Y%m%d_%H%M%S).json"
     mkdir -p "$ROOT_DIR/reports"
 
-    local success_rate=0
+    local success_rate;
+
+    success_rate=0
     if [ $TOTAL_TESTS -gt 0 ]; then
         success_rate=$((PASSED_TESTS * 100 / TOTAL_TESTS))
     fi

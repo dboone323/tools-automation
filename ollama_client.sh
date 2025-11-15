@@ -136,7 +136,8 @@ MEMORY_AWARE_CHUNKING=$(jq -r '.guidance.memoryAwareChunking // false' "$RESOURC
 
 # Policy enforcement functions
 check_quota() {
-    local priority=$1
+    local priority;
+    priority=$1
 
     if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
         return 0 # Policy not enabled, allow all
@@ -148,10 +149,14 @@ check_quota() {
     fi
 
     # Check quota availability
-    local daily_used=$(jq -r ".quotas.${priority}.daily_used // 0" "$QUOTA_TRACKER")
-    local hourly_used=$(jq -r ".quotas.${priority}.hourly_used // 0" "$QUOTA_TRACKER")
-    local daily_limit=$(jq -r ".quotas.${priority}.daily_limit // 999999" "$QUOTA_TRACKER")
-    local hourly_limit=$(jq -r ".quotas.${priority}.hourly_limit // 999999" "$QUOTA_TRACKER")
+    local daily_used;
+    daily_used=$(jq -r ".quotas.${priority}.daily_used // 0" "$QUOTA_TRACKER")
+    local hourly_used;
+    hourly_used=$(jq -r ".quotas.${priority}.hourly_used // 0" "$QUOTA_TRACKER")
+    local daily_limit;
+    daily_limit=$(jq -r ".quotas.${priority}.daily_limit // 999999" "$QUOTA_TRACKER")
+    local hourly_limit;
+    hourly_limit=$(jq -r ".quotas.${priority}.hourly_limit // 999999" "$QUOTA_TRACKER")
 
     if [[ $daily_used -ge $daily_limit ]] || [[ $hourly_used -ge $hourly_limit ]]; then
         return 1 # Quota exhausted
@@ -161,21 +166,28 @@ check_quota() {
 }
 
 check_circuit_breaker() {
-    local priority=$1
+    local priority;
+    priority=$1
 
     if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
         return 0 # Policy not enabled, allow all
     fi
 
-    local cb_state=$(jq -r ".circuit_breaker.${priority}.state // \"closed\"" "$QUOTA_TRACKER")
+    local cb_state;
+
+    cb_state=$(jq -r ".circuit_breaker.${priority}.state // \"closed\"" "$QUOTA_TRACKER")
 
     if [[ "$cb_state" == "open" ]]; then
         # Check if reset time has passed
-        local opened_at=$(jq -r ".circuit_breaker.${priority}.opened_at // null" "$QUOTA_TRACKER")
+        local opened_at;
+        opened_at=$(jq -r ".circuit_breaker.${priority}.opened_at // null" "$QUOTA_TRACKER")
         if [[ "$opened_at" != "null" ]]; then
-            local now=$(date +%s)
-            local opened_timestamp=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$opened_at" +%s 2>/dev/null || echo 0)
-            local reset_seconds=$((CB_RESET_MINUTES * 60))
+            local now;
+            now=$(date +%s)
+            local opened_timestamp;
+            opened_timestamp=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$opened_at" +%s 2>/dev/null || echo 0)
+            local reset_seconds;
+            reset_seconds=$((CB_RESET_MINUTES * 60))
 
             if [[ $((now - opened_timestamp)) -ge $reset_seconds ]]; then
                 # Reset circuit breaker
@@ -190,14 +202,18 @@ check_circuit_breaker() {
 }
 
 record_failure() {
-    local priority=$1
+    local priority;
+    priority=$1
 
     if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
         return 0
     fi
 
-    local now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-    local failure_count=$(jq -r ".circuit_breaker.${priority}.failure_count // 0" "$QUOTA_TRACKER")
+    local now;
+
+    now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    local failure_count;
+    failure_count=$(jq -r ".circuit_breaker.${priority}.failure_count // 0" "$QUOTA_TRACKER")
     failure_count=$((failure_count + 1))
 
     # Update failure count
@@ -211,37 +227,50 @@ record_failure() {
 }
 
 increment_quota() {
-    local priority=$1
+    local priority;
+    priority=$1
 
     if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
         return 0
     fi
 
-    local daily_used=$(jq -r ".quotas.${priority}.daily_used // 0" "$QUOTA_TRACKER")
-    local hourly_used=$(jq -r ".quotas.${priority}.hourly_used // 0" "$QUOTA_TRACKER")
+    local daily_used;
+
+    daily_used=$(jq -r ".quotas.${priority}.daily_used // 0" "$QUOTA_TRACKER")
+    local hourly_used;
+    hourly_used=$(jq -r ".quotas.${priority}.hourly_used // 0" "$QUOTA_TRACKER")
 
     jq ".quotas.${priority}.daily_used = $((daily_used + 1)) | .quotas.${priority}.hourly_used = $((hourly_used + 1))" "$QUOTA_TRACKER" >"${QUOTA_TRACKER}.tmp" && mv "${QUOTA_TRACKER}.tmp" "$QUOTA_TRACKER"
 }
 
 log_cloud_escalation() {
-    local task=$1
-    local priority=$2
-    local reason=$3
-    local model_attempted=$4
-    local cloud_provider=$5
+    local task;
+    task=$1
+    local priority;
+    priority=$2
+    local reason;
+    reason=$3
+    local model_attempted;
+    model_attempted=$4
+    local cloud_provider;
+    cloud_provider=$5
 
     if [[ "$FALLBACK_POLICY_ENABLED" != "true" ]]; then
         return 0
     fi
 
-    local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-    local quota_remaining=$(jq -r ".quotas.${priority}.daily_limit - .quotas.${priority}.daily_used" "$QUOTA_TRACKER")
+    local timestamp;
+
+    timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    local quota_remaining;
+    quota_remaining=$(jq -r ".quotas.${priority}.daily_limit - .quotas.${priority}.daily_used" "$QUOTA_TRACKER")
 
     # Append to escalation log
     echo "{\"timestamp\": \"$timestamp\", \"task\": \"$task\", \"priority\": \"$priority\", \"reason\": \"$reason\", \"model_attempted\": \"$model_attempted\", \"cloud_provider\": \"$cloud_provider\", \"quota_remaining\": $quota_remaining}" >>"$ESCALATION_LOG"
 
     # Update dashboard metrics
-    local dashboard_file="${DASHBOARD_DATA:-dashboard_data.json}"
+    local dashboard_file;
+    dashboard_file="${DASHBOARD_DATA:-dashboard_data.json}"
     if [[ -f "$dashboard_file" ]]; then
         jq ".ai_metrics = (.ai_metrics // {}) | .ai_metrics.escalation_count = ((.ai_metrics.escalation_count // 0) + 1) | .ai_metrics.fallback_rate = ((.ai_metrics.escalation_count // 0) / (.ollama_metrics.total_calls // 1))" "$dashboard_file" >"${dashboard_file}.tmp" && mv "${dashboard_file}.tmp" "$dashboard_file" 2>/dev/null || true
     fi
@@ -249,13 +278,18 @@ log_cloud_escalation() {
 
 # Function to chunk large prompts
 chunk_prompt() {
-    local prompt=$1
-    local max_tokens=$2
-    local overlap=$3
+    local prompt;
+    prompt=$1
+    local max_tokens;
+    max_tokens=$2
+    local overlap;
+    overlap=$3
 
     # Rough token estimation: ~4 chars per token
-    local prompt_chars=${#prompt}
-    local estimated_tokens=$((prompt_chars / 4))
+    local prompt_chars;
+    prompt_chars=${#prompt}
+    local estimated_tokens;
+    estimated_tokens=$((prompt_chars / 4))
 
     if [[ $estimated_tokens -le $max_tokens ]]; then
         echo "$prompt"
@@ -263,18 +297,26 @@ chunk_prompt() {
     fi
 
     # Split into chunks with overlap
-    local chunk_size_chars=$((max_tokens * 4))
-    local overlap_chars=$((overlap * 4))
-    local chunks=()
+    local chunk_size_chars;
+    chunk_size_chars=$((max_tokens * 4))
+    local overlap_chars;
+    overlap_chars=$((overlap * 4))
+    local chunks;
+    chunks=()
 
-    local start=0
+    local start;
+
+    start=0
     while [[ $start -lt $prompt_chars ]]; do
-        local end=$((start + chunk_size_chars))
+        local end;
+        end=$((start + chunk_size_chars))
         if [[ $end -gt $prompt_chars ]]; then
             end=$prompt_chars
         fi
 
-        local chunk="${prompt:start:end-start}"
+        local chunk;
+
+        chunk="${prompt:start:end-start}"
         chunks+=("$chunk")
 
         # Move start position with overlap
@@ -290,8 +332,10 @@ chunk_prompt() {
 
 # Function to process chunked prompt
 process_chunked_prompt() {
-    local full_prompt=$1
-    local model=$2
+    local full_prompt;
+    full_prompt=$1
+    local model;
+    model=$2
 
     if [[ "$CHUNK_LARGE_INPUTS" != "true" ]]; then
         echo "$full_prompt"
@@ -307,7 +351,8 @@ process_chunked_prompt() {
 
 # Function to try a model
 try_model() {
-    local model=$1
+    local model;
+    model=$1
 
     if [[ "$DRY_RUN" == true ]]; then
         # Dry run mode: just return routing info without inference
@@ -315,12 +360,15 @@ try_model() {
         return 0
     fi
 
-    local start_time=$(date +%s)
+    local start_time;
+
+    start_time=$(date +%s)
     local output
     local exit_code
 
     # Build prompt with system if provided
-    local full_prompt="$prompt"
+    local full_prompt;
+    full_prompt="$prompt"
     if [[ -n "$system" ]]; then
         full_prompt="$system\n\n$prompt"
     fi
@@ -339,10 +387,13 @@ try_model() {
         log_usage_metrics "$task" "$model" "0" "0" "timeout"
         return 1
     elif [[ $exit_code -eq 0 && -n "$output" ]]; then
-        local end_time=$(date +%s)
-        local latency_ms=$(((end_time - start_time) * 1000))
+        local end_time;
+        end_time=$(date +%s)
+        local latency_ms;
+        latency_ms=$(((end_time - start_time) * 1000))
         # Estimate tokens (rough: 4 chars per token, account for chunking)
-        local tokens_est=$((${#processed_prompt} / 4 + ${#output} / 4))
+        local tokens_est;
+        tokens_est=$((${#processed_prompt} / 4 + ${#output} / 4))
 
         # Log usage metrics to dashboard_data.json
         log_usage_metrics "$task" "$model" "$latency_ms" "$tokens_est" "success"
@@ -359,20 +410,30 @@ try_model() {
 
 # Log usage metrics to dashboard_data.json
 log_usage_metrics() {
-    local task=$1
-    local model=$2
-    local latency_ms=$3
-    local tokens_est=$4
-    local status=$5
+    local task;
+    task=$1
+    local model;
+    model=$2
+    local latency_ms;
+    latency_ms=$3
+    local tokens_est;
+    tokens_est=$4
+    local status;
+    status=$5
 
-    local dashboard_file="${DASHBOARD_DATA:-dashboard_data.json}"
-    local timestamp=$(date +%s)
+    local dashboard_file;
+
+    dashboard_file="${DASHBOARD_DATA:-dashboard_data.json}"
+    local timestamp;
+    timestamp=$(date +%s)
 
     # Create backup before modifying registry (for rollback)
     if [[ "$ROLLBACK" != true && -f "$MODEL_REGISTRY" ]]; then
-        local backup_dir="./ollama_backups"
+        local backup_dir;
+        backup_dir="./ollama_backups"
         mkdir -p "$backup_dir"
-        local backup_file="$backup_dir/$(basename "$MODEL_REGISTRY" .json)_$(date +%Y%m%d_%H%M%S).json"
+        local backup_file;
+        backup_file="$backup_dir/$(basename "$MODEL_REGISTRY" .json)_$(date +%Y%m%d_%H%M%S).json"
         cp "$MODEL_REGISTRY" "$backup_file"
     fi
 

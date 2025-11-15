@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -60,10 +60,12 @@ WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"  # Seconds to wait when system is busy
 
 # Function to check if we should proceed with task processing
 ensure_within_limits() {
-    local agent_name="ai_docs_agent.sh"
+    local agent_name;
+    agent_name="ai_docs_agent.sh"
 
     # Check concurrent instances
-    local running_count=$(pgrep -f "${agent_name}" | wc -l)
+    local running_count;
+    running_count=$(pgrep -f "${agent_name}" | wc -l)
     if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
         log "Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..."
         return 1
@@ -105,8 +107,10 @@ log() {
 
 # Ollama Integration Functions
 ollama_query() {
-    local prompt="$1"
-    local model="${2:-codellama}"
+    local prompt;
+    prompt="$1"
+    local model;
+    model="${2:-codellama}"
 
     curl -s -X POST "${OLLAMA_ENDPOINT}/api/generate" \
         -H "Content-Type: application/json" \
@@ -116,7 +120,8 @@ ollama_query() {
 
 # Update agent status
 update_status() {
-    local status="$1"
+    local status;
+    status="$1"
     if command -v jq &>/dev/null; then
         jq "(.[] | select(.id == \"${AGENT_NAME}\") | .status) = \"${status}\" | (.[] | select(.id == \"${AGENT_NAME}\") | .last_seen) = $(date +%s)" "${AGENT_STATUS_FILE}" >"${AGENT_STATUS_FILE}.tmp" && mv "${AGENT_STATUS_FILE}.tmp" "${AGENT_STATUS_FILE}"
     fi
@@ -125,7 +130,8 @@ update_status() {
 
 # Process a specific task
 process_task() {
-    local task_id="$1"
+    local task_id;
+    task_id="$1"
     echo "[$(date)] ${AGENT_NAME}: Processing task ${task_id}" >>"${LOG_FILE}"
 
     # Get task details
@@ -156,8 +162,10 @@ process_task() {
 
 # Update task status
 update_task_status() {
-    local task_id="$1"
-    local status="$2"
+    local task_id;
+    task_id="$1"
+    local status;
+    status="$2"
     if command -v jq &>/dev/null; then
         jq "(.tasks[] | select(.id == \"${task_id}\") | .status) = \"${status}\"" "${TASK_QUEUE_FILE}" >"${TASK_QUEUE_FILE}.tmp" && mv "${TASK_QUEUE_FILE}.tmp" "${TASK_QUEUE_FILE}"
     fi
@@ -165,11 +173,13 @@ update_task_status() {
 
 # Main AI documentation generation function
 run_ai_documentation() {
-    local task_desc="$1"
+    local task_desc;
+    task_desc="$1"
     log "Running AI documentation generation for: ${task_desc}"
 
     # Extract project name from task description or use all projects
-    local projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
+    local projects;
+    projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
 
     for project in "${projects[@]}"; do
         if [[ -d "${WORKSPACE}/Projects/${project}" ]]; then
@@ -194,20 +204,28 @@ run_ai_documentation() {
 
 # Generate API documentation
 generate_api_documentation() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Generating API documentation for ${project}..."
 
-    local api_file="${DOCS_DIR}/API/${project}_API.md"
+    local api_file;
+
+    api_file="${DOCS_DIR}/API/${project}_API.md"
     mkdir -p "${DOCS_DIR}/API"
 
     # Analyze Swift files for API endpoints and public interfaces
     local swift_files
     swift_files=$(find "${WORKSPACE}/Projects/${project}" -name "*.swift" -type f)
 
-    local api_content=""
-    local public_functions=""
-    local classes=""
-    local protocols=""
+    local api_content;
+
+    api_content=""
+    local public_functions;
+    public_functions=""
+    local classes;
+    classes=""
+    local protocols;
+    protocols=""
 
     for file in ${swift_files}; do
         if [[ -f "${file}" ]]; then
@@ -235,7 +253,8 @@ generate_api_documentation() {
     done
 
     # Use AI to generate comprehensive API documentation
-    local api_prompt="Generate comprehensive API documentation for this Swift iOS/macOS application:
+    local api_prompt;
+    api_prompt="Generate comprehensive API documentation for this Swift iOS/macOS application:
 
 Project: ${project}
 
@@ -314,10 +333,13 @@ Format as clean Markdown documentation suitable for developers."
 
 # Generate architecture documentation
 generate_architecture_documentation() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Generating architecture documentation for ${project}..."
 
-    local arch_file="${DOCS_DIR}/Architecture/${project}_Architecture.md"
+    local arch_file;
+
+    arch_file="${DOCS_DIR}/Architecture/${project}_Architecture.md"
     mkdir -p "${DOCS_DIR}/Architecture"
 
     # Analyze project structure
@@ -334,7 +356,8 @@ generate_architecture_documentation() {
     shared_components=$(find "${WORKSPACE}/Projects/${project}" -name "*.swift" -exec grep -l "SharedArchitecture\|SharedTypes" {} \; | wc -l)
 
     # Use AI to generate architecture documentation
-    local arch_prompt="Generate comprehensive architecture documentation for this Swift application:
+    local arch_prompt;
+    arch_prompt="Generate comprehensive architecture documentation for this Swift application:
 
 Project: ${project}
 File Count: ${file_count} Swift files
@@ -418,17 +441,22 @@ Format as architectural documentation for developers and architects."
 
 # Generate user guide
 generate_user_guide() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Generating user guide for ${project}..."
 
-    local guide_file="${DOCS_DIR}/UserGuides/${project}_User_Guide.md"
+    local guide_file;
+
+    guide_file="${DOCS_DIR}/UserGuides/${project}_User_Guide.md"
     mkdir -p "${DOCS_DIR}/UserGuides"
 
     # Analyze UI components and features
     local ui_files
     ui_files=$(find "${WORKSPACE}/Projects/${project}" -name "*.swift" -exec grep -l "View\|Button\|TextField\|List" {} \; | wc -l)
 
-    local features=""
+    local features;
+
+    features=""
     case "${project}" in
     "CodingReviewer")
         features="Code review, analysis, and collaboration features"
@@ -448,7 +476,8 @@ generate_user_guide() {
     esac
 
     # Use AI to generate user guide
-    local guide_prompt="Generate a comprehensive user guide for this Swift application:
+    local guide_prompt;
+    guide_prompt="Generate a comprehensive user guide for this Swift application:
 
 Project: ${project}
 UI Components: ${ui_files} files with user interface elements
@@ -572,10 +601,13 @@ Make it accessible for non-technical users while covering all major functionalit
 
 # Generate developer guide
 generate_developer_guide() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Generating developer guide for ${project}..."
 
-    local dev_file="${DOCS_DIR}/Developer/${project}_Developer_Guide.md"
+    local dev_file;
+
+    dev_file="${DOCS_DIR}/Developer/${project}_Developer_Guide.md"
     mkdir -p "${DOCS_DIR}/Developer"
 
     # Analyze development aspects
@@ -586,7 +618,8 @@ generate_developer_guide() {
     build_configs=$(find "${WORKSPACE}/Projects/${project}" -name "*.xcconfig" -o -name "Package.swift" | wc -l)
 
     # Use AI to generate developer guide
-    local dev_prompt="Generate a comprehensive developer guide for this Swift application:
+    local dev_prompt;
+    dev_prompt="Generate a comprehensive developer guide for this Swift application:
 
 Project: ${project}
 Test Files: ${test_files} test files
@@ -764,7 +797,9 @@ Focus on practical development information for team members."
 generate_workspace_overview() {
     log "Generating workspace overview documentation..."
 
-    local overview_file="${DOCS_DIR}/README.md"
+    local overview_file;
+
+    overview_file="${DOCS_DIR}/README.md"
 
     # Count projects and files
     local project_count
@@ -961,7 +996,9 @@ generate_workspace_overview() {
 generate_integration_guide() {
     log "Generating integration guide..."
 
-    local integration_file="${DOCS_DIR}/Integration_Guide.md"
+    local integration_file;
+
+    integration_file="${DOCS_DIR}/Integration_Guide.md"
 
     {
         echo "# Integration Guide"

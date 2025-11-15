@@ -56,12 +56,14 @@ cleanup_test_env() {
 
 # Test 1: Error extraction from log lines
 test_error_extraction() {
-    local test_name="test_error_extraction"
+    local test_name;
+    test_name="test_error_extraction"
     announce_test "$test_name"
 
     # Define extract_error function (simplified version)
     extract_error() {
-        local line="$1"
+        local line;
+        line="$1"
 
         # Simple pattern matching for errors
         if echo "${line}" | grep -qiE '(ERROR|FAILED|exception|fatal)'; then
@@ -94,7 +96,8 @@ test_error_extraction() {
 
 # Test 2: Knowledge base initialization
 test_knowledge_base_init() {
-    local test_name="test_knowledge_base_init"
+    local test_name;
+    test_name="test_knowledge_base_init"
     announce_test "$test_name"
 
     # Define initialize function
@@ -132,7 +135,8 @@ test_knowledge_base_init() {
 
 # Test 3: Error recording to database
 test_error_recording() {
-    local test_name="test_error_recording"
+    local test_name;
+    test_name="test_error_recording"
     announce_test "$test_name"
 
     # Initialize knowledge base
@@ -141,13 +145,15 @@ test_error_recording() {
 
     # Define record_error function (simplified)
     record_error() {
-        local error_json="$1"
+        local error_json;
+        error_json="$1"
         # Simple mock - just append to a test file
         echo "$error_json" >>"${TEST_DIR}/recorded_errors.txt"
     }
 
     # Test recording an error
-    local test_error='{"timestamp":"2025-01-09 10:00:01","agent":"test_agent","message":"Test error","hash":"abc123"}'
+    local test_error;
+    test_error='{"timestamp":"2025-01-09 10:00:01","agent":"test_agent","message":"Test error","hash":"abc123"}'
     record_error "$test_error"
 
     # Check if error was recorded
@@ -162,20 +168,25 @@ test_error_recording() {
 
 # Test 4: Log file monitoring
 test_log_monitoring() {
-    local test_name="test_log_monitoring"
+    local test_name;
+    test_name="test_log_monitoring"
     announce_test "$test_name"
 
     # Create test log file
-    local test_log="${TEST_DIR}/monitor_test.log"
+    local test_log;
+    test_log="${TEST_DIR}/monitor_test.log"
     echo "[2025-01-09 10:00:01] [test] ERROR: Test error message" >"$test_log"
 
     # Define monitor_log function (simplified)
     monitor_log() {
-        local log_file="$1"
-        local pos_file="${TEST_DIR}/.pos_$(basename "${log_file}")"
+        local log_file;
+        log_file="$1"
+        local pos_file;
+        pos_file="${TEST_DIR}/.pos_$(basename "${log_file}")"
 
         # Get last position
-        local last_pos=0
+        local last_pos;
+        last_pos=0
         if [[ -f "${pos_file}" ]]; then
             last_pos=$(cat "${pos_file}")
         fi
@@ -208,7 +219,8 @@ test_log_monitoring() {
     fi
 
     # Test position tracking
-    local pos_file="${TEST_DIR}/.pos_monitor_test.log"
+    local pos_file;
+    pos_file="${TEST_DIR}/.pos_monitor_test.log"
     assert_file_exists "$pos_file" "Position file should be created"
 
     test_passed "$test_name"
@@ -216,7 +228,8 @@ test_log_monitoring() {
 
 # Test 5: Log scanning functionality
 test_log_scanning() {
-    local test_name="test_log_scanning"
+    local test_name;
+    test_name="test_log_scanning"
     announce_test "$test_name"
 
     # Create multiple test log files
@@ -226,7 +239,8 @@ test_log_scanning() {
 
     # Define scan_logs function (simplified)
     scan_logs() {
-        local scanned=0
+        local scanned;
+        scanned=0
 
         for log_file in "${TEST_DIR}"/scan_*.log; do
             if [[ -f "${log_file}" ]]; then
@@ -259,12 +273,14 @@ test_log_scanning() {
 
 # Test 6: Agent startup and PID file creation
 test_agent_startup() {
-    local test_name="test_agent_startup"
+    local test_name;
+    test_name="test_agent_startup"
     announce_test "$test_name"
 
     # Test that agent creates PID file (run briefly)
     timeout 3 bash "$AGENT_SCRIPT" >/dev/null 2>&1 &
-    local pid=$!
+    local pid;
+    pid=$!
     sleep 1
 
     # Check if PID file was created
@@ -279,7 +295,8 @@ test_agent_startup() {
 
 # Test 7: Knowledge base file structure
 test_knowledge_base_structure() {
-    local test_name="test_knowledge_base_structure"
+    local test_name;
+    test_name="test_knowledge_base_structure"
     announce_test "$test_name"
 
     # Initialize knowledge base
@@ -312,7 +329,8 @@ test_knowledge_base_structure() {
 
 # Test 8: Directory structure creation
 test_directory_structure() {
-    local test_name="test_directory_structure"
+    local test_name;
+    test_name="test_directory_structure"
     announce_test "$test_name"
 
     # Clean up any existing directories
@@ -351,7 +369,8 @@ test_directory_structure() {
 
 # Test 9: Error pattern frequency tracking
 test_error_frequency_tracking() {
-    local test_name="test_error_frequency_tracking"
+    local test_name;
+    test_name="test_error_frequency_tracking"
     announce_test "$test_name"
 
     # Create test error database
@@ -385,7 +404,8 @@ EOF
 
 # Test 10: Agent cleanup on exit
 test_agent_cleanup() {
-    local test_name="test_agent_cleanup"
+    local test_name;
+    test_name="test_agent_cleanup"
     announce_test "$test_name"
 
     # Create a PID file

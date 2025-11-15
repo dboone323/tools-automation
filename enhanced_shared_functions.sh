@@ -48,14 +48,18 @@ trap 'enhanced_error_handler $? $LINENO "$BASH_COMMAND"' ERR
 
 # Enhanced error handler
 enhanced_error_handler() {
-    local exit_code=$1
-    local line_number=$2
-    local command=$3
+    local exit_code;
+    exit_code=$1
+    local line_number;
+    line_number=$2
+    local command;
+    command=$3
 
     enhanced_log "ERROR" "Command failed (exit code: ${exit_code}) at line ${line_number}: ${command}"
 
     # Print stack trace
-    local frame=0
+    local frame;
+    frame=0
     while caller $frame; do
         ((frame++))
     done
@@ -65,9 +69,12 @@ enhanced_error_handler() {
 
 # Enhanced logging function with levels and colors
 enhanced_log() {
-    local level="$1"
-    local message="$2"
-    local timestamp=$(date '+%Y-%m-%d %H:%M:%S.%3N')
+    local level;
+    level="$1"
+    local message;
+    message="$2"
+    local timestamp;
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S.%3N')
     local level_num
 
     case "${level}" in
@@ -106,15 +113,20 @@ enhanced_log() {
 
 # Performance tracking decorator
 performance_track() {
-    local func_name="$1"
-    local start_time=$(date +%s%3N)
+    local func_name;
+    func_name="$1"
+    local start_time;
+    start_time=$(date +%s%3N)
 
     # Call the actual function (passed as remaining arguments)
     shift
     "$@"
 
-    local end_time=$(date +%s%3N)
-    local duration=$((end_time - start_time))
+    local end_time;
+
+    end_time=$(date +%s%3N)
+    local duration;
+    duration=$((end_time - start_time))
 
     FUNCTION_TIMES["${func_name}"]=$((FUNCTION_TIMES["${func_name}"] + duration))
     FUNCTION_CALLS["${func_name}"]=$((FUNCTION_CALLS["${func_name}"] + 1))
@@ -128,9 +140,12 @@ get_performance_stats() {
     echo "======================"
 
     for func in "${!FUNCTION_TIMES[@]}"; do
-        local total_time=${FUNCTION_TIMES["${func}"]}
-        local call_count=${FUNCTION_CALLS["${func}"]}
-        local avg_time=$((total_time / call_count))
+        local total_time;
+        total_time=${FUNCTION_TIMES["${func}"]}
+        local call_count;
+        call_count=${FUNCTION_CALLS["${func}"]}
+        local avg_time;
+        avg_time=$((total_time / call_count))
 
         printf "%-30s Total: %6dms Calls: %3d Avg: %6dms\n" \
             "${func}" "${total_time}" "${call_count}" "${avg_time}"
@@ -139,8 +154,10 @@ get_performance_stats() {
 
 # Enhanced file operations with error handling and validation
 enhanced_read_file() {
-    local file="$1"
-    local max_size=${2:-1048576} # Default 1MB limit
+    local file;
+    file="$1"
+    local max_size;
+    max_size=${2:-1048576} # Default 1MB limit
 
     if [[ ! -f "${file}" ]]; then
         enhanced_log "ERROR" "File does not exist: ${file}"
@@ -160,19 +177,24 @@ enhanced_read_file() {
 }
 
 enhanced_write_file() {
-    local file="$1"
-    local content="$2"
-    local backup=${3:-true}
+    local file;
+    file="$1"
+    local content;
+    content="$2"
+    local backup;
+    backup=${3:-true}
 
     # Create backup if requested and file exists
     if [[ "${backup}" == "true" && -f "${file}" ]]; then
-        local backup_file="${file}.backup.$(date +%Y%m%d_%H%M%S)"
+        local backup_file;
+        backup_file="${file}.backup.$(date +%Y%m%d_%H%M%S)"
         cp "${file}" "${backup_file}"
         enhanced_log "DEBUG" "Created backup: ${backup_file}"
     fi
 
     # Write content atomically
-    local temp_file="${TEMP_DIR}/temp_$(basename "${file}").$$"
+    local temp_file;
+    temp_file="${TEMP_DIR}/temp_$(basename "${file}").$$"
     echo "${content}" >"${temp_file}"
 
     if mv "${temp_file}" "${file}"; then
@@ -187,8 +209,10 @@ enhanced_write_file() {
 
 # Enhanced JSON operations (fallback if jq not available)
 enhanced_json_get() {
-    local json_file="$1"
-    local key="$2"
+    local json_file;
+    json_file="$1"
+    local key;
+    key="$2"
 
     if command -v jq >/dev/null 2>&1; then
         jq -r ".${key}" "${json_file}" 2>/dev/null || echo ""
@@ -199,13 +223,17 @@ enhanced_json_get() {
 }
 
 enhanced_json_set() {
-    local json_file="$1"
-    local key="$2"
-    local value="$3"
+    local json_file;
+    json_file="$1"
+    local key;
+    key="$2"
+    local value;
+    value="$3"
 
     if command -v jq >/dev/null 2>&1; then
         # Use jq for proper JSON manipulation
-        local temp_file="${TEMP_DIR}/json_temp.$$"
+        local temp_file;
+        temp_file="${TEMP_DIR}/json_temp.$$"
         jq ".${key} = \"${value}\"" "${json_file}" >"${temp_file}" && mv "${temp_file}" "${json_file}"
     else
         # Fallback: simple sed replacement (limited)
@@ -216,8 +244,10 @@ enhanced_json_set() {
 
 # Enhanced process management
 enhanced_process_check() {
-    local process_name="$1"
-    local pid_file="${STATUS_DIR}/${process_name}.pid"
+    local process_name;
+    process_name="$1"
+    local pid_file;
+    pid_file="${STATUS_DIR}/${process_name}.pid"
 
     if [[ -f "${pid_file}" ]]; then
         local pid
@@ -236,9 +266,12 @@ enhanced_process_check() {
 }
 
 enhanced_process_start() {
-    local process_name="$1"
-    local command="$2"
-    local pid_file="${STATUS_DIR}/${process_name}.pid"
+    local process_name;
+    process_name="$1"
+    local command;
+    command="$2"
+    local pid_file;
+    pid_file="${STATUS_DIR}/${process_name}.pid"
 
     if enhanced_process_check "${process_name}"; then
         enhanced_log "WARN" "Process ${process_name} is already running"
@@ -249,7 +282,8 @@ enhanced_process_start() {
 
     # Start process in background
     eval "${command}" &
-    local pid=$!
+    local pid;
+    pid=$!
 
     echo "${pid}" >"${pid_file}"
     enhanced_log "INFO" "Process ${process_name} started with PID: ${pid}"
@@ -258,9 +292,12 @@ enhanced_process_start() {
 }
 
 enhanced_process_stop() {
-    local process_name="$1"
-    local pid_file="${STATUS_DIR}/${process_name}.pid"
-    local timeout=${2:-10}
+    local process_name;
+    process_name="$1"
+    local pid_file;
+    pid_file="${STATUS_DIR}/${process_name}.pid"
+    local timeout;
+    timeout=${2:-10}
 
     if [[ ! -f "${pid_file}" ]]; then
         enhanced_log "WARN" "No PID file found for process: ${process_name}"
@@ -276,7 +313,8 @@ enhanced_process_stop() {
     kill -TERM "${pid}" 2>/dev/null || true
 
     # Wait for process to stop
-    local count=0
+    local count;
+    count=0
     while [[ ${count} -lt ${timeout} ]] && kill -0 "${pid}" 2>/dev/null; do
         sleep 1
         ((count++))
@@ -301,9 +339,12 @@ enhanced_process_stop() {
 
 # Enhanced network utilities
 enhanced_http_get() {
-    local url="$1"
-    local output_file="$2"
-    local timeout=${3:-30}
+    local url;
+    url="$1"
+    local output_file;
+    output_file="$2"
+    local timeout;
+    timeout=${3:-30}
 
     enhanced_log "DEBUG" "HTTP GET: ${url}"
 
@@ -326,9 +367,12 @@ enhanced_http_get() {
 }
 
 enhanced_http_post() {
-    local url="$1"
-    local data="$2"
-    local content_type=${3:-"application/json"}
+    local url;
+    url="$1"
+    local data;
+    data="$2"
+    local content_type;
+    content_type=${3:-"application/json"}
 
     enhanced_log "DEBUG" "HTTP POST: ${url}"
 
@@ -370,7 +414,8 @@ enhanced_system_info() {
 }
 
 enhanced_memory_usage() {
-    local pid=${1:-$$}
+    local pid;
+    pid=${1:-$$}
 
     if [[ -f "/proc/${pid}/status" ]]; then
         # Linux
@@ -385,8 +430,10 @@ enhanced_memory_usage() {
 
 # Enhanced validation functions
 enhanced_validate_email() {
-    local email="$1"
-    local email_regex="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    local email;
+    email="$1"
+    local email_regex;
+    email_regex="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
     if [[ ${email} =~ ${email_regex} ]]; then
         return 0
@@ -396,8 +443,10 @@ enhanced_validate_email() {
 }
 
 enhanced_validate_url() {
-    local url="$1"
-    local url_regex="^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+    local url;
+    url="$1"
+    local url_regex;
+    url_regex="^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
 
     if [[ ${url} =~ ${url_regex} ]]; then
         return 0
@@ -407,14 +456,17 @@ enhanced_validate_url() {
 }
 
 enhanced_validate_json() {
-    local json_string="$1"
+    local json_string;
+    json_string="$1"
 
     if command -v jq >/dev/null 2>&1; then
         echo "${json_string}" | jq empty >/dev/null 2>&1
     else
         # Basic validation - check for balanced braces and brackets
-        local braces=$(echo "${json_string}" | tr -cd '{}' | wc -c)
-        local brackets=$(echo "${json_string}" | tr -cd '[]' | wc -c)
+        local braces;
+        braces=$(echo "${json_string}" | tr -cd '{}' | wc -c)
+        local brackets;
+        brackets=$(echo "${json_string}" | tr -cd '[]' | wc -c)
 
         [[ $((braces % 2)) -eq 0 && $((brackets % 2)) -eq 0 ]]
     fi
@@ -422,14 +474,17 @@ enhanced_validate_json() {
 
 # Enhanced string utilities
 enhanced_string_escape() {
-    local string="$1"
+    local string;
+    string="$1"
     # Escape special characters for shell
     printf '%q' "${string}"
 }
 
 enhanced_string_truncate() {
-    local string="$1"
-    local max_length="$2"
+    local string;
+    string="$1"
+    local max_length;
+    max_length="$2"
 
     if [[ ${#string} -le ${max_length} ]]; then
         echo "${string}"
@@ -439,16 +494,19 @@ enhanced_string_truncate() {
 }
 
 enhanced_string_slugify() {
-    local string="$1"
+    local string;
+    string="$1"
     # Convert to lowercase, replace spaces and special chars with hyphens
     echo "${string}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//'
 }
 
 # Enhanced array utilities
 enhanced_array_contains() {
-    local element="$1"
+    local element;
+    element="$1"
     shift
-    local array=("$@")
+    local array;
+    array=("$@")
 
     for item in "${array[@]}"; do
         if [[ "${item}" == "${element}" ]]; then
@@ -459,8 +517,10 @@ enhanced_array_contains() {
 }
 
 enhanced_array_unique() {
-    local array=("$@")
-    local unique_array=()
+    local array;
+    array=("$@")
+    local unique_array;
+    unique_array=()
 
     for item in "${array[@]}"; do
         if ! enhanced_array_contains "${item}" "${unique_array[@]}"; then
@@ -473,13 +533,16 @@ enhanced_array_unique() {
 
 # Enhanced date/time utilities
 enhanced_date_format() {
-    local format="${1:-%Y-%m-%d %H:%M:%S}"
+    local format;
+    format="${1:-%Y-%m-%d %H:%M:%S}"
     date "${format}"
 }
 
 enhanced_date_add() {
-    local date_string="$1"
-    local days="$2"
+    local date_string;
+    date_string="$1"
+    local days;
+    days="$2"
 
     if command -v date >/dev/null 2>&1 && date --version 2>/dev/null | grep -q GNU; then
         # GNU date
@@ -494,7 +557,8 @@ enhanced_date_add() {
 
 # Enhanced configuration management
 enhanced_config_load() {
-    local config_file="$1"
+    local config_file;
+    config_file="$1"
 
     if [[ ! -f "${config_file}" ]]; then
         enhanced_log "WARN" "Config file not found: ${config_file}"
@@ -513,8 +577,10 @@ enhanced_config_load() {
 }
 
 enhanced_config_save() {
-    local config_file="$1"
-    local config_data="$2"
+    local config_file;
+    config_file="$1"
+    local config_data;
+    config_data="$2"
 
     enhanced_write_file "${config_file}" "${config_data}"
     enhanced_log "INFO" "Configuration saved: ${config_file}"
@@ -522,7 +588,8 @@ enhanced_config_save() {
 
 # Enhanced cleanup utilities
 enhanced_cleanup_temp() {
-    local max_age=${1:-3600} # Default 1 hour
+    local max_age;
+    max_age=${1:-3600} # Default 1 hour
 
     enhanced_log "INFO" "Cleaning up temporary files older than ${max_age} seconds"
 
@@ -533,7 +600,8 @@ enhanced_cleanup_temp() {
 }
 
 enhanced_cleanup_logs() {
-    local max_age_days=${1:-30}
+    local max_age_days;
+    max_age_days=${1:-30}
 
     enhanced_log "INFO" "Cleaning up log files older than ${max_age_days} days"
 
@@ -593,7 +661,8 @@ enhanced_status() {
 
 # Main function for testing
 main() {
-    local command="${1:-help}"
+    local command;
+    command="${1:-help}"
 
     case "${command}" in
     "init")

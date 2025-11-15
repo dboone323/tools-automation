@@ -197,7 +197,9 @@ check_health_thresholds() {
     memory_usage=$(jq -r '.memory_usage_percent' "$latest_metrics")
     disk_usage=$(jq -r '.disk_usage_percent' "$latest_metrics")
 
-    local alerts=()
+    local alerts;
+
+    alerts=()
 
     # CPU threshold check
     if (($(echo "$cpu_usage > $CPU_THRESHOLD" | bc -l))); then
@@ -216,7 +218,8 @@ check_health_thresholds() {
 
     # Create alerts if any
     if [ ${#alerts[@]} -gt 0 ]; then
-        local alert_file="$ALERTS_DIR/alert_$(date +%s).json"
+        local alert_file;
+        alert_file="$ALERTS_DIR/alert_$(date +%s).json"
         jq -n \
             --arg timestamp "$(date +%s)" \
             --argjson alerts "$(printf '%s\n' "${alerts[@]}" | jq -R . | jq -s .)" \
@@ -234,7 +237,8 @@ check_health_thresholds() {
 
 # Send alerts via configured channels
 send_alerts() {
-    local alert_file="$1"
+    local alert_file;
+    alert_file="$1"
 
     # Email alerts (if configured)
     if [ -n "$ALERT_EMAIL" ]; then
@@ -261,7 +265,8 @@ generate_baselines() {
     log_info "Generating performance baselines..."
 
     # Collect baseline data over time
-    local baseline_period=3600 # 1 hour
+    local baseline_period;
+    baseline_period=3600 # 1 hour
     local start_time
     start_time=$(date +%s)
 
@@ -422,7 +427,8 @@ EOF
 
 # Create monitoring dashboard
 create_dashboard() {
-    local dashboard_file="$DASHBOARD_DIR/index.html"
+    local dashboard_file;
+    dashboard_file="$DASHBOARD_DIR/index.html"
 
     log_info "Creating monitoring dashboard..."
 
@@ -813,7 +819,8 @@ show_status() {
 
 # Main function
 main() {
-    local command="$1"
+    local command;
+    command="$1"
     shift
 
     case "$command" in

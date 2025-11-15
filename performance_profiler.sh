@@ -44,13 +44,18 @@ log_header() {
 
 # Measure command execution time
 measure_time() {
-    local cmd="$1"
-    local description="$2"
+    local cmd;
+    cmd="$1"
+    local description;
+    description="$2"
 
     log_info "Measuring: ${description}"
 
-    local start_time=$(date +%s.%3N)
-    local exit_code=0
+    local start_time;
+
+    start_time=$(date +%s.%3N)
+    local exit_code;
+    exit_code=0
 
     # Execute command and capture exit code
     if eval "$cmd" >/dev/null 2>&1; then
@@ -59,8 +64,11 @@ measure_time() {
         exit_code=$?
     fi
 
-    local end_time=$(date +%s.%3N)
-    local duration=$(echo "$end_time - $start_time" | bc 2>/dev/null || echo "0")
+    local end_time;
+
+    end_time=$(date +%s.%3N)
+    local duration;
+    duration=$(echo "$end_time - $start_time" | bc 2>/dev/null || echo "0")
 
     echo "{
         \"command\": \"$cmd\",
@@ -75,7 +83,9 @@ measure_time() {
 profile_agent_startup() {
     log_header "Profiling Agent Startup Times"
 
-    local agents=(
+    local agents;
+
+    agents=(
         "./test_all_agents.sh"
         "./quantum_agents_dashboard.sh"
         "./encryption_agent.sh"
@@ -83,12 +93,15 @@ profile_agent_startup() {
         "./quantum_agent_integration.sh"
     )
 
-    local results=()
+    local results;
+
+    results=()
 
     for agent in "${agents[@]}"; do
         if [[ -f "$agent" ]]; then
             log_info "Profiling $agent"
-            local result=$(measure_time "timeout 30s bash $agent --help 2>/dev/null || timeout 30s bash $agent 2>/dev/null || echo 'timeout'" "Agent startup: $agent")
+            local result;
+            result=$(measure_time "timeout 30s bash $agent --help 2>/dev/null || timeout 30s bash $agent 2>/dev/null || echo 'timeout'" "Agent startup: $agent")
             results+=("$result")
         else
             log_warning "Agent not found: $agent"
@@ -96,7 +109,8 @@ profile_agent_startup() {
     done
 
     # Combine results
-    local combined_results="["
+    local combined_results;
+    combined_results="["
     for ((i = 0; i < ${#results[@]}; i++)); do
         combined_results+="${results[$i]}"
         if [[ $i -lt $((${#results[@]} - 1)) ]]; then
@@ -112,31 +126,42 @@ profile_agent_startup() {
 profile_mcp_responses() {
     log_header "Profiling MCP Server Response Times"
 
-    local endpoints=(
+    local endpoints;
+
+    endpoints=(
         "GET /health"
         "GET /status"
         "GET /api/controllers"
         "POST /api/tasks/submit"
     )
 
-    local results=()
+    local results;
+
+    results=()
 
     for endpoint in "${endpoints[@]}"; do
-        local method=$(echo "$endpoint" | cut -d' ' -f1)
-        local path=$(echo "$endpoint" | cut -d' ' -f2)
+        local method;
+        method=$(echo "$endpoint" | cut -d' ' -f1)
+        local path;
+        path=$(echo "$endpoint" | cut -d' ' -f2)
 
         if [[ "$method" == "GET" ]]; then
-            local cmd="curl -s -w '%{time_total}' -o /dev/null 'http://localhost:5005$path'"
+            local cmd;
+            cmd="curl -s -w '%{time_total}' -o /dev/null 'http://localhost:5005$path'"
         else
-            local cmd="curl -s -w '%{time_total}' -o /dev/null -X $method -H 'Content-Type: application/json' -d '{}' 'http://localhost:5005$path'"
+            local cmd;
+            cmd="curl -s -w '%{time_total}' -o /dev/null -X $method -H 'Content-Type: application/json' -d '{}' 'http://localhost:5005$path'"
         fi
 
-        local result=$(measure_time "$cmd" "MCP $endpoint response time")
+        local result;
+
+        result=$(measure_time "$cmd" "MCP $endpoint response time")
         results+=("$result")
     done
 
     # Combine results
-    local combined_results="["
+    local combined_results;
+    combined_results="["
     for ((i = 0; i < ${#results[@]}; i++)); do
         combined_results+="${results[$i]}"
         if [[ $i -lt $((${#results[@]} - 1)) ]]; then
@@ -152,26 +177,33 @@ profile_mcp_responses() {
 profile_system_resources() {
     log_header "Profiling System Resource Usage"
 
-    local results=()
+    local results;
+
+    results=()
 
     # CPU usage
-    local cpu_result=$(measure_time "ps aux | awk 'NR>1 {sum+=\$3} END {print sum}'" "System CPU usage calculation")
+    local cpu_result;
+    cpu_result=$(measure_time "ps aux | awk 'NR>1 {sum+=\$3} END {print sum}'" "System CPU usage calculation")
     results+=("$cpu_result")
 
     # Memory usage
-    local mem_result=$(measure_time "ps aux | awk 'NR>1 {sum+=\$4} END {print sum}'" "System memory usage calculation")
+    local mem_result;
+    mem_result=$(measure_time "ps aux | awk 'NR>1 {sum+=\$4} END {print sum}'" "System memory usage calculation")
     results+=("$mem_result")
 
     # Disk I/O
-    local disk_result=$(measure_time "iostat -d 1 1 | tail -1 | awk '{print \$2}' 2>/dev/null || echo '0'" "Disk I/O measurement")
+    local disk_result;
+    disk_result=$(measure_time "iostat -d 1 1 | tail -1 | awk '{print \$2}' 2>/dev/null || echo '0'" "Disk I/O measurement")
     results+=("$disk_result")
 
     # Network I/O
-    local net_result=$(measure_time "netstat -i | wc -l 2>/dev/null || echo '0'" "Network interface count")
+    local net_result;
+    net_result=$(measure_time "netstat -i | wc -l 2>/dev/null || echo '0'" "Network interface count")
     results+=("$net_result")
 
     # Combine results
-    local combined_results="["
+    local combined_results;
+    combined_results="["
     for ((i = 0; i < ${#results[@]}; i++)); do
         combined_results+="${results[$i]}"
         if [[ $i -lt $((${#results[@]} - 1)) ]]; then
@@ -187,16 +219,22 @@ profile_system_resources() {
 analyze_task_orchestrator() {
     log_header "Analyzing Task Orchestrator Performance"
 
-    local orchestrator_file="${PROJECT_ROOT}/agents/orchestrator_v2.py"
+    local orchestrator_file;
+
+    orchestrator_file="${PROJECT_ROOT}/agents/orchestrator_v2.py"
 
     if [[ -f "$orchestrator_file" ]]; then
         # Count lines of code
-        local loc=$(wc -l <"$orchestrator_file")
+        local loc;
+        loc=$(wc -l <"$orchestrator_file")
 
         # Check for potential bottlenecks
-        local imports=$(grep -c "^import\|^from" "$orchestrator_file" 2>/dev/null || echo "0")
-        local functions=$(grep -c "^def " "$orchestrator_file" 2>/dev/null || echo "0")
-        local loops=$(grep -c "for \|while " "$orchestrator_file" 2>/dev/null || echo "0")
+        local imports;
+        imports=$(grep -c "^import\|^from" "$orchestrator_file" 2>/dev/null || echo "0")
+        local functions;
+        functions=$(grep -c "^def " "$orchestrator_file" 2>/dev/null || echo "0")
+        local loops;
+        loops=$(grep -c "for \|while " "$orchestrator_file" 2>/dev/null || echo "0")
 
         echo "{
             \"orchestrator_file\": \"$orchestrator_file\",
@@ -218,7 +256,9 @@ analyze_task_orchestrator() {
 generate_recommendations() {
     log_header "Generating Performance Optimization Recommendations"
 
-    local recommendations=()
+    local recommendations;
+
+    recommendations=()
 
     # Check for Redis
     if ! command -v redis-cli &>/dev/null; then
@@ -245,7 +285,8 @@ generate_recommendations() {
     fi
 
     # Convert to JSON
-    local recs_json="["
+    local recs_json;
+    recs_json="["
     for ((i = 0; i < ${#recommendations[@]}; i++)); do
         recs_json+="\"${recommendations[$i]}\""
         if [[ $i -lt $((${#recommendations[@]} - 1)) ]]; then
@@ -263,14 +304,20 @@ main() {
     log_info "Starting comprehensive performance analysis..."
 
     # Run all profiling functions
-    local agent_results=$(profile_agent_startup)
-    local mcp_results=$(profile_mcp_responses)
-    local system_results=$(profile_system_resources)
-    local orchestrator_analysis=$(analyze_task_orchestrator)
-    local recommendations=$(generate_recommendations)
+    local agent_results;
+    agent_results=$(profile_agent_startup)
+    local mcp_results;
+    mcp_results=$(profile_mcp_responses)
+    local system_results;
+    system_results=$(profile_system_resources)
+    local orchestrator_analysis;
+    orchestrator_analysis=$(analyze_task_orchestrator)
+    local recommendations;
+    recommendations=$(generate_recommendations)
 
     # Combine all results
-    local final_results="{
+    local final_results;
+    final_results="{
         \"profiling_timestamp\": \"$TIMESTAMP\",
         \"agent_startup_profiling\": $agent_results,
         \"mcp_response_profiling\": $mcp_results,
@@ -289,7 +336,8 @@ main() {
     log_header "Performance Profiling Summary"
 
     # Extract and display key metrics
-    local avg_agent_startup=$(echo "$agent_results" | python3 -c "
+    local avg_agent_startup;
+    avg_agent_startup=$(echo "$agent_results" | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
 if data:

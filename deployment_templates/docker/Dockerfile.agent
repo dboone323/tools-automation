@@ -1,0 +1,41 @@
+FROM ubuntu:22.04
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    jq \
+    curl \
+    python3 \
+    python3-pip \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy application files
+COPY agent_coordinator.sh ./
+COPY config/ ./config/
+COPY scripts/ ./scripts/
+
+# Install Python dependencies
+COPY requirements.txt ./
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Make scripts executable
+RUN chmod +x agent_coordinator.sh scripts/*.sh
+
+# Create non-root user
+RUN useradd -r -s /bin/false agentuser && \
+    chown -R agentuser:agentuser /app
+
+USER agentuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8082/health || exit 1
+
+# Expose port
+EXPOSE 8082
+
+# Start command
+CMD ["./agent_coordinator.sh", "serve"]

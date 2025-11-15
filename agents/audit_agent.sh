@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -60,10 +60,12 @@ WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-30}"  # Seconds to wait when system is busy
 
 # Function to check if we should proceed with task processing
 ensure_within_limits() {
-    local agent_name="audit_agent.sh"
+    local agent_name;
+    agent_name="audit_agent.sh"
 
     # Check concurrent instances
-    local running_count=$(pgrep -f "${agent_name}" | wc -l)
+    local running_count;
+    running_count=$(pgrep -f "${agent_name}" | wc -l)
     if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
         log "Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..."
         return 1
@@ -105,8 +107,10 @@ log() {
 
 # Ollama Integration Functions
 ollama_query() {
-    local prompt="$1"
-    local model="${2:-codellama}"
+    local prompt;
+    prompt="$1"
+    local model;
+    model="${2:-codellama}"
 
     curl -s -X POST "${OLLAMA_ENDPOINT}/api/generate" \
         -H "Content-Type: application/json" \
@@ -116,7 +120,8 @@ ollama_query() {
 
 # Update agent status to available when starting
 update_status() {
-    local status="$1"
+    local status;
+    status="$1"
     if command -v jq &>/dev/null; then
         jq "(.[] | select(.id == \"${AGENT_NAME}\") | .status) = \"${status}\" | (.[] | select(.id == \"${AGENT_NAME}\") | .last_seen) = $(date +%s)" "${AGENT_STATUS_FILE}" >"${AGENT_STATUS_FILE}.tmp" && mv "${AGENT_STATUS_FILE}.tmp" "${AGENT_STATUS_FILE}"
     fi
@@ -125,7 +130,8 @@ update_status() {
 
 # Process a specific task
 process_task() {
-    local task_id="$1"
+    local task_id;
+    task_id="$1"
     echo "[$(date)] ${AGENT_NAME}: Processing task ${task_id}" >>"${LOG_FILE}"
 
     # Get task details
@@ -156,8 +162,10 @@ process_task() {
 
 # Update task status
 update_task_status() {
-    local task_id="$1"
-    local status="$2"
+    local task_id;
+    task_id="$1"
+    local status;
+    status="$2"
     if command -v jq &>/dev/null; then
         jq "(.tasks[] | select(.id == \"${task_id}\") | .status) = \"${status}\"" "${TASK_QUEUE_FILE}" >"${TASK_QUEUE_FILE}.tmp" && mv "${TASK_QUEUE_FILE}.tmp" "${TASK_QUEUE_FILE}"
     fi
@@ -214,20 +222,29 @@ EOF
 
 # Log audit event
 log_audit_event() {
-    local event_type="$1"
-    local severity="$2"
-    local user_id="${3:-system}"
-    local resource="$4"
-    local action="$5"
-    local details="${6:-}"
-    local ip_address="${7:-localhost}"
-    local session_id="${8:-}"
+    local event_type;
+    event_type="$1"
+    local severity;
+    severity="$2"
+    local user_id;
+    user_id="${3:-system}"
+    local resource;
+    resource="$4"
+    local action;
+    action="$5"
+    local details;
+    details="${6:-}"
+    local ip_address;
+    ip_address="${7:-localhost}"
+    local session_id;
+    session_id="${8:-}"
 
     local timestamp
     timestamp=$(date +%Y%m%d_%H%M%S)
     local log_date
     log_date=$(date +%Y-%m-%d)
-    local log_file="${AUDIT_LOG_DIR}/audit_${log_date}.log"
+    local log_file;
+    log_file="${AUDIT_LOG_DIR}/audit_${log_date}.log"
 
     # Create log entry
     local log_entry
@@ -273,11 +290,16 @@ log_audit_event() {
 
 # Check for audit alerts
 check_audit_alerts() {
-    local severity="$1"
-    local event_type="$2"
-    local log_entry="$3"
+    local severity;
+    severity="$1"
+    local event_type;
+    event_type="$2"
+    local log_entry;
+    log_entry="$3"
 
-    local alert_needed=false
+    local alert_needed;
+
+    alert_needed=false
 
     case "${severity}" in
     "critical")
@@ -301,13 +323,17 @@ check_audit_alerts() {
 
 # Analyze code for audit trail implementation
 analyze_audit_implementation() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Analyzing audit trail implementation in ${project}..."
 
     cd "${WORKSPACE}/Projects/${project}" || return
 
-    local audit_findings=""
-    local audit_score=0
+    local audit_findings;
+
+    audit_findings=""
+    local audit_score;
+    audit_score=0
 
     # Check for logging frameworks
     local logging_usage
@@ -338,7 +364,8 @@ analyze_audit_implementation() {
     audit_score=$((logging_usage + audit_logging * 2 + user_tracking * 2 + error_logging + security_logging * 3))
 
     # Use Ollama for audit implementation analysis
-    local audit_prompt="Analyze this Swift application for audit trail implementation:
+    local audit_prompt;
+    audit_prompt="Analyze this Swift application for audit trail implementation:
 
 Project: ${project}
 Logging Usage: ${logging_usage} files
@@ -366,7 +393,8 @@ Provide specific implementation recommendations."
     fi
 
     # Save audit analysis results
-    local audit_file="${WORKSPACE}/Tools/Automation/results/${project}_audit_analysis.txt"
+    local audit_file;
+    audit_file="${WORKSPACE}/Tools/Automation/results/${project}_audit_analysis.txt"
 
     {
         echo "Audit Trail Implementation Analysis"
@@ -385,13 +413,17 @@ Provide specific implementation recommendations."
 
 # Generate audit trail patterns for Swift code
 generate_audit_patterns() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Generating audit trail patterns for ${project}..."
 
-    local patterns_file="${WORKSPACE}/Tools/Automation/results/${project}_audit_patterns.txt"
+    local patterns_file;
+
+    patterns_file="${WORKSPACE}/Tools/Automation/results/${project}_audit_patterns.txt"
 
     # Use Ollama to generate audit patterns
-    local pattern_prompt="Generate comprehensive audit trail implementation patterns for a Swift iOS application:
+    local pattern_prompt;
+    pattern_prompt="Generate comprehensive audit trail implementation patterns for a Swift iOS application:
 
 Project: ${project}
 
@@ -447,7 +479,8 @@ Provide complete Swift code examples with proper error handling and security con
 
 # Run comprehensive audit analysis
 run_audit_analysis() {
-    local task_desc="$1"
+    local task_desc;
+    task_desc="$1"
     log "Running comprehensive audit analysis for: ${task_desc}"
 
     # Initialize audit configuration if needed
@@ -456,7 +489,8 @@ run_audit_analysis() {
     fi
 
     # Extract project name from task description
-    local projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
+    local projects;
+    projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
 
     for project in "${projects[@]}"; do
         if [[ -d "${WORKSPACE}/Projects/${project}" ]]; then
@@ -484,10 +518,13 @@ run_audit_analysis() {
 
 # Generate audit compliance report
 generate_audit_compliance_report() {
-    local project="$1"
+    local project;
+    project="$1"
     log "Generating audit compliance report for ${project}..."
 
-    local report_file="${WORKSPACE}/Tools/Automation/results/${project}_audit_compliance_report.md"
+    local report_file;
+
+    report_file="${WORKSPACE}/Tools/Automation/results/${project}_audit_compliance_report.md"
 
     {
         echo "# Audit Trail Compliance Report"

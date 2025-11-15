@@ -25,7 +25,8 @@ check_ollama_health() {
     fi
     if command -v ollama &> /dev/null; then
         if ollama list &> /dev/null; then
-            local model_count=$(ollama list | tail -n +2 | wc -l)
+            local model_count;
+            model_count=$(ollama list | tail -n +2 | wc -l)
             log "✅ Ollama healthy: ${model_count} models available"
             return 0
         else
@@ -39,26 +40,33 @@ check_ollama_health() {
 }
 
 monitor_ai_activity() {
-    local ai_files_before=$(find "${WORKSPACE_ROOT}" -name "AI_*" -o -name "*ai_*" | wc -l)
+    local ai_files_before;
+    ai_files_before=$(find "${WORKSPACE_ROOT}" -name "AI_*" -o -name "*ai_*" | wc -l)
     sleep 300  # Check every 5 minutes
-    local ai_files_after=$(find "${WORKSPACE_ROOT}" -name "AI_*" -o -name "*ai_*" | wc -l)
+    local ai_files_after;
+    ai_files_after=$(find "${WORKSPACE_ROOT}" -name "AI_*" -o -name "*ai_*" | wc -l)
 
     if [[ ${ai_files_after} -gt ${ai_files_before} ]]; then
-        local new_files=$((ai_files_after - ai_files_before))
+        local new_files;
+        new_files=$((ai_files_after - ai_files_before))
         log "📈 AI activity detected: ${new_files} new AI-generated files"
     fi
 }
 
 monitor_disk_usage() {
-    local ai_dir_size=$(du -sh "${WORKSPACE_ROOT}/Tools/Automation" 2>/dev/null | cut -f1 || echo "0")
+    local ai_dir_size;
+    ai_dir_size=$(du -sh "${WORKSPACE_ROOT}/Tools/Automation" 2>/dev/null | cut -f1 || echo "0")
     log "💾 AI tools directory size: ${ai_dir_size}"
 }
 
 main_monitoring_loop() {
     log "Starting AI monitoring loop with autorestart..."
 
-    local restart_count=0
-    local max_restarts=10
+    local restart_count;
+
+    restart_count=0
+    local max_restarts;
+    max_restarts=10
     
     while [[ ${restart_count} -lt ${max_restarts} ]]; do
         log "Monitoring cycle ${restart_count}/${max_restarts} started"
@@ -66,7 +74,8 @@ main_monitoring_loop() {
         # Run monitoring tasks
         if check_ollama_health && monitor_ai_activity && monitor_disk_usage; then
             # Check for automation processes
-            local running_automations=$(pgrep -f "ai_enhanced_automation\|ai_quality_gates" | wc -l)
+            local running_automations;
+            running_automations=$(pgrep -f "ai_enhanced_automation\|ai_quality_gates" | wc -l)
             if [[ ${running_automations} -gt 0 ]]; then
                 log "⚙️ Active AI automations: ${running_automations}"
             fi

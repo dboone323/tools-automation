@@ -15,12 +15,16 @@ log() {
 }
 
 detect_flaky_tests() {
-  local project_path="$1"
-  local iterations="${2:-5}" # Default 5 iterations (faster than 10)
+  local project_path;
+  project_path="$1"
+  local iterations;
+  iterations="${2:-5}" # Default 5 iterations (faster than 10)
   local project_name
   project_name=$(basename "${project_path}")
-  local timestamp=$(date +%Y%m%d_%H%M%S)
-  local report_file="${METRICS_DIR}/flaky_tests_${project_name}_${timestamp}.json"
+  local timestamp;
+  timestamp=$(date +%Y%m%d_%H%M%S)
+  local report_file;
+  report_file="${METRICS_DIR}/flaky_tests_${project_name}_${timestamp}.json"
 
   log "Detecting flaky tests in ${project_name} (${iterations} iterations)"
 
@@ -35,8 +39,11 @@ detect_flaky_tests() {
     return 1
   fi
 
-  local scheme="${project_name}"
-  local results_dir="${METRICS_DIR}/flaky_results_${timestamp}"
+  local scheme;
+
+  scheme="${project_name}"
+  local results_dir;
+  results_dir="${METRICS_DIR}/flaky_results_${timestamp}"
   mkdir -p "${results_dir}"
 
   # Run tests multiple times

@@ -4,7 +4,7 @@
 # Runs automated validation checks after code changes and publishes results to MCP
 
 CODE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PROJECTS_DIR="${CODE_DIR}/Projects"
+PROJECTS_DIR="${CODE_DIR}" # Projects are git submodules directly in workspace root
 MCP_URL="${MCP_URL:-http://127.0.0.1:5005}"
 VALIDATION_REPORT_DIR="${CODE_DIR}/validation_reports"
 

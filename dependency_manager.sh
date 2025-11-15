@@ -50,12 +50,16 @@ setup_directories() {
 
 # Check if a command is available
 check_command() {
-    local cmd="$1"
-    local description="$2"
-    local required="${3:-false}"
+    local cmd;
+    cmd="$1"
+    local description;
+    description="$2"
+    local required;
+    required="${3:-false}"
 
     if command -v "$cmd" &>/dev/null; then
-        local version=""
+        local version;
+        version=""
         case "$cmd" in
         "swift") version=" ($($cmd --version 2>/dev/null | head -1 | cut -d' ' -f3 || echo "unknown"))" ;;
         "python3") version=" ($($cmd --version 2>&1 | head -1 | cut -d' ' -f2 || echo "unknown"))" ;;
@@ -81,7 +85,9 @@ check_command() {
 check_development_tools() {
     print_status "Checking development tools..."
 
-    local critical_missing=0
+    local critical_missing;
+
+    critical_missing=0
 
     # Critical tools
     check_command "git" "Git" true || ((critical_missing++))
@@ -133,11 +139,15 @@ check_ollama_service() {
         print_success "Ollama server running (${model_count} models available)"
 
         # Check for required models
-        local required_models=("llama2" "codellama" "mistral")
-        local available_models=""
+        local required_models;
+        required_models=("llama2" "codellama" "mistral")
+        local available_models;
+        available_models=""
         available_models=$(curl -sf "http://localhost:11434/api/tags" 2>/dev/null | jq -r '.models[].name' 2>/dev/null || echo "")
 
-        local missing_models=()
+        local missing_models;
+
+        missing_models=()
         for model in "${required_models[@]}"; do
             if ! echo "$available_models" | grep -q "$model"; then
                 missing_models+=("$model")
@@ -169,11 +179,13 @@ start_ollama_service() {
     if command -v ollama &>/dev/null; then
         print_info "Starting Ollama server in background..."
         nohup ollama serve >"${SERVICES_DIR}/ollama.log" 2>&1 &
-        local pid=$!
+        local pid;
+        pid=$!
         echo "$pid" >"${SERVICES_DIR}/ollama.pid"
 
         # Wait for service to start
-        local attempts=0
+        local attempts;
+        attempts=0
         while [[ $attempts -lt 10 ]]; do
             if curl -sf --max-time 2 "http://localhost:11434/api/tags" &>/dev/null; then
                 print_success "Ollama service started (PID: $pid)"
@@ -193,7 +205,8 @@ start_ollama_service() {
 
 # Check MCP server
 check_mcp_server() {
-    local mcp_url="${MCP_URL:-http://127.0.0.1:5005}"
+    local mcp_url;
+    mcp_url="${MCP_URL:-http://127.0.0.1:5005}"
     print_status "Checking MCP server (${mcp_url})..."
 
     if curl -sf --max-time 5 "${mcp_url}/health" &>/dev/null; then
@@ -210,7 +223,9 @@ check_mcp_server() {
 check_file_permissions() {
     print_status "Checking file system permissions..."
 
-    local issues=0
+    local issues;
+
+    issues=0
 
     # Check workspace writability
     if [[ ! -w "$WORKSPACE_ROOT" ]]; then
@@ -219,21 +234,24 @@ check_file_permissions() {
     fi
 
     # Check Tools directory
-    local tools_dir="${WORKSPACE_ROOT}/Tools"
+    local tools_dir;
+    tools_dir="${WORKSPACE_ROOT}/Tools"
     if [[ ! -w "$tools_dir" ]]; then
         print_error "Tools directory not writable: $tools_dir"
         ((issues++))
     fi
 
     # Check Automation directory
-    local automation_dir="${WORKSPACE_ROOT}/Tools/Automation"
+    local automation_dir;
+    automation_dir="${WORKSPACE_ROOT}/Tools/Automation"
     if [[ ! -w "$automation_dir" ]]; then
         print_error "Automation directory not writable: $automation_dir"
         ((issues++))
     fi
 
     # Check Projects directory
-    local projects_dir="${WORKSPACE_ROOT}/Projects"
+    local projects_dir;
+    projects_dir="${WORKSPACE_ROOT}/Projects"
     if [[ ! -d "$projects_dir" ]]; then
         print_warning "Projects directory missing: $projects_dir"
     elif [[ ! -r "$projects_dir" ]]; then
@@ -278,7 +296,9 @@ check_git_repository() {
 generate_dependency_report() {
     print_status "Generating dependency report..."
 
-    local report_file="${SERVICES_DIR}/dependency_report_$(date +%Y%m%d_%H%M%S).md"
+    local report_file;
+
+    report_file="${SERVICES_DIR}/dependency_report_$(date +%Y%m%d_%H%M%S).md"
 
     {
         echo "# Agent Dependency Report"
@@ -295,7 +315,8 @@ generate_dependency_report() {
         echo ""
 
         # Check each tool and record status
-        local tools=("git:Git:required" "python3:Python 3:required" "curl:cURL:required")
+        local tools;
+        tools=("git:Git:required" "python3:Python 3:required" "curl:cURL:required")
         if [[ "$OSTYPE" == "darwin"* ]]; then
             tools+=("swift:Swift Compiler:optional" "xcodebuild:Xcode Build:optional" "swiftlint:SwiftLint:optional")
         fi
@@ -306,7 +327,8 @@ generate_dependency_report() {
             if command -v "$cmd" &>/dev/null; then
                 echo "- ✅ $name: Available"
             else
-                local marker="⚠️"
+                local marker;
+                marker="⚠️"
                 [[ "$level" == "required" ]] && marker="❌"
                 echo "- $marker $name: Missing (${level})"
             fi
@@ -326,7 +348,8 @@ generate_dependency_report() {
         fi
 
         # MCP status
-        local mcp_url="${MCP_URL:-http://127.0.0.1:5005}"
+        local mcp_url;
+        mcp_url="${MCP_URL:-http://127.0.0.1:5005}"
         if curl -sf --max-time 2 "${mcp_url}/health" &>/dev/null; then
             echo "- ✅ MCP Server: Running (${mcp_url})"
         else
@@ -396,7 +419,9 @@ run_dependency_check() {
     print_header
     log "Starting comprehensive dependency check"
 
-    local all_good=true
+    local all_good;
+
+    all_good=true
 
     # Setup
     setup_directories

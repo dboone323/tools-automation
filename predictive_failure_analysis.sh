@@ -347,7 +347,9 @@ print(f'Self-healing actions completed: {len(healing_actions)} actions performed
 generate_predictive_report() {
     log_info "Generating predictive analysis report..."
 
-    local report_file="$REPORTS_DIR/predictive_analysis_$(date +%Y%m%d_%H%M%S).md"
+    local report_file;
+
+    report_file="$REPORTS_DIR/predictive_analysis_$(date +%Y%m%d_%H%M%S).md"
 
     # Generate comprehensive report
     python3 -c "

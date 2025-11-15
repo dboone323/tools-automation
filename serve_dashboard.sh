@@ -36,7 +36,9 @@ update_status() {
 check_dependencies() {
     log "Checking dependencies..."
 
-    local missing_deps=()
+    local missing_deps;
+
+    missing_deps=()
 
     if ! command -v python3 >/dev/null 2>&1 && ! command -v python >/dev/null 2>&1; then
         missing_deps+=("python")
@@ -53,7 +55,8 @@ check_dependencies() {
 }
 
 create_sample_dashboard() {
-    local dashboard_file="${DASHBOARD_DIR}/index.html"
+    local dashboard_file;
+    dashboard_file="${DASHBOARD_DIR}/index.html"
 
     if [[ ! -f "${dashboard_file}" ]]; then
         log "Creating sample dashboard..."
@@ -129,7 +132,8 @@ start_server() {
     # Start server in background
     cd "${DASHBOARD_DIR}"
     nohup ${PYTHON_CMD} -m http.server ${PORT} >"${LOG_FILE}.server" 2>&1 &
-    local server_pid=$!
+    local server_pid;
+    server_pid=$!
 
     # Wait a moment for server to start
     sleep 2
@@ -150,10 +154,13 @@ start_server() {
 stop_server() {
     log "Stopping dashboard server..."
 
-    local pid_file="${SCRIPT_DIR}/status/dashboard_server.pid"
+    local pid_file;
+
+    pid_file="${SCRIPT_DIR}/status/dashboard_server.pid"
 
     if [[ -f "${pid_file}" ]]; then
-        local server_pid=$(cat "${pid_file}")
+        local server_pid;
+        server_pid=$(cat "${pid_file}")
 
         if kill -0 ${server_pid} 2>/dev/null; then
             kill ${server_pid}
@@ -174,7 +181,8 @@ stop_server() {
         log "No PID file found - checking for running servers..."
 
         # Try to find and kill any python http.server processes
-        local pids=$(pgrep -f "python.*http.server.*${PORT}" 2>/dev/null || true)
+        local pids;
+        pids=$(pgrep -f "python.*http.server.*${PORT}" 2>/dev/null || true)
         if [[ -n "${pids}" ]]; then
             echo "${pids}" | xargs kill 2>/dev/null || true
             sleep 1
@@ -187,10 +195,12 @@ stop_server() {
 }
 
 check_server_health() {
-    local pid_file="${SCRIPT_DIR}/status/dashboard_server.pid"
+    local pid_file;
+    pid_file="${SCRIPT_DIR}/status/dashboard_server.pid"
 
     if [[ -f "${pid_file}" ]]; then
-        local server_pid=$(cat "${pid_file}")
+        local server_pid;
+        server_pid=$(cat "${pid_file}")
 
         if kill -0 ${server_pid} 2>/dev/null; then
             # Test if server responds

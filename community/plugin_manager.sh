@@ -37,7 +37,8 @@ warning() {
 
 # Function to validate plugin metadata
 validate_plugin_metadata() {
-    local plugin_file="$1"
+    local plugin_file;
+    plugin_file="$1"
 
     if [[ ! -f "$plugin_file" ]]; then
         error "Plugin file not found: $plugin_file"
@@ -45,7 +46,8 @@ validate_plugin_metadata() {
     fi
 
     # Check required fields
-    local required_fields=("name" "version" "description" "author" "category" "compatibility")
+    local required_fields;
+    required_fields=("name" "version" "description" "author" "category" "compatibility")
     for field in "${required_fields[@]}"; do
         if ! jq -e "has(\"$field\")" "$plugin_file" >/dev/null 2>&1; then
             error "Missing required field: $field"
@@ -56,7 +58,8 @@ validate_plugin_metadata() {
     # Validate category
     local category
     category=$(jq -r '.category' "$plugin_file")
-    local valid_categories=("automation" "monitoring" "ai-assistance" "data-processing" "integration" "utilities")
+    local valid_categories;
+    valid_categories=("automation" "monitoring" "ai-assistance" "data-processing" "integration" "utilities")
 
     if [[ ! " ${valid_categories[*]} " =~ " ${category} " ]]; then
         error "Invalid category: $category. Must be one of: ${valid_categories[*]}"
@@ -69,8 +72,10 @@ validate_plugin_metadata() {
 
 # Function to submit a plugin
 submit_plugin() {
-    local plugin_file="$1"
-    local submitter="$2"
+    local plugin_file;
+    plugin_file="$1"
+    local submitter;
+    submitter="$2"
 
     log "Submitting plugin: $plugin_file"
 
@@ -87,7 +92,8 @@ submit_plugin() {
     # Generate plugin ID
     local plugin_name
     plugin_name=$(jq -r '.name' "$plugin_file" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g')
-    local plugin_id="${plugin_name}-$(date +%s)"
+    local plugin_id;
+    plugin_id="${plugin_name}-$(date +%s)"
 
     # Add submission metadata
     jq --arg id "$plugin_id" \
@@ -114,14 +120,20 @@ submit_plugin() {
 
 # Function to review a plugin
 review_plugin() {
-    local plugin_id="$1"
-    local reviewer="$2"
-    local decision="$3" # approve, reject, request_changes
-    local comments="$4"
+    local plugin_id;
+    plugin_id="$1"
+    local reviewer;
+    reviewer="$2"
+    local decision;
+    decision="$3" # approve, reject, request_changes
+    local comments;
+    comments="$4"
 
     log "Reviewing plugin: $plugin_id"
 
-    local plugin_file="${PLUGINS_DIR}/${plugin_id}.json"
+    local plugin_file;
+
+    plugin_file="${PLUGINS_DIR}/${plugin_id}.json"
     if [[ ! -f "$plugin_file" ]]; then
         error "Plugin not found: $plugin_id"
         return 1
@@ -158,7 +170,8 @@ review_plugin() {
 
 # Function to list plugins
 list_plugins() {
-    local status_filter="${1:-all}"
+    local status_filter;
+    status_filter="${1:-all}"
 
     log "Listing plugins (filter: $status_filter)"
 
@@ -172,7 +185,9 @@ list_plugins() {
         plugins=$(find "$PLUGINS_DIR" -name "*.json" -type f -exec jq -r --arg status "$status_filter" 'select(.status == $status) | input_filename' {} \;)
     fi
 
-    local count=0
+    local count;
+
+    count=0
     for plugin_file in $plugins; do
         if [[ -f "$plugin_file" ]]; then
             local name version author status category
@@ -196,9 +211,12 @@ list_plugins() {
 
 # Function to get plugin details
 get_plugin_details() {
-    local plugin_id="$1"
+    local plugin_id;
+    plugin_id="$1"
 
-    local plugin_file="${PLUGINS_DIR}/${plugin_id}.json"
+    local plugin_file;
+
+    plugin_file="${PLUGINS_DIR}/${plugin_id}.json"
     if [[ ! -f "$plugin_file" ]]; then
         error "Plugin not found: $plugin_id"
         return 1
@@ -211,10 +229,14 @@ get_plugin_details() {
 
 # Function to update plugin stats
 update_plugin_stats() {
-    local plugin_id="$1"
-    local action="$2" # download, view, etc.
+    local plugin_id;
+    plugin_id="$1"
+    local action;
+    action="$2" # download, view, etc.
 
-    local plugin_file="${PLUGINS_DIR}/${plugin_id}.json"
+    local plugin_file;
+
+    plugin_file="${PLUGINS_DIR}/${plugin_id}.json"
     if [[ ! -f "$plugin_file" ]]; then
         error "Plugin not found: $plugin_id"
         return 1

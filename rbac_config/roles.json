@@ -1,0 +1,76 @@
+{
+  "roles": {
+    "super_admin": {
+      "name": "super_admin",
+      "description": "Super Administrator with full system access",
+      "permissions": ["*"],
+      "inherits_from": [],
+      "created_at": "2025-01-01T00:00:00Z"
+    },
+    "admin": {
+      "name": "admin",
+      "description": "Administrator with system management access",
+      "permissions": [
+        "users.manage",
+        "roles.manage",
+        "system.config",
+        "agents.manage",
+        "monitoring.view",
+        "audit.view"
+      ],
+      "inherits_from": [],
+      "created_at": "2025-01-01T00:00:00Z"
+    },
+    "developer": {
+      "name": "developer",
+      "description": "Developer with code and deployment access",
+      "permissions": [
+        "code.read",
+        "code.write",
+        "build.execute",
+        "deploy.execute",
+        "agents.manage",
+        "monitoring.view",
+        "logs.view"
+      ],
+      "inherits_from": [],
+      "created_at": "2025-01-01T00:00:00Z"
+    },
+    "operator": {
+      "name": "operator",
+      "description": "Operations team with system monitoring access",
+      "permissions": [
+        "monitoring.view",
+        "monitoring.manage",
+        "agents.view",
+        "agents.control",
+        "alerts.manage",
+        "logs.view"
+      ],
+      "inherits_from": [],
+      "created_at": "2025-01-01T00:00:00Z"
+    },
+    "auditor": {
+      "name": "auditor",
+      "description": "Auditor with read-only access to logs and reports",
+      "permissions": [
+        "audit.view",
+        "logs.view",
+        "reports.view",
+        "monitoring.view"
+      ],
+      "inherits_from": [],
+      "created_at": "2025-01-01T00:00:00Z"
+    },
+    "guest": {
+      "name": "guest",
+      "description": "Guest with minimal read-only access",
+      "permissions": [
+        "status.view"
+      ],
+      "inherits_from": [],
+      "created_at": "2025-01-01T00:00:00Z"
+    }
+  },
+  "last_updated": null
+}

@@ -8,8 +8,10 @@ PLISTS=(
 )
 
 validate_plist() {
-    local name="$1"
-    local plist="${PLIST_DIR}/${name}.plist"
+    local name;
+    name="$1"
+    local plist;
+    plist="${PLIST_DIR}/${name}.plist"
 
     echo "Validating $name..."
 
@@ -37,8 +39,10 @@ validate_plist() {
 }
 
 load_plist() {
-    local name="$1"
-    local plist="${PLIST_DIR}/${name}.plist"
+    local name;
+    name="$1"
+    local plist;
+    plist="${PLIST_DIR}/${name}.plist"
 
     echo "Loading $name..."
 
@@ -56,8 +60,10 @@ load_plist() {
 }
 
 unload_plist() {
-    local name="$1"
-    local plist="${PLIST_DIR}/${name}.plist"
+    local name;
+    name="$1"
+    local plist;
+    plist="${PLIST_DIR}/${name}.plist"
 
     echo "Unloading $name..."
 
@@ -71,13 +77,16 @@ unload_plist() {
 }
 
 status_plist() {
-    local name="$1"
+    local name;
+    name="$1"
 
     echo "Status for $name:"
 
     if launchctl list 2>/dev/null | grep -q "$name"; then
-        local pid=$(launchctl list 2>/dev/null | grep "$name" | awk '{print $1}')
-        local status=$(launchctl list 2>/dev/null | grep "$name" | awk '{print $2}')
+        local pid;
+        pid=$(launchctl list 2>/dev/null | grep "$name" | awk '{print $1}')
+        local status;
+        status=$(launchctl list 2>/dev/null | grep "$name" | awk '{print $2}')
         echo "  Status: Running"
         echo "  PID: $pid"
         echo "  Exit Code: $status"

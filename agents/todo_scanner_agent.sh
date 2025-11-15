@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -80,9 +80,12 @@ NC='\033[0m' # No Color
 
 # Logging functions
 log() {
-    local level="$1"
-    local message="$2"
-    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    local level;
+    level="$1"
+    local message;
+    message="$2"
+    local timestamp;
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     echo "[$timestamp] [$level] $message" >>"$SCANNER_LOG_FILE"
 
     # Rotate log if too large
@@ -114,10 +117,14 @@ log_error() {
 
 # Status management
 update_status() {
-    local status="$1"
-    local message="$2"
-    local last_scan="$3"
-    local new_todos="$4"
+    local status;
+    status="$1"
+    local message;
+    message="$2"
+    local last_scan;
+    last_scan="$3"
+    local new_todos;
+    new_todos="$4"
 
     cat >"$SCANNER_STATUS_FILE" <<EOF
 {
@@ -134,7 +141,8 @@ EOF
 # Check if scanner is already running
 is_running() {
     if [ -f "$SCANNER_PID_FILE" ]; then
-        local pid=$(cat "$SCANNER_PID_FILE")
+        local pid;
+        pid=$(cat "$SCANNER_PID_FILE")
         if kill -0 "$pid" 2>/dev/null; then
             return 0 # Running
         else
@@ -162,7 +170,8 @@ scan_todos() {
 
     # Run the TODO scanner with timeout to prevent hanging
     if ! timeout 300 python3 "$SCRIPTS_DIR/regenerate_todo_json.py" >>"$SCANNER_LOG_FILE" 2>&1; then
-        local exit_code=$?
+        local exit_code;
+        exit_code=$?
         if [ $exit_code -eq 124 ]; then
             log_error "TODO scan timed out after 5 minutes"
         else
@@ -177,8 +186,10 @@ scan_todos() {
 
 # Compare with previous scan to find new TODOs
 find_new_todos() {
-    local current_todos="$1"
-    local previous_todos="$2"
+    local current_todos;
+    current_todos="$1"
+    local previous_todos;
+    previous_todos="$2"
 
     if [ ! -f "$previous_todos" ]; then
         # First scan, all TODOs are new
@@ -203,14 +214,17 @@ find_new_todos() {
 
 # Convert new TODOs to tasks
 convert_todos_to_tasks() {
-    local new_todos_file="$1"
+    local new_todos_file;
+    new_todos_file="$1"
 
     if [ ! -s "$new_todos_file" ] || [ "$(cat "$new_todos_file" | jq '. | length' 2>/dev/null || echo "0")" = "0" ]; then
         log_info "No new TODOs to convert"
         return 0
     fi
 
-    local new_count=$(cat "$new_todos_file" | jq '. | length' 2>/dev/null || echo "0")
+    local new_count;
+
+    new_count=$(cat "$new_todos_file" | jq '. | length' 2>/dev/null || echo "0")
     log_info "Converting $new_count new TODOs to tasks..."
 
     # Run the task converter
@@ -233,7 +247,8 @@ save_previous_scan() {
 
 # Main scanning cycle
 scan_cycle() {
-    local cycle_start=$(date '+%Y-%m-%d %H:%M:%S')
+    local cycle_start;
+    cycle_start=$(date '+%Y-%m-%d %H:%M:%S')
     log_info "Starting scan cycle at $cycle_start"
 
     update_status "scanning" "Scanning for TODOs..." "$cycle_start" 0
@@ -245,10 +260,13 @@ scan_cycle() {
     fi
 
     # Step 2: Find new TODOs
-    local temp_new_todos="/tmp/new_todos_$$.json"
+    local temp_new_todos;
+    temp_new_todos="/tmp/new_todos_$$.json"
     find_new_todos "$TODO_OUTPUT_FILE" "$PREVIOUS_TODO_FILE" >"$temp_new_todos"
 
-    local new_count=$(cat "$temp_new_todos" | jq '. | length' 2>/dev/null || echo "0")
+    local new_count;
+
+    new_count=$(cat "$temp_new_todos" | jq '. | length' 2>/dev/null || echo "0")
 
     if [ "$new_count" -gt 0 ]; then
         log_info "Found $new_count new TODOs"
@@ -272,7 +290,9 @@ scan_cycle() {
     # Cleanup
     rm -f "$temp_new_todos"
 
-    local cycle_end=$(date '+%Y-%m-%d %H:%M:%S')
+    local cycle_end;
+
+    cycle_end=$(date '+%Y-%m-%d %H:%M:%S')
     log_info "Scan cycle completed at $cycle_end"
 }
 
@@ -310,7 +330,8 @@ stop_agent() {
     log_info "Stopping TODO Scanner Agent..."
 
     if [ -f "$SCANNER_PID_FILE" ]; then
-        local pid=$(cat "$SCANNER_PID_FILE")
+        local pid;
+        pid=$(cat "$SCANNER_PID_FILE")
         if kill -TERM "$pid" 2>/dev/null; then
             log_success "Scanner agent stopped (PID: $pid)"
             rm -f "$SCANNER_PID_FILE"

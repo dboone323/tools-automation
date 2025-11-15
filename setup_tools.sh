@@ -47,7 +47,8 @@ detect_os() {
 
 # Install Docker
 install_docker() {
-    local os=$(detect_os)
+    local os;
+    os=$(detect_os)
 
     print_status "Installing Docker..."
 
@@ -101,7 +102,8 @@ install_python_deps() {
 
 # Install Node.js and npm (for some tools)
 install_nodejs() {
-    local os=$(detect_os)
+    local os;
+    os=$(detect_os)
 
     print_status "Installing Node.js and npm..."
 
@@ -208,7 +210,8 @@ setup_security_tools() {
 
 # Install development tools
 install_dev_tools() {
-    local os=$(detect_os)
+    local os;
+    os=$(detect_os)
 
     print_status "Installing development tools..."
 
@@ -275,12 +278,18 @@ EOF
 
 # Main setup function
 main() {
-    local install_docker_flag=false
-    local install_monitoring_flag=false
-    local install_devtools_flag=false
-    local install_quality_flag=false
-    local install_security_flag=false
-    local install_docs_flag=false
+    local install_docker_flag;
+    install_docker_flag=false
+    local install_monitoring_flag;
+    install_monitoring_flag=false
+    local install_devtools_flag;
+    install_devtools_flag=false
+    local install_quality_flag;
+    install_quality_flag=false
+    local install_security_flag;
+    install_security_flag=false
+    local install_docs_flag;
+    install_docs_flag=false
 
     while [[ $# -gt 0 ]]; do
         case $1 in

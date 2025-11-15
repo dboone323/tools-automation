@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -110,10 +110,14 @@ mkdir -p "${QUANTUM_LEARNING_DIR}/reports"
 
 # Update agent status
 update_agent_status() {
-    local agent_script="$1"
-    local status="$2"
-    local pid="$3"
-    local task="$4"
+    local agent_script;
+    agent_script="$1"
+    local status;
+    status="$2"
+    local pid;
+    pid="$3"
+    local task;
+    task="$4"
 
     if [[ ! -f "${STATUS_FILE}" ]]; then
         echo "{}" >"${STATUS_FILE}"
@@ -146,26 +150,39 @@ with open('${STATUS_FILE}', 'w') as f:
 
 # Train quantum machine learning model
 train_quantum_model() {
-    local model_type="$1"      # qsvm, qnn, qkmeans, qboost
-    local dataset="$2"         # iris, mnist, custom
-    local hyperparameters="$3" # JSON string with hyperparameters
+    local model_type;
+    model_type="$1"      # qsvm, qnn, qkmeans, qboost
+    local dataset;
+    dataset="$2"         # iris, mnist, custom
+    local hyperparameters;
+    hyperparameters="$3" # JSON string with hyperparameters
 
     quantum_log "Training quantum ${model_type} model on ${dataset} dataset"
 
-    local model_id="${model_type}_${dataset}_$(date +%s)"
-    local model_file="${QUANTUM_MODELS_DIR}/${model_id}.json"
-    local timestamp=$(date +%s)
+    local model_id;
+
+    model_id="${model_type}_${dataset}_$(date +%s)"
+    local model_file;
+    model_file="${QUANTUM_MODELS_DIR}/${model_id}.json"
+    local timestamp;
+    timestamp=$(date +%s)
 
     # Simulate quantum model training
-    local start_time=$(date +%s)
+    local start_time;
+    start_time=$(date +%s)
     sleep 8 # Simulate training time
-    local end_time=$(date +%s)
-    local training_time=$((end_time - start_time))
+    local end_time;
+    end_time=$(date +%s)
+    local training_time;
+    training_time=$((end_time - start_time))
 
     # Generate mock model results based on type
-    local accuracy=0
-    local quantum_advantage=0
-    local model_size=0
+    local accuracy;
+    accuracy=0
+    local quantum_advantage;
+    quantum_advantage=0
+    local model_size;
+    model_size=0
 
     case "${model_type}" in
     "qsvm")
@@ -194,7 +211,9 @@ train_quantum_model() {
         ;;
     esac
 
-    local model_data=$(
+    local model_data;
+
+    model_data=$(
         cat <<EOF
 {
   "model_id": "${model_id}",
@@ -234,26 +253,39 @@ EOF
 
 # Run quantum pattern recognition
 run_pattern_recognition() {
-    local data_source="$1"    # chemistry_data, finance_data, code_patterns, custom
-    local pattern_type="$2"   # anomaly, cluster, classification, regression
-    local quantum_method="$3" # qsvm, qkmeans, qnn
+    local data_source;
+    data_source="$1"    # chemistry_data, finance_data, code_patterns, custom
+    local pattern_type;
+    pattern_type="$2"   # anomaly, cluster, classification, regression
+    local quantum_method;
+    quantum_method="$3" # qsvm, qkmeans, qnn
 
     quantum_log "Running quantum pattern recognition: ${pattern_type} on ${data_source} using ${quantum_method}"
 
-    local experiment_id="pattern_${data_source}_${pattern_type}_$(date +%s)"
-    local results_file="${QUANTUM_EXPERIMENTS_DIR}/${experiment_id}.json"
-    local timestamp=$(date +%s)
+    local experiment_id;
+
+    experiment_id="pattern_${data_source}_${pattern_type}_$(date +%s)"
+    local results_file;
+    results_file="${QUANTUM_EXPERIMENTS_DIR}/${experiment_id}.json"
+    local timestamp;
+    timestamp=$(date +%s)
 
     # Simulate pattern recognition analysis
-    local start_time=$(date +%s)
+    local start_time;
+    start_time=$(date +%s)
     sleep 6
-    local end_time=$(date +%s)
-    local analysis_time=$((end_time - start_time))
+    local end_time;
+    end_time=$(date +%s)
+    local analysis_time;
+    analysis_time=$((end_time - start_time))
 
     # Generate mock results based on data source and pattern type
-    local patterns_found=0
-    local accuracy=0
-    local insights="[]"
+    local patterns_found;
+    patterns_found=0
+    local accuracy;
+    accuracy=0
+    local insights;
+    insights="[]"
 
     case "${data_source}_${pattern_type}" in
     "chemistry_data_anomaly")
@@ -278,7 +310,9 @@ run_pattern_recognition() {
         ;;
     esac
 
-    local pattern_results=$(
+    local pattern_results;
+
+    pattern_results=$(
         cat <<EOF
 {
   "experiment_id": "${experiment_id}",
@@ -311,24 +345,35 @@ EOF
 
 # Optimize hyperparameters using quantum algorithms
 optimize_hyperparameters() {
-    local model_type="$1"
-    local search_space="$2" # JSON string defining parameter ranges
+    local model_type;
+    model_type="$1"
+    local search_space;
+    search_space="$2" # JSON string defining parameter ranges
 
     quantum_log "Optimizing hyperparameters for ${model_type} using quantum algorithms"
 
-    local optimization_id="hyperopt_${model_type}_$(date +%s)"
-    local results_file="${QUANTUM_EXPERIMENTS_DIR}/${optimization_id}.json"
-    local timestamp=$(date +%s)
+    local optimization_id;
+
+    optimization_id="hyperopt_${model_type}_$(date +%s)"
+    local results_file;
+    results_file="${QUANTUM_EXPERIMENTS_DIR}/${optimization_id}.json"
+    local timestamp;
+    timestamp=$(date +%s)
 
     # Simulate quantum hyperparameter optimization
-    local start_time=$(date +%s)
+    local start_time;
+    start_time=$(date +%s)
     sleep 10
-    local end_time=$(date +%s)
-    local optimization_time=$((end_time - start_time))
+    local end_time;
+    end_time=$(date +%s)
+    local optimization_time;
+    optimization_time=$((end_time - start_time))
 
     # Generate optimized parameters
-    local best_params=""
-    local best_score=0
+    local best_params;
+    best_params=""
+    local best_score;
+    best_score=0
 
     case "${model_type}" in
     "neural_network")
@@ -349,7 +394,9 @@ optimize_hyperparameters() {
         ;;
     esac
 
-    local optimization_results=$(
+    local optimization_results;
+
+    optimization_results=$(
         cat <<EOF
 {
   "optimization_id": "${optimization_id}",
@@ -389,17 +436,25 @@ EOF
 learn_from_quantum_results() {
     quantum_log "Learning from quantum computation results across domains"
 
-    local learning_id="meta_learning_$(date +%s)"
-    local insights_file="${QUANTUM_LEARNING_DIR}/reports/${learning_id}.json"
+    local learning_id;
+
+    learning_id="meta_learning_$(date +%s)"
+    local insights_file;
+    insights_file="${QUANTUM_LEARNING_DIR}/reports/${learning_id}.json"
 
     # Analyze results from chemistry, finance, and other quantum computations
-    local chemistry_results=$(find "${WORKSPACE_ROOT}/.quantum_metrics/simulations" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
-    local finance_results=$(find "${WORKSPACE_ROOT}/.quantum_finance_metrics/portfolios" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
-    local orchestrator_jobs=$(find "${WORKSPACE_ROOT}/.quantum_orchestrator/jobs" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
+    local chemistry_results;
+    chemistry_results=$(find "${WORKSPACE_ROOT}/.quantum_metrics/simulations" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
+    local finance_results;
+    finance_results=$(find "${WORKSPACE_ROOT}/.quantum_finance_metrics/portfolios" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
+    local orchestrator_jobs;
+    orchestrator_jobs=$(find "${WORKSPACE_ROOT}/.quantum_orchestrator/jobs" -name "*.json" -mtime -1 2>/dev/null | wc -l | tr -d ' ')
 
     # Extract patterns and insights
-    local patterns_learned=0
-    local performance_improvements=0
+    local patterns_learned;
+    patterns_learned=0
+    local performance_improvements;
+    performance_improvements=0
 
     if [[ ${chemistry_results} -gt 0 ]]; then
         patterns_learned=$((patterns_learned + 3))
@@ -416,7 +471,9 @@ learn_from_quantum_results() {
         performance_improvements=$((performance_improvements + 2))
     fi
 
-    local learning_insights=$(
+    local learning_insights;
+
+    learning_insights=$(
         cat <<EOF
 {
   "learning_session_id": "${learning_id}",
@@ -460,20 +517,28 @@ EOF
 generate_learning_report() {
     info "Generating quantum learning report"
 
-    local report_file="${QUANTUM_LEARNING_DIR}/reports/learning_report_$(date +%Y%m%d_%H%M%S).json"
+    local report_file;
+
+    report_file="${QUANTUM_LEARNING_DIR}/reports/learning_report_$(date +%Y%m%d_%H%M%S).json"
 
     # Collect learning metrics
-    local total_models=$(find "${QUANTUM_MODELS_DIR}" -name "*.json" -mtime -7 2>/dev/null | wc -l | tr -d ' ')
-    local total_experiments=$(find "${QUANTUM_EXPERIMENTS_DIR}" -name "*.json" -mtime -7 2>/dev/null | wc -l | tr -d ' ')
-    local total_datasets=$(find "${QUANTUM_DATASETS_DIR}" -name "*.json" -mtime -7 2>/dev/null | wc -l | tr -d ' ')
+    local total_models;
+    total_models=$(find "${QUANTUM_MODELS_DIR}" -name "*.json" -mtime -7 2>/dev/null | wc -l | tr -d ' ')
+    local total_experiments;
+    total_experiments=$(find "${QUANTUM_EXPERIMENTS_DIR}" -name "*.json" -mtime -7 2>/dev/null | wc -l | tr -d ' ')
+    local total_datasets;
+    total_datasets=$(find "${QUANTUM_DATASETS_DIR}" -name "*.json" -mtime -7 2>/dev/null | wc -l | tr -d ' ')
 
     # Calculate average performance
-    local avg_accuracy=0
-    local total_models_count=0
+    local avg_accuracy;
+    avg_accuracy=0
+    local total_models_count;
+    total_models_count=0
 
     while IFS= read -r model_file; do
         [[ ! -f "$model_file" ]] && continue
-        local acc=$(python3 -c "
+        local acc;
+        acc=$(python3 -c "
 import json
 try:
     with open('$model_file', 'r') as f:
@@ -491,7 +556,9 @@ except:
         avg_accuracy=$((avg_accuracy / total_models_count))
     fi
 
-    local learning_report=$(
+    local learning_report;
+
+    learning_report=$(
         cat <<EOF
 {
   "timestamp": $(date +%s),
@@ -543,9 +610,13 @@ EOF
 run_learning_experiments() {
     quantum_log "Running automated quantum learning experiments"
 
-    local experiments_run=0
-    local model_types=("qsvm" "qnn" "qkmeans" "qboost")
-    local datasets=("iris" "mnist" "finance" "chemistry")
+    local experiments_run;
+
+    experiments_run=0
+    local model_types;
+    model_types=("qsvm" "qnn" "qkmeans" "qboost")
+    local datasets;
+    datasets=("iris" "mnist" "finance" "chemistry")
 
     for model in "${model_types[@]}"; do
         for dataset in "${datasets[@]}"; do
@@ -595,7 +666,9 @@ main() {
     update_agent_status "quantum_learning_agent.sh" "available" $$ ""
     quantum_log "Quantum Learning Agent ready - quantum-enhanced intelligence activated"
 
-    local cycle_count=0
+    local cycle_count;
+
+    cycle_count=0
 
     # Main loop - learning operations every 20 minutes
     while true; do

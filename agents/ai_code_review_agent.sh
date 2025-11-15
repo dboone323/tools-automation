@@ -60,10 +60,12 @@ WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-60}"  # Seconds to wait when system is busy
 
 # Function to check if we should proceed with task processing
 ensure_within_limits() {
-    local agent_name="ai_code_review_agent.sh"
+    local agent_name;
+    agent_name="ai_code_review_agent.sh"
 
     # Check concurrent instances
-    local running_count=$(pgrep -f "${agent_name}" | wc -l)
+    local running_count;
+    running_count=$(pgrep -f "${agent_name}" | wc -l)
     if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
         log "Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..."
         return 1
@@ -104,7 +106,8 @@ log() {
 
 # Ollama Integration Functions (policy-aware)
 ollama_query() {
-    local prompt="$1"
+    local prompt;
+    prompt="$1"
     # Route via unified client with task mapping for analysis
     local input_json
     input_json=$(jq -n --arg task "codeAnalysis" --arg prompt "$prompt" '{task:$task, prompt:$prompt}')
@@ -113,13 +116,15 @@ ollama_query() {
 
 # Update agent status
 update_status() {
-    local status="$1"
+    local status;
+    status="$1"
     update_agent_status "${AGENT_NAME}" "$status" "$$"
 }
 
 # Process a specific task
 process_task() {
-    local task_id="$1"
+    local task_id;
+    task_id="$1"
     echo "[$(date)] ${AGENT_NAME}: Processing task ${task_id}" >>"${LOG_FILE}"
 
     # Get task details
@@ -150,14 +155,17 @@ process_task() {
 
 # Update task status
 update_task_status() {
-    local task_id="$1"
-    local status="$2"
+    local task_id;
+    task_id="$1"
+    local status;
+    status="$2"
     update_task_status "$task_id" "$status"
 }
 
 # Main AI code review function
 run_ai_code_review() {
-    local task_desc="$1"
+    local task_desc;
+    task_desc="$1"
     log "Running AI code review for: ${task_desc}"
 
     # Get changed files from git
@@ -169,10 +177,15 @@ run_ai_code_review() {
         changed_files=$(find "${WORKSPACE}/Projects" -name "*.swift" -type f | head -20)
     fi
 
-    local review_results=""
-    local total_files=0
-    local issues_found=0
-    local suggestions_made=0
+    local review_results;
+
+    review_results=""
+    local total_files;
+    total_files=0
+    local issues_found;
+    issues_found=0
+    local suggestions_made;
+    suggestions_made=0
 
     for file in ${changed_files}; do
         if [[ -f "${file}" && "${file}" == *.swift ]]; then
@@ -211,7 +224,8 @@ run_ai_code_review() {
 
 # Review a single Swift file
 review_swift_file() {
-    local file_path="$1"
+    local file_path;
+    file_path="$1"
     local file_content
     file_content=$(head -100 "${file_path}") # Limit to first 100 lines for analysis
 
@@ -219,7 +233,8 @@ review_swift_file() {
     file_name=$(basename "${file_path}")
 
     # Analyze code quality aspects
-    local issues=""
+    local issues;
+    issues=""
 
     # Check for common Swift issues
     if grep -q "TODO\|FIXME\|HACK" "${file_path}"; then
@@ -238,7 +253,8 @@ review_swift_file() {
     fi
 
     # Use AI for deeper analysis
-    local ai_review_prompt="Analyze this Swift code for potential issues, improvements, and best practices:
+    local ai_review_prompt;
+    ai_review_prompt="Analyze this Swift code for potential issues, improvements, and best practices:
 
 File: ${file_name}
 Code:
@@ -267,14 +283,17 @@ Format as a structured code review with specific recommendations."
 
 # Generate improvement suggestions
 generate_improvements() {
-    local file_path="$1"
+    local file_path;
+    file_path="$1"
     local file_content
     file_content=$(head -100 "${file_path}")
 
     local file_name
     file_name=$(basename "${file_path}")
 
-    local improvement_prompt="Suggest specific improvements for this Swift code:
+    local improvement_prompt;
+
+    improvement_prompt="Suggest specific improvements for this Swift code:
 
 File: ${file_name}
 Code:
@@ -301,12 +320,18 @@ ${ai_suggestions}"
 
 # Generate comprehensive review report
 generate_review_report() {
-    local review_results="$1"
-    local total_files="$2"
-    local issues_found="$3"
-    local suggestions_made="$4"
+    local review_results;
+    review_results="$1"
+    local total_files;
+    total_files="$2"
+    local issues_found;
+    issues_found="$3"
+    local suggestions_made;
+    suggestions_made="$4"
 
-    local report_file="${RESULTS_DIR}/ai_code_review_report_$(date +%Y%m%d_%H%M%S).md"
+    local report_file;
+
+    report_file="${RESULTS_DIR}/ai_code_review_report_$(date +%Y%m%d_%H%M%S).md"
     mkdir -p "${RESULTS_DIR}"
 
     {
@@ -360,10 +385,13 @@ generate_review_report() {
 
 # Run security-focused code review
 run_security_review() {
-    local changed_files="$1"
+    local changed_files;
+    changed_files="$1"
     log "Running security-focused code review..."
 
-    local security_issues=""
+    local security_issues;
+
+    security_issues=""
 
     for file in ${changed_files}; do
         if [[ -f "${file}" && "${file}" == *.swift ]]; then
@@ -376,7 +404,8 @@ run_security_review() {
     done
 
     if [[ -n "${security_issues}" ]]; then
-        local security_report="${RESULTS_DIR}/security_review_report_$(date +%Y%m%d_%H%M%S).md"
+        local security_report;
+        security_report="${RESULTS_DIR}/security_review_report_$(date +%Y%m%d_%H%M%S).md"
         {
             echo "# Security Code Review Report"
             echo "**Generated:** $(date)"
@@ -395,11 +424,14 @@ run_security_review() {
 
 # Analyze security aspects of a file
 analyze_security() {
-    local file_path="$1"
+    local file_path;
+    file_path="$1"
     local file_content
     file_content=$(head -100 "${file_path}")
 
-    local security_prompt="Analyze this Swift code for security vulnerabilities and concerns:
+    local security_prompt;
+
+    security_prompt="Analyze this Swift code for security vulnerabilities and concerns:
 
 Code:
 ${file_content}
@@ -426,10 +458,13 @@ ${ai_security}"
 
 # Run performance analysis
 run_performance_analysis() {
-    local changed_files="$1"
+    local changed_files;
+    changed_files="$1"
     log "Running performance analysis..."
 
-    local performance_issues=""
+    local performance_issues;
+
+    performance_issues=""
 
     for file in ${changed_files}; do
         if [[ -f "${file}" && "${file}" == *.swift ]]; then
@@ -442,7 +477,8 @@ run_performance_analysis() {
     done
 
     if [[ -n "${performance_issues}" ]]; then
-        local perf_report="${RESULTS_DIR}/performance_analysis_report_$(date +%Y%m%d_%H%M%S).md"
+        local perf_report;
+        perf_report="${RESULTS_DIR}/performance_analysis_report_$(date +%Y%m%d_%H%M%S).md"
         {
             echo "# Performance Analysis Report"
             echo "**Generated:** $(date)"
@@ -461,11 +497,14 @@ run_performance_analysis() {
 
 # Analyze performance aspects of a file
 analyze_performance() {
-    local file_path="$1"
+    local file_path;
+    file_path="$1"
     local file_content
     file_content=$(head -100 "${file_path}")
 
-    local perf_prompt="Analyze this Swift code for performance issues and optimization opportunities:
+    local perf_prompt;
+
+    perf_prompt="Analyze this Swift code for performance issues and optimization opportunities:
 
 Code:
 ${file_content}

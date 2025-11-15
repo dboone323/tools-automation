@@ -24,7 +24,8 @@ activate_venv() {
 }
 
 run_step() {
-    local desc="$1"
+    local desc;
+    desc="$1"
     shift
     log "STEP: $desc"
     if "$@"; then
@@ -36,10 +37,13 @@ run_step() {
 
 prune_old_snapshots() {
     log "Pruning old dashboard snapshots (keeping last $MAX_SNAPSHOTS)"
-    local snapshots=("$ROOT/reports/dashboard_snapshot_"*.txt)
-    local count=${#snapshots[@]}
+    local snapshots;
+    snapshots=("$ROOT/reports/dashboard_snapshot_"*.txt)
+    local count;
+    count=${#snapshots[@]}
     if [[ $count -gt $MAX_SNAPSHOTS ]]; then
-        local to_remove=$((count - MAX_SNAPSHOTS))
+        local to_remove;
+        to_remove=$((count - MAX_SNAPSHOTS))
         # Sort by modification time and remove oldest
         find "$ROOT/reports" -name "dashboard_snapshot_*.txt" -type f -print0 2>/dev/null |
             xargs -0 ls -t | tail -n "$to_remove" | xargs rm -f 2>/dev/null || true
@@ -48,10 +52,14 @@ prune_old_snapshots() {
 }
 
 append_pipeline_run_log() {
-    local start_time="$1"
-    local end_time="$(date -u +%s)"
-    local duration=$((end_time - start_time))
-    local autonomy_score=$(python3 -c "
+    local start_time;
+    start_time="$1"
+    local end_time;
+    end_time="$(date -u +%s)"
+    local duration;
+    duration=$((end_time - start_time))
+    local autonomy_score;
+    autonomy_score=$(python3 -c "
 import json, os
 score = 0
 if os.path.exists('$ROOT/unified_todos.json'):

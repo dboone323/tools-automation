@@ -38,7 +38,8 @@ mb_to_bytes() {
 
 # Get file size in bytes
 get_file_size() {
-  local file="$1"
+  local file;
+  file="$1"
   if [[ ! -f "$file" ]]; then
     echo 0
     return
@@ -54,9 +55,12 @@ get_file_size() {
 
 # Rotate a log file
 rotate_log() {
-  local logfile="$1"
-  local timestamp=$(date +%Y%m%d_%H%M%S)
-  local rotated="${logfile}.${timestamp}"
+  local logfile;
+  logfile="$1"
+  local timestamp;
+  timestamp=$(date +%Y%m%d_%H%M%S)
+  local rotated;
+  rotated="${logfile}.${timestamp}"
 
   log_info "Rotating: ${logfile}"
 
@@ -73,9 +77,12 @@ rotate_log() {
 
 # Delete old logs
 cleanup_old_logs() {
-  local dir="$1"
-  local days="$2"
-  local count=0
+  local dir;
+  dir="$1"
+  local days;
+  days="$2"
+  local count;
+  count=0
 
   log_info "Cleaning up logs older than ${days} days in ${dir}"
 
@@ -97,11 +104,16 @@ cleanup_old_logs() {
 
 # Publish rotation summary to MCP
 publish_to_mcp() {
-  local rotated_count="$1"
-  local deleted_count="$2"
-  local total_size_mb="$3"
+  local rotated_count;
+  rotated_count="$1"
+  local deleted_count;
+  deleted_count="$2"
+  local total_size_mb;
+  total_size_mb="$3"
 
-  local payload=$(
+  local payload;
+
+  payload=$(
     cat <<EOF
 {
   "source": "log_rotation",
@@ -133,14 +145,20 @@ main() {
   log_info "Max size: ${MAX_LOG_SIZE_MB}MB"
   log_info "Retention: ${RETENTION_DAYS} days"
 
-  local rotated_count=0
-  local deleted_count=0
-  local total_freed_bytes=0
-  local max_size_bytes=$(mb_to_bytes "$MAX_LOG_SIZE_MB")
+  local rotated_count;
+
+  rotated_count=0
+  local deleted_count;
+  deleted_count=0
+  local total_freed_bytes;
+  total_freed_bytes=0
+  local max_size_bytes;
+  max_size_bytes=$(mb_to_bytes "$MAX_LOG_SIZE_MB")
 
   # Find all log files in automation directories
   while IFS= read -r -d '' logfile; do
-    local size=$(get_file_size "$logfile")
+    local size;
+    size=$(get_file_size "$logfile")
 
     # Skip if file doesn't exist or is empty
     [[ ! -f "$logfile" ]] && continue
@@ -148,7 +166,8 @@ main() {
 
     # Rotate if size exceeds threshold
     if [[ $size -gt $max_size_bytes ]]; then
-      local size_mb=$((size / 1024 / 1024))
+      local size_mb;
+      size_mb=$((size / 1024 / 1024))
       log_warning "Log exceeds ${MAX_LOG_SIZE_MB}MB: ${logfile} (${size_mb}MB)"
 
       if rotate_log "$logfile"; then
@@ -161,12 +180,14 @@ main() {
   done < <(find "$LOG_DIR" -type f -name "*.log" -print0 2>/dev/null)
 
   # Clean up old compressed logs
-  local old_count=$(find "$LOG_DIR" -name "*.log.*.gz" -mtime "+${RETENTION_DAYS}" 2>/dev/null | wc -l | tr -d ' ')
+  local old_count;
+  old_count=$(find "$LOG_DIR" -name "*.log.*.gz" -mtime "+${RETENTION_DAYS}" 2>/dev/null | wc -l | tr -d ' ')
   cleanup_old_logs "$LOG_DIR" "$RETENTION_DAYS"
   deleted_count=$old_count
 
   # Calculate total freed space
-  local total_freed_mb=$((total_freed_bytes / 1024 / 1024))
+  local total_freed_mb;
+  total_freed_mb=$((total_freed_bytes / 1024 / 1024))
 
   # Summary
   log_info "================================================"

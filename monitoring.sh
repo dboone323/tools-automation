@@ -107,7 +107,8 @@ check_services() {
 
 # Show logs
 show_logs() {
-    local service="$1"
+    local service;
+    service="$1"
 
     if [[ -n "${service}" ]]; then
         print_status "Showing logs for ${service}..."
@@ -154,7 +155,8 @@ start_autorestart() {
 
     # Start the monitor in background
     nohup "${SCRIPT_DIR}/auto_restart_monitor.sh" >/tmp/tools_autorestart.log 2>&1 &
-    local pid=$!
+    local pid;
+    pid=$!
 
     sleep 2
 
@@ -186,7 +188,8 @@ stop_autorestart() {
 # Check auto-restart status
 check_autorestart() {
     if pgrep -f "auto_restart_monitor.sh" >/dev/null 2>&1; then
-        local pid=$(pgrep -f "auto_restart_monitor.sh")
+        local pid;
+        pid=$(pgrep -f "auto_restart_monitor.sh")
         print_success "✅ Auto-restart monitor is running (PID: $pid)"
     else
         print_error "❌ Auto-restart monitor is not running"
@@ -218,8 +221,10 @@ show_usage() {
 
 # Main execution
 main() {
-    local command="$1"
-    local service="$2"
+    local command;
+    command="$1"
+    local service;
+    service="$2"
 
     # Handle help
     if [[ "$command" == "--help" ]] || [[ "$command" == "-h" ]]; then

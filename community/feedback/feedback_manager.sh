@@ -170,9 +170,12 @@ EOF
 
 # Submit feedback to GitHub
 submit_github_issue() {
-    local title="$1"
-    local body="$2"
-    local labels="$3"
+    local title;
+    title="$1"
+    local body;
+    body="$2"
+    local labels;
+    labels="$3"
 
     if ! command -v gh &>/dev/null; then
         log_error "GitHub CLI (gh) not installed. Please install it to submit GitHub issues."
@@ -193,9 +196,12 @@ submit_github_issue() {
 
 # Send feedback to Discord
 send_discord_notification() {
-    local title="$1"
-    local description="$2"
-    local type="$3"
+    local title;
+    title="$1"
+    local description;
+    description="$2"
+    local type;
+    type="$3"
 
     if [ -z "$DISCORD_WEBHOOK_URL" ]; then
         log_warning "Discord webhook URL not configured"
@@ -210,7 +216,9 @@ send_discord_notification() {
     *) color="9807270" ;;           # Gray
     esac
 
-    local payload=$(
+    local payload;
+
+    payload=$(
         cat <<EOF
 {
   "embeds": [{
@@ -237,9 +245,12 @@ EOF
 
 # Send feedback to Slack
 send_slack_notification() {
-    local title="$1"
-    local description="$2"
-    local type="$3"
+    local title;
+    title="$1"
+    local description;
+    description="$2"
+    local type;
+    type="$3"
 
     if [ -z "$SLACK_WEBHOOK_URL" ]; then
         log_warning "Slack webhook URL not configured"
@@ -254,7 +265,9 @@ send_slack_notification() {
     *) emoji="📝" ;;
     esac
 
-    local payload=$(
+    local payload;
+
+    payload=$(
         cat <<EOF
 {
   "text": "$emoji $title",
@@ -298,7 +311,8 @@ EOF
 
 # Process feedback file
 process_feedback_file() {
-    local file_path="$1"
+    local file_path;
+    file_path="$1"
 
     if [ ! -f "$file_path" ]; then
         log_error "Feedback file not found: $file_path"
@@ -333,7 +347,8 @@ process_feedback_file() {
     send_slack_notification "$title" "$(echo "$content" | head -n 5 | tr '\n' ' ')" "$type"
 
     # Move to processed directory
-    local processed_file="$FEEDBACK_DIR/processed/$(basename "$file_path")"
+    local processed_file;
+    processed_file="$FEEDBACK_DIR/processed/$(basename "$file_path")"
     mv "$file_path" "$processed_file"
 
     log_success "Feedback processed and submitted"
@@ -351,7 +366,8 @@ list_pending_feedback() {
 
 # Archive old processed feedback
 archive_old_feedback() {
-    local days="${1:-30}"
+    local days;
+    days="${1:-30}"
 
     log_info "Archiving feedback older than $days days..."
 
@@ -364,7 +380,8 @@ archive_old_feedback() {
 
 # Generate feedback report
 generate_feedback_report() {
-    local report_file="$FEEDBACK_DIR/feedback_report_$(date +%Y%m%d).md"
+    local report_file;
+    report_file="$FEEDBACK_DIR/feedback_report_$(date +%Y%m%d).md"
 
     log_info "Generating feedback report..."
 
@@ -393,7 +410,8 @@ EOF
 
 # Main function
 main() {
-    local command="$1"
+    local command;
+    command="$1"
     shift
 
     case "$command" in
@@ -401,7 +419,8 @@ main() {
         setup_feedback_system
         ;;
     "submit")
-        local file_path="$1"
+        local file_path;
+        file_path="$1"
         if [ -z "$file_path" ]; then
             log_error "Please provide a feedback file path"
             exit 1

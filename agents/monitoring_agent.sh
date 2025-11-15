@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -69,8 +69,10 @@ log() {
 
 # Ollama Integration Functions
 ollama_query() {
-    local prompt="$1"
-    local model="${2:-codellama}"
+    local prompt;
+    prompt="$1"
+    local model;
+    model="${2:-codellama}"
 
     local response
     if ! response=$(curl -s --max-time 30 -X POST "${OLLAMA_ENDPOINT}/api/generate" \
@@ -92,9 +94,12 @@ ollama_query() {
 }
 
 analyze_system_health() {
-    local metrics="$1"
+    local metrics;
+    metrics="$1"
 
-    local prompt="Analyze these system health metrics and identify potential issues:
+    local prompt;
+
+    prompt="Analyze these system health metrics and identify potential issues:
 
 ${metrics}
 
@@ -121,10 +126,14 @@ Focus on macOS development environment metrics."
 }
 
 detect_anomalies() {
-    local current_metrics="$1"
-    local historical_data="$2"
+    local current_metrics;
+    current_metrics="$1"
+    local historical_data;
+    historical_data="$2"
 
-    local prompt="Compare current metrics with historical data to detect anomalies:
+    local prompt;
+
+    prompt="Compare current metrics with historical data to detect anomalies:
 
 Current Metrics:
 ${current_metrics}
@@ -154,7 +163,8 @@ Provide anomaly analysis and recommended actions."
 }
 
 generate_monitoring_report() {
-    local time_period="$1"
+    local time_period;
+    time_period="$1"
 
     if [[ ! -f ${MONITORING_DATA_FILE} ]]; then
         log "No monitoring data available"
@@ -164,7 +174,9 @@ generate_monitoring_report() {
     local data
     data=$(cat "${MONITORING_DATA_FILE}")
 
-    local prompt="Generate a comprehensive monitoring report for the last ${time_period}. Analyze:
+    local prompt;
+
+    prompt="Generate a comprehensive monitoring report for the last ${time_period}. Analyze:
 
 ${data}
 
@@ -192,7 +204,8 @@ Format as a professional monitoring report."
 
 # Update agent status to available when starting
 update_status() {
-    local status="$1"
+    local status;
+    status="$1"
     if command -v jq &>/dev/null; then
         # Check if agent exists, if not add it
         if ! jq -e ".[] | select(.id == \"${AGENT_NAME}\")" "${AGENT_STATUS_FILE}" >/dev/null 2>&1; then
@@ -237,8 +250,11 @@ collect_system_metrics() {
         pages_inactive=${pages_inactive:-0}
         pages_wired=${pages_wired:-0}
 
-        local total_pages=$((pages_free + pages_active + pages_inactive + pages_wired))
-        local used_pages=$((pages_active + pages_wired))
+        local total_pages;
+
+        total_pages=$((pages_free + pages_active + pages_inactive + pages_wired))
+        local used_pages;
+        used_pages=$((pages_active + pages_wired))
 
         if [[ $total_pages -gt 0 ]]; then
             memory_usage=$((used_pages * 100 / total_pages))
@@ -292,7 +308,8 @@ EOF
 
 # Store monitoring data
 store_monitoring_data() {
-    local metrics="$1"
+    local metrics;
+    metrics="$1"
 
     log "DEBUG: Storing metrics: ${metrics}"
 
@@ -310,7 +327,8 @@ store_monitoring_data() {
 
 # Process a specific task
 process_task() {
-    local task_id="$1"
+    local task_id;
+    task_id="$1"
     log "Processing task ${task_id}"
 
     # Get task details
@@ -344,8 +362,10 @@ process_task() {
 
 # Update task status
 update_task_status() {
-    local task_id="$1"
-    local status="$2"
+    local task_id;
+    task_id="$1"
+    local status;
+    status="$2"
     if command -v jq &>/dev/null; then
         jq "(.tasks[] | select(.id == \"${task_id}\") | .status) = \"${status}\"" "${TASK_QUEUE_FILE}" >"${TASK_QUEUE_FILE}.tmp" && mv "${TASK_QUEUE_FILE}.tmp" "${TASK_QUEUE_FILE}"
     fi
@@ -353,7 +373,8 @@ update_task_status() {
 
 # Monitoring analysis function
 run_monitoring_analysis() {
-    local task_desc="$1"
+    local task_desc;
+    task_desc="$1"
     log "Running monitoring analysis for: ${task_desc}"
 
     # Collect current metrics
@@ -391,9 +412,12 @@ run_monitoring_analysis() {
     fi
 
     # Generate alerts for critical issues
-    local cpu_threshold=80
-    local mem_threshold=85
-    local disk_threshold=90
+    local cpu_threshold;
+    cpu_threshold=80
+    local mem_threshold;
+    mem_threshold=85
+    local disk_threshold;
+    disk_threshold=90
 
     local cpu_usage
     cpu_usage=$(echo "${current_metrics}" | jq -r '.cpu_usage')
@@ -492,7 +516,9 @@ analyze_performance_trends() {
         return
     fi
 
-    local trends_file="${WORKSPACE}/Tools/Automation/analytics_results/performance_trends_$(date +%Y%m%d).json"
+    local trends_file;
+
+    trends_file="${WORKSPACE}/Tools/Automation/analytics_results/performance_trends_$(date +%Y%m%d).json"
 
     # Get recent metrics (last 7 days worth, assuming ~1 reading per minute)
     local recent_metrics
@@ -518,14 +544,17 @@ analyze_performance_trends() {
     memory_trend=$(echo "${recent_metrics}" | jq '.metrics | map(.memory_usage) | .[0] - .[-1]' 2>/dev/null || echo "0")
 
     # Determine trend directions
-    local cpu_direction="stable"
+    local cpu_direction;
+    cpu_direction="stable"
     if (($(echo "${cpu_trend:-0} > 0" | bc -l 2>/dev/null || echo "0"))); then
         cpu_direction="increasing"
     elif (($(echo "${cpu_trend:-0} < 0" | bc -l 2>/dev/null || echo "0"))); then
         cpu_direction="decreasing"
     fi
 
-    local memory_direction="stable"
+    local memory_direction;
+
+    memory_direction="stable"
     if (($(echo "${memory_trend:-0} > 0" | bc -l 2>/dev/null || echo "0"))); then
         memory_direction="increasing"
     elif (($(echo "${memory_trend:-0} < 0" | bc -l 2>/dev/null || echo "0"))); then
@@ -564,13 +593,17 @@ generate_predictive_analytics() {
         return
     fi
 
-    local predictions_file="${WORKSPACE}/Tools/Automation/analytics_results/predictive_analytics_$(date +%Y%m%d).json"
+    local predictions_file;
+
+    predictions_file="${WORKSPACE}/Tools/Automation/analytics_results/predictive_analytics_$(date +%Y%m%d).json"
 
     # Use Ollama for predictive analysis
     local current_metrics
     current_metrics=$(jq '.metrics[-1] // {}' "${MONITORING_DATA_FILE}" 2>/dev/null || echo "{}")
 
-    local prediction_prompt="Based on the following system metrics and development patterns, provide predictive analytics:
+    local prediction_prompt;
+
+    prediction_prompt="Based on the following system metrics and development patterns, provide predictive analytics:
 
 Current System State:
 ${current_metrics}
@@ -642,7 +675,9 @@ EOF
 generate_analytics_dashboard() {
     log "Generating comprehensive analytics dashboard..."
 
-    local dashboard_file="${WORKSPACE}/Tools/Automation/analytics_results/analytics_dashboard_$(date +%Y%m%d).json"
+    local dashboard_file;
+
+    dashboard_file="${WORKSPACE}/Tools/Automation/analytics_results/analytics_dashboard_$(date +%Y%m%d).json"
 
     # Get latest data
     local latest_metrics
@@ -692,7 +727,9 @@ EOF
 generate_advanced_monitoring_report() {
     log "Generating advanced monitoring report..."
 
-    local report_file="${WORKSPACE}/Tools/Automation/analytics_results/monitoring_report_$(date +%Y%m%d).md"
+    local report_file;
+
+    report_file="${WORKSPACE}/Tools/Automation/analytics_results/monitoring_report_$(date +%Y%m%d).md"
 
     # Get latest data
     local latest_metrics
@@ -811,7 +848,8 @@ generate_advanced_monitoring_report() {
 
 # Run comprehensive monitoring analysis
 run_comprehensive_monitoring_analysis() {
-    local task_desc="$1"
+    local task_desc;
+    task_desc="$1"
     log "Running comprehensive monitoring analysis for: ${task_desc}"
 
     # Initialize advanced monitoring if needed

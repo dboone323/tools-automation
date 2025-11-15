@@ -37,8 +37,10 @@ print_header() {
 
 # Function to check service availability
 check_service() {
-    local url="$1"
-    local name="$2"
+    local url;
+    url="$1"
+    local name;
+    name="$2"
 
     if curl -s --max-time 5 "$url" >/dev/null 2>&1; then
         print_status "$name is accessible"
@@ -51,11 +53,16 @@ check_service() {
 
 # Function to generate monitor JSON for API
 generate_monitor_json() {
-    local name="$1"
-    local url="$2"
-    local interval="$3"
-    local timeout="$4"
-    local retries="$5"
+    local name;
+    name="$1"
+    local url;
+    url="$2"
+    local interval;
+    interval="$3"
+    local timeout;
+    timeout="$4"
+    local retries;
+    retries="$5"
 
     cat <<EOF
 {
@@ -77,7 +84,8 @@ try_automated_setup() {
     print_info "Attempting automated monitor setup..."
 
     # Try to get auth token
-    local token=$(curl -s -X POST "${UPTIME_KUMA_URL}/api/login" \
+    local token;
+    token=$(curl -s -X POST "${UPTIME_KUMA_URL}/api/login" \
         -H "Content-Type: application/json" \
         -d "{\"username\":\"admin\",\"password\":\"admin\"}" 2>/dev/null | jq -r '.token // empty' 2>/dev/null)
 
@@ -103,15 +111,24 @@ try_automated_setup() {
 
 # Function to create monitor via API
 create_monitor_api() {
-    local token="$1"
-    local name="$2"
-    local type="$3"
-    local url="$4"
-    local interval="$5"
-    local timeout="$6"
-    local retries="$7"
+    local token;
+    token="$1"
+    local name;
+    name="$2"
+    local type;
+    type="$3"
+    local url;
+    url="$4"
+    local interval;
+    interval="$5"
+    local timeout;
+    timeout="$6"
+    local retries;
+    retries="$7"
 
-    local response=$(curl -s -X POST "${UPTIME_KUMA_URL}/api/monitors" \
+    local response;
+
+    response=$(curl -s -X POST "${UPTIME_KUMA_URL}/api/monitors" \
         -H "Authorization: Bearer ${token}" \
         -H "Content-Type: application/json" \
         -d "{
@@ -126,7 +143,9 @@ create_monitor_api() {
             \"resendInterval\": 0
         }")
 
-    local success=$(echo "$response" | jq -r '.ok // false' 2>/dev/null)
+    local success;
+
+    success=$(echo "$response" | jq -r '.ok // false' 2>/dev/null)
 
     if [ "$success" = "true" ]; then
         print_success "✅ Created monitor: $name"

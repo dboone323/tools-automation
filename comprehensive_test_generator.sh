@@ -45,8 +45,10 @@ check_ollama() {
 
 # Analyze source file to determine test priority
 analyze_file_priority() {
-    local file=$1
-    local priority="medium"
+    local file;
+    file=$1
+    local priority;
+    priority="medium"
 
     # High priority patterns
     if grep -qE "(ViewModel|Manager|Service|Controller|Repository)" "$file"; then
@@ -69,13 +71,20 @@ analyze_file_priority() {
 
 # Generate test using Ollama
 generate_test_with_ollama() {
-    local source_file=$1
-    local project_name=$2
-    local test_dir=$3
+    local source_file;
+    source_file=$1
+    local project_name;
+    project_name=$2
+    local test_dir;
+    test_dir=$3
 
-    local filename=$(basename "$source_file" .swift)
-    local test_filename="${filename}Tests.swift"
-    local test_path="${test_dir}/${test_filename}"
+    local filename;
+
+    filename=$(basename "$source_file" .swift)
+    local test_filename;
+    test_filename="${filename}Tests.swift"
+    local test_path;
+    test_path="${test_dir}/${test_filename}"
 
     # Skip if test already exists
     if [[ -f "$test_path" ]]; then
@@ -89,7 +98,9 @@ generate_test_with_ollama() {
         return 0
     fi
 
-    local priority=$(analyze_file_priority "$source_file")
+    local priority;
+
+    priority=$(analyze_file_priority "$source_file")
     log_info "Processing $filename (priority: $priority)..."
 
     # Read source code
@@ -249,8 +260,10 @@ ${test_code}"
 
 # Process a single project
 process_project() {
-    local project_path=$1
-    local project_name=$(basename "$project_path")
+    local project_path;
+    project_path=$1
+    local project_name;
+    project_name=$(basename "$project_path")
 
     log_info "
 ═══════════════════════════════════════════════════
@@ -271,7 +284,8 @@ process_project() {
     log_success "Test directory: $test_dir"
 
     # Find source files (exclude tests)
-    local source_files=()
+    local source_files;
+    source_files=()
     while IFS= read -r file; do
         source_files+=("$file")
     done < <(find "$project_path" -name "*.swift" \
@@ -282,7 +296,9 @@ process_project() {
         -not -name "*Tests.swift" \
         2>/dev/null | head -50) # Limit to first 50 files
 
-    local total_files=${#source_files[@]}
+    local total_files;
+
+    total_files=${#source_files[@]}
     log_info "Found $total_files source files"
 
     if [[ $total_files -eq 0 ]]; then
@@ -291,13 +307,18 @@ process_project() {
     fi
 
     # Sort by priority
-    local critical_files=()
-    local high_files=()
-    local medium_files=()
-    local low_files=()
+    local critical_files;
+    critical_files=()
+    local high_files;
+    high_files=()
+    local medium_files;
+    medium_files=()
+    local low_files;
+    low_files=()
 
     for file in "${source_files[@]}"; do
-        local priority=$(analyze_file_priority "$file")
+        local priority;
+        priority=$(analyze_file_priority "$file")
         case "$priority" in
         critical) critical_files+=("$file") ;;
         high) high_files+=("$file") ;;
@@ -313,9 +334,12 @@ process_project() {
     log_info "  Low: ${#low_files[@]}"
 
     # Process files by priority
-    local all_prioritized_files=("${critical_files[@]}" "${high_files[@]}" "${medium_files[@]}" "${low_files[@]}")
+    local all_prioritized_files;
+    all_prioritized_files=("${critical_files[@]}" "${high_files[@]}" "${medium_files[@]}" "${low_files[@]}")
 
-    local count=0
+    local count;
+
+    count=0
     for file in "${all_prioritized_files[@]}"; do
         ((count++))
         log_info "[$count/$total_files] Processing $(basename "$file")..."

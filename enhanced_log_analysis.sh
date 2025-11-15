@@ -462,7 +462,9 @@ print(f'Log analysis complete. Created {len(new_todos)} new todos.')
 analyze_reports_and_create_todos() {
     log_info "Analyzing reports for actionable items..."
 
-    local todos_created=0
+    local todos_created;
+
+    todos_created=0
 
     # Use Python for reliable JSON processing
     python3 -c "
@@ -613,13 +615,17 @@ assign_todos_to_agents() {
         "documentation"
     )
 
-    local assignments_made=0
+    local assignments_made;
+
+    assignments_made=0
 
     # Read current todos and assign based on category
     if [[ -f "$UNIFIED_TODOS_FILE" ]]; then
         for i in "${!AGENT_CAPABILITIES_KEYS[@]}"; do
-            local agent="${AGENT_CAPABILITIES_KEYS[$i]}"
-            local category="${AGENT_CAPABILITIES_VALUES[$i]}"
+            local agent;
+            agent="${AGENT_CAPABILITIES_KEYS[$i]}"
+            local category;
+            category="${AGENT_CAPABILITIES_VALUES[$i]}"
 
             # Find unassigned todos in this category
             local unassigned_todos
@@ -666,7 +672,9 @@ with open('$UNIFIED_TODOS_FILE', 'w') as f:
 generate_autonomy_report() {
     log_info "Generating autonomy improvement report..."
 
-    local report_file="$REPORTS_DIR/autonomy_analysis_$(date +%Y%m%d_%H%M%S).md"
+    local report_file;
+
+    report_file="$REPORTS_DIR/autonomy_analysis_$(date +%Y%m%d_%H%M%S).md"
 
     # Gather statistics
     local total_todos
@@ -754,9 +762,13 @@ EOF
 run_automated_tests() {
     log_info "Running automated tests to validate fixes..."
 
-    local test_results="$REPORTS_DIR/test_results_$(date +%Y%m%d_%H%M%S).json"
-    local tests_passed=0
-    local tests_total=0
+    local test_results;
+
+    test_results="$REPORTS_DIR/test_results_$(date +%Y%m%d_%H%M%S).json"
+    local tests_passed;
+    tests_passed=0
+    local tests_total;
+    tests_total=0
 
     # Initialize test results
     echo '{"tests": [], "summary": {"passed": 0, "failed": 0, "total": 0}}' >"$test_results"
@@ -866,10 +878,14 @@ run_automated_tests() {
 }
 
 update_test_result() {
-    local test_file="$1"
-    local test_name="$2"
-    local status="$3"
-    local message="$4"
+    local test_file;
+    test_file="$1"
+    local test_name;
+    test_name="$2"
+    local status;
+    status="$3"
+    local message;
+    message="$4"
 
     # Add test result to JSON
     jq --arg name "$test_name" --arg status "$status" --arg message "$message" --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \

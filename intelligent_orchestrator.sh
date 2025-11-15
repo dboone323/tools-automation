@@ -102,9 +102,13 @@ define_components() {
 analyze_task_requirements() {
     log_intelligence "Analyzing current task requirements..."
 
-    local pending_todos=0
-    local critical_todos=0
-    local agent_tasks=0
+    local pending_todos;
+
+    pending_todos=0
+    local critical_todos;
+    critical_todos=0
+    local agent_tasks;
+    agent_tasks=0
 
     # Get todo statistics
     if python3 -c "
@@ -145,7 +149,8 @@ print(active_tasks)
     fi
 
     # Analyze MCP server load
-    local mcp_load=0
+    local mcp_load;
+    mcp_load=0
     if check_component_health "mcp_server"; then
         mcp_load=$(curl -s "http://${MCP_HOST}:${MCP_PORT}/api/metrics/load" 2>/dev/null | python3 -c "
 import sys, json
@@ -174,7 +179,8 @@ EOF
 
 # Component health checking
 check_component_health() {
-    local component=$1
+    local component;
+    component=$1
 
     case "$component" in
     "mcp_server")
@@ -234,15 +240,21 @@ make_intelligent_decisions() {
     log_decision "Making intelligent orchestration decisions..."
 
     # Load task analysis
-    local analysis_data="{}"
+    local analysis_data;
+    analysis_data="{}"
     if [[ -f "$TASK_ANALYSIS_CACHE" ]]; then
         analysis_data=$(cat "$TASK_ANALYSIS_CACHE")
     fi
 
-    local pending_todos=$(echo "$analysis_data" | python3 -c "import sys, json; print(json.load(sys.stdin).get('pending_todos', 0))" 2>/dev/null || echo "0")
-    local critical_todos=$(echo "$analysis_data" | python3 -c "import sys, json; print(json.load(sys.stdin).get('critical_todos', 0))" 2>/dev/null || echo "0")
-    local agent_tasks=$(echo "$analysis_data" | python3 -c "import sys, json; print(json.load(sys.stdin).get('agent_tasks', 0))" 2>/dev/null || echo "0")
-    local mcp_load=$(echo "$analysis_data" | python3 -c "import sys, json; print(json.load(sys.stdin).get('mcp_load', 0))" 2>/dev/null || echo "0")
+    local pending_todos;
+
+    pending_todos=$(echo "$analysis_data" | python3 -c "import sys, json; print(json.load(sys.stdin).get('pending_todos', 0))" 2>/dev/null || echo "0")
+    local critical_todos;
+    critical_todos=$(echo "$analysis_data" | python3 -c "import sys, json; print(json.load(sys.stdin).get('critical_todos', 0))" 2>/dev/null || echo "0")
+    local agent_tasks;
+    agent_tasks=$(echo "$analysis_data" | python3 -c "import sys, json; print(json.load(sys.stdin).get('agent_tasks', 0))" 2>/dev/null || echo "0")
+    local mcp_load;
+    mcp_load=$(echo "$analysis_data" | python3 -c "import sys, json; print(json.load(sys.stdin).get('mcp_load', 0))" 2>/dev/null || echo "0")
 
     # Decision 1: MCP Server management
     if [[ $pending_todos -gt 0 || $agent_tasks -gt 0 ]]; then
@@ -280,7 +292,8 @@ make_intelligent_decisions() {
     fi
 
     # Decision 5: AI services (Ollama)
-    local needs_ai=false
+    local needs_ai;
+    needs_ai=false
     # Check if any pending todos require AI processing
     if [[ $pending_todos -gt 0 ]]; then
         # Could analyze todo content for AI requirements here
@@ -294,13 +307,16 @@ make_intelligent_decisions() {
 
     # Decision 6: Resource-based scaling
     # Get system metrics
-    local cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+    local cpu_usage;
+    cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
     if command -v free >/dev/null 2>&1; then
         # Linux
-        local mem_usage=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')
+        local mem_usage;
+        mem_usage=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')
     else
         # macOS - use vm_stat (rough estimate)
-        local mem_usage=$(vm_stat | grep "Pages active" | awk '{print $3}' | tr -d '.' | awk '{print $1 * 4096 / 1024 / 1024 / 1024 * 100}') # Rough percentage
+        local mem_usage;
+        mem_usage=$(vm_stat | grep "Pages active" | awk '{print $3}' | tr -d '.' | awk '{print $1 * 4096 / 1024 / 1024 / 1024 * 100}') # Rough percentage
     fi
 
     if [[ $(echo "$cpu_usage > 80" | bc -l) -eq 1 ]]; then
@@ -315,7 +331,8 @@ make_intelligent_decisions() {
 
 # Component management
 start_component() {
-    local component=$1
+    local component;
+    component=$1
 
     log_action "Starting component: $component"
 
@@ -349,7 +366,8 @@ start_component() {
 }
 
 stop_component() {
-    local component=$1
+    local component;
+    component=$1
 
     log_action "Stopping component: $component"
 
@@ -380,8 +398,10 @@ predictive_actions() {
     log_intelligence "Running predictive analytics..."
 
     # Analyze patterns from recent activity
-    local current_hour=$(date +%H)
-    local day_of_week=$(date +%u) # 1=Monday, 7=Sunday
+    local current_hour;
+    current_hour=$(date +%H)
+    local day_of_week;
+    day_of_week=$(date +%u) # 1=Monday, 7=Sunday
 
     # Peak hours prediction
     if [[ $current_hour -ge 9 && $current_hour -le 17 ]]; then
@@ -427,13 +447,17 @@ cleanup_old_files() {
 
 # Resource monitoring
 monitor_resources() {
-    local cpu=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+    local cpu;
+    cpu=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
     if command -v free >/dev/null 2>&1; then
-        local mem=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')
+        local mem;
+        mem=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}')
     else
-        local mem=$(vm_stat | grep 'Pages active' | awk '{print $3}' | tr -d '.' | awk '{print $1 * 4096 / 1024 / 1024 / 1024 * 100}')
+        local mem;
+        mem=$(vm_stat | grep 'Pages active' | awk '{print $3}' | tr -d '.' | awk '{print $1 * 4096 / 1024 / 1024 / 1024 * 100}')
     fi
-    local disk=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
+    local disk;
+    disk=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
 
     RESOURCE_USAGE["cpu"]=$cpu
     RESOURCE_USAGE["memory"]=$mem
@@ -451,7 +475,8 @@ intelligent_orchestration_loop() {
     set +euo pipefail
 
     while true; do
-        local cycle_start=$(date +%s)
+        local cycle_start;
+        cycle_start=$(date +%s)
 
         # Analyze current requirements
         analyze_task_requirements
@@ -471,9 +496,12 @@ intelligent_orchestration_loop() {
         monitor_resources
 
         # Calculate cycle time
-        local cycle_end=$(date +%s)
-        local cycle_duration=$((cycle_end - cycle_start))
-        local sleep_time=$((ANALYSIS_INTERVAL - cycle_duration))
+        local cycle_end;
+        cycle_end=$(date +%s)
+        local cycle_duration;
+        cycle_duration=$((cycle_end - cycle_start))
+        local sleep_time;
+        sleep_time=$((ANALYSIS_INTERVAL - cycle_duration))
 
         if [[ $sleep_time -gt 0 ]]; then
             sleep "$sleep_time"
@@ -489,7 +517,8 @@ start_intelligent_orchestrator() {
 
     # Check if already running
     if [[ -f "$INTELLIGENT_ORCHESTRATOR_PID" ]]; then
-        local existing_pid=$(cat "$INTELLIGENT_ORCHESTRATOR_PID")
+        local existing_pid;
+        existing_pid=$(cat "$INTELLIGENT_ORCHESTRATOR_PID")
         if kill -0 "$existing_pid" 2>/dev/null; then
             log_success "Intelligent orchestrator already running (PID: $existing_pid)"
             return 0
@@ -504,7 +533,8 @@ start_intelligent_orchestrator() {
 
     # Start orchestration loop in background
     nohup bash -c "source '$0'; intelligent_orchestration_loop" >/dev/null 2>&1 &
-    local orchestrator_pid=$!
+    local orchestrator_pid;
+    orchestrator_pid=$!
 
     # Save PID
     echo "$orchestrator_pid" >"$INTELLIGENT_ORCHESTRATOR_PID"
@@ -517,7 +547,8 @@ stop_intelligent_orchestrator() {
     log_info "Stopping Intelligent Component Orchestrator..."
 
     if [[ -f "$INTELLIGENT_ORCHESTRATOR_PID" ]]; then
-        local pid=$(cat "$INTELLIGENT_ORCHESTRATOR_PID")
+        local pid;
+        pid=$(cat "$INTELLIGENT_ORCHESTRATOR_PID")
         if kill -0 "$pid" 2>/dev/null; then
             kill -TERM "$pid" 2>/dev/null || true
             sleep 5
@@ -536,10 +567,13 @@ status_intelligent_orchestrator() {
     echo
     log_info "=== Intelligent Component Orchestrator Status ==="
 
-    local is_running=0
+    local is_running;
+
+    is_running=0
 
     if [[ -f "$INTELLIGENT_ORCHESTRATOR_PID" ]]; then
-        local pid=$(cat "$INTELLIGENT_ORCHESTRATOR_PID")
+        local pid;
+        pid=$(cat "$INTELLIGENT_ORCHESTRATOR_PID")
         if kill -0 "$pid" 2>/dev/null; then
             echo -e "${GREEN}✓${NC} Intelligent orchestrator running (PID: $pid)"
             is_running=1
@@ -553,8 +587,10 @@ status_intelligent_orchestrator() {
     echo
     log_info "=== Component Status ==="
     for component in "${!COMPONENT_STATUS[@]}"; do
-        local status="${COMPONENT_STATUS[$component]}"
-        local capabilities="${COMPONENT_CAPABILITIES[$component]}"
+        local status;
+        status="${COMPONENT_STATUS[$component]}"
+        local capabilities;
+        capabilities="${COMPONENT_CAPABILITIES[$component]}"
 
         case "$status" in
         "healthy")

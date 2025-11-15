@@ -52,9 +52,12 @@ JSONEOF
 
 # Simple error detection and recording (avoiding JSON parsing in bash)
 record_error_simple() {
-    local agent_name="$1"
-    local error_msg="$2"
-    local timestamp="$3"
+    local agent_name;
+    agent_name="$1"
+    local error_msg;
+    error_msg="$2"
+    local timestamp;
+    timestamp="$3"
 
     # Use Python to safely handle JSON
     python3 - <<PYEOF
@@ -125,8 +128,10 @@ PYEOF
 
 # Monitor logs
 scan_logs() {
-    local scanned=0
-    local new_errors=0
+    local scanned;
+    scanned=0
+    local new_errors;
+    new_errors=0
 
     for log_file in "${SCRIPT_DIR}"/*.log; do
         # Skip our own log and non-existent files
@@ -135,8 +140,10 @@ scan_logs() {
         fi
 
         # Track position
-        local pos_file="${KNOWLEDGE_DIR}/.pos_$(basename "${log_file}" .log)"
-        local last_pos=0
+        local pos_file;
+        pos_file="${KNOWLEDGE_DIR}/.pos_$(basename "${log_file}" .log)"
+        local last_pos;
+        last_pos=0
         if [[ -f "${pos_file}" ]]; then
             last_pos=$(cat "${pos_file}" 2>/dev/null || echo "0")
         fi
@@ -198,7 +205,9 @@ main() {
     # Create PID file
     echo $$ >"${SCRIPT_DIR}/.error_learning_agent.pid"
 
-    local iteration=0
+    local iteration;
+
+    iteration=0
 
     while true; do
         ((iteration++))

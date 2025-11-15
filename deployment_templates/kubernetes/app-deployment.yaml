@@ -1,0 +1,143 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-coordinator
+  namespace: tools-automation
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: agent-coordinator
+  template:
+    metadata:
+      labels:
+        app: agent-coordinator
+    spec:
+      containers:
+      - name: coordinator
+        image: tools-automation/coordinator:latest
+        ports:
+        - containerPort: 8082
+        env:
+        - name: AGENT_CONFIG_PATH
+          value: "/app/config"
+        - name: RBAC_SERVICE_URL
+          value: "http://rbac-service.tools-automation-rbac.svc.cluster.local"
+        - name: AUDIT_SERVICE_URL
+          value: "http://audit-service.tools-automation-audit.svc.cluster.local"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+        - name: data-volume
+          mountPath: /app/data
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "1000m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8082
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: config-volume
+        persistentVolumeClaim:
+          claimName: app-config-pvc
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: app-data-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitoring-system
+  namespace: tools-automation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monitoring-system
+  template:
+    metadata:
+      labels:
+        app: monitoring-system
+    spec:
+      containers:
+      - name: monitoring
+        image: tools-automation/monitoring:latest
+        ports:
+        - containerPort: 9090
+        - containerPort: 3000
+        volumeMounts:
+        - name: monitoring-data-volume
+          mountPath: /app/data
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+      volumes:
+      - name: monitoring-data-volume
+        persistentVolumeClaim:
+          claimName: monitoring-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  namespace: tools-automation
+spec:
+  selector:
+    app: agent-coordinator
+  ports:
+  - port: 80
+    targetPort: 8082
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-config-pvc
+  namespace: tools-automation
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data-pvc
+  namespace: tools-automation
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: monitoring-data-pvc
+  namespace: tools-automation
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi

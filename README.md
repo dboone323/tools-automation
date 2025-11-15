@@ -15,12 +15,14 @@
 ### Installation
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/dboone323/tools-automation.git
    cd tools-automation
    ```
 
 2. **Set up Python environment**:
+
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # On macOS/Linux
@@ -28,6 +30,7 @@
    ```
 
 3. **Configure environment**:
+
    ```bash
    # Set workspace root (required)
    export WORKSPACE_ROOT="$(pwd)"
@@ -37,6 +40,7 @@
    ```
 
 4. **Initialize submodules** (if using project submodules):
+
    ```bash
    git submodule update --init --recursive
    ```
@@ -135,8 +139,8 @@ A comprehensive suite of free, open-source tools for monitoring, security, quali
 
 ### Access Points
 
- - `scripts/add_github_view_remotes.sh` helps you add 'view' remotes for sibling repositories (useful for quick browsing).
-	 See `docs/REMOTE_ACCESS.md` for usage options.
+- `scripts/add_github_view_remotes.sh` helps you add 'view' remotes for sibling repositories (useful for quick browsing).
+  See `docs/REMOTE_ACCESS.md` for usage options.
 - **Grafana**: http://localhost:3000 (admin/admin)
 - **Prometheus**: http://localhost:9090
 - **Uptime Kuma**: http://localhost:3001
@@ -156,6 +160,30 @@ A comprehensive suite of free, open-source tools for monitoring, security, quali
 ## Overview
 
 This repository serves as the superproject for all automation infrastructure, providing shared tools, agents, MCP servers, and workflows to all project submodules. Everything is organized for maximum reusability and minimal duplication.
+
+## 📊 Project Status
+
+### Phase 14: Advanced Monitoring & Analytics ✅ COMPLETED
+
+- Agent performance analytics and predictive scoring
+- Intelligent alert correlation and noise reduction
+- Proactive health monitoring and preventive actions
+- All monitoring scripts implemented and functional
+
+### Phase 16: AI Integration Enhancement ✅ COMPLETED
+
+- Enhanced Ollama model support and auto-selection
+- AI-powered code review and optimization
+- Intelligent agent coordination and load balancing
+- Comprehensive AI integration across all systems
+
+### Current Architecture
+
+- **111 shared agent scripts** for automation tasks
+- **MCP servers** with AI integration capabilities
+- **Advanced monitoring** with predictive analytics
+- **Intelligent model selection** for optimal AI performance
+- **Load-balanced agent coordination** for efficient task distribution
 
 ## Structure
 

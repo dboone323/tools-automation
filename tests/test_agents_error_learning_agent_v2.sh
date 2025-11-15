@@ -56,7 +56,8 @@ cleanup_test_env() {
 
 # Test 1: Knowledge base initialization
 test_knowledge_base_init() {
-    local test_name="test_knowledge_base_init"
+    local test_name;
+    test_name="test_knowledge_base_init"
     announce_test "$test_name"
 
     # Clean up any existing files
@@ -109,7 +110,8 @@ JSONEOF
 
 # Test 2: Error recording with Python JSON handling
 test_error_recording_python() {
-    local test_name="test_error_recording_python"
+    local test_name;
+    test_name="test_error_recording_python"
     announce_test "$test_name"
 
     # Initialize knowledge base
@@ -135,9 +137,12 @@ EOF
 
     # Define record_error_simple function (simplified)
     record_error_simple() {
-        local agent_name="$1"
-        local error_msg="$2"
-        local timestamp="$3"
+        local agent_name;
+        agent_name="$1"
+        local error_msg;
+        error_msg="$2"
+        local timestamp;
+        timestamp="$3"
 
         # Use Python to safely handle JSON (mock version for testing)
         python3 - <<PYEOF
@@ -236,16 +241,20 @@ PYEOF
 
 # Test 3: Position tracking for log files
 test_position_tracking() {
-    local test_name="test_position_tracking"
+    local test_name;
+    test_name="test_position_tracking"
     announce_test "$test_name"
 
     # Create test log file
-    local test_log="${TEST_DIR}/pos_test.log"
+    local test_log;
+    test_log="${TEST_DIR}/pos_test.log"
     echo "[2025-01-09 10:00:01] [test] ERROR: Test error 1" >"$test_log"
 
     # Define position tracking logic (simplified)
-    local pos_file="${KNOWLEDGE_DIR}/.pos_pos_test"
-    local last_pos=0
+    local pos_file;
+    pos_file="${KNOWLEDGE_DIR}/.pos_pos_test"
+    local last_pos;
+    last_pos=0
     if [[ -f "${pos_file}" ]]; then
         last_pos=$(cat "${pos_file}")
     fi
@@ -297,7 +306,8 @@ test_position_tracking() {
 
 # Test 4: Log scanning with multiple files
 test_log_scanning_multiple() {
-    local test_name="test_log_scanning_multiple"
+    local test_name;
+    test_name="test_log_scanning_multiple"
     announce_test "$test_name"
 
     # Create multiple test log files
@@ -317,8 +327,10 @@ EOF
 
     # Define simplified scan_logs function
     scan_logs() {
-        local scanned=0
-        local new_errors=0
+        local scanned;
+        scanned=0
+        local new_errors;
+        new_errors=0
 
         for log_file in "${TEST_DIR}"/scan_*.log; do
             if [[ ! -f "${log_file}" ]]; then
@@ -326,8 +338,10 @@ EOF
             fi
 
             # Track position
-            local pos_file="${KNOWLEDGE_DIR}/.pos_$(basename "${log_file}" .log)"
-            local last_pos=0
+            local pos_file;
+            pos_file="${KNOWLEDGE_DIR}/.pos_$(basename "${log_file}" .log)"
+            local last_pos;
+            last_pos=0
             if [[ -f "${pos_file}" ]]; then
                 last_pos=$(cat "${pos_file}" 2>/dev/null || echo "0")
             fi
@@ -392,7 +406,8 @@ EOF
 
 # Test 5: Statistics tracking and reporting
 test_statistics_tracking() {
-    local test_name="test_statistics_tracking"
+    local test_name;
+    test_name="test_statistics_tracking"
     announce_test "$test_name"
 
     # Initialize learning model
@@ -466,12 +481,14 @@ PYEOF
 
 # Test 6: Agent startup and PID management
 test_agent_startup_pid() {
-    local test_name="test_agent_startup_pid"
+    local test_name;
+    test_name="test_agent_startup_pid"
     announce_test "$test_name"
 
     # Test that agent creates PID file (run briefly)
     timeout 3 bash "$AGENT_SCRIPT" >/dev/null 2>&1 &
-    local pid=$!
+    local pid;
+    pid=$!
     sleep 1
 
     # Check if PID file was created
@@ -486,7 +503,8 @@ test_agent_startup_pid() {
 
 # Test 7: Error pattern deduplication
 test_error_deduplication() {
-    local test_name="test_error_deduplication"
+    local test_name;
+    test_name="test_error_deduplication"
     announce_test "$test_name"
 
     # Initialize knowledge base
@@ -501,9 +519,12 @@ EOF
 
     # Record same error twice
     record_error_simple() {
-        local agent_name="$1"
-        local error_msg="$2"
-        local timestamp="$3"
+        local agent_name;
+        agent_name="$1"
+        local error_msg;
+        error_msg="$2"
+        local timestamp;
+        timestamp="$3"
 
         python3 - <<PYEOF
 import json
@@ -574,11 +595,13 @@ PYEOF
 
 # Test 8: Timestamp extraction from log lines
 test_timestamp_extraction() {
-    local test_name="test_timestamp_extraction"
+    local test_name;
+    test_name="test_timestamp_extraction"
     announce_test "$test_name"
 
     # Test timestamp extraction logic
-    local line="[2025-01-09 10:00:01] [agent1] ERROR: Test error"
+    local line;
+    line="[2025-01-09 10:00:01] [agent1] ERROR: Test error"
     local ts
     ts=$(echo "${line}" | grep -oE '\[[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\]' | tr -d '[]' || date '+%Y-%m-%d %H:%M:%S')
 
@@ -589,7 +612,8 @@ test_timestamp_extraction() {
     fi
 
     # Test fallback to current date for lines without timestamp
-    local line_no_ts="ERROR: Test error without timestamp"
+    local line_no_ts;
+    line_no_ts="ERROR: Test error without timestamp"
     local extracted_ts
     extracted_ts=$(echo "${line_no_ts}" | grep -oE '\[[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\]' | tr -d '[]')
     if [[ -z "$extracted_ts" ]]; then
@@ -610,11 +634,13 @@ test_timestamp_extraction() {
 
 # Test 9: Message extraction from log lines
 test_message_extraction() {
-    local test_name="test_message_extraction"
+    local test_name;
+    test_name="test_message_extraction"
     announce_test "$test_name"
 
     # Test message extraction logic
-    local line="[2025-01-09 10:00:01] [agent1] ERROR: This is the error message"
+    local line;
+    line="[2025-01-09 10:00:01] [agent1] ERROR: This is the error message"
     local msg
     msg=$(echo "${line}" | awk -F']' '{print $NF}' | sed 's/^[ \t]*//')
 
@@ -625,7 +651,8 @@ test_message_extraction() {
     fi
 
     # Test with multiple brackets - use a simpler approach
-    local complex_line="[2025-01-09 10:00:01] [agent1] [INFO] ERROR: Complex error [with brackets]"
+    local complex_line;
+    complex_line="[2025-01-09 10:00:01] [agent1] [INFO] ERROR: Complex error [with brackets]"
     # Extract everything after the last timestamp/agent bracket
     msg=$(echo "${complex_line}" | sed 's/.*\] //' | sed 's/^[ \t]*//')
 
@@ -640,7 +667,8 @@ test_message_extraction() {
 
 # Test 10: Agent cleanup and signal handling
 test_agent_cleanup() {
-    local test_name="test_agent_cleanup"
+    local test_name;
+    test_name="test_agent_cleanup"
     announce_test "$test_name"
 
     # Create a PID file

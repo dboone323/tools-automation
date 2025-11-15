@@ -38,8 +38,10 @@ log_error() {
 
 # Compress backups in a directory
 compress_directory_backups() {
-  local dir="$1"
-  local dir_name="$(basename "$dir")"
+  local dir;
+  dir="$1"
+  local dir_name;
+  dir_name="$(basename "$dir")"
 
   if [[ ! -d "$dir" ]]; then
     log_warning "Directory not found: $dir"
@@ -49,11 +51,13 @@ compress_directory_backups() {
   log_info "Processing backups in: $dir"
 
   # Find directories older than AGE_THRESHOLD days (not already compressed)
-  local old_backups=()
+  local old_backups;
+  old_backups=()
   local find_tmpfile
   find_tmpfile=$(mktemp)
   find "$dir" -maxdepth 1 -type d ! -path "$dir" -mtime +${AGE_THRESHOLD} -print0 2>/dev/null >"$find_tmpfile"
-  local find_status=$?
+  local find_status;
+  find_status=$?
   while IFS= read -r -d '' backup; do
     old_backups+=("$backup")
   done <"$find_tmpfile"
@@ -62,7 +66,9 @@ compress_directory_backups() {
     log_warning "find command failed while processing $dir_name (exit code $find_status). Some backups may not have been found."
   fi
 
-  local total=${#old_backups[@]}
+  local total;
+
+  total=${#old_backups[@]}
 
   if [[ $total -eq 0 ]]; then
     log_info "No backups older than ${AGE_THRESHOLD} day(s) found in $dir_name"
@@ -71,9 +77,13 @@ compress_directory_backups() {
 
   log_info "Found $total backup(s) to compress in $dir_name"
 
-  local compressed_count=0
-  local failed_count=0
-  local space_saved=0
+  local compressed_count;
+
+  compressed_count=0
+  local failed_count;
+  failed_count=0
+  local space_saved;
+  space_saved=0
 
   for backup in "${old_backups[@]}"; do
     local backup_name
@@ -93,7 +103,8 @@ compress_directory_backups() {
 
           local compressed_size
           compressed_size=$(du -sk "${backup}.tar.gz" 2>/dev/null | awk '{print $1}')
-          local saved=$((backup_size - compressed_size))
+          local saved;
+          saved=$((backup_size - compressed_size))
           space_saved=$((space_saved + saved))
 
           log_success "Compressed: $backup_name (saved ${saved}KB)"

@@ -1,0 +1,28 @@
+{
+  "rbac_integration": {
+    "enabled": true,
+    "protected_commands": [
+      "intelligent_orchestrator.sh",
+      "agent_dashboard_api.py",
+      "master_automation.sh",
+      "deploy_workflows_all_projects.sh",
+      "security_audit.sh",
+      "final_security_audit.sh"
+    ],
+    "protected_scripts": [
+      "scripts/*.sh",
+      "agents/*.sh",
+      "security/*.sh",
+      "ci/*.sh"
+    ],
+    "audit_all_commands": true,
+    "session_required": true,
+    "permission_checks": {
+      "orchestrator_access": ["admin", "operator"],
+      "agent_management": ["admin", "developer"],
+      "deployment_access": ["admin", "operator"],
+      "security_operations": ["admin", "auditor"],
+      "system_configuration": ["admin"]
+    }
+  }
+}

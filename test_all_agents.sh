@@ -34,8 +34,10 @@ echo ""
 
 # Function to test agent health
 test_agent_health() {
-    local agent_path="$1"
-    local agent_name=$(basename "$agent_path" .sh)
+    local agent_path;
+    agent_path="$1"
+    local agent_name;
+    agent_name=$(basename "$agent_path" .sh)
 
     # Skip non-agent files
     if [[ ! "$agent_name" =~ ^agent_ ]] && [[ ! "$agent_name" =~ _agent$ ]]; then
@@ -61,8 +63,10 @@ test_agent_health() {
     fi
 
     # Check if agent has required functions/sections
-    local has_health_check=false
-    local has_error_handling=false
+    local has_health_check;
+    has_health_check=false
+    local has_error_handling;
+    has_error_handling=false
 
     if grep -q "health.*check\|status.*check\|--health" "$agent_path"; then
         has_health_check=true
@@ -73,7 +77,8 @@ test_agent_health() {
     fi
 
     # Try to run agent with --help or --version (non-destructive)
-    local can_execute=false
+    local can_execute;
+    can_execute=false
     if timeout 5s "$agent_path" --help >/dev/null 2>&1 ||
         timeout 5s "$agent_path" --version >/dev/null 2>&1 ||
         timeout 5s "$agent_path" status >/dev/null 2>&1; then
@@ -81,8 +86,10 @@ test_agent_health() {
     fi
 
     # Evaluate overall health
-    local status="PASS"
-    local issues=()
+    local status;
+    status="PASS"
+    local issues;
+    issues=()
 
     if [[ "$has_health_check" == false ]]; then
         issues+=("no_health_check")

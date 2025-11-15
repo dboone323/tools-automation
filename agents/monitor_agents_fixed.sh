@@ -14,11 +14,14 @@ log() {
 
 # Function to check if agent is running
 is_agent_running() {
-  local agent_name="$1"
-  local pid_file="${AGENTS_DIR}/${agent_name}.pid"
+  local agent_name;
+  agent_name="$1"
+  local pid_file;
+  pid_file="${AGENTS_DIR}/${agent_name}.pid"
 
   if [[ -f "${pid_file}" ]]; then
-    local pid=$(cat "${pid_file}")
+    local pid;
+    pid=$(cat "${pid_file}")
     if kill -0 "${pid}" 2>/dev/null; then
       return 0 # Running
     else
@@ -31,8 +34,10 @@ is_agent_running() {
 
 # Function to restart agent
 restart_agent() {
-  local agent_name="$1"
-  local script_name=""
+  local agent_name;
+  agent_name="$1"
+  local script_name;
+  script_name=""
 
   # Map agent names to actual script names
   case "${agent_name}" in
@@ -72,7 +77,8 @@ restart_agent() {
 
   # Kill existing process if it exists
   if [[ -f "${AGENTS_DIR}/${agent_name}.pid" ]]; then
-    local old_pid=$(cat "${AGENTS_DIR}/${agent_name}.pid")
+    local old_pid;
+    old_pid=$(cat "${AGENTS_DIR}/${agent_name}.pid")
     kill "${old_pid}" 2>/dev/null || true
     rm -f "${AGENTS_DIR}/${agent_name}.pid"
   fi

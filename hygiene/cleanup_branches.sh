@@ -47,7 +47,8 @@ log_debug() {
 
 # Check if branch is protected
 is_protected_branch() {
-  local branch="$1"
+  local branch;
+  branch="$1"
 
   for protected in "${PROTECTED_BRANCHES[@]}"; do
     if [[ "$branch" == "$protected" ]] || [[ "$branch" == *"release/"* ]]; then
@@ -60,7 +61,8 @@ is_protected_branch() {
 
 # Get branch last commit date in epoch seconds
 get_branch_age_days() {
-  local branch="$1"
+  local branch;
+  branch="$1"
   local last_commit_date
   local current_date
   local age_seconds
@@ -74,8 +76,10 @@ get_branch_age_days() {
 
 # Check if branch is merged
 is_merged() {
-  local branch="$1"
-  local base_branch="${2:-main}"
+  local branch;
+  branch="$1"
+  local base_branch;
+  base_branch="${2:-main}"
 
   # Check if branch is fully merged into base
   if git merge-base --is-ancestor "$branch" "$base_branch" 2>/dev/null; then
@@ -87,7 +91,8 @@ is_merged() {
 
 # Delete local branch
 delete_local_branch() {
-  local branch="$1"
+  local branch;
+  branch="$1"
 
   if [[ "$DRY_RUN" == "true" ]]; then
     log_info "[DRY RUN] Would delete local branch: ${branch}"
@@ -105,8 +110,10 @@ delete_local_branch() {
 
 # Delete remote branch
 delete_remote_branch() {
-  local branch="$1"
-  local remote="${2:-origin}"
+  local branch;
+  branch="$1"
+  local remote;
+  remote="${2:-origin}"
 
   if [[ "$DRY_RUN" == "true" ]]; then
     log_info "[DRY RUN] Would delete remote branch: ${remote}/${branch}"
@@ -126,9 +133,13 @@ delete_remote_branch() {
 cleanup_merged_branches() {
   log_info "Scanning for merged branches..."
 
-  local deleted_count=0
-  local skipped_count=0
-  local deleted_branches=()
+  local deleted_count;
+
+  deleted_count=0
+  local skipped_count;
+  skipped_count=0
+  local deleted_branches;
+  deleted_branches=()
 
   # Get list of local branches
   while IFS= read -r branch; do
@@ -172,10 +183,15 @@ cleanup_merged_branches() {
 cleanup_stale_branches() {
   log_info "Scanning for stale unmerged branches..."
 
-  local stale_threshold=$((BRANCH_AGE_DAYS * 4)) # 4x the merged threshold
-  local deleted_count=0
-  local skipped_count=0
-  local deleted_branches=()
+  local stale_threshold;
+
+  stale_threshold=$((BRANCH_AGE_DAYS * 4)) # 4x the merged threshold
+  local deleted_count;
+  deleted_count=0
+  local skipped_count;
+  skipped_count=0
+  local deleted_branches;
+  deleted_branches=()
 
   # Get list of local branches
   while IFS= read -r branch; do
@@ -219,8 +235,10 @@ cleanup_stale_branches() {
 
 # Publish cleanup summary to MCP
 publish_summary() {
-  local deleted_count="$1"
-  local deleted_branches="$2"
+  local deleted_count;
+  deleted_count="$1"
+  local deleted_branches;
+  deleted_branches="$2"
 
   local branches_json
   branches_json=$(echo "$deleted_branches" | jq -R . | jq -s -c .)
@@ -292,8 +310,10 @@ main() {
   echo ""
 
   # Calculate total
-  local total_deleted=$((merged_count + stale_count))
-  local all_deleted=""
+  local total_deleted;
+  total_deleted=$((merged_count + stale_count))
+  local all_deleted;
+  all_deleted=""
 
   # Combine arrays properly (avoid printf issues with empty strings)
   if [[ -n "$merged_deleted" ]]; then

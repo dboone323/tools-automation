@@ -1,0 +1,151 @@
+version: '3.8'
+
+services:
+  # RBAC System
+  rbac-system:
+    build:
+      context: ..
+      dockerfile: deployment/docker/Dockerfile.rbac
+    container_name: tools-automation-rbac
+    environment:
+      - RBAC_CONFIG_PATH=/app/config/rbac_config
+      - LOG_LEVEL=info
+    volumes:
+      - ./config/rbac_config:/app/config/rbac_config
+      - ./logs:/app/logs
+    networks:
+      - internal
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "./rbac_system.sh", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Audit and Compliance System
+  audit-system:
+    build:
+      context: ..
+      dockerfile: deployment/docker/Dockerfile.audit
+    container_name: tools-automation-audit
+    environment:
+      - AUDIT_CONFIG_PATH=/app/audit_config
+      - COMPLIANCE_FRAMEWORKS=SOX,GDPR,HIPAA,PCI-DSS
+    volumes:
+      - ./audit_config:/app/audit_config
+      - ./compliance_reports:/app/compliance_reports
+      - ./logs:/app/logs
+    networks:
+      - internal
+    restart: unless-stopped
+    depends_on:
+      - rbac-system
+
+  # Agent Coordinator
+  agent-coordinator:
+    build:
+      context: ..
+      dockerfile: deployment/docker/Dockerfile.agent
+    container_name: tools-automation-coordinator
+    environment:
+      - AGENT_CONFIG_PATH=/app/config
+      - MAX_CONCURRENT_AGENTS=20
+      - AGENT_TIMEOUT=3600
+    volumes:
+      - ./config:/app/config
+      - ./data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - internal
+    restart: unless-stopped
+    depends_on:
+      - rbac-system
+      - audit-system
+
+  # Monitoring System
+  monitoring-system:
+    build:
+      context: ..
+      dockerfile: deployment/docker/Dockerfile.monitoring
+    container_name: tools-automation-monitoring
+    environment:
+      - MONITORING_CONFIG_PATH=/app/config
+      - PROMETHEUS_PORT=9090
+      - GRAFANA_PORT=3000
+    ports:
+      - "9090:9090"
+      - "3000:3000"
+    volumes:
+      - ./config:/app/config
+      - ./data/prometheus:/app/data/prometheus
+      - ./data/grafana:/app/data/grafana
+      - ./logs:/app/logs
+    networks:
+      - internal
+    restart: unless-stopped
+
+  # PostgreSQL Database (for enterprise features)
+  postgres:
+    image: postgres:15-alpine
+    container_name: tools-automation-postgres
+    environment:
+      - POSTGRES_DB=tools_automation
+      - POSTGRES_USER=automation_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-CHANGE_THIS_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - internal
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U automation_user -d tools_automation"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: tools-automation-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-CHANGE_THIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    networks:
+      - internal
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Load Balancer
+  nginx:
+    image: nginx:alpine
+    container_name: tools-automation-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/ssl:/etc/nginx/ssl
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      - internal
+      - external
+    restart: unless-stopped
+    depends_on:
+      - agent-coordinator
+      - monitoring-system
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  internal:
+    driver: bridge
+    internal: true
+  external:
+    driver: bridge

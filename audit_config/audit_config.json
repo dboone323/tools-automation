@@ -1,0 +1,22 @@
+{
+    "audit_settings": { "enabled": true, "retention_days": 365 },
+    "compliance_requirements": {
+        "SOX": {
+            "retention_period_days": 2555,
+            "required_events": ["authentication", "authorization", "system_config", "code_changes"],
+            "alert_thresholds": { "failed_auth_attempts": 5 }
+        },
+        "GDPR": {
+            "retention_period_days": 2555,
+            "required_events": ["data_access", "user_management", "authentication"]
+        },
+        "HIPAA": {
+            "retention_period_days": 2555,
+            "required_events": ["data_access", "authentication", "security_events"]
+        },
+        "PCI-DSS": {
+            "retention_period_days": 365,
+            "required_events": ["authentication", "data_access", "security_events"]
+        }
+    }
+}

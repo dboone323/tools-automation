@@ -68,8 +68,10 @@ LAST_HEALTHY_TIME=$(date +%s)
 
 # Health check functions
 check_mcp_health() {
-    local timeout=$HEALTH_TIMEOUT
-    local start_time=$(date +%s)
+    local timeout;
+    timeout=$HEALTH_TIMEOUT
+    local start_time;
+    start_time=$(date +%s)
 
     log_info "Checking MCP server health at http://${MCP_HOST}:${MCP_PORT}/health"
 
@@ -77,7 +79,9 @@ check_mcp_health() {
     if curl -s --max-time "$timeout" --connect-timeout "$timeout" \
         "http://${MCP_HOST}:${MCP_PORT}/health" >/dev/null 2>&1; then
 
-        local response_time=$(($(date +%s) - start_time))
+        local response_time;
+
+        response_time=$(($(date +%s) - start_time))
         log_success "MCP server healthy (response time: ${response_time}s)"
         CONSECUTIVE_FAILURES=0
         LAST_HEALTHY_TIME=$(date +%s)
@@ -91,10 +95,12 @@ check_mcp_health() {
 
 check_mcp_process() {
     # Check if MCP server process is running
-    local mcp_pid_file="$PROJECT_ROOT/services/mcp.pid"
+    local mcp_pid_file;
+    mcp_pid_file="$PROJECT_ROOT/services/mcp.pid"
 
     if [[ -f "$mcp_pid_file" ]]; then
-        local pid=$(cat "$mcp_pid_file")
+        local pid;
+        pid=$(cat "$mcp_pid_file")
         if kill -0 "$pid" 2>/dev/null; then
             log_info "MCP server process running (PID: $pid)"
             return 0
@@ -158,10 +164,13 @@ start_mcp_server() {
 stop_mcp_server() {
     log_action "Stopping MCP server..."
 
-    local mcp_pid_file="$PROJECT_ROOT/services/mcp.pid"
+    local mcp_pid_file;
+
+    mcp_pid_file="$PROJECT_ROOT/services/mcp.pid"
 
     if [[ -f "$mcp_pid_file" ]]; then
-        local pid=$(cat "$mcp_pid_file")
+        local pid;
+        pid=$(cat "$mcp_pid_file")
 
         # Try graceful shutdown first
         kill -TERM "$pid" 2>/dev/null || true
@@ -182,7 +191,8 @@ stop_mcp_server() {
 }
 
 restart_mcp_server() {
-    local force_restart=${1:-false}
+    local force_restart;
+    force_restart=${1:-false}
 
     if [[ "$force_restart" == "true" ]]; then
         log_action "Force restarting MCP server"
@@ -219,9 +229,13 @@ restart_mcp_server() {
 monitor_and_manage() {
     ((HEALTH_CHECK_COUNT++))
 
-    local current_time=$(date +%s)
-    local time_since_last_restart=$((current_time - LAST_RESTART_TIME))
-    local time_since_last_healthy=$((current_time - LAST_HEALTHY_TIME))
+    local current_time;
+
+    current_time=$(date +%s)
+    local time_since_last_restart;
+    time_since_last_restart=$((current_time - LAST_RESTART_TIME))
+    local time_since_last_healthy;
+    time_since_last_healthy=$((current_time - LAST_HEALTHY_TIME))
 
     log_info "Health check #$HEALTH_CHECK_COUNT - Failures: $CONSECUTIVE_FAILURES"
 
@@ -265,7 +279,8 @@ monitor_and_manage() {
         log_info "Performing periodic maintenance checks"
 
         # Check disk space
-        local disk_usage=$(df "$PROJECT_ROOT" 2>/dev/null | tail -1 | awk '{print $5}' | sed 's/%//' || echo "0")
+        local disk_usage;
+        disk_usage=$(df "$PROJECT_ROOT" 2>/dev/null | tail -1 | awk '{print $5}' | sed 's/%//' || echo "0")
         if [[ $disk_usage -gt 90 ]]; then
             log_warning "High disk usage detected: ${disk_usage}%"
             # Could trigger cleanup here
@@ -274,10 +289,12 @@ monitor_and_manage() {
         # Check memory usage
         if command -v free >/dev/null 2>&1; then
             # Linux
-            local mem_usage=$(free 2>/dev/null | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}' || echo "0")
+            local mem_usage;
+            mem_usage=$(free 2>/dev/null | grep Mem | awk '{printf "%.0f", $3/$2 * 100.0}' || echo "0")
         else
             # macOS - use vm_stat (rough estimate)
-            local mem_usage=$(vm_stat 2>/dev/null | grep "Pages active" | awk '{print $3}' | tr -d '.' | awk '{print $1 * 4096 / 1024 / 1024 / 1024 * 100}' || echo "0")
+            local mem_usage;
+            mem_usage=$(vm_stat 2>/dev/null | grep "Pages active" | awk '{print $3}' | tr -d '.' | awk '{print $1 * 4096 / 1024 / 1024 / 1024 * 100}' || echo "0")
         fi
         if [[ $mem_usage -gt 85 ]]; then
             log_warning "High memory usage detected: ${mem_usage}%"
@@ -313,7 +330,8 @@ monitoring_loop() {
     set +euo pipefail
 
     while true; do
-        local cycle_start=$(date +%s)
+        local cycle_start;
+        cycle_start=$(date +%s)
 
         monitor_and_manage
 
@@ -323,9 +341,13 @@ monitoring_loop() {
             emergency_recovery
         fi
 
-        local cycle_end=$(date +%s)
-        local cycle_duration=$((cycle_end - cycle_start))
-        local sleep_time=$((HEALTH_CHECK_INTERVAL - cycle_duration))
+        local cycle_end;
+
+        cycle_end=$(date +%s)
+        local cycle_duration;
+        cycle_duration=$((cycle_end - cycle_start))
+        local sleep_time;
+        sleep_time=$((HEALTH_CHECK_INTERVAL - cycle_duration))
 
         if [[ $sleep_time -gt 0 ]]; then
             sleep "$sleep_time"
@@ -341,7 +363,8 @@ start_auto_restart() {
 
     # Check if already running
     if [[ -f "$MCP_AUTO_RESTART_PID" ]]; then
-        local existing_pid=$(cat "$MCP_AUTO_RESTART_PID")
+        local existing_pid;
+        existing_pid=$(cat "$MCP_AUTO_RESTART_PID")
         if kill -0 "$existing_pid" 2>/dev/null; then
             log_success "Auto-restart manager already running (PID: $existing_pid)"
             return 0
@@ -354,7 +377,8 @@ start_auto_restart() {
     # Start monitoring loop in background
     log_info "Starting background monitoring loop..."
     nohup bash -c "source '$0'; monitoring_loop" >/dev/null 2>&1 &
-    local manager_pid=$!
+    local manager_pid;
+    manager_pid=$!
     log_info "Background process started with PID: $manager_pid"
 
     # Save PID
@@ -367,7 +391,8 @@ stop_auto_restart() {
     log_info "Stopping MCP Server Auto-Restart Manager..."
 
     if [[ -f "$MCP_AUTO_RESTART_PID" ]]; then
-        local pid=$(cat "$MCP_AUTO_RESTART_PID")
+        local pid;
+        pid=$(cat "$MCP_AUTO_RESTART_PID")
         if kill -0 "$pid" 2>/dev/null; then
             kill -TERM "$pid" 2>/dev/null || true
             sleep 5
@@ -386,10 +411,13 @@ status_auto_restart() {
     echo
     log_info "=== MCP Server Auto-Restart Manager Status ==="
 
-    local is_running=0
+    local is_running;
+
+    is_running=0
 
     if [[ -f "$MCP_AUTO_RESTART_PID" ]]; then
-        local pid=$(cat "$MCP_AUTO_RESTART_PID")
+        local pid;
+        pid=$(cat "$MCP_AUTO_RESTART_PID")
         if kill -0 "$pid" 2>/dev/null; then
             echo -e "${GREEN}✓${NC} Auto-restart manager running (PID: $pid)"
             is_running=1

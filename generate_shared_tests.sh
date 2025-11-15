@@ -18,9 +18,12 @@ mkdir -p "$TEST_DIR"
 
 # Function to generate test for shared component
 generate_shared_test() {
-    local source_file="$1"
-    local basename=$(basename "$source_file" .swift)
-    local test_file="${TEST_DIR}/${basename}Tests.swift"
+    local source_file;
+    source_file="$1"
+    local basename;
+    basename=$(basename "$source_file" .swift)
+    local test_file;
+    test_file="${TEST_DIR}/${basename}Tests.swift"
 
     # Skip if test exists
     if [ -f "$test_file" ]; then
@@ -31,10 +34,12 @@ generate_shared_test() {
     echo "📝 Generating test for: $basename"
 
     # Read file content for context
-    local file_content=$(head -100 "$source_file" 2>/dev/null || echo "")
+    local file_content;
+    file_content=$(head -100 "$source_file" 2>/dev/null || echo "")
 
     # Determine test complexity based on file content
-    local test_category="unit"
+    local test_category;
+    test_category="unit"
     if echo "$file_content" | grep -q "@MainActor\|@Observable"; then
         test_category="actor"
     elif echo "$file_content" | grep -q "class.*Client\|Service\|Manager"; then

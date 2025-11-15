@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -60,10 +60,12 @@ WAIT_WHEN_BUSY="${WAIT_WHEN_BUSY:-45}"  # Seconds to wait when system is busy
 
 # Function to check if we should proceed with task processing
 ensure_within_limits() {
-    local agent_name="ai_predictive_analytics_agent.sh"
+    local agent_name;
+    agent_name="ai_predictive_analytics_agent.sh"
 
     # Check concurrent instances
-    local running_count=$(pgrep -f "${agent_name}" | wc -l)
+    local running_count;
+    running_count=$(pgrep -f "${agent_name}" | wc -l)
     if [[ ${running_count} -gt ${MAX_CONCURRENCY} ]]; then
         log "Too many concurrent instances (${running_count}/${MAX_CONCURRENCY}). Waiting..."
         return 1
@@ -104,8 +106,10 @@ log() {
 
 # Ollama Integration Functions
 ollama_query() {
-    local prompt="$1"
-    local model="${2:-codellama}"
+    local prompt;
+    prompt="$1"
+    local model;
+    model="${2:-codellama}"
 
     curl -s -X POST "${OLLAMA_ENDPOINT}/api/generate" \
         -H "Content-Type: application/json" \
@@ -115,7 +119,8 @@ ollama_query() {
 
 # Update agent status
 update_status() {
-    local status="$1"
+    local status;
+    status="$1"
     if command -v jq &>/dev/null; then
         jq "(.[] | select(.id == \"${AGENT_NAME}\") | .status) = \"${status}\" | (.[] | select(.id == \"${AGENT_NAME}\") | .last_seen) = $(date +%s)" "${AGENT_STATUS_FILE}" >"${AGENT_STATUS_FILE}.tmp" && mv "${AGENT_STATUS_FILE}.tmp" "${AGENT_STATUS_FILE}"
     fi
@@ -124,7 +129,8 @@ update_status() {
 
 # Process a specific task
 process_task() {
-    local task_id="$1"
+    local task_id;
+    task_id="$1"
     echo "[$(date)] ${AGENT_NAME}: Processing task ${task_id}" >>"${LOG_FILE}"
 
     # Get task details
@@ -155,8 +161,10 @@ process_task() {
 
 # Update task status
 update_task_status() {
-    local task_id="$1"
-    local status="$2"
+    local task_id;
+    task_id="$1"
+    local status;
+    status="$2"
     if command -v jq &>/dev/null; then
         jq "(.tasks[] | select(.id == \"${task_id}\") | .status) = \"${status}\"" "${TASK_QUEUE_FILE}" >"${TASK_QUEUE_FILE}.tmp" && mv "${TASK_QUEUE_FILE}.tmp" "${TASK_QUEUE_FILE}"
     fi
@@ -164,16 +172,23 @@ update_task_status() {
 
 # Main predictive analytics function
 run_predictive_analytics() {
-    local task_desc="$1"
+    local task_desc;
+    task_desc="$1"
     log "Running predictive analytics for: ${task_desc}"
 
     # Analyze all projects
-    local projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
+    local projects;
+    projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
 
-    local analytics_data=""
-    local total_predicted_days=0
-    local total_risk_score=0
-    local project_count=0
+    local analytics_data;
+
+    analytics_data=""
+    local total_predicted_days;
+    total_predicted_days=0
+    local total_risk_score;
+    total_risk_score=0
+    local project_count;
+    project_count=0
 
     for project in "${projects[@]}"; do
         if [[ -d "${WORKSPACE}/Projects/${project}" ]]; then
@@ -212,8 +227,10 @@ run_predictive_analytics() {
     done
 
     # Generate overall analytics report
-    local avg_completion_days=$((total_predicted_days / project_count))
-    local avg_risk_score=$((total_risk_score / project_count))
+    local avg_completion_days;
+    avg_completion_days=$((total_predicted_days / project_count))
+    local avg_risk_score;
+    avg_risk_score=$((total_risk_score / project_count))
 
     generate_analytics_report "${analytics_data}" "${avg_completion_days}" "${avg_risk_score}" "${project_count}"
 
@@ -225,7 +242,8 @@ run_predictive_analytics() {
 
 # Gather comprehensive project metrics
 gather_project_metrics() {
-    local project="$1"
+    local project;
+    project="$1"
 
     # Code metrics
     local swift_files
@@ -238,7 +256,8 @@ gather_project_metrics() {
     test_files=$(find "${WORKSPACE}/Projects/${project}" -name "*Test*.swift" -type f | wc -l)
 
     # Complexity metrics
-    local avg_complexity="Medium" # Would need more sophisticated analysis
+    local avg_complexity;
+    avg_complexity="Medium" # Would need more sophisticated analysis
 
     # Git metrics (if available)
     local commits
@@ -248,7 +267,8 @@ gather_project_metrics() {
     contributors=$(git log --format='%aN' -- "${WORKSPACE}/Projects/${project}" 2>/dev/null | sort | uniq | wc -l || echo "1")
 
     # Build metrics
-    local build_status="Unknown"
+    local build_status;
+    build_status="Unknown"
     if [[ -f "${WORKSPACE}/Tools/Automation/results/build_${project}.log" ]]; then
         if grep -q "SUCCESS\|success" "${WORKSPACE}/Tools/Automation/results/build_${project}.log"; then
             build_status="Passing"
@@ -282,10 +302,14 @@ gather_project_metrics() {
 
 # Predict project timeline using AI analysis
 predict_project_timeline() {
-    local project="$1"
-    local metrics="$2"
+    local project;
+    project="$1"
+    local metrics;
+    metrics="$2"
 
-    local timeline_prompt="Based on the following project metrics, predict the timeline for completion:
+    local timeline_prompt;
+
+    timeline_prompt="Based on the following project metrics, predict the timeline for completion:
 
 Project: ${project}
 ${metrics}
@@ -322,10 +346,14 @@ Consider this is a Swift iOS/macOS application with MVVM architecture."
 
 # Analyze project bottlenecks
 analyze_bottlenecks() {
-    local project="$1"
-    local metrics="$2"
+    local project;
+    project="$1"
+    local metrics;
+    metrics="$2"
 
-    local bottleneck_prompt="Analyze the following project for potential bottlenecks and blocking issues:
+    local bottleneck_prompt;
+
+    bottleneck_prompt="Analyze the following project for potential bottlenecks and blocking issues:
 
 Project: ${project}
 ${metrics}
@@ -355,10 +383,12 @@ Provide specific recommendations to address each bottleneck."
 
 # Calculate risk score (0-100, higher = riskier)
 calculate_risk_score() {
-    local metrics="$1"
+    local metrics;
+    metrics="$1"
 
     # Simple risk calculation based on available metrics
-    local risk_score=50 # Base risk
+    local risk_score;
+    risk_score=50 # Base risk
 
     # Adjust based on issues found
     if echo "${metrics}" | grep -q "Open Issues: [5-9]"; then
@@ -387,12 +417,18 @@ calculate_risk_score() {
 
 # Generate comprehensive analytics report
 generate_analytics_report() {
-    local analytics_data="$1"
-    local avg_completion="$2"
-    local avg_risk="$3"
-    local project_count="$4"
+    local analytics_data;
+    analytics_data="$1"
+    local avg_completion;
+    avg_completion="$2"
+    local avg_risk;
+    avg_risk="$3"
+    local project_count;
+    project_count="$4"
 
-    local report_file="${RESULTS_DIR}/predictive_analytics_report_$(date +%Y%m%d_%H%M%S).md"
+    local report_file;
+
+    report_file="${RESULTS_DIR}/predictive_analytics_report_$(date +%Y%m%d_%H%M%S).md"
     mkdir -p "${RESULTS_DIR}"
 
     # Determine overall project health
@@ -472,11 +508,16 @@ generate_analytics_report() {
 
 # Generate actionable recommendations
 generate_recommendations() {
-    local analytics_data="$1"
+    local analytics_data;
+    analytics_data="$1"
 
-    local recommendations_file="${RESULTS_DIR}/project_recommendations_$(date +%Y%m%d_%H%M%S).md"
+    local recommendations_file;
 
-    local recommendations_prompt="Based on the following project analytics, generate specific, actionable recommendations:
+    recommendations_file="${RESULTS_DIR}/project_recommendations_$(date +%Y%m%d_%H%M%S).md"
+
+    local recommendations_prompt;
+
+    recommendations_prompt="Based on the following project analytics, generate specific, actionable recommendations:
 
 ${analytics_data}
 

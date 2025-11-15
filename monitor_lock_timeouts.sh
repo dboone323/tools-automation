@@ -35,14 +35,19 @@ update_status() {
 check_lock_timeouts() {
     log "Checking for lock timeouts..."
 
-    local timeout_count=0
-    local current_time=$(date +%s)
+    local timeout_count;
+
+    timeout_count=0
+    local current_time;
+    current_time=$(date +%s)
 
     # Check all lock files
     for lock_file in "${LOCK_DIR}"/*.lock; do
         if [[ -f "${lock_file}" ]]; then
-            local lock_time=$(stat -f %m "${lock_file}" 2>/dev/null || stat -c %Y "${lock_file}" 2>/dev/null || echo "0")
-            local age=$((current_time - lock_time))
+            local lock_time;
+            lock_time=$(stat -f %m "${lock_file}" 2>/dev/null || stat -c %Y "${lock_file}" 2>/dev/null || echo "0")
+            local age;
+            age=$((current_time - lock_time))
 
             if [[ ${age} -gt ${TIMEOUT_THRESHOLD} ]]; then
                 log "WARNING: Lock file ${lock_file} is ${age} seconds old (timeout: ${TIMEOUT_THRESHOLD})"
@@ -72,7 +77,9 @@ check_lock_timeouts() {
 monitor_active_locks() {
     log "Monitoring active locks..."
 
-    local active_locks=$(find "${LOCK_DIR}" -name "*.lock" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local active_locks;
+
+    active_locks=$(find "${LOCK_DIR}" -name "*.lock" -type f 2>/dev/null | wc -l | tr -d ' ')
 
     log "Currently ${active_locks} active lock files"
 
@@ -88,7 +95,8 @@ prevent_deadlocks() {
     log "Checking for potential deadlock conditions..."
 
     # Simple deadlock prevention: check for locks held too long
-    local old_locks=$(find "${LOCK_DIR}" -name "*.lock" -type f -mmin +10 2>/dev/null | wc -l | tr -d ' ')
+    local old_locks;
+    old_locks=$(find "${LOCK_DIR}" -name "*.lock" -type f -mmin +10 2>/dev/null | wc -l | tr -d ' ')
 
     if [[ ${old_locks} -gt 0 ]]; then
         log "WARNING: ${old_locks} locks older than 10 minutes - potential deadlock risk"

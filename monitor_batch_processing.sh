@@ -60,13 +60,17 @@ show_progress() {
     echo -e "${BLUE}Last update:${NC} ${last_update}"
 
     if [[ ${total} -gt 0 ]]; then
-        local percent=$((processed * 100 / total))
+        local percent;
+        percent=$((processed * 100 / total))
         echo -e "${BLUE}Completion:${NC} ${percent}%"
 
         # Progress bar
-        local bar_width=50
-        local filled=$((processed * bar_width / total))
-        local empty=$((bar_width - filled))
+        local bar_width;
+        bar_width=50
+        local filled;
+        filled=$((processed * bar_width / total))
+        local empty;
+        empty=$((bar_width - filled))
 
         printf "${GREEN}Progress: ["
         printf "%${filled}s" | tr ' ' '█'
@@ -80,8 +84,10 @@ show_progress() {
         avg_batch_time=$(jq -r '.batches_completed / ((now - (.start_time | strptime("%Y-%m-%dT%H:%M:%SZ") | mktime)) / 60)' "${PROGRESS_FILE}" 2>/dev/null || echo "0")
 
         if [[ $(echo "${avg_batch_time} > 0" | bc -l 2>/dev/null) ]]; then
-            local remaining_batches=$(((total - processed + 9) / 10)) # Round up
-            local eta_minutes=$(echo "scale=1; ${remaining_batches} / ${avg_batch_time}" | bc -l 2>/dev/null || echo "0")
+            local remaining_batches;
+            remaining_batches=$(((total - processed + 9) / 10)) # Round up
+            local eta_minutes;
+            eta_minutes=$(echo "scale=1; ${remaining_batches} / ${avg_batch_time}" | bc -l 2>/dev/null || echo "0")
             echo -e "${BLUE}ETA:${NC} ~${eta_minutes} minutes remaining"
         fi
     fi
@@ -135,10 +141,14 @@ show_summary() {
         local start_time
         start_time=$(jq -r '.start_time // empty' "${PROGRESS_FILE}")
         if [[ -n "${start_time}" ]]; then
-            local elapsed_seconds=$(($(date +%s) - $(date -d "${start_time}" +%s 2>/dev/null || echo "$(date +%s)")))
-            local elapsed_minutes=$((elapsed_seconds / 60))
-            local elapsed_hours=$((elapsed_minutes / 60))
-            local remaining_minutes=$((elapsed_minutes % 60))
+            local elapsed_seconds;
+            elapsed_seconds=$(($(date +%s) - $(date -d "${start_time}" +%s 2>/dev/null || echo "$(date +%s)")))
+            local elapsed_minutes;
+            elapsed_minutes=$((elapsed_seconds / 60))
+            local elapsed_hours;
+            elapsed_hours=$((elapsed_minutes / 60))
+            local remaining_minutes;
+            remaining_minutes=$((elapsed_minutes % 60))
 
             if [[ ${elapsed_hours} -gt 0 ]]; then
                 echo -e "${BLUE}Time elapsed:${NC} ${elapsed_hours}h ${remaining_minutes}m"
@@ -151,7 +161,8 @@ show_summary() {
 
 # Main function
 main() {
-    local mode="${1:-summary}"
+    local mode;
+    mode="${1:-summary}"
 
     case "${mode}" in
     "progress")

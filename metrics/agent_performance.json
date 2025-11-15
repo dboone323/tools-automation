@@ -1,0 +1,14 @@
+{
+  "agents": {},
+  "system_metrics": {
+    "last_updated": "2025-11-14T16:34:25-06:00",
+    "overall_health_score": 0.0,
+    "performance_trends": [],
+    "bottlenecks": []
+  },
+  "predictions": {
+    "generated_at": "",
+    "agent_predictions": {},
+    "system_predictions": []
+  }
+}

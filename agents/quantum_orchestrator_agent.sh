@@ -1,4 +1,4 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -180,10 +180,14 @@ fi
 
 # Update agent status
 update_agent_status() {
-    local agent_script="$1"
-    local status="$2"
-    local pid="$3"
-    local task="$4"
+    local agent_script;
+    agent_script="$1"
+    local status;
+    status="$2"
+    local pid;
+    pid="$3"
+    local task;
+    task="$4"
 
     if [[ ! -f "${STATUS_FILE}" ]]; then
         echo "{}" >"${STATUS_FILE}"
@@ -216,15 +220,20 @@ with open('${STATUS_FILE}', 'w') as f:
 
 # Submit quantum job to queue
 submit_quantum_job() {
-    local domain="$1"             # chemistry, finance, learning
-    local algorithm="$2"          # vqe, qaoa, qmc, qpe, vqd
-    local priority="${3:-normal}" # low, normal, high, urgent
-    local parameters="$4"         # JSON string with job parameters
+    local domain;
+    domain="$1"             # chemistry, finance, learning
+    local algorithm;
+    algorithm="$2"          # vqe, qaoa, qmc, qpe, vqd
+    local priority;
+    priority="${3:-normal}" # low, normal, high, urgent
+    local parameters;
+    parameters="$4"         # JSON string with job parameters
 
     quantum_log "Submitting quantum job: ${domain}/${algorithm} with ${priority} priority"
 
     local job_id
-    local timestamp=$(date +%s)
+    local timestamp;
+    timestamp=$(date +%s)
 
     # Generate job ID and add to queue
     job_id=$(python3 -c "
@@ -279,7 +288,9 @@ print(job_id)
 schedule_quantum_jobs() {
     quantum_log "Scheduling quantum jobs"
 
-    local scheduled_jobs=0
+    local scheduled_jobs;
+
+    scheduled_jobs=0
 
     # Process pending jobs in priority order
     scheduled_jobs=$(python3 -c "
@@ -386,8 +397,11 @@ print(scheduled_count)
 monitor_quantum_jobs() {
     quantum_log "Monitoring quantum job execution"
 
-    local completed_jobs=0
-    local failed_jobs=0
+    local completed_jobs;
+
+    completed_jobs=0
+    local failed_jobs;
+    failed_jobs=0
 
     # Check for completed jobs and update status
     local result
@@ -450,7 +464,9 @@ print(f'{completed},{failed}')
 optimize_resource_allocation() {
     quantum_log "Optimizing quantum resource allocation"
 
-    local optimizations_made=0
+    local optimizations_made;
+
+    optimizations_made=0
 
     # Analyze job patterns and redistribute resources
     optimizations_made=$(python3 -c "
@@ -653,24 +669,30 @@ EOF
 
 # Run coordinated quantum workflow
 run_coordinated_workflow() {
-    local workflow_type="$1"
+    local workflow_type;
+    workflow_type="$1"
 
     quantum_log "Running coordinated quantum workflow: ${workflow_type}"
 
     case "${workflow_type}" in
     "chemistry_finance_comparison")
         # Submit jobs for both domains and compare results
-        local chem_job=$(submit_quantum_job "chemistry" "vqe" "high" '{"molecule": "H2O", "method": "ground_state"}')
-        local finance_job=$(submit_quantum_job "finance" "qaoa" "high" '{"portfolio_size": 10, "risk_tolerance": "medium"}')
+        local chem_job;
+        chem_job=$(submit_quantum_job "chemistry" "vqe" "high" '{"molecule": "H2O", "method": "ground_state"}')
+        local finance_job;
+        finance_job=$(submit_quantum_job "finance" "qaoa" "high" '{"portfolio_size": 10, "risk_tolerance": "medium"}')
 
         success "Submitted comparison jobs: Chemistry ${chem_job}, Finance ${finance_job}"
         ;;
 
     "multi_algorithm_benchmark")
         # Submit same problem to different algorithms
-        local vqe_job=$(submit_quantum_job "chemistry" "vqe" "normal" '{"molecule": "H2", "method": "ground_state"}')
-        local qmc_job=$(submit_quantum_job "chemistry" "qmc" "normal" '{"molecule": "H2", "method": "properties"}')
-        local qpe_job=$(submit_quantum_job "chemistry" "qpe" "normal" '{"molecule": "H2", "method": "eigenvalues"}')
+        local vqe_job;
+        vqe_job=$(submit_quantum_job "chemistry" "vqe" "normal" '{"molecule": "H2", "method": "ground_state"}')
+        local qmc_job;
+        qmc_job=$(submit_quantum_job "chemistry" "qmc" "normal" '{"molecule": "H2", "method": "properties"}')
+        local qpe_job;
+        qpe_job=$(submit_quantum_job "chemistry" "qpe" "normal" '{"molecule": "H2", "method": "eigenvalues"}')
 
         success "Submitted benchmark jobs: VQE ${vqe_job}, QMC ${qmc_job}, QPE ${qpe_job}"
         ;;
@@ -709,7 +731,9 @@ main() {
     update_agent_status "quantum_orchestrator_agent.sh" "available" $$ ""
     quantum_log "Quantum Orchestrator Agent ready - coordinating quantum advantage across domains"
 
-    local cycle_count=0
+    local cycle_count;
+
+    cycle_count=0
 
     # Main loop - orchestration every 5 minutes
     while true; do
@@ -800,8 +824,10 @@ EOF
 
 # Create quantum entanglement between agents
 create_agent_entanglement() {
-    local agent1="$1"
-    local agent2="$2"
+    local agent1;
+    agent1="$1"
+    local agent2;
+    agent2="$2"
 
     entanglement_log "Creating quantum entanglement between ${agent1} and ${agent2}"
 
@@ -812,8 +838,10 @@ create_agent_entanglement() {
     fi
 
     # Create entanglement record
-    local entanglement_id=$(uuidgen)
-    local timestamp=$(date +%s)
+    local entanglement_id;
+    entanglement_id=$(uuidgen)
+    local timestamp;
+    timestamp=$(date +%s)
 
     cat >>"${ENTANGLEMENT_NETWORK}" <<EOF
 {
@@ -832,13 +860,16 @@ EOF
 
 # Navigate to parallel universe for workflow execution
 navigate_to_parallel_universe() {
-    local universe_id="$1"
-    local workflow_type="$2"
+    local universe_id;
+    universe_id="$1"
+    local workflow_type;
+    workflow_type="$2"
 
     multiverse_log "Navigating to parallel universe ${universe_id} for ${workflow_type} workflow"
 
     # Update multiverse state
-    local timestamp=$(date +%s)
+    local timestamp;
+    timestamp=$(date +%s)
 
     # Simulate dimensional navigation
     sleep 0.1
@@ -861,8 +892,10 @@ EOF
 
 # Execute workflow across multiple dimensions
 execute_multidimensional_workflow() {
-    local workflow_name="$1"
-    local dimensions="$2"
+    local workflow_name;
+    workflow_name="$1"
+    local dimensions;
+    dimensions="$2"
 
     quantum_log "Executing ${workflow_name} across dimensions: ${dimensions}"
 
@@ -901,35 +934,40 @@ execute_multidimensional_workflow() {
 
 # Execute 3D classical workflow
 execute_3d_workflow() {
-    local workflow="$1"
+    local workflow;
+    workflow="$1"
     info "Executing 3D classical workflow: ${workflow}"
     # Implementation for 3D processing
 }
 
 # Execute 4D spacetime workflow
 execute_4d_workflow() {
-    local workflow="$1"
+    local workflow;
+    workflow="$1"
     quantum_log "Executing 4D spacetime workflow: ${workflow}"
     # Implementation for 4D spacetime processing
 }
 
 # Execute 5D quantum field workflow
 execute_5d_workflow() {
-    local workflow="$1"
+    local workflow;
+    workflow="$1"
     quantum_log "Executing 5D quantum field workflow: ${workflow}"
     # Implementation for 5D quantum field processing
 }
 
 # Execute communication workflow
 execute_communication_workflow() {
-    local workflow="$1"
+    local workflow;
+    workflow="$1"
     entanglement_log "Executing communication workflow: ${workflow}"
     # Implementation for inter-agent communication
 }
 
 # Execute synchronization workflow
 execute_synchronization_workflow() {
-    local workflow="$1"
+    local workflow;
+    workflow="$1"
     multiverse_log "Executing synchronization workflow: ${workflow}"
     # Implementation for temporal synchronization
 }
@@ -944,14 +982,18 @@ monitor_entanglement_network() {
     fi
 
     # Check network health metrics
-    local entangled_agents=$(jq '.entanglements | length' "${ENTANGLEMENT_NETWORK}" 2>/dev/null || echo "0")
-    local active_channels=$(jq '.channels | length' "${ENTANGLEMENT_NETWORK}" 2>/dev/null || echo "0")
-    local network_health=$(jq '.network_health' "${ENTANGLEMENT_NETWORK}" 2>/dev/null || echo "1.0")
+    local entangled_agents;
+    entangled_agents=$(jq '.entanglements | length' "${ENTANGLEMENT_NETWORK}" 2>/dev/null || echo "0")
+    local active_channels;
+    active_channels=$(jq '.channels | length' "${ENTANGLEMENT_NETWORK}" 2>/dev/null || echo "0")
+    local network_health;
+    network_health=$(jq '.network_health' "${ENTANGLEMENT_NETWORK}" 2>/dev/null || echo "1.0")
 
     entanglement_log "Network Status: ${entangled_agents} entanglements, ${active_channels} channels, health: ${network_health}"
 
     # Clean up stale entanglements (older than 1 hour) using Python
-    local cutoff_time=$(($(date +%s) - 3600))
+    local cutoff_time;
+    cutoff_time=$(($(date +%s) - 3600))
     python3 -c "
 import json
 import sys
@@ -995,13 +1037,16 @@ monitor_multiverse_navigation() {
     fi
 
     # Check multiverse stability
-    local stability=$(jq '.multiverse_stability' "${MULTIVERSE_STATE}" 2>/dev/null || echo "0.95")
-    local active_navigations=$(jq '.timeline_branches | length' "${MULTIVERSE_STATE}" 2>/dev/null || echo "0")
+    local stability;
+    stability=$(jq '.multiverse_stability' "${MULTIVERSE_STATE}" 2>/dev/null || echo "0.95")
+    local active_navigations;
+    active_navigations=$(jq '.timeline_branches | length' "${MULTIVERSE_STATE}" 2>/dev/null || echo "0")
 
     multiverse_log "Multiverse Status: stability ${stability}, ${active_navigations} active navigations"
 
     # Clean up old navigation records (older than 24 hours) using Python
-    local cutoff_time=$(($(date +%s) - 86400))
+    local cutoff_time;
+    cutoff_time=$(($(date +%s) - 86400))
     python3 -c "
 import json
 import sys
@@ -1064,7 +1109,9 @@ main() {
     initialize_job_queue
     initialize_resource_pool
 
-    local cycle_count=0
+    local cycle_count;
+
+    cycle_count=0
 
     # Main loop - orchestration every 5 minutes
     while true; do
@@ -1093,7 +1140,8 @@ main() {
 
 # Quantum orchestration cycle
 quantum_orchestration_cycle() {
-    local cycle="$1"
+    local cycle;
+    cycle="$1"
 
     # Schedule pending jobs
     schedule_quantum_jobs
@@ -1166,11 +1214,16 @@ navigate_multiverse_workflows() {
 
 # Generate quantum orchestration report
 generate_quantum_orchestration_report() {
-    local report_file="${QUANTUM_ORCHESTRATOR_DIR}/reports/quantum_orchestration_report_$(date +%Y%m%d_%H%M%S).json"
+    local report_file;
+    report_file="${QUANTUM_ORCHESTRATOR_DIR}/reports/quantum_orchestration_report_$(date +%Y%m%d_%H%M%S).json"
 
-    local entangled_count=$(jq '.entanglements | length' "${ENTANGLEMENT_NETWORK}" 2>/dev/null || echo "0")
-    local universe_count=$(jq '.parallel_universes | length' "${MULTIVERSE_STATE}" 2>/dev/null || echo "4")
-    local job_count=$(jq '.jobs | length' "${QUANTUM_JOB_QUEUE}" 2>/dev/null || echo "0")
+    local entangled_count;
+
+    entangled_count=$(jq '.entanglements | length' "${ENTANGLEMENT_NETWORK}" 2>/dev/null || echo "0")
+    local universe_count;
+    universe_count=$(jq '.parallel_universes | length' "${MULTIVERSE_STATE}" 2>/dev/null || echo "4")
+    local job_count;
+    job_count=$(jq '.jobs | length' "${QUANTUM_JOB_QUEUE}" 2>/dev/null || echo "0")
 
     cat >"${report_file}" <<EOF
 {

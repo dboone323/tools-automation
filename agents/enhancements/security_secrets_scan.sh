@@ -30,7 +30,8 @@ install_git_secrets() {
 }
 
 add_custom_patterns() {
-  local repo_path="$1"
+  local repo_path;
+  repo_path="$1"
 
   cd "${repo_path}" || return 1
 
@@ -53,8 +54,10 @@ add_custom_patterns() {
 }
 
 scan_for_secrets() {
-  local project_path="$1"
-  local report_file="${METRICS_DIR}/secrets_scan_$(date +%Y%m%d_%H%M%S).txt"
+  local project_path;
+  project_path="$1"
+  local report_file;
+  report_file="${METRICS_DIR}/secrets_scan_$(date +%Y%m%d_%H%M%S).txt"
 
   log "Scanning for secrets in ${project_path}"
 

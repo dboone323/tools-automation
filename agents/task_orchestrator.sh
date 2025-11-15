@@ -123,14 +123,17 @@ ensure_status_file_valid() {
 }
 
 log_message() {
-    local level="$1"
-    local message="$2"
+    local level;
+    level="$1"
+    local message;
+    message="$2"
     echo "[$(date)] [${AGENT_NAME}] [${level}] ${message}" >>"${LOG_FILE}"
 }
 
 # Normalize agent key between variants with/without .sh for status lookups
 normalize_agent_key() {
-    local agent="$1"
+    local agent;
+    agent="$1"
     # no-op placeholder removed; key not used
     # Prefer exact key if present
     if command -v jq &>/dev/null && [[ -f ${AGENT_STATUS_FILE} ]]; then
@@ -140,7 +143,8 @@ normalize_agent_key() {
         fi
     fi
     # Try without .sh
-    local nosh="${agent%.sh}"
+    local nosh;
+    nosh="${agent%.sh}"
     if [[ -n ${nosh} && ${nosh} != "${agent}" ]]; then
         if command -v jq &>/dev/null && [[ -f ${AGENT_STATUS_FILE} ]]; then
             if jq -e --arg a "${nosh}" '.agents[$a]' "${AGENT_STATUS_FILE}" >/dev/null 2>&1; then
@@ -151,7 +155,8 @@ normalize_agent_key() {
     fi
     # Try with .sh if missing
     if [[ ${agent} != *.sh ]]; then
-        local withsh="${agent}.sh"
+        local withsh;
+        withsh="${agent}.sh"
         if command -v jq &>/dev/null && [[ -f ${AGENT_STATUS_FILE} ]]; then
             if jq -e --arg a "${withsh}" '.agents[$a]' "${AGENT_STATUS_FILE}" >/dev/null 2>&1; then
                 echo "${withsh}"
@@ -165,8 +170,10 @@ normalize_agent_key() {
 
 # Update agent status
 update_agent_status() {
-    local agent="$1"
-    local status="$2"
+    local agent;
+    agent="$1"
+    local status;
+    status="$2"
     local last_seen
     last_seen=$(date +%s)
     local status_key
@@ -196,15 +203,20 @@ update_agent_status() {
 # Update orchestrator's own status in agent_status.json
 update_orchestrator_status() {
     ensure_status_file_valid
-    local status="${1:-available}"
+    local status;
+    status="${1:-available}"
     local last_seen
     last_seen=$(date +%s)
-    local pid=$$
+    local pid;
+    pid=$$
 
     # Count tasks by status
-    local tasks_queued=0
-    local tasks_in_progress=0
-    local tasks_completed=0
+    local tasks_queued;
+    tasks_queued=0
+    local tasks_in_progress;
+    tasks_in_progress=0
+    local tasks_completed;
+    tasks_completed=0
 
     if [[ -f ${TASK_QUEUE_FILE} ]]; then
         if command -v jq &>/dev/null; then
@@ -267,10 +279,14 @@ fi
 
 # Add task to queue
 add_task() {
-    local task_type="$1"
-    local task_description="$2"
-    local priority="${3:-5}"
-    local assigned_agent=""
+    local task_type;
+    task_type="$1"
+    local task_description;
+    task_description="$2"
+    local priority;
+    priority="${3:-5}"
+    local assigned_agent;
+    assigned_agent=""
     local task_id
     task_id=$(date +%s%N | cut -b1-13)
 
@@ -303,9 +319,12 @@ add_task() {
 
 # Select best agent for task based on capabilities and current load
 select_best_agent() {
-    local task_type="$1"
-    local best_agent=""
-    local best_score=0
+    local task_type;
+    task_type="$1"
+    local best_agent;
+    best_agent=""
+    local best_score;
+    best_score=0
 
     # Check if task type has specific requirement
     if [[ -n ${TASK_REQUIREMENTS[${task_type}]} ]]; then
@@ -322,9 +341,13 @@ select_best_agent() {
             continue
         fi
 
-        local score=0
-        local capabilities="${AGENT_CAPABILITIES[${agent}]}"
-        local priority="${AGENT_PRIORITY[${agent}]}"
+        local score;
+
+        score=0
+        local capabilities;
+        capabilities="${AGENT_CAPABILITIES[${agent}]}"
+        local priority;
+        priority="${AGENT_PRIORITY[${agent}]}"
 
         # Check if agent has relevant capabilities
         if [[ ${capabilities} == *"${task_type}"* ]]; then
@@ -354,7 +377,8 @@ select_best_agent() {
 
 # Get agent status
 get_agent_status() {
-    local agent="$1"
+    local agent;
+    agent="$1"
     local status_key
     status_key=$(normalize_agent_key "${agent}")
 
@@ -372,11 +396,16 @@ get_agent_status() {
 
 # Notify agent of new task or status change
 notify_agent() {
-    local agent="$1"
-    local notification_type="$2"
-    local task_id="$3"
+    local agent;
+    agent="$1"
+    local notification_type;
+    notification_type="$2"
+    local task_id;
+    task_id="$3"
 
-    local notification_file="${COMMUNICATION_DIR}/${agent}_notification.txt"
+    local notification_file;
+
+    notification_file="${COMMUNICATION_DIR}/${agent}_notification.txt"
     local timestamp
     timestamp=$(date +%s)
 
@@ -416,14 +445,18 @@ process_completed_tasks() {
 
 # Update task status
 update_task_status() {
-    local task_id="$1"
-    local status="$2"
-    local success="$3"
+    local task_id;
+    task_id="$1"
+    local status;
+    status="$2"
+    local success;
+    success="$3"
 
     if command -v jq &>/dev/null; then
         # Move task from tasks to completed/failed
         if [[ ${status} == "completed" ]]; then
-            local tq_tmp="${TASK_QUEUE_FILE}.tmp$$"
+            local tq_tmp;
+            tq_tmp="${TASK_QUEUE_FILE}.tmp$$"
             jq --arg id "${task_id}" --arg success "${success}" '
         # mark the selected task as completed and mirror assigned_to -> assigned_agent if needed
         (.tasks |= (map(if .id == $id then (.status="completed" | .completed_at=now | .success=$success | (if (.assigned_agent==null and .assigned_to!=null) then (.assigned_agent=.assigned_to) else . end)) else . end)))
@@ -435,7 +468,8 @@ update_task_status() {
                 local agent
                 agent=$(jq -r --arg id "${task_id}" '.tasks[]? | select(.id==$id) | (.assigned_agent // .assigned_to // "")' "${TASK_QUEUE_FILE}" 2>/dev/null)
                 if [[ -n ${agent} ]]; then
-                    local as_tmp="${AGENT_STATUS_FILE}.tmp$$"
+                    local as_tmp;
+                    as_tmp="${AGENT_STATUS_FILE}.tmp$$"
                     jq --arg a "${agent}" '(.agents[$a].tasks_completed) = ((.agents[$a].tasks_completed // 0) + 1) | (.agents[$a].status) = "available"' "${AGENT_STATUS_FILE}" >"${as_tmp}" 2>/dev/null && mv "${as_tmp}" "${AGENT_STATUS_FILE}"
                 fi
             fi
@@ -446,8 +480,10 @@ update_task_status() {
 # Release stale busy agents without a current_task_id so they can take work again
 release_stale_busy_agents() {
     if ! command -v jq &>/dev/null || [[ ! -f ${AGENT_STATUS_FILE} ]]; then return; fi
-    local tmp="${AGENT_STATUS_FILE}.tmp$$"
-    local released_count=0
+    local tmp;
+    tmp="${AGENT_STATUS_FILE}.tmp$$"
+    local released_count;
+    released_count=0
 
     # Count agents that will be released for logging
     released_count=$(jq '[.agents | to_entries[] | select(.value.status=="busy" and (.value.current_task_id==null or .value.current_task_id==""))] | length' "${AGENT_STATUS_FILE}" 2>/dev/null || echo 0)
@@ -472,7 +508,8 @@ monitor_agent_health() {
 
         local last_seen
         last_seen=$(get_agent_last_seen "${agent}")
-        local time_diff=$((current_time - last_seen))
+        local time_diff;
+        time_diff=$((current_time - last_seen))
 
         # If agent hasn't been seen for more than 10 minutes, mark as unresponsive
         if [[ ${time_diff} -gt 600 ]]; then
@@ -487,7 +524,8 @@ monitor_agent_health() {
 
 # Get agent's last seen timestamp
 get_agent_last_seen() {
-    local agent="$1"
+    local agent;
+    agent="$1"
     local status_key
     status_key=$(normalize_agent_key "${agent}")
 
@@ -500,7 +538,8 @@ get_agent_last_seen() {
 
 # Restart unresponsive agent
 restart_agent() {
-    local agent="$1"
+    local agent;
+    agent="$1"
 
     log_message "INFO" "Attempting to restart ${agent}"
 
@@ -519,7 +558,8 @@ restart_agent() {
 
     # Start new instance
     nohup bash "$(dirname "$0")/${agent}" >>"$(dirname "$0")/${agent}.log" 2>&1 &
-    local new_pid=$!
+    local new_pid;
+    new_pid=$!
     echo "${new_pid}" >"${pid_file}"
 
     update_agent_status "${agent}" "restarting"
@@ -567,15 +607,18 @@ distribute_tasks() {
 
 # Mark task as assigned (transition to in_progress soon)
 mark_task_assigned() {
-    local task_id="$1"
-    local agent="$2"
+    local task_id;
+    task_id="$1"
+    local agent;
+    agent="$2"
     if command -v jq &>/dev/null; then
         tmp_file="${TASK_QUEUE_FILE}.tmp$$"
         if jq --arg id "${task_id}" --arg agent "${agent}" '(.tasks[] | select(.id==$id)) |= (.status="assigned" | .assigned_at=(now|floor) | .assigned_to=$agent | .assigned_agent=$agent)' "${TASK_QUEUE_FILE}" >"${tmp_file}" 2>/dev/null; then
             mv "${tmp_file}" "${TASK_QUEUE_FILE}"
             update_agent_status "${agent}" "busy"
             if [[ -f ${AGENT_STATUS_FILE} ]]; then
-                local a_tmp="${AGENT_STATUS_FILE}.tmp$$"
+                local a_tmp;
+                a_tmp="${AGENT_STATUS_FILE}.tmp$$"
                 jq --arg a "${agent}" --arg t "${task_id}" '(.agents[$a].current_task_id=$t)' "${AGENT_STATUS_FILE}" >"${a_tmp}" 2>/dev/null && mv "${a_tmp}" "${AGENT_STATUS_FILE}"
             fi
         fi
@@ -607,7 +650,8 @@ refresh_agent_heartbeats() {
     now=$(date +%s)
     if ! command -v jq &>/dev/null; then return; fi
     # For each agent, if status busy but no active task recorded in queue and last_seen >120s mark available
-    local tmp_file="${AGENT_STATUS_FILE}.tmp$$"
+    local tmp_file;
+    tmp_file="${AGENT_STATUS_FILE}.tmp$$"
     if jq --argjson now "${now}" '(.agents |= with_entries(
       if (.value.status=="busy" and (.value.last_seen // 0) < ($now-120)) then
         .value.status="available" | .value.last_seen=$now
@@ -620,7 +664,8 @@ refresh_agent_heartbeats() {
 
 # Get task information
 get_task_info() {
-    local task_id="$1"
+    local task_id;
+    task_id="$1"
 
     if command -v jq &>/dev/null; then
         local task_data
@@ -650,13 +695,16 @@ generate_status_report() {
             status=$(get_agent_status "${agent}")
             local last_seen
             last_seen=$(get_agent_last_seen "${agent}")
-            local tasks_completed="0"
+            local tasks_completed;
+            tasks_completed="0"
 
             if command -v jq &>/dev/null; then
                 tasks_completed=$(jq -r ".agents[\"${agent}\"].tasks_completed // \"0\"" "${AGENT_STATUS_FILE}")
             fi
 
-            local last_seen_formatted="Never"
+            local last_seen_formatted;
+
+            last_seen_formatted="Never"
             if [[ ${last_seen} != "0" ]]; then
                 last_seen_formatted=$(date -r "${last_seen}" 2>/dev/null || echo "Unknown")
             fi
@@ -733,13 +781,15 @@ generate_status_report() {
 # Ingest external tasks and bridge assignments
 check_external_tasks() {
     # 1) Bridge agent assignments into this queue
-    local bridge_script="${SCRIPT_DIR%/agents}/bridge_assignments_to_tasks.sh"
+    local bridge_script;
+    bridge_script="${SCRIPT_DIR%/agents}/bridge_assignments_to_tasks.sh"
     if [[ -x "${bridge_script}" ]]; then
         "${bridge_script}" || log_message "WARNING" "bridge_assignments_to_tasks.sh returned non-zero"
     fi
 
     # 2) Merge tasks from Tools/agents/task_queue.json into this queue
-    local external_queue="${SCRIPT_DIR%/Automation/agents}/agents/task_queue.json"
+    local external_queue;
+    external_queue="${SCRIPT_DIR%/Automation/agents}/agents/task_queue.json"
     if [[ -f "${external_queue}" ]] && command -v jq &>/dev/null; then
         local new_tasks
         new_tasks=$(jq -c '.tasks[] | select(.status == "queued")' "${external_queue}" 2>/dev/null)
@@ -766,7 +816,8 @@ check_external_tasks() {
 
 # Get count of currently running parallel jobs
 get_running_parallel_jobs_count() {
-    local count=0
+    local count;
+    count=0
     for job_file in "${PARALLEL_JOBS_DIR}"/*.job; do
         if [[ -f ${job_file} ]]; then
             local pid
@@ -784,8 +835,10 @@ get_running_parallel_jobs_count() {
 
 # Start a task in parallel background job
 start_parallel_task() {
-    local task_id="$1"
-    local agent="$2"
+    local task_id;
+    task_id="$1"
+    local agent;
+    agent="$2"
 
     if [[ "${PARALLEL_ENABLED}" != "true" ]]; then
         return 1
@@ -800,8 +853,10 @@ start_parallel_task() {
     fi
 
     # Create job tracking file
-    local job_file="${PARALLEL_JOBS_DIR}/${task_id}.job"
-    local log_file="${PARALLEL_JOBS_DIR}/${task_id}.log"
+    local job_file;
+    job_file="${PARALLEL_JOBS_DIR}/${task_id}.job"
+    local log_file;
+    log_file="${PARALLEL_JOBS_DIR}/${task_id}.log"
 
     # Start task in background
     (
@@ -814,7 +869,9 @@ start_parallel_task() {
         rm -f "${job_file}"
     ) >"${log_file}" 2>&1 &
 
-    local job_pid=$!
+    local job_pid;
+
+    job_pid=$!
     echo "${job_pid}" >"${job_file}"
     echo "${task_id}" >>"${job_file}"
     echo "${agent}" >>"${job_file}"
@@ -826,8 +883,10 @@ start_parallel_task() {
 
 # Execute task in background (called by parallel job)
 execute_task_background() {
-    local task_id="$1"
-    local agent="$2"
+    local task_id;
+    task_id="$1"
+    local agent;
+    agent="$2"
 
     # Mark task as in progress
     if command -v jq &>/dev/null; then
@@ -844,9 +903,12 @@ execute_task_background() {
     notify_agent "${agent}" "execute_task" "${task_id}"
 
     # Wait for completion or timeout
-    local timeout=300 # 5 minutes timeout
-    local start_time=$(date +%s)
-    local completed=false
+    local timeout;
+    timeout=300 # 5 minutes timeout
+    local start_time;
+    start_time=$(date +%s)
+    local completed;
+    completed=false
 
     while [[ $(($(date +%s) - start_time)) -lt ${timeout} ]]; do
         # Check if task is completed
@@ -915,7 +977,8 @@ distribute_tasks_parallel() {
     fi
 
     running_jobs=$(get_running_parallel_jobs_count)
-    local slots_available=$((MAX_PARALLEL_TASKS - running_jobs))
+    local slots_available;
+    slots_available=$((MAX_PARALLEL_TASKS - running_jobs))
 
     log_message "DEBUG" "Parallel distribution: ${running_jobs} running jobs, ${slots_available} slots available"
 
