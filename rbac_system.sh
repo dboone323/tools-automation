@@ -403,10 +403,10 @@ authenticate_user() {
       local lock_until
       lock_until=$(
         python3 - <<PY
-    from datetime import datetime, timedelta, timezone
-    import sys
-    sys.stdout.write((datetime.now(timezone.utc)+timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ') + "\n")
-    PY
+from datetime import datetime, timedelta, timezone
+import sys
+sys.stdout.write((datetime.now(timezone.utc)+timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ') + "\n")
+PY
       )
       jq ".users.\"$username\".locked_until = \"$lock_until\"" "$USERS_DB" >"${USERS_DB}.tmp" && mv "${USERS_DB}.tmp" "$USERS_DB"
     fi
@@ -528,7 +528,7 @@ check_permission() {
   for role in "${roles[@]}"; do
     # Resolve permissions including inherited roles
     local permissions
-    permissions=$(resolve_role_permissions "$role" )
+    permissions=$(resolve_role_permissions "$role")
 
     # Check for wildcard permission
     if echo "$permissions" | grep -q "^\*$"; then
