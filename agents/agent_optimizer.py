@@ -8,8 +8,6 @@ import json
 import time
 import os
 import subprocess
-import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 class AgentOptimizer:
@@ -28,7 +26,7 @@ class AgentOptimizer:
         try:
             with open(self.agent_status_file, "r") as f:
                 return json.load(f).get("agents", {})
-        except:
+        except Exception:
             return {}
 
     def load_tasks(self):
@@ -36,7 +34,7 @@ class AgentOptimizer:
         try:
             with open(self.task_queue_file, "r") as f:
                 return json.load(f).get("tasks", [])
-        except:
+        except Exception:
             return []
 
     def optimize_agent_memory(self):
@@ -63,7 +61,7 @@ class AgentOptimizer:
                             os.kill(pid, 15)  # SIGTERM
                             time.sleep(2)
                             optimized += 1
-                except:
+                except Exception:
                     pass
 
         print(f"✅ Optimized {optimized} high-memory agents")
@@ -99,7 +97,7 @@ class AgentOptimizer:
                             capture_output=True,
                         )
                         parallelized += 1
-                    except:
+                    except Exception:
                         pass
 
         print(f"✅ Enabled parallel processing for {parallelized} agents")

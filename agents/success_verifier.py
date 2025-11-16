@@ -9,7 +9,7 @@ import json
 import sys
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict
 
 # Configuration
 SCRIPT_DIR = Path(__file__).parent
@@ -216,7 +216,7 @@ class SuccessVerifier:
         except subprocess.TimeoutExpired:
             self.checks_failed.append({"check": check_name, "reason": "Tests timeout"})
             return False
-        except Exception as e:
+        except Exception:
             # Tests might not exist, that's okay
             self.checks_passed.append(
                 {"check": check_name, "result": "skipped (no tests)"}
@@ -241,11 +241,11 @@ class SuccessVerifier:
 
         if "test_pass_rate" in before and "test_pass_rate" in after:
             if after["test_pass_rate"] < before["test_pass_rate"]:
-                regressions.append(f"Test pass rate decreased")
+                regressions.append("Test pass rate decreased")
 
         if "build_time" in before and "build_time" in after:
             if after["build_time"] > before["build_time"] * 1.5:
-                regressions.append(f"Build time increased significantly")
+                regressions.append("Build time increased significantly")
 
         if regressions:
             self.checks_failed.append(
@@ -286,7 +286,7 @@ class SuccessVerifier:
                 errors = result.stdout.decode().count("error:")
                 if errors > 0:
                     issues.append(f"{errors} lint errors")
-        except:
+        except Exception:
             pass  # SwiftLint not available
 
         if issues:

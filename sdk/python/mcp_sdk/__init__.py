@@ -173,7 +173,7 @@ class MCPClient:
 
                     try:
                         response_data = await response.json()
-                    except:
+                    except Exception:
                         response_data = await response.text()
 
                     if response.status >= 400:

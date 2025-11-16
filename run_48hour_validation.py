@@ -11,7 +11,28 @@ import os
 import subprocess
 import shlex
 import time
-import schedule
+
+try:
+    import schedule
+except ImportError:
+    # Provide a minimal fallback so tests can import the module without the dependency
+    class _DummyJob:
+        def minutes(self):
+            return self
+
+        def do(self, fn):
+            return None
+
+    class _DummySchedule:
+        jobs = []
+
+        def every(self, interval):
+            return _DummyJob()
+
+        def run_pending(self):
+            return None
+
+    schedule = _DummySchedule()
 from pathlib import Path
 from datetime import datetime, timedelta
 from threading import Thread
@@ -23,7 +44,9 @@ import sys
 class ValidationOrchestrator:
     """Orchestrate 48-hour automated validation cycles."""
 
-    def __init__(self, config_file="validation_config.json", results_dir="validation_results"):
+    def __init__(
+        self, config_file="validation_config.json", results_dir="validation_results"
+    ):
         self.config_file = Path(config_file)
         self.results_dir = Path(results_dir)
         self.results_dir.mkdir(exist_ok=True)
@@ -46,57 +69,57 @@ class ValidationOrchestrator:
                     "name": "unit_tests",
                     "command": "pytest tests/unit/ -v --tb=short",
                     "interval_minutes": 30,
-                    "timeout_seconds": 300
+                    "timeout_seconds": 300,
                 },
                 {
                     "name": "integration_tests",
                     "command": "pytest tests/integration/ -v --tb=short",
                     "interval_minutes": 60,
-                    "timeout_seconds": 600
+                    "timeout_seconds": 600,
                 },
                 {
                     "name": "e2e_tests",
                     "command": "pytest tests/e2e/ -v --tb=short",
                     "interval_minutes": 120,
-                    "timeout_seconds": 1800
+                    "timeout_seconds": 1800,
                 },
                 {
                     "name": "performance_tests",
                     "command": "python run_performance_benchmarks.py --quick",
                     "interval_minutes": 240,  # Every 4 hours
-                    "timeout_seconds": 3600
-                }
+                    "timeout_seconds": 3600,
+                },
             ],
             "health_checks": [
                 {
                     "name": "mcp_server_health",
                     "command": "curl -f http://localhost:5005/health",
                     "interval_minutes": 5,
-                    "timeout_seconds": 30
+                    "timeout_seconds": 30,
                 },
                 {
                     "name": "database_connectivity",
                     "command": "python -c \"import sqlite3; sqlite3.connect('agents.db').close()\"",
                     "interval_minutes": 15,
-                    "timeout_seconds": 30
-                }
+                    "timeout_seconds": 30,
+                },
             ],
             "alerts": {
                 "email_enabled": False,
                 "slack_webhook": None,
                 "alert_on_failure": True,
-                "alert_on_recovery": True
+                "alert_on_recovery": True,
             },
             "reporting": {
                 "generate_reports": True,
                 "report_interval_hours": 6,
-                "keep_reports_days": 7
-            }
+                "keep_reports_days": 7,
+            },
         }
 
         if self.config_file.exists():
             try:
-                with open(self.config_file, 'r') as f:
+                with open(self.config_file, "r") as f:
                     user_config = json.load(f)
                 # Merge with defaults
                 for key, value in user_config.items():
@@ -112,7 +135,7 @@ class ValidationOrchestrator:
 
     def save_config(self):
         """Save current configuration."""
-        with open(self.config_file, 'w') as f:
+        with open(self.config_file, "w") as f:
             json.dump(self.config, f, indent=2)
 
     def run_test_suite(self, suite_config):
@@ -142,8 +165,12 @@ class ValidationOrchestrator:
                 cmd_list = args
                 env = os.environ
 
-            requires_shell = any(c in command for c in ["|", "<", ">", "&&", "||", ";", "$"])
-            suite_allows_shell = suite_config.get("allow_shell", False) or self._allow_shell_env
+            requires_shell = any(
+                c in command for c in ["|", "<", ">", "&&", "||", ";", "$"]
+            )
+            suite_allows_shell = (
+                suite_config.get("allow_shell", False) or self._allow_shell_env
+            )
 
             if requires_shell and not suite_allows_shell:
                 # Not allowed to use a shell; attempt to run as a list and avoid shell=True
@@ -187,9 +214,11 @@ class ValidationOrchestrator:
                 "success": success,
                 "returncode": result.returncode,
                 "duration_seconds": duration,
-                "stdout": result.stdout[-5000:] if result.stdout else "",  # Last 5000 chars
+                "stdout": (
+                    result.stdout[-5000:] if result.stdout else ""
+                ),  # Last 5000 chars
                 "stderr": result.stderr[-5000:] if result.stderr else "",
-                "command": command
+                "command": command,
             }
 
             print(f"{'✅' if success else '❌'} {name} completed in {duration:.1f}s")
@@ -204,7 +233,7 @@ class ValidationOrchestrator:
                 "success": False,
                 "error": "timeout",
                 "timeout_seconds": timeout,
-                "command": command
+                "command": command,
             }
         except Exception as e:
             print(f"💥 {name} failed with error: {e}")
@@ -213,10 +242,12 @@ class ValidationOrchestrator:
                 "timestamp": start_time.isoformat(),
                 "success": False,
                 "error": str(e),
-                "command": command
+                "command": command,
             }
             # only allow shell execution if the suite has allow_shell=True or the env var is set
-            suite_allows_shell = suite_config.get("allow_shell", False) or self._allow_shell_env
+            suite_allows_shell = (
+                suite_config.get("allow_shell", False) or self._allow_shell_env
+            )
             requires_shell = requires_shell and suite_allows_shell
 
     def run_health_check(self, check_config):
@@ -242,8 +273,12 @@ class ValidationOrchestrator:
                 cmd_list = args
                 env = os.environ
 
-            requires_shell = any(c in command for c in ["|", "<", ">", "&&", "||", ";", "$"])
-            check_allows_shell = check_config.get("allow_shell", False) or self._allow_shell_env
+            requires_shell = any(
+                c in command for c in ["|", "<", ">", "&&", "||", ";", "$"]
+            )
+            check_allows_shell = (
+                check_config.get("allow_shell", False) or self._allow_shell_env
+            )
 
             if requires_shell and not check_allows_shell:
                 print(
@@ -284,7 +319,7 @@ class ValidationOrchestrator:
                 "success": success,
                 "returncode": result.returncode,
                 "stdout": result.stdout.strip(),
-                "stderr": result.stderr.strip()
+                "stderr": result.stderr.strip(),
             }
 
         except subprocess.TimeoutExpired:
@@ -292,14 +327,14 @@ class ValidationOrchestrator:
                 "check_name": name,
                 "timestamp": datetime.now().isoformat(),
                 "success": False,
-                "error": "timeout"
+                "error": "timeout",
             }
         except Exception as e:
             return {
                 "check_name": name,
                 "timestamp": datetime.now().isoformat(),
                 "success": False,
-                "error": str(e)
+                "error": str(e),
             }
 
     def send_alert(self, alert_type, message, details=None):
@@ -328,7 +363,10 @@ class ValidationOrchestrator:
 
     def generate_report(self):
         """Generate comprehensive validation report."""
-        report_file = self.results_dir / f"validation_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        report_file = (
+            self.results_dir
+            / f"validation_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
 
         # Collect recent results
         recent_results = self.collect_recent_results(hours=24)
@@ -345,11 +383,11 @@ class ValidationOrchestrator:
             "system_info": {
                 "python_version": sys.version,
                 "platform": sys.platform,
-                "working_directory": str(Path.cwd())
-            }
+                "working_directory": str(Path.cwd()),
+            },
         }
 
-        with open(report_file, 'w') as f:
+        with open(report_file, "w") as f:
             json.dump(report, f, indent=2)
 
         print(f"📊 Validation report generated: {report_file}")
@@ -363,33 +401,30 @@ class ValidationOrchestrator:
         """Collect test results from the last N hours."""
         cutoff_time = datetime.now() - timedelta(hours=hours)
 
-        results = {
-            "test_suites": [],
-            "health_checks": []
-        }
+        results = {"test_suites": [], "health_checks": []}
 
         # Find result files
         for result_file in self.results_dir.glob("*.json"):
             if result_file.name.startswith("test_result_"):
                 try:
-                    with open(result_file, 'r') as f:
+                    with open(result_file, "r") as f:
                         data = json.load(f)
 
                     result_time = datetime.fromisoformat(data["timestamp"])
                     if result_time > cutoff_time:
                         results["test_suites"].append(data)
-                except:
+                except Exception:
                     pass
 
             elif result_file.name.startswith("health_check_"):
                 try:
-                    with open(result_file, 'r') as f:
+                    with open(result_file, "r") as f:
                         data = json.load(f)
 
                     result_time = datetime.fromisoformat(data["timestamp"])
                     if result_time > cutoff_time:
                         results["health_checks"].append(data)
-                except:
+                except Exception:
                     pass
 
         return results
@@ -407,7 +442,7 @@ class ValidationOrchestrator:
             "health_check_success_rate": 0,
             "average_test_duration": 0,
             "failed_tests": [],
-            "failed_checks": []
+            "failed_checks": [],
         }
 
         if test_suites:
@@ -417,40 +452,48 @@ class ValidationOrchestrator:
             total_duration = sum(t.get("duration_seconds", 0) for t in test_suites)
             stats["average_test_duration"] = total_duration / len(test_suites)
 
-            stats["failed_tests"] = [t for t in test_suites if not t.get("success", False)]
+            stats["failed_tests"] = [
+                t for t in test_suites if not t.get("success", False)
+            ]
 
         if health_checks:
             successful_checks = sum(1 for c in health_checks if c.get("success", False))
             stats["health_check_success_rate"] = successful_checks / len(health_checks)
 
-            stats["failed_checks"] = [c for c in health_checks if not c.get("success", False)]
+            stats["failed_checks"] = [
+                c for c in health_checks if not c.get("success", False)
+            ]
 
         return stats
 
     def print_summary_report(self, stats):
         """Print human-readable summary."""
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("VALIDATION SUMMARY REPORT (24h)")
-        print("="*60)
+        print("=" * 60)
 
         print(f"Test Suites Run: {stats['test_suites_run']}")
-        print(".1%")
         print(f"Health Checks Run: {stats['health_checks_run']}")
-        print(".1%")
-        print(".1f")
+        # (summary completed)
 
-        if stats['failed_tests']:
+        if stats["failed_tests"]:
             print(f"\n❌ Failed Test Suites: {len(stats['failed_tests'])}")
-            for test in stats['failed_tests'][-5:]:  # Show last 5 failures
+            for test in stats["failed_tests"][-5:]:  # Show last 5 failures
                 print(f"  - {test['suite_name']} ({test['timestamp']})")
 
-        if stats['failed_checks']:
+        if stats["failed_checks"]:
             print(f"\n⚠️ Failed Health Checks: {len(stats['failed_checks'])}")
-            for check in stats['failed_checks'][-5:]:  # Show last 5 failures
+            for check in stats["failed_checks"][-5:]:  # Show last 5 failures
                 print(f"  - {check['check_name']} ({check['timestamp']})")
 
-        overall_health = (stats['test_suite_success_rate'] + stats['health_check_success_rate']) / 2
-        health_status = "🟢 GOOD" if overall_health > 0.95 else "🟡 WARNING" if overall_health > 0.8 else "🔴 CRITICAL"
+        overall_health = (
+            stats["test_suite_success_rate"] + stats["health_check_success_rate"]
+        ) / 2
+        health_status = (
+            "🟢 GOOD"
+            if overall_health > 0.95
+            else "🟡 WARNING" if overall_health > 0.8 else "🔴 CRITICAL"
+        )
         print(f"\n🏥 Overall Health: {health_status} ({overall_health:.1%})")
 
     def cleanup_old_results(self):
@@ -465,7 +508,7 @@ class ValidationOrchestrator:
                 if file_date < cutoff_date:
                     result_file.unlink()
                     cleaned_count += 1
-            except:
+            except Exception:
                 pass
 
         if cleaned_count > 0:
@@ -500,14 +543,18 @@ class ValidationOrchestrator:
 
         # Save result
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        result_file = self.results_dir / f"test_result_{suite_config['name']}_{timestamp}.json"
+        result_file = (
+            self.results_dir / f"test_result_{suite_config['name']}_{timestamp}.json"
+        )
 
-        with open(result_file, 'w') as f:
+        with open(result_file, "w") as f:
             json.dump(result, f, indent=2)
 
         # Send alert on failure
         if not result["success"]:
-            self.send_alert("failure", f"Test suite '{suite_config['name']}' failed", result)
+            self.send_alert(
+                "failure", f"Test suite '{suite_config['name']}' failed", result
+            )
 
         return result
 
@@ -517,14 +564,18 @@ class ValidationOrchestrator:
 
         # Save result
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        result_file = self.results_dir / f"health_check_{check_config['name']}_{timestamp}.json"
+        result_file = (
+            self.results_dir / f"health_check_{check_config['name']}_{timestamp}.json"
+        )
 
-        with open(result_file, 'w') as f:
+        with open(result_file, "w") as f:
             json.dump(result, f, indent=2)
 
         # Send alert on failure (only if previously successful)
         if not result["success"]:
-            self.send_alert("failure", f"Health check '{check_config['name']}' failed", result)
+            self.send_alert(
+                "failure", f"Health check '{check_config['name']}' failed", result
+            )
 
         return result
 
@@ -569,7 +620,7 @@ class ValidationOrchestrator:
         final_report = self.generate_report()
 
         elapsed = datetime.now() - start_time
-        print(".1f"
+        print(f"Elapsed: {elapsed.total_seconds():.1f}s")
         return final_report
 
     def stop_validation_cycle(self):
@@ -584,26 +635,38 @@ class ValidationOrchestrator:
             "cycles_completed": self.cycles_completed,
             "config": self.config,
             "next_scheduled_runs": [
-                {"job": str(job), "next_run": job.next_run.isoformat() if hasattr(job, 'next_run') else None}
+                {
+                    "job": str(job),
+                    "next_run": (
+                        job.next_run.isoformat() if hasattr(job, "next_run") else None
+                    ),
+                }
                 for job in schedule.jobs
-            ]
+            ],
         }
 
 
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="48-Hour Validation Automation System")
-    parser.add_argument("--config", default="validation_config.json", help="Configuration file")
-    parser.add_argument("--results-dir", default="validation_results", help="Results directory")
-    parser.add_argument("--duration-hours", type=int, help="Validation duration in hours")
+    parser.add_argument(
+        "--config", default="validation_config.json", help="Configuration file"
+    )
+    parser.add_argument(
+        "--results-dir", default="validation_results", help="Results directory"
+    )
+    parser.add_argument(
+        "--duration-hours", type=int, help="Validation duration in hours"
+    )
     parser.add_argument("--status", action="store_true", help="Show current status")
-    parser.add_argument("--generate-config", action="store_true", help="Generate default config file")
+    parser.add_argument(
+        "--generate-config", action="store_true", help="Generate default config file"
+    )
 
     args = parser.parse_args()
 
     orchestrator = ValidationOrchestrator(
-        config_file=args.config,
-        results_dir=args.results_dir
+        config_file=args.config, results_dir=args.results_dir
     )
 
     if args.generate_config:

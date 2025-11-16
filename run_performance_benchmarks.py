@@ -8,7 +8,6 @@ Generates detailed performance reports and validates against benchmarks.
 
 import subprocess
 import json
-import os
 import time
 import csv
 from pathlib import Path
@@ -32,7 +31,7 @@ class PerformanceBenchmarker:
             response = requests.get(f"{self.host}/health", timeout=5)
             # Accept healthy (200), degraded (503), or rate-limited (429) states for testing
             return response.status_code in [200, 503, 429]
-        except:
+        except Exception:
             return False
 
     def run_load_test(

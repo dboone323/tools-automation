@@ -13,10 +13,9 @@ import os
 import shlex
 import subprocess
 import sys
-import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 class Phase2TestOrchestrator:
@@ -28,7 +27,11 @@ class Phase2TestOrchestrator:
         self.results_dir.mkdir(exist_ok=True)
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         # allow shell execution if env var ALLOW_SHELL is set to true
-        self._allow_shell_env = os.environ.get("ALLOW_SHELL", "false").lower() in ("1", "true", "yes")
+        self._allow_shell_env = os.environ.get("ALLOW_SHELL", "false").lower() in (
+            "1",
+            "true",
+            "yes",
+        )
 
     def check_dependencies(self) -> bool:
         """Check if all required dependencies are available."""
@@ -188,7 +191,9 @@ class Phase2TestOrchestrator:
                 cmd_list = args
                 env = os.environ
 
-            requires_shell = any(c in command for c in ["|", "<", ">", "&&", "||", ";", "$"])
+            requires_shell = any(
+                c in command for c in ["|", "<", ">", "&&", "||", ";", "$"]
+            )
             requires_shell = requires_shell and self._allow_shell_env
 
             if requires_shell:
@@ -244,7 +249,9 @@ class Phase2TestOrchestrator:
                 cmd_list = args
                 env = os.environ
 
-            requires_shell = any(c in command for c in ["|", "<", ">", "&&", "||", ";", "$"])
+            requires_shell = any(
+                c in command for c in ["|", "<", ">", "&&", "||", ";", "$"]
+            )
             requires_shell = requires_shell and self._allow_shell_env
 
             if requires_shell:

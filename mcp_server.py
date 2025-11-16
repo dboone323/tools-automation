@@ -19,14 +19,11 @@ import os
 import subprocess
 import threading
 import time
-import gc
 import uuid
-from collections import deque
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 from functools import wraps
 import redis
-import sys
 import importlib.util
 import shutil
 
@@ -969,7 +966,6 @@ class MCPHandler(BaseHTTPRequestHandler):
         plugins_ok = True
         try:
             # Check if plugin manager is loaded
-            import plugin_integrator
 
             plugins_ok = True
         except Exception:
@@ -1943,14 +1939,39 @@ class MCPHandler(BaseHTTPRequestHandler):
         )
 
         try:
-            proc = subprocess.run(
-                cmd,
-                cwd=CODE_DIR,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                timeout=1800,
-            )
+            # Normalize command to a list when possible and avoid shell=True
+            requires_shell = False
+            cmd_to_run = cmd
+            if isinstance(cmd, str):
+                try:
+                    cmd_args = shlex.split(cmd)
+                    cmd_to_run = cmd_args if isinstance(cmd_args, list) else [cmd_args]
+                    requires_shell = any(
+                        c in cmd for c in ["|", "<", ">", "&&", "||", ";", "$"]
+                    )
+                except Exception:
+                    cmd_to_run = cmd
+                    requires_shell = True
+
+            if requires_shell:
+                proc = subprocess.run(
+                    cmd_to_run,
+                    cwd=CODE_DIR,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    timeout=1800,
+                    shell=True,  # nosec: controlled fallback
+                )
+            else:
+                proc = subprocess.run(
+                    cmd_to_run,
+                    cwd=CODE_DIR,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    timeout=1800,
+                )
             task["status"] = "success" if proc.returncode == 0 else "failed"
             task["returncode"] = proc.returncode
             task["stdout"] = proc.stdout[:8000]
@@ -2260,7 +2281,6 @@ class MCPHandler(BaseHTTPRequestHandler):
         try:
             # Import and initialize consciousness expansion frameworks
             import subprocess
-            import sys
             import os
 
             # Check if consciousness frameworks are available

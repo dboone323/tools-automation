@@ -7,7 +7,6 @@ Generates daily health reports and sends notifications
 import json
 import os
 import time
-import smtplib
 import requests
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
@@ -217,7 +216,7 @@ class HealthCheckReporter:
                     "last_check": int(time.time()),
                 }
             )
-        except:
+        except Exception:
             services.append(
                 {
                     "name": "monitoring_api",

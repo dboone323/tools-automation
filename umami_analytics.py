@@ -120,7 +120,7 @@ class UmamiAnalyticsManager:
                 if response.status_code == 200:
                     print("Umami server is ready!")
                     return True
-            except:
+            except Exception:
                 pass
 
             time.sleep(2)
@@ -270,7 +270,7 @@ class UmamiAnalyticsManager:
                                 > cutoff_date
                             ):
                                 events.append(event)
-                        except:
+                        except Exception:
                             continue
 
         except Exception as e:
@@ -293,7 +293,7 @@ class UmamiAnalyticsManager:
                 )
                 if event_date in daily_stats:
                     daily_stats[event_date] += 1
-            except:
+            except Exception:
                 continue
 
         return daily_stats
@@ -444,7 +444,7 @@ def main():
                         if config.get("name") == "Agent System Dashboard":
                             tracker.agent_website_id = website_id
                             break
-            except:
+            except Exception:
                 pass
 
         if tracker.agent_website_id:
