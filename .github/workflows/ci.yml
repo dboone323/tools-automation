@@ -1,20 +1,101 @@
----
-name: ci
+name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, "**/feature/**", "**/fix/**", "**/hotfix/**"]
   pull_request:
     branches: [main]
 
 jobs:
-  bootstrap:
-    runs-on: ubuntu-latest
+  build:
+    name: Build & Test (macOS)
+    runs-on: macos-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Environment check
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Prepare venv & install PyTest and SDK
         run: |
-          python3 --version || true
-          bash --version || true
-          docker --version || true
-          echo "CI bootstrap complete"
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -U pip
+          pip install pytest
+          # Attempt to install the local SDK using editable install to make
+          # `mcp_sdk` importable for pytest. If this fails, we still provide
+          # a PYTHONPATH fallback in the pytest step.
+          if [ -d "sdk/python" ]; then
+            pip install -e sdk/python || true
+          fi
+
+      - name: Run shell tests
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for f in tests/*.sh; do
+            [ -e "$f" ] || continue
+            echo "---- Running $f ----"
+            bash "$f"
+          done
+
+      - name: Run pytest (unit/incremental)
+        env:
+          PYTHONPATH: ${{ github.workspace }}/sdk/python
+        run: |
+          source .venv/bin/activate
+          # Run non-integration/non-e2e tests by default; CI can opt into full test matrix.
+          pytest -q -m "not integration and not e2e and not flaky"
+
+      - name: "Swift: test Shared package"
+        run: |
+          if [ -d Shared ]; then
+            cd Shared
+            swift test --enable-test-discovery
+          else
+            echo "No Shared package directory found, skipping swift test"
+          fi
+
+      - name: "Swift: build MomentumFinance (core SPM target)"
+        run: |
+          if [ -d MomentumFinance ]; then
+            cd MomentumFinance
+            swift build -v
+          else
+            echo "No MomentumFinance directory found, skipping swift build"
+          fi
+
+  # Add a separate job to do a full xcodebuild workspace/project build on macOS
+  macos-xcodebuild:
+    name: Xcode full app build (macOS)
+    runs-on: macos-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode & environment
+        run: |
+          echo "macOS runner has Xcode preinstalled"
+
+      - name: Detect and run xcodebuild
+        run: |
+          # If there's an xcworkspace use it, otherwise fall back to the xcodeproj
+          if [ -f MomentumFinance/MomentumFinance.xcworkspace ]; then
+            echo "Found workspace: MomentumFinance.xcworkspace"
+            xcodebuild -workspace MomentumFinance/MomentumFinance.xcworkspace -scheme MomentumFinance -destination 'platform=macOS' build
+          elif [ -f MomentumFinance.xcodeproj ]; then
+            echo "Found project: MomentumFinance.xcodeproj"
+            xcodebuild -project MomentumFinance.xcodeproj -scheme MomentumFinance -destination 'platform=macOS' build
+          elif [ -f MomentumFinance/MomentumFinance.xcodeproj ]; then
+            echo "Found project at MomentumFinance/MomentumFinance.xcodeproj"
+            xcodebuild -project MomentumFinance/MomentumFinance.xcodeproj -scheme MomentumFinance -destination 'platform=macOS' build
+          else
+            echo "Could not find MomentumFinance.xcodeproj or workspace — skipping xcodebuild"
+          fi
+
+# End of CI workflow (single workflow file). The previous 'ci' workflow was merged here and removed.
