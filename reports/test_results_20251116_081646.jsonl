@@ -1,0 +1,11 @@
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_auto_restart_monitor","result":"passed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_auto_restart_project_health_agent","result":"failed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_auto_restart_workflow_optimization_agent","result":"failed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_auto_rollback","result":"passed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_auto_update_agent","result":"failed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_backup_manager","result":"passed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_check_persistence","result":"passed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_clear_alerts","result":"passed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_code_analysis_agent","result":"failed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_code_review_agent","result":"failed"}
+{"timestamp":"2025-11-16T14:16:46Z","test":"test_agents_collab_agent","result":"failed"}

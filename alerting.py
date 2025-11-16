@@ -3,7 +3,9 @@
 Supports webhook (Slack/Discord) and email (SMTP).
 Configure via environment variables or alerting_config.json.
 """
-import json, os, sys, datetime, subprocess
+import json
+import os
+import sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = os.path.join(ROOT, "alerting_config.json")

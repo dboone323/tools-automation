@@ -32,6 +32,7 @@ run)
     exit 1
   fi
   # Policy enforcement
+  # allow_list block_list
   allow_list=$(awk '/^\[plugins\]/{f=1} f&&/^allow=/{print $0; exit}' "${POLICY_CONF}" | cut -d= -f2 | tr ',' ' ')
   block_list=$(awk '/^\[plugins\]/{f=1} f&&/^block=/{print $0; exit}' "${POLICY_CONF}" | cut -d= -f2 | tr ',' ' ')
   for blocked in ${block_list}; do

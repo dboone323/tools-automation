@@ -1,0 +1,17 @@
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_.auto_restart_search_agent","result":"failed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_.auto_restart_task_orchestrator","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_.auto_restart_uiux_agent","result":"failed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_.auto_restart_updater_agent","result":"failed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_agent_analytics","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_agent_backup","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_agent_build","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_agent_cleanup","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_agent_codegen","result":"failed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_agent_keeper","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_agent_loop_utils","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_agent_migration","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_agent_performance_monitor","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_ai_client","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_ai_code_review_agent","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_ai_docs_agent","result":"passed"}
+{"timestamp":"2025-11-15T16:28:17Z","test":"test_agents_ai_predictive_analytics_agent","result":"passed"}

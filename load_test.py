@@ -14,11 +14,9 @@ import statistics
 from datetime import datetime
 import argparse
 import sys
-from pathlib import Path
 import psutil
 import threading
 import signal
-import os
 
 
 class LoadTester:
@@ -307,13 +305,13 @@ class LoadTester:
         print(".1f")
         print(".1%")
 
-        print(f"\n📊 REQUESTS:")
+        print("\n📊 REQUESTS:")
         print(f"Total: {stats['total_requests']}")
         print(f"Successful: {stats['successful_requests']}")
         print(f"Failed: {stats['failed_requests']}")
         print(".1%")
 
-        print(f"\n⏱️ RESPONSE TIMES (ms):")
+        print("\n⏱️ RESPONSE TIMES (ms):")
         rt = stats["response_time_stats"]
         print(".1f")
         print(".1f")
@@ -323,7 +321,7 @@ class LoadTester:
         print(".1f")
 
         if stats["error_breakdown"]:
-            print(f"\n❌ ERRORS:")
+            print("\n❌ ERRORS:")
             for error_type, count in stats["error_breakdown"].items():
                 print(f"  {error_type}: {count}")
 
@@ -332,7 +330,7 @@ class LoadTester:
         rps_achievement = stats["rps_achievement"]
         p95_response_time = rt["p95_ms"]
 
-        print(f"\n🎯 PERFORMANCE ASSESSMENT:")
+        print("\n🎯 PERFORMANCE ASSESSMENT:")
         if (
             success_rate >= 0.99
             and rps_achievement >= 0.95

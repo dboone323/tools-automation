@@ -1,7 +1,9 @@
-#!/usr/bin/env bash
-        # Auto-injected health & reliability shim
+#!/bin/bash
+# Auto-injected health & reliability shim
 
-        DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+set -euo pipefail
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Prefer shared helpers when available
 if [[ -f "$DIR/shared_functions.sh" ]]; then
   # shellcheck disable=SC1091
@@ -12,8 +14,6 @@ if [[ -f "$DIR/agent_helpers.sh" ]]; then
   # shellcheck disable=SC1091
   source "$DIR/agent_helpers.sh"
 fi
-
-set -euo pipefail
 
 AGENT_NAME="performance_agent.sh"
 LOG_FILE="${LOG_FILE:-$DIR/${AGENT_NAME}.log}"
@@ -45,19 +45,20 @@ if [[ "${1-}" == "--health" || "${1-}" == "health" || "${1-}" == "-h" ]]; then
   exit 0
 fi
 
-# Original agent script continues below
-#!/bin/bash
 # Performance Agent: Analyzes and optimizes code performance
 
-# Source shared functions for file locking and monitoring
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/shared_functions.sh"
+# Use DIR as script directory (keep compatible variable name)
+SCRIPT_DIR="${DIR}"
+# Prefer shared functions if present
+if [[ -f "${SCRIPT_DIR}/shared_functions.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "${SCRIPT_DIR}/shared_functions.sh"
+fi
 
-AGENT_NAME="performance_agent.sh"
-LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/performance_agent.log"
-NOTIFICATION_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/communication/${AGENT_NAME}_notification.txt"
-AGENT_STATUS_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/agent_status.json"
-TASK_QUEUE_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/task_queue.json"
+LOG_FILE="${LOG_FILE:-$DIR/${AGENT_NAME}.log}"
+NOTIFICATION_FILE="${NOTIFICATION_FILE:-$DIR/communication/${AGENT_NAME}_notification.txt}"
+AGENT_STATUS_FILE="${AGENT_STATUS_FILE:-$DIR/agent_status.json}"
+TASK_QUEUE_FILE="${TASK_QUEUE_FILE:-$DIR/task_queue.json}"
 
 # Update agent status to available when starting
 update_status() {
@@ -96,7 +97,9 @@ process_task() {
 
     # Mark task as completed
     update_task_status "${task_id}" "completed"
-    increment_task_count "${AGENT_NAME}"
+    if type increment_task_count >/dev/null 2>&1; then
+      increment_task_count "${AGENT_NAME}"
+    fi
     echo "[$(date)] ${AGENT_NAME}: Task ${task_id} completed" >>"${LOG_FILE}"
   fi
 }
@@ -172,15 +175,15 @@ run_performance_analysis() {
   projects=("CodingReviewer" "MomentumFinance" "HabitQuest" "PlannerApp" "AvoidObstaclesGame")
 
   for project in "${projects[@]}"; do
-    if [[ -d "/Users/danielstevens/Desktop/Quantum-workspace/Projects/${project}" ]]; then
+    if [[ -d "${DIR}/../Projects/${project}" ]]; then
       echo "[$(date)] ${AGENT_NAME}: Analyzing performance in ${project}..." >>"${LOG_FILE}"
-      cd "/Users/danielstevens/Desktop/Quantum-workspace/Projects/${project}" || continue
+      cd "${DIR}/../Projects/${project}" || continue
 
       # Performance metrics
       echo "[$(date)] ${AGENT_NAME}: Calculating performance metrics for ${project}..." >>"${LOG_FILE}"
 
-      local swift_files_list=()
-      while IFS='' read -r -d '' swift_file; do
+      local -a swift_files_list=()
+      while IFS= read -r -d $'\0' swift_file; do
         swift_files_list+=("${swift_file}")
       done < <(find . -name "*.swift" -print0 2>/dev/null)
 

@@ -8,8 +8,6 @@ import json
 import time
 import os
 import subprocess
-import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 class AgentOptimizer:
@@ -28,7 +26,7 @@ class AgentOptimizer:
         try:
             with open(self.agent_status_file, "r") as f:
                 return json.load(f).get("agents", {})
-        except:
+        except Exception:
             return {}
 
     def load_tasks(self):
@@ -36,15 +34,15 @@ class AgentOptimizer:
         try:
             with open(self.task_queue_file, "r") as f:
                 return json.load(f).get("tasks", [])
-        except:
+        except Exception:
             return []
 
     def optimize_agent_memory(self):
         """Optimize agent memory usage by restarting memory-intensive agents"""
-        agents = self.load_agent_status()
+        _agents = self.load_agent_status()
         optimized = 0
 
-        for agent_name, agent_info in agents.items():
+        for agent_name, agent_info in _agents.items():
             pid = agent_info.get("pid", 0)
             if pid > 0:
                 try:
@@ -63,7 +61,7 @@ class AgentOptimizer:
                             os.kill(pid, 15)  # SIGTERM
                             time.sleep(2)
                             optimized += 1
-                except:
+                except Exception:
                     pass
 
         print(f"✅ Optimized {optimized} high-memory agents")
@@ -71,7 +69,7 @@ class AgentOptimizer:
 
     def parallelize_agent_tasks(self):
         """Enable parallel task processing within agents"""
-        agents = self.load_agent_status()
+        _agents = self.load_agent_status()
         tasks = self.load_tasks()
 
         # Group tasks by agent
@@ -99,7 +97,7 @@ class AgentOptimizer:
                             capture_output=True,
                         )
                         parallelized += 1
-                    except:
+                    except Exception:
                         pass
 
         print(f"✅ Enabled parallel processing for {parallelized} agents")
@@ -107,7 +105,7 @@ class AgentOptimizer:
 
     def optimize_task_distribution(self):
         """Redistribute tasks for better load balancing"""
-        agents = self.load_agent_status()
+        _agents = self.load_agent_status()
         tasks = self.load_tasks()
 
         # Count tasks per agent
@@ -122,7 +120,7 @@ class AgentOptimizer:
         overloaded = [a for a, count in agent_workload.items() if count > 3]
         available_agents = [
             a
-            for a, info in agents.items()
+            for a, info in _agents.items()
             if info.get("status") in ["available", "idle"]
         ]
 
@@ -156,7 +154,7 @@ class AgentOptimizer:
 
     def enable_agent_specialization(self):
         """Enable agent specialization for better performance"""
-        agents = self.load_agent_status()
+        _agents = self.load_agent_status()
         tasks = self.load_tasks()
 
         # Analyze task completion patterns

@@ -1,0 +1,2 @@
+{"timestamp":"2025-11-15T16:50:53Z","test":"test_agents_auto_restart_monitor","result":"passed"}
+{"timestamp":"2025-11-15T16:50:53Z","test":"test_agents_auto_restart_project_health_agent","result":"failed"}

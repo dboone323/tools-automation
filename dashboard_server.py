@@ -3,11 +3,8 @@
 Simple web server to serve dashboards for the hybrid desktop app
 """
 import http.server
-import socketserver
 import os
 import sys
-import urllib.request
-import urllib.error
 import json
 import datetime
 from pathlib import Path
@@ -1126,7 +1123,7 @@ class ProxyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(f.read())
 
-        except Exception as e:
+        except Exception:
             self.send_error(500, "Internal server error")
 
     def do_POST(self):

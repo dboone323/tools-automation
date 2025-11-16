@@ -30,7 +30,7 @@ test_passed() {
 # Mark test as failed
 test_failed() {
     local test_name="$1"
-    local message="$2"
+    local message="${2:-}"
     echo -e "${RED}❌ FAIL${NC}: $test_name - $message"
     ((FAILED_TESTS++))
 }
@@ -53,7 +53,7 @@ get_failed_tests() {
 # Assertion: assert true
 assert_true() {
     local condition="$1"
-    local message="$2"
+    local message="${2:-}"
     if [[ "$condition" == "true" ]]; then
         return 0
     else
@@ -65,8 +65,8 @@ assert_true() {
 # Assertion: assert equals
 assert_equals() {
     local expected="$1"
-    local actual="$2"
-    local message="$3"
+    local actual="${2:-}"
+    local message="${3:-}"
     if [[ "$expected" == "$actual" ]]; then
         return 0
     else
@@ -78,7 +78,7 @@ assert_equals() {
 # Assertion: assert not empty
 assert_not_empty() {
     local value="$1"
-    local message="$2"
+    local message="${2:-}"
     if [[ -n "$value" ]]; then
         return 0
     else
@@ -90,7 +90,21 @@ assert_not_empty() {
 # Assertion: assert file exists
 assert_file_exists() {
     local file_path="$1"
-    local message="$2"
+    local message="${2:-}"
+    # Normalize file path (strip accidental newlines introduced by callers)
+    file_path="${file_path//$'\n'/}"
+    # If the resulting path doesn't exist but contains '/agents/',
+    # try to map to the repo's agents directory (helps when REPO_ROOT
+    # was accidentally duplicated in the test harness).
+    if [[ ! -e "$file_path" && "$file_path" == *"/agents/"* ]]; then
+        local suffix
+        suffix="agents/${file_path##*agents/}"
+        local candidate
+        candidate="$PWD/${suffix}"
+        if [[ -e "$candidate" || -x "$candidate" ]]; then
+            file_path="$candidate"
+        fi
+    fi
     if [[ -f "$file_path" ]]; then
         return 0
     else
@@ -102,7 +116,9 @@ assert_file_exists() {
 # Assertion: assert file does not exist
 assert_file_not_exists() {
     local file_path="$1"
-    local message="$2"
+    local message="${2:-}"
+    # Normalize file path (strip accidental newlines introduced by callers)
+    file_path="${file_path//$'\n'/}"
     if [[ ! -f "$file_path" ]]; then
         return 0
     else
@@ -114,8 +130,8 @@ assert_file_not_exists() {
 # Assertion: assert contains
 assert_contains() {
     local haystack="$1"
-    local needle="$2"
-    local message="$3"
+    local needle="${2:-}"
+    local message="${3:-}"
     if [[ "$haystack" == *"$needle"* ]]; then
         return 0
     else
@@ -127,8 +143,8 @@ assert_contains() {
 # Assertion: assert regex match
 assert_regex() {
     local text="$1"
-    local pattern="$2"
-    local message="$3"
+    local pattern="${2:-}"
+    local message="${3:-}"
     if [[ "$text" =~ $pattern ]]; then
         return 0
     else
@@ -140,7 +156,9 @@ assert_regex() {
 # Assertion: assert file is executable
 assert_file_executable() {
     local file_path="$1"
-    local message="$2"
+    local message="${2:-}"
+    # Normalize file path (strip accidental newlines introduced by callers)
+    file_path="${file_path//$'\n'/}"
     if [[ -x "$file_path" ]]; then
         return 0
     else
@@ -152,8 +170,10 @@ assert_file_executable() {
 # Assertion: assert pattern in file
 assert_pattern_in_file() {
     local pattern="$1"
-    local file_path="$2"
-    local message="$3"
+    local file_path="${2:-}"
+    # Normalize file path (strip accidental newlines introduced by callers)
+    file_path="${file_path//$'\n'/}"
+    local message="${3:-}"
     if grep -q "$pattern" "$file_path" 2>/dev/null; then
         return 0
     else

@@ -4,22 +4,11 @@ Version: 1.0.0
 Summary: Python SDK for MCP (Model Context Protocol) server
 Home-page: https://github.com/dboone323/tools-automation
 Author: Tools Automation
-Author-email: sdk@tools-automation.com
+Author-email: Tools Automation <sdk@tools-automation.com>
+License: MIT
+Project-URL: Homepage, https://github.com/dboone323/tools-automation
 Project-URL: Bug Reports, https://github.com/dboone323/tools-automation/issues
-Project-URL: Source, https://github.com/dboone323/tools-automation
-Project-URL: Documentation, https://github.com/dboone323/tools-automation/docs
-Keywords: mcp sdk api client automation
-Classifier: Development Status :: 5 - Production/Stable
-Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: MIT License
-Classifier: Operating System :: OS Independent
-Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.8
-Classifier: Programming Language :: Python :: 3.9
-Classifier: Programming Language :: Python :: 3.10
-Classifier: Programming Language :: Python :: 3.11
-Classifier: Topic :: Software Development :: Libraries :: Python Modules
-Classifier: Topic :: System :: Distributed Computing
+Keywords: mcp,sdk,api,client,automation
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 Requires-Dist: aiohttp>=3.8.0
@@ -32,17 +21,8 @@ Requires-Dist: isort>=5.10.0; extra == "dev"
 Requires-Dist: mypy>=1.0.0; extra == "dev"
 Requires-Dist: flake8>=4.0.0; extra == "dev"
 Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
 Dynamic: home-page
-Dynamic: keywords
-Dynamic: project-url
-Dynamic: provides-extra
-Dynamic: requires-dist
 Dynamic: requires-python
-Dynamic: summary
 
 # MCP Python SDK
 

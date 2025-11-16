@@ -9,10 +9,8 @@ Run with: python -m pytest tests/integration/test_mcp_contracts.py -v
 """
 
 import json
-import os
 import unittest
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 import requests
 from requests.exceptions import ConnectionError, Timeout

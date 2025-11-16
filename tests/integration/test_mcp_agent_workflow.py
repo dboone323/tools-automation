@@ -6,8 +6,6 @@ import json
 import time
 import subprocess
 import os
-import signal
-from unittest.mock import patch, MagicMock
 
 
 class TestMCPAgentWorkflowIntegration:
@@ -434,7 +432,7 @@ class TestMCPAgentWorkflowIntegration:
             try:
                 response = requests.get("http://localhost:5005/invalid_endpoint")
                 # Should get 404, but circuit breaker might activate
-            except:
+            except Exception:
                 pass
 
         # Circuit breaker should eventually activate for repeated failures
@@ -448,7 +446,7 @@ class TestMCPAgentWorkflowIntegration:
             try:
                 response = requests.get("http://localhost:5005/health")
                 responses.append(response.status_code)
-            except:
+            except Exception:
                 responses.append(500)
 
         # Should have some successful responses

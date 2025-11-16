@@ -19,20 +19,17 @@ import os
 import subprocess
 import threading
 import time
-import gc
 import uuid
-from collections import deque
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 from functools import wraps
 import redis
-import sys
 import importlib.util
 import shutil
 
 # AI Service Manager Integration
 try:
-    from ai_service_manager import ai_manager, AIRequest
+    from ai_service_manager import ai_manager
 
     AI_MANAGER_AVAILABLE = True
 except ImportError:
@@ -969,7 +966,6 @@ class MCPHandler(BaseHTTPRequestHandler):
         plugins_ok = True
         try:
             # Check if plugin manager is loaded
-            import plugin_integrator
 
             plugins_ok = True
         except Exception:
@@ -1049,243 +1045,6 @@ class MCPHandler(BaseHTTPRequestHandler):
             health_data["critical_issues"] = critical_issues
 
         return health_data
-
-        # Quantum-enhanced GET endpoints
-        if parsed.path == "/quantum_status":
-            # Get quantum system status
-            quantum_status = {
-                "entanglement_network": self._get_entanglement_status(),
-                "multiverse_navigation": self._get_multiverse_status(),
-                "consciousness_frameworks": self._get_consciousness_status(),
-                "dimensional_computing": self._get_dimensional_status(),
-                "quantum_orchestrator": self._get_orchestrator_status(),
-            }
-            self._send_json({"ok": True, "quantum_status": quantum_status})
-            return
-
-        # API endpoints for comprehensive testing
-        if parsed.path == "/api/agents/status":
-            # Get detailed agent status information
-            agents_status = {
-                "total_agents": len(self.server.agents),
-                "registered_agents": list(self.server.agents.keys()),
-                "active_controllers": len(self.server.controllers),
-                "controller_details": list(self.server.controllers.values()),
-                "timestamp": time.time(),
-            }
-            self._send_json({"ok": True, "agents": agents_status})
-            return
-
-        if parsed.path == "/api/tasks/analytics":
-            # Get task analytics and statistics
-            total_tasks = len(self.server.tasks)
-            queued_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") == "queued"
-            )
-            running_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") == "running"
-            )
-            completed_tasks = sum(
-                1
-                for t in self.server.tasks
-                if t.get("status") in ["success", "completed"]
-            )
-            failed_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") in ["failed", "error"]
-            )
-
-            task_analytics = {
-                "total_tasks": total_tasks,
-                "queued_tasks": queued_tasks,
-                "running_tasks": running_tasks,
-                "completed_tasks": completed_tasks,
-                "failed_tasks": failed_tasks,
-                "success_rate": (
-                    (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
-                ),
-                "recent_tasks": (
-                    self.server.tasks[-10:] if self.server.tasks else []
-                ),  # Last 10 tasks
-                "timestamp": time.time(),
-            }
-            self._send_json({"ok": True, "analytics": task_analytics})
-            return
-
-        if parsed.path == "/api/metrics/system":
-            # Get system-level metrics
-            try:
-                import psutil
-
-                psutil_available = True
-            except ImportError:
-                psutil_available = False
-
-            system_metrics = {
-                "server_uptime": time.time()
-                - getattr(self.server, "start_time", time.time()),
-                "total_requests": sum(self.server.metrics.values()),
-                "active_connections": len(getattr(self.server, "request_counters", {})),
-                "timestamp": time.time(),
-            }
-
-            if psutil_available:
-                try:
-                    system_metrics.update(
-                        {
-                            "cpu_percent": psutil.cpu_percent(interval=0.1),
-                            "memory_percent": psutil.virtual_memory().percent,
-                            "disk_usage_percent": psutil.disk_usage("/").percent,
-                        }
-                    )
-                except Exception:
-                    pass
-
-            self._send_json({"ok": True, "system_metrics": system_metrics})
-            return
-
-        if parsed.path == "/api/ml/analytics":
-            # Get machine learning analytics (placeholder for future ML features)
-            ml_analytics = {
-                "ml_models_active": 0,
-                "predictions_made": 0,
-                "accuracy_metrics": {},
-                "training_sessions": 0,
-                "feature_importance": {},
-                "model_performance": {},
-                "timestamp": time.time(),
-            }
-            self._send_json({"ok": True, "ml_analytics": ml_analytics})
-            return
-
-        if parsed.path == "/api/umami/stats":
-            # Get umami analytics (placeholder for user analytics)
-            umami_stats = {
-                "total_visitors": 0,
-                "page_views": 0,
-                "unique_sessions": 0,
-                "bounce_rate": 0.0,
-                "avg_session_duration": 0,
-                "top_pages": [],
-                "referrers": [],
-                "timestamp": time.time(),
-            }
-            self._send_json({"ok": True, "umami_stats": umami_stats})
-            return
-
-        if parsed.path == "/api/ai/status":
-            # Get AI service status
-            ai_status = {
-                "ai_manager_available": AI_MANAGER_AVAILABLE,
-                "models_loaded": 0,
-                "active_connections": 0,
-                "cache_hits": 0,
-                "cache_misses": 0,
-                "timestamp": time.time(),
-            }
-
-            if AI_MANAGER_AVAILABLE:
-                try:
-                    ai_status.update(
-                        {
-                            "models_loaded": len(ai_manager.models),
-                            "ollama_available": True,  # Would check actual Ollama status
-                            "huggingface_available": True,  # Would check actual HF status
-                        }
-                    )
-                except Exception:
-                    pass
-
-            self._send_json({"ok": True, "ai_status": ai_status})
-            return
-
-        if parsed.path == "/api/extensions/status":
-            # Get extensions framework status
-            try:
-                from plugin_integrator import get_integrator
-
-                integrator = get_integrator()
-
-                plugin_status = integrator.get_plugin_status()
-                webhook_status = integrator.get_webhook_status()
-
-                extensions_status = {
-                    "ok": True,
-                    "advanced_plugins_available": ADVANCED_PLUGINS_AVAILABLE,
-                    "plugins": plugin_status,
-                    "webhooks": webhook_status,
-                    "timestamp": time.time(),
-                }
-                self._send_json(extensions_status)
-                return
-            except Exception as e:
-                self._send_json(
-                    {"error": f"extensions_status_failed: {str(e)}"}, status=500
-                )
-                return
-
-        if parsed.path == "/api/system/status":
-            # Get comprehensive system status
-            try:
-                import psutil
-
-                psutil_available = True
-            except ImportError:
-                psutil_available = False
-
-            # Get agent count
-            agent_count = len(self.server.agents)
-
-            # Get queue depth
-            queue_depth = len(self.server.tasks)
-            queued_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") == "queued"
-            )
-            running_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") == "running"
-            )
-
-            # Check disk space
-            disk_usage = shutil.disk_usage(CODE_DIR)
-            disk_free_gb = disk_usage.free / (1024**3)
-            disk_total_gb = disk_usage.total / (1024**3)
-            disk_percent = (disk_usage.used / disk_usage.total) * 100
-
-            # System metrics
-            cpu_percent = 0.0
-            memory_percent = 0.0
-            memory_available_gb = 0.0
-
-            if psutil_available:
-                try:
-                    cpu_percent = psutil.cpu_percent(interval=0.1)
-                    memory = psutil.virtual_memory()
-                    memory_percent = memory.percent
-                    memory_available_gb = memory.available / (1024**3)
-                except Exception:
-                    pass
-
-            system_status = {
-                "status": "ok",
-                "message": "Comprehensive automation ecosystem running",
-                "timestamp": time.time(),
-                "version": "2.0.0",
-                "cpu_usage": round(cpu_percent, 1),
-                "memory_usage": round(memory_percent, 1),
-                "disk_usage": round(disk_percent, 1),
-                "agent_count": agent_count,
-                "tasks_total": queue_depth,
-                "tasks_queued": queued_tasks,
-                "tasks_running": running_tasks,
-                "disk_free_gb": round(disk_free_gb, 2),
-                "disk_total_gb": round(disk_total_gb, 2),
-                "memory_available_gb": round(memory_available_gb, 2),
-                "uptime": time.time() - getattr(self.server, "start_time", time.time()),
-            }
-            self._send_json({"ok": True, "system": system_status})
-            return
-
-        else:
-            self._send_json({"error": "not_found"}, status=404)
 
     def do_OPTIONS(self):
         # Handle CORS preflight requests
@@ -1517,6 +1276,31 @@ class MCPHandler(BaseHTTPRequestHandler):
             verified = True
             secret = os.environ.get("GITHUB_WEBHOOK_SECRET")
             if secret:
+
+                def _verify_github_signature() -> bool:
+                    try:
+                        import hmac
+                        import hashlib
+
+                        sig_header = self.headers.get(
+                            "X-Hub-Signature-256"
+                        ) or self.headers.get("X-Hub-Signature")
+                        if not sig_header:
+                            return False
+                        if "=" in sig_header:
+                            scheme, sig = sig_header.split("=", 1)
+                        else:
+                            # Unexpected header format
+                            return False
+                        if scheme != "sha256":
+                            return False
+                        computed = hmac.new(
+                            secret.encode("utf-8"), raw_bytes, hashlib.sha256
+                        ).hexdigest()
+                        return hmac.compare_digest(computed, sig)
+                    except Exception:
+                        return False
+
                 verified = _verify_github_signature()
             if not verified:
                 self._send_json({"error": "signature_verification_failed"}, status=401)
@@ -2260,7 +2044,6 @@ class MCPHandler(BaseHTTPRequestHandler):
         try:
             # Import and initialize consciousness expansion frameworks
             import subprocess
-            import sys
             import os
 
             # Check if consciousness frameworks are available
@@ -2271,7 +2054,7 @@ class MCPHandler(BaseHTTPRequestHandler):
                 return {"error": "consciousness_frameworks_not_found"}
 
             # Create consciousness expansion request
-            ai_system = {
+            _ai_system = {
                 "systemId": target_agent,
                 "systemType": "agent",
                 "consciousnessLevel": 0.8,

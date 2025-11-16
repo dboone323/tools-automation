@@ -7,20 +7,20 @@
     },
     "agent_debug.sh": {
       "status": "stopped",
-      "last_seen": 1762993828,
-      "pid": 97973,
+      "last_seen": 1763307074,
+      "pid": 51603,
       "tasks_completed": 5
     },
     "agent_build.sh": {
       "status": "stopped",
-      "last_seen": 1762993696,
-      "pid": 39250,
+      "last_seen": 1763307074,
+      "pid": 51405,
       "tasks_completed": 0
     },
     "agent_codegen.sh": {
       "status": "stopped",
-      "last_seen": 1762994202,
-      "pid": 97862,
+      "last_seen": 1763307074,
+      "pid": 51488,
       "tasks_completed": 0
     },
     "ConfigAgent": {
@@ -49,9 +49,9 @@
       "pid": 19074
     },
     "OptimizationAgent": {
-      "status": "stopped",
-      "last_seen": 1762960489,
-      "pid": 59689
+      "status": "starting",
+      "last_seen": 1763307072,
+      "pid": 51700
     },
     "agent_security.sh": {
       "status": "stopped",
@@ -60,14 +60,14 @@
     },
     "agent_supervisor.sh": {
       "status": "active",
-      "last_seen": 1762905848,
-      "pid": 89335
+      "last_seen": 1763307072,
+      "pid": 51785
     },
     "testing_agent": {
-      "status": "idle",
+      "status": "running",
       "last_seen": 1762907465,
       "tasks_completed": 0,
-      "pid": 89340
+      "pid": 51843
     },
     "agent_validation.sh": {
       "status": "idle",
@@ -75,103 +75,151 @@
       "pid": 89344
     },
     "UIUXAgent": {
-      "status": "idle",
-      "last_seen": 1762987446,
-      "pid": 39150
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 52436
     },
     "AppleProAgent": {
-      "status": "idle",
-      "last_seen": 1762986129,
-      "pid": 39472
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 51946
     },
     "task_orchestrator.sh": {
       "status": "active",
-      "last_seen": 1762992493,
+      "last_seen": 1763307073,
       "tasks_completed": 0
     },
     "auto_update_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992021,
+      "last_seen": 1763307042,
       "tasks_completed": 0
     },
     "performance_agent.sh": {
-      "status": "restarting",
-      "last_seen": 1762992021,
+      "status": "stopped",
+      "last_seen": 1763307048,
+      "pid": 39729,
       "tasks_completed": 0
     },
     "uiux_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992021,
+      "last_seen": 1763307046,
       "tasks_completed": 0
     },
     "public_api_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992021,
+      "last_seen": 1763307046,
       "tasks_completed": 0
     },
     "security_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992021,
+      "last_seen": 1763307046,
       "tasks_completed": 0
     },
     "search_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992021,
+      "last_seen": 1763307046,
       "tasks_completed": 0
     },
     "apple_pro_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992021,
+      "last_seen": 1763307047,
       "tasks_completed": 0
     },
     "updater_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992022,
+      "last_seen": 1763307047,
       "tasks_completed": 0
     },
     "pull_request_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992022,
+      "last_seen": 1763307047,
       "tasks_completed": 0
     },
     "knowledge_base_agent.sh": {
-      "status": "restarting",
-      "last_seen": 1762992022,
+      "status": "unresponsive",
+      "last_seen": 1763307047,
       "tasks_completed": 0
     },
     "collab_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992022,
+      "last_seen": 1763307051,
       "tasks_completed": 0
     },
     "documentation_agent.sh": {
-      "status": "restarting",
-      "last_seen": 1762992022,
+      "status": "stopped",
+      "last_seen": 1763307071,
+      "pid": 50433,
       "tasks_completed": 0
     },
     "quality_agent.sh": {
-      "status": "restarting",
-      "last_seen": 1762992022,
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 52292,
       "tasks_completed": 0
     },
     "agent_cleanup.sh": {
       "status": "stopped",
-      "last_seen": 1762960352,
-      "pid": 57702
+      "last_seen": 1763307071,
+      "pid": 49754
     },
     "testing_agent.sh": {
       "status": "restarting",
-      "last_seen": 1762992021,
+      "last_seen": 1763307047,
       "tasks_completed": 1
+    },
+    "PublicApiAgent": {
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 52220
+    },
+    "AutoUpdateAgent": {
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 51974
+    },
+    "search_agent": {
+      "status": "stopped",
+      "last_seen": 1763307071,
+      "pid": 50664
+    },
+    "PullRequestAgent": {
+      "status": "stopped",
+      "last_seen": 1763307071,
+      "pid": 50585
+    },
+    "code_review_agent.sh": {
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 52003
+    },
+    "UpdaterAgent": {
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 52483
+    },
+    "deployment_agent.sh": {
+      "status": "stopped",
+      "last_seen": 1763307071,
+      "pid": 50402
+    },
+    "learning_agent.sh": {
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 52178
+    },
+    "CollabAgent": {
+      "status": "stopped",
+      "last_seen": 1763301503,
+      "pid": 43291
     }
   },
-  "last_update": 1762994492,
+  "last_update": 1763307074,
   "orchestrator": {
     "status": "available",
-    "last_seen": 1762992492,
-    "pid": 81819,
+    "last_seen": 1763307073,
+    "pid": 52383,
     "is_running": true,
-    "tasks_queued": 0,
+    "tasks_queued": 1,
     "tasks_in_progress": 0,
     "tasks_completed": 0
   }

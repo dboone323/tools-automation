@@ -23,7 +23,7 @@ import asyncio
 import aiohttp
 import json
 import logging
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from urllib.parse import urljoin
 import time
@@ -173,7 +173,7 @@ class MCPClient:
 
                     try:
                         response_data = await response.json()
-                    except:
+                    except Exception:
                         response_data = await response.text()
 
                     if response.status >= 400:

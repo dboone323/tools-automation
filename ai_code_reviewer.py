@@ -5,7 +5,7 @@ Provides automated code review with sentiment analysis and bug detection
 """
 
 import re
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 try:
     from transformers import pipeline

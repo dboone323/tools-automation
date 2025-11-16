@@ -1,0 +1,3 @@
+{"timestamp":"2025-11-16T14:27:02Z","test":"test_agents_auto_restart_monitor","result":"passed"}
+{"timestamp":"2025-11-16T14:27:02Z","test":"test_agents_auto_restart_project_health_agent","result":"failed"}
+{"timestamp":"2025-11-16T14:27:02Z","test":"test_agents_auto_restart_workflow_optimization_agent","result":"failed"}

@@ -8,7 +8,7 @@ import json
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
-from typing import Dict, List, Tuple, Optional
+from typing import Dict
 import os
 import sys
 
@@ -35,9 +35,6 @@ try:
 except ImportError:
     JOBLIB_AVAILABLE = False
     print("Warning: joblib not available, cannot load trained models")
-
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 class AgentPerformanceAnalyzer:
@@ -325,7 +322,7 @@ class AgentPerformanceAnalyzer:
                 # Encode task type
                 try:
                     task_encoded = self.label_encoder.transform([task_type])[0]
-                except:
+                except Exception:
                     task_encoded = 0  # Default for unknown task type
 
                 # Create feature array (matching training features)
@@ -397,7 +394,7 @@ class AgentPerformanceAnalyzer:
                 # Encode task type
                 try:
                     task_encoded = self.label_encoder.transform([task_type])[0]
-                except:
+                except Exception:
                     task_encoded = 0  # Default for unknown task type
 
                 # Create feature array (matching training features)

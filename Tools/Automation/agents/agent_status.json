@@ -1,15 +1,15 @@
 {
   "agents": {
     "search_agent": {
-      "last_seen": 1763132515,
-      "pid": 2656,
+      "last_seen": 1763307073,
+      "pid": 52331,
       "status": "available"
     },
     "search_agent.sh": {
-      "last_seen": 1763132515,
-      "pid": 2656,
+      "last_seen": 1763307073,
+      "pid": 52331,
       "status": "available"
     }
   },
-  "last_update": 1763132515
+  "last_update": 1763307073
 }

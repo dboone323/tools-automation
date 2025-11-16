@@ -7,10 +7,8 @@ Evaluates situations, selects actions, and verifies outcomes with confidence sco
 
 import json
 import sys
-import os
 import hashlib
-import subprocess
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 from datetime import datetime
 from pathlib import Path
 

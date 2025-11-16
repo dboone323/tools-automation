@@ -27,7 +27,7 @@ def fix_habitquest(pbxproj_path):
     with open(pbxproj_path, "w") as f:
         f.write(content)
 
-    print(f"✅ Fixed HabitQuest: Removed macOS support")
+    print("✅ Fixed HabitQuest: Removed macOS support")
     return True
 
 
@@ -72,7 +72,7 @@ def fix_momentumfinance(pbxproj_path):
     with open(pbxproj_path, "w") as f:
         f.write(content)
 
-    print(f"✅ Fixed MomentumFinance: Added MACOSX_DEPLOYMENT_TARGET = 26.0")
+    print("✅ Fixed MomentumFinance: Added MACOSX_DEPLOYMENT_TARGET = 26.0")
     return True
 
 

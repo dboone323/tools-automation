@@ -60,7 +60,7 @@ class FinalAccelerator:
                     )
                     started += 1
                     time.sleep(0.2)  # Stagger starts
-                except:
+                except Exception:
                     pass
 
         print(f"✅ Emergency restarted {started} agents with high priority")
@@ -88,7 +88,7 @@ class FinalAccelerator:
                 try:
                     os.kill(pid, 0)
                     running_agents.append(agent_name)
-                except:
+                except Exception:
                     pass
 
         print(f"Running agents: {len(running_agents)}")
@@ -161,7 +161,7 @@ class FinalAccelerator:
                     # Send SIGURG (urgent condition)
                     os.kill(pid, 23)  # SIGURG
                     urgent_signals += 1
-                except:
+                except Exception:
                     pass
 
         print(f"✅ Sent urgent performance signals to {urgent_signals} agents")
@@ -180,7 +180,7 @@ class FinalAccelerator:
                     in_progress = len(
                         [t for t in tasks if t.get("status") == "in_progress"]
                     )
-                    completed = len(queue_data.get("completed", []))
+                    _completed = len(queue_data.get("completed", []))
 
                     if in_progress < 10:  # If less than 10 tasks running, boost
                         print(

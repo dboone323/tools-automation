@@ -5,7 +5,6 @@
 import os
 import re
 import json
-import subprocess
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -173,7 +172,7 @@ def main():
     # Scan the entire workspace (including submodules)
     scan_dirs = [workspace_root]
 
-    print(f"🔍 Scanning for TODO/FIXME comments in workspace...")
+    print("🔍 Scanning for TODO/FIXME comments in workspace...")
 
     all_todos = []
     for scan_dir in scan_dirs:

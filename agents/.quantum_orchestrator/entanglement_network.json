@@ -662,10 +662,70 @@
         "communication",
         "synchronization"
       ]
+    },
+    {
+      "entanglement_id": "6f096133-fe24-4c65-a38e-b84a95dcfc54",
+      "particles": [
+        "agent_a_e3e652d8",
+        "agent_b_eb4313ea"
+      ],
+      "bell_state": "phi_plus",
+      "fidelity": 0.98,
+      "created_at": 1763303048.80316,
+      "coherence_time": 3600,
+      "dimensions": [
+        "communication",
+        "synchronization"
+      ]
+    },
+    {
+      "entanglement_id": "74c9af85-bea9-495d-ac10-628ecc91f9a3",
+      "particles": [
+        "agent_a",
+        "agent_b"
+      ],
+      "bell_state": "phi_plus",
+      "fidelity": 0.98,
+      "created_at": 1763303054.864779,
+      "coherence_time": 3600,
+      "dimensions": [
+        "communication",
+        "synchronization"
+      ]
+    },
+    {
+      "entanglement_id": "b49f294b-1673-4486-90b2-ad8a75b52254",
+      "particles": [
+        "agent_a_8cfea463",
+        "agent_b_f237fae5"
+      ],
+      "bell_state": "phi_plus",
+      "fidelity": 0.98,
+      "created_at": 1763309609.407897,
+      "coherence_time": 3600,
+      "dimensions": [
+        "communication",
+        "synchronization"
+      ]
+    },
+    {
+      "entanglement_id": "c609bd7a-1e78-414f-b83c-1209376a845e",
+      "particles": [
+        "agent_a",
+        "agent_b"
+      ],
+      "bell_state": "phi_plus",
+      "fidelity": 0.98,
+      "created_at": 1763309627.740282,
+      "coherence_time": 3600,
+      "dimensions": [
+        "communication",
+        "synchronization"
+      ]
     }
   ],
   "network_health": 1.0,
-  "last_updated": 1762978625.1833751,
+  "last_updated": 1763309627.740284,
   "dimensions": [
     "3D",
     "4D",

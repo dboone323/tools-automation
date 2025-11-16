@@ -3,15 +3,12 @@
 Comprehensive tests for the MCP Python SDK
 """
 
-import asyncio
-import json
 import pytest
 from mcp_sdk import (
     MCPClient,
     MCPError,
     MCPConnectionError,
     MCPTimeoutError,
-    MCPAPIError,
 )
 
 
@@ -103,7 +100,7 @@ class TestErrorHandling:
         """Test MCPConnectionError creation"""
         import aiohttp
 
-        original_error = aiohttp.ClientConnectionError("Connection refused")
+        _original_error = aiohttp.ClientConnectionError("Connection refused")
         error = MCPConnectionError("Connection failed")
         assert str(error) == "Connection failed"
 

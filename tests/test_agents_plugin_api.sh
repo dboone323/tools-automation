@@ -61,9 +61,9 @@ test_plugin_api_policy_conf() {
 test_plugin_api_list_command() {
     local test_name="test_plugin_api_list_command"
     announce_test "$test_name"
-    
+
     assert_pattern_in_file "list)" "$AGENT_SCRIPT"
-    
+
     test_passed "$test_name"
 }
 
@@ -71,9 +71,9 @@ test_plugin_api_list_command() {
 test_plugin_api_run_command() {
     local test_name="test_plugin_api_run_command"
     announce_test "$test_name"
-    
+
     assert_pattern_in_file "run)" "$AGENT_SCRIPT"
-    
+
     test_passed "$test_name"
 }
 
@@ -81,9 +81,9 @@ test_plugin_api_run_command() {
 test_plugin_api_api_token_check() {
     local test_name="test_plugin_api_api_token_check"
     announce_test "$test_name"
-    
+
     assert_pattern_in_file "API_TOKEN" "$AGENT_SCRIPT"
-    
+
     test_passed "$test_name"
 }
 
@@ -91,11 +91,13 @@ test_plugin_api_api_token_check() {
 test_plugin_api_policy_enforcement() {
     local test_name="test_plugin_api_policy_enforcement"
     announce_test "$test_name"
-    
+
     assert_pattern_in_file "allow_list.*block_list" "$AGENT_SCRIPT"
-    
+
     test_passed "$test_name"
-}# Test 10: Should log audit information
+}
+
+# Test 10: Should log audit information
 test_plugin_api_audit_logging() {
     local test_name="test_plugin_api_audit_logging"
     announce_test "$test_name"

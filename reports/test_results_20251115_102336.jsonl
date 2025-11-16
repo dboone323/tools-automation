@@ -1,0 +1,13 @@
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_inject_todo","result":"passed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_knowledge_base_agent","result":"failed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_knowledge_sync","result":"passed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_launch_agent_dashboard","result":"passed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_learning_agent","result":"failed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_mcp_client","result":"failed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_minimal_dashboard","result":"passed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_monitor_agents","result":"passed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_monitor_lock_timeouts","result":"failed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_monitoring_agent","result":"failed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_onboard","result":"passed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_performance_agent","result":"failed"}
+{"timestamp":"2025-11-15T16:23:36Z","test":"test_agents_plugin_api","result":"failed"}

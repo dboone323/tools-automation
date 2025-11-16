@@ -12,17 +12,14 @@ Features:
 """
 
 import json
-import os
 import sys
-import time
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Dict, List, Optional, Any, Set
 from dataclasses import dataclass, asdict
 from enum import Enum
 import threading
 import queue
-import requests
 from pathlib import Path
 
 # Add project root to path
@@ -396,7 +393,7 @@ class TodoManager:
                                 updates["priority"] = TodoPriority(
                                     analysis["suggested_priority"]
                                 )
-                            except:
+                            except Exception:
                                 pass
 
                         if "subtasks" in analysis:

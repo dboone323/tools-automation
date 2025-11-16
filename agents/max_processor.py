@@ -7,9 +7,7 @@ Forces maximum agent utilization for rapid task completion
 import json
 import time
 import os
-import subprocess
 import threading
-from concurrent.futures import ThreadPoolExecutor
 
 
 class MaxParallelProcessor:
@@ -162,7 +160,7 @@ class MaxParallelProcessor:
                     # Send SIGUSR1 to trigger performance mode (if supported)
                     os.kill(pid, 10)  # SIGUSR1
                     performance_signals += 1
-                except:
+                except Exception:
                     pass
 
         print(f"✅ Sent performance signals to {performance_signals} agents")

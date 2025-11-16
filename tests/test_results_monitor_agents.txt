@@ -56,3 +56,496 @@ Failed: 0
 Success Rate: 100%
 ==========================================
 🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!
+✅ Test 1 PASSED: monitor_agents.sh is executable
+✅ Test 2 PASSED: Defines SCRIPT_DIR variable
+✅ Test 3 PASSED: Defines LOG_FILE variable
+✅ Test 4 PASSED: Defines STATUS_FILE variable
+✅ Test 5 PASSED: Defines TASK_QUEUE_FILE variable
+✅ Test 6 PASSED: Defines AGENTS array
+✅ Test 7 PASSED: Defines start_agent function
+✅ Test 8 PASSED: Defines ensure_agents_running function
+✅ Test 9 PASSED: Defines check_repeated_failures function
+✅ Test 10 PASSED: Defines handle_stuck_tasks function
+✅ Test 11 PASSED: Defines monitor_long_running_processes function
+✅ Test 12 PASSED: Sources shared_functions.sh
+✅ Test 13 PASSED: Has pgrep command for process checking
+✅ Test 14 PASSED: Has grep command for failure detection
+✅ Test 15 PASSED: Has ps command for process monitoring
+✅ Test 16 PASSED: Has Python code for stuck task handling
+✅ Test 17 PASSED: Has Python code for status summary
+✅ Test 18 PASSED: Has add_task_to_queue function calls
+✅ Test 19 PASSED: Has update_agent_status function calls
+✅ Test 20 PASSED: Has function calls at the end
+
+==========================================
+Test Summary:
+Total Tests: 20
+Passed: 20
+Failed: 0
+Success Rate: 100%
+==========================================
+🎉 All tests passed!

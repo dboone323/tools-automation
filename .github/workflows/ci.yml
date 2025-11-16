@@ -7,8 +7,46 @@ on:
     branches: [main]
 
 jobs:
+  lint:
+    name: Lint (ruff, shellcheck, actionlint)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install ruff
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+
+      - name: Run ruff (Python linter)
+        run: |
+          # Use repo .ruff.toml to configure excludes and rules
+          ruff check . --show-fixes
+
+      - name: Install shellcheck and actionlint
+        run: |
+          sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Run shellcheck (shell linter)
+        run: |
+          # Ignore vendored and internal virtualenvs
+          find . -path "*/venv/*" -prune -o -name "*.sh" -print | xargs -r shellcheck -x
+
+      - name: Run actionlint (GitHub Workflows)
+        uses: rhysd/actionlint@v1
+        with:
+          directory: .github/workflows
+    # Lint job is blocking - requires changes to pass lint before the build proceeds
+
   build:
     name: Build & Test (macOS)
+    needs: lint
     runs-on: macos-latest
 
     steps:
@@ -43,13 +81,13 @@ jobs:
             bash "$f"
           done
 
-      - name: Run pytest (unit/incremental)
+      - name: Run pytest (unit-only)
         env:
           PYTHONPATH: ${{ github.workspace }}/sdk/python
         run: |
           source .venv/bin/activate
-          # Run non-integration/non-e2e tests by default; CI can opt into full test matrix.
-          pytest -q -m "not integration and not e2e and not flaky"
+          # Run only unit tests so CI does not attempt integration tests that require a running server.
+          pytest -q tests/unit
 
       - name: "Swift: test Shared package"
         run: |

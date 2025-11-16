@@ -60,21 +60,15 @@ current_fallback=$(echo "${current}" | jq '.fallback_rate // 0' 2>/dev/null || e
 baseline_cov=$(echo "${baseline}" | jq '(.coverage_values // []) | if length>0 then (add/length) else 0 end' 2>/dev/null || echo 0)
 current_cov=$(echo "${current}" | jq '(.coverage_values // []) | if length>0 then (add/length) else 0 end' 2>/dev/null || echo 0)
 
-# Delta helpers (handle baseline 0 specially for increases)
-percent_increase() { # $1 baseline, $2 current
-  if awk "BEGIN {exit !($1 == 0)}"; then
-    if awk "BEGIN {exit !($2 == 0)}"; then echo 0; else echo 100; fi
-  else
-    awk -v b="$1" -v c="$2" 'BEGIN {printf("%.2f", ((c - b) / (b == 0 ? 1 : b)) * 100)}'
-  fi
-}
-percent_drop() { # baseline vs current (drop positive if decreased)
-  if awk "BEGIN {exit !($1 == 0)}"; then
-    echo 0
-  else
-    awk -v b="$1" -v c="$2" 'BEGIN {printf("%.2f", ((b - c) / (b == 0 ? 1 : b)) * 100)}'
-  fi
-}
+## Load delta helpers from shared helper file to enable isolated unit testing.
+if [[ -f "$(dirname "${BASH_SOURCE[0]}")/trend_helpers.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$(dirname "${BASH_SOURCE[0]}")/trend_helpers.sh"
+else
+  # Fallback: define minimal helpers inline (should not normally happen)
+  percent_increase() { awk -v b="$1" -v c="$2" 'BEGIN{printf("%.2f", (b==0? (c==0?0:100) : ((c-b)/b)*100))}'; }
+  percent_drop() { awk -v b="$1" -v c="$2" 'BEGIN{printf("%.2f", (b==0?0:((b-c)/b)*100))}'; }
+fi
 
 error_delta=$(percent_increase "$baseline_error" "$current_error")
 fallback_delta=$(percent_increase "$baseline_fallback" "$current_fallback")

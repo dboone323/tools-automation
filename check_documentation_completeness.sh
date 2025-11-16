@@ -42,9 +42,12 @@ FAILED_CHECKS=0
 TOTAL_CHECKS=0
 
 check_document() {
-    local doc_spec="$1"
-    local doc_file=$(echo "$doc_spec" | cut -d':' -f1)
-    local description=$(echo "$doc_spec" | cut -d':' -f2-)
+    local doc_spec;
+    doc_spec="$1"
+    local doc_file;
+    doc_file=$(echo "$doc_spec" | cut -d':' -f1)
+    local description;
+    description=$(echo "$doc_spec" | cut -d':' -f2-)
 
     ((TOTAL_CHECKS++))
 
@@ -52,7 +55,7 @@ check_document() {
         # Check if file has content (not empty)
         if [ -s "$doc_file" ]; then
             # Check if file has minimum content (at least 100 characters)
-            content_size=$(wc -c < "$doc_file")
+            content_size=$(wc -c <"$doc_file")
             if [ "$content_size" -gt 100 ]; then
                 echo -e "${GREEN}✅ PASS${NC}: $doc_file - $description"
                 ((PASSED_CHECKS++))
@@ -139,7 +142,7 @@ fi
 ((TOTAL_CHECKS++))
 
 # Check for code examples in documentation
-if grep -r "```" docs/ README.md AGENT_SYSTEM_README.md >/dev/null 2>&1; then
+if grep -r '```' docs/ README.md AGENT_SYSTEM_README.md >/dev/null 2>&1; then
     echo -e "${GREEN}✅ PASS${NC}: Code examples found in documentation"
     ((PASSED_CHECKS++))
 else
@@ -215,7 +218,7 @@ if [ $FAILED_CHECKS -eq 0 ]; then
 
     CODE_EXAMPLES_STATUS=$(grep -r '```' docs/ README.md >/dev/null 2>&1 && echo "Found" || echo "Missing")
 
-    cat > docs_completeness_report_$(date +%Y%m%d_%H%M%S).md << EOF
+    cat >docs_completeness_report_$(date +%Y%m%d_%H%M%S).md <<EOF
 # Documentation Completeness Report
 Generated: $(date)
 

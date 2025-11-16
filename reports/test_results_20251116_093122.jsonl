@@ -1,0 +1,7 @@
+{"timestamp":"2025-11-16T15:31:22Z","test":"test_agents_monitor_lock_timeouts","result":"failed"}
+{"timestamp":"2025-11-16T15:31:22Z","test":"test_agents_monitoring_agent","result":"failed"}
+{"timestamp":"2025-11-16T15:31:22Z","test":"test_agents_onboard","result":"passed"}
+{"timestamp":"2025-11-16T15:31:22Z","test":"test_agents_performance_agent","result":"passed"}
+{"timestamp":"2025-11-16T15:31:22Z","test":"test_agents_plugin_api","result":"passed"}
+{"timestamp":"2025-11-16T15:31:22Z","test":"test_agents_plugins","result":"passed"}
+{"timestamp":"2025-11-16T15:31:22Z","test":"test_agents_predictive_analytics_agent","result":"passed"}

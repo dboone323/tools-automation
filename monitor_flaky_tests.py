@@ -7,12 +7,10 @@ for manual review. Integrates with GitHub Actions for continuous monitoring.
 """
 
 import json
-import os
 import subprocess
-import sys
+import shlex
 from pathlib import Path
 from datetime import datetime, timedelta
-from collections import defaultdict, Counter
 import argparse
 
 
@@ -37,12 +35,20 @@ class FlakyTestMonitor:
 
         print(f"🧪 Running tests: {test_command}")
 
-        # Run tests with JSON output
-        cmd = (
-            f"{test_command} --tb=short --json-report --json-report-file={output_file}"
-        )
+        # Run tests with JSON output (avoid shell=True to prevent injection and escaping surprises)
+        # Split the user-provided command safely and append flags.
+        base_cmd = shlex.split(test_command)
+        cmd_list = base_cmd[:]
 
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        # Only add JSON report flags if not provided already by the caller
+        if not any(arg.startswith("--json-report") for arg in base_cmd):
+            cmd_list += ["--json-report"]
+        if not any(arg.startswith("--json-report-file") for arg in base_cmd):
+            cmd_list += ["--json-report-file", str(output_file)]
+        if not any(arg == "--tb=short" for arg in base_cmd):
+            cmd_list += ["--tb=short"]
+
+        result = subprocess.run(cmd_list, capture_output=True, text=True)
 
         success = result.returncode == 0
         print(
@@ -214,8 +220,8 @@ class FlakyTestMonitor:
         skip_content += "# These tests are skipped due to flakiness\n\n"
 
         for test_id in active_quarantines:
-            skip_content += f"markers =\n    quarantine: marks tests as quarantined due to flakiness\n"
-            skip_content += f'addopts =\n    -m "not quarantine"\n'
+            skip_content += "markers =\n    quarantine: marks tests as quarantined due to flakiness\n"
+            skip_content += 'addopts =\n    -m "not quarantine"\n'
             break  # Only add once
 
         # Create conftest.py content for individual test skipping

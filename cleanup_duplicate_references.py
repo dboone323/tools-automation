@@ -18,6 +18,7 @@ Example:
 
 import sys
 import os
+import subprocess
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -246,7 +247,7 @@ class XcodeprojCleaner:
 
         print("\n" + "=" * 60)
         print("✅ Cleanup complete!")
-        print(f"\n⚠️  IMPORTANT: Open the project in Xcode to verify it loads correctly")
+        print("\n⚠️  IMPORTANT: Open the project in Xcode to verify it loads correctly")
         print(
             f"   If there are issues, restore from: {self.pbxproj_path.with_suffix('.pbxproj.backup')}"
         )
@@ -255,10 +256,21 @@ class XcodeprojCleaner:
 def verify_project(xcodeproj_path):
     """Verify the project by running xcodebuild -list"""
     print(f"\n🔍 Verifying project: {xcodeproj_path}")
-    result = os.system(
-        f'xcodebuild -project "{xcodeproj_path}" -list 2>&1 | grep -c "member of multiple groups"'
-    )
-    return result == 0
+    try:
+        proc = subprocess.run(
+            ["xcodebuild", "-project", str(xcodeproj_path), "-list"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError:
+        print("❌ xcodebuild not found in PATH")
+        return False
+
+    output = proc.stdout + proc.stderr
+    count = output.count("member of multiple groups")
+    print(f"🔎 xcodebuild output lines: {len(output.splitlines())}, instances: {count}")
+    return count == 0
 
 
 def main():
@@ -282,7 +294,17 @@ def main():
 
         # Verify
         print("\n🔍 Running verification...")
-        os.system(f'xcodebuild -project "{xcodeproj_path}" -list 2>&1 | head -20')
+        try:
+            proc = subprocess.run(
+                ["xcodebuild", "-project", str(xcodeproj_path), "-list"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            output_lines = proc.stdout.splitlines()[:20]
+            print("\n".join(output_lines))
+        except FileNotFoundError:
+            print("❌ xcodebuild not found in PATH; cannot verify further")
 
     except Exception as e:
         print(f"\n❌ Error during cleanup: {e}")

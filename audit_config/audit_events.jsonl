@@ -1,6 +1,6 @@
 {
-  "event_id": "audit_1763212788_14064",
-  "timestamp": "2025-11-15T13:19:48Z",
+  "event_id": "audit_1763307087_8342",
+  "timestamp": "2025-11-16T15:31:27Z",
   "event_type": "authentication",
   "username": "admin",
   "action": "login",
@@ -10,8 +10,8 @@
   "compliance_flags": []
 }
 {
-  "event_id": "audit_1763212788_1769",
-  "timestamp": "2025-11-15T13:19:48Z",
+  "event_id": "audit_1763307087_28815",
+  "timestamp": "2025-11-16T15:31:27Z",
   "event_type": "authorization",
   "username": "admin",
   "action": "permission_check",

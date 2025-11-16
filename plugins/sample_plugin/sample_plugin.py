@@ -5,7 +5,6 @@ This plugin shows how to create plugins for the MCP server with monitoring,
 notification, and data processing capabilities.
 """
 
-import logging
 import time
 from typing import Any, Dict, List
 from plugin_manager import PluginBase, PluginMetadata

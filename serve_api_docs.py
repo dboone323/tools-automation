@@ -19,7 +19,6 @@ import os
 import sys
 import webbrowser
 from pathlib import Path
-import mimetypes
 
 
 class APIDocsHandler(http.server.SimpleHTTPRequestHandler):

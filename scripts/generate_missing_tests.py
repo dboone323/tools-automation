@@ -4,7 +4,6 @@ Outputs: reports/missing_tests_suggestions.json
 """
 import json
 from pathlib import Path
-import re
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORTS = ROOT / "reports"

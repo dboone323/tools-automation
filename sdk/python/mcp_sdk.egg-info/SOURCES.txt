@@ -1,4 +1,5 @@
 README.md
+pyproject.toml
 setup.py
 mcp_sdk/__init__.py
 mcp_sdk.egg-info/PKG-INFO

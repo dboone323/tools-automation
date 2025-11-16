@@ -10,7 +10,7 @@ import time
 import subprocess
 import os
 import shutil
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 from pathlib import Path
 
 MODEL_REGISTRY = os.getenv("MODEL_REGISTRY", "model_registry.json")

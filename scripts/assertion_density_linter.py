@@ -2,7 +2,8 @@
 """Flag tests with single assertion (heuristic).
 Outputs reports/low_assert_tests.json
 """
-import re, json
+import re
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]

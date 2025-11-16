@@ -2,7 +2,9 @@
 """Process resolved todos to update predictive learning correlations.
 Usage: python process_resolved_todos.py
 """
-import json, os, datetime, collections
+import json
+import os
+import collections
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 TODOS_FILE = os.path.join(ROOT, "unified_todos.json")

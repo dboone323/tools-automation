@@ -24,7 +24,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import random
 import time
 import uuid
 from typing import Any, Dict, List
@@ -47,6 +46,28 @@ def _load_json(path: str, default: Any) -> Any:
             return json.load(f)
     except Exception:
         return default
+
+
+def _aliases_for(name: str) -> List[str]:
+    """Return possible alias variants for an agent identifier.
+
+    This helps matching overrides such as 'agent_build.sh' or 'Agent-Build'
+    to canonical agent ids/names in status files.
+    """
+    if not name:
+        return []
+    normalized = name.strip().lower()
+    aliases = {normalized}
+    # Strip common file extensions
+    if normalized.endswith(".sh"):
+        aliases.add(normalized[:-3])
+    # Replace underscores/dots with dashes for similarity
+    aliases.add(normalized.replace("_", "-"))
+    aliases.add(normalized.replace(".", "-"))
+    # Also include base filename if path provided
+    if "/" in normalized:
+        aliases.add(normalized.split("/")[-1])
+    return list(aliases)
 
 
 def _write_json(path: str, data: Any) -> None:

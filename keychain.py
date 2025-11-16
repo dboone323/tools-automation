@@ -3,7 +3,6 @@
 
 import subprocess
 import sys
-import os
 
 
 def get_secret(service: str) -> str:

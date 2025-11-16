@@ -127,8 +127,8 @@
       "tasks_completed": 0
     },
     "performance_agent.sh": {
-      "status": "stopped",
-      "last_seen": 1762992023,
+      "status": "available",
+      "last_seen": 1763307046,
       "pid": 31076,
       "tasks_completed": 0
     },
@@ -242,9 +242,24 @@
       "last_seen": 1762964183,
       "pid": 53631,
       "status": "stopped"
+    },
+    "auto_restart_monitor.sh": {
+      "status": "idle",
+      "last_seen": 1763307073,
+      "pid": 51294
+    },
+    "IntegrationAgent": {
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 51648
+    },
+    "NotificationAgent": {
+      "status": "stopped",
+      "last_seen": 1763307074,
+      "pid": 51672
     }
   },
-  "last_update": 1763132519,
+  "last_update": 1763307074,
   "orchestrator": {
     "is_running": true,
     "last_seen": 1762905888,

@@ -1,0 +1,11 @@
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_agent_loop_utils","result":"passed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_agent_migration","result":"passed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_agent_performance_monitor","result":"passed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_ai_client","result":"passed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_ai_code_review_agent","result":"passed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_ai_docs_agent","result":"passed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_ai_predictive_analytics_agent","result":"passed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_apple_pro_agent","result":"failed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_assign_once","result":"passed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_audit_agent","result":"failed"}
+{"timestamp":"2025-11-15T16:47:04Z","test":"test_agents_auto_restart_code_analysis_agent","result":"failed"}

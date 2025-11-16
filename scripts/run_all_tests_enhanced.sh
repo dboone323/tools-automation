@@ -28,8 +28,15 @@ fi
 
 CONFIG_FILE="$ROOT_DIR/tests/config/test_settings.json"
 if [[ -f "$CONFIG_FILE" ]]; then
-    RUN_INTEGRATION=${RUN_INTEGRATION:-$(jq -r '.run_integration' "$CONFIG_FILE")}
-    DEFAULT_TIMEOUT=$(jq -r '.timeout_default_sec' "$CONFIG_FILE")
+    # Use jq to read config only if available; avoid failing the runner if jq is not installed.
+    if command -v jq >/dev/null 2>&1; then
+        RUN_INTEGRATION=${RUN_INTEGRATION:-$(jq -r '.run_integration' "$CONFIG_FILE")}
+        DEFAULT_TIMEOUT=$(jq -r '.timeout_default_sec' "$CONFIG_FILE")
+    else
+        echo "[warning] 'jq' not found: using environment/default test settings"
+        RUN_INTEGRATION=${RUN_INTEGRATION:-0}
+        DEFAULT_TIMEOUT=60
+    fi
 else
     RUN_INTEGRATION=${RUN_INTEGRATION:-0}
     DEFAULT_TIMEOUT=60
@@ -43,7 +50,7 @@ QUARANTINE_TESTS=()
 if [[ -f "$QUARANTINE_FILE" ]]; then
     while IFS= read -r line; do
         [[ -n "$line" && ! "$line" =~ ^[[:space:]]*# ]] && QUARANTINE_TESTS+=("$line")
-    done < "$QUARANTINE_FILE"
+    done <"$QUARANTINE_FILE"
 fi
 
 # Load retry helper if available
@@ -74,7 +81,8 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 # Check if test should be quarantined
 is_quarantined() {
-    local test_name="$1"
+    local test_name
+    test_name="$1"
     for quarantined in "${QUARANTINE_TESTS[@]}"; do
         if [[ "$test_name" == "$quarantined" ]]; then
             return 0
@@ -85,28 +93,32 @@ is_quarantined() {
 
 # Record test result
 record_test_result() {
-    local test_name="$1"
-    local result="$2"  # passed|failed|skipped|flaky|quarantined
+    local test_name
+    test_name="$1"
+    local result
+    result="$2" # passed|failed|skipped|flaky|quarantined
 
     ((TOTAL_TESTS++))
 
     case "$result" in
-        passed) ((PASSED_TESTS++)) ;;
-        failed) ((FAILED_TESTS++)) ;;
-        skipped) ((SKIPPED_TESTS++)) ;;
-        flaky) ((FLAKY_TESTS++)) ;;
-        quarantined) ((QUARANTINED_TESTS++)) ;;
+    passed) ((PASSED_TESTS++)) ;;
+    failed) ((FAILED_TESTS++)) ;;
+    skipped) ((SKIPPED_TESTS++)) ;;
+    flaky) ((FLAKY_TESTS++)) ;;
+    quarantined) ((QUARANTINED_TESTS++)) ;;
     esac
 
     # Log to test results file
-    local results_file="$ROOT_DIR/reports/test_results_$(date +%Y%m%d_%H%M%S).jsonl"
+    local results_file
+    results_file="$ROOT_DIR/reports/test_results_$(date +%Y%m%d_%H%M%S).jsonl"
     mkdir -p "$ROOT_DIR/reports"
-    echo "{\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"test\":\"$test_name\",\"result\":\"$result\"}" >> "$results_file"
+    echo "{\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"test\":\"$test_name\",\"result\":\"$result\"}" >>"$results_file"
 }
 
 # Run test with retry logic if enabled
 run_test_with_retry() {
-    local test_name="$1"
+    local test_name
+    test_name="$1"
     shift
 
     if [[ "${RETRY_FLAKY:-0}" == "1" ]] && command -v retry_with_backoff >/dev/null 2>&1; then
@@ -114,12 +126,13 @@ run_test_with_retry() {
             record_test_result "$test_name" "passed"
             return 0
         else
-            local exit_code=$?
+            local exit_code
+            exit_code=$?
             # Check if this is a known flaky test
             if is_quarantined "$test_name"; then
                 record_test_result "$test_name" "flaky"
                 log_warning "Flaky test quarantined: $test_name"
-                return 0  # Don't fail on quarantined tests
+                return 0 # Don't fail on quarantined tests
             else
                 record_test_result "$test_name" "failed"
                 return $exit_code
@@ -130,7 +143,8 @@ run_test_with_retry() {
             record_test_result "$test_name" "passed"
             return 0
         else
-            local exit_code=$?
+            local exit_code
+            exit_code=$?
             record_test_result "$test_name" "failed"
             return $exit_code
         fi
@@ -139,8 +153,10 @@ run_test_with_retry() {
 
 shell_tests() {
     echo "[phase] Shell tests"
-    local pattern="tests/test_*.sh"
-    local failed_tests=()
+    local pattern
+    pattern="tests/test_*.sh"
+    local failed_tests
+    failed_tests=()
 
     for f in $pattern; do
         if [[ -f "$f" ]]; then
@@ -173,7 +189,8 @@ shell_tests() {
 python_tests() {
     echo "[phase] Python tests"
     if [[ -d tests ]]; then
-        local PY=python
+        local PY
+        PY=python
         # Prefer venv python explicitly if available
         if [[ -x "$ROOT_DIR/.venv/bin/python" ]]; then
             PY="$ROOT_DIR/.venv/bin/python"
@@ -191,7 +208,8 @@ python_tests() {
         fi
 
         # Build pytest command
-        local cmd=("$PY" -m pytest)
+        local cmd
+        cmd=("$PY" -m pytest)
         if [[ "${COVERAGE:-0}" == "1" ]] && "$PY" -c "import coverage" >/dev/null 2>&1; then
             cmd=("$PY" -m coverage run -m pytest)
         fi
@@ -210,7 +228,10 @@ python_tests() {
         if [[ "${RUN_INTEGRATION}" == "1" ]]; then
             cmd+=(-m "not skip")
         else
+            # Exclude integration tests by marker and by path to avoid
+            # executing long-running integration suites in this pass.
             cmd+=(-m "not integration")
+            cmd+=(--ignore=tests/integration)
         fi
 
         # Add quarantine filtering
@@ -259,7 +280,9 @@ swift_tests() {
             echo "[run] swift test ($pkg)"
             pushd "$pkg" >/dev/null
 
-            local swift_cmd=(swift test)
+            local swift_cmd
+
+            swift_cmd=(swift test)
             if [[ "${COVERAGE:-0}" == "1" ]]; then
                 swift_cmd+=(--enable-code-coverage)
             fi
@@ -280,7 +303,7 @@ swift_tests() {
                         -format="lcov" \
                         .build/debug/${pkg}PackageTests.xctest/Contents/MacOS/${pkg}PackageTests \
                         -instr-profile .build/debug/codecov/default.profdata \
-                        > "$ROOT_DIR/reports/swift-coverage-${pkg}.json" 2>/dev/null || true
+                        >"$ROOT_DIR/reports/swift-coverage-${pkg}.json" 2>/dev/null || true
                 fi
             fi
 
@@ -299,7 +322,8 @@ merge_coverage_reports() {
 
 # Generate test summary report
 generate_test_summary() {
-    local summary_file="$ROOT_DIR/reports/test_summary_$(date +%Y%m%d_%H%M%S).json"
+    local summary_file
+    summary_file="$ROOT_DIR/reports/test_summary_$(date +%Y%m%d_%H%M%S).json"
     mkdir -p "$ROOT_DIR/reports"
 
     cat >"$summary_file" <<EOF

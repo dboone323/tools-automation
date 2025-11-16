@@ -4,13 +4,11 @@ TODO Learning Integrator
 Learning system integration for TODO task processing optimization
 """
 
-import os
 import json
-import time
 from pathlib import Path
-from datetime import datetime, timedelta
-from typing import List, Dict, Any, Optional, Tuple
-from collections import defaultdict, Counter
+from datetime import datetime
+from typing import List, Dict, Any, Optional
+from collections import defaultdict
 import statistics
 
 

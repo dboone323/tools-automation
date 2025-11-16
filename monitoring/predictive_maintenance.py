@@ -8,11 +8,9 @@ import json
 import os
 import time
 import statistics
-from datetime import datetime, timedelta
-from collections import defaultdict, deque
+from datetime import datetime
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import StandardScaler
 
 
 class PredictiveMaintenance:
@@ -489,7 +487,7 @@ def main():
             predictions = predictor.analyze_maintenance_needs()
             print(f"Generated {len(predictions)} maintenance predictions")
         elif command == "report":
-            report = predictor.generate_maintenance_report([])
+            _report = predictor.generate_maintenance_report([])
             print("Maintenance report generated")
         else:
             print("Usage: python predictive_maintenance.py [analyze|report]")

@@ -11,11 +11,11 @@ import argparse
 import json
 import os
 import subprocess
+import shlex
 import sys
-import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 class Phase2TestOrchestrator:
@@ -169,14 +169,49 @@ class Phase2TestOrchestrator:
     def _run_command_background(self, command: str, name: str) -> Dict:
         """Run a command in the background."""
         try:
-            result = subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                cwd=self.workspace_root,
-                timeout=30,  # 30 second timeout for background commands
+            cmd_list = None
+            env = None
+            # Detect and extract leading VAR=value env assignments
+            args = shlex.split(command)
+            env_vars = {}
+            i = 0
+            while i < len(args) and "=" in args[i] and not args[i].startswith("="):
+                key, val = args[i].split("=", 1)
+                env_vars[key] = val
+                i += 1
+
+            if i > 0:
+                # remaining args are the command
+                cmd_list = args[i:]
+                env = {**os.environ, **env_vars}
+            else:
+                # No env assignment at front - use shlex splitting safely
+                cmd_list = args
+                env = os.environ
+
+            # For complex shell constructs, fallback to shell=True
+            requires_shell = any(
+                c in command for c in ["|", "<", ">", "&&", "||", ";", "$"]
             )
+
+            if requires_shell:
+                result = subprocess.run(
+                    command,
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    cwd=self.workspace_root,
+                    timeout=30,
+                )
+            else:
+                result = subprocess.run(
+                    cmd_list,
+                    capture_output=True,
+                    text=True,
+                    cwd=self.workspace_root,
+                    env=env,
+                    timeout=30,
+                )
 
             success = result.returncode == 0
 
@@ -197,14 +232,44 @@ class Phase2TestOrchestrator:
         start_time = datetime.now()
 
         try:
-            result = subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                cwd=self.workspace_root,
-                timeout=3600,  # 1 hour timeout
+            args = shlex.split(command)
+            env_vars = {}
+            i = 0
+            while i < len(args) and "=" in args[i] and not args[i].startswith("="):
+                key, val = args[i].split("=", 1)
+                env_vars[key] = val
+                i += 1
+
+            if i > 0:
+                cmd_list = args[i:]
+                env = {**os.environ, **env_vars}
+            else:
+                cmd_list = args
+                env = os.environ
+
+            # If the command contains shell metacharacters, fallback to shell=True
+            requires_shell = any(
+                c in command for c in ["|", "<", ">", "&&", "||", ";", "$"]
             )
+
+            if requires_shell:
+                result = subprocess.run(
+                    command,
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    cwd=self.workspace_root,
+                    timeout=3600,
+                )
+            else:
+                result = subprocess.run(
+                    cmd_list,
+                    capture_output=True,
+                    text=True,
+                    cwd=self.workspace_root,
+                    env=env,
+                    timeout=3600,
+                )
 
             success = result.returncode == 0
             duration = (datetime.now() - start_time).total_seconds()

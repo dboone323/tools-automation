@@ -2,13 +2,19 @@
 # Agent Dashboard Launcher
 # Starts the dashboard API server and opens the dashboard
 
-# Source shared functions for file locking and monitoring
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/shared_functions.sh"
+set -euo pipefail
 
-WORKSPACE="/Users/danielstevens/Desktop/Quantum-workspace"
-AGENTS_DIR="${WORKSPACE}/Tools/Automation/agents"
-LOG_FILE="${AGENTS_DIR}/dashboard_launcher.log"
+# Source shared functions for file locking and monitoring (if available)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "${SCRIPT_DIR}/shared_functions.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "${SCRIPT_DIR}/shared_functions.sh"
+fi
+
+# Derive workspace/agents directories relative to the script when possible
+WORKSPACE="${WORKSPACE:-$(cd "${SCRIPT_DIR}/.." && pwd)}"
+AGENTS_DIR="${AGENTS_DIR:-${WORKSPACE}/agents}"
+LOG_FILE="${LOG_FILE:-${AGENTS_DIR}/dashboard_launcher.log}"
 
 # Colors
 GREEN='\033[0;32m'
@@ -24,7 +30,7 @@ log() {
 
 # Check if server is running
 is_server_running() {
-  if pgrep -f "Python.*dashboard_api_server.py" >/dev/null; then
+  if pgrep -f "Python.*dashboard_api_server.py" >/dev/null || pgrep -f "Python.*dashboard_api.py" >/dev/null; then
     return 0
   else
     return 1
@@ -46,7 +52,15 @@ start_server() {
   }
 
   # Start server in background
-  python3 dashboard_api_server.py &
+  if [[ -f "${AGENTS_DIR}/dashboard_api_server.py" ]]; then
+    python3 "${AGENTS_DIR}/dashboard_api_server.py" &
+  elif [[ -f "${AGENTS_DIR}/dashboard_api.py" ]]; then
+    python3 "${AGENTS_DIR}/dashboard_api.py" &
+  else
+    log "No dashboard server found in ${AGENTS_DIR}"
+    echo -e "${RED}❌ No dashboard server found in ${AGENTS_DIR}${NC}"
+    return 1
+  fi
   local server_pid=$!
 
   # Wait for server to start
@@ -77,10 +91,11 @@ stop_server() {
   log "Stopping dashboard server..."
 
   # Kill server process
-  pkill -f "Python.*dashboard_api_server.py"
+  pkill -f "Python.*dashboard_api_server.py" || true
+  pkill -f "Python.*dashboard_api.py" || true
 
   # Remove PID file
-  rm -f "${AGENTS_DIR}/dashboard_server.pid"
+  rm -f "${AGENTS_DIR}/dashboard_server.pid" || true
 
   log "Dashboard server stopped"
   echo -e "${GREEN}✅ Dashboard server stopped${NC}"
@@ -90,7 +105,7 @@ stop_server() {
 show_status() {
   if is_server_running; then
     local pid
-    pid=$(pgrep -f "Python.*dashboard_api_server.py")
+    pid=$(pgrep -f "Python.*dashboard_api_server.py" || pgrep -f "Python.*dashboard_api.py")
     echo -e "${GREEN}✅ Dashboard server is running${NC}"
     echo -e "${BLUE}🔢 Process ID: ${pid}${NC}"
     echo -e "${BLUE}🌐 URL: http://localhost:8004/dashboard${NC}"
@@ -103,7 +118,14 @@ show_status() {
 open_dashboard() {
   if is_server_running; then
     echo -e "${BLUE}Opening dashboard in browser...${NC}"
-    open "http://localhost:8004/dashboard"
+    # macOS 'open' available; fallback to xdg-open
+    if command -v open >/dev/null; then
+      open "http://localhost:8004/dashboard"
+    elif command -v xdg-open >/dev/null; then
+      xdg-open "http://localhost:8004/dashboard"
+    else
+      echo "http://localhost:8004/dashboard"
+    fi
   else
     echo -e "${RED}Dashboard server is not running. Start it first with: $0 start${NC}"
   fi
@@ -111,25 +133,25 @@ open_dashboard() {
 
 # Main logic
 command="${1:-start}"
-case "$command" in
-"start")
+case "${command}" in
+start)
   start_server
   ;;
-"stop")
+stop)
   stop_server
   ;;
-"restart")
+restart)
   stop_server
   sleep 2
   start_server
   ;;
-"status")
+status)
   show_status
   ;;
-"open")
+open)
   open_dashboard
   ;;
-"help" | "-h" | "--help")
+help | -h | --help)
   echo "Agent Dashboard Launcher"
   echo ""
   echo "Usage: $0 [command]"
@@ -141,11 +163,9 @@ case "$command" in
   echo "  status  - Show server status"
   echo "  open    - Open dashboard in browser"
   echo "  help    - Show this help"
-  echo ""
-  echo "The dashboard shows live agent status, task progress, and system metrics."
   ;;
 *)
-  echo -e "${RED}Unknown command: $command${NC}"
+  echo -e "${RED}Unknown command: ${command}${NC}"
   echo "Use '$0 help' for usage information"
   exit 1
   ;;

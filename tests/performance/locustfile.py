@@ -2,7 +2,6 @@
 
 import time
 from locust import HttpUser, task, between
-import json
 
 
 class MCPUser(HttpUser):

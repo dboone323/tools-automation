@@ -4,12 +4,10 @@ Dependency Analyzer
 Analyzes relationships between TODO tasks and establishes dependency chains
 """
 
-import os
-import json
 import re
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Set, Tuple
-from collections import defaultdict, deque
+from typing import Dict, Any, List, Set
+from collections import defaultdict
 
 
 class DependencyAnalyzer:

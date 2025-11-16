@@ -4,14 +4,10 @@ TODO Retry Manager
 Smart retry logic for failed TODO tasks with analysis and optimization
 """
 
-import os
 import json
-import time
 from pathlib import Path
 from datetime import datetime, timedelta
-from typing import List, Dict, Any, Optional, Tuple
-from collections import defaultdict, Counter
-import subprocess
+from typing import List, Dict, Any, Optional
 
 
 class TodoRetryManager:
@@ -130,10 +126,10 @@ class TodoRetryManager:
 
         # Look for similar failed tasks
         task_type = task.get("type", "")
-        assigned_agent = task.get("assigned_agent", "")
-        source_file = task.get("source_file", "")
+        _assigned_agent = task.get("assigned_agent", "")
+        _source_file = task.get("source_file", "")
 
-        similar_failures = []
+        _similar_failures = []
         for snapshot in monitoring_data.get("snapshots", []):
             # This is a simplified analysis - in production, you'd want more sophisticated pattern matching
             pass

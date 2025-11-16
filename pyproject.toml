@@ -128,3 +128,22 @@ exclude_lines = [
     "raise AssertionError",
     "raise NotImplementedError"
 ]
+
+[tool.ruff]
+line-length = 100
+extend-ignore = ["E203"]
+exclude = [
+    "venv",
+    ".venv",
+    "community/showcase",
+    "AvoidObstaclesGame",
+    "HabitQuest",
+    "MomentumFinance",
+    "PlannerApp",
+    "shared-kit",
+    "site",
+    "reports",
+    "sdk/python/docs",
+    "sdk/python/examples",
+    "docs",
+]

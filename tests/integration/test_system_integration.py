@@ -12,13 +12,10 @@ Run with: python -m pytest tests/integration/test_system_integration.py -v
 """
 
 import json
-import os
 import subprocess
-import tempfile
 import time
 import unittest
 from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 import requests
 from requests.exceptions import ConnectionError, Timeout
@@ -363,7 +360,7 @@ class TestSystemIntegration(unittest.TestCase):
                 end = time.time()
                 with lock:
                     results.append((resp.status_code, end - start))
-            except Exception as e:
+            except Exception:
                 with lock:
                     results.append((0, 0))
 

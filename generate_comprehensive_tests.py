@@ -6,7 +6,6 @@ Analyzes source code and generates real unit tests for functions and classes
 
 import ast
 import os
-import sys
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -371,7 +370,6 @@ class Test{module_name}:
 
 def main():
     # Dynamically resolve workspace root (prefer git)
-    from pathlib import Path
 
     candidate = Path(__file__).resolve().parent
     for parent in [candidate] + list(candidate.parents):

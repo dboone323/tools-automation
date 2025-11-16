@@ -95,7 +95,7 @@ def resolve_script(agent_key: str) -> Optional[Path]:
             candidates.append(f"{raw}")
             candidates.append(f"{suffix}_agent.sh")
         elif raw.endswith("_agent"):
-            prefix = raw[:-len("_agent")]
+            prefix = raw[: -len("_agent")]
             candidates.append(f"agent_{prefix}.sh")
             candidates.append(f"{prefix}_agent.sh")
         else:
@@ -136,7 +136,9 @@ def read_agent_status() -> Dict[str, Dict]:
     return agents if isinstance(agents, dict) else {}
 
 
-def update_agent_status(agent_keys: Iterable[str], status: str, pid: Optional[int] = None) -> None:
+def update_agent_status(
+    agent_keys: Iterable[str], status: str, pid: Optional[int] = None
+) -> None:
     data = load_json(STATUS_PATH, {})
     if not isinstance(data, dict):
         data = {}
@@ -206,7 +208,9 @@ def stop_process(pid: Optional[int], verbose: bool = False) -> None:
         return
 
 
-def launch_agent(script: Path, log_prefix: str, dry_run: bool, verbose: bool) -> Optional[int]:
+def launch_agent(
+    script: Path, log_prefix: str, dry_run: bool, verbose: bool
+) -> Optional[int]:
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
     log_path = LOGS_DIR / f"{log_prefix}.out"
     err_path = LOGS_DIR / f"{log_prefix}.err"
@@ -214,7 +218,10 @@ def launch_agent(script: Path, log_prefix: str, dry_run: bool, verbose: bool) ->
         if verbose:
             print(f"Dry run: would launch {script} (logs: {log_path})")
         return None
-    with log_path.open("a", encoding="utf-8") as stdout, err_path.open("a", encoding="utf-8") as stderr:
+    with (
+        log_path.open("a", encoding="utf-8") as stdout,
+        err_path.open("a", encoding="utf-8") as stderr,
+    ):
         process = subprocess.Popen(
             ["bash", str(script)],
             cwd=str(AGENTS_DIR),
@@ -247,7 +254,9 @@ def related_keys(agent_key: str) -> List[str]:
     return seen
 
 
-def restart_agent(agent_key: str, script: Path, pid: Optional[int], dry_run: bool, verbose: bool) -> None:
+def restart_agent(
+    agent_key: str, script: Path, pid: Optional[int], dry_run: bool, verbose: bool
+) -> None:
     if verbose:
         print(f"Restarting {agent_key} using {script.name}")
     stop_process(pid, verbose=verbose)
@@ -280,7 +289,12 @@ def prune_dead_clones(clones: Dict[str, List[Dict[str, int]]], verbose: bool) ->
             clones.pop(agent, None)
 
 
-def ensure_extra_workers(clones: Dict[str, List[Dict[str, int]]], plan: Dict[str, int], dry_run: bool, verbose: bool) -> None:
+def ensure_extra_workers(
+    clones: Dict[str, List[Dict[str, int]]],
+    plan: Dict[str, int],
+    dry_run: bool,
+    verbose: bool,
+) -> None:
     for agent, desired in plan.items():
         if desired <= 0:
             continue
@@ -288,9 +302,11 @@ def ensure_extra_workers(clones: Dict[str, List[Dict[str, int]]], plan: Dict[str
         while current < desired:
             script = resolve_script(agent)
             if script is None:
-                print(f"Warning: cannot scale {agent}; script not found", file=sys.stderr)
+                print(
+                    f"Warning: cannot scale {agent}; script not found", file=sys.stderr
+                )
                 break
-            suffix = int(time.time())
+            _suffix = int(time.time())
             log_prefix = f"{agent.replace('.sh', '')}_extra_{current+1}"
             new_pid = launch_agent(script, log_prefix, dry_run, verbose)
             if new_pid is None:
@@ -354,9 +370,21 @@ def format_agent_label(name: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Recover stalled automation agents")
-    parser.add_argument("--apply", action="store_true", help="Restart agents and launch extra workers")
-    parser.add_argument("--scale", action="append", default=[], help="Request extra workers (agent=count)")
-    parser.add_argument("--threshold", type=int, default=BACKLOG_THRESHOLD, help="Queue size threshold for auto scaling")
+    parser.add_argument(
+        "--apply", action="store_true", help="Restart agents and launch extra workers"
+    )
+    parser.add_argument(
+        "--scale",
+        action="append",
+        default=[],
+        help="Request extra workers (agent=count)",
+    )
+    parser.add_argument(
+        "--threshold",
+        type=int,
+        default=BACKLOG_THRESHOLD,
+        help="Queue size threshold for auto scaling",
+    )
     parser.add_argument("--verbose", action="store_true", help="Verbose output")
     parser.add_argument("--summary", action="store_true", help="Print summary and exit")
     args = parser.parse_args()
@@ -370,11 +398,15 @@ def main() -> None:
     if args.verbose or args.summary or not args.apply:
         print(f"Queued tasks: {queued_count}")
         if distribution:
-            top = sorted(distribution.items(), key=lambda item: item[1], reverse=True)[:10]
+            top = sorted(distribution.items(), key=lambda item: item[1], reverse=True)[
+                :10
+            ]
             print("Top task assignments:")
             for name, count in top:
                 print(f"  {name}: {count}")
-        print(f"Drain rate (per min): {drain_rate if drain_rate is not None else 'unknown'}")
+        print(
+            f"Drain rate (per min): {drain_rate if drain_rate is not None else 'unknown'}"
+        )
         print("Agent statuses:")
         for info in agent_info:
             state = "stale" if info["stale"] else info["status"]
@@ -397,11 +429,15 @@ def main() -> None:
         try:
             count_int = int(count)
         except ValueError:
-            print(f"Warning: invalid count '{count}' for agent {agent}", file=sys.stderr)
+            print(
+                f"Warning: invalid count '{count}' for agent {agent}", file=sys.stderr
+            )
             continue
         scale_plan[agent] = count_int
 
-    auto_scale_needed = queued_count >= args.threshold and (drain_rate is None or drain_rate <= 0)
+    auto_scale_needed = queued_count >= args.threshold and (
+        drain_rate is None or drain_rate <= 0
+    )
     if auto_scale_needed:
         for agent, extra in DEFAULT_EXTRA_WORKERS.items():
             scale_plan.setdefault(agent, extra)
@@ -417,7 +453,9 @@ def main() -> None:
             if script is None:
                 print(f"Warning: no script found for {target['name']}", file=sys.stderr)
                 continue
-            restart_agent(target["name"], script, target.get("pid"), dry_run, args.verbose)
+            restart_agent(
+                target["name"], script, target.get("pid"), dry_run, args.verbose
+            )
     elif args.verbose:
         print("No critical agents require restart")
 

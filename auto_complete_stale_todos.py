@@ -3,7 +3,9 @@
 Criteria: error_pattern has not appeared in last N log analysis runs (tracked via predictive_data.json error_patterns frequency going to 0).
 Simplified heuristic: if occurrences <=1 and created_at older than threshold, auto-complete.
 """
-import json, os, datetime
+import json
+import os
+import datetime
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 TODOS_FILE = os.path.join(ROOT, "unified_todos.json")
