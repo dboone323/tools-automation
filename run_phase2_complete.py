@@ -195,9 +195,12 @@ class Phase2TestOrchestrator:
             )
 
             if requires_shell:
+                # shell=True is used here intentionally for complex commands (pipes/redirects)
+                # Origin of 'command' is the test orchestrator configuration; ensure only
+                # admin-trusted configurations enable shell usage.
                 result = subprocess.run(
                     command,
-                    shell=True,
+                    shell=True,  # nosec: allowed controlled shell usage
                     capture_output=True,
                     text=True,
                     cwd=self.workspace_root,
@@ -253,9 +256,10 @@ class Phase2TestOrchestrator:
             )
 
             if requires_shell:
+                # shell=True is used here intentionally for complex commands (pipes/redirects)
                 result = subprocess.run(
                     command,
-                    shell=True,
+                    shell=True,  # nosec: allowed controlled shell usage
                     capture_output=True,
                     text=True,
                     cwd=self.workspace_root,

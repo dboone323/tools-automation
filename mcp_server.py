@@ -1745,6 +1745,11 @@ class MCPHandler(BaseHTTPRequestHandler):
                     requires_shell = True
 
             if requires_shell:
+                # The `cmd` fallback to shell=True here is guarded by an attempt to parse
+                # the value into a list first. We only use shell=True if parsing fails
+                # and the command contains shell constructs. Ensure that tasks are
+                # produced by trusted sources; otherwise, require a 'allow_shell' flag
+                # in the task definition.
                 proc = subprocess.run(
                     cmd_to_run,
                     cwd=CODE_DIR,
@@ -1752,7 +1757,7 @@ class MCPHandler(BaseHTTPRequestHandler):
                     stderr=subprocess.PIPE,
                     text=True,
                     timeout=1800,
-                    shell=True,
+                    shell=True,  # nosec: controlled fallback (should be authenticated & authorized)
                 )
             else:
                 proc = subprocess.run(

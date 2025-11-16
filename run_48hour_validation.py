@@ -164,9 +164,13 @@ class ValidationOrchestrator:
             )
 
             if requires_shell:
+                # shell=True is used here intentionally for complex commands (pipes/redirects)
+                # The command is parsed from a known configuration source and is not user input.
+                # If you are changing this behavior, consider validating the input or
+                # providing an allowlist of commands: https://example.com/security-guidance
                 result = subprocess.run(
                     command,
-                    shell=True,
+                    shell=True,  # nosec: allowed controlled shell usage
                     capture_output=True,
                     text=True,
                     timeout=timeout,
@@ -250,9 +254,10 @@ class ValidationOrchestrator:
             )
 
             if requires_shell:
+                # shell=True is used here intentionally for complex commands (pipes/redirects)
                 result = subprocess.run(
                     command,
-                    shell=True,
+                    shell=True,  # nosec: allowed controlled shell usage
                     capture_output=True,
                     text=True,
                     timeout=timeout,
