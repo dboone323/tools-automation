@@ -23,18 +23,20 @@ import uuid
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 from functools import wraps
+import logging
+import shlex
 import redis
 import importlib.util
 import shutil
 
 # AI Service Manager Integration
 try:
-    from ai_service_manager import ai_manager, AIRequest
+    from ai_service_manager import ai_manager
 
     AI_MANAGER_AVAILABLE = True
 except ImportError:
     AI_MANAGER_AVAILABLE = False
-    print("AI Service Manager not available - AI endpoints will be disabled")
+    logging.getLogger(__name__).warning("AI Service Manager not available - AI endpoints will be disabled")
 
 
 # Plugin system integration
@@ -45,6 +47,7 @@ try:
     print("Advanced plugin system loaded successfully")
 except ImportError as e:
     print(f"Advanced plugin system not available ({e}), using fallback")
+    logging.getLogger(__name__).warning("Advanced plugin system not available (%s), using fallback", e)
     ADVANCED_PLUGINS_AVAILABLE = False
 
     # Fallback plugin manager (original simple implementation)
@@ -103,7 +106,7 @@ except ImportError as e:
                         plugin_instance = plugin_class()
                         if plugin_instance.initialize(config):
                             self.plugins[plugin_name] = plugin_instance
-                            print(f"Loaded plugin: {plugin_name}")
+                            logging.getLogger(__name__).info("Loaded plugin: %s", plugin_name)
 
                             # Register webhooks if it's a webhook plugin
                             if hasattr(plugin_instance, "webhooks"):
@@ -127,12 +130,12 @@ except ImportError as e:
                                         self.register_hook(hook_name, callback)
 
                         else:
-                            print(f"Failed to initialize plugin: {plugin_name}")
+                            logging.getLogger(__name__).warning("Failed to initialize plugin: %s", plugin_name)
                     else:
                         print(f"No valid plugin class found in: {plugin_name}")
 
                 except Exception as e:
-                    print(f"Error loading plugin {plugin_name}: {e}")
+                    logging.getLogger(__name__).exception("Error loading plugin %s: %s", plugin_name, e)
 
         def register_webhook(self, path, handler, methods=None):
             """Register a webhook endpoint"""
@@ -276,9 +279,11 @@ class RedisCache:
             )
             # Test connection
             self.redis_client.ping()
-            print("Redis cache connected successfully")
+            logging.getLogger(__name__).info("Redis cache connected successfully")
         except Exception as e:
-            print(f"Redis connection failed, using memory cache: {e}")
+            logging.getLogger(__name__).warning(
+                "Redis connection failed, using memory cache: %s", e
+            )
             self.redis_client = None
 
     def get(self, key):

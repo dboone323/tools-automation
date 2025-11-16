@@ -9,6 +9,7 @@ import json
 import sys
 import subprocess
 from pathlib import Path
+import logging
 from typing import Dict, List, Optional
 
 # Configuration
@@ -70,7 +71,7 @@ class FixSuggester:
                     }
                 )
             except Exception as e:
-                print(f"WARN: Decision engine failed: {e}", file=sys.stderr)
+                logging.getLogger(__name__).warning("Decision engine failed: %s", e)
 
         # Strategy 2: MCP Client (AI-enhanced analysis)
         if self.mcp_available:
@@ -88,7 +89,7 @@ class FixSuggester:
                         }
                     )
             except Exception as e:
-                print(f"WARN: MCP client failed: {e}", file=sys.stderr)
+                logging.getLogger(__name__).warning("MCP client failed: %s", e)
 
         # Strategy 3: Pattern matching fallback
         if not suggestions:

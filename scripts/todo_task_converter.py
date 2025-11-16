@@ -173,7 +173,8 @@ class TodoTaskConverter:
     ) -> Dict[str, Any]:
         """Convert a TODO item into an agent task with enhanced metadata"""
         # Generate unique task ID
-        content_hash = hashlib.md5(
+        # Use sha256 for a stronger unique hash (non-security usage)
+        content_hash = hashlib.sha256(
             f"{todo.get('file', '')}:{todo.get('line', 0)}:{todo.get('text', '')}".encode()
         ).hexdigest()[:8]
 

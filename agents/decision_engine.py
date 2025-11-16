@@ -72,7 +72,9 @@ class DecisionEngine:
 
     def _stable_hash(self, text: str) -> str:
         """Generate stable 8-character hash for text."""
-        return hashlib.md5(text.encode()).hexdigest()[:8]
+        # Use a non-cryptographically weak hash for stable identifiers (not for security)
+        # MD5 is flagged by Bandit; use sha256 for better collision resistance.
+        return hashlib.sha256(text.encode()).hexdigest()[:8]
 
     def evaluate_situation(
         self, error_pattern: str, context: Dict[str, any] = None

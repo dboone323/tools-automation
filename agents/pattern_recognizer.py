@@ -58,7 +58,8 @@ def categorize(msg: str) -> tuple[str, str]:
 
 
 def stable_hash(s: str) -> str:
-    return hashlib.sha1(s.encode("utf-8")).hexdigest()[:12]
+    # Use sha256 for stronger hashing despite this being a non-security stable id
+    return hashlib.sha256(s.encode("utf-8")).hexdigest()[:12]
 
 
 def recognize(line: str) -> Pattern:

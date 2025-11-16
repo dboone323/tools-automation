@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Dict, List
 from datetime import datetime
 import hashlib
+import logging
 
 # Configuration
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
@@ -49,9 +50,9 @@ class FailurePredictor:
                             content = "{" + parts[-1]
                     return json.loads(content)
             except json.JSONDecodeError as e:
-                print(
-                    f"[Prediction] Warning: Could not parse failure_analysis.json: {e}",
-                    file=sys.stderr,
+                logger = logging.getLogger(__name__)
+                logger.warning(
+                    "[Prediction] Could not parse failure_analysis.json: %s", e
                 )
                 # Return minimal structure
                 return {"failures": []}
@@ -85,9 +86,8 @@ class FailurePredictor:
         Returns:
             Dictionary with risk score and predicted issues
         """
-        print(
-            f"[Prediction] Analyzing {change_type} in {file_path}...", file=sys.stderr
-        )
+        logger = logging.getLogger(__name__)
+        logger.debug("[Prediction] Analyzing %s in %s...", change_type, file_path)
 
         # Calculate risk score
         risk_score = self._calculate_risk_score(file_path, change_type)
@@ -183,10 +183,8 @@ class FailurePredictor:
             with open(file_path, "r") as f:
                 content = f.read()
         except Exception as e:
-            print(
-                f"[Prediction] Warning: Could not read {file_path}: {e}",
-                file=sys.stderr,
-            )
+            logger = logging.getLogger(__name__)
+            logger.warning("[Prediction] Could not read %s: %s", file_path, e)
             return issues
 
         # Check against known error patterns
@@ -456,7 +454,8 @@ class FailurePredictor:
         for pred in self.predictions_history["predictions"]:
             if (
                 pred["timestamp"] == prediction_id
-                or hashlib.md5(pred["timestamp"].encode()).hexdigest() == prediction_id
+                # Convert to sha256 for stronger stable ID hashing
+                or hashlib.sha256(pred["timestamp"].encode()).hexdigest() == prediction_id
             ):
                 pred["status"] = "completed"
                 pred["outcome"] = outcome

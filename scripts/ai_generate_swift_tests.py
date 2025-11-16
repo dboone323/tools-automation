@@ -121,7 +121,8 @@ def unique_output_path(base_dir: Path, base_name: str) -> Path:
         return candidate
     # Append short hash for uniqueness
     stem = base_name[:-7] if base_name.endswith(".swift") else base_name
-    suffix = hashlib.sha1(str(datetime.now().timestamp()).encode()).hexdigest()[:6]
+    # Use sha256 for stronger hash even though this is used only to ensure unique filenames
+    suffix = hashlib.sha256(str(datetime.now().timestamp()).encode()).hexdigest()[:6]
     return base_dir / f"{stem}_{suffix}.swift"
 
 
