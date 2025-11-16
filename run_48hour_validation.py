@@ -9,6 +9,7 @@ Includes scheduling, monitoring, and reporting for long-term test stability.
 import json
 import os
 import subprocess
+import shlex
 import time
 import schedule
 from pathlib import Path
@@ -29,6 +30,12 @@ class ValidationOrchestrator:
         self.running = False
         self.cycles_completed = 0
         self.load_config()
+        # Allow developers to opt-in to allowing shell-based commands via env var
+        self._allow_shell_env = os.environ.get("ALLOW_SHELL", "false").lower() in (
+            "1",
+            "true",
+            "yes",
+        )
 
     def load_config(self):
         """Load validation configuration."""
@@ -119,14 +126,57 @@ class ValidationOrchestrator:
         start_time = datetime.now()
 
         try:
-            result = subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                cwd=Path(__file__).parent
-            )
+            # Parse any leading VAR=VALUE env assignments
+            args = shlex.split(command)
+            env_vars = {}
+            i = 0
+            while i < len(args) and "=" in args[i] and not args[i].startswith("="):
+                key, val = args[i].split("=", 1)
+                env_vars[key] = val
+                i += 1
+
+            if i > 0:
+                cmd_list = args[i:]
+                env = {**os.environ, **env_vars}
+            else:
+                cmd_list = args
+                env = os.environ
+
+            requires_shell = any(c in command for c in ["|", "<", ">", "&&", "||", ";", "$"])
+            suite_allows_shell = suite_config.get("allow_shell", False) or self._allow_shell_env
+
+            if requires_shell and not suite_allows_shell:
+                # Not allowed to use a shell; attempt to run as a list and avoid shell=True
+                print(
+                    f"⚠️ SKIPPING shell usage for test suite '{name}' since allow_shell is False; will try list-based execution"
+                )
+                result = subprocess.run(
+                    cmd_list,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    cwd=Path(__file__).parent,
+                    env=env,
+                )
+            elif requires_shell and suite_allows_shell:
+                # Shell usage explicitly allowed for this suite
+                result = subprocess.run(
+                    command,
+                    shell=True,  # nosec: allowed controlled shell usage
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    cwd=Path(__file__).parent,
+                )
+            else:
+                result = subprocess.run(
+                    cmd_list,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    cwd=Path(__file__).parent,
+                    env=env,
+                )
 
             success = result.returncode == 0
             duration = (datetime.now() - start_time).total_seconds()
@@ -165,6 +215,9 @@ class ValidationOrchestrator:
                 "error": str(e),
                 "command": command
             }
+            # only allow shell execution if the suite has allow_shell=True or the env var is set
+            suite_allows_shell = suite_config.get("allow_shell", False) or self._allow_shell_env
+            requires_shell = requires_shell and suite_allows_shell
 
     def run_health_check(self, check_config):
         """Run a health check."""
@@ -173,14 +226,55 @@ class ValidationOrchestrator:
         timeout = check_config.get("timeout_seconds", 30)
 
         try:
-            result = subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                cwd=Path(__file__).parent
-            )
+            # Parse any leading VAR=VALUE env assignments
+            args = shlex.split(command)
+            env_vars = {}
+            i = 0
+            while i < len(args) and "=" in args[i] and not args[i].startswith("="):
+                key, val = args[i].split("=", 1)
+                env_vars[key] = val
+                i += 1
+
+            if i > 0:
+                cmd_list = args[i:]
+                env = {**os.environ, **env_vars}
+            else:
+                cmd_list = args
+                env = os.environ
+
+            requires_shell = any(c in command for c in ["|", "<", ">", "&&", "||", ";", "$"])
+            check_allows_shell = check_config.get("allow_shell", False) or self._allow_shell_env
+
+            if requires_shell and not check_allows_shell:
+                print(
+                    f"⚠️ Shell constructs detected for health check '{name}', but allow_shell is False; attempting safe execution"
+                )
+                result = subprocess.run(
+                    cmd_list,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    cwd=Path(__file__).parent,
+                    env=env,
+                )
+            elif requires_shell and check_allows_shell:
+                result = subprocess.run(
+                    command,
+                    shell=True,  # nosec: allowed controlled shell usage
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    cwd=Path(__file__).parent,
+                )
+            else:
+                result = subprocess.run(
+                    cmd_list,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    cwd=Path(__file__).parent,
+                    env=env,
+                )
 
             success = result.returncode == 0
 

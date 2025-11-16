@@ -10,6 +10,7 @@ monitoring, and 48-hour validation automation.
 import argparse
 import json
 import os
+import shlex
 import subprocess
 import sys
 import time
@@ -26,6 +27,8 @@ class Phase2TestOrchestrator:
         self.results_dir = self.workspace_root / "phase2_results"
         self.results_dir.mkdir(exist_ok=True)
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # allow shell execution if env var ALLOW_SHELL is set to true
+        self._allow_shell_env = os.environ.get("ALLOW_SHELL", "false").lower() in ("1", "true", "yes")
 
     def check_dependencies(self) -> bool:
         """Check if all required dependencies are available."""
@@ -169,14 +172,43 @@ class Phase2TestOrchestrator:
     def _run_command_background(self, command: str, name: str) -> Dict:
         """Run a command in the background."""
         try:
-            result = subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                cwd=self.workspace_root,
-                timeout=30,  # 30 second timeout for background commands
-            )
+            # Parse any leading VAR=VALUE env assignments
+            args = shlex.split(command)
+            env_vars = {}
+            i = 0
+            while i < len(args) and "=" in args[i] and not args[i].startswith("="):
+                key, val = args[i].split("=", 1)
+                env_vars[key] = val
+                i += 1
+
+            if i > 0:
+                cmd_list = args[i:]
+                env = {**os.environ, **env_vars}
+            else:
+                cmd_list = args
+                env = os.environ
+
+            requires_shell = any(c in command for c in ["|", "<", ">", "&&", "||", ";", "$"])
+            requires_shell = requires_shell and self._allow_shell_env
+
+            if requires_shell:
+                result = subprocess.run(
+                    command,
+                    shell=True,  # nosec: allowed controlled shell usage
+                    capture_output=True,
+                    text=True,
+                    cwd=self.workspace_root,
+                    timeout=30,  # 30 second timeout for background commands
+                )
+            else:
+                result = subprocess.run(
+                    cmd_list,
+                    capture_output=True,
+                    text=True,
+                    cwd=self.workspace_root,
+                    env=env,
+                    timeout=30,
+                )
 
             success = result.returncode == 0
 
@@ -197,14 +229,42 @@ class Phase2TestOrchestrator:
         start_time = datetime.now()
 
         try:
-            result = subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                cwd=self.workspace_root,
-                timeout=3600,  # 1 hour timeout
-            )
+            args = shlex.split(command)
+            env_vars = {}
+            i = 0
+            while i < len(args) and "=" in args[i] and not args[i].startswith("="):
+                key, val = args[i].split("=", 1)
+                env_vars[key] = val
+                i += 1
+
+            if i > 0:
+                cmd_list = args[i:]
+                env = {**os.environ, **env_vars}
+            else:
+                cmd_list = args
+                env = os.environ
+
+            requires_shell = any(c in command for c in ["|", "<", ">", "&&", "||", ";", "$"])
+            requires_shell = requires_shell and self._allow_shell_env
+
+            if requires_shell:
+                result = subprocess.run(
+                    command,
+                    shell=True,  # nosec: allowed controlled shell usage
+                    capture_output=True,
+                    text=True,
+                    cwd=self.workspace_root,
+                    timeout=3600,  # 1 hour timeout
+                )
+            else:
+                result = subprocess.run(
+                    cmd_list,
+                    capture_output=True,
+                    text=True,
+                    cwd=self.workspace_root,
+                    env=env,
+                    timeout=3600,
+                )
 
             success = result.returncode == 0
             duration = (datetime.now() - start_time).total_seconds()
@@ -247,6 +307,7 @@ class Phase2TestOrchestrator:
                 "duration_seconds": duration,
                 "timestamp": start_time.isoformat(),
             }
+            requires_shell = requires_shell and self._allow_shell_env
 
     def generate_comprehensive_report(self, results: List[Dict]) -> Dict:
         """Generate comprehensive Phase 2 testing report."""
