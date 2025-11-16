@@ -39,7 +39,7 @@ def test_run_48hour_validation_shell_not_allowed(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", fake_run)
 
-    result = vo.run_test_suite(suite)
+    _result = vo.run_test_suite(suite)
     # Because allow_shell is False, subprocess.run should NOT be invoked with shell=True
     assert "shell" not in captured["kwargs"] or not captured["kwargs"].get("shell")
 
@@ -70,7 +70,7 @@ def test_run_48hour_validation_shell_allowed_by_suite(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", fake_run)
 
-    result = vo.run_test_suite(suite)
+    _result = vo.run_test_suite(suite)
     assert captured["kwargs"].get("shell") is True
 
 
@@ -94,7 +94,7 @@ def test_phase2_run_test_command_shell_policy(monkeypatch):
     monkeypatch.setattr(subprocess, "run", fake_run)
 
     # By default ALLOW_SHELL is not set; ensure background and test commands avoid shell=True
-    r = orchestrator._run_test_command(cmd, "unit_test")
+    _r = orchestrator._run_test_command(cmd, "unit_test")
     assert not captured["kwargs"].get("shell", False)
 
     # Now set ALLOW_SHELL via env var and ensure shell=True is used
@@ -102,7 +102,7 @@ def test_phase2_run_test_command_shell_policy(monkeypatch):
     orchestrator = Phase2TestOrchestrator()
     captured = {}
     monkeypatch.setattr(subprocess, "run", fake_run)
-    r = orchestrator._run_test_command(cmd, "unit_test")
+    _r = orchestrator._run_test_command(cmd, "unit_test")
     assert captured["kwargs"].get("shell") is True
     if "ALLOW_SHELL" in os.environ:
         del os.environ["ALLOW_SHELL"]

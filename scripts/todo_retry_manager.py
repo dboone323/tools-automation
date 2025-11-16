@@ -4,14 +4,10 @@ TODO Retry Manager
 Smart retry logic for failed TODO tasks with analysis and optimization
 """
 
-import os
 import json
-import time
 from pathlib import Path
 from datetime import datetime, timedelta
-from typing import List, Dict, Any, Optional, Tuple
-from collections import defaultdict, Counter
-import subprocess
+from typing import List, Dict, Any, Optional
 
 
 class TodoRetryManager:

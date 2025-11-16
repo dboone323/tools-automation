@@ -4,7 +4,6 @@ TODO Task Converter
 Converts TODO/FIXME comments from codebase scan into agent tasks
 """
 
-import os
 import json
 import subprocess
 from pathlib import Path
@@ -470,13 +469,13 @@ class TodoTaskConverter:
         total_tasks = len(existing_queue["tasks"])
         completed_tasks = len(existing_queue["completed"])
         failed_tasks = len(existing_queue["failed"])
-        print(f"\n📊 Task Queue Status:")
+        print("\n📊 Task Queue Status:")
         print(f"  📋 Total tasks in queue: {total_tasks}")
         print(f"  ✅ Completed tasks: {completed_tasks}")
         print(f"  ❌ Failed tasks: {failed_tasks}")
         print(f"  ✨ New TODO tasks added: {new_task_count}")
         print(
-            f"  🎯 Intelligence features: ✅ Priority scoring, ✅ Agent matching, ✅ Dependency analysis"
+            "  🎯 Intelligence features: ✅ Priority scoring, ✅ Agent matching, ✅ Dependency analysis"
         )
 
         return new_task_count

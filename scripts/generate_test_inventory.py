@@ -6,7 +6,8 @@ Outputs JSON reports:
   reports/unreferenced_symbols.json
 Simplified initial implementation; enhancement hooks can be added later.
 """
-import re, json, os, sys
+import re
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]

@@ -13,11 +13,9 @@ import os
 import time
 import hashlib
 import logging
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
-from datetime import datetime, timedelta
 import psutil
-import statistics
 
 # Optional imports with fallbacks
 try:

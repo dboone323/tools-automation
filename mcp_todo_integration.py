@@ -8,7 +8,6 @@ import json
 import sys
 from pathlib import Path
 from typing import Dict, Any, List
-from datetime import datetime
 
 # Add project root to path
 project_root = Path(__file__).parent

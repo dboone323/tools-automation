@@ -9,8 +9,8 @@ integrating with Umami analytics and serving real-time agent data.
 import json
 import os
 import sys
-from datetime import datetime, timedelta
-from flask import Flask, jsonify, request
+from datetime import datetime
+from flask import Flask, jsonify
 from flask_cors import CORS
 import subprocess
 import logging

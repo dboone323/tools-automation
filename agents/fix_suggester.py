@@ -7,7 +7,6 @@ Combines knowledge base patterns with AI analysis to suggest fixes.
 
 import json
 import sys
-import os
 import subprocess
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -118,7 +117,7 @@ class FixSuggester:
 
     def _get_mcp_suggestion(self, error_pattern: str, context: Dict) -> Optional[Dict]:
         """Get suggestion from MCP client (AI analysis)."""
-        context_str = json.dumps(context) if context else ""
+        _context_str = json.dumps(context) if context else ""
         result = subprocess.run(
             [str(MCP_CLIENT), "suggest-fix", error_pattern],
             capture_output=True,

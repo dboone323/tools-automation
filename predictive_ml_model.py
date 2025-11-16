@@ -4,7 +4,11 @@ Updates predictive_data.json with ml_risk_scores.
 Usage: python predictive_ml_model.py predictive_data.json
 (No external ML libs required.)
 """
-import json, sys, math, datetime, os
+import json
+import sys
+import math
+import datetime
+import os
 
 if len(sys.argv) < 2:
     print("Usage: predictive_ml_model.py predictive_data.json")

@@ -7,11 +7,10 @@ Provides syntax, logical, integration, and outcome validation for agent operatio
 
 import json
 import sys
-import os
 import subprocess
 import time
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 from datetime import datetime
 from enum import Enum
 
@@ -325,7 +324,7 @@ class ValidationFramework:
         passed = len(failed_checks) == 0
 
         if passed:
-            message = f"Outcome validation passed - goal achieved"
+            message = "Outcome validation passed - goal achieved"
         else:
             message = f"Outcome validation failed: {len(failed_checks)}/{len(outcome_checks)} checks failed"
 
@@ -485,7 +484,7 @@ class ValidationFramework:
             if (
                 after_state["build_time"] > before_state["build_time"] * 1.5
             ):  # 50% increase
-                regressions.append(f"Build time increased significantly")
+                regressions.append("Build time increased significantly")
 
         if regressions:
             return (False, "; ".join(regressions))
@@ -589,7 +588,7 @@ def main():
         file_path = sys.argv[2]
         context = json.loads(sys.argv[3])
 
-        results = framework.validate_all_layers(file_path, context)
+        _results = framework.validate_all_layers(file_path, context)
         report = framework.get_validation_report()
         print(json.dumps(report, indent=2))
         sys.exit(0 if report["overall_passed"] else 1)

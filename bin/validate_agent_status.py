@@ -4,7 +4,6 @@ Validate agent_status.json schema and integrity.
 """
 import json
 import sys
-from pathlib import Path
 
 
 def validate_agent_status(file_path: str) -> bool:

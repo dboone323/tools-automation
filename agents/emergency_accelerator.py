@@ -180,7 +180,7 @@ class FinalAccelerator:
                     in_progress = len(
                         [t for t in tasks if t.get("status") == "in_progress"]
                     )
-                    completed = len(queue_data.get("completed", []))
+                    _completed = len(queue_data.get("completed", []))
 
                     if in_progress < 10:  # If less than 10 tasks running, boost
                         print(

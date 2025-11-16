@@ -8,11 +8,9 @@ import json
 import os
 import time
 import statistics
-from datetime import datetime, timedelta
-from collections import defaultdict, deque
+from datetime import datetime
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import StandardScaler
 
 
 class PredictiveMaintenance:

@@ -5,7 +5,6 @@ Automatically backs up files to cloud storage with configurable schedules.
 """
 
 import os
-import json
 import logging
 import schedule
 import time

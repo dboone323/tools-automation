@@ -7,11 +7,10 @@ Provides REST API endpoints for monitoring dashboard and data access
 import json
 import os
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 import glob
-import statistics
 
 app = Flask(__name__)
 CORS(app)

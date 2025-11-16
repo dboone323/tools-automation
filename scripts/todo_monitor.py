@@ -4,14 +4,12 @@ TODO Monitor
 Real-time monitoring and progress tracking for TODO task processing
 """
 
-import os
 import json
 import time
 from pathlib import Path
 from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple
-from collections import defaultdict, Counter
-import subprocess
+from typing import Dict, Any, List
+from collections import Counter
 
 
 class TodoMonitor:

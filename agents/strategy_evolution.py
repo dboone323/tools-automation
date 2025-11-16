@@ -6,10 +6,9 @@ Automatically tests and evolves strategies to improve performance over time
 
 import json
 import sys
-import os
 import random
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from datetime import datetime
 import copy
 

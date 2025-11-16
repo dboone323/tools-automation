@@ -12,7 +12,6 @@ from prometheus_client import (
     Gauge,
     Counter,
     Histogram,
-    Summary,
     generate_latest,
     CONTENT_TYPE_LATEST,
 )

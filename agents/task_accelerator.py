@@ -9,9 +9,6 @@ import time
 import os
 import sys
 from datetime import datetime, timedelta
-import subprocess
-import threading
-import queue
 
 
 class TaskAccelerator:
@@ -261,7 +258,7 @@ class TaskAccelerator:
                 remaining_days = remaining_hours / 24
                 completion_date = datetime.now() + timedelta(hours=remaining_hours)
 
-                print(f"\\n⏱️  ESTIMATED COMPLETION:")
+                print("\\n⏱️  ESTIMATED COMPLETION:")
                 print(f"Current rate: {rate_per_hour:.2f} tasks/hour")
                 print(f"Time remaining: {remaining_days:.1f} days")
                 print(f"Completion date: {completion_date.strftime('%Y-%m-%d %H:%M')}")

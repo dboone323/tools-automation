@@ -3,15 +3,12 @@
 Comprehensive tests for the MCP Python SDK
 """
 
-import asyncio
-import json
 import pytest
 from mcp_sdk import (
     MCPClient,
     MCPError,
     MCPConnectionError,
     MCPTimeoutError,
-    MCPAPIError,
 )
 
 

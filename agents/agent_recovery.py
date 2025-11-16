@@ -290,7 +290,7 @@ def ensure_extra_workers(clones: Dict[str, List[Dict[str, int]]], plan: Dict[str
             if script is None:
                 print(f"Warning: cannot scale {agent}; script not found", file=sys.stderr)
                 break
-            suffix = int(time.time())
+            _suffix = int(time.time())
             log_prefix = f"{agent.replace('.sh', '')}_extra_{current+1}"
             new_pid = launch_agent(script, log_prefix, dry_run, verbose)
             if new_pid is None:

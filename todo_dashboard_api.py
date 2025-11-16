@@ -4,16 +4,15 @@ Todo Dashboard API Server
 Provides REST API endpoints for the unified todo management dashboard.
 """
 
-import json
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 import threading
 import time
 import argparse
-from typing import Dict, List, Any
+from typing import Dict, Any
 
 # Add current directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))

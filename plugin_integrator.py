@@ -8,7 +8,6 @@ This replaces the simple plugin system with the comprehensive extensions framewo
 
 import os
 import sys
-import importlib.util
 import logging
 from typing import Dict, Any
 

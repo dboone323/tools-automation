@@ -13,10 +13,9 @@ import logging
 import os
 import sys
 import uuid
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Callable
+from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
 
 import aiohttp

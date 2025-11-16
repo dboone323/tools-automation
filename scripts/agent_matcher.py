@@ -4,12 +4,9 @@ Advanced Agent Matcher
 Intelligent agent assignment system for TODO tasks
 """
 
-import os
 import json
-import re
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
-from difflib import SequenceMatcher
+from typing import Dict, Any, List, Tuple
 
 
 class AgentMatcher:
@@ -544,7 +541,7 @@ def main():
         print(f"🎖️  Priority: {todo['priority']}/10")
         print(f"🤖 Best Agent: {agent}")
         print(f"📊 Score Breakdown: {breakdown}")
-        print(f"🏆 Top 3 Recommendations:")
+        print("🏆 Top 3 Recommendations:")
         for i, (rec_agent, rec_breakdown) in enumerate(recommendations, 1):
             print(f"  {i}. {rec_agent}: {rec_breakdown['total_score']} points")
 

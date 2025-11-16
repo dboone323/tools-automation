@@ -246,7 +246,7 @@ class XcodeprojCleaner:
 
         print("\n" + "=" * 60)
         print("✅ Cleanup complete!")
-        print(f"\n⚠️  IMPORTANT: Open the project in Xcode to verify it loads correctly")
+        print("\n⚠️  IMPORTANT: Open the project in Xcode to verify it loads correctly")
         print(
             f"   If there are issues, restore from: {self.pbxproj_path.with_suffix('.pbxproj.backup')}"
         )

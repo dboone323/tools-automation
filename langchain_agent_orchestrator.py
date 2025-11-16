@@ -4,9 +4,8 @@ LangChain Integration for Agent Workflows
 Provides LLM-powered task processing and agent coordination
 """
 
-import os
 import json
-from typing import Dict, List, Optional, Any
+from typing import Dict, List
 
 try:
     from langchain.llms import Ollama

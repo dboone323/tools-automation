@@ -4,7 +4,10 @@ Usage:
   python agent_training_update.py --id <TODO_ID> [--snippet path/to/code_or_log]
 Stores training data in agent_training_data.json
 """
-import argparse, json, os, datetime
+import argparse
+import json
+import os
+import datetime
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 TRAIN_FILE = os.path.join(ROOT, "agent_training_data.json")

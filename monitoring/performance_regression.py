@@ -8,9 +8,8 @@ import json
 import os
 import time
 import statistics
-from datetime import datetime, timedelta
+from datetime import datetime
 from collections import defaultdict
-import numpy as np
 
 
 class PerformanceRegressionDetector:

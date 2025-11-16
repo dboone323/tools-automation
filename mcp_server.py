@@ -2377,20 +2377,24 @@ Task {{
 }}
 """
 
-            # Write Swift script to temporary file
-            script_path = "/tmp/consciousness_expansion.swift"
+            # Write Swift script to a secure temporary file
+            import tempfile
+
+            tmp_dir = tempfile.mkdtemp(prefix="mcp_consciousness_")
+            script_path = os.path.join(tmp_dir, "consciousness_expansion.swift")
             with open(script_path, "w") as f:
                 f.write(swift_script)
 
             # Compile and run Swift script
+            exec_path = os.path.join(tmp_dir, "consciousness_expansion_exec")
             compile_cmd = [
                 "swiftc",
                 "-o",
-                "/tmp/consciousness_expansion_exec",
+                exec_path,
                 script_path,
                 framework_path,
             ]
-            run_cmd = ["/tmp/consciousness_expansion_exec"]
+            run_cmd = [exec_path]
 
             # Compile
             compile_result = subprocess.run(
@@ -2424,6 +2428,23 @@ Task {{
             return {"error": "consciousness_expansion_timeout"}
         except Exception as e:
             return {"error": f"consciousness_expansion_failed: {str(e)}"}
+        finally:
+            # Clean up temporary files
+            try:
+                if os.path.exists(script_path):
+                    os.remove(script_path)
+            except Exception:
+                pass
+            try:
+                if os.path.exists(exec_path):
+                    os.remove(exec_path)
+            except Exception:
+                pass
+            try:
+                if os.path.exists(tmp_dir):
+                    os.rmdir(tmp_dir)
+            except Exception:
+                pass
 
     def _execute_dimensional_computation(self, dimensions, computation_type):
         """Execute dimensional computing task"""

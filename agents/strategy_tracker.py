@@ -8,7 +8,7 @@ import json
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional
-from datetime import datetime, timedelta
+from datetime import datetime
 import statistics
 
 # Configuration

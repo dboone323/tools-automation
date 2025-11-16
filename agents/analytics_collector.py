@@ -28,7 +28,6 @@ import argparse
 import json
 import os
 import statistics
-import time
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List
 
@@ -60,7 +59,7 @@ def _mean_safe(values: List[float], default: float = 0.0) -> float:
 def collect_metrics() -> Dict[str, Any]:
     # Load inputs (best-effort)
     predictions = _load_json(os.path.join(KNOWLEDGE_DIR, "predictions.json"), [])
-    proactive_metrics = _load_json(
+    _proactive_metrics = _load_json(
         os.path.join(KNOWLEDGE_DIR, "proactive_metrics.json"), {}
     )
     proactive_alerts = _load_json(

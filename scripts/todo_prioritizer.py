@@ -4,13 +4,9 @@ Advanced TODO Prioritizer
 Intelligent priority scoring system for TODO tasks
 """
 
-import os
 import json
-import re
 from pathlib import Path
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional, Tuple
-import subprocess
+from typing import Dict, Any, List, Tuple
 
 
 class TodoPrioritizer:

@@ -39,10 +39,10 @@ class AgentOptimizer:
 
     def optimize_agent_memory(self):
         """Optimize agent memory usage by restarting memory-intensive agents"""
-        agents = self.load_agent_status()
+        _agents = self.load_agent_status()
         optimized = 0
 
-        for agent_name, agent_info in agents.items():
+        for agent_name, agent_info in _agents.items():
             pid = agent_info.get("pid", 0)
             if pid > 0:
                 try:
@@ -69,7 +69,7 @@ class AgentOptimizer:
 
     def parallelize_agent_tasks(self):
         """Enable parallel task processing within agents"""
-        agents = self.load_agent_status()
+        _agents = self.load_agent_status()
         tasks = self.load_tasks()
 
         # Group tasks by agent
@@ -105,7 +105,7 @@ class AgentOptimizer:
 
     def optimize_task_distribution(self):
         """Redistribute tasks for better load balancing"""
-        agents = self.load_agent_status()
+        _agents = self.load_agent_status()
         tasks = self.load_tasks()
 
         # Count tasks per agent
@@ -120,7 +120,7 @@ class AgentOptimizer:
         overloaded = [a for a, count in agent_workload.items() if count > 3]
         available_agents = [
             a
-            for a, info in agents.items()
+            for a, info in _agents.items()
             if info.get("status") in ["available", "idle"]
         ]
 
@@ -154,7 +154,7 @@ class AgentOptimizer:
 
     def enable_agent_specialization(self):
         """Enable agent specialization for better performance"""
-        agents = self.load_agent_status()
+        _agents = self.load_agent_status()
         tasks = self.load_tasks()
 
         # Analyze task completion patterns

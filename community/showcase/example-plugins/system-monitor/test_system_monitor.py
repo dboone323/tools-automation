@@ -4,9 +4,7 @@ Test suite for System Monitor Plugin
 """
 
 import unittest
-import json
-import time
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from datetime import datetime
 from system_monitor import (
     SystemMonitor,

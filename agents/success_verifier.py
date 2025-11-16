@@ -207,7 +207,7 @@ class SuccessVerifier:
                 return True
             else:
                 # Extract test failure count
-                output = result.stderr.decode()
+                _output = result.stderr.decode()
                 self.checks_failed.append(
                     {"check": check_name, "reason": "Some tests failed"}
                 )
@@ -459,7 +459,7 @@ class SuccessVerifier:
 
     def _check_functionality_preserved(self, context: Dict) -> bool:
         """Check if functionality is preserved."""
-        check_name = "functionality_preserved"
+        _check_name = "functionality_preserved"
 
         # Run tests to verify functionality
         return self._check_tests_pass(context)

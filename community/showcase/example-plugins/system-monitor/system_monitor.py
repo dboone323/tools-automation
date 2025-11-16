@@ -5,12 +5,11 @@ Comprehensive system monitoring with alerts and performance tracking.
 """
 
 import psutil
-import json
 import logging
 import time
 import threading
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from dataclasses import dataclass
 
 try:

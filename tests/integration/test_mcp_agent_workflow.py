@@ -6,8 +6,6 @@ import json
 import time
 import subprocess
 import os
-import signal
-from unittest.mock import patch, MagicMock
 
 
 class TestMCPAgentWorkflowIntegration:

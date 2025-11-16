@@ -35,7 +35,6 @@ except ImportError:
     schedule = _DummySchedule()
 from pathlib import Path
 from datetime import datetime, timedelta
-from threading import Thread
 import argparse
 import signal
 import sys

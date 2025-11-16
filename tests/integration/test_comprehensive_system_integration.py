@@ -17,13 +17,10 @@ Coverage includes:
 
 import pytest
 import requests
-import json
 import time
 import subprocess
 import os
-import threading
 import uuid
-from unittest.mock import patch, MagicMock
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
@@ -372,7 +369,6 @@ class TestMCPSystemIntegration:
     def test_rate_limiting_integration(self, mcp_server):
         """Test rate limiting protects server from abuse."""
         # Reset rate limit bucket for this test
-        import time
 
         # Clear any existing rate limit counters
         if hasattr(mcp_server, "request_counters"):

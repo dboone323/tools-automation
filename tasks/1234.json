@@ -1,0 +1,8 @@
+{
+  "id": "1234",
+  "command": "echo hi | sed s/h/a/",
+  "status": "success",
+  "returncode": 0,
+  "stdout": "out",
+  "stderr": ""
+}

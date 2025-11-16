@@ -5,10 +5,8 @@ Creates comprehensive unit tests with proper import handling for subdirectories
 """
 
 import os
-import sys
 from pathlib import Path
 
-from pathlib import Path
 
 
 # Resolve workspace root dynamically: prefer git, else parent of this file

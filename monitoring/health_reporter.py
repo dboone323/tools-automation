@@ -584,7 +584,7 @@ This is an automated message from the Tools Automation monitoring system.
                 ]
             }
 
-            response = requests.post(webhook_url, json=payload)
+            response = requests.post(webhook_url, json=payload, timeout=5)
             if response.status_code == 200:
                 print("📱 Slack notification sent successfully")
             else:

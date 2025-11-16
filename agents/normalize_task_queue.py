@@ -7,7 +7,9 @@ Normalize task_queue.json to agent-compatible schema:
 - Ensure completed array exists
 """
 from __future__ import annotations
-import json, os, sys, time
+import json
+import os
+import time
 from typing import Any, Dict
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))

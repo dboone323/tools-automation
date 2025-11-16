@@ -458,7 +458,7 @@ class TodoManager:
         """Perform health check on the todo manager"""
         try:
             # Check if we can access the data
-            todos = list(self.todos.values())
+            _todos = list(self.todos.values())
             # Check if queue is responsive
             self.queue.put(("test", "health_check"))
             # Basic validation

@@ -3,7 +3,11 @@
 Usage:
   python complete_todo.py --id <TODO_ID> [--notes "resolution notes"] [--outcome success|partial|failed] [--root-cause "root cause"]
 """
-import argparse, json, os, sys, datetime
+import argparse
+import json
+import os
+import sys
+import datetime
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 TODOS_FILE = os.path.join(ROOT, "unified_todos.json")

@@ -7,12 +7,9 @@ for manual review. Integrates with GitHub Actions for continuous monitoring.
 """
 
 import json
-import os
 import subprocess
-import sys
 from pathlib import Path
 from datetime import datetime, timedelta
-from collections import defaultdict, Counter
 import argparse
 
 
@@ -214,8 +211,8 @@ class FlakyTestMonitor:
         skip_content += "# These tests are skipped due to flakiness\n\n"
 
         for test_id in active_quarantines:
-            skip_content += f"markers =\n    quarantine: marks tests as quarantined due to flakiness\n"
-            skip_content += f'addopts =\n    -m "not quarantine"\n'
+            skip_content += "markers =\n    quarantine: marks tests as quarantined due to flakiness\n"
+            skip_content += 'addopts =\n    -m "not quarantine"\n'
             break  # Only add once
 
         # Create conftest.py content for individual test skipping

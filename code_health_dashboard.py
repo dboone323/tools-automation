@@ -13,7 +13,6 @@ Metrics:
 
 This complements the existing dashboard system by generating a code-focused snapshot.
 """
-import os
 import re
 import json
 import time
