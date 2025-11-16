@@ -9,7 +9,7 @@ ROOT_DIR="${ROOT_DIR:-$(cd "${SCRIPT_DIR}/.." && pwd)}"
 # Export expected MCP env vars (tests search for these patterns)
 export MCP_HOST="${MCP_HOST:-127.0.0.1}"
 export MCP_PORT="${MCP_PORT:-8080}"
-export MCP_AUTH_TOKEN="${MCP_AUTH_TOKEN:-dummy-token}"
+export MCP_AUTH_TOKEN="${MCP_AUTH_TOKEN:-}"
 
 # Call helper to populate auth token if available
 if [[ -x "${ROOT_DIR}/scripts/mcp_auth_token.sh" ]]; then

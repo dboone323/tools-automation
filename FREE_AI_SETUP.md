@@ -3,12 +3,14 @@
 ## What's Been Set Up
 
 ### 1. Ollama (Primary - 100% Free)
+
 - **Local AI server** running on your machine
 - **No API costs** - uses your computer's resources
 - **Models installed**: llama2 (general), codellama (code)
 - **Endpoint**: http://localhost:11434
 
 ### 2. Hugging Face (Backup - Free Tier)
+
 - **Free inference API** with rate limits
 - **3000 requests/hour** free tier
 - **No credit card required**
@@ -16,6 +18,7 @@
 ## How to Use in Your Code
 
 ### Replace OpenAI Calls
+
 ```swift
 // OLD (Paid)
 let openai = OpenAI(apiKey: "your-key")
@@ -26,6 +29,7 @@ let response = try await ollama.generate(model: "llama2", prompt: prompt)
 ```
 
 ### Replace Gemini Calls
+
 ```swift
 // OLD (Paid)
 let gemini = GeminiAPI(apiKey: "your-key")
@@ -37,34 +41,38 @@ let response = try await ollama.generate(model: "codellama", prompt: prompt)
 ## Managing Ollama
 
 ### Start Ollama
+
 ```bash
 ollama serve
 ```
 
 ### List Available Models
+
 ```bash
 ollama list
 ```
 
 ### Pull More Models
+
 ```bash
 ollama pull mistral  # Better general model
 ollama pull llama2:13b  # Larger model
 ```
 
 ### Stop Ollama
+
 ```bash
 pkill ollama
 ```
 
 ## Cost Comparison
 
-| Service | Cost | Setup | Speed |
-|---------|------|-------|-------|
-| OpenAI GPT-4 | $0.03/1K tokens | API Key | Fast |
-| Gemini Pro | $0.0015/1K chars | API Key | Fast |
-| **Ollama Local** | **$0.00** | Local Install | Medium |
-| Hugging Face | $0.00 (rate limited) | Token Optional | Slow |
+| Service          | Cost                 | Setup          | Speed  |
+| ---------------- | -------------------- | -------------- | ------ |
+| OpenAI GPT-4     | $0.03/1K tokens      | API Key        | Fast   |
+| Gemini Pro       | $0.0015/1K chars     | API Key        | Fast   |
+| **Ollama Local** | **$0.00**            | Local Install  | Medium |
+| Hugging Face     | $0.00 (rate limited) | Token Optional | Slow   |
 
 ## Next Steps
 
@@ -89,7 +97,7 @@ Add these to your `~/.zshrc`:
 export OLLAMA_HOST=http://localhost:11434
 
 # Hugging Face (optional)
-export HF_TOKEN=your_token_here
+export HF_TOKEN=<YOUR_HF_TOKEN>
 ```
 
 Enjoy your FREE AI services! 🚀

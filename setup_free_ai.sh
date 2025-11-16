@@ -105,7 +105,8 @@ setup_huggingface() {
   if [[ -z ${HF_TOKEN} ]]; then
     print_warning "Hugging Face token not found. Get one at: https://huggingface.co/settings/tokens"
     print_status "Set HF_TOKEN environment variable for better rate limits"
-    echo "export HF_TOKEN='your_token_here'" >>~/.zshrc
+    # Add a commented instruction instead of an actual token so pre-commit scanning won't flag placeholder tokens
+    echo "# export HF_TOKEN=<YOUR_HF_TOKEN>  # Add your Hugging Face token here, do not commit sensitive values" >>~/.zshrc
   else
     print_success "Hugging Face token found"
   fi
@@ -230,7 +231,7 @@ let response = try await ollama.generate(model: "codellama", prompt: prompt)
 ## Managing Ollama
 
 ### Start Ollama
-```bash
+#```bash
 ollama serve
 ```
 
@@ -282,7 +283,7 @@ Add these to your `~/.zshrc`:
 export OLLAMA_HOST=http://localhost:11434
 
 # Hugging Face (optional)
-export HF_TOKEN=your_token_here
+export HF_TOKEN=<YOUR_HF_TOKEN>
 ```
 
 Enjoy your FREE AI services! 🚀

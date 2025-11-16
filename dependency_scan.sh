@@ -54,7 +54,7 @@ authenticate_snyk() {
 
     if [[ -z "${SNYK_TOKEN}" ]]; then
         print_warning "SNYK_TOKEN environment variable not set"
-        print_status "Set it with: export SNYK_TOKEN=your_token_here"
+        print_status "Set it with: export SNYK_TOKEN=<YOUR_SNYK_TOKEN>"
         return 1
     fi
 }
