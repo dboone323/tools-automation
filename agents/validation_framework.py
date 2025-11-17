@@ -8,10 +8,10 @@ Provides syntax, logical, integration, and outcome validation for agent operatio
 import json
 import sys
 import subprocess
-from agents.utils import safe_run, user_log
 import logging
-logger = logging.getLogger(__name__)
 import time
+from agents.utils import safe_run, user_log
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import Dict, List, Tuple
 from datetime import datetime
@@ -580,12 +580,12 @@ def main():
 
         context = json.loads(sys.argv[2])
         result = framework.validate_outcome(context)
-        print(json.dumps(result.to_dict(), indent=2))
+        user_log(json.dumps(result.to_dict(), indent=2))
         sys.exit(0 if result.passed else 1)
 
     elif command == "all":
         if len(sys.argv) < 4:
-            print("ERROR: Missing file path and context JSON", file=sys.stderr)
+            user_log("ERROR: Missing file path and context JSON", level="error", stderr=True)
             sys.exit(1)
 
         file_path = sys.argv[2]

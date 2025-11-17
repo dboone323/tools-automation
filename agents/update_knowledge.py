@@ -9,9 +9,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import sys
 from datetime import datetime, timezone
 import logging
+from agents.utils import user_log
 logger = logging.getLogger(__name__)
 
 
@@ -87,7 +87,8 @@ def main() -> int:
     try:
         pattern_obj = json.loads(args.pattern_json)
     except json.JSONDecodeError as e:
-        print(f"Invalid JSON for --pattern-json: {e}", file=sys.stderr)
+        user_log(f"Invalid JSON for --pattern-json: {e}", level="error", stderr=True)
+        return 2
         return 2
 
     update_error_patterns(args.workspace, pattern_obj, args.source)

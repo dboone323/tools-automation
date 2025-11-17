@@ -13,6 +13,7 @@ from typing import Dict, List
 from datetime import datetime
 import hashlib
 import logging
+from agents.utils import user_log
 
 # Configuration
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
@@ -520,17 +521,19 @@ class FailurePredictor:
 def main():
     """Main entry point"""
     if len(sys.argv) < 2:
-        print("Usage: prediction_engine.py <command> [args...]", file=sys.stderr)
-        print("\nCommands:", file=sys.stderr)
-        print(
+        user_log("Usage: prediction_engine.py <command> [args...]", level="error", stderr=True)
+        user_log("\nCommands:", level="error", stderr=True)
+        user_log(
             "  analyze <file_path> [change_type]  - Analyze file and predict failures",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
-        print(
+        user_log(
             "  update <prediction_id> <outcome> [issues...]  - Update prediction outcome",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
-        print("  accuracy  - Show prediction accuracy statistics", file=sys.stderr)
+        user_log("  accuracy  - Show prediction accuracy statistics", level="error", stderr=True)
         sys.exit(1)
 
     command = sys.argv[1]
@@ -538,18 +541,18 @@ def main():
 
     if command == "analyze":
         if len(sys.argv) < 3:
-            print("Error: analyze requires file_path argument", file=sys.stderr)
+            user_log("Error: analyze requires file_path argument", level="error", stderr=True)
             sys.exit(1)
 
         file_path = sys.argv[2]
         change_type = sys.argv[3] if len(sys.argv) > 3 else "modification"
 
         result = predictor.analyze_change(file_path, change_type)
-        print(json.dumps(result, indent=2))
+        user_log(json.dumps(result, indent=2))
 
     elif command == "update":
         if len(sys.argv) < 4:
-            print("Error: update requires prediction_id and outcome", file=sys.stderr)
+            user_log("Error: update requires prediction_id and outcome", level="error", stderr=True)
             sys.exit(1)
 
         prediction_id = sys.argv[2]
@@ -557,7 +560,7 @@ def main():
         actual_issues = sys.argv[4:] if len(sys.argv) > 4 else []
 
         predictor.update_prediction_outcome(prediction_id, outcome, actual_issues)
-        print(
+        user_log(
             json.dumps(
                 {
                     "status": "updated",
@@ -569,10 +572,10 @@ def main():
 
     elif command == "accuracy":
         accuracy = predictor.get_prediction_accuracy()
-        print(json.dumps(accuracy, indent=2))
+        user_log(json.dumps(accuracy, indent=2))
 
     else:
-        print(f"Error: Unknown command '{command}'", file=sys.stderr)
+        user_log(f"Error: Unknown command '{command}'", level="error", stderr=True)
         sys.exit(1)
 
 

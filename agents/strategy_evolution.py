@@ -10,6 +10,7 @@ import random
 from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
+from agents.utils import user_log
 import copy
 
 # Configuration
@@ -76,18 +77,12 @@ class StrategyEvolution:
         Returns:
             Variant strategy dictionary
         """
-        print(
-            f"[Strategy Evolution] Generating variant for {strategy_id}...",
-            file=sys.stderr,
-        )
+        user_log(f"[Strategy Evolution] Generating variant for {strategy_id}...", level="info", stderr=True)
 
         # Find base strategy
         base_strategy = self._find_strategy(strategy_id)
         if not base_strategy:
-            print(
-                f"[Strategy Evolution] Strategy {strategy_id} not found",
-                file=sys.stderr,
-            )
+            user_log(f"[Strategy Evolution] Strategy {strategy_id} not found", level="error", stderr=True)
             return None
 
         # Create variant with mutations
@@ -105,10 +100,7 @@ class StrategyEvolution:
         for mutation in mutations:
             variant["mutations"].append(mutation)
 
-        print(
-            f"[Strategy Evolution] Generated variant with {len(mutations)} mutation(s)",
-            file=sys.stderr,
-        )
+        user_log(f"[Strategy Evolution] Generated variant with {len(mutations)} mutation(s)", level="info", stderr=True)
         return variant
 
     def _generate_mutations(self, strategy: Dict) -> List[Dict]:
@@ -177,10 +169,7 @@ class StrategyEvolution:
         Returns:
             Experiment configuration
         """
-        print(
-            f"[Strategy Evolution] Creating A/B test for {strategy_id}...",
-            file=sys.stderr,
-        )
+        user_log(f"[Strategy Evolution] Creating A/B test for {strategy_id}...", level="info", stderr=True)
 
         # Generate variant
         variant = self.generate_variant(strategy_id)
@@ -220,10 +209,7 @@ class StrategyEvolution:
         self.experiments["experiments"].append(experiment)
         self._save_experiments()
 
-        print(
-            f"[Strategy Evolution] Created experiment {experiment['id']}",
-            file=sys.stderr,
-        )
+        user_log(f"[Strategy Evolution] Created experiment {experiment['id']}", level="info", stderr=True)
         return experiment
 
     def record_ab_result(
@@ -245,17 +231,11 @@ class StrategyEvolution:
         # Find experiment
         experiment = self._find_experiment(experiment_id)
         if not experiment:
-            print(
-                f"[Strategy Evolution] Experiment {experiment_id} not found",
-                file=sys.stderr,
-            )
+            user_log(f"[Strategy Evolution] Experiment {experiment_id} not found", level="error", stderr=True)
             return
 
         if experiment["status"] != "active":
-            print(
-                f"[Strategy Evolution] Experiment {experiment_id} is not active",
-                file=sys.stderr,
-            )
+            user_log(f"[Strategy Evolution] Experiment {experiment_id} is not active", level="warning", stderr=True)
             return
 
         # Update results
@@ -287,10 +267,7 @@ class StrategyEvolution:
 
     def _complete_experiment(self, experiment: Dict):
         """Complete an A/B test experiment and determine winner"""
-        print(
-            f"[Strategy Evolution] Completing experiment {experiment['id']}...",
-            file=sys.stderr,
-        )
+        user_log(f"[Strategy Evolution] Completing experiment {experiment['id']}...", level="info", stderr=True)
 
         experiment["status"] = "completed"
         experiment["completed_at"] = datetime.now().isoformat()
@@ -340,10 +317,7 @@ class StrategyEvolution:
         if decision == "adopt":
             self._record_evolution(experiment)
 
-        print(
-            f"[Strategy Evolution] Experiment complete: winner={winner}, decision={decision}",
-            file=sys.stderr,
-        )
+        user_log(f"[Strategy Evolution] Experiment complete: winner={winner}, decision={decision}", level="info", stderr=True)
 
     def _record_evolution(self, experiment: Dict):
         """Record successful evolution"""
@@ -367,10 +341,7 @@ class StrategyEvolution:
 
         self._save_evolution()
 
-        print(
-            f"[Strategy Evolution] Evolution recorded: {evolution['base_strategy']} -> {evolution['variant_strategy']}",
-            file=sys.stderr,
-        )
+        user_log(f"[Strategy Evolution] Evolution recorded: {evolution['base_strategy']} -> {evolution['variant_strategy']}", level="info", stderr=True)
 
     def get_experiment_status(self, experiment_id: str) -> Dict:
         """Get status of an A/B test experiment"""
@@ -438,22 +409,22 @@ class StrategyEvolution:
 def main():
     """Main entry point"""
     if len(sys.argv) < 2:
-        print("Usage: strategy_evolution.py <command> [args...]", file=sys.stderr)
-        print("\nCommands:", file=sys.stderr)
-        print(
-            "  variant <strategy_id>  - Generate variant for strategy", file=sys.stderr
-        )
-        print(
+        user_log("Usage: strategy_evolution.py <command> [args...]", level="error", stderr=True)
+        user_log("\nCommands:", level="error", stderr=True)
+        user_log("  variant <strategy_id>  - Generate variant for strategy", level="error", stderr=True)
+        user_log(
             "  create-test <strategy_id> <context> [sample_size]  - Create A/B test",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
-        print(
+        user_log(
             "  record <experiment_id> <variant_type> <success> <time>  - Record result",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
-        print("  status <experiment_id>  - Get experiment status", file=sys.stderr)
-        print("  list  - List active experiments", file=sys.stderr)
-        print("  history  - Show evolution history", file=sys.stderr)
+        user_log("  status <experiment_id>  - Get experiment status", level="error", stderr=True)
+        user_log("  list  - List active experiments", level="error", stderr=True)
+        user_log("  history  - Show evolution history", level="error", stderr=True)
         sys.exit(1)
 
     command = sys.argv[1]
@@ -461,22 +432,16 @@ def main():
 
     if command == "variant":
         if len(sys.argv) < 3:
-            print("Error: variant requires strategy_id", file=sys.stderr)
+            user_log("Error: variant requires strategy_id", level="error", stderr=True)
             sys.exit(1)
 
         strategy_id = sys.argv[2]
         variant = evolution.generate_variant(strategy_id)
-        print(
-            json.dumps(variant, indent=2)
-            if variant
-            else json.dumps({"error": "Failed"})
-        )
+        user_log(json.dumps(variant, indent=2) if variant else json.dumps({"error": "Failed"}))
 
     elif command == "create-test":
         if len(sys.argv) < 4:
-            print(
-                "Error: create-test requires strategy_id and context", file=sys.stderr
-            )
+            user_log("Error: create-test requires strategy_id and context", level="error", stderr=True)
             sys.exit(1)
 
         strategy_id = sys.argv[2]
@@ -484,13 +449,14 @@ def main():
         sample_size = int(sys.argv[4]) if len(sys.argv) > 4 else 20
 
         experiment = evolution.create_ab_test(strategy_id, context, sample_size)
-        print(json.dumps(experiment, indent=2))
+        user_log(json.dumps(experiment, indent=2))
 
     elif command == "record":
         if len(sys.argv) < 6:
-            print(
+            user_log(
                 "Error: record requires experiment_id, variant_type, success, time",
-                file=sys.stderr,
+                level="error",
+                stderr=True,
             )
             sys.exit(1)
 
@@ -500,27 +466,27 @@ def main():
         execution_time = float(sys.argv[5])
 
         evolution.record_ab_result(experiment_id, variant_type, success, execution_time)
-        print(json.dumps({"status": "recorded"}))
+        user_log(json.dumps({"status": "recorded"}))
 
     elif command == "status":
         if len(sys.argv) < 3:
-            print("Error: status requires experiment_id", file=sys.stderr)
+            user_log("Error: status requires experiment_id", level="error", stderr=True)
             sys.exit(1)
 
         experiment_id = sys.argv[2]
         status = evolution.get_experiment_status(experiment_id)
-        print(json.dumps(status, indent=2))
+        user_log(json.dumps(status, indent=2))
 
     elif command == "list":
         experiments = evolution.list_active_experiments()
-        print(json.dumps(experiments, indent=2))
+        user_log(json.dumps(experiments, indent=2))
 
     elif command == "history":
         history = evolution.get_evolution_history()
-        print(json.dumps(history, indent=2))
+        user_log(json.dumps(history, indent=2))
 
     else:
-        print(f"Error: Unknown command '{command}'", file=sys.stderr)
+        user_log(f"Error: Unknown command '{command}'", level="error", stderr=True)
         sys.exit(1)
 
 

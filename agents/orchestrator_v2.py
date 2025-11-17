@@ -26,10 +26,11 @@ import json
 import os
 import time
 import logging
-from agents.utils import user_log
-logger = logging.getLogger(__name__)
 import uuid
 from typing import Any, Dict, List
+from agents.utils import user_log, safe_start
+
+logger = logging.getLogger(__name__)
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
@@ -121,7 +122,6 @@ def _pick_agent(
 
 def _start_agent_if_needed(agent_id: str) -> bool:
     """Start an agent if it's not already running."""
-    import subprocess
     import logging
     logger = logging.getLogger(__name__)
     import os
@@ -152,7 +152,7 @@ def _start_agent_if_needed(agent_id: str) -> bool:
         # Start in background
         log_file = os.path.join(AGENTS_DIR, f"{agent_base}.log")
         with open(log_file, "a") as log:
-            proc = subprocess.Popen([agent_script], stdout=log, stderr=log, cwd=ROOT)
+            proc = safe_start([agent_script], stdout=log, stderr=log, cwd=ROOT)
 
         # Write PID file
         with open(pid_file, "w") as f:

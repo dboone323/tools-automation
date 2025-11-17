@@ -7,8 +7,9 @@ import json
 import os
 import sys
 import logging
-logger = logging.getLogger(__name__)
 import time
+logger = logging.getLogger(__name__)
+from agents.utils import user_log
 from typing import Any, Callable, Dict
 
 try:
@@ -199,7 +200,7 @@ def main(argv: list[str]) -> int:
     try:
         args.func(args)
     except Exception as exc:  # pragma: no cover - defensive logging
-        print(f"status_utils: {exc}", file=sys.stderr)
+        user_log(f"status_utils: {exc}", level="error", stderr=True)
         return 1
     return 0
 

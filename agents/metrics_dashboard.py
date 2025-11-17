@@ -16,8 +16,8 @@ import json
 import os
 from agents.utils import safe_run, user_log
 import logging
-logger = logging.getLogger(__name__)
 import time
+logger = logging.getLogger(__name__)
 from typing import Any, Dict
 
 

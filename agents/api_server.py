@@ -13,7 +13,7 @@ AUDIT_LOG = os.path.join(os.path.dirname(__file__), "audit.log")
 POLICY_CONF = os.path.join(os.path.dirname(__file__), "policy.conf")
 API_TOKEN = os.environ.get("API_TOKEN")
 if not API_TOKEN:
-    print("ERROR: API_TOKEN environment variable must be set for security")
+    user_log("ERROR: API_TOKEN environment variable must be set for security", level="error", stderr=True)
     exit(1)
 
 

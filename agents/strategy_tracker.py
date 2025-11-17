@@ -454,15 +454,16 @@ def main():
             level="error",
             stderr=True,
         )
-        print("  adapt <strategy_id> <change> <impact>", file=sys.stderr)
-        print("  performance <strategy_id>", file=sys.stderr)
-        print("  best <context>", file=sys.stderr)
-        print("  list", file=sys.stderr)
-        print("  compare <strategy_id1> <strategy_id2> [...]", file=sys.stderr)
-        print("  recommend <context>", file=sys.stderr)
-        print(
+        user_log("  adapt <strategy_id> <change> <impact>", level="error", stderr=True)
+        user_log("  performance <strategy_id>", level="error", stderr=True)
+        user_log("  best <context>", level="error", stderr=True)
+        user_log("  list", level="error", stderr=True)
+        user_log("  compare <strategy_id1> <strategy_id2> [...]", level="error", stderr=True)
+        user_log("  recommend <context>", level="error", stderr=True)
+        user_log(
             "  add <strategy_id> <name> <description> <contexts> <risk> <time>",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
         sys.exit(1)
 
@@ -545,9 +546,10 @@ def main():
 
     elif command == "add":
         if len(sys.argv) < 8:
-            print(
+            user_log(
                 "Error: add requires strategy_id, name, description, contexts, risk, time",
-                file=sys.stderr,
+                level="error",
+                stderr=True,
             )
             sys.exit(1)
 

@@ -9,6 +9,7 @@ import json
 import sys
 import hashlib
 from typing import Dict, List
+from agents.utils import user_log
 from datetime import datetime
 from pathlib import Path
 
@@ -384,19 +385,22 @@ class DecisionEngine:
 def main():
     """CLI interface for decision engine."""
     if len(sys.argv) < 2:
-        print("Usage: decision_engine.py <command> [arguments]", file=sys.stderr)
-        print("\nCommands:", file=sys.stderr)
-        print(
+        user_log("Usage: decision_engine.py <command> [arguments]", level="error", stderr=True)
+        user_log("\nCommands:", level="error", stderr=True)
+        user_log(
             "  evaluate <error_pattern> [context_json]  - Evaluate situation and recommend action",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
-        print(
+        user_log(
             "  verify <action> <before> <after>         - Verify if action succeeded",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
-        print(
+        user_log(
             "  record <error_pattern> <action> <success> [duration] - Record fix attempt",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
         sys.exit(1)
 
@@ -405,7 +409,7 @@ def main():
 
     if command == "evaluate":
         if len(sys.argv) < 3:
-            print("ERROR: Missing error_pattern argument", file=sys.stderr)
+            user_log("ERROR: Missing error_pattern argument", level="error", stderr=True)
             sys.exit(1)
 
         error_pattern = sys.argv[2]
@@ -414,14 +418,14 @@ def main():
             try:
                 context = json.loads(sys.argv[3])
             except json.JSONDecodeError:
-                print("WARN: Invalid context JSON, ignoring", file=sys.stderr)
+                user_log("WARN: Invalid context JSON, ignoring", level="warning", stderr=True)
 
         result = engine.evaluate_situation(error_pattern, context)
-        print(json.dumps(result, indent=2))
+        user_log(json.dumps(result, indent=2))
 
     elif command == "verify":
         if len(sys.argv) < 5:
-            print("ERROR: Missing arguments for verify", file=sys.stderr)
+            user_log("ERROR: Missing arguments for verify", level="error", stderr=True)
             sys.exit(1)
 
         action = sys.argv[2]
@@ -429,11 +433,11 @@ def main():
         after = sys.argv[4]
 
         result = engine.verify_outcome(action, before, after)
-        print(json.dumps(result, indent=2))
+        user_log(json.dumps(result, indent=2))
 
     elif command == "record":
         if len(sys.argv) < 5:
-            print("ERROR: Missing arguments for record", file=sys.stderr)
+            user_log("ERROR: Missing arguments for record", level="error", stderr=True)
             sys.exit(1)
 
         error_pattern = sys.argv[2]
@@ -442,10 +446,10 @@ def main():
         duration = float(sys.argv[5]) if len(sys.argv) > 5 else 0.0
 
         engine.record_fix_attempt(error_pattern, action, success, duration)
-        print(json.dumps({"status": "recorded", "success": success}))
+        user_log(json.dumps({"status": "recorded", "success": success}))
 
     else:
-        print(f"ERROR: Unknown command: {command}", file=sys.stderr)
+        user_log(f"ERROR: Unknown command: {command}", level="error", stderr=True)
         sys.exit(1)
 
 

@@ -2,6 +2,7 @@
 # AI Log Analyzer for Agent System
 # Scans agent logs for anomalies, errors, and patterns. Suggests fixes and optimizations.
 import os
+from agents.utils import user_log
 import re
 from datetime import datetime
 
@@ -54,6 +55,6 @@ with open(AUDIT_LOG, "a") as f:
         f"[{now}] user=ai_log_analyzer action=analyze_logs result=success findings={len(recommendations)} suggestions={len(suggested_actions)}\n"
     )
 
-print(
+user_log(
     f"AI Log Analysis complete. Findings: {len(recommendations)}. Suggestions: {len(suggested_actions)}. See {REPORT_FILE}."
 )

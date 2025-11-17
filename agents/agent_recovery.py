@@ -12,8 +12,7 @@ import argparse
 import json
 import os
 import signal
-import subprocess
-from agents.utils import user_log
+from agents.utils import user_log, safe_start
 import time
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
@@ -215,7 +214,7 @@ def launch_agent(script: Path, log_prefix: str, dry_run: bool, verbose: bool) ->
             user_log(f"Dry run: would launch {script} (logs: {log_path})")
         return None
     with log_path.open("a", encoding="utf-8") as stdout, err_path.open("a", encoding="utf-8") as stderr:
-        process = subprocess.Popen(
+        process = safe_start(
             ["bash", str(script)],
             cwd=str(AGENTS_DIR),
             stdout=stdout,

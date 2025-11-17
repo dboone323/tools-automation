@@ -7,10 +7,10 @@ import json
 import time
 import os
 import subprocess
-from agents.utils import safe_run, user_log
 import logging
-logger = logging.getLogger(__name__)
 import threading
+from agents.utils import safe_run, user_log, safe_start
+logger = logging.getLogger(__name__)
 
 
 class FinalAccelerator:
@@ -59,7 +59,7 @@ class FinalAccelerator:
             if os.path.exists(agent_path):
                 try:
                     # Start with nice -n -10 (high priority)
-                    subprocess.Popen(
+                    safe_start(
                         ["nice", "-n", "-10", "bash", agent_path, "start"],
                         stdout=subprocess.DEVNULL,
                         stderr=subprocess.DEVNULL,

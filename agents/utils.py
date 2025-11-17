@@ -93,3 +93,47 @@ def user_log(msg: str, level: str = "info", stderr: bool = False):
         print(msg, file=sys.stderr if stderr else sys.stdout)
     else:
         logger_method(msg)
+
+
+def safe_start(cmd: Any, cwd: str | None = None, stdout=None, stderr=None, **kwargs):
+    """Start a process using subprocess.Popen while gating shell usage.
+
+    - `cmd` can be a list or a string. If it's a string and contains shell
+      metacharacters, shell=True will be used only when allowed via env
+      ALLOW_SHELL or ALLOWED_SHELL_COMMANDS.
+    - Returns subprocess.Popen object. Annotate with `# nosec B603` where
+      appropriate when callers assert it's safe.
+    """
+    allow_shell_env = os.environ.get("ALLOW_SHELL", "").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+    allowed_shell_command_names = set(
+        [c.strip() for c in os.environ.get("ALLOWED_SHELL_COMMANDS", "").split(",") if c.strip()]
+    )
+
+    shell_flag = False
+    if isinstance(cmd, str):
+        for c in ["|", "&&", ";", ">", "<", "*", "$", "`"]:
+            if c in cmd:
+                shell_flag = True
+                break
+
+    if shell_flag and not allow_shell_env:
+        cmd_name = None
+        try:
+            if isinstance(cmd, str):
+                cmd_name = cmd.split()[0]
+            elif isinstance(cmd, (list, tuple)) and cmd:
+                cmd_name = str(cmd[0])
+        except Exception:
+            cmd_name = None
+        if cmd_name not in allowed_shell_command_names:
+            raise RuntimeError("shell_execution_not_allowed")
+
+    if isinstance(cmd, (list, tuple)):
+        shell_flag = False
+
+    logger.debug("safe_start: cmd=%s shell=%s cwd=%s", cmd, shell_flag, cwd)
+    return subprocess.Popen(cmd, cwd=cwd, stdout=stdout, stderr=stderr, shell=shell_flag, **kwargs)  # nosec B603

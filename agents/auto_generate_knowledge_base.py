@@ -3,6 +3,7 @@
 import os
 import re
 from datetime import datetime
+from agents.utils import user_log
 from itertools import islice
 
 AGENTS_DIR = os.path.dirname(__file__)
@@ -64,4 +65,4 @@ with open(DOC_FILE, "w") as f:
     f.write(header)
     f.write("\n".join(sections))
 
-print(f"Knowledge base auto-generated at {DOC_FILE}")
+user_log(f"Knowledge base auto-generated at {DOC_FILE}")

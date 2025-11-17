@@ -8,13 +8,15 @@ import tempfile
 import os
 import sys
 import fcntl
+from agents.utils import user_log
 
 
 def main():
     if len(sys.argv) < 4:
-        print(
+        user_log(
             "Usage: update_status.py <status> <agent_name> <pid> [task_id]",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
         sys.exit(1)
 
@@ -25,9 +27,10 @@ def main():
         task_id = sys.argv[4] if len(sys.argv) > 4 else ""
         status_file = os.environ.get("STATUS_FILE", "agent_status.json")
 
-        print(
+        user_log(
             f"DEBUG: update_status.py called with status={status}, agent_name={agent_name}, pid={pid}, task_id={task_id}, status_file={status_file}, cwd={os.getcwd()}",
-            file=sys.stderr,
+            level="debug",
+            stderr=True,
         )
 
         # Update under an exclusive file lock to avoid lost updates
@@ -49,9 +52,10 @@ def main():
                     break
                 except json.JSONDecodeError as e:
                     if attempt < max_retries - 1:
-                        print(
+                        user_log(
                             f"JSON decode error (attempt {attempt + 1}/{max_retries}): {e}",
-                            file=sys.stderr,
+                            level="error",
+                            stderr=True,
                         )
                         time.sleep(0.1)
                         continue
@@ -133,7 +137,7 @@ def main():
 
         sys.exit(0)
     except Exception as e:
-        print(f"Failed to update status: {e}", file=sys.stderr)
+        user_log(f"Failed to update status: {e}", level="error", stderr=True)
         sys.exit(1)
 
 
