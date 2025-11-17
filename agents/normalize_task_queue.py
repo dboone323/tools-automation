@@ -11,6 +11,7 @@ import json
 import os
 import time
 from typing import Any, Dict
+from agents.utils import user_log
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 AGENTS_DIR = os.path.join(ROOT, "Tools", "Automation", "agents")
@@ -79,4 +80,4 @@ def normalize() -> Dict[str, Any]:
 
 if __name__ == "__main__":
     result = normalize()
-    print(json.dumps({"normalized": result}))
+    user_log(json.dumps({"normalized": result}))

@@ -6,6 +6,8 @@ import argparse
 import json
 import os
 import sys
+import logging
+logger = logging.getLogger(__name__)
 import time
 from typing import Any, Callable, Dict
 
@@ -103,13 +105,13 @@ def _update_file(path: str, default_factory: DefaultFactory, mutator: Mutator) -
         try:
             handle.flush()
             os.fsync(handle.fileno())
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug("Failed to flush fsync: %s", e, exc_info=True)
         if fcntl is not None:
             try:
                 fcntl.flock(handle, fcntl.LOCK_UN)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug("Failed to unlock file: %s", e, exc_info=True)
         handle.close()
 
 

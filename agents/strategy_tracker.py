@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
+from agents.utils import user_log
 import statistics
 
 # Configuration
@@ -157,17 +158,18 @@ class StrategyTracker:
             execution_time: Time taken in seconds
             details: Additional execution details
         """
-        print(
+        user_log(
             f"[Strategy Tracker] Recording execution: {strategy_id} (success={success})",
-            file=sys.stderr,
+            level="info",
         )
 
         # Find strategy
         strategy = self._find_strategy(strategy_id)
         if not strategy:
-            print(
+            user_log(
                 f"[Strategy Tracker] Warning: Strategy {strategy_id} not found",
-                file=sys.stderr,
+                level="warning",
+                stderr=True,
             )
             # Still record in history even for unknown strategies
             execution_record = {
@@ -238,9 +240,7 @@ class StrategyTracker:
             change: Description of the change
             impact: Impact of the change
         """
-        print(
-            f"[Strategy Tracker] Recording adaptation: {strategy_id}", file=sys.stderr
-        )
+        user_log(f"[Strategy Tracker] Recording adaptation: {strategy_id}", level="info")
 
         strategy = self._find_strategy(strategy_id)
         if not strategy:
@@ -414,9 +414,10 @@ class StrategyTracker:
         """Add a new strategy"""
         # Check if already exists
         if self._find_strategy(strategy_id):
-            print(
+            user_log(
                 f"[Strategy Tracker] Strategy {strategy_id} already exists",
-                file=sys.stderr,
+                level="warning",
+                stderr=True,
             )
             return False
 
@@ -439,18 +440,19 @@ class StrategyTracker:
         self.strategies["strategies"].append(strategy)
         self._save_strategies()
 
-        print(f"[Strategy Tracker] Added strategy: {strategy_id}", file=sys.stderr)
+        user_log(f"[Strategy Tracker] Added strategy: {strategy_id}", level="info")
         return True
 
 
 def main():
     """Main entry point"""
     if len(sys.argv) < 2:
-        print("Usage: strategy_tracker.py <command> [args...]", file=sys.stderr)
-        print("\nCommands:", file=sys.stderr)
-        print(
+        user_log("Usage: strategy_tracker.py <command> [args...]", level="error", stderr=True)
+        user_log("\nCommands:", level="error", stderr=True)
+        user_log(
             "  record <strategy_id> <context> <success> <time> [details_json]",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
         print("  adapt <strategy_id> <change> <impact>", file=sys.stderr)
         print("  performance <strategy_id>", file=sys.stderr)
@@ -469,9 +471,10 @@ def main():
 
     if command == "record":
         if len(sys.argv) < 6:
-            print(
+            user_log(
                 "Error: record requires strategy_id, context, success, time",
-                file=sys.stderr,
+                level="error",
+                stderr=True,
             )
             sys.exit(1)
 
@@ -482,11 +485,11 @@ def main():
         details = json.loads(sys.argv[6]) if len(sys.argv) > 6 else None
 
         tracker.record_execution(strategy_id, context, success, execution_time, details)
-        print(json.dumps({"status": "recorded", "strategy_id": strategy_id}))
+        user_log(json.dumps({"status": "recorded", "strategy_id": strategy_id}))
 
     elif command == "adapt":
         if len(sys.argv) < 5:
-            print("Error: adapt requires strategy_id, change, impact", file=sys.stderr)
+            user_log("Error: adapt requires strategy_id, change, impact", level="error", stderr=True)
             sys.exit(1)
 
         strategy_id = sys.argv[2]
@@ -494,25 +497,25 @@ def main():
         impact = sys.argv[4]
 
         tracker.record_adaptation(strategy_id, change, impact)
-        print(json.dumps({"status": "recorded", "strategy_id": strategy_id}))
+        user_log(json.dumps({"status": "recorded", "strategy_id": strategy_id}))
 
     elif command == "performance":
         if len(sys.argv) < 3:
-            print("Error: performance requires strategy_id", file=sys.stderr)
+            user_log("Error: performance requires strategy_id", level="error", stderr=True)
             sys.exit(1)
 
         strategy_id = sys.argv[2]
         performance = tracker.get_strategy_performance(strategy_id)
-        print(json.dumps(performance, indent=2))
+        user_log(json.dumps(performance, indent=2))
 
     elif command == "best":
         if len(sys.argv) < 3:
-            print("Error: best requires context", file=sys.stderr)
+            user_log("Error: best requires context", level="error", stderr=True)
             sys.exit(1)
 
         context = sys.argv[2]
         best = tracker.get_best_strategy(context)
-        print(
+        user_log(
             json.dumps(best, indent=2)
             if best
             else json.dumps({"error": "No strategy found"})
@@ -520,25 +523,25 @@ def main():
 
     elif command == "list":
         strategies = tracker.get_all_strategies()
-        print(json.dumps(strategies, indent=2))
+        user_log(json.dumps(strategies, indent=2))
 
     elif command == "compare":
         if len(sys.argv) < 4:
-            print("Error: compare requires at least 2 strategy IDs", file=sys.stderr)
+            user_log("Error: compare requires at least 2 strategy IDs", level="error", stderr=True)
             sys.exit(1)
 
         strategy_ids = sys.argv[2:]
         comparison = tracker.compare_strategies(strategy_ids)
-        print(json.dumps(comparison, indent=2))
+        user_log(json.dumps(comparison, indent=2))
 
     elif command == "recommend":
         if len(sys.argv) < 3:
-            print("Error: recommend requires context", file=sys.stderr)
+            user_log("Error: recommend requires context", level="error", stderr=True)
             sys.exit(1)
 
         context = sys.argv[2]
         recommendations = tracker.get_strategy_recommendations(context)
-        print(json.dumps(recommendations, indent=2))
+        user_log(json.dumps(recommendations, indent=2))
 
     elif command == "add":
         if len(sys.argv) < 8:
@@ -558,14 +561,14 @@ def main():
         success = tracker.add_strategy(
             strategy_id, name, description, contexts, risk, estimated_time
         )
-        print(
+        user_log(
             json.dumps(
                 {"status": "added" if success else "exists", "strategy_id": strategy_id}
             )
         )
 
     else:
-        print(f"Error: Unknown command '{command}'", file=sys.stderr)
+        user_log(f"Error: Unknown command '{command}'", level="error", stderr=True)
         sys.exit(1)
 
 

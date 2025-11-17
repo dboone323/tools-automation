@@ -8,6 +8,9 @@ Provides syntax, logical, integration, and outcome validation for agent operatio
 import json
 import sys
 import subprocess
+from agents.utils import safe_run, user_log
+import logging
+logger = logging.getLogger(__name__)
 import time
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -89,7 +92,7 @@ class ValidationFramework:
         # Syntax check based on language
         try:
             if language == "swift":
-                result = subprocess.run(
+                result = safe_run(
                     ["swiftc", "-typecheck", str(file_path)],
                     capture_output=True,
                     text=True,
@@ -102,7 +105,7 @@ class ValidationFramework:
                 details = {"stderr": result.stderr} if not passed else {}
 
             elif language == "python":
-                result = subprocess.run(
+                result = safe_run(
                     ["python3", "-m", "py_compile", str(file_path)],
                     capture_output=True,
                     text=True,
@@ -115,7 +118,7 @@ class ValidationFramework:
                 details = {"stderr": result.stderr} if not passed else {}
 
             elif language == "bash":
-                result = subprocess.run(
+                result = safe_run(
                     ["bash", "-n", str(file_path)],
                     capture_output=True,
                     text=True,
@@ -392,7 +395,7 @@ class ValidationFramework:
     def _check_dependency(self, dependency: str) -> bool:
         """Check if a dependency is available."""
         try:
-            subprocess.run(["which", dependency], capture_output=True, check=True)
+            safe_run(["which", dependency], capture_output=True, check=True)
             return True
         except subprocess.CalledProcessError:
             return False
@@ -409,7 +412,7 @@ class ValidationFramework:
         """Run build check."""
         project = context.get("project", "CodingReviewer")
         try:
-            result = subprocess.run(
+            result = safe_run(
                 ["xcodebuild", "build", "-scheme", project, "-configuration", "Debug"],
                 capture_output=True,
                 text=True,
@@ -429,7 +432,7 @@ class ValidationFramework:
         """Run test check."""
         project = context.get("project", "CodingReviewer")
         try:
-            result = subprocess.run(
+            result = safe_run(
                 ["xcodebuild", "test", "-scheme", project, "-configuration", "Debug"],
                 capture_output=True,
                 text=True,
@@ -448,7 +451,7 @@ class ValidationFramework:
     def _run_lint_check(self, context: Dict) -> Tuple[bool, str]:
         """Run lint check."""
         try:
-            result = subprocess.run(
+            result = safe_run(
                 ["swiftlint", "lint", "--quiet"],
                 capture_output=True,
                 text=True,
@@ -526,13 +529,13 @@ class ValidationFramework:
 def main():
     """CLI interface for validation framework."""
     if len(sys.argv) < 2:
-        print("Usage: validation_framework.py <command> [arguments]", file=sys.stderr)
-        print("\nCommands:", file=sys.stderr)
-        print("  syntax <file> [language]     - Validate syntax", file=sys.stderr)
-        print("  logical <context_json>       - Validate logic", file=sys.stderr)
-        print("  integration <context_json>   - Validate integration", file=sys.stderr)
-        print("  outcome <context_json>       - Validate outcome", file=sys.stderr)
-        print("  all <file> <context_json>    - Run all layers", file=sys.stderr)
+        user_log("Usage: validation_framework.py <command> [arguments]", level="error", stderr=True)
+        user_log("\nCommands:", level="error", stderr=True)
+        user_log("  syntax <file> [language]     - Validate syntax", level="error", stderr=True)
+        user_log("  logical <context_json>       - Validate logic", level="error", stderr=True)
+        user_log("  integration <context_json>   - Validate integration", level="error", stderr=True)
+        user_log("  outcome <context_json>       - Validate outcome", level="error", stderr=True)
+        user_log("  all <file> <context_json>    - Run all layers", level="error", stderr=True)
         sys.exit(1)
 
     command = sys.argv[1]
@@ -540,39 +543,39 @@ def main():
 
     if command == "syntax":
         if len(sys.argv) < 3:
-            print("ERROR: Missing file path", file=sys.stderr)
+            user_log("ERROR: Missing file path", level="error", stderr=True)
             sys.exit(1)
 
         file_path = sys.argv[2]
         language = sys.argv[3] if len(sys.argv) > 3 else "auto"
 
         result = framework.validate_syntax(file_path, language)
-        print(json.dumps(result.to_dict(), indent=2))
+        user_log(json.dumps(result.to_dict(), indent=2))
         sys.exit(0 if result.passed else 1)
 
     elif command == "logical":
         if len(sys.argv) < 3:
-            print("ERROR: Missing context JSON", file=sys.stderr)
+            user_log("ERROR: Missing context JSON", level="error", stderr=True)
             sys.exit(1)
 
         context = json.loads(sys.argv[2])
         result = framework.validate_logical(context)
-        print(json.dumps(result.to_dict(), indent=2))
+        user_log(json.dumps(result.to_dict(), indent=2))
         sys.exit(0 if result.passed else 1)
 
     elif command == "integration":
         if len(sys.argv) < 3:
-            print("ERROR: Missing context JSON", file=sys.stderr)
+            user_log("ERROR: Missing context JSON", level="error", stderr=True)
             sys.exit(1)
 
         context = json.loads(sys.argv[2])
         result = framework.validate_integration(context)
-        print(json.dumps(result.to_dict(), indent=2))
+        user_log(json.dumps(result.to_dict(), indent=2))
         sys.exit(0 if result.passed else 1)
 
     elif command == "outcome":
         if len(sys.argv) < 3:
-            print("ERROR: Missing context JSON", file=sys.stderr)
+            user_log("ERROR: Missing context JSON", level="error", stderr=True)
             sys.exit(1)
 
         context = json.loads(sys.argv[2])
@@ -590,11 +593,11 @@ def main():
 
         _results = framework.validate_all_layers(file_path, context)
         report = framework.get_validation_report()
-        print(json.dumps(report, indent=2))
+        user_log(json.dumps(report, indent=2))
         sys.exit(0 if report["overall_passed"] else 1)
 
     else:
-        print(f"ERROR: Unknown command: {command}", file=sys.stderr)
+        user_log(f"ERROR: Unknown command: {command}", level="error", stderr=True)
         sys.exit(1)
 
 

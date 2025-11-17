@@ -11,6 +11,8 @@ import json
 import os
 import sys
 from datetime import datetime, timezone
+import logging
+logger = logging.getLogger(__name__)
 
 
 def load_json(path: str, default):
@@ -19,7 +21,8 @@ def load_json(path: str, default):
     try:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
-    except Exception:
+    except Exception as e:
+        logger.debug("load_json error reading %s: %s", path, e, exc_info=True)
         return default
 
 

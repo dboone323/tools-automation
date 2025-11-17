@@ -9,6 +9,8 @@ import time
 import os
 import sys
 from datetime import datetime, timedelta
+import logging
+from agents.utils import user_log
 
 
 class TaskAccelerator:
@@ -37,7 +39,7 @@ class TaskAccelerator:
                 self.tasks = data.get("tasks", [])
                 self.completed = data.get("completed", [])
         except Exception as e:
-            print(f"Error loading task queue: {e}")
+            logging.getLogger(__name__).warning("Error loading task queue: %s", e)
             self.tasks = []
             self.completed = []
 
@@ -46,7 +48,7 @@ class TaskAccelerator:
                 data = json.load(f)
                 self.agents = data.get("agents", {})
         except Exception as e:
-            print(f"Error loading agent status: {e}")
+            logging.getLogger(__name__).warning("Error loading agent status: %s", e)
             self.agents = {}
 
     def save_data(self):
@@ -70,7 +72,7 @@ class TaskAccelerator:
                 failed_count += 1
 
         self.save_data()
-        print(f"✅ Retried {failed_count} failed tasks")
+        user_log(f"✅ Retried {failed_count} failed tasks")
         return failed_count
 
     def prioritize_tasks(self):
@@ -99,7 +101,7 @@ class TaskAccelerator:
         self.tasks = queued_tasks + non_queued
 
         self.save_data()
-        print(f"✅ Prioritized {len(queued_tasks)} queued tasks")
+        user_log(f"✅ Prioritized {len(queued_tasks)} queued tasks")
         return len(queued_tasks)
 
     def get_available_agents(self):
@@ -138,9 +140,7 @@ class TaskAccelerator:
                 assignments += 1
 
         self.save_data()
-        print(
-            f"✅ Assigned {assignments} tasks to {len(available_agents)} available agents"
-        )
+        user_log(f"✅ Assigned {assignments} tasks to {len(available_agents)} available agents")
         return assignments
 
     def batch_similar_tasks(self):
@@ -176,7 +176,7 @@ class TaskAccelerator:
                     task["batch_id"] = batch_task["id"]
 
         self.save_data()
-        print(f"✅ Created {batch_tasks_created} batch tasks for large task groups")
+        user_log(f"✅ Created {batch_tasks_created} batch tasks for large task groups")
         return batch_tasks_created
 
     def optimize_agent_orchestration(self):
@@ -196,13 +196,13 @@ class TaskAccelerator:
 
         if stuck_count > 0:
             self.save_data()
-            print(f"✅ Reset {stuck_count} stuck tasks (running > 2 hours)")
+            user_log(f"✅ Reset {stuck_count} stuck tasks (running > 2 hours)")
 
         return stuck_count
 
     def run_accelerator_cycle(self):
         """Run one complete optimization cycle"""
-        print("🚀 Starting Task Acceleration Cycle...")
+        user_log("🚀 Starting Task Acceleration Cycle...")
 
         # Step 1: Retry failed tasks
         self.retry_failed_tasks()
@@ -219,7 +219,7 @@ class TaskAccelerator:
         # Step 5: Assign tasks to agents
         self.assign_tasks_to_agents()
 
-        print("✅ Acceleration cycle complete!")
+        user_log("✅ Acceleration cycle complete!")
 
     def get_progress_report(self):
         """Generate progress report"""
@@ -236,13 +236,13 @@ class TaskAccelerator:
         available_agents = len(self.get_available_agents())
         total_agents = len(self.agents)
 
-        print("📊 PROGRESS REPORT")
-        print(f"Progress: {completed_count}/{total_tasks} ({progress_pct:.1f}%)")
-        print(f"Remaining: {remaining_count} tasks")
-        print(f"In Progress: {in_progress} tasks")
-        print(f"Queued: {queued} tasks")
-        print(f"Failed: {failed} tasks")
-        print(f"Available Agents: {available_agents}/{total_agents}")
+        user_log("📊 PROGRESS REPORT")
+        user_log(f"Progress: {completed_count}/{total_tasks} ({progress_pct:.1f}%)")
+        user_log(f"Remaining: {remaining_count} tasks")
+        user_log(f"In Progress: {in_progress} tasks")
+        user_log(f"Queued: {queued} tasks")
+        user_log(f"Failed: {failed} tasks")
+        user_log(f"Available Agents: {available_agents}/{total_agents}")
 
         # Estimate completion time
         if completed_count > 0 and in_progress > 0:
@@ -258,10 +258,10 @@ class TaskAccelerator:
                 remaining_days = remaining_hours / 24
                 completion_date = datetime.now() + timedelta(hours=remaining_hours)
 
-                print("\\n⏱️  ESTIMATED COMPLETION:")
-                print(f"Current rate: {rate_per_hour:.2f} tasks/hour")
-                print(f"Time remaining: {remaining_days:.1f} days")
-                print(f"Completion date: {completion_date.strftime('%Y-%m-%d %H:%M')}")
+                user_log("\n⏱️  ESTIMATED COMPLETION:")
+                user_log(f"Current rate: {rate_per_hour:.2f} tasks/hour")
+                user_log(f"Time remaining: {remaining_days:.1f} days")
+                user_log(f"Completion date: {completion_date.strftime('%Y-%m-%d %H:%M')}")
 
 
 def main():
@@ -285,8 +285,10 @@ def main():
         elif command == "report":
             accelerator.get_progress_report()
         else:
-            print(
-                "Usage: python3 task_accelerator.py [retry|prioritize|assign|batch|optimize|cycle|report]"
+            user_log(
+                "Usage: python3 task_accelerator.py [retry|prioritize|assign|batch|optimize|cycle|report]",
+                level="error",
+                stderr=True,
             )
     else:
         # Run full cycle by default

@@ -7,10 +7,13 @@ Combines knowledge base patterns with AI analysis to suggest fixes.
 
 import json
 import sys
+from agents.utils import safe_run, user_log
 import subprocess
 from pathlib import Path
 import logging
 from typing import Dict, List, Optional
+import logging
+logger = logging.getLogger(__name__)
 
 # Configuration
 SCRIPT_DIR = Path(__file__).parent
@@ -29,7 +32,7 @@ class FixSuggester:
     def _check_mcp(self) -> bool:
         """Check if MCP client is functional."""
         try:
-            result = subprocess.run(
+            result = safe_run(
                 [str(MCP_CLIENT), "test"], capture_output=True, text=True, timeout=5
             )
             return result.returncode == 0
@@ -104,7 +107,7 @@ class FixSuggester:
     ) -> Dict:
         """Get suggestion from decision engine."""
         context_json = json.dumps(context)
-        result = subprocess.run(
+        result = safe_run(
             [str(DECISION_ENGINE), "evaluate", error_pattern, context_json],
             capture_output=True,
             text=True,
@@ -119,7 +122,7 @@ class FixSuggester:
     def _get_mcp_suggestion(self, error_pattern: str, context: Dict) -> Optional[Dict]:
         """Get suggestion from MCP client (AI analysis)."""
         _context_str = json.dumps(context) if context else ""
-        result = subprocess.run(
+        result = safe_run(
             [str(MCP_CLIENT), "suggest-fix", error_pattern],
             capture_output=True,
             text=True,
@@ -335,15 +338,17 @@ class FixSuggester:
 def main():
     """CLI interface for fix suggester."""
     if len(sys.argv) < 2:
-        print("Usage: fix_suggester.py <command> [arguments]", file=sys.stderr)
-        print("\nCommands:", file=sys.stderr)
-        print(
+        user_log("Usage: fix_suggester.py <command> [arguments]", level="error", stderr=True)
+        user_log("\nCommands:", level="error", stderr=True)
+        user_log(
             "  suggest <error_pattern> [context_json]  - Suggest fix for error",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
-        print(
+        user_log(
             "  explain <action>                        - Explain what an action does",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
         sys.exit(1)
 
@@ -352,7 +357,7 @@ def main():
 
     if command == "suggest":
         if len(sys.argv) < 3:
-            print("ERROR: Missing error_pattern argument", file=sys.stderr)
+            user_log("ERROR: Missing error_pattern argument", level="error", stderr=True)
             sys.exit(1)
 
         error_pattern = sys.argv[2]
@@ -361,22 +366,22 @@ def main():
             try:
                 context = json.loads(sys.argv[3])
             except json.JSONDecodeError:
-                print("WARN: Invalid context JSON, ignoring", file=sys.stderr)
+                user_log("WARN: Invalid context JSON, ignoring", level="warning", stderr=True)
 
         result = suggester.suggest_fix(error_pattern, context)
-        print(json.dumps(result, indent=2))
+        user_log(json.dumps(result, indent=2))
 
     elif command == "explain":
         if len(sys.argv) < 3:
-            print("ERROR: Missing action argument", file=sys.stderr)
+            user_log("ERROR: Missing action argument", level="error", stderr=True)
             sys.exit(1)
 
         action = sys.argv[2]
         result = suggester.explain_fix(action)
-        print(json.dumps(result, indent=2))
+        user_log(json.dumps(result, indent=2))
 
     else:
-        print(f"ERROR: Unknown command: {command}", file=sys.stderr)
+        user_log(f"ERROR: Unknown command: {command}", level="error", stderr=True)
         sys.exit(1)
 
 

@@ -25,6 +25,9 @@ import argparse
 import json
 import os
 import time
+import logging
+from agents.utils import user_log
+logger = logging.getLogger(__name__)
 import uuid
 from typing import Any, Dict, List
 
@@ -44,7 +47,8 @@ def _load_json(path: str, default: Any) -> Any:
             return default
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
-    except Exception:
+    except Exception as e:
+        logger.debug("_load_json failed for %s: %s", path, e, exc_info=True)
         return default
 
 
@@ -98,8 +102,8 @@ def _agent_score(agent: Dict[str, Any], strategies: List[Dict[str, Any]]) -> flo
     try:
         q = int(agent.get("queue_size", 0))
         base -= 0.05 * q
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("_agent_score: error computing queue size for agent %s: %s", agent, e, exc_info=True)
     return base
 
 
@@ -118,6 +122,8 @@ def _pick_agent(
 def _start_agent_if_needed(agent_id: str) -> bool:
     """Start an agent if it's not already running."""
     import subprocess
+    import logging
+    logger = logging.getLogger(__name__)
     import os
 
     try:
@@ -154,6 +160,7 @@ def _start_agent_if_needed(agent_id: str) -> bool:
 
         return True
     except Exception:
+        logger.debug("_start_agent_if_needed: failed to start %s", agent_id, exc_info=True)
         return False
 
 
@@ -394,16 +401,16 @@ def main() -> int:
             if not isinstance(task, dict):
                 raise ValueError("task must be a JSON object")
         except Exception as e:
-            print(json.dumps({"error": f"invalid task: {e}"}))
+            user_log(json.dumps({"error": f"invalid task: {e}"}))
             return 2
         result = assign_task(task)
-        print(json.dumps(result))
+        user_log(json.dumps(result))
         return 0
     elif args.cmd == "balance":
-        print(json.dumps(balance_load()))
+        user_log(json.dumps(balance_load()))
         return 0
     elif args.cmd == "status":
-        print(json.dumps(snapshot()))
+        user_log(json.dumps(snapshot()))
         return 0
     else:
         parser.print_help()

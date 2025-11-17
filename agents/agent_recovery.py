@@ -13,7 +13,7 @@ import json
 import os
 import signal
 import subprocess
-import sys
+from agents.utils import user_log
 import time
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
@@ -62,7 +62,7 @@ def load_json(path: Path, default):
     except FileNotFoundError:
         return default
     except json.JSONDecodeError as exc:
-        print(f"Warning: failed to parse {path}: {exc}", file=sys.stderr)
+        user_log(f"Warning: failed to parse {path}: {exc}", level="warning", stderr=True)
         return default
 
 
@@ -191,7 +191,7 @@ def stop_process(pid: Optional[int], verbose: bool = False) -> None:
     try:
         os.kill(pid, signal.SIGTERM)
         if verbose:
-            print(f"Sent SIGTERM to PID {pid}")
+            user_log(f"Sent SIGTERM to PID {pid}")
         timeout = time.time() + 5
         while time.time() < timeout:
             if not is_process_running(pid):
@@ -199,9 +199,9 @@ def stop_process(pid: Optional[int], verbose: bool = False) -> None:
             time.sleep(0.25)
         os.kill(pid, signal.SIGKILL)
         if verbose:
-            print(f"Sent SIGKILL to PID {pid}")
+            user_log(f"Sent SIGKILL to PID {pid}")
     except PermissionError:
-        print(f"Warning: insufficient permissions to stop PID {pid}", file=sys.stderr)
+        user_log(f"Warning: insufficient permissions to stop PID {pid}", level="error", stderr=True)
     except ProcessLookupError:
         return
 
@@ -212,7 +212,7 @@ def launch_agent(script: Path, log_prefix: str, dry_run: bool, verbose: bool) ->
     err_path = LOGS_DIR / f"{log_prefix}.err"
     if dry_run:
         if verbose:
-            print(f"Dry run: would launch {script} (logs: {log_path})")
+            user_log(f"Dry run: would launch {script} (logs: {log_path})")
         return None
     with log_path.open("a", encoding="utf-8") as stdout, err_path.open("a", encoding="utf-8") as stderr:
         process = subprocess.Popen(
@@ -223,7 +223,7 @@ def launch_agent(script: Path, log_prefix: str, dry_run: bool, verbose: bool) ->
             start_new_session=True,
         )
     if verbose:
-        print(f"Launched {script.name} (pid {process.pid})")
+        user_log(f"Launched {script.name} (pid {process.pid})")
     return process.pid
 
 
@@ -249,7 +249,7 @@ def related_keys(agent_key: str) -> List[str]:
 
 def restart_agent(agent_key: str, script: Path, pid: Optional[int], dry_run: bool, verbose: bool) -> None:
     if verbose:
-        print(f"Restarting {agent_key} using {script.name}")
+                user_log(f"Restarting {agent_key} using {script.name}")
     stop_process(pid, verbose=verbose)
     new_pid = launch_agent(script, agent_key.replace("/", "_"), dry_run, verbose)
     if new_pid is not None:
@@ -273,7 +273,7 @@ def prune_dead_clones(clones: Dict[str, List[Dict[str, int]]], verbose: bool) ->
             if is_process_running(pid):
                 alive.append(record)
             elif verbose:
-                print(f"Removed stale clone for {agent} (pid {pid})")
+                user_log(f"Removed stale clone for {agent} (pid {pid})")
         if alive:
             clones[agent] = alive
         else:
@@ -288,7 +288,7 @@ def ensure_extra_workers(clones: Dict[str, List[Dict[str, int]]], plan: Dict[str
         while current < desired:
             script = resolve_script(agent)
             if script is None:
-                print(f"Warning: cannot scale {agent}; script not found", file=sys.stderr)
+                user_log(f"Warning: cannot scale {agent}; script not found", level="warning", stderr=True)
                 break
             _suffix = int(time.time())
             log_prefix = f"{agent.replace('.sh', '')}_extra_{current+1}"
@@ -299,7 +299,7 @@ def ensure_extra_workers(clones: Dict[str, List[Dict[str, int]]], plan: Dict[str
             clones.setdefault(agent, []).append(record)
             current += 1
             if verbose:
-                print(f"Started extra worker {agent} (pid {new_pid})")
+                user_log(f"Started extra worker {agent} (pid {new_pid})")
     if not dry_run:
         save_clones(clones)
 
@@ -368,18 +368,18 @@ def main() -> None:
     drain_rate = load_drain_rate()
 
     if args.verbose or args.summary or not args.apply:
-        print(f"Queued tasks: {queued_count}")
+        user_log(f"Queued tasks: {queued_count}")
         if distribution:
             top = sorted(distribution.items(), key=lambda item: item[1], reverse=True)[:10]
-            print("Top task assignments:")
+            user_log("Top task assignments:")
             for name, count in top:
-                print(f"  {name}: {count}")
-        print(f"Drain rate (per min): {drain_rate if drain_rate is not None else 'unknown'}")
-        print("Agent statuses:")
+                user_log(f"  {name}: {count}")
+        user_log(f"Drain rate (per min): {drain_rate if drain_rate is not None else 'unknown'}")
+        user_log("Agent statuses:")
         for info in agent_info:
             state = "stale" if info["stale"] else info["status"]
             label = format_agent_label(info["name"])
-            print(f"  {label:25s} {state:10s} pid={info['pid']}")
+            user_log(f"  {label:25s} {state:10s} pid={info['pid']}")
 
     restart_targets = [
         item
@@ -390,14 +390,14 @@ def main() -> None:
     scale_plan: Dict[str, int] = {}
     for entry in args.scale:
         if "=" not in entry:
-            print(f"Warning: ignoring invalid --scale entry '{entry}'", file=sys.stderr)
+            user_log(f"Warning: ignoring invalid --scale entry '{entry}'", level="warning", stderr=True)
             continue
         agent, count = entry.split("=", 1)
         agent = agent.strip()
         try:
             count_int = int(count)
         except ValueError:
-            print(f"Warning: invalid count '{count}' for agent {agent}", file=sys.stderr)
+            user_log(f"Warning: invalid count '{count}' for agent {agent}", level="warning", stderr=True)
             continue
         scale_plan[agent] = count_int
 
@@ -415,21 +415,21 @@ def main() -> None:
         for target in restart_targets:
             script = resolve_script(target["name"])
             if script is None:
-                print(f"Warning: no script found for {target['name']}", file=sys.stderr)
+                user_log(f"Warning: no script found for {target['name']}", level="warning", stderr=True)
                 continue
             restart_agent(target["name"], script, target.get("pid"), dry_run, args.verbose)
     elif args.verbose:
-        print("No critical agents require restart")
+        user_log("No critical agents require restart")
 
     if scale_plan:
         clones = load_clones()
         prune_dead_clones(clones, args.verbose)
         ensure_extra_workers(clones, scale_plan, dry_run, args.verbose)
     elif args.verbose:
-        print("No scaling actions requested")
+        user_log("No scaling actions requested")
 
     if dry_run:
-        print("Dry run complete. Re-run with --apply to restart agents.")
+        user_log("Dry run complete. Re-run with --apply to restart agents.")
 
 
 if __name__ == "__main__":

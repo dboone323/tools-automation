@@ -4,9 +4,7 @@ from pathlib import Path
 import subprocess
 from types import SimpleNamespace
 import importlib
-import shlex
 
-import pytest
 
 sys.path.append(str(Path(__file__).parents[2]))
 from run_48hour_validation import ValidationOrchestrator
@@ -133,8 +131,50 @@ def test_mcp_execute_task_shell_usage(monkeypatch, tmp_path):
 
     monkeypatch.setattr(subprocess, "run", fake_run)
 
-    # Call the function unbound: MCPHandler._execute_task(self_obj, task, task["command"])
+    # Call the function unbound: MCPHandler._execute_task(self_obj, task, task["command"]) without ALLOW_SHELL
     func = getattr(MCPHandler, "_execute_task")
     func(self_obj, task, task["command"])
-    # Expect shell to be True when piping is used since we cannot parse a pipe into args list
+    # Without ALLOW_SHELL, subprocess.run should not be invoked for shell commands
+    assert "kwargs" not in captured
+
+    # Now enable ALLOW_SHELL via env var and re-run
+    os.environ["ALLOW_SHELL"] = "true"
+    captured = {}
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    func(self_obj, task, task["command"])
     assert captured["kwargs"].get("shell") is True
+    if "ALLOW_SHELL" in os.environ:
+        del os.environ["ALLOW_SHELL"]
+
+
+def test_mcp_execute_task_shell_allowed_by_command_name(monkeypatch, tmp_path):
+    mcp = importlib.import_module("mcp_server")
+    MCPHandler = getattr(mcp, "MCPHandler")
+    fake_server = SimpleNamespace(metrics={"tasks_executed": 0, "tasks_failed": 0})
+    self_obj = SimpleNamespace(server=fake_server)
+    setattr(mcp, "CODE_DIR", str(tmp_path))
+    task = {"id": "1234", "command": "shell-allowed"}
+    cmd = "echo hi | sed s/h/a/"
+
+    captured = {}
+
+    def fake_run(cmd, **kwargs):
+        captured["cmd"] = cmd
+        captured["kwargs"] = kwargs
+
+        class R:
+            returncode = 0
+            stdout = "out"
+            stderr = ""
+
+        return R()
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    # When ALLOWED_SHELL_COMMANDS contains the command, shell should be allowed
+    os.environ["ALLOWED_SHELL_COMMANDS"] = "shell-allowed"
+    func = getattr(MCPHandler, "_execute_task")
+    func(self_obj, task, cmd)
+    assert captured["kwargs"].get("shell") is True
+    if "ALLOWED_SHELL_COMMANDS" in os.environ:
+        del os.environ["ALLOWED_SHELL_COMMANDS"]

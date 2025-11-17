@@ -8,6 +8,7 @@ import argparse
 import json
 import os
 import time
+from agents.utils import user_log
 
 try:
     import requests  # type: ignore[import-not-found]
@@ -33,7 +34,7 @@ def register(mcp_url, name, capabilities):
         r.raise_for_status()
         return r.json()
     except Exception as e:
-        print(f"register failed: {e}")
+        user_log(f"register failed: {e}", level="error", stderr=True)
         return None
 
 
@@ -65,7 +66,7 @@ def perform_backup(path):
         shutil.copy2(path, bak)
         return os.path.abspath(bak)
     except Exception as e:
-        print(f"backup failed: {e}")
+        user_log(f"backup failed: {e}", level="error", stderr=True)
         return None
 
 
@@ -153,7 +154,7 @@ def restore_backup(bak):
         shutil.copy2(bak, orig)
         return True
     except Exception as e:
-        print(f"restore failed: {e}")
+        user_log(f"restore failed: {e}", level="error", stderr=True)
         return False
 
 
@@ -207,7 +208,7 @@ def main():
     args = p.parse_args()
 
     caps = [c.strip() for c in args.capabilities.split(",") if c.strip()]
-    print(f"Starting agent {args.name} -> MCP {args.mcp} capabilities={caps}")
+    user_log(f"Starting agent {args.name} -> MCP {args.mcp} capabilities={caps}")
     # write pidfile
     pidfile = os.path.join(os.path.dirname(__file__), "..", "logs", f"{args.name}.pid")
     write_pid(pidfile)
@@ -234,7 +235,7 @@ def main():
             try:
                 srv = HTTPServer(("127.0.0.1", 0), HealthHandler)
                 sa = srv.socket.getsockname()
-                print(f"health listening on {sa}")
+                user_log(f"health listening on {sa}")
                 srv.serve_forever()
             except Exception:
                 pass
@@ -249,9 +250,9 @@ def main():
     for i in range(3):
         res = register(args.mcp, args.name, caps)
         if res:
-            print(f"registered: {res}")
+            user_log(f"registered: {res}")
             break
-        print(f"register attempt {i+1} failed, retrying in 2s...")
+        user_log(f"register attempt {i+1} failed, retrying in 2s...", level="warning", stderr=True)
         time.sleep(2)
 
     # main loop: heartbeat
@@ -259,14 +260,14 @@ def main():
         # simple loop: heartbeat and optionally poll tasks to execute
         while True:
             ok = heartbeat(args.mcp, args.name)
-            print(f"heartbeat {'ok' if ok else 'fail'}")
+            user_log(f"heartbeat {'ok' if ok else 'fail'}")
 
             # if this agent can execute, poll /status tasks for queued tasks and exec them
             if "execute" in caps:
                 try:
                     req = _require_requests()
                 except RuntimeError as err:
-                    print(f"requests dependency missing: {err}")
+                    user_log(f"requests dependency missing: {err}", level="error", stderr=True)
                     time.sleep(5)
                     continue
                 try:
@@ -299,9 +300,9 @@ def main():
                                         return bak
 
                                     bak = _with_file_lock(target, _do_backup)
-                                    print(f"backup created for {tid}: {bak}")
+                                    user_log(f"backup created for {tid}: {bak}")
                             except Exception as e:
-                                print(f"backup check failed: {e}")
+                                user_log(f"backup check failed: {e}", level="error", stderr=True)
 
                         if t.get("status") == "queued":
                             # attempt to execute via /execute_task
@@ -331,14 +332,14 @@ def main():
                                         return bak
 
                                     bak = _with_file_lock(target, _do_backup_marker)
-                                    print(f"backup created and marker written: {bak}")
+                                    user_log(f"backup created and marker written: {bak}")
 
                                 er = req.post(
                                     args.mcp.rstrip("/") + "/execute_task",
                                     json={"task_id": tid},
                                     timeout=5,
                                 )
-                                print(f"requested execute {tid} -> {er.status_code}")
+                                user_log(f"requested execute {tid} -> {er.status_code}")
 
                                 # if we requested execute, poll task status and restore on failure
                                 if er.status_code == 200:
@@ -371,21 +372,19 @@ def main():
                                             if task.get("status") != "success":
                                                 latest = _latest_backup_for(target)
                                                 if latest:
-                                                    print(
-                                                        f"task {tid} failed; restoring from {latest}"
-                                                    )
+                                                    user_log(f"task {tid} failed; restoring from {latest}", level="warning", stderr=True)
                                                     restore_backup(latest)
                                             break
                                         time.sleep(0.5)
 
                             except Exception as e:
-                                print(f"execute request failed: {e}")
+                                user_log(f"execute request failed: {e}", level="error", stderr=True)
                 except Exception:
                     pass
 
             time.sleep(args.interval)
     except KeyboardInterrupt:
-        print("agent exiting")
+        user_log("agent exiting")
 
 
 if __name__ == "__main__":

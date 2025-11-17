@@ -126,13 +126,10 @@ class TodoRetryManager:
 
         # Look for similar failed tasks
         task_type = task.get("type", "")
-        assigned_agent = task.get("assigned_agent", "")
-        source_file = task.get("source_file", "")
-
-        similar_failures = []
         for snapshot in monitoring_data.get("snapshots", []):
             # This is a simplified analysis - in production, you'd want more sophisticated pattern matching
-            pass
+            # The function can be extended to populate similar failures for retry heuristics
+            continue
 
         # For now, return basic analysis
         if task_type == "todo_processing":

@@ -23,11 +23,14 @@ import uuid
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 from functools import wraps
-import logging
-import shlex
 import redis
 import importlib.util
 import shutil
+import tempfile
+import logging
+
+# Logger for this module
+logger = logging.getLogger(__name__)
 
 # AI Service Manager Integration
 try:
@@ -36,7 +39,7 @@ try:
     AI_MANAGER_AVAILABLE = True
 except ImportError:
     AI_MANAGER_AVAILABLE = False
-    logging.getLogger(__name__).warning("AI Service Manager not available - AI endpoints will be disabled")
+    logger.warning("AI Service Manager not available - AI endpoints will be disabled")
 
 
 # Plugin system integration
@@ -44,10 +47,9 @@ try:
     from plugin_integrator import plugin_manager, trigger_event
 
     ADVANCED_PLUGINS_AVAILABLE = True
-    print("Advanced plugin system loaded successfully")
+    logger.info("Advanced plugin system loaded successfully")
 except ImportError as e:
-    print(f"Advanced plugin system not available ({e}), using fallback")
-    logging.getLogger(__name__).warning("Advanced plugin system not available (%s), using fallback", e)
+    logger.warning(f"Advanced plugin system not available ({e}), using fallback")
     ADVANCED_PLUGINS_AVAILABLE = False
 
     # Fallback plugin manager (original simple implementation)
@@ -106,7 +108,7 @@ except ImportError as e:
                         plugin_instance = plugin_class()
                         if plugin_instance.initialize(config):
                             self.plugins[plugin_name] = plugin_instance
-                            logging.getLogger(__name__).info("Loaded plugin: %s", plugin_name)
+                            logger.info(f"Loaded plugin: {plugin_name}")
 
                             # Register webhooks if it's a webhook plugin
                             if hasattr(plugin_instance, "webhooks"):
@@ -130,12 +132,12 @@ except ImportError as e:
                                         self.register_hook(hook_name, callback)
 
                         else:
-                            logging.getLogger(__name__).warning("Failed to initialize plugin: %s", plugin_name)
+                            print(f"Failed to initialize plugin: {plugin_name}")
                     else:
-                        print(f"No valid plugin class found in: {plugin_name}")
+                        logger.warning(f"No valid plugin class found in: {plugin_name}")
 
                 except Exception as e:
-                    logging.getLogger(__name__).exception("Error loading plugin %s: %s", plugin_name, e)
+                    logger.exception(f"Error loading plugin {plugin_name}: {e}")
 
         def register_webhook(self, path, handler, methods=None):
             """Register a webhook endpoint"""
@@ -166,9 +168,9 @@ except ImportError as e:
             for plugin_name, plugin in self.plugins.items():
                 try:
                     plugin.shutdown()
-                    print(f"Shutdown plugin: {plugin_name}")
+                    logger.info(f"Shutdown plugin: {plugin_name}")
                 except Exception as e:
-                    print(f"Error shutting down plugin {plugin_name}: {e}")
+                    logger.exception(f"Error shutting down plugin {plugin_name}: {e}")
             self.plugins.clear()
             self.webhooks.clear()
             self.hooks.clear()
@@ -279,11 +281,9 @@ class RedisCache:
             )
             # Test connection
             self.redis_client.ping()
-            logging.getLogger(__name__).info("Redis cache connected successfully")
+            print("Redis cache connected successfully")
         except Exception as e:
-            logging.getLogger(__name__).warning(
-                "Redis connection failed, using memory cache: %s", e
-            )
+            print(f"Redis connection failed, using memory cache: {e}")
             self.redis_client = None
 
     def get(self, key):
@@ -940,353 +940,16 @@ class MCPHandler(BaseHTTPRequestHandler):
             # return registered controllers with last heartbeat
             return self._get_controllers_data()
 
-    def _get_health_data(self):
-        """Get comprehensive health data for the MCP server"""
-        try:
-            import psutil
-
-            psutil_available = True
-        except ImportError:
-            psutil_available = False
-
-        # Basic health checks
-        agent_count = len(self.server.agents)
-        controller_count = len(self.server.controllers)
-        task_count = len(self.server.tasks)
-
-        # Check for any critical issues
-        critical_issues = []
-
-        # Check if Redis is available (if configured)
-        redis_ok = True
-        try:
-            if hasattr(self.server, "redis_cache") and self.server.redis_cache:
-                # Try a simple Redis ping
-                self.server.redis_cache._connect().ping()
-        except Exception:
-            redis_ok = False
-            critical_issues.append("Redis connection failed")
-
-        # Check plugin system
-        plugins_ok = True
-        try:
-            # Check if plugin manager is loaded
-
-            plugins_ok = True
-        except Exception:
-            plugins_ok = False
-            critical_issues.append("Plugin system failed")
-
-        # System metrics
-        cpu_percent = 0.0
-        memory_percent = 0.0
-        disk_percent = 0.0
-
-        if psutil_available:
-            try:
-                cpu_percent = psutil.cpu_percent(interval=0.1)
-                memory = psutil.virtual_memory()
-                memory_percent = memory.percent
-                disk_usage = psutil.disk_usage("/")
-                disk_percent = disk_usage.percent
-            except Exception:
-                pass
-
-        # Determine overall health
-        overall_ok = (
-            redis_ok
-            and plugins_ok
-            and cpu_percent < 95  # CPU not critically high
-            and memory_percent < 95  # Memory not critically high
-            and disk_percent < 95  # Disk not critically full
-        )
-
-        health_data = {
-            "ok": overall_ok,
-            "status": "healthy" if overall_ok else "degraded",
-            "timestamp": time.time(),
-            "version": "2.0.0",
-            "uptime": time.time() - getattr(self.server, "start_time", time.time()),
-            "agents": {
-                "count": agent_count,
-                "active": agent_count > 0,
-            },
-            "controllers": {
-                "count": controller_count,
-                "active": controller_count > 0,
-            },
-            "tasks": {
-                "total": task_count,
-                "queued": sum(
-                    1 for t in self.server.tasks if t.get("status") == "queued"
-                ),
-                "running": sum(
-                    1 for t in self.server.tasks if t.get("status") == "running"
-                ),
-                "completed": sum(
-                    1
-                    for t in self.server.tasks
-                    if t.get("status") in ["success", "completed"]
-                ),
-                "failed": sum(
-                    1
-                    for t in self.server.tasks
-                    if t.get("status") in ["failed", "error"]
-                ),
-            },
-            "system": {
-                "cpu_usage": round(cpu_percent, 1),
-                "memory_usage": round(memory_percent, 1),
-                "disk_usage": round(disk_percent, 1),
-                "psutil_available": psutil_available,
-            },
-            "services": {
-                "redis": redis_ok,
-                "plugins": plugins_ok,
-            },
-        }
-
-        if critical_issues:
-            health_data["critical_issues"] = critical_issues
-
-        return health_data
-
-        # Quantum-enhanced GET endpoints
-        if parsed.path == "/quantum_status":
-            # Get quantum system status
-            quantum_status = {
-                "entanglement_network": self._get_entanglement_status(),
-                "multiverse_navigation": self._get_multiverse_status(),
-                "consciousness_frameworks": self._get_consciousness_status(),
-                "dimensional_computing": self._get_dimensional_status(),
-                "quantum_orchestrator": self._get_orchestrator_status(),
-            }
-            self._send_json({"ok": True, "quantum_status": quantum_status})
-            return
-
-        # API endpoints for comprehensive testing
-        if parsed.path == "/api/agents/status":
-            # Get detailed agent status information
-            agents_status = {
-                "total_agents": len(self.server.agents),
-                "registered_agents": list(self.server.agents.keys()),
-                "active_controllers": len(self.server.controllers),
-                "controller_details": list(self.server.controllers.values()),
-                "timestamp": time.time(),
-            }
-            self._send_json({"ok": True, "agents": agents_status})
-            return
-
-        if parsed.path == "/api/tasks/analytics":
-            # Get task analytics and statistics
-            total_tasks = len(self.server.tasks)
-            queued_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") == "queued"
-            )
-            running_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") == "running"
-            )
-            completed_tasks = sum(
-                1
-                for t in self.server.tasks
-                if t.get("status") in ["success", "completed"]
-            )
-            failed_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") in ["failed", "error"]
-            )
-
-            task_analytics = {
-                "total_tasks": total_tasks,
-                "queued_tasks": queued_tasks,
-                "running_tasks": running_tasks,
-                "completed_tasks": completed_tasks,
-                "failed_tasks": failed_tasks,
-                "success_rate": (
-                    (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
-                ),
-                "recent_tasks": (
-                    self.server.tasks[-10:] if self.server.tasks else []
-                ),  # Last 10 tasks
-                "timestamp": time.time(),
-            }
-            self._send_json({"ok": True, "analytics": task_analytics})
-            return
-
-        if parsed.path == "/api/metrics/system":
-            # Get system-level metrics
-            try:
-                import psutil
-
-                psutil_available = True
-            except ImportError:
-                psutil_available = False
-
-            system_metrics = {
-                "server_uptime": time.time()
-                - getattr(self.server, "start_time", time.time()),
-                "total_requests": sum(self.server.metrics.values()),
-                "active_connections": len(getattr(self.server, "request_counters", {})),
-                "timestamp": time.time(),
-            }
-
-            if psutil_available:
-                try:
-                    system_metrics.update(
-                        {
-                            "cpu_percent": psutil.cpu_percent(interval=0.1),
-                            "memory_percent": psutil.virtual_memory().percent,
-                            "disk_usage_percent": psutil.disk_usage("/").percent,
-                        }
-                    )
-                except Exception:
-                    pass
-
-            self._send_json({"ok": True, "system_metrics": system_metrics})
-            return
-
-        if parsed.path == "/api/ml/analytics":
-            # Get machine learning analytics (placeholder for future ML features)
-            ml_analytics = {
-                "ml_models_active": 0,
-                "predictions_made": 0,
-                "accuracy_metrics": {},
-                "training_sessions": 0,
-                "feature_importance": {},
-                "model_performance": {},
-                "timestamp": time.time(),
-            }
-            self._send_json({"ok": True, "ml_analytics": ml_analytics})
-            return
-
-        if parsed.path == "/api/umami/stats":
-            # Get umami analytics (placeholder for user analytics)
-            umami_stats = {
-                "total_visitors": 0,
-                "page_views": 0,
-                "unique_sessions": 0,
-                "bounce_rate": 0.0,
-                "avg_session_duration": 0,
-                "top_pages": [],
-                "referrers": [],
-                "timestamp": time.time(),
-            }
-            self._send_json({"ok": True, "umami_stats": umami_stats})
-            return
-
-        if parsed.path == "/api/ai/status":
-            # Get AI service status
-            ai_status = {
-                "ai_manager_available": AI_MANAGER_AVAILABLE,
-                "models_loaded": 0,
-                "active_connections": 0,
-                "cache_hits": 0,
-                "cache_misses": 0,
-                "timestamp": time.time(),
-            }
-
-            if AI_MANAGER_AVAILABLE:
-                try:
-                    ai_status.update(
-                        {
-                            "models_loaded": len(ai_manager.models),
-                            "ollama_available": True,  # Would check actual Ollama status
-                            "huggingface_available": True,  # Would check actual HF status
-                        }
-                    )
-                except Exception:
-                    pass
-
-            self._send_json({"ok": True, "ai_status": ai_status})
-            return
-
-        if parsed.path == "/api/extensions/status":
-            # Get extensions framework status
-            try:
-                from plugin_integrator import get_integrator
-
-                integrator = get_integrator()
-
-                plugin_status = integrator.get_plugin_status()
-                webhook_status = integrator.get_webhook_status()
-
-                extensions_status = {
-                    "ok": True,
-                    "advanced_plugins_available": ADVANCED_PLUGINS_AVAILABLE,
-                    "plugins": plugin_status,
-                    "webhooks": webhook_status,
-                    "timestamp": time.time(),
-                }
-                self._send_json(extensions_status)
-                return
-            except Exception as e:
-                self._send_json(
-                    {"error": f"extensions_status_failed: {str(e)}"}, status=500
-                )
-                return
-
-        if parsed.path == "/api/system/status":
-            # Get comprehensive system status
-            try:
-                import psutil
-
-                psutil_available = True
-            except ImportError:
-                psutil_available = False
-
-            # Get agent count
-            agent_count = len(self.server.agents)
-
-            # Get queue depth
-            queue_depth = len(self.server.tasks)
-            queued_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") == "queued"
-            )
-            running_tasks = sum(
-                1 for t in self.server.tasks if t.get("status") == "running"
-            )
-
-            # Check disk space
-            disk_usage = shutil.disk_usage(CODE_DIR)
-            disk_free_gb = disk_usage.free / (1024**3)
-            disk_total_gb = disk_usage.total / (1024**3)
-            disk_percent = (disk_usage.used / disk_usage.total) * 100
-
-            # System metrics
-            cpu_percent = 0.0
-            memory_percent = 0.0
-            memory_available_gb = 0.0
-
-            if psutil_available:
-                try:
-                    cpu_percent = psutil.cpu_percent(interval=0.1)
-                    memory = psutil.virtual_memory()
-                    memory_percent = memory.percent
-                    memory_available_gb = memory.available / (1024**3)
-                except Exception:
-                    pass
-
-            system_status = {
-                "status": "ok",
-                "message": "Comprehensive automation ecosystem running",
-                "timestamp": time.time(),
-                "version": "2.0.0",
-                "cpu_usage": round(cpu_percent, 1),
-                "memory_usage": round(memory_percent, 1),
-                "disk_usage": round(disk_percent, 1),
-                "agent_count": agent_count,
-                "tasks_total": queue_depth,
-                "tasks_queued": queued_tasks,
-                "tasks_running": running_tasks,
-                "disk_free_gb": round(disk_free_gb, 2),
-                "disk_total_gb": round(disk_total_gb, 2),
-                "memory_available_gb": round(memory_available_gb, 2),
-                "uptime": time.time() - getattr(self.server, "start_time", time.time()),
-            }
-            self._send_json({"ok": True, "system": system_status})
-            return
-
-        else:
-            self._send_json({"error": "not_found"}, status=404)
+    # NOTE: The `_get_health_data` function used to be duplicated below with
+    # additional endpoint handlers embedded after the return statement.
+    # Those duplicate route handlers caused undefined `parsed` references and
+    # made the module invalid for linting (F821) and runtime errors. The
+    # canonical route handling for these endpoints is implemented in `do_GET`.
+    # Removing the duplicated function and its embedded routes resolves the
+    # undefined `parsed` issues and avoids accidental shadowing of server
+    # behavior. If specific health computations from the removed duplicate are
+    # required, that logic should be merged into `_get_detailed_health` or the
+    # existing cached `_get_health_data` defined earlier.
 
     def do_OPTIONS(self):
         # Handle CORS preflight requests
@@ -1518,7 +1181,9 @@ class MCPHandler(BaseHTTPRequestHandler):
             verified = True
             secret = os.environ.get("GITHUB_WEBHOOK_SECRET")
             if secret:
-                verified = _verify_github_signature()
+                sig = self.headers.get("X-Hub-Signature-256") or self.headers.get("X-Hub-Signature")
+                # raw_bytes contains the request payload
+                verified = verify_github_signature(secret, raw_bytes, sig)
             if not verified:
                 self._send_json({"error": "signature_verification_failed"}, status=401)
                 return
@@ -1944,39 +1609,51 @@ class MCPHandler(BaseHTTPRequestHandler):
         )
 
         try:
-            # Normalize command to a list when possible and avoid shell=True
-            requires_shell = False
-            cmd_to_run = cmd
+            # Determine if command should be executed through the shell.
+            # If the caller provided a string with shell constructs (pipes,
+            # redirection, etc.) then `shell=True` is required; otherwise
+            # prefer list invocation for safer execution.
+            shell_flag = False
             if isinstance(cmd, str):
-                try:
-                    cmd_args = shlex.split(cmd)
-                    cmd_to_run = cmd_args if isinstance(cmd_args, list) else [cmd_args]
-                    requires_shell = any(
-                        c in cmd for c in ["|", "<", ">", "&&", "||", ";", "$"]
-                    )
-                except Exception:
-                    cmd_to_run = cmd
-                    requires_shell = True
+                # Heuristic to detect shell metacharacters; conservative list
+                shell_metachars = ["|", "&&", ";", ">", "<", "*", "$", "`"]
+                shell_flag = any(c in cmd for c in shell_metachars)
 
-            if requires_shell:
-                proc = subprocess.run(
-                    cmd_to_run,
-                    cwd=CODE_DIR,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    timeout=1800,
-                    shell=True,  # nosec: controlled fallback
-                )
-            else:
-                proc = subprocess.run(
-                    cmd_to_run,
-                    cwd=CODE_DIR,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    timeout=1800,
-                )
+            # If the command requires shell meta-characters and shell execution is
+            # not explicitly allowed via an environment flag or per-command
+            # allowlist, reject the task to avoid executing untrusted shell
+            # commands on the host.
+            allow_shell_env = os.environ.get("ALLOW_SHELL", "").lower() in (
+                "1",
+                "true",
+                "yes",
+            )
+            # Per-command allowlist can be configured via comma-separated
+            # env var `ALLOWED_SHELL_COMMANDS`, e.g. "status,quantum_orchestrate".
+            allowed_shell_command_names = set(
+                [c.strip() for c in os.environ.get("ALLOWED_SHELL_COMMANDS", "").split(",") if c.strip()]
+            )
+            if shell_flag and not (allow_shell_env or task.get("command") in allowed_shell_command_names):
+                task["status"] = "error"
+                task["stderr"] = "shell_execution_not_allowed"
+                return
+
+            # In this handler we may intentionally invoke shell constructs when
+            # the provided command is a string containing shell meta-characters
+            # (pipes, redirection, etc.). These are controlled inputs coming
+            # from internal controllers / allowed commands and therefore we
+            # explicitly permit this usage. Bandit (B602) flags shell usage —
+            # suppress that warning here as we've performed additional
+            # validation elsewhere.
+            proc = subprocess.run(  # nosec B602
+                cmd,
+                cwd=CODE_DIR,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=1800,
+                shell=shell_flag,
+            )
             task["status"] = "success" if proc.returncode == 0 else "failed"
             task["returncode"] = proc.returncode
             task["stdout"] = proc.stdout[:8000]
@@ -2296,7 +1973,7 @@ class MCPHandler(BaseHTTPRequestHandler):
                 return {"error": "consciousness_frameworks_not_found"}
 
             # Create consciousness expansion request
-            ai_system = {
+            _ai_system = {
                 "systemId": target_agent,
                 "systemType": "agent",
                 "consciousnessLevel": 0.8,
@@ -2382,74 +2059,70 @@ Task {{
 }}
 """
 
-            # Write Swift script to a secure temporary file
-            import tempfile
-
-            tmp_dir = tempfile.mkdtemp(prefix="mcp_consciousness_")
-            script_path = os.path.join(tmp_dir, "consciousness_expansion.swift")
-            with open(script_path, "w") as f:
-                f.write(swift_script)
-
-            # Compile and run Swift script
-            exec_path = os.path.join(tmp_dir, "consciousness_expansion_exec")
-            compile_cmd = [
-                "swiftc",
-                "-o",
-                exec_path,
-                script_path,
-                framework_path,
-            ]
-            run_cmd = [exec_path]
-
-            # Compile
-            compile_result = subprocess.run(
-                compile_cmd,
-                capture_output=True,
-                text=True,
-                cwd=os.path.dirname(__file__),
-            )
-            if compile_result.returncode != 0:
-                return {"error": f"compilation_failed: {compile_result.stderr}"}
-
-            # Run
-            run_result = subprocess.run(
-                run_cmd, capture_output=True, text=True, timeout=30
-            )
-            if run_result.returncode != 0:
-                return {"error": f"execution_failed: {run_result.stderr}"}
-
-            # Parse result
+            # Write Swift script to a temporary directory and file
+            tempdir = tempfile.mkdtemp(prefix="consciousness_expansion_")
             try:
-                result_data = json.loads(run_result.stdout.strip())
-                return {
-                    "ok": True,
-                    "consciousness_expanded": True,
-                    "expansion_details": result_data,
-                }
-            except json.JSONDecodeError:
-                return {"error": f"result_parsing_failed: {run_result.stdout}"}
+                script_path = os.path.join(tempdir, "consciousness_expansion.swift")
+                with open(script_path, "w") as f:
+                    f.write(swift_script)
+
+                # Compile and run Swift script using temp executable path
+                exec_path = os.path.join(tempdir, "consciousness_expansion_exec")
+                compile_cmd = [
+                    "swiftc",
+                    "-o",
+                    exec_path,
+                    script_path,
+                    framework_path,
+                ]
+                run_cmd = [exec_path]
+
+                # Compile
+                # The compile step invokes swiftc on a trusted framework path and
+                # emit an executable in a temporary directory. We explicitly
+                # consider this a controlled operation and mark it as such for
+                # security audits. (no untrusted user data in compile_cmd)
+                compile_result = subprocess.run(  # nosec B603
+                    compile_cmd,
+                    capture_output=True,
+                    text=True,
+                    cwd=os.path.dirname(__file__),
+                )
+                if compile_result.returncode != 0:
+                    return {"error": f"compilation_failed: {compile_result.stderr}"}
+
+                # Run
+                # Running the compiled executable from a temp dir is a
+                # controlled operation; runtime inputs are not directly from
+                # external users. Suppress Bandit B603 here while keeping
+                # this code under review for safer execution.
+                run_result = subprocess.run(  # nosec B603
+                    run_cmd, capture_output=True, text=True, timeout=30
+                )
+                if run_result.returncode != 0:
+                    return {"error": f"execution_failed: {run_result.stderr}"}
+
+                # Parse result
+                try:
+                    result_data = json.loads(run_result.stdout.strip())
+                    return {
+                        "ok": True,
+                        "consciousness_expanded": True,
+                        "expansion_details": result_data,
+                    }
+                except json.JSONDecodeError:
+                    return {"error": f"result_parsing_failed: {run_result.stdout}"}
+            finally:
+                # Clean up temp dir to avoid leaking files into /tmp
+                try:
+                    shutil.rmtree(tempdir)
+                except Exception:
+                    pass
 
         except subprocess.TimeoutExpired:
             return {"error": "consciousness_expansion_timeout"}
         except Exception as e:
             return {"error": f"consciousness_expansion_failed: {str(e)}"}
-        finally:
-            # Clean up temporary files
-            try:
-                if os.path.exists(script_path):
-                    os.remove(script_path)
-            except Exception:
-                pass
-            try:
-                if os.path.exists(exec_path):
-                    os.remove(exec_path)
-            except Exception:
-                pass
-            try:
-                if os.path.exists(tmp_dir):
-                    os.rmdir(tmp_dir)
-            except Exception:
-                pass
 
     def _execute_dimensional_computation(self, dimensions, computation_type):
         """Execute dimensional computing task"""

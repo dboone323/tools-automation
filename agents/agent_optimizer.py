@@ -7,7 +7,9 @@ Improves individual agent performance and coordination
 import json
 import time
 import os
-import subprocess
+from agents.utils import safe_run, user_log
+import logging
+logger = logging.getLogger(__name__)
 
 
 class AgentOptimizer:
@@ -26,7 +28,8 @@ class AgentOptimizer:
         try:
             with open(self.agent_status_file, "r") as f:
                 return json.load(f).get("agents", {})
-        except Exception:
+        except Exception as e:
+            logging.getLogger(__name__).warning("Failed to load agent status: %s", e)
             return {}
 
     def load_tasks(self):
@@ -34,7 +37,8 @@ class AgentOptimizer:
         try:
             with open(self.task_queue_file, "r") as f:
                 return json.load(f).get("tasks", [])
-        except Exception:
+        except Exception as e:
+            logging.getLogger(__name__).warning("Failed to load tasks: %s", e)
             return []
 
     def optimize_agent_memory(self):
@@ -47,7 +51,7 @@ class AgentOptimizer:
             if pid > 0:
                 try:
                     # Check memory usage (simplified - in real implementation use psutil)
-                    result = subprocess.run(
+                    result = safe_run(
                         ["ps", "-o", "rss=", "-p", str(pid)],
                         capture_output=True,
                         text=True,
@@ -55,16 +59,19 @@ class AgentOptimizer:
                     if result.returncode == 0:
                         memory_mb = int(result.stdout.strip()) / 1024
                         if memory_mb > 500:  # Restart if > 500MB
-                            print(
-                                f"Restarting high-memory agent: {agent_name} ({memory_mb:.1f}MB)"
-                            )
+                            user_log(f"Restarting high-memory agent: {agent_name} ({memory_mb:.1f}MB)")
                             os.kill(pid, 15)  # SIGTERM
                             time.sleep(2)
                             optimized += 1
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug(
+                        "agent_optimizer: failed to inspect memory for %s: %s",
+                        agent_name,
+                        e,
+                        exc_info=True,
+                    )
 
-        print(f"✅ Optimized {optimized} high-memory agents")
+        user_log(f"✅ Optimized {optimized} high-memory agents")
         return optimized
 
     def parallelize_agent_tasks(self):
@@ -91,16 +98,12 @@ class AgentOptimizer:
                 if os.path.exists(agent_script):
                     try:
                         # Send parallel processing signal (implementation depends on agent)
-                        subprocess.run(
-                            [agent_script, "parallel", str(len(agent_task_list))],
-                            timeout=5,
-                            capture_output=True,
-                        )
+                        safe_run([agent_script, "parallel", str(len(agent_task_list))], timeout=5, capture_output=True)
                         parallelized += 1
                     except Exception:
-                        pass
+                        logger.debug("agent_optimizer: failed to signal agent %s for parallel processing", agent, exc_info=True)
 
-        print(f"✅ Enabled parallel processing for {parallelized} agents")
+        user_log(f"✅ Enabled parallel processing for {parallelized} agents")
         return parallelized
 
     def optimize_task_distribution(self):
@@ -149,7 +152,7 @@ class AgentOptimizer:
             with open(self.task_queue_file, "w") as f:
                 json.dump(data, f, indent=2)
 
-        print(f"✅ Redistributed {redistributed} tasks for load balancing")
+        user_log(f"✅ Redistributed {redistributed} tasks for load balancing")
         return redistributed
 
     def enable_agent_specialization(self):
@@ -199,19 +202,19 @@ class AgentOptimizer:
             with open(self.task_queue_file, "w") as f:
                 json.dump(data, f, indent=2)
 
-        print(f"✅ Specialized {specialized} tasks to best-performing agents")
+        user_log(f"✅ Specialized {specialized} tasks to best-performing agents")
         return specialized
 
     def run_optimization_cycle(self):
         """Run complete optimization cycle"""
-        print("🔧 Running Agent Efficiency Optimization...")
+        user_log("🔧 Running Agent Efficiency Optimization...")
 
         self.optimize_agent_memory()
         self.parallelize_agent_tasks()
         self.optimize_task_distribution()
         self.enable_agent_specialization()
 
-        print("✅ Agent optimization cycle complete!")
+        user_log("✅ Agent optimization cycle complete!")
 
 
 def main():
@@ -233,9 +236,7 @@ def main():
         elif command == "cycle":
             optimizer.run_optimization_cycle()
         else:
-            print(
-                "Usage: python3 agent_optimizer.py [memory|parallel|balance|specialize|cycle]"
-            )
+            user_log("Usage: python3 agent_optimizer.py [memory|parallel|balance|specialize|cycle]", level="error", stderr=True)
     else:
         optimizer.run_optimization_cycle()
 

@@ -2,7 +2,9 @@ import http.server
 import json
 import os
 import socketserver
-import subprocess
+from agents.utils import safe_run, user_log
+import logging
+logger = logging.getLogger(__name__)
 from datetime import datetime
 
 PORT = 8090
@@ -52,8 +54,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                             block_list = [
                                 x.strip() for x in line.split("=", 1)[1].split(",")
                             ]
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug("Policy file load exception: %s", e, exc_info=True)
             if plugin in block_list:
                 self.send_response(403)
                 self.end_headers()
@@ -79,7 +81,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     )
                 return
             if os.path.isfile(plugin_path):
-                result = subprocess.run([plugin_path], capture_output=True, text=True)
+                result = safe_run([plugin_path], capture_output=True, text=True)
                 self.send_response(200)
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
@@ -102,5 +104,5 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 if __name__ == "__main__":
     os.chdir(os.path.dirname(__file__))
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"Agent API server running at http://localhost:{PORT}/api/plugins/list")
+        user_log(f"Agent API server running at http://localhost:{PORT}/api/plugins/list")
         httpd.serve_forever()

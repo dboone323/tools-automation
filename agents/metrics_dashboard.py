@@ -14,7 +14,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import subprocess
+from agents.utils import safe_run, user_log
+import logging
+logger = logging.getLogger(__name__)
 import time
 from typing import Any, Dict
 
@@ -31,6 +33,7 @@ def _load_json(path: str) -> Dict[str, Any]:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception:
+        logger.debug("_load_json failed for %s", path, exc_info=True)
         return {}
 
 
@@ -38,17 +41,16 @@ def _run_refresh(html: bool = False) -> None:
     script = os.path.join(AGENTS_DIR, "analytics_collector.py")
     if html:
         html_out = os.path.join(AGENTS_DIR, "analytics_report.html")
-        subprocess.run(
-            [script, "collect", "--out", SUMMARY_PATH, "--html", html_out], check=False
-        )
+        safe_run([script, "collect", "--out", SUMMARY_PATH, "--html", html_out], check=False)
     else:
-        subprocess.run([script, "collect", "--out", SUMMARY_PATH], check=False)
+        safe_run([script, "collect", "--out", SUMMARY_PATH], check=False)
 
 
 def _pct(x: float) -> str:
     try:
         return f"{100*float(x):.2f}%"
     except Exception:
+        logger.debug("_pct: invalid input %s", x, exc_info=True)
         return "0.00%"
 
 
@@ -56,6 +58,7 @@ def _secs(x: float) -> str:
     try:
         return f"{float(x):.2f}s"
     except Exception:
+        logger.debug("_secs: invalid input %s", x, exc_info=True)
         return "0.00s"
 
 
@@ -134,25 +137,25 @@ def main() -> int:
         if args.refresh:
             _run_refresh(html=False)
         data = _load_json(SUMMARY_PATH)
-        print(show_dashboard(data))
+        user_log(show_dashboard(data))
         return 0
     elif args.cmd == "html":
         _run_refresh(html=True)
-        print(f"HTML report generated at {args.out}")
+        user_log(f"HTML report generated at {args.out}")
         return 0
     elif args.cmd == "queue":
         if args.watch:
             try:
                 while True:
-                    print("\033[2J\033[H")  # Clear screen
-                    print(show_queue_status())
-                    print("\n[Refreshing every 60s... Ctrl+C to stop]")
+                    user_log("\033[2J\033[H")  # Clear screen
+                    user_log(show_queue_status())
+                    user_log("\n[Refreshing every 60s... Ctrl+C to stop]")
                     time.sleep(60)
             except KeyboardInterrupt:
-                print("\nStopped.")
+                user_log("\nStopped.")
                 return 0
         else:
-            print(show_queue_status())
+            user_log(show_queue_status())
             return 0
     else:
         parser.print_help()

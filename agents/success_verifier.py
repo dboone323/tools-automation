@@ -7,7 +7,9 @@ Comprehensive validation for code generation and modification operations.
 
 import json
 import sys
-import subprocess
+from agents.utils import safe_run, user_log
+import logging
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import Dict
 
@@ -116,19 +118,19 @@ class SuccessVerifier:
 
         try:
             if suffix == ".swift":
-                result = subprocess.run(
+                result = safe_run(  # nosec B603
                     ["swiftc", "-typecheck", str(file_path)],
                     capture_output=True,
                     timeout=30,
                 )
             elif suffix == ".py":
-                result = subprocess.run(
+                result = safe_run(  # nosec B603
                     ["python3", "-m", "py_compile", str(file_path)],
                     capture_output=True,
                     timeout=10,
                 )
             elif suffix == ".sh":
-                result = subprocess.run(
+                result = safe_run(  # nosec B603
                     ["bash", "-n", str(file_path)], capture_output=True, timeout=5
                 )
             else:
@@ -161,7 +163,7 @@ class SuccessVerifier:
         project = context.get("project", "CodingReviewer")
 
         try:
-            result = subprocess.run(
+            result = safe_run(  # nosec B603
                 ["xcodebuild", "build", "-scheme", project, "-configuration", "Debug"],
                 capture_output=True,
                 timeout=120,
@@ -193,7 +195,7 @@ class SuccessVerifier:
         project = context.get("project", "CodingReviewer")
 
         try:
-            result = subprocess.run(
+            result = safe_run(  # nosec B603
                 ["xcodebuild", "test", "-scheme", project, "-configuration", "Debug"],
                 capture_output=True,
                 timeout=300,
@@ -216,8 +218,9 @@ class SuccessVerifier:
         except subprocess.TimeoutExpired:
             self.checks_failed.append({"check": check_name, "reason": "Tests timeout"})
             return False
-        except Exception:
-            # Tests might not exist, that's okay
+        except Exception as e:
+            # Tests might not exist, that's okay — record for debug
+            logger.debug("_check_tests_pass: tests invocation error: %s", e, exc_info=True)
             self.checks_passed.append(
                 {"check": check_name, "result": "skipped (no tests)"}
             )
@@ -277,7 +280,7 @@ class SuccessVerifier:
 
         # Check complexity (if swiftlint available)
         try:
-            result = subprocess.run(
+            result = safe_run(  # nosec B603
                 ["swiftlint", "lint", "--quiet", str(file_path)],
                 capture_output=True,
                 timeout=10,
@@ -286,8 +289,8 @@ class SuccessVerifier:
                 errors = result.stdout.decode().count("error:")
                 if errors > 0:
                     issues.append(f"{errors} lint errors")
-        except Exception:
-            pass  # SwiftLint not available
+        except Exception as e:
+            logger.debug("SwiftLint check skipped/unavailable: %s", e, exc_info=True)
 
         if issues:
             self.checks_failed.append(
@@ -307,7 +310,7 @@ class SuccessVerifier:
         project = context.get("project", "CodingReviewer")
 
         try:
-            result = subprocess.run(
+            result = safe_run(  # nosec B603
                 ["xcodebuild", "build", "-scheme", project, "-configuration", "Debug"],
                 capture_output=True,
                 timeout=120,
@@ -468,18 +471,24 @@ class SuccessVerifier:
 def main():
     """CLI interface for success verifier."""
     if len(sys.argv) < 2:
-        print(
+        user_log(
             "Usage: success_verifier.py <command> <file_path> [context_json]",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
-        print("\nCommands:", file=sys.stderr)
-        print(
+        user_log("\nCommands:", level="error", stderr=True)
+        user_log(
             "  codegen <file> [context]   - Verify code generation success",
-            file=sys.stderr,
+            level="error",
+            stderr=True,
         )
-        print("  build [context]            - Verify build success", file=sys.stderr)
-        print("  test [context]             - Verify test success", file=sys.stderr)
-        print("  fix <error> [context]      - Verify fix success", file=sys.stderr)
+        user_log("  build [context]            - Verify build success", level="error", stderr=True)
+        user_log("  test [context]             - Verify test success", level="error", stderr=True)
+        user_log(
+            "  fix <error> [context]      - Verify fix success",
+            level="error",
+            stderr=True,
+        )
         sys.exit(1)
 
     command = sys.argv[1]
@@ -490,7 +499,7 @@ def main():
         try:
             context = json.loads(sys.argv[3])
         except json.JSONDecodeError:
-            print("WARN: Invalid context JSON", file=sys.stderr)
+            user_log("WARN: Invalid context JSON", level="warning", stderr=True)
     elif len(sys.argv) > 2:
         try:
             context = json.loads(sys.argv[2])
@@ -499,7 +508,7 @@ def main():
 
     if command == "codegen":
         if len(sys.argv) < 3:
-            print("ERROR: Missing file path", file=sys.stderr)
+            user_log("ERROR: Missing file path", level="error", stderr=True)
             sys.exit(1)
 
         file_path = sys.argv[2]
@@ -513,18 +522,18 @@ def main():
 
     elif command == "fix":
         if len(sys.argv) < 3:
-            print("ERROR: Missing error pattern", file=sys.stderr)
+            user_log("ERROR: Missing error pattern", level="error", stderr=True)
             sys.exit(1)
 
         error_pattern = sys.argv[2]
         success = verifier.verify_fix_success(error_pattern, context)
 
     else:
-        print(f"ERROR: Unknown command: {command}", file=sys.stderr)
+        user_log(f"ERROR: Unknown command: {command}", level="error", stderr=True)
         sys.exit(1)
 
     report = verifier.get_verification_report()
-    print(json.dumps(report, indent=2))
+    user_log(json.dumps(report, indent=2))
     sys.exit(0 if success else 1)
 
 

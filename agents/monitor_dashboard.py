@@ -2,6 +2,7 @@ import http.server
 import socketserver
 import time
 from pathlib import Path
+from agents.utils import user_log
 
 AGENTS_DIR = Path(__file__).parent
 LOGS = [
@@ -62,5 +63,5 @@ class LogHandler(http.server.SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     with socketserver.TCPServer(("", PORT), LogHandler) as httpd:
-        print(f"Serving agent monitor dashboard at http://localhost:{PORT}")
+        user_log(f"Serving agent monitor dashboard at http://localhost:{PORT}")
         httpd.serve_forever()

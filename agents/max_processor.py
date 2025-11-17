@@ -8,6 +8,9 @@ import json
 import time
 import os
 import threading
+import logging
+from agents.utils import user_log
+logger = logging.getLogger(__name__)
 
 
 class MaxParallelProcessor:
@@ -23,7 +26,7 @@ class MaxParallelProcessor:
 
     def force_max_parallelization(self):
         """Force maximum parallel task processing"""
-        print("🔥 FORCING MAXIMUM PARALLELIZATION")
+        user_log("🔥 FORCING MAXIMUM PARALLELIZATION")
 
         # Load current data
         with open(f"{self.agents_dir}/task_queue.json", "r") as f:
@@ -52,11 +55,11 @@ class MaxParallelProcessor:
             if is_running and status in ["available", "idle", "running"]:
                 available_agents.append(agent_name)
 
-        print(f"Available agents: {len(available_agents)}")
+        user_log(f"Available agents: {len(available_agents)}")
 
         # Get queued tasks
         queued_tasks = [t for t in tasks if t.get("status") == "queued"]
-        print(f"Queued tasks: {len(queued_tasks)}")
+        user_log(f"Queued tasks: {len(queued_tasks)}")
 
         # Force assign tasks to agents (allow multiple tasks per agent)
         assignments = 0
@@ -84,10 +87,8 @@ class MaxParallelProcessor:
         with open(f"{self.agents_dir}/task_queue.json", "w") as f:
             json.dump(queue_data, f, indent=2)
 
-        print(
-            f"✅ Force-assigned {assignments} tasks to {len(available_agents)} agents"
-        )
-        print(f"   (Up to {self.max_workers} concurrent tasks)")
+        user_log(f"✅ Force-assigned {assignments} tasks to {len(available_agents)} agents")
+        user_log(f"   (Up to {self.max_workers} concurrent tasks)")
 
         return assignments
 
@@ -118,21 +119,21 @@ class MaxParallelProcessor:
                         with open(f"{self.agents_dir}/task_queue.json", "w") as f:
                             json.dump(queue_data, f, indent=2)
 
-                        print(f"📈 Auto-assigned {to_assign} more tasks")
+                        user_log(f"📈 Auto-assigned {to_assign} more tasks")
 
                 except Exception as e:
-                    print(f"Monitor error: {e}")
+                    logger.exception("Monitor error: %s", e)
 
                 time.sleep(10)  # Check every 10 seconds
 
         # Start monitor thread
         monitor_thread = threading.Thread(target=monitor, daemon=True)
         monitor_thread.start()
-        print("✅ Parallel execution monitor started")
+        logger.info("✅ Parallel execution monitor started")
 
     def optimize_agent_performance(self):
         """Optimize individual agent performance"""
-        print("⚡ OPTIMIZING AGENT PERFORMANCE")
+        user_log("⚡ OPTIMIZING AGENT PERFORMANCE")
 
         # Force agents to high-performance mode
         config = {
@@ -146,7 +147,7 @@ class MaxParallelProcessor:
         with open(f"{self.agents_dir}/performance_config.json", "w") as f:
             json.dump(config, f, indent=2)
 
-        print("✅ Performance config updated")
+        user_log("✅ Performance config updated")
 
         # Send performance signals to running agents
         with open(f"{self.agents_dir}/agent_status.json", "r") as f:
@@ -163,20 +164,20 @@ class MaxParallelProcessor:
                 except Exception:
                     pass
 
-        print(f"✅ Sent performance signals to {performance_signals} agents")
+        user_log(f"✅ Sent performance signals to {performance_signals} agents")
 
     def run_max_acceleration(self):
         """Run maximum acceleration protocol"""
-        print("🚀 MAXIMUM ACCELERATION PROTOCOL ACTIVATED")
-        print("=" * 50)
+        user_log("🚀 MAXIMUM ACCELERATION PROTOCOL ACTIVATED")
+        user_log("=" * 50)
 
         self.force_max_parallelization()
         self.optimize_agent_performance()
         self.start_parallel_execution_monitor()
 
-        print("\n🎯 TARGET: Complete all tasks in DAYS")
-        print("📊 Monitoring active - check dashboard for progress")
-        print("🔄 System will self-optimize continuously")
+        user_log("\n🎯 TARGET: Complete all tasks in DAYS")
+        user_log("📊 Monitoring active - check dashboard for progress")
+        user_log("🔄 System will self-optimize continuously")
 
 
 def main():

@@ -28,6 +28,9 @@ import argparse
 import json
 import os
 import statistics
+import logging
+from agents.utils import user_log
+logger = logging.getLogger(__name__)
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List
 
@@ -43,7 +46,8 @@ def _load_json(path: str, default: Any) -> Any:
             return default
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
-    except Exception:
+    except Exception as e:
+        logger.debug("Failed to load JSON from %s: %s", path, e, exc_info=True)
         return default
 
 
@@ -107,7 +111,8 @@ def collect_metrics() -> Dict[str, Any]:
                                 # Make timezone-aware by assuming UTC
                                 ts.append(parsed.replace(tzinfo=timezone.utc))
                                 break
-                            except Exception:
+                            except Exception as e:
+                                logger.debug("Failed to parse timestamp %s: %s", raw, e)
                                 continue
         return ts
 
@@ -263,8 +268,8 @@ def main() -> int:
         return 1
 
     data = collect_metrics()
-    # Print to stdout
-    print(json.dumps(data))
+    # Print to stdout (or structured log depending on env)
+    user_log(json.dumps(data))
     # Persist JSON
     _write_json(args.out, data)
     # Optional HTML

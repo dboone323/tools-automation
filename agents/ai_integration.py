@@ -17,7 +17,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import subprocess
+from agents.utils import safe_run, user_log
+import logging
+logger = logging.getLogger(__name__)
 from typing import Any, Dict
 
 
@@ -33,7 +35,7 @@ def _try_mcp(args: list[str]) -> Dict[str, Any] | None:
     for path in candidates:
         if os.path.exists(path) and os.access(path, os.X_OK):
             try:
-                proc = subprocess.run(
+                proc = safe_run(
                     [path] + args, check=False, capture_output=True, text=True
                 )
                 out = proc.stdout.strip()
@@ -44,7 +46,8 @@ def _try_mcp(args: list[str]) -> Dict[str, Any] | None:
                         # If MCP returns non-JSON, wrap it
                         return {"raw": out, "exit_code": proc.returncode}
                 return {"raw": out, "exit_code": proc.returncode}
-            except Exception:
+            except Exception as e:
+                logger.debug("_try_mcp: invocation failed for %s: %s", path, e, exc_info=True)
                 continue
     return None
 
@@ -120,16 +123,16 @@ def main() -> int:
 
     args = parser.parse_args()
     if args.cmd == "analyze":
-        print(json.dumps(analyze(args.text)))
+        user_log(json.dumps(analyze(args.text)))
         return 0
     elif args.cmd == "suggest-fix":
-        print(json.dumps(suggest_fix(args.pattern)))
+        user_log(json.dumps(suggest_fix(args.pattern)))
         return 0
     elif args.cmd == "evaluate":
-        print(json.dumps(evaluate(args.change)))
+        user_log(json.dumps(evaluate(args.change)))
         return 0
     elif args.cmd == "verify":
-        print(json.dumps(verify(args.target)))
+        user_log(json.dumps(verify(args.target)))
         return 0
     else:
         parser.print_help()

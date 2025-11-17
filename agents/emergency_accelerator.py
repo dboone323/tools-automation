@@ -7,6 +7,9 @@ import json
 import time
 import os
 import subprocess
+from agents.utils import safe_run, user_log
+import logging
+logger = logging.getLogger(__name__)
 import threading
 
 
@@ -22,11 +25,14 @@ class FinalAccelerator:
 
     def emergency_agent_restart(self):
         """Force restart all agents with maximum priority"""
-        print("🚨 EMERGENCY AGENT RESTART")
+        logger.warning("🚨 EMERGENCY AGENT RESTART")
 
         # Kill all existing agents
-        subprocess.run(["pkill", "-f", "agent_.*.sh"], capture_output=True)
-        subprocess.run(["pkill", "-f", "quality_agent.sh"], capture_output=True)
+        try:
+            safe_run(["pkill", "-f", "agent_.*.sh"], capture_output=True)
+            safe_run(["pkill", "-f", "quality_agent.sh"], capture_output=True)
+        except Exception:
+            logger.debug("Failed to pkill agent processes (not fatal)")
         time.sleep(2)
 
         # Start agents with high priority
@@ -60,15 +66,15 @@ class FinalAccelerator:
                     )
                     started += 1
                     time.sleep(0.2)  # Stagger starts
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.debug("Failed to spawn agent %s: %s", agent, e, exc_info=True)
 
-        print(f"✅ Emergency restarted {started} agents with high priority")
+        logger.info(f"✅ Emergency restarted {started} agents with high priority")
         return started
 
     def force_maximum_task_distribution(self):
         """Force distribute all available tasks to running agents"""
-        print("🔥 FORCE MAXIMUM TASK DISTRIBUTION")
+        logger.warning("🔥 FORCE MAXIMUM TASK DISTRIBUTION")
 
         # Load current data
         with open(f"{self.agents_dir}/task_queue.json", "r") as f:
@@ -91,11 +97,11 @@ class FinalAccelerator:
                 except Exception:
                     pass
 
-        print(f"Running agents: {len(running_agents)}")
+        logger.info(f"Running agents: {len(running_agents)}")
 
         # Get available tasks
         available_tasks = [t for t in tasks if t.get("status") in ["queued", "batched"]]
-        print(f"Available tasks: {len(available_tasks)}")
+        logger.info(f"Available tasks: {len(available_tasks)}")
 
         # Force assign tasks (allow multiple per agent)
         max_per_agent = 5  # Allow up to 5 concurrent tasks per agent
@@ -123,12 +129,12 @@ class FinalAccelerator:
         with open(f"{self.agents_dir}/task_queue.json", "w") as f:
             json.dump(queue_data, f, indent=2)
 
-        print(f"✅ Force assigned {assignments} tasks ({max_per_agent} per agent max)")
+        logger.info(f"✅ Force assigned {assignments} tasks ({max_per_agent} per agent max)")
         return assignments
 
     def enable_ultra_performance_mode(self):
         """Enable ultra performance mode for all agents"""
-        print("⚡ ENABLING ULTRA PERFORMANCE MODE")
+        logger.warning("⚡ ENABLING ULTRA PERFORMANCE MODE")
 
         # Create ultra performance config
         config = {
@@ -147,7 +153,7 @@ class FinalAccelerator:
         with open(f"{self.agents_dir}/ultra_performance_config.json", "w") as f:
             json.dump(config, f, indent=2)
 
-        print("✅ Ultra performance config created")
+        logger.info("✅ Ultra performance config created")
 
         # Send URGENT signals to running agents
         with open(f"{self.agents_dir}/agent_status.json", "r") as f:
@@ -164,7 +170,7 @@ class FinalAccelerator:
                 except Exception:
                     pass
 
-        print(f"✅ Sent urgent performance signals to {urgent_signals} agents")
+        logger.info(f"✅ Sent urgent performance signals to {urgent_signals} agents")
 
     def start_acceleration_monitor(self):
         """Start real-time acceleration monitoring"""
@@ -183,27 +189,27 @@ class FinalAccelerator:
                     _completed = len(queue_data.get("completed", []))
 
                     if in_progress < 10:  # If less than 10 tasks running, boost
-                        print(
-                            f"📈 Low activity detected ({in_progress} tasks). Boosting..."
+                        logger.info(
+                            "📈 Low activity detected (%s tasks). Boosting...", in_progress
                         )
                         self.force_maximum_task_distribution()
 
                 except Exception as e:
-                    print(f"Monitor error: {e}")
+                    logger.exception("Monitor error: %s", e)
 
                 time.sleep(30)  # Check every 30 seconds
 
         monitor_thread = threading.Thread(target=monitor, daemon=True)
         monitor_thread.start()
-        print("✅ Acceleration monitor started")
+        logger.info("✅ Acceleration monitor started")
 
     def run_emergency_acceleration(self):
         """Run complete emergency acceleration protocol"""
-        print("🚨 EMERGENCY ACCELERATION PROTOCOL ACTIVATED")
-        print("=" * 60)
-        print("🎯 TARGET: Complete automation in DAYS")
-        print("⚡ Ultra performance mode + maximum parallelization")
-        print("=" * 60)
+        user_log("🚨 EMERGENCY ACCELERATION PROTOCOL ACTIVATED")
+        user_log("=" * 60)
+        user_log("🎯 TARGET: Complete automation in DAYS")
+        user_log("⚡ Ultra performance mode + maximum parallelization")
+        user_log("=" * 60)
 
         self.emergency_agent_restart()
         time.sleep(3)  # Wait for agents to start
@@ -212,13 +218,13 @@ class FinalAccelerator:
         self.enable_ultra_performance_mode()
         self.start_acceleration_monitor()
 
-        print("\n🎯 FINAL ACCELERATION STATUS:")
-        print("  ✅ Emergency agent restart: COMPLETE")
-        print("  ✅ Maximum task distribution: ACTIVE")
-        print("  ✅ Ultra performance mode: ENABLED")
-        print("  ✅ Real-time monitoring: ACTIVE")
-        print("\n📊 Monitor progress at: http://127.0.0.1:8080")
-        print("🎯 Expected completion: DAYS (not months)!")
+        user_log("\n🎯 FINAL ACCELERATION STATUS:")
+        user_log("  ✅ Emergency agent restart: COMPLETE")
+        user_log("  ✅ Maximum task distribution: ACTIVE")
+        user_log("  ✅ Ultra performance mode: ENABLED")
+        user_log("  ✅ Real-time monitoring: ACTIVE")
+        user_log("\n📊 Monitor progress at: http://127.0.0.1:8080")
+        user_log("🎯 Expected completion: DAYS (not months)!")
 
 
 def main():

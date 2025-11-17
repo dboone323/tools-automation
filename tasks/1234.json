@@ -1,6 +1,6 @@
 {
   "id": "1234",
-  "command": "echo hi | sed s/h/a/",
+  "command": "shell-allowed",
   "status": "success",
   "returncode": 0,
   "stdout": "out",

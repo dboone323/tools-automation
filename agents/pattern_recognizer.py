@@ -14,6 +14,7 @@ import json
 import re
 import sys
 from dataclasses import dataclass, asdict
+from agents.utils import user_log
 
 
 @dataclass
@@ -83,7 +84,7 @@ def main() -> int:
         data = sys.stdin.read()
         line = data.strip().splitlines()[0] if data.strip() else ""
     p = recognize(line)
-    print(json.dumps(asdict(p), ensure_ascii=False))
+    user_log(json.dumps(asdict(p), ensure_ascii=False))
     return 0
 
 
