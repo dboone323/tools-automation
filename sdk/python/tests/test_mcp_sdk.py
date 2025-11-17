@@ -100,7 +100,7 @@ class TestErrorHandling:
         """Test MCPConnectionError creation"""
         import aiohttp
 
-        original_error = aiohttp.ClientConnectionError("Connection refused")
+        _original_error = aiohttp.ClientConnectionError("Connection refused")
         error = MCPConnectionError("Connection failed")
         assert str(error) == "Connection failed"
 
@@ -143,7 +143,7 @@ class TestIntegration:
     """Integration tests that require MCP server to be running"""
 
     @pytest.mark.integration
-    def test_server_connection(self):
+    def test_server_connection(self, mcp_server):
         """Test basic connection to MCP server"""
         import socket
 
@@ -154,7 +154,7 @@ class TestIntegration:
 
     @pytest.mark.integration
     @pytest.mark.asyncio
-    async def test_get_status_integration(self):
+    async def test_get_status_integration(self, mcp_server):
         """Integration test for get_status with real MCP server"""
         async with MCPClient() as client:
             try:
@@ -166,7 +166,7 @@ class TestIntegration:
 
     @pytest.mark.integration
     @pytest.mark.asyncio
-    async def test_get_health_integration(self):
+    async def test_get_health_integration(self, mcp_server):
         """Integration test for get_health with real MCP server"""
         async with MCPClient() as client:
             try:

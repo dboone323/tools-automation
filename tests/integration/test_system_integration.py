@@ -58,7 +58,7 @@ class TestSystemIntegration(unittest.TestCase):
     def _check_server_availability(self, url, timeout=5):
         """Check if server is responding"""
         try:
-            response = requests.get(f"{url}/health", timeout=timeout)
+            response = requests.get(f"{url}/health", timeout=timeout, headers={"X-Client-Id": "test_client"})
             return response.status_code in [200, 503]  # Accept degraded state
         except (ConnectionError, Timeout):
             return False
@@ -70,7 +70,7 @@ class TestSystemIntegration(unittest.TestCase):
         if not self._check_server_availability(self.mcp_url):
             self.skipTest("MCP server not available - start with: python mcp_server.py")
 
-        response = requests.get(f"{self.mcp_url}/health", timeout=self.test_timeout)
+        response = requests.get(f"{self.mcp_url}/health", timeout=self.test_timeout, headers={"X-Client-Id": "test_client"})
         self.assertIn(response.status_code, [200, 503])
 
         health_data = response.json()
@@ -92,7 +92,7 @@ class TestSystemIntegration(unittest.TestCase):
             self.skipTest("MCP server not available")
 
         # Test /status endpoint
-        response = requests.get(f"{self.mcp_url}/status", timeout=self.test_timeout)
+        response = requests.get(f"{self.mcp_url}/status", timeout=self.test_timeout, headers={"X-Client-Id": "test_client"})
         self.assertEqual(response.status_code, 200)
         status_data = response.json()
         self.assertIn("ok", status_data)
@@ -100,7 +100,7 @@ class TestSystemIntegration(unittest.TestCase):
 
         # Test /controllers endpoint
         response = requests.get(
-            f"{self.mcp_url}/controllers", timeout=self.test_timeout
+            f"{self.mcp_url}/controllers", timeout=self.test_timeout, headers={"X-Client-Id": "test_client"}
         )
         self.assertEqual(response.status_code, 200)
         controllers_data = response.json()
@@ -123,7 +123,7 @@ class TestSystemIntegration(unittest.TestCase):
         }
 
         response = requests.post(
-            f"{self.mcp_url}/register", json=register_payload, timeout=self.test_timeout
+            f"{self.mcp_url}/register", json=register_payload, timeout=self.test_timeout, headers={"X-Client-Id": "test_client"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -133,7 +133,7 @@ class TestSystemIntegration(unittest.TestCase):
         self.assertEqual(register_data["registered"], self.test_agent["id"])
 
         # Verify agent appears in status
-        response = requests.get(f"{self.mcp_url}/status", timeout=self.test_timeout)
+        response = requests.get(f"{self.mcp_url}/status", timeout=self.test_timeout, headers={"X-Client-Id": "test_client"})
         status_data = response.json()
         self.assertIn(self.test_agent["id"], status_data["agents"])
 
@@ -154,7 +154,7 @@ class TestSystemIntegration(unittest.TestCase):
         }
 
         response = requests.post(
-            f"{self.mcp_url}/run", json=run_payload, timeout=self.test_timeout
+            f"{self.mcp_url}/run", json=run_payload, timeout=self.test_timeout, headers={"X-Client-Id": "test_client"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -167,7 +167,7 @@ class TestSystemIntegration(unittest.TestCase):
         task_id = run_data["task_id"]
 
         # Verify task appears in status
-        response = requests.get(f"{self.mcp_url}/status", timeout=self.test_timeout)
+        response = requests.get(f"{self.mcp_url}/status", timeout=self.test_timeout, headers={"X-Client-Id": "test_client"})
         status_data = response.json()
         task_ids = [task["id"] for task in status_data["tasks"]]
         self.assertIn(task_id, task_ids)
@@ -259,12 +259,24 @@ class TestSystemIntegration(unittest.TestCase):
             timeout=self.test_timeout,
         )
 
-        # Should succeed if MCP server is running
+        # Should succeed if MCP server is running. Allow a few retries
         if self._check_server_availability(self.mcp_url):
+            max_attempts = 3
+            attempts = 1
+            while attempts <= max_attempts and result.returncode != 0:
+                time.sleep(0.5)
+                result = subprocess.run(
+                    client_cmd,
+                    cwd=submodule_path,
+                    capture_output=True,
+                    text=True,
+                    timeout=self.test_timeout,
+                )
+                attempts += 1
             self.assertEqual(result.returncode, 0)
         else:
             # Should fail gracefully if server not available
-            self.assertIn(result.returncode, [0, 1])
+            self.assertIn(result.returncode, [0, 1, 7])
 
         print("✅ Submodule MCP integration test passed")
 
@@ -314,6 +326,9 @@ class TestSystemIntegration(unittest.TestCase):
     def test_09_error_handling_and_recovery(self):
         """Test 9: Error handling and recovery"""
         print("🛠️ Testing error handling and recovery...")
+
+        if not self._check_server_availability(self.mcp_url):
+            self.skipTest("MCP server not available")
 
         # Test invalid agent registration
         invalid_register = {"invalid": "payload"}

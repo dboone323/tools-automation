@@ -1,0 +1,64 @@
+name: CI Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+      - name: Initialize test server (ensure permissive rate limit)
+        env:
+          MCP_TEST_MODE: '1'
+          MCP_TEST_BYPASS_RATE_LIMIT: '1'
+        run: |
+          # This is best-effort; the test fixture will also set runtime defaults
+          curl -fsS -X POST http://localhost:5005/_test/set_rate_limit -H "Content-Type: application/json" -d '{"max":99999,"bypass":true}' || true
+          curl -fsS http://localhost:5005/_test/reset_rate_limits || true
+
+      - name: Run unit & integration tests
+        env:
+          MCP_TEST_MODE: '1'
+          MCP_TEST_BYPASS_RATE_LIMIT: '1'
+        run: |
+          pytest -q tests
+  sdk_tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install SDK test deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+      - name: Initialize SDK test server (ensure permissive rate limit)
+        env:
+          MCP_TEST_MODE: '1'
+          MCP_TEST_BYPASS_RATE_LIMIT: '1'
+        run: |
+          curl -fsS -X POST http://localhost:5005/_test/set_rate_limit -H "Content-Type: application/json" -d '{"max":99999,"bypass":true}' || true
+          curl -fsS http://localhost:5005/_test/reset_rate_limits || true
+
+      - name: Run SDK tests
+        env:
+          MCP_TEST_MODE: '1'
+          MCP_TEST_BYPASS_RATE_LIMIT: '1'
+        run: |
+          export PYTHONPATH=sdk/python:.
+          pytest -q sdk/python/tests

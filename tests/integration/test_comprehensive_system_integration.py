@@ -27,45 +27,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 class TestMCPSystemIntegration:
     """Comprehensive integration tests for the complete MCP ↔ Agent ↔ Workflow system."""
 
-    @pytest.fixture(scope="class")
-    def mcp_server(self):
-        """Start MCP server for comprehensive integration testing."""
-        # Set test mode to disable rate limiting
-        os.environ["MCP_TEST_MODE"] = "1"
-        # Start MCP server in background
-        proc = subprocess.Popen(
-            ["python3", "mcp_server.py"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            cwd=os.getcwd(),
-        )
-
-        # Wait for server to start and stabilize
-        time.sleep(3)
-
-        # Verify server is responding
-        max_retries = 10
-        for attempt in range(max_retries):
-            try:
-                response = requests.get("http://localhost:5005/health", timeout=5)
-                if response.status_code in [200, 503]:
-                    break
-            except requests.RequestException:
-                pass
-            time.sleep(1)
-        else:
-            pytest.fail("MCP server failed to start within timeout")
-
-        yield proc
-
-        # Cleanup
-        proc.terminate()
-        try:
-            proc.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            proc.kill()
-        # Clean up test mode
-        os.environ.pop("MCP_TEST_MODE", None)
+    # Use centralized `mcp_server` fixture from tests/conftest.py for server startup
 
     # ===== MCP SERVER ENDPOINT INTEGRATION TESTS =====
 
@@ -143,7 +105,7 @@ class TestMCPSystemIntegration:
         assert "registered" in result
 
         # Verify agent appears in status
-        status_response = requests.get("http://localhost:5005/status")
+        status_response = requests.get("http://localhost:5005/status", headers={"X-Client-Id": "test_client"})
         status_data = status_response.json()
         assert agent_data["agent"] in status_data["agents"]
 
@@ -177,9 +139,14 @@ class TestMCPSystemIntegration:
         assert result["heartbeat"] is True
 
         # Verify heartbeat recorded in controllers
-        controllers_response = requests.get("http://localhost:5005/controllers")
+        controllers_response = requests.get("http://localhost:5005/controllers", headers={"X-Client-Id": "test_client"})
         controllers_data = controllers_response.json()
-        assert agent_name in [c["agent"] for c in controllers_data["controllers"]]
+        # Support both raw list and wrapped object
+        if isinstance(controllers_data, dict) and "controllers" in controllers_data:
+            controllers = controllers_data.get("controllers", [])
+        else:
+            controllers = controllers_data
+        assert agent_name in [c["agent"] for c in controllers]
 
     # ===== TASK EXECUTION WORKFLOW INTEGRATION =====
 
@@ -206,7 +173,7 @@ class TestMCPSystemIntegration:
         task_id = result["task_id"]
 
         # Verify task appears in status
-        status_response = requests.get("http://localhost:5005/status")
+        status_response = requests.get("http://localhost:5005/status", headers={"X-Client-Id": "test_client"})
         status_data = status_response.json()
         task_ids = [t.get("id") for t in status_data["tasks"]]
         assert task_id in task_ids
@@ -368,15 +335,24 @@ class TestMCPSystemIntegration:
 
     def test_rate_limiting_integration(self, mcp_server):
         """Test rate limiting protects server from abuse."""
-        # Reset rate limit bucket for this test
-
+        # Reset rate limit state for this test
+        # Set a low rate limit value to reliably trigger 429s
+        try:
+            # Set a low rate limit and disable bypass to force rate-limited responses
+            requests.post("http://localhost:5005/_test/set_rate_limit", json={"max": 5, "bypass": False})
+        except Exception:
+            pass
         # Clear any existing rate limit counters
-        if hasattr(mcp_server, "request_counters"):
-            mcp_server.request_counters.clear()
+        try:
+            requests.get("http://localhost:5005/_test/reset_rate_limits")
+        except Exception:
+            if hasattr(mcp_server, "request_counters"):
+                mcp_server.request_counters.clear()
 
         # Make concurrent rapid requests to trigger rate limiting faster
         def make_request():
             try:
+                # Don't send X-Client-Id (whitelisted) so rate limiting can apply
                 response = requests.get("http://localhost:5005/status", timeout=2)
                 return response.status_code
             except requests.RequestException:
@@ -386,13 +362,25 @@ class TestMCPSystemIntegration:
         with ThreadPoolExecutor(max_workers=50) as executor:
             futures = [executor.submit(make_request) for _ in range(100)]
             responses = [future.result() for future in as_completed(futures)]
+            # Debug: show a sample of response codes for troubleshooting
 
         # Should have some successful responses and some rate limited
         success_count = sum(1 for r in responses if r == 200)
         rate_limited_count = sum(1 for r in responses if r == 429)
+        error_count = sum(1 for r in responses if r not in (200, 429))
 
         assert success_count > 0  # Some requests should succeed
         assert rate_limited_count > 0  # Some should be rate limited
+        # Reset rate limiter for subsequent tests
+        try:
+            requests.post(
+                "http://localhost:5005/_test/set_rate_limit",
+                json={"max": int(os.environ.get("RATE_LIMIT_MAX_REQS", "99999")), "bypass": True},
+                timeout=2,
+            )
+            requests.get("http://localhost:5005/_test/reset_rate_limits", timeout=2)
+        except Exception:
+            pass
 
     # ===== ERROR HANDLING AND RECOVERY INTEGRATION =====
 
@@ -500,7 +488,12 @@ class TestMCPSystemIntegration:
             "http://localhost:5005/controllers", headers={"X-Client-Id": "test_client"}
         )
         controllers_data = controllers_response.json()
-        assert agent_name in [c["agent"] for c in controllers_data["controllers"]]
+        # Support both raw list and wrapped object
+        if isinstance(controllers_data, dict) and "controllers" in controllers_data:
+            controllers = controllers_data.get("controllers", [])
+        else:
+            controllers = controllers_data
+        assert agent_name in [c.get("agent") for c in controllers]
 
         # Task should be in tasks list
         task_ids = [t.get("id") for t in status_data["tasks"]]
@@ -649,7 +642,7 @@ class TestMCPSystemIntegration:
                         "X-Client-Id": "test_client",
                     },
                 )
-            except:
+            except Exception:
                 pass
 
         # System should still respond to valid requests
@@ -659,6 +652,6 @@ class TestMCPSystemIntegration:
         assert response.status_code in [200, 503]
 
         # Status endpoint should still work
-        status_response = requests.get(
+        _status_response = requests.get(
             "http://localhost:5005/status", headers={"X-Client-Id": "test_client"}
         )

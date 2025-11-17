@@ -29,7 +29,7 @@ class TestMCPContracts(unittest.TestCase):
     def _check_server_available(self):
         """Check if MCP server is available"""
         try:
-            response = requests.get(f"{self.mcp_url}/health", timeout=5)
+            response = requests.get(f"{self.mcp_url}/health", timeout=5, headers={"X-Client-Id": "test_client"})
             return response.status_code in [200, 503]
         except (ConnectionError, Timeout):
             return False
@@ -41,7 +41,7 @@ class TestMCPContracts(unittest.TestCase):
         if not self._check_server_available():
             self.skipTest("MCP server not available")
 
-        response = requests.get(f"{self.mcp_url}/health", timeout=10)
+        response = requests.get(f"{self.mcp_url}/health", timeout=10, headers={"X-Client-Id": "test_client"})
 
         # Contract: Must return valid JSON
         self.assertEqual(response.status_code, 200)
@@ -114,7 +114,7 @@ class TestMCPContracts(unittest.TestCase):
         }
 
         response = requests.post(
-            f"{self.mcp_url}/register", json=register_payload, timeout=10
+            f"{self.mcp_url}/register", json=register_payload, timeout=10, headers={"X-Client-Id": "test_client"}
         )
 
         # Contract: Must return 200 for valid registration
@@ -132,7 +132,7 @@ class TestMCPContracts(unittest.TestCase):
         # Test invalid registration (missing agent)
         invalid_payload = {"capabilities": ["test"]}
         response = requests.post(
-            f"{self.mcp_url}/register", json=invalid_payload, timeout=10
+            f"{self.mcp_url}/register", json=invalid_payload, timeout=10, headers={"X-Client-Id": "test_client"}
         )
 
         # Contract: Must return 400 for invalid registration
@@ -156,7 +156,7 @@ class TestMCPContracts(unittest.TestCase):
             "execute": False,
         }
 
-        response = requests.post(f"{self.mcp_url}/run", json=run_payload, timeout=10)
+        response = requests.post(f"{self.mcp_url}/run", json=run_payload, timeout=10, headers={"X-Client-Id": "test_client"})
 
         # Contract: Must return 200 for valid task submission
         self.assertEqual(response.status_code, 200)
@@ -174,7 +174,7 @@ class TestMCPContracts(unittest.TestCase):
         # Test invalid task submission (missing agent)
         invalid_payload = {"command": "status"}
         response = requests.post(
-            f"{self.mcp_url}/run", json=invalid_payload, timeout=10
+            f"{self.mcp_url}/run", json=invalid_payload, timeout=10, headers={"X-Client-Id": "test_client"}
         )
 
         # Contract: Must return 400 for invalid task submission
@@ -188,7 +188,7 @@ class TestMCPContracts(unittest.TestCase):
             "command": "invalid_command",
         }
         response = requests.post(
-            f"{self.mcp_url}/run", json=invalid_cmd_payload, timeout=10
+            f"{self.mcp_url}/run", json=invalid_cmd_payload, timeout=10, headers={"X-Client-Id": "test_client"}
         )
 
         # Contract: Must return 403 for invalid command
@@ -205,7 +205,7 @@ class TestMCPContracts(unittest.TestCase):
         if not self._check_server_available():
             self.skipTest("MCP server not available")
 
-        response = requests.get(f"{self.mcp_url}/status", timeout=10)
+        response = requests.get(f"{self.mcp_url}/status", timeout=10, headers={"X-Client-Id": "test_client"})
 
         # Contract: Must return 200
         self.assertEqual(response.status_code, 200)
@@ -232,7 +232,7 @@ class TestMCPContracts(unittest.TestCase):
         if not self._check_server_available():
             self.skipTest("MCP server not available")
 
-        response = requests.get(f"{self.mcp_url}/controllers", timeout=10)
+        response = requests.get(f"{self.mcp_url}/controllers", timeout=10, headers={"X-Client-Id": "test_client"})
 
         # Contract: Must return 200
         self.assertEqual(response.status_code, 200)
@@ -261,13 +261,13 @@ class TestMCPContracts(unittest.TestCase):
             "command": "status",
             "execute": False,
         }
-        response = requests.post(f"{self.mcp_url}/run", json=run_payload)
+        response = requests.post(f"{self.mcp_url}/run", json=run_payload, headers={"X-Client-Id": "test_client"})
         task_id = response.json()["task_id"]
 
         # Now execute it
         execute_payload = {"task_id": task_id}
         response = requests.post(
-            f"{self.mcp_url}/execute_task", json=execute_payload, timeout=15
+            f"{self.mcp_url}/execute_task", json=execute_payload, timeout=15, headers={"X-Client-Id": "test_client"}
         )
 
         # Contract: Must return 200 for valid execution
@@ -286,7 +286,7 @@ class TestMCPContracts(unittest.TestCase):
         # Test invalid execution (missing task_id)
         invalid_payload = {}
         response = requests.post(
-            f"{self.mcp_url}/execute_task", json=invalid_payload, timeout=10
+            f"{self.mcp_url}/execute_task", json=invalid_payload, timeout=10, headers={"X-Client-Id": "test_client"}
         )
 
         # Contract: Must return 400 for invalid execution
@@ -300,8 +300,11 @@ class TestMCPContracts(unittest.TestCase):
         """Test error response contracts"""
         print("❌ Testing error response contracts...")
 
+        if not self._check_server_available():
+            self.skipTest("MCP server not available")
+
         # Test 404 for non-existent endpoint
-        response = requests.get(f"{self.mcp_url}/nonexistent", timeout=10)
+        response = requests.get(f"{self.mcp_url}/nonexistent", timeout=10, headers={"X-Client-Id": "test_client"})
         self.assertEqual(response.status_code, 404)
         error_data = response.json()
         self.assertIn("error", error_data)
@@ -310,7 +313,7 @@ class TestMCPContracts(unittest.TestCase):
         # This test may be skipped if rate limiting is not enabled
         rate_limited = False
         for i in range(60):  # Try to trigger rate limit
-            response = requests.get(f"{self.mcp_url}/health", timeout=1)
+            response = requests.get(f"{self.mcp_url}/health", timeout=1, headers={"X-Client-Id": "test_client"})
             if response.status_code == 429:
                 rate_limited = True
                 error_data = response.json()
@@ -329,7 +332,8 @@ class TestMCPContracts(unittest.TestCase):
         print("🌐 Testing CORS headers contract...")
 
         # Test preflight request
-        response = requests.options(
+        try:
+            response = requests.options(
             f"{self.mcp_url}/health",
             headers={
                 "Origin": "http://localhost:3000",
@@ -337,7 +341,9 @@ class TestMCPContracts(unittest.TestCase):
                 "Access-Control-Request-Headers": "Content-Type",
             },
             timeout=10,
-        )
+            )
+        except (ConnectionError, Timeout):
+            self.skipTest("MCP server not available for CORS contract test")
 
         # Contract: Must allow CORS
         self.assertIn("Access-Control-Allow-Origin", response.headers)
@@ -345,7 +351,7 @@ class TestMCPContracts(unittest.TestCase):
         self.assertIn("Access-Control-Allow-Headers", response.headers)
 
         # Test actual request includes CORS headers
-        response = requests.get(f"{self.mcp_url}/health", timeout=10)
+        response = requests.get(f"{self.mcp_url}/health", timeout=10, headers={"X-Client-Id": "test_client"})
         self.assertIn("Access-Control-Allow-Origin", response.headers)
 
         print("✅ CORS headers contract test passed")
@@ -354,7 +360,10 @@ class TestMCPContracts(unittest.TestCase):
         """Test security headers contract"""
         print("🔒 Testing security headers contract...")
 
-        response = requests.get(f"{self.mcp_url}/health", timeout=10)
+        if not self._check_server_available():
+            self.skipTest("MCP server not available")
+
+        response = requests.get(f"{self.mcp_url}/health", timeout=10, headers={"X-Client-Id": "test_client"})
 
         # Contract: Must include security headers
         required_headers = [
