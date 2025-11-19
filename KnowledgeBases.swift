@@ -344,7 +344,7 @@ struct KnowledgeQuery {
         let filterId: String
         let type: FilterType
         let value: String
-        let operator: FilterOperator
+        let `operator`: FilterOperator
 
         enum FilterType {
             case domain
@@ -995,7 +995,7 @@ struct ArchiveQuery {
         let criterionId: String
         let type: CriterionType
         let value: String
-        let operator: CriterionOperator
+        let `operator`: CriterionOperator
 
         enum CriterionType {
             case domain
@@ -1160,7 +1160,7 @@ class KnowledgeBasesEngine {
                 performance: 0.9,
                 reliability: 0.95,
                 domainType: domain
-            ),
+            )
         ]
 
         let indexingCapabilities = [
@@ -1171,7 +1171,7 @@ class KnowledgeBasesEngine {
                 accuracy: 0.9,
                 coverage: 0.95,
                 domainType: domain
-            ),
+            )
         ]
 
         let retrievalCapabilities = [
@@ -1182,7 +1182,7 @@ class KnowledgeBasesEngine {
                 precision: 0.88,
                 recall: 0.92,
                 domainType: domain
-            ),
+            )
         ]
 
         let archivalCapabilities = [
@@ -1193,7 +1193,7 @@ class KnowledgeBasesEngine {
                 compressionRatio: 0.7,
                 accessSpeed: 0.6,
                 domainType: domain
-            ),
+            )
         ]
 
         let system = KnowledgeBaseSystem(
@@ -1534,7 +1534,7 @@ class KnowledgeRepositoryImpl: KnowledgeRepository {
                 type: .deduplication,
                 improvement: 0.2,
                 description: "Reduced storage through deduplication"
-            ),
+            )
         ]
 
         let optimizedStorage = KnowledgeStorage(
@@ -1584,7 +1584,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     accessPattern: .direct,
                     userContext: query.context.userId
                 )
-            ),
+            )
         ]
 
         return KnowledgeRetrieval(
@@ -1614,7 +1614,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                         type: .ranking,
                         duration: 2.0,
                         resultsCount: dummyResults.count
-                    ),
+                    )
                 ]
             ),
             retrievalTime: 10.0
@@ -1634,7 +1634,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     context: "Context around match",
                     confidence: 0.9
                 )
-            ),
+            )
         ]
 
         return KnowledgeSearch(
@@ -1664,7 +1664,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     popularity: 0.8,
                     lastUpdated: Date()
                 )
-            ),
+            )
         ]
 
         return KnowledgeBrowsing(
@@ -1690,7 +1690,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                 knowledge: Knowledge(id: "knowledge_1", content: "Recommended knowledge", type: .fact, domain: domain, metadata: KnowledgeMetadata(created: Date(), author: "System", version: "1.0", tags: [], references: [])),
                 recommendationScore: 0.9,
                 recommendationReason: .relevance
-            ),
+            )
         ]
 
         return KnowledgeRecommendation(
@@ -1803,7 +1803,7 @@ class KnowledgeIndexerImpl: KnowledgeIndexer {
                 type: .caching,
                 improvement: 0.3,
                 description: "Added index caching for faster access"
-            ),
+            )
         ]
 
         let optimizedIndexing = KnowledgeIndexing(
@@ -1839,7 +1839,7 @@ class KnowledgeIndexerImpl: KnowledgeIndexer {
                 knowledgeIds: ["knowledge_1", "knowledge_2"],
                 score: 0.9,
                 context: "Search context"
-            ),
+            )
         ]
 
         return IndexSearch(
@@ -1896,7 +1896,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                     compressionRatio: 0.7,
                     integrityVerified: true
                 )
-            ),
+            )
         ]
 
         return ArchiveRetrieval(
@@ -1940,7 +1940,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                 currentPhase: .cold,
                 nextTransition: Date().addingTimeInterval(31_536_000),
                 retentionStatus: .retain
-            ),
+            )
         ]
 
         let actions = [
@@ -1950,7 +1950,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                 archiveId: "archive_1",
                 executedAt: Date(),
                 result: .success
-            ),
+            )
         ]
 
         return ArchiveLifecycleManagement(
@@ -1983,7 +1983,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                     retentionPolicy: "1 year",
                     migrationHistory: []
                 )
-            ),
+            )
         ]
 
         let optimizations = [
@@ -1998,7 +1998,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                 type: .deduplication,
                 improvement: 0.2,
                 description: "Reduced archive size through deduplication"
-            ),
+            )
         ]
 
         let optimizedArchives = dummyArchives.map { archive in

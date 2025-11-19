@@ -308,8 +308,8 @@ struct DimensionalBoundary {
     }
 
     enum SecurityLevel: String, Codable {
-        case public_
-        case internal
+        case publicAccess
+        case internalAccess
         case confidential
         case restricted
     }
@@ -771,7 +771,7 @@ class CrossDimensionalConsistencyEngine {
                 expression: "check_constraints(data)",
                 parameters: [:],
                 severity: .medium
-            ),
+            )
         ]
 
         let result = await integrityValidator.validateDataIntegrity(data, against: rules)
@@ -918,7 +918,7 @@ class ConsistencyManagerImpl: ConsistencyManager {
                 action: RuleAction(type: .enforce, parameters: [:]),
                 priority: 1,
                 enabled: true
-            ),
+            )
         ]
 
         let network = ConsistencyNetwork(

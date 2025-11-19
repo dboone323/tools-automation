@@ -69,7 +69,7 @@ struct ArchitectureAnalysis: Codable, Sendable {
         let strength: Double
 
         enum DependencyType: String, Codable {
-            case import, inheritance, composition, protocol_conformance, function_call
+            case `import`, inheritance, composition, protocol_conformance, function_call
 
         }
     }
@@ -585,8 +585,7 @@ final class AutonomousArchitectureEvolution: ObservableObject {
 
     init(analyzer: ArchitectureAnalyzer = CodebaseAnalyzer(),
          refactorer: IntelligentRefactorer = IntelligentRefactoringEngine(),
-         architect: AutonomousArchitect = AutonomousArchitectureArchitect())
-    {
+         architect: AutonomousArchitect = AutonomousArchitectureArchitect()) {
         self.analyzer = analyzer
         self.refactorer = refactorer
         self.architect = architect
@@ -748,7 +747,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                 interfaces: ["Codable"],
                 classes: ["ReviewModel"],
                 functions: ["init", "encode"]
-            ),
+            )
         ]
     }
 
@@ -766,7 +765,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                 to: "Combine",
                 type: .import,
                 strength: 0.6
-            ),
+            )
         ]
     }
 
@@ -823,7 +822,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                 locations: ["Projects/CodingReviewer/Models/"],
                 quality: .fair,
                 suggestions: ["Standardize repository interfaces", "Add error handling patterns"]
-            ),
+            )
         ]
     }
 
@@ -855,7 +854,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                     performance: 0.95
                 ),
                 refactoringEffort: .hard
-            ),
+            )
         ]
     }
 }
@@ -873,7 +872,7 @@ final class IntelligentRefactoringEngine: IntelligentRefactorer {
 
         // Generate suggestions based on patterns
         for pattern in patterns {
-            if pattern.quality == .poor || pattern.quality == .anti_pattern {
+            if pattern.quality == .poor || pattern.quality == .antiPattern {
                 let suggestion = try await generatePatternSuggestion(for: pattern)
                 suggestions.append(suggestion)
             }
@@ -976,7 +975,7 @@ final class IntelligentRefactoringEngine: IntelligentRefactorer {
                     changeType: .modified,
                     linesChanged: 1 ... 10,
                     contentPreview: "// Refactored code"
-                ),
+                )
             ],
             compilationErrors: [],
             testResults: RefactoringResult.TestResults(
@@ -1074,7 +1073,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     testCoverageChange: 2.0,
                     performanceChange: 0.5
                 )
-            ),
+            )
         ]
 
         return ArchitectureEvolution(
@@ -1095,7 +1094,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     priority: .medium,
                     description: "Consider adopting more MVVM patterns for better separation of concerns",
                     implementationEffort: .medium
-                ),
+                )
             ]
         )
     }
@@ -1117,7 +1116,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                         affectedComponents: ["new_features"],
                         mitigationCost: 3600
                     )
-                ),
+                )
             ],
             riskAssessment: ArchitecturePrediction.RiskAssessment(
                 overallRiskLevel: .low,
@@ -1127,12 +1126,12 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                         probability: 0.6,
                         impact: 0.3,
                         riskScore: 0.18
-                    ),
+                    )
                 ],
                 mitigationStrategies: [
                     "Regular refactoring sessions",
                     "Code review for complexity",
-                    "Automated complexity monitoring",
+                    "Automated complexity monitoring"
                 ]
             ),
             recommendedActions: [
@@ -1142,7 +1141,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     timeline: 30 * 86400, // 30 days
                     expectedBenefit: 0.7,
                     implementationEffort: .easy
-                ),
+                )
             ]
         )
     }
@@ -1186,7 +1185,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                         area: "code_quality",
                         improvement: "Improved maintainability through targeted optimizations",
                         longTermBenefit: "Reduced technical debt and easier future development"
-                    ),
+                    )
                 ]
             ),
             implementationTimeline: [
@@ -1210,7 +1209,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     steps: phaseSteps[2],
                     milestones: ["Validation complete", "Deployed to production"],
                     deliverables: ["Validation report", "Deployment confirmation"]
-                ),
+                )
             ],
             riskMitigation: [
                 OptimizationPlan.RiskMitigation(
@@ -1224,7 +1223,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     mitigationStrategy: "Performance benchmarking before and after changes",
                     contingencyPlan: "Optimize performance-critical sections",
                     monitoringApproach: "Continuous performance monitoring"
-                ),
+                )
             ]
         )
     }

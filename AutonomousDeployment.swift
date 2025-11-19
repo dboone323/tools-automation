@@ -1330,8 +1330,7 @@ final class AutonomousDeployment: ObservableObject {
 
     /// Generate deployment strategy
     func generateDeploymentStrategy(for deployment: DeploymentPlan, basedOn risk: RiskAssessment)
-        async throws -> DeploymentStrategy
-    {
+        async throws -> DeploymentStrategy {
         // Mock implementation - would analyze risk and generate optimal strategy
         DeploymentStrategy(
             type: risk.overallRisk == .low ? .rolling : .blue_green,
@@ -1370,7 +1369,7 @@ final class AutonomousDeployment: ObservableObject {
                         metrics: ["performance", "availability"],
                         manualApproval: true
                     )
-                ),
+                )
             ],
             riskMitigation: risk.mitigationStrategies.map { strategy in
                 DeploymentStrategy.RiskMitigation(
@@ -1401,15 +1400,14 @@ final class AutonomousDeployment: ObservableObject {
                     condition: "response_time > 2000ms",
                     threshold: 2.0,
                     action: .manual
-                ),
+                )
             ]
         )
     }
 
     /// Execute deployment
     func executeDeployment(_ deployment: DeploymentPlan, with strategy: DeploymentStrategy)
-        async throws -> DeploymentResult
-    {
+        async throws -> DeploymentResult {
         isDeploying = true
         defer { isDeploying = false }
 
@@ -1503,8 +1501,7 @@ final class AutonomousDeployment: ObservableObject {
 
     /// Monitor deployment
     func monitorDeployment(_ deployment: DeploymentExecution, with strategy: MonitoringStrategy)
-        async throws -> DeploymentMonitoring
-    {
+        async throws -> DeploymentMonitoring {
         // Mock implementation - would set up real-time monitoring
         DeploymentMonitoring(
             execution: deployment,
@@ -1520,7 +1517,7 @@ final class AutonomousDeployment: ObservableObject {
                     value: 0.01,
                     timestamp: Date(),
                     threshold: 0.05
-                ),
+                )
             ],
             alerts: [],
             predictions: [
@@ -1529,7 +1526,7 @@ final class AutonomousDeployment: ObservableObject {
                     probability: 0.95,
                     timeframe: 3600.0,
                     description: "Deployment likely to succeed based on current metrics"
-                ),
+                )
             ],
             recommendations: [
                 DeploymentMonitoring.Recommendation(
@@ -1537,15 +1534,14 @@ final class AutonomousDeployment: ObservableObject {
                     priority: .medium,
                     description: "Monitor error rates closely",
                     action: "Set up additional alerts for error_rate > 0.03"
-                ),
+                )
             ]
         )
     }
 
     /// Rollback deployment
     func rollbackDeployment(_ deployment: DeploymentExecution, reason: RollbackReason) async throws
-        -> RollbackResult
-    {
+        -> RollbackResult {
         log_info(
             "Initiating autonomous rollback for deployment \(deployment.id), reason: \(reason.rawValue)"
         )
@@ -1655,8 +1651,7 @@ final class AutonomousDeployment: ObservableObject {
 /// Quantum risk assessor implementation
 final class QuantumRiskAssessorImpl: QuantumRiskAssessor {
     func assessQuantumRisk(for deployment: DeploymentPlan, environment: DeploymentEnvironment)
-        async throws -> QuantumRiskAssessment
-    {
+        async throws -> QuantumRiskAssessment {
         // Mock implementation - would perform quantum risk analysis
         QuantumRiskAssessment(
             quantumRiskLevel: deployment.metadata.riskLevel == .low ? .low : .moderate,
@@ -1666,7 +1661,7 @@ final class QuantumRiskAssessorImpl: QuantumRiskAssessor {
                     entanglementStrength: 0.7,
                     failurePropagation: 0.3,
                     mitigation: "Implement circuit breakers"
-                ),
+                )
             ],
             superpositionStates: [
                 QuantumRiskAssessment.SuperpositionState(
@@ -1680,7 +1675,7 @@ final class QuantumRiskAssessorImpl: QuantumRiskAssessor {
                     probability: 0.15,
                     riskContribution: 0.6,
                     stability: 0.4
-                ),
+                )
             ],
             interferencePatterns: [
                 QuantumRiskAssessment.InterferencePattern(
@@ -1688,14 +1683,14 @@ final class QuantumRiskAssessorImpl: QuantumRiskAssessor {
                     frequency: 0.2,
                     impact: 0.4,
                     predictability: 0.7
-                ),
+                )
             ],
             quantumMitigations: [
                 QuantumRiskAssessment.QuantumMitigation(
                     technique: .decoherence_control,
                     effectiveness: 0.8,
                     complexity: 0.6
-                ),
+                )
             ]
         )
     }
@@ -1720,11 +1715,11 @@ final class QuantumRiskAssessorImpl: QuantumRiskAssessor {
                     weight: 0.3,
                     contribution: 0.25,
                     evidence: ["Staging environment stable"]
-                ),
+                )
             ],
             riskFactors: ["New component introduction", "Complex dependencies"],
             recommendations: [
-                "Run additional integration tests", "Monitor closely during deployment",
+                "Run additional integration tests", "Monitor closely during deployment"
             ]
         )
     }
@@ -1743,8 +1738,7 @@ final class QuantumRiskAssessorImpl: QuantumRiskAssessor {
     }
 
     func calculateRiskMitigationStrategies(for risks: [DeploymentRisk]) async throws
-        -> [RiskMitigationStrategy]
-    {
+        -> [RiskMitigationStrategy] {
         // Mock implementation
         [
             RiskMitigationStrategy(
@@ -1758,7 +1752,7 @@ final class QuantumRiskAssessorImpl: QuantumRiskAssessor {
                 effectiveness: 0.8,
                 cost: 0.2,
                 implementationEffort: .low
-            ),
+            )
         ]
     }
 }
@@ -1766,8 +1760,7 @@ final class QuantumRiskAssessorImpl: QuantumRiskAssessor {
 /// Predictive deployment analyzer implementation
 final class PredictiveDeploymentAnalyzerImpl: PredictiveDeploymentAnalyzer {
     func analyzeDeploymentPatterns(from history: DeploymentHistory) async throws
-        -> DeploymentPatterns
-    {
+        -> DeploymentPatterns {
         // Mock implementation
         history.patterns
     }
@@ -1792,7 +1785,7 @@ final class PredictiveDeploymentAnalyzerImpl: PredictiveDeploymentAnalyzer {
                     factor: "Historical average",
                     impact: 1.0,
                     reasoning: "Based on historical deployment patterns"
-                ),
+                )
             ],
             range: DurationPrediction.DurationRange(
                 minimum: predictedDuration * 0.8,
@@ -1834,7 +1827,7 @@ final class PredictiveDeploymentAnalyzerImpl: PredictiveDeploymentAnalyzer {
             scalingRecommendations: [
                 "Scale CPU to 4 cores during peak deployment",
                 "Ensure 8GB memory availability",
-                "Monitor network bandwidth usage",
+                "Monitor network bandwidth usage"
             ]
         )
     }
@@ -1856,13 +1849,13 @@ final class PredictiveDeploymentAnalyzerImpl: PredictiveDeploymentAnalyzer {
                     probability: 0.1,
                     impact: .high,
                     description: "Potential service unavailability during transition"
-                ),
+                )
             ],
             riskAssessment: .medium,
             preventionStrategies: [
                 "Implement blue-green deployment strategy",
                 "Add comprehensive health checks",
-                "Prepare rollback procedures",
+                "Prepare rollback procedures"
             ]
         )
     }
@@ -1888,7 +1881,7 @@ final class ZeroDowntimeDeploymentImpl: ZeroDowntimeDeployment {
                         condition: "header:deployment=green",
                         target: "green-environment",
                         weight: 0.1
-                    ),
+                    )
                 ],
                 trafficSplitting: ZeroDowntimeStrategy.TrafficManagement.TrafficSplitting(
                     strategy: .percentage,
@@ -1913,8 +1906,7 @@ final class ZeroDowntimeDeploymentImpl: ZeroDowntimeDeployment {
     }
 
     func executeBlueGreenDeployment(_ deployment: DeploymentPlan, strategy: BlueGreenStrategy)
-        async throws -> BlueGreenResult
-    {
+        async throws -> BlueGreenResult {
         // Mock implementation
         BlueGreenResult(
             success: true,
@@ -1927,8 +1919,7 @@ final class ZeroDowntimeDeploymentImpl: ZeroDowntimeDeployment {
     }
 
     func executeCanaryDeployment(_ deployment: DeploymentPlan, strategy: CanaryStrategy)
-        async throws -> CanaryResult
-    {
+        async throws -> CanaryResult {
         // Mock implementation
         CanaryResult(
             success: true,
@@ -1941,8 +1932,7 @@ final class ZeroDowntimeDeploymentImpl: ZeroDowntimeDeployment {
     }
 
     func executeRollingDeployment(_ deployment: DeploymentPlan, strategy: RollingStrategy)
-        async throws -> RollingResult
-    {
+        async throws -> RollingResult {
         // Mock implementation
         RollingResult(
             success: true,
@@ -1955,8 +1945,7 @@ final class ZeroDowntimeDeploymentImpl: ZeroDowntimeDeployment {
     }
 
     func validateZeroDowntimeExecution(_ execution: DeploymentExecution) async throws
-        -> ZeroDowntimeValidation
-    {
+        -> ZeroDowntimeValidation {
         // Mock implementation
         ZeroDowntimeValidation(
             zeroDowntimeAchieved: true,
@@ -1964,7 +1953,7 @@ final class ZeroDowntimeDeploymentImpl: ZeroDowntimeDeployment {
             userImpact: 0.001,
             trafficDistribution: ["blue": 0.1, "green": 0.9],
             validationChecks: [
-                "No 5xx errors", "Response times within SLA", "All services accessible",
+                "No 5xx errors", "Response times within SLA", "All services accessible"
             ]
         )
     }
@@ -1973,8 +1962,7 @@ final class ZeroDowntimeDeploymentImpl: ZeroDowntimeDeployment {
 /// Autonomous rollback implementation
 final class AutonomousRollbackImpl: AutonomousRollback {
     func detectDeploymentFailure(_ execution: DeploymentExecution, thresholds: FailureThresholds)
-        async throws -> FailureDetection
-    {
+        async throws -> FailureDetection {
         // Mock implementation - would analyze metrics against thresholds
         let errorRate = execution.metrics.performance.errorRate
         let responseTime = execution.metrics.performance.responseTime
@@ -1986,7 +1974,7 @@ final class AutonomousRollbackImpl: AutonomousRollback {
                 severity: .high,
                 evidence: [
                     "Error rate: \(errorRate) > threshold: \(thresholds.errorRate)",
-                    "Response time: \(responseTime)ms > threshold: \(thresholds.responseTime)ms",
+                    "Response time: \(responseTime)ms > threshold: \(thresholds.responseTime)ms"
                 ],
                 confidence: 0.9
             )
@@ -2002,8 +1990,7 @@ final class AutonomousRollbackImpl: AutonomousRollback {
     }
 
     func planRollbackStrategy(for execution: DeploymentExecution, failure: FailureDetection)
-        async throws -> RollbackStrategy
-    {
+        async throws -> RollbackStrategy {
         // Mock implementation
         RollbackStrategy(
             type: .immediate,
@@ -2025,21 +2012,20 @@ final class AutonomousRollbackImpl: AutonomousRollback {
                     action: "Validate system state",
                     component: "monitoring",
                     timeout: 120.0
-                ),
+                )
             ],
             timeout: 600.0,
             validation: RollbackStrategy.RollbackValidation(
                 checks: ["health_checks", "data_integrity", "service_availability"],
                 successCriteria: [
-                    "All services responding", "Data consistency verified", "User impact minimized",
+                    "All services responding", "Data consistency verified", "User impact minimized"
                 ]
             )
         )
     }
 
     func executeAutomatedRollback(_ execution: DeploymentExecution, strategy: RollbackStrategy)
-        async throws -> RollbackResult
-    {
+        async throws -> RollbackResult {
         // Mock implementation
         let startTime = Date()
         try await Task.sleep(nanoseconds: 5_000_000_000) // 5 seconds simulation
@@ -2059,7 +2045,7 @@ final class AutonomousRollbackImpl: AutonomousRollback {
                         name: "database",
                         version: "2.1.0",
                         status: .running
-                    ),
+                    )
                 ],
                 configuration: ["environment": "production", "version": "1.0.0"],
                 dataIntegrity: true
@@ -2075,8 +2061,7 @@ final class AutonomousRollbackImpl: AutonomousRollback {
     }
 
     func validateRollbackSuccess(_ rollback: RollbackResult, originalState: SystemState)
-        async throws -> RollbackValidation
-    {
+        async throws -> RollbackValidation {
         // Mock implementation
         RollbackValidation(
             success: rollback.success,
@@ -2091,8 +2076,7 @@ final class AutonomousRollbackImpl: AutonomousRollback {
 /// Deployment orchestrator implementation
 final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
     func orchestrateDeployment(_ deployment: DeploymentPlan, environment: DeploymentEnvironment)
-        async throws -> OrchestratedDeployment
-    {
+        async throws -> OrchestratedDeployment {
         // Mock implementation
         let strategy = try await generateDeploymentStrategy(
             for: deployment, basedOn: RiskAssessment.mock
@@ -2118,7 +2102,7 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
                                 name: "database_ready",
                                 components: ["api", "worker"],
                                 condition: "database_health_check_passed"
-                            ),
+                            )
                     ],
                     timeouts: ["database_ready": 300.0]
                 )
@@ -2136,14 +2120,14 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
                         startTime: Date().addingTimeInterval(300.0),
                         duration: 900.0,
                         parallel: true
-                    ),
+                    )
                 ],
                 milestones: [
                     OrchestratedDeployment.DeploymentTimeline.Milestone(
                         name: "Database migrated",
                         time: Date().addingTimeInterval(600.0),
                         validation: "database_schema_updated"
-                    ),
+                    )
                 ],
                 criticalPath: ["database", "api"]
             ),
@@ -2152,8 +2136,7 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
     }
 
     func coordinateMicroservicesDeployment(_ deployment: MicroserviceDeployment) async throws
-        -> CoordinationResult
-    {
+        -> CoordinationResult {
         // Mock implementation
         CoordinationResult(
             success: true,
@@ -2169,8 +2152,7 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
     }
 
     func synchronizeDatabaseMigrations(with deployment: DeploymentPlan) async throws
-        -> MigrationSynchronization
-    {
+        -> MigrationSynchronization {
         // Mock implementation
         MigrationSynchronization(
             databaseMigrations: [
@@ -2179,14 +2161,14 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
                     version: deployment.version,
                     scripts: ["001_initial_schema.sql", "002_add_indexes.sql"],
                     rollbackScripts: ["002_rollback_indexes.sql", "001_rollback_schema.sql"]
-                ),
+                )
             ],
             schemaChanges: [
                 MigrationSynchronization.SchemaChange(
                     table: "users",
                     change: "ADD COLUMN email_verified BOOLEAN",
                     impact: .none
-                ),
+                )
             ],
             dataMigrations: [],
             synchronizationStatus: .synchronized
@@ -2194,8 +2176,7 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
     }
 
     func validateDeploymentPrerequisites(_ deployment: DeploymentPlan) async throws
-        -> PrerequisiteValidation
-    {
+        -> PrerequisiteValidation {
         // Mock implementation
         PrerequisiteValidation(
             validated: true,
@@ -2209,7 +2190,7 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
                     name: "Database connectivity",
                     status: .passed,
                     details: "Database connection established"
-                ),
+                )
             ],
             blockers: [],
             recommendations: ["Proceed with deployment"]
@@ -2217,8 +2198,7 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
     }
 
     func ensureDeploymentConsistency(_ execution: DeploymentExecution) async throws
-        -> ConsistencyValidation
-    {
+        -> ConsistencyValidation {
         // Mock implementation
         ConsistencyValidation(
             consistent: true,
@@ -2232,7 +2212,7 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
                     type: .data,
                     component: "database",
                     status: .passed
-                ),
+                )
             ],
             violations: [],
             remediation: []
@@ -2256,7 +2236,7 @@ final class DeploymentOrchestratorImpl: DeploymentOrchestrator {
                         metrics: ["response_time"],
                         manualApproval: false
                     )
-                ),
+                )
             ],
             riskMitigation: [],
             monitoring: DeploymentStrategy.MonitoringStrategy(
@@ -2452,7 +2432,7 @@ struct AutonomousDeploymentView: View {
                         version: "1.24",
                         nodeCount: 10,
                         nodeTypes: ["t3.large"]
-                    ),
+                    )
                 ],
                 databases: [
                     DeploymentEnvironment.Infrastructure.DatabaseInstance(
@@ -2460,7 +2440,7 @@ struct AutonomousDeploymentView: View {
                         type: .postgresql,
                         version: "13.7",
                         size: "db.r5.large"
-                    ),
+                    )
                 ]
             ),
             resources: DeploymentEnvironment.ResourceAllocation(
@@ -2483,9 +2463,9 @@ struct AutonomousDeploymentView: View {
                                 port: 80,
                                 protocol: "HTTP",
                                 targetGroup: "tg-web"
-                            ),
+                            )
                         ]
-                    ),
+                    )
                 ],
                 dnsConfiguration: DeploymentEnvironment.NetworkConfiguration.DNSConfig(
                     domain: "example.com",
@@ -2509,7 +2489,7 @@ struct AutonomousDeploymentView: View {
                     rotationPolicy: .automatic
                 ),
                 compliance: DeploymentEnvironment.SecurityConfiguration.ComplianceConfig(
-                    standards: [.pci_dss, .gdpr],
+                    standards: [.pciDSS, .gdpr],
                     auditLogging: true,
                     dataRetention: 2555 * 24 * 3600 // 7 years
                 )
@@ -2521,7 +2501,7 @@ struct AutonomousDeploymentView: View {
                         source: "EC2",
                         interval: 60.0,
                         retention: 30 * 24 * 3600 // 30 days
-                    ),
+                    )
                 ],
                 logs: DeploymentEnvironment.MonitoringConfiguration.LogConfig(
                     aggregation: .cloudwatch,
@@ -2535,14 +2515,14 @@ struct AutonomousDeploymentView: View {
                         threshold: 80.0,
                         severity: .warning,
                         channels: ["slack", "email"]
-                    ),
+                    )
                 ],
                 dashboards: [
                     DeploymentEnvironment.MonitoringConfiguration.DashboardConfig(
                         name: "Deployment Dashboard",
                         type: .deployment,
                         widgets: ["cpu_chart", "memory_chart", "error_chart"]
-                    ),
+                    )
                 ]
             )
         )
@@ -2571,7 +2551,7 @@ struct AutonomousDeploymentView: View {
                             type: .docker_image,
                             location: "registry.example.com/web-app:2.1.0",
                             checksum: "sha256:abc123"
-                        ),
+                        )
                     ],
                     configuration: ["replicas": "3", "port": "80"],
                     healthChecks: [
@@ -2582,7 +2562,7 @@ struct AutonomousDeploymentView: View {
                             interval: 30.0,
                             timeout: 10.0,
                             successCriteria: "status == 200"
-                        ),
+                        )
                     ]
                 ),
                 DeploymentPlan.DeploymentComponent(
@@ -2595,7 +2575,7 @@ struct AutonomousDeploymentView: View {
                             type: .docker_image,
                             location: "registry.example.com/api-app:2.1.0",
                             checksum: "sha256:def456"
-                        ),
+                        )
                     ],
                     configuration: ["replicas": "5", "port": "8080"],
                     healthChecks: [
@@ -2606,7 +2586,7 @@ struct AutonomousDeploymentView: View {
                             interval: 30.0,
                             timeout: 10.0,
                             successCriteria: "status == 200"
-                        ),
+                        )
                     ]
                 ),
                 DeploymentPlan.DeploymentComponent(
@@ -2619,7 +2599,7 @@ struct AutonomousDeploymentView: View {
                             type: .sql_script,
                             location: "migrations/v2.1.0.sql",
                             checksum: "sha256:ghi789"
-                        ),
+                        )
                     ],
                     configuration: ["instance_class": "db.r5.large"],
                     healthChecks: [
@@ -2630,9 +2610,9 @@ struct AutonomousDeploymentView: View {
                             interval: 60.0,
                             timeout: 30.0,
                             successCriteria: "connection_successful"
-                        ),
+                        )
                     ]
-                ),
+                )
             ],
             dependencies: [
                 DeploymentPlan.DeploymentDependency(
@@ -2646,7 +2626,7 @@ struct AutonomousDeploymentView: View {
                     dependsOn: ["database"],
                     deploymentOrder: 1,
                     waitCondition: .database_ready
-                ),
+                )
             ],
             rollbackPlan: DeploymentPlan.RollbackPlan(
                 automaticRollback: true,
@@ -2664,7 +2644,7 @@ struct AutonomousDeploymentView: View {
                         action: "Rollback database schema",
                         component: "database",
                         timeout: 300.0
-                    ),
+                    )
                 ]
             ),
             successCriteria: [
@@ -2679,7 +2659,7 @@ struct AutonomousDeploymentView: View {
                     type: .performance,
                     threshold: 200.0,
                     measurement: "response_time_ms"
-                ),
+                )
             ],
             metadata: DeploymentPlan.DeploymentMetadata(
                 createdAt: Date(),
@@ -2757,7 +2737,7 @@ extension RiskAssessment {
                     probability: 0.3,
                     impact: 0.6,
                     description: "New component introduction may cause integration issues"
-                ),
+                )
             ],
             mitigationStrategies: [
                 RiskAssessment.RiskMitigationStrategy(
@@ -2765,11 +2745,11 @@ extension RiskAssessment {
                     effectiveness: 0.8,
                     cost: 0.3,
                     implementationEffort: .medium
-                ),
+                )
             ],
             confidence: 0.85,
             recommendations: [
-                "Use blue-green deployment strategy", "Implement comprehensive monitoring",
+                "Use blue-green deployment strategy", "Implement comprehensive monitoring"
             ]
         )
     }
@@ -2982,7 +2962,7 @@ struct QuantumDeployerTool {
                             type: .docker_image,
                             location: "quantum.registry.com/api:3.0.0",
                             checksum: "quantum:abc123"
-                        ),
+                        )
                     ],
                     configuration: ["replicas": "10", "quantum_enabled": "true"],
                     healthChecks: [
@@ -2993,7 +2973,7 @@ struct QuantumDeployerTool {
                             interval: 15.0,
                             timeout: 5.0,
                             successCriteria: "entanglement_stable"
-                        ),
+                        )
                     ]
                 ),
                 DeploymentPlan.DeploymentComponent(
@@ -3006,7 +2986,7 @@ struct QuantumDeployerTool {
                             type: .sql_script,
                             location: "migrations/quantum_v3.sql",
                             checksum: "quantum:def456"
-                        ),
+                        )
                     ],
                     configuration: ["quantum_storage": "enabled"],
                     healthChecks: [
@@ -3017,9 +2997,9 @@ struct QuantumDeployerTool {
                             interval: 30.0,
                             timeout: 15.0,
                             successCriteria: "superposition_ready"
-                        ),
+                        )
                     ]
-                ),
+                )
             ],
             dependencies: [
                 DeploymentPlan.DeploymentDependency(
@@ -3027,7 +3007,7 @@ struct QuantumDeployerTool {
                     dependsOn: ["quantum-database"],
                     deploymentOrder: 2,
                     waitCondition: .database_ready
-                ),
+                )
             ],
             rollbackPlan: DeploymentPlan.RollbackPlan(
                 automaticRollback: true,
@@ -3045,7 +3025,7 @@ struct QuantumDeployerTool {
                         action: "Restore classical database state",
                         component: "quantum-database",
                         timeout: 120.0
-                    ),
+                    )
                 ]
             ),
             successCriteria: [
@@ -3060,7 +3040,7 @@ struct QuantumDeployerTool {
                     type: .availability,
                     threshold: 1.0,
                     measurement: "uptime_during_deployment"
-                ),
+                )
             ],
             metadata: DeploymentPlan.DeploymentMetadata(
                 createdAt: Date(),
@@ -3087,7 +3067,7 @@ struct QuantumDeployerTool {
                         version: "1.25",
                         nodeCount: 50,
                         nodeTypes: ["quantum.optimized"]
-                    ),
+                    )
                 ],
                 databases: [
                     DeploymentEnvironment.Infrastructure.DatabaseInstance(
@@ -3095,7 +3075,7 @@ struct QuantumDeployerTool {
                         type: .postgresql,
                         version: "14.0",
                         size: "quantum.large"
-                    ),
+                    )
                 ]
             ),
             resources: DeploymentEnvironment.ResourceAllocation(
@@ -3118,9 +3098,9 @@ struct QuantumDeployerTool {
                                 port: 443,
                                 protocol: "HTTPS",
                                 targetGroup: "quantum-tg"
-                            ),
+                            )
                         ]
-                    ),
+                    )
                 ],
                 dnsConfiguration: DeploymentEnvironment.NetworkConfiguration.DNSConfig(
                     domain: "quantum.example.com",
@@ -3156,7 +3136,7 @@ struct QuantumDeployerTool {
                         source: "quantum_monitor",
                         interval: 10.0,
                         retention: 365 * 24 * 3600 // 1 year
-                    ),
+                    )
                 ],
                 logs: DeploymentEnvironment.MonitoringConfiguration.LogConfig(
                     aggregation: .cloudwatch,
@@ -3170,16 +3150,16 @@ struct QuantumDeployerTool {
                         threshold: 0.95,
                         severity: .critical,
                         channels: ["quantum-alerts"]
-                    ),
+                    )
                 ],
                 dashboards: [
                     DeploymentEnvironment.MonitoringConfiguration.DashboardConfig(
                         name: "Quantum Deployment Dashboard",
                         type: .deployment,
                         widgets: [
-                            "entanglement_chart", "superposition_gauge", "deployment_timeline",
+                            "entanglement_chart", "superposition_gauge", "deployment_timeline"
                         ]
-                    ),
+                    )
                 ]
             )
         )

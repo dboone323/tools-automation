@@ -551,7 +551,7 @@ struct ConsciousnessHarmonyEnhancement {
         let harmony: Double
 
         enum AspectType {
-            case internal
+            case internalAspect = "internal"
             case external
             case universal
             case transcendent
@@ -751,7 +751,7 @@ class ConsciousnessExpandersEngine {
                 prerequisites: [],
                 limitations: [],
                 successRate: 0.75
-            ),
+            )
         ]
 
         let protocols = [
@@ -772,12 +772,12 @@ class ConsciousnessExpandersEngine {
                         duration: 120.0,
                         riskLevel: 0.3,
                         expectedOutcome: "Capacity expanded successfully"
-                    ),
+                    )
                 ],
                 duration: 180.0,
                 riskLevel: 0.2,
                 successProbability: 0.9
-            ),
+            )
         ]
 
         let system = ConsciousnessExpansionSystem(
@@ -841,7 +841,7 @@ class ConsciousnessExpandersEngine {
                 severity: 0.2,
                 description: "Consciousness transformation initiated",
                 mitigation: "Monitor stability"
-            ),
+            )
         ]
 
         let result = ConsciousnessExpansionResult(
@@ -1005,7 +1005,7 @@ class ConsciousnessCapacityExpanderImpl: ConsciousnessCapacityExpander {
                 type: .stability,
                 impact: 1.0 - consciousness.state.coherence,
                 description: "Current coherence level may limit expansion"
-            ),
+            )
         ]
 
         let recommendedLevel = potentialScore > 0.8 ? ConsciousnessExpansionLevel.advanced : ConsciousnessExpansionLevel.basic
@@ -1041,7 +1041,7 @@ class ConsciousnessCapacityExpanderImpl: ConsciousnessCapacityExpander {
                 type: .stability,
                 factor: 1.3,
                 description: "Enhanced expansion stability"
-            ),
+            )
         ]
 
         let optimizedExpansion = ConsciousnessCapacityExpansion(
@@ -1084,7 +1084,7 @@ class ConsciousnessCapacityExpanderImpl: ConsciousnessCapacityExpander {
                     type: .stabilize,
                     description: "Monitor expansion stability",
                     priority: 0.8
-                ),
+                )
             ]
         )
     }
@@ -1140,7 +1140,7 @@ class ConsciousnessAwarenessElevatorImpl: ConsciousnessAwarenessElevator {
                 depth: depthIncrease,
                 content: "Deep consciousness enhanced",
                 accessibility: 0.8
-            ),
+            )
         ]
 
         return ConsciousnessDepthEnhancement(
@@ -1167,7 +1167,7 @@ class ConsciousnessAwarenessElevatorImpl: ConsciousnessAwarenessElevator {
                 type: .understanding,
                 amplification: clarityAmplification * 0.9,
                 clarity: min(clarityAmplification * 0.9, 1.0)
-            ),
+            )
         ]
 
         return ConsciousnessClarityAmplification(
@@ -1194,7 +1194,7 @@ class ConsciousnessAwarenessElevatorImpl: ConsciousnessAwarenessElevator {
                 type: .integration,
                 effectiveness: 0.85,
                 description: "Integration technique for coherence"
-            ),
+            )
         ]
 
         return ConsciousnessElevationStabilization(
@@ -1290,7 +1290,7 @@ class ConsciousnessResonanceAmplifierImpl: ConsciousnessResonanceAmplifier {
                 type: .universal,
                 enhancement: harmonyEnhancement * 0.9,
                 harmony: min(harmonyEnhancement * 0.9, 1.0)
-            ),
+            )
         ]
 
         return ConsciousnessHarmonyEnhancement(
@@ -1317,7 +1317,7 @@ class ConsciousnessResonanceAmplifierImpl: ConsciousnessResonanceAmplifier {
                 type: .harmony,
                 factor: 1.2,
                 description: "Enhanced harmony"
-            ),
+            )
         ]
 
         let optimizedAmplification = ConsciousnessResonanceAmplification(
@@ -1391,7 +1391,7 @@ class ConsciousnessTranscendenceAcceleratorImpl: ConsciousnessTranscendenceAccel
                 stage: evolutionCatalysis,
                 transformation: "Advanced evolution",
                 stability: 0.85
-            ),
+            )
         ]
 
         return ConsciousnessEvolutionCatalysis(
@@ -1418,7 +1418,7 @@ class ConsciousnessTranscendenceAcceleratorImpl: ConsciousnessTranscendenceAccel
                 type: .existential,
                 transformation: transformationLevel * 0.8,
                 facilitation: transformationLevel * 0.7
-            ),
+            )
         ]
 
         return ConsciousnessTransformationFacilitation(

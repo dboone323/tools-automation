@@ -829,7 +829,7 @@ struct SystemUnderTest: Codable, Sendable {
     struct SystemInterface: Codable, Sendable {
         let name: String
         let type: InterfaceType
-        let protocol: String
+        let `protocol`: String
         let endpoints: [String]
 
         enum InterfaceType: String, Codable {
@@ -1038,7 +1038,11 @@ struct RefactoredTestSuite: Codable, Sendable {
         let benefit: String
 
         enum RefactoringType: String, Codable {
-            case extract_method, consolidate_setup, remove_duplication, improve_naming, simplify_assertions
+            case extractMethod = "extract_method"
+            case consolidateSetup = "consolidate_setup"
+            case removeDuplication = "remove_duplication"
+            case improveNaming = "improve_naming"
+            case simplifyAssertions = "simplify_assertions"
         }
     }
 
@@ -1186,8 +1190,7 @@ final class UniversalTestingAutomation: ObservableObject {
     init(testGenerator: QuantumTestGenerator = QuantumTestGeneratorImpl(),
          testExecutor: IntelligentTestExecutor = IntelligentTestExecutorImpl(),
          testVerifier: QuantumTestVerifier = QuantumTestVerifierImpl(),
-         testMaintenance: AutomatedTestMaintenance = AutomatedTestMaintenanceImpl())
-    {
+         testMaintenance: AutomatedTestMaintenance = AutomatedTestMaintenanceImpl()) {
         self.testGenerator = testGenerator
         self.testExecutor = testExecutor
         self.testVerifier = testVerifier
@@ -1343,7 +1346,7 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                 tags: ["unit", "basic"],
                 targetFunction: "performOperation",
                 inputParameters: [
-                    UnitTest.TestParameter(name: "input", type: "String", value: "test"),
+                    UnitTest.TestParameter(name: "input", type: "String", value: "test")
                 ],
                 expectedOutput: UnitTest.TestExpectation(
                     type: .exact,
@@ -1352,7 +1355,7 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                 ),
                 preconditions: ["System is initialized"],
                 postconditions: ["Result is valid"]
-            ),
+            )
         ]
     }
 
@@ -1374,22 +1377,22 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                         action: "processRequest",
                         parameters: ["request": "test"],
                         expectedResponse: "success"
-                    ),
+                    )
                 ],
                 successCriteria: [
                     IntegrationTest.SuccessCriterion(
                         condition: "Response received",
                         measurement: "response_time < 1.0"
-                    ),
+                    )
                 ],
                 failureScenarios: [
                     IntegrationTest.FailureScenario(
                         scenario: "Network failure",
                         expectedFailure: "ConnectionError",
                         recoveryAction: "Retry with backoff"
-                    ),
+                    )
                 ]
-            ),
+            )
         ]
     }
 
@@ -1426,16 +1429,16 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                         target: "/register",
                         parameters: [:],
                         waitCondition: "page_loaded"
-                    ),
+                    )
                 ],
                 validationPoints: [
                     SystemTest.ValidationPoint(
                         point: "registration_form",
                         validation: "form_visible",
                         successCriteria: "form renders correctly"
-                    ),
+                    )
                 ]
-            ),
+            )
         ]
     }
 
@@ -1463,9 +1466,9 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                         value: 1.0,
                         unit: "seconds",
                         condition: .less_than
-                    ),
+                    )
                 ]
-            ),
+            )
         ]
     }
 }
@@ -1555,7 +1558,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     adaptation: "Increased timeout for slow tests",
                     impact: .positive,
                     timestamp: Date()
-                ),
+                )
             ],
             predictions: [],
             optimizations: [
@@ -1564,7 +1567,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     description: "Executed tests in parallel for better performance",
                     benefit: 0.6,
                     appliedAt: Date()
-                ),
+                )
             ]
         )
     }
@@ -1590,7 +1593,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     description: "Reordered tests for optimal execution",
                     affectedTests: results.map(\.testId),
                     benefit: 0.2
-                ),
+                )
             ],
             reasoning: [
                 AdaptedExecutionPlan.AdaptationReason(
@@ -1598,7 +1601,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     reasoning: "Reordering to run fast tests first",
                     confidence: 0.8,
                     evidence: ["Historical data shows faster execution"]
-                ),
+                )
             ]
         )
     }
@@ -1649,7 +1652,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                 severity: .medium,
                 refactoring: "Split into multiple focused test methods",
                 impact: "Improved maintainability and debugging"
-            ),
+            )
         ]
     }
 
@@ -1696,7 +1699,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                     actual: 75.0,
                     gap: 15.0,
                     priority: .medium
-                ),
+                )
             ],
             compliance: .warning,
             recommendations: ["Add more error handling tests", "Increase edge case coverage"]
@@ -1766,7 +1769,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                             severity: 0.3,
                             impact: "Slow test execution",
                             mitigation: "Increase memory allocation"
-                        ),
+                        )
                     ],
                     recommendations: ["Optimize memory usage", "Consider parallel execution"]
                 ),
@@ -1804,7 +1807,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                             requiredCoverage: 85.0,
                             gap: 15.0,
                             priority: .medium
-                        ),
+                        )
                     ],
                     priorityGaps: ["Error handling", "Edge cases"],
                     recommendations: ["Add comprehensive error testing", "Implement boundary value testing"]
@@ -1826,7 +1829,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                     effort: .easy,
                     expectedBenefit: 0.1,
                     implementation: "Implement parallel test execution"
-                ),
+                )
             ]
         )
     }
@@ -1843,7 +1846,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     testId: "existing_test_1",
                     changes: ["Updated assertions for new API"],
                     reason: "API signature changed"
-                ),
+                )
             ],
             obsoleteTests: [],
             impactAnalysis: TestUpdates.ImpactAnalysis(
@@ -1862,11 +1865,11 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
             refactoredSuite: testSuite, // Assume refactored
             refactorings: [
                 RefactoredTestSuite.TestRefactoring(
-                    type: .extract_method,
+                    type: .extractMethod,
                     description: "Extracted common setup code",
                     affectedTests: ["test1", "test2"],
                     benefit: "Reduced duplication"
-                ),
+                )
             ],
             qualityImprovement: RefactoredTestSuite.QualityDelta(
                 maintainabilityChange: 15.0,
@@ -1893,7 +1896,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     reason: .obsolete_code,
                     coverageImpact: 2.0,
                     lastExecution: Date().addingTimeInterval(-86400 * 30) // 30 days ago
-                ),
+                )
             ],
             coverageImpact: CleanedTestSuite.CoverageImpact(
                 overallChange: -2.0,
@@ -1915,7 +1918,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     description: "Added test for new user scenario",
                     affectedTests: ["new_scenario_test"],
                     benefit: 0.1
-                ),
+                )
             ],
             feedbackIncorporated: [
                 EvolvedTestSuite.TestFeedback(
@@ -1923,7 +1926,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     content: feedback.content,
                     priority: .medium,
                     implemented: true
-                ),
+                )
             ],
             improvementMetrics: EvolvedTestSuite.ImprovementMetrics(
                 defectDetectionIncrease: 0.1,
@@ -1946,7 +1949,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     affectedTests: ["test1", "test2"],
                     benefit: 0.15,
                     tradeoffs: ["Slightly more complex test setup"]
-                ),
+                )
             ],
             qualityImprovements: OptimizedTestSuite.QualityImprovement(
                 reliabilityIncrease: 5.0,

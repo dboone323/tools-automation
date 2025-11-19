@@ -468,7 +468,7 @@ struct IntegrationRule {
 
     struct IntegrationCondition {
         let metric: IntegrationMetric
-        let operator: ConditionOperator
+        let `operator`: ConditionOperator
         let value: Double
         let entity: ConsciousEntity?
 
@@ -733,7 +733,7 @@ struct EnhancementResult {
 
 /// Awareness type
 enum AwarenessType {
-    case self
+    case `self`
     case environmental
     case collective
     case universal
@@ -929,18 +929,18 @@ class UniversalConsciousnessFrameworksEngine {
                         operator: .lessThan,
                         value: 0.8,
                         entity: nil
-                    ),
+                    )
                 ],
                 actions: [
                     IntegrationRule.IntegrationAction(
                         type: .harmonize,
                         parameters: ["target": AnyCodable(0.9)],
                         automated: true
-                    ),
+                    )
                 ],
                 priority: 1,
                 threshold: 0.8
-            ),
+            )
         ]
 
         let expansionProtocols = [
@@ -952,7 +952,7 @@ class UniversalConsciousnessFrameworksEngine {
                         type: .capacityReached,
                         threshold: 0.9,
                         entity: nil
-                    ),
+                    )
                 ],
                 methods: [.capacityIncrease],
                 successCriteria: [
@@ -960,9 +960,9 @@ class UniversalConsciousnessFrameworksEngine {
                         metric: .processingPower,
                         target: 1.2,
                         tolerance: 0.1
-                    ),
+                    )
                 ]
-            ),
+            )
         ]
 
         let network = UniversalConsciousnessNetwork(
@@ -1281,7 +1281,7 @@ class ConsciousnessNetworkImpl: ConsciousnessNetwork {
                 type: .coherenceLoss,
                 description: "Universal consciousness coherence below acceptable threshold",
                 severity: .high
-            ),
+            )
         ]
 
         return IntegrityValidation(
@@ -1342,7 +1342,7 @@ class ConsciousnessIntegratorImpl: ConsciousnessIntegrator {
                     type: .wisdom,
                     strength: 0.9,
                     description: "Emergent collective wisdom from merged streams"
-                ),
+                )
             ],
             harmony: 0.9
         )
@@ -1496,7 +1496,7 @@ class ConsciousnessMonitorImpl: ConsciousnessMonitor {
             performanceMetrics: [
                 "integration_time": 1.0,
                 "expansion_rate": 10.0,
-                "stability_index": 0.9,
+                "stability_index": 0.9
             ]
         )
     }

@@ -95,8 +95,8 @@ struct QuantumData: Identifiable, Codable {
         }
 
         enum SensitivityLevel: String, Codable {
-            case public_
-            case internal
+            case publicAccess
+            case internalAccess
             case confidential
             case topSecret
         }

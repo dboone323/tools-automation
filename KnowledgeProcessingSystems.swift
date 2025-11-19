@@ -444,7 +444,7 @@ struct TransformationRule {
         let conditionId: String
         let type: ConditionType
         let value: Any
-        let operator: ConditionOperator
+        let `operator`: ConditionOperator
 
         enum ConditionType {
             case content
@@ -1020,7 +1020,7 @@ class KnowledgeProcessingSystemsEngine {
                 accuracy: 0.95,
                 scalability: 0.85,
                 domainType: domain
-            ),
+            )
         ]
 
         let transformationCapabilities = [
@@ -1031,7 +1031,7 @@ class KnowledgeProcessingSystemsEngine {
                 reliability: 0.9,
                 adaptability: 0.85,
                 domainType: domain
-            ),
+            )
         ]
 
         let analysisCapabilities = [
@@ -1042,7 +1042,7 @@ class KnowledgeProcessingSystemsEngine {
                 precision: 0.88,
                 comprehensiveness: 0.92,
                 domainType: domain
-            ),
+            )
         ]
 
         let validationCapabilities = [
@@ -1053,7 +1053,7 @@ class KnowledgeProcessingSystemsEngine {
                 speed: 0.85,
                 reliability: 0.95,
                 domainType: domain
-            ),
+            )
         ]
 
         let system = KnowledgeProcessingSystemInstance(
@@ -1329,7 +1329,7 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
                 type: .caching,
                 improvement: 0.2,
                 description: "Add caching for repeated operations"
-            ),
+            )
         ]
 
         let optimizedPipeline = ProcessingPipeline(
@@ -1363,7 +1363,7 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
                 location: "transformation_step",
                 impact: 0.2,
                 description: "High computational load in transformation"
-            ),
+            )
         ]
 
         let recommendations = [
@@ -1372,7 +1372,7 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
                 type: .parallelization,
                 description: "Implement parallel processing for transformation steps",
                 expectedImprovement: 0.25
-            ),
+            )
         ]
 
         return ProcessingPerformance(
@@ -1423,7 +1423,7 @@ class KnowledgeTransformerImpl: KnowledgeTransformer {
                 before: rule.pattern,
                 after: rule.replacement,
                 confidence: 0.9
-            ),
+            )
         ] : []
 
         return RuleApplicationResult(
@@ -1468,7 +1468,7 @@ class KnowledgeTransformerImpl: KnowledgeTransformer {
                 type: .performance,
                 improvement: 0.15,
                 description: "Improved caching for repeated transformations"
-            ),
+            )
         ]
 
         let optimizedTransformation = KnowledgeTransformation(
@@ -1500,7 +1500,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 data: ["count": knowledge.count, "average_length": 100],
                 confidence: 0.9,
                 significance: 0.8
-            ),
+            )
         ]
 
         let insights = [
@@ -1510,7 +1510,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 description: "Discovered knowledge patterns",
                 confidence: 0.85,
                 impact: 0.7
-            ),
+            )
         ]
 
         return KnowledgeAnalysisResult(
@@ -1555,7 +1555,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 content: "Statistical analysis reveals patterns",
                 significance: 0.8,
                 evidence: ["pattern_1", "pattern_2"]
-            ),
+            )
         ]
 
         let patterns = [
@@ -1565,7 +1565,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 frequency: 0.6,
                 strength: 0.8,
                 examples: ["example_1", "example_2"]
-            ),
+            )
         ]
 
         let recommendations = [
@@ -1575,7 +1575,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 description: "Investigate identified patterns",
                 priority: 0.7,
                 rationale: "High significance patterns detected"
-            ),
+            )
         ]
 
         let visualizations = [
@@ -1584,7 +1584,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 type: .chart,
                 data: ["data": "visualization_data"],
                 configuration: ["type": "bar_chart"]
-            ),
+            )
         ]
 
         return AnalysisInsights(
@@ -1677,7 +1677,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
                 description: "Improve validation criteria",
                 priority: 0.6,
                 affectedItems: failed
-            ),
+            )
         ]
 
         return ValidationReport(
@@ -1720,7 +1720,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
                 type: .caching,
                 improvement: 0.15,
                 description: "Cache validation results for repeated checks"
-            ),
+            )
         ]
 
         let optimizedValidation = KnowledgeValidation(

@@ -363,7 +363,7 @@ struct HumanActivity {
         let influence: Double
 
         enum StakeholderRole {
-            case operator
+            case `operator`
             case regulator
             case community
             case investor
@@ -2208,7 +2208,7 @@ class QuantumEnvironmentalSystemsEngine {
                     sensors: [],
                     coverage: 0.7,
                     reliability: 0.9
-                ),
+                )
             ],
             dataCenters: [
                 DataCenter(
@@ -2217,7 +2217,7 @@ class QuantumEnvironmentalSystemsEngine {
                     capacity: 1_000_000.0,
                     processing: 0.9,
                     storage: 0.95
-                ),
+                )
             ],
             connectivity: NetworkConnectivity(
                 type: .quantum,
@@ -2237,7 +2237,7 @@ class QuantumEnvironmentalSystemsEngine {
                     resolution: 10.0,
                     parameters: [],
                     algorithms: [.quantumSuperposition]
-                ),
+                )
             ],
             predictions: [],
             scenarios: [],
@@ -2260,7 +2260,7 @@ class QuantumEnvironmentalSystemsEngine {
                     description: "Achieve net-zero carbon emissions",
                     priority: 0.9,
                     timeframe: 31_536_000 * 10 // 10 years
-                ),
+                )
             ],
             strategies: [],
             metrics: [],
@@ -2346,7 +2346,7 @@ class QuantumEnvironmentalSystemsEngine {
                 "temperature": 22.5,
                 "humidity": 65.0,
                 "air_quality": 45.0,
-                "water_quality": 85.0,
+                "water_quality": 85.0
             ],
             quality: .excellent,
             coverage: 0.9
@@ -2362,7 +2362,7 @@ class QuantumEnvironmentalSystemsEngine {
                     magnitude: 0.02,
                     significance: 0.8,
                     timeframe: 2_592_000
-                ),
+                )
             ],
             anomalies: [],
             correlations: [],
@@ -2378,7 +2378,7 @@ class QuantumEnvironmentalSystemsEngine {
                 location: GeographicLocation(latitude: 40.0, longitude: -74.0),
                 description: "Temperature trend detected",
                 recommendedAction: "Implement cooling measures"
-            ),
+            )
         ]
 
         // Generate recommendations
@@ -2389,7 +2389,7 @@ class QuantumEnvironmentalSystemsEngine {
                 priority: 0.7,
                 description: "Implement renewable energy incentives",
                 expectedImpact: 0.6
-            ),
+            )
         ]
 
         let monitoring = EnvironmentalMonitoring(
@@ -2491,7 +2491,7 @@ class QuantumEnvironmentalSystemsEngine {
                     description: "Reduce carbon emissions by 50%",
                     priority: 0.9,
                     timeframe: 31_536_000 * 5
-                ),
+                )
             ],
             methods: [.efficiency],
             technologies: [.renewableEnergy]
@@ -2511,7 +2511,7 @@ class QuantumEnvironmentalSystemsEngine {
                 environmental: 0.4,
                 economic: 0.2,
                 social: 0.1
-            ),
+            )
         ]
 
         let optimizationResult = SustainabilityOptimization(
@@ -2616,7 +2616,7 @@ class QuantumEnvironmentalSystemsEngine {
                     richness: 500,
                     threat: 0.7,
                     protection: 0.6
-                ),
+                )
             ],
             threats: [],
             trends: []
@@ -2629,7 +2629,7 @@ class QuantumEnvironmentalSystemsEngine {
                 priority: 0.8,
                 description: "Establish protected area",
                 expectedOutcome: 0.7
-            ),
+            )
         ]
 
         let biodiversityAssessment = BiodiversityAssessment(
@@ -2688,7 +2688,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 period: 31_536_000,
                 amplitude: 10.0,
                 phase: 0.0
-            ),
+            )
         ]
 
         let anomalies = [
@@ -2698,7 +2698,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 magnitude: 2.5,
                 duration: 2_592_000,
                 significance: 0.9
-            ),
+            )
         ]
 
         let trends = [
@@ -2708,7 +2708,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 slope: 0.02,
                 significance: 0.95,
                 acceleration: 0.001
-            ),
+            )
         ]
 
         return ClimatePattern(
@@ -2729,7 +2729,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 value: 22.0,
                 range: 20.0 ... 24.0,
                 probability: 0.8
-            ),
+            )
         ]
 
         return WeatherPrediction(
@@ -2757,7 +2757,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                         parameter: .temperature,
                         value: 18.5,
                         confidence: 0.8
-                    ),
+                    )
                 ],
                 probabilities: []
             )
@@ -2811,7 +2811,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 value: 2.5,
                 confidence: 0.8,
                 timeframe: horizon
-            ),
+            )
         ]
 
         return ClimateForecast(

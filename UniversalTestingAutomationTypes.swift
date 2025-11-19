@@ -17,7 +17,11 @@ enum ProgrammingLanguage: String, Codable, CaseIterable {
 
 /// Refactoring strategy for test maintenance
 enum RefactoringStrategy: String, Codable {
-    case extract_method, consolidate_setup, remove_duplication, improve_naming, simplify_assertions
+    case extractMethod = "extract_method"
+    case consolidateSetup = "consolidate_setup"
+    case removeDuplication = "remove_duplication"
+    case improveNaming = "improve_naming"
+    case simplifyAssertions = "simplify_assertions"
 }
 
 /// Code coverage type
@@ -72,7 +76,7 @@ struct SystemArchitecture: Codable, Sendable {
 struct SystemInterface: Codable, Sendable {
     let name: String
     let type: InterfaceType
-    let protocol: String
+    let `protocol`: String
     let endpoints: [String]
     let authentication: AuthenticationMethod
     let dataFormat: DataFormat
@@ -304,7 +308,7 @@ struct ChaosTest: Test, Codable, Sendable {
     struct SteadyStateCondition: Codable, Sendable {
         let metric: String
         let threshold: Double
-        let operator: ThresholdOperator
+        let `operator`: ThresholdOperator
 
         enum ThresholdOperator: String, Codable {
             case less_than, greater_than, equals, not_equals
@@ -755,7 +759,7 @@ struct TestAutomationConfig: Codable, Sendable {
         struct QualityGate: Codable, Sendable {
             let metric: String
             let threshold: Double
-            let operator: ThresholdOperator
+            let `operator`: ThresholdOperator
 
             enum ThresholdOperator: String, Codable {
                 case greater_than, less_than, equals
@@ -1006,7 +1010,7 @@ extension TestSuite {
             tags: ["mock", "unit"],
             targetFunction: "mockFunction",
             inputParameters: [
-                UnitTest.TestParameter(name: "input", type: "String", value: "test"),
+                UnitTest.TestParameter(name: "input", type: "String", value: "test")
             ],
             expectedOutput: UnitTest.TestExpectation(
                 type: .exact,

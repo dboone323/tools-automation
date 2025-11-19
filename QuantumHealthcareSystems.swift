@@ -43,7 +43,7 @@ protocol QuantumDiagnosticEngine {
 
 /// Protocol for treatment optimization engine
 protocol TreatmentOptimizationEngine {
-    func optimizeTreatmentProtocol(_ protocol: TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization
+    func optimizeTreatmentProtocol(_ ``protocol`:TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization
     func personalizeMedication(_ medication: Medication, patient: Patient) async -> PersonalizedMedication
     func coordinateMultidisciplinaryCare(_ patient: Patient, specialists: [MedicalSpecialist]) async -> CareCoordination
     func predictTreatmentOutcomes(_ treatment: Treatment, patient: Patient) async -> OutcomePrediction
@@ -797,14 +797,6 @@ struct MedicalImaging {
         let impression: String
         let recommendations: [String]
         let confidence: Double
-
-        struct ImagingFinding {
-            let findingId: String
-            let location: String
-            let description: String
-            let severity: Double
-            let significance: Double
-        }
     }
 }
 
@@ -969,7 +961,7 @@ struct MedicalSpecialist {
         case surgery
         case radiology
         case emergency
-        case internal
+        case internalAccess = "internal"
         case family
     }
 
@@ -1616,21 +1608,7 @@ struct ImagingAnalysis {
     let confidence: Double
     let recommendations: [String]
 
-    struct ImagingFinding {
-        let findingId: String
-        let type: FindingType
-        let location: String
-        let description: String
-        let severity: Double
-        let probability: Double
-
-        enum FindingType {
-            case normal
-            case abnormal
-            case suspicious
-            case critical
-        }
-    }
+    // ImagingFinding and FindingType moved to SharedHealthTypes
 }
 
 /// Protocol optimization
@@ -3394,7 +3372,7 @@ struct AnalyticsQuery {
     struct QueryFilter {
         let filterId: String
         let variable: String
-        let operator: FilterOperator
+        let `operator`:FilterOperator
         let value: Any
 
         enum FilterOperator {
@@ -4142,19 +4120,11 @@ struct HealthAnalytics {
             let reliability: Double
             let timeliness: Double
 
-            enum SourceType {
+            enum SourceType: String, Codable {
                 case clinical
-                let sourceId: String
-                let type: SourceType
-                let reliability: Double
-                let timeliness: Double
-
-                enum SourceType {
-                    case clinical
-                    case administrative
-                    case research
-                    case public
-                }
+                case administrative
+                case research
+                case publicAccess = "public"
             }
         }
     }
@@ -5231,7 +5201,7 @@ class QuantumDiagnosticEngineImpl: QuantumDiagnosticEngine {
     func analyzeMedicalImaging(_ imaging: MedicalImaging) async -> ImagingAnalysis {
         // Simplified imaging analysis
         let findings = [
-            ImagingAnalysis.ImagingFinding(
+            ImagingFinding(
                 findingId: "finding_1",
                 type: .abnormal,
                 location: "Left lung",
@@ -5336,7 +5306,7 @@ class QuantumDiagnosticEngineImpl: QuantumDiagnosticEngine {
 
 /// Treatment optimization engine implementation
 class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
-    func optimizeTreatmentProtocol(_ protocol: TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization {
+    func optimizeTreatmentProtocol(_ ``protocol`:TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization {
         // Simplified protocol optimization
         var optimizedProtocol = protocol
 

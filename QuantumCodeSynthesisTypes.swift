@@ -676,8 +676,8 @@ public enum SynthesisTestingUtils {
                 CodeSpecification.Requirement(
                     type: .functionality,
                     description: "Implement basic functionality",
-                    priority: .must_have
-                ),
+                    priority: .mustHave
+                )
             ],
             constraints: [],
             targetLanguage: language,
@@ -710,7 +710,7 @@ public enum SynthesisTestingUtils {
                 namingConvention: .camelCase,
                 indentation: .spaces,
                 lineLengthLimit: 120,
-                documentationStyle: .swift_documentation,
+                documentationStyle: .swiftDocumentation,
                 errorHandling: .throws
             ),
             domainKnowledge: SynthesisContext.DomainKnowledge(
@@ -738,7 +738,7 @@ public enum SynthesisTestingUtils {
                 )
             ),
             securityRequirements: SynthesisContext.SecurityRequirements(
-                threatModel: .web_application,
+                threatModel: .webApplication,
                 complianceStandards: [],
                 encryptionRequirements: SynthesisContext.SecurityRequirements.EncryptionRequirements(
                     dataAtRest: .basic,

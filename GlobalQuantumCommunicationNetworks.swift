@@ -591,7 +591,7 @@ struct ChannelOptimization {
         let description: String
 
         enum OptimizationType {
-            case protocol
+            case `protocol`
             case hardware
             case software
             case environmental
@@ -1085,7 +1085,7 @@ class QuantumChannelManagerImpl: QuantumChannelManager {
                 type: .software,
                 improvement: 0.05,
                 description: "Enhance error correction algorithms"
-            ),
+            )
         ]
 
         return ChannelOptimization(
@@ -1164,7 +1164,7 @@ class QuantumRouterImpl: QuantumRouter {
                 type: .expand,
                 description: "Temporarily expand channel capacity",
                 priority: 0.7
-            ),
+            )
         ]
 
         return CongestionResolution(
@@ -1395,7 +1395,7 @@ class GlobalNetworkCoordinatorImpl: GlobalNetworkCoordinator {
                 regions: ["global"],
                 improvement: 0.08,
                 description: "Optimize resource allocation across regions"
-            ),
+            )
         ]
 
         return GlobalOptimizationResult(

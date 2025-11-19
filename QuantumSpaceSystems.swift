@@ -311,7 +311,7 @@ struct ResourceSustainability {
 struct QuantumLink {
     let id: UUID
     let endpoints: [LinkEndpoint]
-    let protocol: QuantumProtocol
+    let `protocol`: QuantumProtocol
     let bandwidth: Double
     let latency: TimeInterval
     let reliability: Double

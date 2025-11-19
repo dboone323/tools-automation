@@ -245,7 +245,7 @@ struct QualityGateEvolutionStrategy: Codable, Sendable {
 
     struct SuccessCriterion: Codable, Sendable {
         let metric: String
-        let operator: ComparisonOperator
+        let `operator`: ComparisonOperator
         let value: Double
         let timeframe: TimeInterval
 

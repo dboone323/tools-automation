@@ -99,7 +99,7 @@ public struct ArchitectureAnalysis: Codable, Sendable {
         }
 
         public enum DependencyType: String, Codable {
-            case import, inheritance, composition, protocol_conformance, function_call
+            case `import`, inheritance, composition, protocol_conformance, function_call
 
         }
     }

@@ -235,7 +235,7 @@ struct AutonomousVehicle {
     }
 
     struct VehicleCommunication {
-        let protocol: CommunicationProtocol
+        let `protocol`:CommunicationProtocol
         let range: Double
         let bandwidth: Double
         let security: Double
@@ -2150,7 +2150,7 @@ class QuantumTransportationSystemsEngine {
             ),
             communication: VehicleCommunicationNetwork(
                 networkId: "comm_\(frameworkId)",
-                protocol: .v2x,
+                `protocol`:.v2x,
                 bandwidth: 1000.0,
                 latency: 0.01,
                 security: 0.98

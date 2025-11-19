@@ -453,8 +453,11 @@ struct CommunicationChannel {
         case radio, satellite, cellular, internet, emergency
     }
 
-    enum SecurityLevel {
-        case public, secure, encrypted, quantum
+    enum SecurityLevel: String, Codable {
+        case publicAccess = "public"
+        case secure
+        case encrypted
+        case quantum
     }
 
     enum ChannelStatus {
@@ -1382,7 +1385,7 @@ final class QuantumPredictor {
             ),
             recommendedActions: [
                 DisasterPrediction.RecommendedAction(type: .evacuation, priority: .high, description: "Evacuate vulnerable areas", timeline: 24 * 60 * 60),
-                DisasterPrediction.RecommendedAction(type: .preparation, priority: .medium, description: "Stock emergency supplies", timeline: 48 * 60 * 60),
+                DisasterPrediction.RecommendedAction(type: .preparation, priority: .medium, description: "Stock emergency supplies", timeline: 48 * 60 * 60)
             ],
             uncertaintyFactors: ["Weather conditions", "Population movement"]
         )
@@ -1398,7 +1401,7 @@ final class RiskAnalyzer {
             overallRisk: 0.7,
             riskFactors: [
                 RiskAnalysis.RiskFactor(type: "Seismic", level: 0.8, trend: .stable, contributingFactors: ["Fault lines", "Historical activity"]),
-                RiskAnalysis.RiskFactor(type: "Population", level: 0.6, trend: .increasing, contributingFactors: ["Density", "Vulnerable groups"]),
+                RiskAnalysis.RiskFactor(type: "Population", level: 0.6, trend: .increasing, contributingFactors: ["Density", "Vulnerable groups"])
             ],
             mitigationStrategies: [],
             monitoringRecommendations: ["Install seismic sensors", "Regular drills"]
@@ -1720,7 +1723,7 @@ extension QuantumDisasterResponseEngine {
                     economicLoss: ImpactEstimate.EconomicLoss(immediate: 500_000, longTerm: 2_000_000, currency: "USD"),
                     infrastructureDamage: ImpactEstimate.InfrastructureDamage(severity: 0.4, recoveryTime: 15 * 24 * 60 * 60, criticalSystems: ["roads"]),
                     environmentalImpact: ImpactEstimate.EnvironmentalImpact(contamination: 0.1, habitatLoss: 0.05, longTermEffects: ["minor contamination"])
-                )),
+                ))
             ],
             environmentalFactors: RiskFactors.EnvironmentalFactors(
                 seismicActivity: 0.8,
@@ -1730,7 +1733,7 @@ extension QuantumDisasterResponseEngine {
             ),
             infrastructureVulnerabilities: [
                 RiskFactors.Vulnerability(type: .residential, riskLevel: 0.7, mitigationMeasures: ["Retrofit buildings"]),
-                RiskFactors.Vulnerability(type: .transportation, riskLevel: 0.6, mitigationMeasures: ["Strengthen bridges"]),
+                RiskFactors.Vulnerability(type: .transportation, riskLevel: 0.6, mitigationMeasures: ["Strengthen bridges"])
             ],
             populationDensity: 0.8,
             preparednessLevel: 0.7
