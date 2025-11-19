@@ -351,7 +351,7 @@ struct NetworkTraffic {
         let packetId: String
         let source: NetworkAddress
         let destination: NetworkAddress
-        let `protocol`:NetworkProtocol
+        let protocol: NetworkProtocol
         let size: Int
         let content: Data?
     }
@@ -407,7 +407,7 @@ struct TrafficAnalysis {
 
         enum AnomalyType {
             case volume
-            case `protocol`
+            case protocol
             case behavior
             case signature
         }
@@ -426,7 +426,7 @@ struct DetectedThreat {
 
     enum ThreatSource {
         case external
-        case internalAccess = "internal"
+        case internal
         case unknown
     }
 
@@ -893,14 +893,24 @@ struct SecurityResource {
     enum ResourceType {
         case data
         case system
-        case network
-        case application
-        case physical
+        let resourceId: String
+        let type: ResourceType
+        let classification: SecurityClassification
+        let owner: String
+        let access: ResourceAccess
+
+        enum ResourceType {
+            case data
+            case system
+            case network
+            case application
+            case physical
+        }
     }
 
-    enum SecurityClassification: String, Codable {
-        case publicAccess = "public"
-        case internalAccess = "internal"
+    enum SecurityClassification {
+        case public
+        case internal
         case confidential
         case restricted
         case topSecret
@@ -926,14 +936,14 @@ struct AccessPolicy {
         let conditionId: String
         let type: ConditionType
         let value: Any
-        let `operator`:ConditionOperator
+        let operator: ConditionOperator
 
         enum ConditionType {
             case time
             let conditionId: String
             let type: ConditionType
             let value: Any
-            let `operator`:ConditionOperator
+            let operator: ConditionOperator
 
             enum ConditionType {
                 case time
@@ -1103,11 +1113,36 @@ struct AccessAudit {
         let description: String
         let evidence: [AuditEvidence]
 
+        enum FindingType {
+            case violation
+            let findingId: String
+            let type: FindingType
+            let severity: FindingSeverity
+            let description: String
+            let evidence: [AuditEvidence]
+
+            enum FindingType {
+                case violation
+                case anomaly
+                case gap
+                case improvement
+            }
+        }
+
         enum FindingSeverity {
             case low
-            case medium
-            case high
-            case critical
+            let findingId: String
+            let type: FindingType
+            let severity: FindingSeverity
+            let description: String
+            let evidence: [AuditEvidence]
+
+            enum FindingSeverity {
+                case low
+                case medium
+                case high
+                case critical
+            }
         }
     }
 
@@ -1807,7 +1842,7 @@ struct AlertThreshold {
     let thresholdId: String
     let metric: String
     let value: Double
-    let `operator`:ThresholdOperator
+    let operator: ThresholdOperator
     let severity: AlertSeverity
     let escalation: EscalationRule
 
@@ -1816,7 +1851,7 @@ struct AlertThreshold {
         let thresholdId: String
         let metric: String
         let value: Double
-        let `operator`:ThresholdOperator
+        let operator: ThresholdOperator
         let severity: AlertSeverity
         let escalation: EscalationRule
 
@@ -1833,7 +1868,7 @@ struct AlertThreshold {
         let thresholdId: String
         let metric: String
         let value: Double
-        let `operator`:ThresholdOperator
+        let operator: ThresholdOperator
         let severity: AlertSeverity
         let escalation: EscalationRule
 

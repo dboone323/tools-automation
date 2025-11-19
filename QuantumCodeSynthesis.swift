@@ -6,8 +6,8 @@
 //  Quantum Code Synthesis System with Multi-language Support and Context-aware Generation
 //
 
-import Combine
 import Foundation
+import Combine
 import SwiftUI
 
 // MARK: - Core Protocols
@@ -71,7 +71,7 @@ struct CodeSpecification: Codable, Sendable {
         }
 
         enum Priority: String, Codable {
-            case mustHave = "must_have", shouldHave = "should_have", niceToHave = "nice_to_have"
+            case must_have, should_have, nice_to_have
         }
     }
 
@@ -81,7 +81,7 @@ struct CodeSpecification: Codable, Sendable {
         let strictness: Strictness
 
         enum ConstraintType: String, Codable {
-            case maxLines = "max_lines", maxComplexity = "max_complexity", namingConvention = "naming_convention", styleGuide = "style_guide", performanceBudget = "performance_budget", securityStandard = "security_standard"
+            case max_lines, max_complexity, naming_convention, style_guide, performance_budget, security_standard
         }
 
         enum Strictness: String, Codable {
@@ -115,13 +115,13 @@ struct CodeSpecification: Codable, Sendable {
 
 /// Programming language support
 enum ProgrammingLanguage: String, Codable, CaseIterable {
-    case swift, objectiveC = "objective_c", c, cpp, csharp, java, kotlin, python, javascript, typescript
+    case swift, objective_c, c, cpp, csharp, java, kotlin, python, javascript, typescript
     case go, rust, scala, ruby, php, dart, r, matlab, sql, shell
 
     var fileExtensions: [String] {
         switch self {
         case .swift: return ["swift"]
-        case .objectiveC: return ["m", "mm"]
+        case .objective_c: return ["m", "mm"]
         case .c: return ["c", "h"]
         case .cpp: return ["cpp", "cxx", "cc", "hpp", "hxx"]
         case .csharp: return ["cs"]
@@ -146,7 +146,7 @@ enum ProgrammingLanguage: String, Codable, CaseIterable {
     var syntaxHighlighter: String {
         switch self {
         case .swift: return "swift"
-        case .objectiveC: return "objective-c"
+        case .objective_c: return "objective-c"
         case .c: return "c"
         case .cpp: return "cpp"
         case .csharp: return "csharp"
@@ -186,7 +186,7 @@ struct SynthesisContext: Codable, Sendable {
         let buildSystem: BuildSystem
 
         enum BuildSystem: String, Codable {
-            case xcode, gradle, maven, npm, pip, cargo, swiftPackageManager = "swift_package_manager", make, cmake
+            case xcode, gradle, maven, npm, pip, cargo, swift_package_manager, make, cmake
         }
     }
 
@@ -206,7 +206,7 @@ struct SynthesisContext: Codable, Sendable {
         let errorHandling: ErrorHandlingStyle
 
         enum NamingConvention: String, Codable {
-            case camelCase, snakeCase = "snake_case", kebabCase = "kebab_case", pascalCase = "PascalCase"
+            case camelCase, snake_case, kebab_case, PascalCase
         }
 
         enum IndentationStyle: String, Codable {
@@ -214,11 +214,11 @@ struct SynthesisContext: Codable, Sendable {
         }
 
         enum DocumentationStyle: String, Codable {
-            case javadoc, doxygen, swiftDocumentation = "swift_documentation", pythonDocstring = "python_docstring"
+            case javadoc, doxygen, swift_documentation, python_docstring
         }
 
         enum ErrorHandlingStyle: String, Codable {
-            case exceptions, errorCodes = "error_codes", resultTypes = "result_types", callbacks
+            case exceptions, error_codes, result_types, callbacks
         }
     }
 
@@ -265,11 +265,11 @@ struct SynthesisContext: Codable, Sendable {
         let authenticationRequirements: AuthenticationRequirements
 
         enum ThreatModel: String, Codable {
-            case webApplication = "web_application", mobileApp = "mobile_app", apiService = "api_service", iotDevice = "iot_device", desktopApp = "desktop_app"
+            case web_application, mobile_app, api_service, iot_device, desktop_app
         }
 
         enum ComplianceStandard: String, Codable {
-            case gdpr, hipaa, pciDSS = "pci_dss", sox, iso27001
+            case gdpr, hipaa, pci_dss, sox, iso27001
         }
 
         struct EncryptionRequirements: Codable, Sendable {
@@ -278,11 +278,11 @@ struct SynthesisContext: Codable, Sendable {
             let keyManagement: KeyManagementType
 
             enum EncryptionLevel: String, Codable {
-                case none, basic, strong, militaryGrade = "military_grade"
+                case none, basic, strong, military_grade
             }
 
             enum KeyManagementType: String, Codable {
-                case local, cloudKMS = "cloud_kms", hsm
+                case local, cloud_kms, hsm
             }
         }
 
@@ -310,7 +310,7 @@ struct CodePosition: Codable, Sendable {
     let scope: CodeScope
 
     enum CodeScope: String, Codable {
-        case global, classBody = "class_body", functionBody = "function_body", blockStatement = "block_statement", parameterList = "parameter_list", typeDefinition = "type_definition"
+        case global, class_body, function_body, block_statement, parameter_list, type_definition
     }
 }
 
@@ -349,7 +349,7 @@ struct SynthesisResult: Codable, Sendable {
         let performanceValidation: ValidationStatus
 
         enum ValidationStatus: String, Codable {
-            case passed, failed, warning, notApplicable = "not_applicable"
+            case passed, failed, warning, not_applicable
         }
     }
 
@@ -360,7 +360,7 @@ struct SynthesisResult: Codable, Sendable {
         let priority: Priority
 
         enum SuggestionType: String, Codable {
-            case improvement, alternative, optimization, securityEnhancement = "security_enhancement", documentation
+            case improvement, alternative, optimization, security_enhancement, documentation
         }
 
         enum Priority: String, Codable {
@@ -379,8 +379,7 @@ struct CodeCompletion: Codable, Sendable {
     let additionalEdits: [AdditionalEdit]?
 
     enum CompletionKind: String, Codable {
-        case keyword, function, method, variable, type, `class`, `struct`, `enum`, `protocol`, `import`
-
+        case keyword, function, method, variable, type, class, struct, enum, protocol, import
     }
 
     struct AdditionalEdit: Codable, Sendable {
@@ -538,7 +537,7 @@ struct CodeAnalysis: Codable, Sendable {
             let range: SourceRange
 
             enum TokenType: String, Codable {
-                case keyword, identifier, literal, `operator`, punctuation, comment, whitespace
+                case keyword, identifier, literal, operator, punctuation, comment, whitespace
             }
         }
     }
@@ -557,7 +556,7 @@ struct CodeAnalysis: Codable, Sendable {
             let references: [SourceRange]
 
             enum SymbolType: String, Codable {
-                case `class`, `struct`, `enum`, function, variable, constant, `typealias`, `protocol`
+                case `class`, `struct`, `enum`, function, variable, constant, typealias, protocol
             }
         }
 
@@ -568,7 +567,7 @@ struct CodeAnalysis: Codable, Sendable {
             let methods: [Method]
 
             enum TypeKind: String, Codable {
-                case `class`, `struct`, `enum`, `protocol`, primitive
+                case `class`, `struct`, `enum`, protocol, primitive
             }
 
             struct Property: Codable, Sendable {
@@ -577,7 +576,7 @@ struct CodeAnalysis: Codable, Sendable {
                 let access: AccessLevel
 
                 enum AccessLevel: String, Codable {
-                    case `private`, `fileprivate`, `internal`, `public`, open
+                    case `private`, `fileprivate`, `internal`, `public`, `open`
                 }
             }
 
@@ -625,7 +624,7 @@ struct CodeAnalysis: Codable, Sendable {
                 let successors: [SourceRange]
 
                 enum ControlFlowType: String, Codable {
-                    case sequential, conditional, loop, function_call, `return`, `throw`, `break`, `continue`
+                    case sequential, conditional, loop, function_call, return, throw, break, continue
                 }
             }
         }
@@ -685,8 +684,7 @@ struct CodePattern: Codable, Sendable {
     let suggestions: [String]
 
     enum PatternType: String, Codable {
-        case creational, structural, behavioral, architectural
-        case antiPattern = "anti_pattern"
+        case creational, structural, behavioral, architectural, anti_pattern
     }
 
     enum PatternQuality: String, Codable {
@@ -1046,22 +1044,22 @@ final class QuantumCodeSynthesis: ObservableObject {
 
     /// Generate code completions
     func generateCompletions(for partialCode: String, at position: CodePosition, in context: SynthesisContext) async throws -> [CodeCompletion] {
-        try await synthesizer.generateCompletions(for: partialCode, at: position, in: context)
+        return try await synthesizer.generateCompletions(for: partialCode, at: position, in: context)
     }
 
     /// Refactor existing code
     func refactorCode(_ code: String, with strategy: RefactoringStrategy, in language: ProgrammingLanguage) async throws -> RefactoredCode {
-        try await synthesizer.refactorCode(code, with: strategy, in: language)
+        return try await synthesizer.refactorCode(code, with: strategy, in: language)
     }
 
     /// Optimize code for performance
     func optimizeCode(_ code: String, for metrics: [OptimizationMetric], in language: ProgrammingLanguage) async throws -> OptimizedCode {
-        try await synthesizer.optimizeCode(code, for: metrics, in: language)
+        return try await synthesizer.optimizeCode(code, for: metrics, in: language)
     }
 
     /// Analyze codebase for learning
     func learnFromCodebase(at path: String, for language: ProgrammingLanguage) async throws -> LearningModel {
-        try await learner.learnFromCodebase(at: path, for: language)
+        return try await learner.learnFromCodebase(at: path, for: language)
     }
 
     /// Validate and optimize synthesis result
@@ -1160,7 +1158,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
     }
 
     private func generateSwiftCode(for specification: CodeSpecification) -> String {
-        """
+        return """
         import Foundation
 
         /// \(specification.description)
@@ -1197,7 +1195,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
     }
 
     private func generatePythonCode(for specification: CodeSpecification) -> String {
-        """
+        return """
         import asyncio
         from typing import Optional, Dict, Any
         import json
@@ -1242,7 +1240,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
 
     func generateCompletions(for partialCode: String, at position: CodePosition, in context: SynthesisContext) async throws -> [CodeCompletion] {
         // Mock implementation - would analyze partial code and context
-        [
+        return [
             CodeCompletion(
                 text: "func performOperation() async throws -> Result",
                 displayText: "performOperation()",
@@ -1271,7 +1269,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
                 RefactoredCode.CodeChange(
                     type: .extraction,
                     description: "Extracted method from long function",
-                    lineRange: 1 ... 10,
+                    lineRange: 1...10,
                     originalText: "original code",
                     newText: "refactored code"
                 )
@@ -1302,7 +1300,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
                 OptimizedCode.Optimization(
                     type: .caching,
                     description: "Added result caching to improve performance",
-                    affectedLines: 1 ... 5,
+                    affectedLines: 1...5,
                     confidence: 0.9
                 )
             ],
@@ -1333,7 +1331,7 @@ final class QuantumCodeSynthesizerImpl: QuantumCodeSynthesizer {
 final class MultiLanguageCodeAnalyzer: MultiLanguageAnalyzer {
     func analyzeCode(_ code: String, language: ProgrammingLanguage) async throws -> CodeAnalysis {
         // Mock implementation - would perform actual code analysis
-        CodeAnalysis(
+        return CodeAnalysis(
             language: language,
             syntaxTree: CodeAnalysis.SyntaxTree(
                 root: CodeAnalysis.SyntaxTree.SyntaxNode(
@@ -1381,7 +1379,7 @@ final class MultiLanguageCodeAnalyzer: MultiLanguageAnalyzer {
 
     func extractPatterns(from code: String, in language: ProgrammingLanguage) async throws -> [CodePattern] {
         // Mock implementation - would extract actual patterns
-        [
+        return [
             CodePattern(
                 name: "Singleton Pattern",
                 type: .creational,
@@ -1396,7 +1394,7 @@ final class MultiLanguageCodeAnalyzer: MultiLanguageAnalyzer {
 
     func identifyDependencies(in code: String, for language: ProgrammingLanguage) async throws -> [CodeDependency] {
         // Mock implementation - would identify actual dependencies
-        [
+        return [
             CodeDependency(
                 type: .system_framework,
                 name: "Foundation",
@@ -1409,7 +1407,7 @@ final class MultiLanguageCodeAnalyzer: MultiLanguageAnalyzer {
 
     func validateSyntax(of code: String, in language: ProgrammingLanguage) async throws -> SyntaxValidation {
         // Mock implementation - would perform actual syntax validation
-        SyntaxValidation(
+        return SyntaxValidation(
             isValid: true,
             errors: [],
             warnings: [],
@@ -1451,7 +1449,7 @@ final class ContextAwareCodeGenerator: ContextAwareGenerator {
 
     func adaptToStyle(of existingCode: String, for generation: String, in language: ProgrammingLanguage) async throws -> StyleAdaptedCode {
         // Mock implementation - would adapt code style
-        StyleAdaptedCode(
+        return StyleAdaptedCode(
             originalCode: generation,
             adaptedCode: generation, // Assume already adapted
             styleChanges: [],
@@ -1462,7 +1460,7 @@ final class ContextAwareCodeGenerator: ContextAwareGenerator {
 
     func maintainConsistency(across files: [String], for language: ProgrammingLanguage) async throws -> ConsistencyResult {
         // Mock implementation - would analyze consistency
-        ConsistencyResult(
+        return ConsistencyResult(
             overallConsistency: 0.88,
             inconsistencies: [],
             recommendations: [
@@ -1482,7 +1480,7 @@ final class ContextAwareCodeGenerator: ContextAwareGenerator {
 final class QuantumCodeLearningEngine: QuantumCodeLearner {
     func learnFromCodebase(at path: String, for language: ProgrammingLanguage) async throws -> LearningModel {
         // Mock implementation - would analyze codebase and learn patterns
-        LearningModel(
+        return LearningModel(
             language: language,
             patterns: [
                 LearningModel.LearnedPattern(
@@ -1525,7 +1523,7 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
 
     func applyLearnedPatterns(to specification: CodeSpecification) async throws -> PatternEnhancedSpecification {
         // Mock implementation - would enhance specification with learned patterns
-        PatternEnhancedSpecification(
+        return PatternEnhancedSpecification(
             originalSpecification: specification,
             learnedPatterns: [
                 PatternEnhancedSpecification.AppliedPattern(
@@ -1543,7 +1541,7 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
 
     func predictCodeEvolution(for code: String, over horizon: TimeInterval) async throws -> CodeEvolutionPrediction {
         // Mock implementation - would predict code evolution
-        CodeEvolutionPrediction(
+        return CodeEvolutionPrediction(
             currentCode: code,
             predictions: [
                 CodeEvolutionPrediction.EvolutionPrediction(
@@ -1569,7 +1567,7 @@ final class QuantumCodeLearningEngine: QuantumCodeLearner {
                 CodeEvolutionPrediction.RecommendedAction(
                     action: "Schedule quarterly code review",
                     priority: .medium,
-                    timeline: 7_776_000, // 90 days
+                    timeline: 7776000, // 90 days
                     expectedBenefit: 0.7
                 )
             ],
@@ -1685,7 +1683,7 @@ struct QuantumCodeSynthesisView: View {
                         namingConvention: .camelCase,
                         indentation: .spaces,
                         lineLengthLimit: 120,
-                        documentationStyle: .swiftDocumentation,
+                        documentationStyle: .swift_documentation,
                         errorHandling: .throws
                     ),
                     domainKnowledge: SynthesisContext.DomainKnowledge(
@@ -1713,7 +1711,7 @@ struct QuantumCodeSynthesisView: View {
                         )
                     ),
                     securityRequirements: SynthesisContext.SecurityRequirements(
-                        threatModel: .webApplication,
+                        threatModel: .web_application,
                         complianceStandards: [],
                         encryptionRequirements: SynthesisContext.SecurityRequirements.EncryptionRequirements(
                             dataAtRest: .basic,
@@ -1805,7 +1803,7 @@ struct QuantumCodeSynthesizerTool {
                 CodeSpecification.Requirement(
                     type: .security,
                     description: "Implement secure password hashing",
-                    priority: .mustHave
+                    priority: .must_have
                 )
             ],
             constraints: [],
@@ -1834,14 +1832,14 @@ struct QuantumCodeSynthesizerTool {
                     directories: ["Sources", "Tests"],
                     frameworks: ["Foundation"],
                     dependencies: ["CryptoKit"],
-                    buildSystem: .swiftPackageManager
+                    buildSystem: .spm
                 ),
                 existingCode: [],
                 codingStandards: SynthesisContext.CodingStandards(
                     namingConvention: .camelCase,
                     indentation: .spaces,
                     lineLengthLimit: 120,
-                    documentationStyle: .swiftDocumentation,
+                    documentationStyle: .swift_documentation,
                     errorHandling: .throws
                 ),
                 domainKnowledge: SynthesisContext.DomainKnowledge(
@@ -1869,12 +1867,12 @@ struct QuantumCodeSynthesizerTool {
                     )
                 ),
                 securityRequirements: SynthesisContext.SecurityRequirements(
-                    threatModel: .apiService,
+                    threatModel: .api_service,
                     complianceStandards: [.gdpr],
                     encryptionRequirements: SynthesisContext.SecurityRequirements.EncryptionRequirements(
                         dataAtRest: .strong,
                         dataInTransit: .strong,
-                        keyManagement: .cloudKMS
+                        keyManagement: .cloud_kms
                     ),
                     authenticationRequirements: SynthesisContext.SecurityRequirements.AuthenticationRequirements(
                         methods: [.password, .token],

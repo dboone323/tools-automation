@@ -9,8 +9,8 @@
 // Framework for global healthcare infrastructure with quantum diagnostic and treatment algorithms
 //
 
-import Combine
 import Foundation
+import Combine
 
 // MARK: - Core Protocols
 
@@ -43,7 +43,7 @@ protocol QuantumDiagnosticEngine {
 
 /// Protocol for treatment optimization engine
 protocol TreatmentOptimizationEngine {
-    func optimizeTreatmentProtocol(_ ``protocol`:TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization
+    func optimizeTreatmentProtocol(_ protocol: TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization
     func personalizeMedication(_ medication: Medication, patient: Patient) async -> PersonalizedMedication
     func coordinateMultidisciplinaryCare(_ patient: Patient, specialists: [MedicalSpecialist]) async -> CareCoordination
     func predictTreatmentOutcomes(_ treatment: Treatment, patient: Patient) async -> OutcomePrediction
@@ -797,6 +797,14 @@ struct MedicalImaging {
         let impression: String
         let recommendations: [String]
         let confidence: Double
+
+        struct ImagingFinding {
+            let findingId: String
+            let location: String
+            let description: String
+            let severity: Double
+            let significance: Double
+        }
     }
 }
 
@@ -961,7 +969,7 @@ struct MedicalSpecialist {
         case surgery
         case radiology
         case emergency
-        case internalAccess = "internal"
+        case internal
         case family
     }
 
@@ -1608,7 +1616,21 @@ struct ImagingAnalysis {
     let confidence: Double
     let recommendations: [String]
 
-    // ImagingFinding and FindingType moved to SharedHealthTypes
+    struct ImagingFinding {
+        let findingId: String
+        let type: FindingType
+        let location: String
+        let description: String
+        let severity: Double
+        let probability: Double
+
+        enum FindingType {
+            case normal
+            case abnormal
+            case suspicious
+            case critical
+        }
+    }
 }
 
 /// Protocol optimization
@@ -3372,7 +3394,7 @@ struct AnalyticsQuery {
     struct QueryFilter {
         let filterId: String
         let variable: String
-        let `operator`:FilterOperator
+        let operator: FilterOperator
         let value: Any
 
         enum FilterOperator {
@@ -4120,11 +4142,19 @@ struct HealthAnalytics {
             let reliability: Double
             let timeliness: Double
 
-            enum SourceType: String, Codable {
+            enum SourceType {
                 case clinical
-                case administrative
-                case research
-                case publicAccess = "public"
+                let sourceId: String
+                let type: SourceType
+                let reliability: Double
+                let timeliness: Double
+
+                enum SourceType {
+                    case clinical
+                    case administrative
+                    case research
+                    case public
+                }
             }
         }
     }
@@ -4361,7 +4391,7 @@ class QuantumHealthcareSystemsEngine {
                         name: "Quantum Telehealth Platform",
                         type: .telehealth,
                         adoption: 0.85
-                    ),
+                    )
                 ],
                 devices: [],
                 software: [],
@@ -4474,7 +4504,7 @@ class QuantumHealthcareSystemsEngine {
             ai: DiagnosticCapabilities.AICapabilities(
                 algorithms: [],
                 training: DiagnosticCapabilities.AICapabilities.TrainingData(
-                    volume: 10_000_000,
+                    volume: 10000000,
                     quality: 0.95,
                     diversity: 0.9,
                     updates: 86400 // Daily
@@ -4534,16 +4564,16 @@ class QuantumHealthcareSystemsEngine {
                 recency: 0.8
             ),
             updates: TreatmentProtocols.ProtocolUpdates(
-                frequency: 2_592_000, // Monthly
+                frequency: 2592000, // Monthly
                 process: TreatmentProtocols.ProtocolUpdates.UpdateProcess(
-                    review: 2_592_000,
+                    review: 2592000,
                     evaluation: "Systematic Review",
                     approval: "Expert Panel",
                     dissemination: "Digital Platform"
                 ),
                 stakeholders: ["Clinicians", "Researchers", "Patients"],
                 implementation: TreatmentProtocols.ProtocolUpdates.UpdateImplementation(
-                    timeline: 2_592_000,
+                    timeline: 2592000,
                     training: 0.9,
                     monitoring: 0.85,
                     evaluation: 0.8
@@ -4587,7 +4617,7 @@ class QuantumHealthcareSystemsEngine {
                 technology: [],
                 training: EmergencyResponseSystem.EmergencyCommunication.CommunicationTraining(
                     trainingId: "comm_training_\(frameworkId)",
-                    frequency: 31_536_000, // Annual
+                    frequency: 31536000, // Annual
                     participants: ["Emergency Personnel"],
                     evaluation: 0.9
                 )
@@ -4595,7 +4625,7 @@ class QuantumHealthcareSystemsEngine {
             training: EmergencyResponseSystem.EmergencyTraining(
                 trainingId: "training_\(frameworkId)",
                 programs: [],
-                frequency: 31_536_000,
+                frequency: 31536000,
                 evaluation: EmergencyResponseSystem.EmergencyTraining.TrainingEvaluation(
                     evaluationId: "eval_\(frameworkId)",
                     metrics: [],
@@ -4605,8 +4635,8 @@ class QuantumHealthcareSystemsEngine {
                 certification: EmergencyResponseSystem.EmergencyTraining.TrainingCertification(
                     certificationId: "cert_\(frameworkId)",
                     requirements: ["Basic Training", "Scenario Practice"],
-                    validity: 31_536_000,
-                    renewal: 2_592_000
+                    validity: 31536000,
+                    renewal: 2592000
                 )
             ),
             evaluation: EmergencyResponseSystem.EmergencyEvaluation(
@@ -4621,12 +4651,12 @@ class QuantumHealthcareSystemsEngine {
                 improvement: EmergencyResponseSystem.EmergencyEvaluation.ContinuousImprovement(
                     improvementId: "ci_\(frameworkId)",
                     initiatives: [],
-                    timeline: 2_592_000,
+                    timeline: 2592000,
                     evaluation: 0.8
                 ),
                 reporting: EmergencyResponseSystem.EmergencyEvaluation.EmergencyReporting(
                     reportingId: "reporting_\(frameworkId)",
-                    frequency: 604_800, // Weekly
+                    frequency: 604800, // Weekly
                     format: "Digital Report",
                     recipients: ["Government", "Public"],
                     metrics: ["Response Time", "Effectiveness"]
@@ -4639,7 +4669,7 @@ class QuantumHealthcareSystemsEngine {
             analyticsId: "analytics_\(frameworkId)",
             platforms: [],
             data: HealthAnalytics.AnalyticsData(
-                volume: 1_000_000_000, // 1 billion records
+                volume: 1000000000, // 1 billion records
                 sources: [],
                 quality: 0.9,
                 integration: 0.85,
@@ -4652,7 +4682,7 @@ class QuantumHealthcareSystemsEngine {
                     validationId: "validation_\(frameworkId)",
                     methods: [.crossValidation],
                     metrics: [],
-                    frequency: 604_800
+                    frequency: 604800
                 ),
                 deployment: HealthAnalytics.AnalyticsModels.ModelDeployment(
                     deploymentId: "deployment_\(frameworkId)",
@@ -4664,7 +4694,7 @@ class QuantumHealthcareSystemsEngine {
                     ),
                     updates: HealthAnalytics.AnalyticsModels.ModelDeployment.ModelUpdates(
                         updateId: "updates_\(frameworkId)",
-                        frequency: 604_800,
+                        frequency: 604800,
                         process: "Automated Retraining",
                         validation: 0.9
                     )
@@ -4696,7 +4726,7 @@ class QuantumHealthcareSystemsEngine {
                     decisions: 1000,
                     outcomes: 0.15,
                     efficiency: 0.2,
-                    costSavings: 1_000_000.0
+                    costSavings: 1000000.0
                 )
             ),
             governance: HealthAnalytics.AnalyticsGovernance(
@@ -4768,8 +4798,8 @@ class QuantumHealthcareSystemsEngine {
                     description: "Alleviate symptoms and improve quality of life",
                     priority: 0.9,
                     measurability: 0.8,
-                    timeframe: 2_592_000 // 30 days
-                ),
+                    timeframe: 2592000 // 30 days
+                )
             ],
             phases: [],
             medications: [],
@@ -4793,7 +4823,7 @@ class QuantumHealthcareSystemsEngine {
                 name: "Dr. Quantum",
                 specialty: .internal,
                 qualifications: ["MD", "Quantum Medicine"],
-                experience: 315_360_000, // 10 years
+                experience: 315360000, // 10 years
                 availability: .available,
                 languages: ["English"],
                 rating: 0.95
@@ -4868,7 +4898,7 @@ class QuantumHealthcareSystemsEngine {
                 area: "Treatment Efficiency",
                 improvement: 0.2,
                 description: "Optimized medication combinations"
-            ),
+            )
         ]
 
         let tradeoffs = [
@@ -4877,7 +4907,7 @@ class QuantumHealthcareSystemsEngine {
                 description: "Higher initial cost for better long-term outcomes",
                 cost: 0.15,
                 benefit: 0.3
-            ),
+            )
         ]
 
         let optimization = TreatmentOptimization(
@@ -4950,7 +4980,7 @@ class QuantumHealthcareSystemsEngine {
                     milestones: ["Team mobilization", "Transport", "Treatment initiation"]
                 ),
                 status: .planned
-            ),
+            )
         ]
 
         // Calculate outcomes
@@ -4970,7 +5000,7 @@ class QuantumHealthcareSystemsEngine {
                     name: "Average Response Time",
                     value: 2.5,
                     target: 2.0
-                ),
+                )
             ]
         )
 
@@ -4982,7 +5012,7 @@ class QuantumHealthcareSystemsEngine {
                 description: "Improved coordination between international teams",
                 impact: 0.8,
                 recommendation: "Establish permanent coordination protocols"
-            ),
+            )
         ]
 
         let response = EmergencyResponse(
@@ -5013,7 +5043,7 @@ class QuantumHealthcareSystemsEngine {
         let epidemiologicalAnalysis = await healthDataAnalytics.analyzeEpidemiologicalData(EpidemiologicalData(
             dataId: "epi_\(population.populationId)",
             region: population.region,
-            timeframe: DateInterval(start: Date().addingTimeInterval(-31_536_000), end: Date()), // 1 year
+            timeframe: DateInterval(start: Date().addingTimeInterval(-31536000), end: Date()), // 1 year
             cases: [],
             demographics: EpidemiologicalData.CaseDemographics(
                 ageDistribution: [:],
@@ -5026,7 +5056,7 @@ class QuantumHealthcareSystemsEngine {
                 prevalence: .increasing,
                 mortality: .decreasing,
                 reproduction: 1.2,
-                doubling: 604_800 // 1 week
+                doubling: 604800 // 1 week
             ),
             riskFactors: []
         ))
@@ -5046,7 +5076,7 @@ class QuantumHealthcareSystemsEngine {
                 description: "Potential for preventive care improvements",
                 severity: 0.3,
                 evidence: ["Intervention studies", "Cost-benefit analysis"]
-            ),
+            )
         ]
 
         // Generate trends
@@ -5056,9 +5086,9 @@ class QuantumHealthcareSystemsEngine {
                 metric: "Life Expectancy",
                 direction: .improving,
                 magnitude: 0.02,
-                duration: 31_536_000,
+                duration: 31536000,
                 significance: 0.8
-            ),
+            )
         ]
 
         // Generate recommendations
@@ -5068,8 +5098,8 @@ class QuantumHealthcareSystemsEngine {
                 type: .intervention,
                 description: "Implement comprehensive preventive care program",
                 priority: 0.9,
-                timeframe: 31_536_000
-            ),
+                timeframe: 31536000
+            )
         ]
 
         // Generate predictions
@@ -5078,10 +5108,10 @@ class QuantumHealthcareSystemsEngine {
                 predictionId: "pred_1",
                 outcome: "Chronic disease prevalence reduction",
                 probability: 0.75,
-                timeframe: 31_536_000,
+                timeframe: 31536000,
                 confidence: 0.8,
                 assumptions: ["Program implementation", "Population compliance"]
-            ),
+            )
         ]
 
         let analysis = HealthAnalysis(
@@ -5177,7 +5207,7 @@ class QuantumDiagnosticEngineImpl: QuantumDiagnosticEngine {
                 probability: 0.2,
                 distinguishingFeatures: ["Different symptom pattern"],
                 nextSteps: ["Further testing"]
-            ),
+            )
         ]
 
         return QuantumDiagnosis(
@@ -5201,14 +5231,14 @@ class QuantumDiagnosticEngineImpl: QuantumDiagnosticEngine {
     func analyzeMedicalImaging(_ imaging: MedicalImaging) async -> ImagingAnalysis {
         // Simplified imaging analysis
         let findings = [
-            ImagingFinding(
+            ImagingAnalysis.ImagingFinding(
                 findingId: "finding_1",
                 type: .abnormal,
                 location: "Left lung",
                 description: "Irregular opacity",
                 severity: 0.7,
                 probability: 0.8
-            ),
+            )
         ]
 
         return ImagingAnalysis(
@@ -5228,10 +5258,10 @@ class QuantumDiagnosticEngineImpl: QuantumDiagnosticEngine {
                 DiseasePrediction.DiseaseProgression.ProgressionStage(
                     stageId: "stage_1",
                     name: "Early Stage",
-                    duration: 2_592_000, // 30 days
+                    duration: 2592000, // 30 days
                     symptoms: ["Mild symptoms"],
                     complications: []
-                ),
+                )
             ],
             timeline: DiseasePrediction.DiseaseProgression.ProgressionTimeline(
                 onset: Date(),
@@ -5241,7 +5271,7 @@ class QuantumDiagnosticEngineImpl: QuantumDiagnosticEngine {
                         endpointId: "endpoint_1",
                         type: .remission,
                         probability: 0.7
-                    ),
+                    )
                 ]
             ),
             biomarkers: []
@@ -5267,7 +5297,7 @@ class QuantumDiagnosticEngineImpl: QuantumDiagnosticEngine {
                 lifetimeRisk: 0.15,
                 relativeRisk: 2.5,
                 confidence: 0.9
-            ),
+            )
         ]
 
         return GeneticRiskAssessment(
@@ -5306,12 +5336,12 @@ class QuantumDiagnosticEngineImpl: QuantumDiagnosticEngine {
 
 /// Treatment optimization engine implementation
 class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
-    func optimizeTreatmentProtocol(_ ``protocol`:TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization {
+    func optimizeTreatmentProtocol(_ protocol: TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization {
         // Simplified protocol optimization
         var optimizedProtocol = protocol
 
         // Optimize phases
-        optimizedProtocol.phases = protocol .phases.map { phase in
+        optimizedProtocol.phases = protocol.phases.map { phase in
             var optimizedPhase = phase
             optimizedPhase.duration *= 0.9 // 10% reduction
             return optimizedPhase
@@ -5323,11 +5353,11 @@ class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
                 aspect: "Treatment Duration",
                 improvement: 0.1,
                 evidence: ["Clinical trials", "Patient outcomes"]
-            ),
+            )
         ]
 
         return ProtocolOptimization(
-            optimizationId: "opt_\(protocol .protocolId)",
+            optimizationId: "opt_\(protocol.protocolId)",
             originalProtocol: protocol,
             optimizedProtocol: optimizedProtocol,
             improvements: improvements,
@@ -5348,7 +5378,7 @@ class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
                 originalValue: "100mg",
                 adjustedValue: "75mg",
                 rationale: "Genetic metabolism profile"
-            ),
+            )
         ]
 
         return PersonalizedMedication(
@@ -5365,7 +5395,7 @@ class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
             monitoring: PersonalizedMedication.MedicationMonitoring(
                 parameters: [],
                 frequency: 86400, // Daily
-                therapeuticRange: 75.0 ... 125.0,
+                therapeuticRange: 75.0...125.0,
                 alerts: []
             )
         )
@@ -5380,7 +5410,7 @@ class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
             timeline: CareCoordination.CoordinatedCarePlan.CareTimeline(
                 start: Date(),
                 milestones: [],
-                end: Date().addingTimeInterval(2_592_000)
+                end: Date().addingTimeInterval(2592000)
             ),
             monitoring: CareCoordination.CoordinatedCarePlan.CoordinationMonitoring(
                 metrics: [],
@@ -5413,7 +5443,7 @@ class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
                 probability: 0.85,
                 expectedLevel: .intermediate,
                 conditions: ["Patient compliance", "No complications"]
-            ),
+            )
         ]
 
         return OutcomePrediction(
@@ -5444,7 +5474,7 @@ class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
                 probability: 0.3,
                 severity: 0.4,
                 onset: 3600 // 1 hour
-            ),
+            )
         ]
 
         let mitigationStrategies = [
@@ -5454,7 +5484,7 @@ class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
                 description: "Pre-treatment anti-nausea medication",
                 effectiveness: 0.8,
                 sideEffects: ["Drowsiness"]
-            ),
+            )
         ]
 
         return SideEffectMinimization(
@@ -5571,7 +5601,7 @@ class GlobalHealthCoordinatorImpl: GlobalHealthCoordinator {
                     frequency: 86400,
                     thresholds: []
                 )
-            ),
+            )
         ]
 
         return PandemicResponse(
@@ -5585,7 +5615,7 @@ class GlobalHealthCoordinatorImpl: GlobalHealthCoordinator {
                 timeliness: 0.75,
                 coverage: 0.9,
                 impact: PandemicResponse.ResponseOutcomes.PandemicImpact(
-                    infections: 100_000,
+                    infections: 100000,
                     deaths: 5000,
                     economic: 0.1,
                     social: 0.15
@@ -5603,7 +5633,7 @@ class GlobalHealthCoordinatorImpl: GlobalHealthCoordinator {
             timeline: StandardHarmonization.HarmonizationProcess.HarmonizationTimeline(
                 start: Date(),
                 milestones: [],
-                completion: Date().addingTimeInterval(31_536_000)
+                completion: Date().addingTimeInterval(31536000)
             )
         )
 
@@ -5627,9 +5657,9 @@ class GlobalHealthCoordinatorImpl: GlobalHealthCoordinator {
                 activityId: "activity_1",
                 type: .research,
                 description: "Collaborative research on new treatments",
-                participants: institutions.map(\.institutionId),
-                duration: 2_592_000
-            ),
+                participants: institutions.map { $0.institutionId },
+                duration: 2592000
+            )
         ]
 
         return KnowledgeExchange(
@@ -5642,7 +5672,7 @@ class GlobalHealthCoordinatorImpl: GlobalHealthCoordinator {
                 innovations: 20,
                 trained: 500,
                 policies: 10,
-                economic: 5_000_000.0
+                economic: 5000000.0
             )
         )
     }
@@ -5797,8 +5827,8 @@ class MedicalResourceManagerImpl: MedicalResourceManager {
                     unit: "units",
                     shelfLife: 0,
                     storage: MedicalSupply.StorageRequirements(
-                        temperature: 15.0 ... 25.0,
-                        humidity: 30.0 ... 60.0,
+                        temperature: 15.0...25.0,
+                        humidity: 30.0...60.0,
                         light: .insensitive,
                         security: .medium
                     ),
@@ -5808,7 +5838,7 @@ class MedicalResourceManagerImpl: MedicalResourceManager {
                 currentStock: 200.0,
                 gap: 300.0,
                 risk: .high
-            ),
+            )
         ]
 
         return SupplyPrediction(
@@ -5866,7 +5896,7 @@ class HealthDataAnalyticsImpl: HealthDataAnalytics {
                 parameters: ["beta": 0.3, "gamma": 0.1],
                 fit: 0.85,
                 validation: 0.8
-            ),
+            )
         ]
 
         let predictions = [
@@ -5875,8 +5905,8 @@ class HealthDataAnalyticsImpl: HealthDataAnalytics {
                 outcome: "Peak infections",
                 value: 10000.0,
                 confidence: 0.8,
-                timeframe: 2_592_000
-            ),
+                timeframe: 2592000
+            )
         ]
 
         return EpidemiologicalAnalysis(
@@ -5897,9 +5927,9 @@ class HealthDataAnalyticsImpl: HealthDataAnalytics {
                 indicator: "Life Expectancy",
                 current: 75.0,
                 predicted: 78.0,
-                timeframe: 31_536_000,
+                timeframe: 31536000,
                 drivers: ["Medical advances", "Lifestyle improvements"]
-            ),
+            )
         ]
 
         return TrendPrediction(
@@ -5922,7 +5952,7 @@ class HealthDataAnalyticsImpl: HealthDataAnalytics {
                 impact: 0.8,
                 evidence: 0.9,
                 modifiable: true
-            ),
+            )
         ]
 
         return RiskFactorIdentification(
@@ -5968,7 +5998,7 @@ class HealthDataAnalyticsImpl: HealthDataAnalytics {
                 description: "Telemedicine consultations have increased by 150% over the past year",
                 confidence: 0.9,
                 impact: 0.7
-            ),
+            )
         ]
 
         return HealthInsights(
@@ -6008,17 +6038,17 @@ extension QuantumHealthcareFramework {
     }
 
     var needsOptimization: Bool {
-        status == .operational && healthcareEfficiency < 0.8
+        return status == .operational && healthcareEfficiency < 0.8
     }
 }
 
 extension MedicalCare {
     var careQuality: Double {
-        (outcomes.healthImprovement + outcomes.qualityOfLife + outcomes.patientSatisfaction) / 3.0
+        return (outcomes.healthImprovement + outcomes.qualityOfLife + outcomes.patientSatisfaction) / 3.0
     }
 
     var isHighQuality: Bool {
-        careQuality > 0.8 && diagnosis.confidence > 0.85
+        return careQuality > 0.8 && diagnosis.confidence > 0.85
     }
 }
 
@@ -6030,7 +6060,7 @@ extension TreatmentPlan {
     }
 
     var isEffective: Bool {
-        planEffectiveness > 0.7
+        return planEffectiveness > 0.7
     }
 }
 

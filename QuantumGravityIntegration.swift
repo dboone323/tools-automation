@@ -10,8 +10,8 @@
 //  for enhanced stability and novel computational capabilities.
 //
 
-import Combine
 import Foundation
+import Combine
 
 // MARK: - Core Protocols
 
@@ -43,8 +43,7 @@ struct SpacetimePosition {
     let metricTensor: [[Double]] // 4x4 metric tensor
 
     init(t: Double, x: Double, y: Double, z: Double,
-         uncertainty: Double = 0.0, potential: Double = 0.0)
-    {
+         uncertainty: Double = 0.0, potential: Double = 0.0) {
         coordinates = SIMD4(t, x, y, z)
         quantumUncertainty = uncertainty
         gravitationalPotential = potential
@@ -52,7 +51,7 @@ struct SpacetimePosition {
     }
 
     private static func calculateMetricTensor(potential: Double) -> [[Double]] {
-        let c = 299_792_458.0 // speed of light
+        let c = 299792458.0 // speed of light
         let G = 6.67430e-11 // gravitational constant
 
         // Schwarzschild metric approximation
@@ -60,10 +59,10 @@ struct SpacetimePosition {
         let r = 1.0 // normalized radial coordinate
 
         return [
-            [-(1 - rs / r), 0, 0, 0],
-            [0, 1 / (1 - rs / r), 0, 0],
-            [0, 0, r * r, 0],
-            [0, 0, 0, r * r * sin(1.0) * sin(1.0)], // theta = 1 for simplicity
+            [-(1 - rs/r), 0, 0, 0],
+            [0, 1/(1 - rs/r), 0, 0],
+            [0, 0, r*r, 0],
+            [0, 0, 0, r*r * sin(1.0)*sin(1.0)] // theta = 1 for simplicity
         ]
     }
 }
@@ -98,7 +97,7 @@ struct ChristoffelSymbols {
     let symbols: [[[Double]]] // Γ^μ_νρ
 
     subscript(mu: Int, nu: Int, rho: Int) -> Double {
-        symbols[mu][nu][rho]
+        return symbols[mu][nu][rho]
     }
 }
 
@@ -116,7 +115,6 @@ struct GeodesicPath {
 @MainActor
 class QuantumGravityIntegration: ObservableObject {
     // MARK: - Properties
-
     @Published var gravitationalFieldStrength: Double = 1.0
     @Published var spacetimeCurvature: Double = 0.0
     @Published var quantumGravityCoupling: Double = 1.0e-10 // Very weak coupling
@@ -130,7 +128,6 @@ class QuantumGravityIntegration: ObservableObject {
     private let quantumGravityProcessor: QuantumGravityProcessor
 
     // MARK: - Initialization
-
     init() {
         self.gravitationalFieldEngine = GravitationalFieldEngine()
         self.spacetimeManipulator = SpacetimeManipulator()
@@ -211,7 +208,7 @@ class GravitationalFieldEngine {
         let tidalForces = SIMD3<Double>(0.001, 0.001, 0.001)
 
         // Generate gravitational waves for stabilization
-        let waves = (0 ..< 10).map { i in
+        let waves = (0..<10).map { i in
             GravitationalField.GravitationalWave(
                 frequency: Double(i + 1) * 100.0, // 100-1000 Hz
                 amplitude: 1e-21 / Double(i + 1), // Decreasing amplitude
@@ -244,9 +241,9 @@ class SpacetimeManipulator: SpacetimeMetricManipulator {
 
         // Simplified calculation for demonstration
         // In reality, this involves complex partial derivatives
-        for mu in 0 ..< 4 {
-            for nu in 0 ..< 4 {
-                for rho in 0 ..< 4 {
+        for mu in 0..<4 {
+            for nu in 0..<4 {
+                for rho in 0..<4 {
                     symbols[mu][nu][rho] = metric[mu][nu] * metric[rho][mu] * 0.1 // Simplified
                 }
             }
@@ -375,7 +372,7 @@ private extension QuantumGravityIntegration {
         // Apply gravitational corrections to quantum operation
         var correctedParameters = operation.parameters
 
-        for i in 0 ..< correctedParameters.count {
+        for i in 0..<correctedParameters.count {
             correctedParameters[i] *= (1.0 + quantumGravityCoupling * gravitationalFieldStrength * 0.001)
         }
 
@@ -387,12 +384,12 @@ private extension QuantumGravityIntegration {
 
     func calculateDecoherenceRate() -> Double {
         // Calculate current decoherence rate
-        quantumGravityCoupling * gravitationalFieldStrength * spacetimeCurvature
+        return quantumGravityCoupling * gravitationalFieldStrength * spacetimeCurvature
     }
 
     func measureGravitationalNoise() -> Double {
         // Measure gravitational noise in the system
-        gravitationalFieldStrength * spacetimeCurvature * 1e-20
+        return gravitationalFieldStrength * spacetimeCurvature * 1e-20
     }
 
     func applyGravitationalDecoherenceMitigation() async throws {
@@ -428,5 +425,5 @@ extension Complex: CustomStringConvertible {
             return "\(real) + \(imaginary)i"
         }
     }
-} </ content>
-<parameter name = "filePath" >/ Users / danielstevens / Desktop / Quantum - workspace / Tools / Automation / QuantumGravityIntegration.swift
+}</content>
+<parameter name="filePath">/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/QuantumGravityIntegration.swift
