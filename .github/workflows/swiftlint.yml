@@ -1,0 +1,58 @@
+name: SwiftLint
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+
+jobs:
+  swiftlint:
+    name: SwiftLint Analysis
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        project:
+          - name: PlannerApp
+            path: PlannerApp
+          - name: MomentumFinance
+            path: MomentumFinance
+          - name: HabitQuest
+            path: HabitQuest
+          - name: AvoidObstaclesGame
+            path: AvoidObstaclesGame
+          - name: CodingReviewer
+            path: CodingReviewer
+          - name: shared-kit
+            path: shared-kit
+      fail-fast: false
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+      
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      
+      - name: Run SwiftLint
+        working-directory: ${{ matrix.project.path }}
+        run: |
+          echo "Running SwiftLint for ${{ matrix.project.name }}..."
+          swiftlint lint --reporter github-actions-logging --strict || true
+          swiftlint lint --reporter json > swiftlint-results.json || true
+          
+          # Display summary
+          if [ -f swiftlint-results.json ]; then
+            VIOLATION_COUNT=$(jq 'length' swiftlint-results.json)
+            echo "::notice::${{ matrix.project.name }}: Found $VIOLATION_COUNT violations"
+          fi
+      
+      - name: Upload SwiftLint Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiftlint-${{ matrix.project.name }}
+          path: ${{ matrix.project.path }}/swiftlint-results.json
+          retention-days: 30
