@@ -43,7 +43,7 @@ jobs:
                     "${{ matrix.submodule }}"
 
             - name: Upload validation artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v5
               with:
                   name: validation-${{ matrix.submodule }}
                   path: metrics/validation/${{ matrix.submodule }}.json
@@ -73,7 +73,7 @@ jobs:
               shell: bash
 
             - name: Store combined summary
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v5
               with:
                   name: validation-combined
                   path: metrics/validation/combined.json
