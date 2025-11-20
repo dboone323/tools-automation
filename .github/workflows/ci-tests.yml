@@ -11,6 +11,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: false  # Bypass LFS - files removed from LFS tracking
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
