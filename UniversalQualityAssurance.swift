@@ -97,7 +97,7 @@ struct Project: Codable, Sendable {
         let dependencies: [String]
 
         enum ComponentType: String, Codable {
-            case ui, business_logic, data_access, infrastructure, testing, configuration
+            case ui, businessLogic = "business_logic", dataAccess = "data_access", infrastructure, testing, configuration
         }
     }
 
@@ -111,7 +111,7 @@ struct Project: Codable, Sendable {
         let type: FrameworkType
 
         enum FrameworkType: String, Codable {
-            case ui, backend, testing, infrastructure, ai_ml, quantum
+            case ui, backend, testing, infrastructure, aiMl = "ai_ml", quantum
         }
     }
 
@@ -148,7 +148,7 @@ struct QualityEnvironment: Codable, Sendable {
     let integrations: QualityIntegrations
 
     enum EnvironmentType: String, Codable {
-        case development, staging, production, ci_cd, quality_gate
+        case development, staging, production, ciCd = "ci_cd", qualityGate = "quality_gate"
     }
 
     struct QualityStandards: Codable, Sendable {
@@ -209,8 +209,19 @@ struct QualityEnvironment: Codable, Sendable {
             let auditRequired: Bool
             let documentationRequired: Bool
 
-            enum ComplianceStandard: String, Codable {
-                case pci_dss, hipaa, gdpr, sox, iso27001, quantum_computing
+
+                case pciDss = "pci_dss"
+
+                case hipaa
+
+                case gdpr
+
+                case sox
+
+                case iso27001
+
+                case quantumComputing = "quantum_computing"
+
             }
         }
     }
@@ -303,12 +314,19 @@ struct QualityAssessment: Codable, Sendable {
         let impact: Double
         let effort: Double
 
-        enum IssueSeverity: String, Codable {
-            case low, medium, high, critical
+
+            case low
+
+            case medium
+
+            case high
+
+            case critical
+
         }
 
         enum IssueCategory: String, Codable {
-            case code_quality, testing, performance, security, compliance
+            case codeQuality = "code_quality", testing, performance, security, compliance
         }
 
         struct IssueLocation: Codable, Sendable {
@@ -354,16 +372,16 @@ struct QualityGates: Codable, Sendable {
         let name: String
         let category: GateCategory
         let metric: String
-        let `operator`: GateOperator
+        let `operator`:GateOperator
         let threshold: Double
         let weight: Double
 
         enum GateCategory: String, Codable {
-            case code_quality, testing, performance, security, compliance
+            case codeQuality = "code_quality", testing, performance, security, compliance
         }
 
         enum GateOperator: String, Codable {
-            case greater_than, less_than, equal_to, not_equal_to, greater_equal, less_equal
+            case greaterThan = "greater_than", lessThan = "less_than", equalTo = "equal_to", notEqualTo = "not_equal_to", greaterEqual = "greater_equal", lessEqual = "less_equal"
         }
     }
 
@@ -407,7 +425,7 @@ struct QualityGateEvolution: Codable, Sendable {
         let reason: String
 
         enum ChangeType: String, Codable {
-            case threshold_adjustment, new_gate, removed_gate, weight_change
+            case thresholdAdjustment = "threshold_adjustment", newGate = "new_gate", removedGate = "removed_gate", weightChange = "weight_change"
         }
     }
 
@@ -565,8 +583,27 @@ struct QualityImprovement: Codable, Sendable {
     let effort: Double
     let prerequisites: [String]
 
-    enum ImprovementType: String, Codable {
-        case code_refactoring, test_addition, performance_optimization, security_hardening, compliance_update
+
+        case codeRefactoring = "code_refactoring"
+
+        case testAddition = "test_addition"
+
+        case performanceOptimization = "performance_optimization"
+
+        case securityHardening = "security_hardening"
+
+        case complianceUpdate = "compliance_update"
+
+        case tightenThreshold = "tighten_threshold"
+
+        case loosenThreshold = "loosen_threshold"
+
+        case addGate = "add_gate"
+
+        case removeGate = "remove_gate"
+
+        case adjustWeight = "adjust_weight"
+
     }
 
     struct ImplementationDetails: Codable, Sendable {
@@ -721,9 +758,6 @@ struct QualityGateImprovements: Codable, Sendable {
         let proposedValue: Double
         let impact: Double
 
-        enum ImprovementType: String, Codable {
-            case tighten_threshold, loosen_threshold, add_gate, remove_gate, adjust_weight
-        }
     }
 
     enum ImprovementPriority: String, Codable {
@@ -779,7 +813,7 @@ struct GateImplementation: Codable, Sendable {
     let monitoringSetup: MonitoringSetup
 
     enum ImplementationStatus: String, Codable {
-        case pending, in_progress, completed, failed
+        case pending, inProgress = "in_progress", completed, failed
     }
 
     struct DeploymentResult: Codable, Sendable {
@@ -929,12 +963,9 @@ struct QualityIssue: Codable, Sendable {
     let fix: IssueFix
 
     enum IssueType: String, Codable {
-        case code_smell, bug, vulnerability, performance_issue, compliance_violation
+        case codeSmell = "code_smell", bug, vulnerability, performanceIssue = "performance_issue", complianceViolation = "compliance_violation"
     }
 
-    enum IssueSeverity: String, Codable {
-        case low, medium, high, critical
-    }
 
     struct IssueLocation: Codable, Sendable {
         let file: String?
@@ -1251,9 +1282,6 @@ struct ComplianceRequirements: Codable, Sendable {
     let requirements: [ComplianceRequirement]
     let audit: AuditRequirements
 
-    enum ComplianceStandard: String, Codable {
-        case pci_dss, hipaa, gdpr, sox, iso27001
-    }
 
     struct ComplianceRequirement: Codable, Sendable {
         let standard: String
@@ -1301,7 +1329,8 @@ final class UniversalQualityAssurance: ObservableObject {
          gateEvolution: AutonomousQualityGateEvolution = AutonomousQualityGateEvolutionImpl(),
          qualityValidation: ComprehensiveQualityValidation = ComprehensiveQualityValidationImpl(),
          improvementAutomation: QualityImprovementAutomation = QualityImprovementAutomationImpl(),
-         qualityOrchestration: QualityAssuranceOrchestration = QualityAssuranceOrchestrationImpl()) {
+         qualityOrchestration: QualityAssuranceOrchestration = QualityAssuranceOrchestrationImpl())
+    {
         self.quantumMetrics = quantumMetrics
         self.gateEvolution = gateEvolution
         self.qualityValidation = qualityValidation
@@ -1372,7 +1401,7 @@ final class UniversalQualityAssurance: ObservableObject {
             metrics.testQuality.unitTestCoverage,
             metrics.performanceQuality.scalability,
             metrics.securityQuality.complianceScore,
-            metrics.complianceQuality.standardCompliance
+            metrics.complianceQuality.standardCompliance,
         ]
 
         let overallScore = zip(weights, scores).map(*).reduce(0, +)
@@ -1418,7 +1447,7 @@ final class UniversalQualityAssurance: ObservableObject {
                     description: "Increase test coverage to meet standards",
                     implementation: "Add unit tests for uncovered functions",
                     expectedImpact: 0.15
-                )
+                ),
             ],
             quantumAssessment: quantumAssessment.map { quantum in
                 QualityAssessment.QuantumQualityAssessment(
@@ -1497,17 +1526,17 @@ final class UniversalQualityAssurance: ObservableObject {
             let status: QualityValidation.GateValidationResult.ValidationStatus
 
             switch gate.operator {
-            case .greater_than:
+            case .greaterThan: = ".greater_than:"
                 status = actualValue > gate.threshold ? .pass : .fail
-            case .less_than:
+            case .lessThan: = ".less_than:"
                 status = actualValue < gate.threshold ? .pass : .fail
-            case .greater_equal:
+            case .greaterEqual: = ".greater_equal:"
                 status = actualValue >= gate.threshold ? .pass : .fail
-            case .less_equal:
+            case .lessEqual: = ".less_equal:"
                 status = actualValue <= gate.threshold ? .pass : .fail
-            case .equal_to:
+            case .equalTo: = ".equal_to:"
                 status = abs(actualValue - gate.threshold) < 0.01 ? .pass : .fail
-            case .not_equal_to:
+            case .notEqualTo: = ".not_equal_to:"
                 status = abs(actualValue - gate.threshold) >= 0.01 ? .pass : .fail
             }
 
@@ -1574,7 +1603,7 @@ final class UniversalQualityAssurance: ObservableObject {
                     dueDate: Date().addingTimeInterval(30 * 24 * 3600),
                     priority: "High",
                     status: "Open"
-                )
+                ),
             ],
             generatedAt: Date()
         )
@@ -1655,15 +1684,15 @@ final class UniversalQualityAssurance: ObservableObject {
 
     private func getMetricValue(_ metric: String, from metrics: QualityMetrics) -> Double {
         switch metric {
-        case "code_coverage":
+        case "codeCoverage": = ""code_coverage":"
             return metrics.codeQuality.coverage
-        case "test_coverage":
+        case "testCoverage": = ""test_coverage":"
             return metrics.testQuality.unitTestCoverage
-        case "performance_response_time":
+        case "performanceResponseTime": = ""performance_response_time":"
             return metrics.performanceQuality.responseTime
-        case "security_score":
+        case "securityScore": = ""security_score":"
             return metrics.securityQuality.complianceScore
-        case "compliance_score":
+        case "complianceScore": = ""compliance_score":"
             return metrics.complianceQuality.standardCompliance
         default:
             return 0.0
@@ -1765,7 +1794,7 @@ final class AutonomousQualityGateEvolutionImpl: AutonomousQualityGateEvolution {
                     currentValue: 0.75,
                     proposedValue: 0.80,
                     impact: 0.05
-                )
+                ),
             ],
             priority: .medium,
             rationale: "Based on improving quality trends",
@@ -1810,7 +1839,7 @@ final class AutonomousQualityGateEvolutionImpl: AutonomousQualityGateEvolution {
                     success: true,
                     duration: 120.0,
                     issues: []
-                )
+                ),
             ],
             monitoringSetup: GateImplementation.MonitoringSetup(
                 metrics: ["gate_compliance"],
@@ -1836,7 +1865,7 @@ final class ComprehensiveQualityValidationImpl: ComprehensiveQualityValidation {
                     severity: "medium",
                     message: "Function is too complex",
                     rule: "complexity"
-                )
+                ),
             ],
             metrics: CodeQualityValidation.CodeMetrics(
                 complexity: 0.75,
@@ -1872,7 +1901,7 @@ final class ComprehensiveQualityValidationImpl: ComprehensiveQualityValidation {
                     threshold: thresholds.responseTime,
                     actual: performance.responseTime,
                     severity: "high"
-                )
+                ),
             ] : [],
             metrics: performance,
             recommendations: ["Optimize database queries", "Implement caching"]
@@ -1946,7 +1975,7 @@ final class QualityImprovementAutomationImpl: QualityImprovementAutomation {
                         factor: "effort",
                         weight: 0.4,
                         contribution: (1.0 - issue.fix.effort) * 0.4
-                    )
+                    ),
                 ]
             )
         }
@@ -1989,7 +2018,7 @@ final class QualityImprovementAutomationImpl: QualityImprovementAutomation {
                         duration: 1800,
                         improvements: improvements.map(\.id),
                         dependencies: []
-                    )
+                    ),
                 ],
                 totalDuration: improvements.map(\.implementation.timeEstimate).reduce(0, +),
                 milestones: []
@@ -2073,7 +2102,7 @@ final class QualityAssuranceOrchestrationImpl: QualityAssuranceOrchestration {
                         type: .assessment,
                         duration: 1800,
                         components: project.components.map(\.name)
-                    )
+                    ),
                 ],
                 dependencies: [:],
                 synchronization: QualityOrchestration.OrchestrationPlan.SynchronizationPlan(
@@ -2130,7 +2159,7 @@ final class QualityAssuranceOrchestrationImpl: QualityAssuranceOrchestration {
                     enforced: true,
                     violations: 2,
                     remediation: ["Fix complexity issues", "Add documentation"]
-                )
+                ),
             ],
             compliance: 0.88
         )
@@ -2147,7 +2176,7 @@ final class QualityAssuranceOrchestrationImpl: QualityAssuranceOrchestration {
                     value: 0.85,
                     threshold: 0.80,
                     status: .normal
-                )
+                ),
             ],
             alerts: []
         )
@@ -2339,7 +2368,7 @@ struct UniversalQualityAssuranceView: View {
                     language: .swift,
                     files: ["Tests/*.swift"],
                     dependencies: ["Core Framework", "UI Components"]
-                )
+                ),
             ],
             languages: [.swift, .python, .typescript],
             frameworks: [
@@ -2352,14 +2381,14 @@ struct UniversalQualityAssuranceView: View {
                     name: "Combine",
                     version: "1.0",
                     type: .infrastructure
-                )
+                ),
             ],
             dependencies: [
                 Project.Dependency(
                     name: "Alamofire",
                     version: "5.6.0",
                     type: .direct
-                )
+                ),
             ],
             metadata: Project.ProjectMetadata(
                 createdAt: Date().addingTimeInterval(-365 * 24 * 3600),
@@ -2514,7 +2543,7 @@ extension QualityGates {
                     name: "code_coverage",
                     category: .code_quality,
                     metric: "code_coverage",
-                    operator: .greater_equal,
+                    `operator`:.greater_equal,
                     threshold: 0.80,
                     weight: 0.25
                 ),
@@ -2522,10 +2551,10 @@ extension QualityGates {
                     name: "performance_response_time",
                     category: .performance,
                     metric: "performance_response_time",
-                    operator: .less_equal,
+                    `operator`:.less_equal,
                     threshold: 200.0,
                     weight: 0.20
-                )
+                ),
             ],
             thresholds: QualityGates.QualityThresholds(
                 qualityScore: 0.75,
@@ -2593,7 +2622,7 @@ extension QualityEnvironment {
                     complianceFrameworks: ["OWASP", "NIST"]
                 ),
                 compliance: QualityEnvironment.QualityStandards.ComplianceStandards(
-                    standards: [.pciDSS, .gdpr, .iso27001],
+                    standards: [.pci_dss, .gdpr, .iso27001],
                     auditRequired: true,
                     documentationRequired: true
                 )
@@ -2765,7 +2794,7 @@ extension ComplianceQualityValidation.ComplianceMetrics {
 extension ComplianceRequirements {
     static var mock: ComplianceRequirements {
         ComplianceRequirements(
-            standards: [.pciDSS, .gdpr],
+            standards: [.pci_dss, .gdpr],
             requirements: [],
             audit: ComplianceRequirements.AuditRequirements(
                 auditFrequency: "quarterly",
@@ -2910,7 +2939,7 @@ struct QuantumQualityTool {
                     language: .swift,
                     files: ["UniversalQualityAssurance.swift"],
                     dependencies: ["UniversalAutomation"]
-                )
+                ),
             ],
             languages: [.swift, .python, .typescript, .javascript],
             frameworks: [
@@ -2928,14 +2957,14 @@ struct QuantumQualityTool {
                     name: "Quantum",
                     version: "1.0",
                     type: .quantum
-                )
+                ),
             ],
             dependencies: [
                 Project.Dependency(
                     name: "swift-argument-parser",
                     version: "1.2.0",
                     type: .direct
-                )
+                ),
             ],
             metadata: Project.ProjectMetadata(
                 createdAt: Date().addingTimeInterval(-180 * 24 * 3600),

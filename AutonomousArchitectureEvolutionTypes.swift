@@ -99,7 +99,7 @@ public struct ArchitectureAnalysis: Codable, Sendable {
         }
 
         public enum DependencyType: String, Codable {
-            case `import`, inheritance, composition, protocol_conformance, function_call
+            case `import` = "import", inheritance, composition, protocolConformance = "protocol_conformance", functionCall = "function_call"
 
         }
     }
@@ -184,14 +184,14 @@ public struct ArchitecturalPattern: Codable, Sendable {
     }
 
     public enum PatternType: String, Codable {
-        case mvvm, mvp, mvc, viper, clean_architecture, hexagonal
+        case mvvm, mvp, mvc, viper, cleanArchitecture = "clean_architecture", hexagonal
         case factory, singleton, observer, strategy, decorator
-        case repository, service_layer, dependency_injection
+        case repository, serviceLayer = "service_layer", dependencyInjection = "dependency_injection"
         case custom
     }
 
     public enum PatternQuality: String, Codable {
-        case excellent, good, fair, poor, anti_pattern
+        case excellent, good, fair, poor, antiPattern = "anti_pattern"
     }
 }
 
@@ -214,25 +214,25 @@ public struct CodeSmell: Codable, Sendable {
     }
 
     public enum SmellType: String, Codable {
-        case longMethod = "long_method"
-        case largeClass = "large_class"
-        case featureEnvy = "feature_envy"
-        case dataClump = "data_clump"
-        case primitiveObsession = "primitive_obsession"
-        case switchStatement = "switch_statement"
-        case temporaryField = "temporary_field"
-        case refusedBequest = "refused_bequest"
-        case alternativeClasses = "alternative_classes"
-        case divergentChange = "divergent_change"
-        case shotgunSurgery = "shotgun_surgery"
-        case parallelInheritance = "parallel_inheritance"
+        case longMethod= "long_method"
+        case largeClass= "large_class"
+        case featureEnvy= "feature_envy"
+        case dataClump= "data_clump"
+        case primitiveObsession= "primitive_obsession"
+        case switchStatement= "switch_statement"
+        case temporaryField= "temporary_field"
+        case refusedBequest= "refused_bequest"
+        case alternativeClasses= "alternative_classes"
+        case divergentChange= "divergent_change"
+        case shotgunSurgery= "shotgun_surgery"
+        case parallelInheritance= "parallel_inheritance"
         case comments
-        case duplicateCode = "duplicate_code"
-        case middleMan = "middle_man"
-        case lazyClass = "lazy_class"
-        case speculativeGenerality = "speculative_generality"
-        case messageChains = "message_chains"
-        case inappropriateIntimacy = "inappropriate_intimacy"
+        case duplicateCode= "duplicate_code"
+        case middleMan= "middle_man"
+        case lazyClass= "lazy_class"
+        case speculativeGenerality= "speculative_generality"
+        case messageChains= "message_chains"
+        case inappropriateIntimacy= "inappropriate_intimacy"
     }
 
     public enum Severity: String, Codable {
@@ -254,7 +254,7 @@ public struct CodeSmell: Codable, Sendable {
     }
 
     public enum EffortLevel: String, Codable {
-        case trivial, easy, medium, hard, very_hard
+        case trivial, easy, medium, hard, veryHard = "very_hard"
     }
 }
 
@@ -283,52 +283,52 @@ public struct RefactoringSuggestion: Codable, Sendable {
     }
 
     public enum RefactoringType: String, Codable {
-        case extractMethod = "extract_method"
-        case extractClass = "extract_class"
-        case moveMethod = "move_method"
-        case moveField = "move_field"
-        case inlineMethod = "inline_method"
-        case inlineClass = "inline_class"
-        case renameMethod = "rename_method"
-        case renameClass = "rename_class"
-        case changeSignature = "change_signature"
-        case introduceParameterObject = "introduce_parameter_object"
-        case preserveWholeObject = "preserve_whole_object"
-        case replaceParameterWithMethod = "replace_parameter_with_method"
-        case introduceLocalExtension = "introduce_local_extension"
-        case removeMiddleMan = "remove_middle_man"
-        case replaceDelegationWithInheritance = "replace_delegation_with_inheritance"
-        case replaceInheritanceWithDelegation = "replace_inheritance_with_delegation"
-        case extractSuperclass = "extract_superclass"
-        case extractSubclass = "extract_subclass"
-        case extractInterface = "extract_interface"
-        case collapseHierarchy = "collapse_hierarchy"
-        case formTemplateMethod = "form_template_method"
-        case replaceInheritanceWithComposition = "replace_inheritance_with_composition"
-        case replaceConditionalWithPolymorphism = "replace_conditional_with_polymorphism"
-        case introduceNullObject = "introduce_null_object"
-        case replaceErrorCodeWithException = "replace_error_code_with_exception"
-        case replaceExceptionWithTest = "replace_exception_with_test"
-        case introduceAssertion = "introduce_assertion"
-        case encapsulateField = "encapsulate_field"
-        case encapsulateCollection = "encapsulate_collection"
-        case replaceRecordWithDataClass = "replace_record_with_data_class"
-        case replaceTypeCodeWithClass = "replace_type_code_with_class"
-        case replaceTypeCodeWithSubclasses = "replace_type_code_with_subclasses"
-        case replaceTypeCodeWithState = "replace_type_code_with_state"
-        case replaceSubclassWithFields = "replace_subclass_with_fields"
-        case introduceForeignMethod = "introduce_foreign_method"
-        case removeParameter = "remove_parameter"
-        case renameParameter = "rename_parameter"
-        case addParameter = "add_parameter"
-        case separateQueryFromModifier = "separate_query_from_modifier"
-        case parameterizeMethod = "parameterize_method"
-        case removeSettingMethod = "remove_setting_method"
-        case hideMethod = "hide_method"
-        case replaceConstructorWithFactoryMethod = "replace_constructor_with_factory_method"
-        case introduceNamedParameter = "introduce_named_parameter"
-        case eliminatePrimitiveObsession = "eliminate_primitive_obsession"
-        case introduceDesignByContract = "introduce_design_by_contract"
+        case extractMethod= "extract_method"
+        case extractClass= "extract_class"
+        case moveMethod= "move_method"
+        case moveField= "move_field"
+        case inlineMethod= "inline_method"
+        case inlineClass= "inline_class"
+        case renameMethod= "rename_method"
+        case renameClass= "rename_class"
+        case changeSignature= "change_signature"
+        case introduceParameterObject= "introduce_parameter_object"
+        case preserveWholeObject= "preserve_whole_object"
+        case replaceParameterWithMethod= "replace_parameter_with_method"
+        case introduceLocalExtension= "introduce_local_extension"
+        case removeMiddleMan= "remove_middle_man"
+        case replaceDelegationWithInheritance= "replace_delegation_with_inheritance"
+        case replaceInheritanceWithDelegation= "replace_inheritance_with_delegation"
+        case extractSuperclass= "extract_superclass"
+        case extractSubclass= "extract_subclass"
+        case extractInterface= "extract_interface"
+        case collapseHierarchy= "collapse_hierarchy"
+        case formTemplateMethod= "form_template_method"
+        case replaceInheritanceWithComposition= "replace_inheritance_with_composition"
+        case replaceConditionalWithPolymorphism= "replace_conditional_with_polymorphism"
+        case introduceNullObject= "introduce_null_object"
+        case replaceErrorCodeWithException= "replace_error_code_with_exception"
+        case replaceExceptionWithTest= "replace_exception_with_test"
+        case introduceAssertion= "introduce_assertion"
+        case encapsulateField= "encapsulate_field"
+        case encapsulateCollection= "encapsulate_collection"
+        case replaceRecordWithDataClass= "replace_record_with_data_class"
+        case replaceTypeCodeWithClass= "replace_type_code_with_class"
+        case replaceTypeCodeWithSubclasses= "replace_type_code_with_subclasses"
+        case replaceTypeCodeWithState= "replace_type_code_with_state"
+        case replaceSubclassWithFields= "replace_subclass_with_fields"
+        case introduceForeignMethod= "introduce_foreign_method"
+        case removeParameter= "remove_parameter"
+        case renameParameter= "rename_parameter"
+        case addParameter= "add_parameter"
+        case separateQueryFromModifier= "separate_query_from_modifier"
+        case parameterizeMethod= "parameterize_method"
+        case removeSettingMethod= "remove_setting_method"
+        case hideMethod= "hide_method"
+        case replaceConstructorWithFactoryMethod= "replace_constructor_with_factory_method"
+        case introduceNamedParameter= "introduce_named_parameter"
+        case eliminatePrimitiveObsession= "eliminate_primitive_obsession"
+        case introduceDesignByContract= "introduce_design_by_contract"
     }
 
     public enum Priority: String, Codable {
@@ -352,7 +352,7 @@ public struct RefactoringSuggestion: Codable, Sendable {
     }
 
     public enum RiskLevel: String, Codable {
-        case very_low, low, medium, high, very_high
+        case veryLow = "very_low", low, medium, high, veryHigh = "very_high"
     }
 }
 
@@ -525,7 +525,7 @@ public struct EvolutionConstraints: Codable, Sendable {
     }
 
     public enum RiskTolerance: String, Codable {
-        case very_conservative, conservative, moderate, aggressive, very_aggressive
+        case veryConservative = "very_conservative", conservative, moderate, aggressive, veryAggressive = "very_aggressive"
     }
 
     public struct QualityThresholds: Codable, Sendable {
@@ -633,7 +633,7 @@ public struct ArchitectureEvolution: Codable, Sendable {
         }
 
         public enum RiskType: String, Codable {
-            case compilation_failure, test_regression, performance_degradation, security_vulnerability, breaking_change
+            case compilationFailure = "compilation_failure", testRegression = "test_regression", performanceDegradation = "performance_degradation", securityVulnerability = "security_vulnerability", breakingChange = "breaking_change"
         }
 
         public enum Severity: String, Codable {
@@ -655,7 +655,7 @@ public struct ArchitectureEvolution: Codable, Sendable {
         }
 
         public enum RecommendationType: String, Codable {
-            case adopt_pattern, remove_anti_pattern, improve_testing, enhance_security, optimize_performance
+            case adoptPattern = "adopt_pattern", removeAntiPattern = "remove_anti_pattern", improveTesting = "improve_testing", enhanceSecurity = "enhance_security", optimizePerformance = "optimize_performance"
         }
 
         public enum Priority: String, Codable {
@@ -663,7 +663,7 @@ public struct ArchitectureEvolution: Codable, Sendable {
         }
 
         public enum EffortLevel: String, Codable {
-            case trivial, easy, medium, hard, very_hard
+            case trivial, easy, medium, hard, veryHard = "very_hard"
         }
     }
 }
@@ -698,7 +698,7 @@ public struct ArchitecturePrediction: Codable, Sendable {
         }
 
         public enum ChangeType: String, Codable {
-            case complexity_increase, maintainability_decline, performance_degradation, security_risk, scalability_issue
+            case complexityIncrease = "complexity_increase", maintainabilityDecline = "maintainability_decline", performanceDegradation = "performance_degradation", securityRisk = "security_risk", scalabilityIssue = "scalability_issue"
         }
 
         public struct ImpactMetrics: Codable, Sendable {
@@ -726,7 +726,7 @@ public struct ArchitecturePrediction: Codable, Sendable {
         }
 
         public enum RiskLevel: String, Codable {
-            case very_low, low, medium, high, very_high
+            case veryLow = "very_low", low, medium, high, veryHigh = "very_high"
         }
 
         public struct RiskFactor: Codable, Sendable {
@@ -764,7 +764,7 @@ public struct ArchitecturePrediction: Codable, Sendable {
         }
 
         public enum EffortLevel: String, Codable {
-            case trivial, easy, medium, hard, very_hard
+            case trivial, easy, medium, hard, veryHard = "very_hard"
         }
     }
 }
@@ -827,7 +827,7 @@ public struct OptimizationPlan: Codable, Sendable {
         }
 
         public enum RiskLevel: String, Codable {
-            case very_low, low, medium, high, very_high
+            case veryLow = "very_low", low, medium, high, veryHigh = "very_high"
         }
     }
 
@@ -1000,7 +1000,7 @@ public extension ArchitecturalPattern.PatternType {
         case .mvp: return "MVP"
         case .mvc: return "MVC"
         case .viper: return "VIPER"
-        case .clean_architecture: return "Clean Architecture"
+        case .cleanArchitecture: return "clean architecture" = ".clean_architecture: return "Clean Architecture""
         case .hexagonal: return "Hexagonal Architecture"
         case .factory: return "Factory Pattern"
         case .singleton: return "Singleton Pattern"
@@ -1008,8 +1008,8 @@ public extension ArchitecturalPattern.PatternType {
         case .strategy: return "Strategy Pattern"
         case .decorator: return "Decorator Pattern"
         case .repository: return "Repository Pattern"
-        case .service_layer: return "Service Layer"
-        case .dependency_injection: return "Dependency Injection"
+        case .serviceLayer: return "service layer" = ".service_layer: return "Service Layer""
+        case .dependencyInjection: return "dependency injection" = ".dependency_injection: return "Dependency Injection""
         case .custom: return "Custom Pattern"
         }
     }

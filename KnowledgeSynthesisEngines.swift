@@ -94,11 +94,15 @@ struct SynthesisCapability {
     let coherence: Double
     let domainType: KnowledgeDomainType
 
-    enum SynthesisType {
+
         case integrative
+
         case analytical
+
         case creative
+
         case deductive
+
     }
 }
 
@@ -111,11 +115,15 @@ struct UnificationCapability {
     let completeness: Double
     let domainType: KnowledgeDomainType
 
-    enum UnificationType {
+
         case semantic
+
         case structural
+
         case contextual
+
         case logical
+
     }
 }
 
@@ -128,11 +136,15 @@ struct HarmonizationCapability {
     let coherence: Double
     let domainType: KnowledgeDomainType
 
-    enum HarmonizationType {
+
         case ontological
+
         case perspectival
+
         case weight
+
         case structural
+
     }
 }
 
@@ -145,22 +157,19 @@ struct IntegrationCapability {
     let emergence: Double
     let domainType: KnowledgeDomainType
 
-    enum IntegrationType {
-        case component
-        case structural
-        let capabilityId: String
-        let type: IntegrationType
-        let connectivity: Double
-        let consolidation: Double
-        let emergence: Double
-        let domainType: KnowledgeDomainType
 
-        enum IntegrationType {
-            case component
-            case structural
-            case relational
-            case insight
-        }
+        case component
+
+        case structural
+
+        case component
+
+        case structural
+
+        case relational
+
+        case insight
+
     }
 }
 
@@ -214,11 +223,31 @@ struct SynthesizedKnowledge {
         let significance: Double
         let novelty: Double
 
-        enum InsightType {
+
             case connection
+
             case pattern
+
             case implication
+
             case contradiction
+
+            case emergence
+
+            case unification
+
+            case harmonization
+
+            case integration
+
+            case trend
+
+            case anomaly
+
+            case correlation
+
+            case prediction
+
         }
     }
 }
@@ -263,11 +292,15 @@ struct UnifiedKnowledge {
         let resolution: String
         let confidence: Double
 
-        enum ConflictType {
+
             case factual
+
             case conceptual
+
             case methodological
+
             case perspectival
+
         }
     }
 
@@ -295,12 +328,6 @@ struct KnowledgeSynthesisInsights {
         let domainType: KnowledgeDomainType
         let timestamp: Date
 
-        enum InsightType {
-            case emergence
-            case unification
-            case harmonization
-            case integration
-        }
     }
 
     struct KnowledgeSynthesisPattern {
@@ -319,11 +346,23 @@ struct KnowledgeSynthesisInsights {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
+
             case synthesisOptimization
+
             case unificationEnhancement
+
             case harmonizationImprovement
+
             case integrationStrategy
+
+            case correction
+
+            case expansion
+
+            case refinement
+
+            case validation
+
         }
     }
 
@@ -334,11 +373,15 @@ struct KnowledgeSynthesisInsights {
         let potentialGain: Double
         let implementationComplexity: Double
 
-        enum OptimizationType {
+
             case algorithm
+
             case parallelization
+
             case caching
+
             case preprocessing
+
         }
     }
 
@@ -359,12 +402,6 @@ struct KnowledgeSynthesis {
     let parameters: [String: Any]
     let scope: SynthesisScope
 
-    enum SynthesisType {
-        case integrative
-        case analytical
-        case creative
-        case deductive
-    }
 
     struct SynthesisScope {
         let domainType: KnowledgeDomainType
@@ -463,12 +500,6 @@ struct KnowledgeUnification {
     let criteria: UnificationCriteria
     let strategy: UnificationStrategy
 
-    enum UnificationType {
-        case semantic
-        case structural
-        case contextual
-        case logical
-    }
 
     struct UnificationCriteria {
         let consistency: Double
@@ -514,23 +545,6 @@ struct KnowledgeConflict {
     let severity: Double
     let resolution: ConflictResolution?
 
-    enum ConflictType {
-        case factual
-        case conceptual
-        let conflictId: String
-        let type: ConflictType
-        let entities: [KnowledgeEntity]
-        let description: String
-        let severity: Double
-        let resolution: ConflictResolution?
-
-        enum ConflictType {
-            case factual
-            case conceptual
-            case methodological
-            case perspectival
-        }
-    }
 }
 
 /// Conflict resolution
@@ -579,12 +593,45 @@ struct KnowledgeEntity {
         let type: RelationshipType
         let strength: Double
 
-        enum RelationshipType {
+
             case related
+
             case prerequisite
+
             case consequence
+
             case contradiction
+
             case support
+
+            case isA
+
+            case partOf
+
+            case relatedTo
+
+            case causes
+
+            case enables
+
+            case dependency
+
+            case composition
+
+            case association
+
+            case inheritance
+
+            case causal
+
+            case correlational
+
+            case hierarchical
+
+            case associative
+
+            case temporal
+
         }
     }
 }
@@ -598,22 +645,19 @@ struct EntityMerging {
     let confidence: Double
     let preservedRelationships: [EntityRelationship]
 
-    enum MergeMethod {
-        case union
-        case intersection
-        let mergingId: String
-        let entities: [KnowledgeEntity]
-        let mergedEntity: KnowledgeEntity
-        let mergeMethod: MergeMethod
-        let confidence: Double
-        let preservedRelationships: [EntityRelationship]
 
-        enum MergeMethod {
-            case union
-            case intersection
-            case consensus
-            case hierarchical
-        }
+        case union
+
+        case intersection
+
+        case union
+
+        case intersection
+
+        case consensus
+
+        case hierarchical
+
     }
 }
 
@@ -657,22 +701,6 @@ struct KnowledgeHarmonization {
     let criteria: HarmonizationCriteria
     let strategy: HarmonizationStrategy
 
-    enum HarmonizationType {
-        case ontological
-        case perspectival
-        let harmonizationId: String
-        let domains: [KnowledgeDomain]
-        let harmonizationType: HarmonizationType
-        let criteria: HarmonizationCriteria
-        let strategy: HarmonizationStrategy
-
-        enum HarmonizationType {
-            case ontological
-            case perspectival
-            case weight
-            case structural
-        }
-    }
 
     struct HarmonizationCriteria {
         let alignment: Double
@@ -742,13 +770,6 @@ struct KnowledgeOntology {
         let type: RelationshipType
         let properties: [String: Any]
 
-        enum RelationshipType {
-            case isA
-            case partOf
-            case relatedTo
-            case causes
-            case enables
-        }
     }
 
     struct OntologyAxiom {
@@ -816,19 +837,15 @@ struct PerspectiveReconciliation {
     let reconciliationMethod: ReconciliationMethod
     let reconciliationMetrics: ReconciliationMetrics
 
-    enum ReconciliationMethod {
-        let reconciliationId: String
-        let perspectives: [KnowledgePerspective]
-        let reconciledPerspective: KnowledgePerspective
-        let reconciliationMethod: ReconciliationMethod
-        let reconciliationMetrics: ReconciliationMetrics
 
-        enum ReconciliationMethod {
-            case consensus
-            case weighted
-            case dialectical
-            case integrative
-        }
+        case consensus
+
+        case weighted
+
+        case dialectical
+
+        case integrative
+
     }
 
     struct ReconciliationMetrics {
@@ -871,19 +888,15 @@ struct WeightBalancing {
     let balancedKnowledge: [WeightedKnowledge]
     let balancingMetrics: BalancingMetrics
 
-    enum BalancingMethod {
-        let balancingId: String
-        let knowledge: [WeightedKnowledge]
-        let balancingMethod: BalancingMethod
-        let balancedKnowledge: [WeightedKnowledge]
-        let balancingMetrics: BalancingMetrics
 
-        enum BalancingMethod {
-            case normalization
-            case redistribution
-            case optimization
-            case consensus
-        }
+        case normalization
+
+        case redistribution
+
+        case optimization
+
+        case consensus
+
     }
 
     struct BalancingMetrics {
@@ -916,11 +929,19 @@ struct KnowledgeComponent {
         let type: InterfaceType
         let specification: [String: Any]
 
-        enum InterfaceType {
+
             case input
+
             case output
+
             case control
+
             case data
+
+            case api
+
+            case ui
+
         }
     }
 
@@ -947,12 +968,6 @@ struct KnowledgeIntegration {
         let architecture: IntegrationArchitecture
         let strategy: IntegrationStrategy
 
-        enum IntegrationType {
-            case component
-            case structural
-            case relational
-            case insight
-        }
     }
 
     struct IntegrationArchitecture {
@@ -1070,12 +1085,6 @@ struct KnowledgeIntegrationResult {
             let type: InterfaceType
             let specification: [String: Any]
 
-            enum InterfaceType {
-                case api
-                case ui
-                case data
-                case control
-            }
         }
 
         struct SystemCapability {
@@ -1102,19 +1111,15 @@ struct KnowledgeStructure {
     let relationships: [StructureRelationship]
     let properties: [String: Any]
 
-    enum StructureType {
-        let structureId: String
-        let type: StructureType
-        let components: [KnowledgeComponent]
-        let relationships: [StructureRelationship]
-        let properties: [String: Any]
 
-        enum StructureType {
-            case hierarchy
-            case network
-            case matrix
-            case modular
-        }
+        case hierarchy
+
+        case network
+
+        case matrix
+
+        case modular
+
     }
 
     struct StructureRelationship {
@@ -1124,12 +1129,6 @@ struct KnowledgeStructure {
         let type: RelationshipType
         let strength: Double
 
-        enum RelationshipType {
-            case dependency
-            case composition
-            case association
-            case inheritance
-        }
     }
 }
 
@@ -1141,19 +1140,15 @@ struct StructureAssembly {
     let assembledStructure: KnowledgeStructure
     let assemblyMetrics: AssemblyMetrics
 
-    enum AssemblyMethod {
-        let assemblyId: String
-        let structures: [KnowledgeStructure]
-        let assemblyMethod: AssemblyMethod
-        let assembledStructure: KnowledgeStructure
-        let assemblyMetrics: AssemblyMetrics
 
-        enum AssemblyMethod {
-            case composition
-            case aggregation
-            case integration
-            case synthesis
-        }
+        case composition
+
+        case aggregation
+
+        case integration
+
+        case synthesis
+
     }
 
     struct AssemblyMetrics {
@@ -1174,23 +1169,6 @@ struct KnowledgeRelationship {
     let strength: Double
     let direction: RelationshipDirection
 
-    enum RelationshipType {
-        let relationshipId: String
-        let sourceEntity: String
-        let targetEntity: String
-        let type: RelationshipType
-        let properties: [String: Any]
-        let strength: Double
-        let direction: RelationshipDirection
-
-        enum RelationshipType {
-            case causal
-            case correlational
-            case hierarchical
-            case associative
-            case temporal
-        }
-    }
 
     enum RelationshipDirection {
         case unidirectional
@@ -1207,19 +1185,15 @@ struct RelationshipConnection {
     let connectedNetwork: RelationshipNetwork
     let connectionMetrics: ConnectionMetrics
 
-    enum ConnectionMethod {
-        let connectionId: String
-        let relationships: [KnowledgeRelationship]
-        let connectionMethod: ConnectionMethod
-        let connectedNetwork: RelationshipNetwork
-        let connectionMetrics: ConnectionMetrics
 
-        enum ConnectionMethod {
-            case direct
-            case transitive
-            case associative
-            case inferential
-        }
+        case direct
+
+        case transitive
+
+        case associative
+
+        case inferential
+
     }
 
     struct RelationshipNetwork {
@@ -1255,23 +1229,6 @@ struct KnowledgeInsight {
     let source: String
     let timestamp: Date
 
-    enum InsightType {
-        let insightId: String
-        let type: InsightType
-        let content: String
-        let significance: Double
-        let confidence: Double
-        let source: String
-        let timestamp: Date
-
-        enum InsightType {
-            case pattern
-            case trend
-            case anomaly
-            case correlation
-            case prediction
-        }
-    }
 }
 
 /// Insight consolidation
@@ -1282,19 +1239,15 @@ struct InsightConsolidation {
     let consolidatedInsights: [KnowledgeInsight]
     let consolidationMetrics: ConsolidationMetrics
 
-    enum ConsolidationMethod {
-        let consolidationId: String
-        let insights: [KnowledgeInsight]
-        let consolidationMethod: ConsolidationMethod
-        let consolidatedInsights: [KnowledgeInsight]
-        let consolidationMetrics: ConsolidationMetrics
 
-        enum ConsolidationMethod {
-            case aggregation
-            case synthesis
-            case prioritization
-            case clustering
-        }
+        case aggregation
+
+        case synthesis
+
+        case prioritization
+
+        case clustering
+
     }
 
     struct ConsolidationMetrics {
@@ -1329,12 +1282,6 @@ struct SynthesisOptimization {
         let improvement: Double
         let description: String
 
-        enum OptimizationType {
-            case algorithm
-            case parallelization
-            case caching
-            case preprocessing
-        }
     }
 }
 
@@ -1374,12 +1321,6 @@ struct SynthesisValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case correction
-            case expansion
-            case refinement
-            case validation
-        }
     }
 }
 

@@ -111,11 +111,19 @@ struct IndexingCapability {
     let coverage: Double
     let domainType: KnowledgeDomainType
 
-    enum IndexType {
+
         case fullText
+
         case semantic
+
         case vector
+
         case graph
+
+        case inverted
+
+        case hybrid
+
     }
 }
 
@@ -244,11 +252,23 @@ struct RetrievedKnowledge {
         let accessPattern: AccessPattern
         let userContext: String?
 
-        enum AccessPattern {
+
             case direct
+
             case related
+
             case recommended
+
             case browsed
+
+            case frequent
+
+            case occasional
+
+            case rare
+
+            case archival
+
         }
     }
 }
@@ -307,11 +327,29 @@ struct KnowledgeBaseInsights {
         let potentialGain: Double
         let implementationComplexity: Double
 
-        enum OptimizationType {
+
             case storage
+
             case indexing
+
             case retrieval
+
             case archival
+
+            case compression
+
+            case deduplication
+
+            case reorganization
+
+            case restructuring
+
+            case caching
+
+            case parallelization
+
+            case migration
+
         }
     }
 
@@ -333,18 +371,44 @@ struct KnowledgeQuery {
     let context: QueryContext
     let preferences: QueryPreferences
 
-    enum QueryType {
+
         case keyword
+
         case semantic
+
         case contextual
+
         case relational
+
+        case term
+
+        case phrase
+
+        case boolean
+
+        case proximity
+
+        case content
+
+        case metadata
+
+        case temporal
+
+        case access
+
+        case frequent
+
+        case occasional
+
+        case rare
+
     }
 
     struct QueryFilter {
         let filterId: String
         let type: FilterType
         let value: String
-        let `operator`: FilterOperator
+        let `operator`:FilterOperator
 
         enum FilterType {
             case domain
@@ -405,11 +469,21 @@ struct SearchPattern {
         let type: ConstraintType
         let value: Any
 
-        enum ConstraintType {
+
             case length
+
             case complexity
+
             case domain
+
             case category
+
+            case frequency
+
+            case position
+
+            case context
+
         }
     }
 }
@@ -500,11 +574,23 @@ struct KnowledgeStorage {
         let path: String
         let backupLocations: [String]
 
-        enum LocationType {
+
             case local
+
             case cloud
+
             case distributed
+
             case archive
+
+            case coldStorage
+
+            case deepArchive
+
+            case offsite
+
+            case permanent
+
         }
     }
 
@@ -516,12 +602,6 @@ struct KnowledgeStorage {
         let accessPatterns: [AccessPattern]
     }
 
-    enum AccessPattern {
-        case frequent
-        case occasional
-        case rare
-        case archival
-    }
 }
 
 /// Knowledge update
@@ -534,11 +614,23 @@ struct KnowledgeUpdate {
     let updateType: UpdateType
     let updateMetadata: UpdateMetadata
 
-    enum UpdateType {
+
         case content
+
         case metadata
+
         case relationship
+
         case status
+
+        case add
+
+        case modify
+
+        case delete
+
+        case reindex
+
     }
 
     struct UpdateMetadata {
@@ -595,12 +687,6 @@ struct KnowledgeArchival {
         let path: String
         let retentionPeriod: TimeInterval
 
-        enum LocationType {
-            case coldStorage
-            case deepArchive
-            case offsite
-            case permanent
-        }
     }
 
     struct ArchivalMetadata {
@@ -635,21 +721,6 @@ struct StorageOptimization {
         let improvement: Double
         let description: String
 
-        enum OptimizationType {
-            case compression
-            case deduplication
-            let itemId: String
-            let type: OptimizationType
-            let improvement: Double
-            let description: String
-
-            enum OptimizationType {
-                case compression
-                case deduplication
-                case reorganization
-                case archival
-            }
-        }
     }
 }
 
@@ -805,12 +876,6 @@ struct KnowledgeIndexing {
         let entries: [IndexEntry]
         let relationships: [IndexRelationship]
 
-        enum IndexType {
-            case inverted
-            case vector
-            case graph
-            case hybrid
-        }
 
         struct IndexEntry {
             let entryId: String
@@ -859,21 +924,6 @@ struct IndexUpdate {
         let affectedTerms: [String]
         let performanceImpact: Double
 
-        enum UpdateType {
-            case add
-            case modify
-            let updatedAt: Date
-            let updateType: UpdateType
-            let affectedTerms: [String]
-            let performanceImpact: Double
-
-            enum UpdateType {
-                case add
-                case modify
-                case delete
-                case reindex
-            }
-        }
     }
 }
 
@@ -892,12 +942,6 @@ struct IndexOptimization {
         let improvement: Double
         let description: String
 
-        enum OptimizationType {
-            case restructuring
-            case compression
-            case caching
-            case parallelization
-        }
     }
 }
 
@@ -909,12 +953,6 @@ struct IndexQuery {
     let operators: [QueryOperator]
     let constraints: [QueryConstraint]
 
-    enum QueryType {
-        case term
-        case phrase
-        case boolean
-        case proximity
-    }
 
     enum QueryOperator {
         case and
@@ -928,12 +966,6 @@ struct IndexQuery {
         let type: ConstraintType
         let value: Any
 
-        enum ConstraintType {
-            case frequency
-            case position
-            case context
-            case domain
-        }
     }
 }
 
@@ -969,33 +1001,12 @@ struct ArchiveQuery {
     let timeRange: DateInterval?
     let accessPattern: AccessPattern
 
-    enum QueryType {
-        case content
-        let queryId: String
-        let type: QueryType
-        let criteria: [ArchiveCriterion]
-        let timeRange: DateInterval?
-        let accessPattern: AccessPattern
-
-        enum QueryType {
-            case content
-            case metadata
-            case temporal
-            case access
-        }
-
-        enum AccessPattern {
-            case frequent
-            case occasional
-            case rare
-        }
-    }
 
     struct ArchiveCriterion {
         let criterionId: String
         let type: CriterionType
         let value: String
-        let `operator`: CriterionOperator
+        let `operator`:CriterionOperator
 
         enum CriterionType {
             case domain
@@ -1108,12 +1119,6 @@ struct ArchiveOptimization {
         let improvement: Double
         let description: String
 
-        enum OptimizationType {
-            case compression
-            case deduplication
-            case migration
-            case indexing
-        }
     }
 }
 
@@ -1160,7 +1165,7 @@ class KnowledgeBasesEngine {
                 performance: 0.9,
                 reliability: 0.95,
                 domainType: domain
-            )
+            ),
         ]
 
         let indexingCapabilities = [
@@ -1171,7 +1176,7 @@ class KnowledgeBasesEngine {
                 accuracy: 0.9,
                 coverage: 0.95,
                 domainType: domain
-            )
+            ),
         ]
 
         let retrievalCapabilities = [
@@ -1182,7 +1187,7 @@ class KnowledgeBasesEngine {
                 precision: 0.88,
                 recall: 0.92,
                 domainType: domain
-            )
+            ),
         ]
 
         let archivalCapabilities = [
@@ -1193,7 +1198,7 @@ class KnowledgeBasesEngine {
                 compressionRatio: 0.7,
                 accessSpeed: 0.6,
                 domainType: domain
-            )
+            ),
         ]
 
         let system = KnowledgeBaseSystem(
@@ -1534,7 +1539,7 @@ class KnowledgeRepositoryImpl: KnowledgeRepository {
                 type: .deduplication,
                 improvement: 0.2,
                 description: "Reduced storage through deduplication"
-            )
+            ),
         ]
 
         let optimizedStorage = KnowledgeStorage(
@@ -1584,7 +1589,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     accessPattern: .direct,
                     userContext: query.context.userId
                 )
-            )
+            ),
         ]
 
         return KnowledgeRetrieval(
@@ -1614,7 +1619,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                         type: .ranking,
                         duration: 2.0,
                         resultsCount: dummyResults.count
-                    )
+                    ),
                 ]
             ),
             retrievalTime: 10.0
@@ -1634,7 +1639,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     context: "Context around match",
                     confidence: 0.9
                 )
-            )
+            ),
         ]
 
         return KnowledgeSearch(
@@ -1664,7 +1669,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                     popularity: 0.8,
                     lastUpdated: Date()
                 )
-            )
+            ),
         ]
 
         return KnowledgeBrowsing(
@@ -1690,7 +1695,7 @@ class KnowledgeRetrieverImpl: KnowledgeRetriever {
                 knowledge: Knowledge(id: "knowledge_1", content: "Recommended knowledge", type: .fact, domain: domain, metadata: KnowledgeMetadata(created: Date(), author: "System", version: "1.0", tags: [], references: [])),
                 recommendationScore: 0.9,
                 recommendationReason: .relevance
-            )
+            ),
         ]
 
         return KnowledgeRecommendation(
@@ -1803,7 +1808,7 @@ class KnowledgeIndexerImpl: KnowledgeIndexer {
                 type: .caching,
                 improvement: 0.3,
                 description: "Added index caching for faster access"
-            )
+            ),
         ]
 
         let optimizedIndexing = KnowledgeIndexing(
@@ -1839,7 +1844,7 @@ class KnowledgeIndexerImpl: KnowledgeIndexer {
                 knowledgeIds: ["knowledge_1", "knowledge_2"],
                 score: 0.9,
                 context: "Search context"
-            )
+            ),
         ]
 
         return IndexSearch(
@@ -1896,7 +1901,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                     compressionRatio: 0.7,
                     integrityVerified: true
                 )
-            )
+            ),
         ]
 
         return ArchiveRetrieval(
@@ -1940,7 +1945,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                 currentPhase: .cold,
                 nextTransition: Date().addingTimeInterval(31_536_000),
                 retentionStatus: .retain
-            )
+            ),
         ]
 
         let actions = [
@@ -1950,7 +1955,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                 archiveId: "archive_1",
                 executedAt: Date(),
                 result: .success
-            )
+            ),
         ]
 
         return ArchiveLifecycleManagement(
@@ -1983,7 +1988,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                     retentionPolicy: "1 year",
                     migrationHistory: []
                 )
-            )
+            ),
         ]
 
         let optimizations = [
@@ -1998,7 +2003,7 @@ class KnowledgeArchiverImpl: KnowledgeArchiver {
                 type: .deduplication,
                 improvement: 0.2,
                 description: "Reduced archive size through deduplication"
-            )
+            ),
         ]
 
         let optimizedArchives = dummyArchives.map { archive in

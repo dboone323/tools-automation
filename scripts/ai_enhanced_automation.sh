@@ -23,7 +23,7 @@ MODEL_TOTAL_FILE="${CODE_DIR}/model_total.txt"
 touch "${MODEL_ERRORS_FILE}" "${MODEL_SUCCESS_FILE}" "${MODEL_TOTAL_FILE}"
 
 # Performance tracking
-AI_PERFORMANCE_LOG="${CODE_DIR}/ai_performance_$(date +%Y%m%d).log"
+# AI_PERFORMANCE_LOG="${CODE_DIR}/ai_performance_$(date +%Y%m%d).log"
 
 # Colors
 GREEN='\033[0;32m'
@@ -100,8 +100,7 @@ check_ai_health() {
     # Test model functionality with a quick call
     print_ai "Testing model functionality..."
     local test_result
-    test_result=$(echo '{"task": "dashboardSummary", "prompt": "Hello"}' | ./ollama_client.sh 2>/dev/null)
-    if [[ $? -eq 0 ]] && [[ -n "$test_result" ]]; then
+    if test_result=$(echo '{"task": "dashboardSummary", "prompt": "Hello"}' | ./ollama_client.sh 2>/dev/null) && [[ -n "$test_result" ]]; then
         local test_text
         test_text=$(echo "$test_result" | jq -r '.text // empty')
         if [[ -n "$test_text" ]]; then
@@ -135,7 +134,7 @@ check_ai_health() {
 call_ai_with_fallback() {
     local task_type="$1"
     local prompt="$2"
-    local max_retries="${3:-2}"
+    # local max_retries="${3:-2}" # Unused
 
     # Map old task types to new registry tasks
     local registry_task
@@ -166,7 +165,7 @@ call_ai_with_fallback() {
     local result
     result=$(echo "$json_input" | ./ollama_client.sh 2>/dev/null)
 
-    if [[ $? -eq 0 ]] && [[ -n "$result" ]]; then
+    if [[ -n "$result" ]]; then
         # Extract text from JSON response
         local text
         text=$(echo "$result" | jq -r '.text // empty')

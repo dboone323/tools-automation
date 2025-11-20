@@ -392,22 +392,19 @@ struct NetworkCongestion {
     let affectedChannels: [String]
     let timestamp: Date
 
-    enum CongestionCause {
-        case traffic
-        case failure
-        let congestionId: String
-        let affectedRegion: GeographicRegion
-        let severity: Double
-        let cause: CongestionCause
-        let affectedChannels: [String]
-        let timestamp: Date
 
-        enum CongestionCause {
-            case traffic
-            case failure
-            case maintenance
-            case environmental
-        }
+        case traffic
+
+        case failure
+
+        case traffic
+
+        case failure
+
+        case maintenance
+
+        case environmental
+
     }
 }
 
@@ -425,11 +422,23 @@ struct CongestionResolution {
         let description: String
         let priority: Double
 
-        enum ActionType {
+
             case reroute
+
             case expand
+
             case optimize
+
             case repair
+
+            case synchronization
+
+            case optimization
+
+            case maintenance
+
+            case expansion
+
         }
     }
 }
@@ -509,12 +518,6 @@ struct CoordinationResult {
         let regions: [String]
         let description: String
 
-        enum ActionType {
-            case synchronization
-            case optimization
-            case maintenance
-            case expansion
-        }
     }
 }
 
@@ -558,11 +561,23 @@ struct GlobalOptimizationResult {
         let improvement: Double
         let description: String
 
-        enum OptimizationType {
+
             case routing
+
             case resource
+
             case security
+
             case performance
+
+            case `protocol` = "protocol"
+
+            case hardware
+
+            case software
+
+            case environmental
+
         }
     }
 }
@@ -590,12 +605,6 @@ struct ChannelOptimization {
         let improvement: Double
         let description: String
 
-        enum OptimizationType {
-            case `protocol`
-            case hardware
-            case software
-            case environmental
-        }
     }
 }
 
@@ -1085,7 +1094,7 @@ class QuantumChannelManagerImpl: QuantumChannelManager {
                 type: .software,
                 improvement: 0.05,
                 description: "Enhance error correction algorithms"
-            )
+            ),
         ]
 
         return ChannelOptimization(
@@ -1164,7 +1173,7 @@ class QuantumRouterImpl: QuantumRouter {
                 type: .expand,
                 description: "Temporarily expand channel capacity",
                 priority: 0.7
-            )
+            ),
         ]
 
         return CongestionResolution(
@@ -1395,7 +1404,7 @@ class GlobalNetworkCoordinatorImpl: GlobalNetworkCoordinator {
                 regions: ["global"],
                 improvement: 0.08,
                 description: "Optimize resource allocation across regions"
-            )
+            ),
         ]
 
         return GlobalOptimizationResult(

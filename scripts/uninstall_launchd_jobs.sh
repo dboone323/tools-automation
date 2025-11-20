@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -euo pipefail
 
 LAUNCH_AGENTS_DIR="$HOME/Library/LaunchAgents"

@@ -29,7 +29,7 @@ for f in "$AGENTS_DIR"/agent_*.sh "$AGENTS_DIR"/*_agent.sh; do
             else
                 cat "$f" >"$tmpfile"
             fi
-            cat > "$f" <<'EOF'
+            cat > "$f" <<-'EOF'
       #!/usr/bin/env bash
       # Auto-injected health & reliability shim
       # Adds: standardized --health handler, strict mode, and a graceful shutdown trap
@@ -84,7 +84,7 @@ for f in "$AGENTS_DIR"/agent_*.sh "$AGENTS_DIR"/*_agent.sh; do
       fi
 
       # Original agent script continues below
-    EOF
+	EOF
             # append the original body (excluding original shebang if we preserved it)
             if [[ -n "$shebang" ]]; then
                 # re-add original shebang as comment to preserve info

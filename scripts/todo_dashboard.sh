@@ -282,7 +282,7 @@ show_task_details() {
     fi
 
     echo
-    read -p "Press Enter to continue..."
+    read -r -p "Press Enter to continue..."
 }
 
 main_loop() {
@@ -301,7 +301,7 @@ main_loop() {
         show_menu
 
         echo -n -e "${WHITE}Choose command: ${NC}"
-        read -n 1 choice
+        read -r -n 1 choice
         echo
 
         case $choice in

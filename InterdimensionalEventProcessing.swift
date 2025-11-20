@@ -193,11 +193,23 @@ struct CorrelationRule {
         let type: ActionType
         let parameters: [String: AnyCodable]
 
-        enum ActionType {
+
             case alert
+
             case correlate
+
             case suppress
+
             case escalate
+
+            case quarantine
+
+            case block
+
+            case investigate
+
+            case mitigate
+
         }
     }
 }
@@ -600,13 +612,6 @@ struct AnomalyResponse {
         let automated: Bool
         let parameters: [String: AnyCodable]
 
-        enum ActionType {
-            case alert
-            case quarantine
-            case block
-            case investigate
-            case mitigate
-        }
     }
 
     enum ResponsePriority {

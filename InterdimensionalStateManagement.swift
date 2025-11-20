@@ -177,7 +177,7 @@ struct SynchronizationRule {
 
     struct SynchronizationCondition {
         let stateProperty: String
-        let `operator`: ConditionOperator
+        let `operator`:ConditionOperator
         let value: AnyCodable
         let dimension: Int?
 
@@ -196,11 +196,17 @@ struct SynchronizationRule {
         let targetDimensions: [Int]
         let parameters: [String: AnyCodable]
 
-        enum ActionType {
+
             case propagate
+
             case merge
+
             case override
+
             case notify
+
+            case rollback
+
         }
     }
 }
@@ -373,11 +379,15 @@ struct TransitionValidation {
         let description: String
         let suggestion: String
 
-        enum IssueSeverity {
+
             case low
+
             case medium
+
             case high
+
             case critical
+
         }
     }
 }
@@ -481,12 +491,6 @@ struct ConflictResolution {
         let description: String
         let automated: Bool
 
-        enum ActionType {
-            case merge
-            case override
-            case rollback
-            case notify
-        }
     }
 }
 
@@ -561,12 +565,6 @@ struct StateValidation {
             case performance
         }
 
-        enum IssueSeverity {
-            case low
-            case medium
-            case high
-            case critical
-        }
     }
 }
 
@@ -744,21 +742,21 @@ class InterdimensionalStateManagementEngine {
                 conditions: [
                     SynchronizationRule.SynchronizationCondition(
                         stateProperty: "status",
-                        operator: .equals,
+                        `operator`:.equals,
                         value: AnyCodable("modified"),
                         dimension: nil
-                    )
+                    ),
                 ],
                 actions: [
                     SynchronizationRule.SynchronizationAction(
                         type: .propagate,
                         targetDimensions: dimensions,
                         parameters: [:]
-                    )
+                    ),
                 ],
                 priority: 1,
                 bidirectional: true
-            )
+            ),
         ]
 
         let transitionRules = [
@@ -772,9 +770,9 @@ class InterdimensionalStateManagementEngine {
                     TransitionRule.ValidationRule(
                         ruleType: .dataIntegrity,
                         parameters: [:]
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
 
         let network = StateManagementNetwork(
@@ -1085,7 +1083,7 @@ class StateCoordinatorImpl: StateCoordinator {
                 type: .consistency,
                 description: "State status is not active",
                 severity: .medium
-            )
+            ),
         ]
 
         return StateValidation(
@@ -1129,7 +1127,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                 description: "Validate transition",
                 estimatedDuration: 3.0,
                 dependencies: ["update"]
-            )
+            ),
         ]
 
         let resourceRequirements = TransitionPlan.ResourceRequirements(
@@ -1145,7 +1143,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                     stepId: "rollback_update",
                     description: "Revert state update",
                     automated: true
-                )
+                ),
             ],
             estimatedDuration: 5.0,
             dataBackupRequired: true
@@ -1163,7 +1161,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                 type: .stateConsistency,
                 description: "Verify state consistency",
                 critical: true
-            )
+            ),
         ]
 
         return TransitionPlan(
@@ -1209,7 +1207,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                 description: "Data corruption detected during transition",
                 recoverable: true,
                 suggestedAction: "Retry transition with error correction"
-            )
+            ),
         ]
 
         return TransitionResult(
@@ -1231,7 +1229,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
                         severity: .critical,
                         description: "No transition result available",
                         suggestion: "Complete transition before validation"
-                    )
+                    ),
                 ],
                 recommendations: ["Execute transition first"],
                 confidence: 0.0
@@ -1276,7 +1274,7 @@ class StateTransitionManagerImpl: StateTransitionManager {
             performanceMetrics: [
                 "throughput": 100.0,
                 "latency": 0.5,
-                "error_rate": 0.0
+                "error_rate": 0.0,
             ]
         )
     }
@@ -1297,7 +1295,7 @@ class StateSynchronizerImpl: StateSynchronizer {
                 description: "Data inconsistency detected",
                 severity: .medium,
                 resolution: nil
-            )
+            ),
         ]
 
         return SynchronizationResult(
@@ -1341,7 +1339,7 @@ class StateSynchronizerImpl: StateSynchronizer {
                 type: .dataMismatch,
                 description: "State status mismatch detected",
                 affectedStates: states.filter { $0.status != .active }.map(\.id)
-            )
+            ),
         ]
 
         return ConsistencyResult(
@@ -1407,7 +1405,7 @@ class StateMonitorImpl: StateMonitor {
             StateStability.StabilityComponent(type: .transitionSuccess, score: 0.9, weight: 0.4),
             StateStability.StabilityComponent(type: .synchronizationRate, score: 0.85, weight: 0.3),
             StateStability.StabilityComponent(type: .conflictRate, score: 0.8, weight: 0.2),
-            StateStability.StabilityComponent(type: .performanceConsistency, score: 0.75, weight: 0.1)
+            StateStability.StabilityComponent(type: .performanceConsistency, score: 0.75, weight: 0.1),
         ]
 
         let trend: StateStability.StabilityTrend = stabilityScore > 0.8 ? .stable : .degrading
@@ -1456,7 +1454,7 @@ class StateMonitorImpl: StateMonitor {
             performanceMetrics: [
                 "cpu_usage": 0.6,
                 "memory_usage": 0.7,
-                "storage_usage": 0.8
+                "storage_usage": 0.8,
             ]
         )
     }

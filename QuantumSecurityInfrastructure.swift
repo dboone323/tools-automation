@@ -351,7 +351,7 @@ struct NetworkTraffic {
         let packetId: String
         let source: NetworkAddress
         let destination: NetworkAddress
-        let protocol: NetworkProtocol
+        let `protocol`:NetworkProtocol
         let size: Int
         let content: Data?
     }
@@ -407,7 +407,7 @@ struct TrafficAnalysis {
 
         enum AnomalyType {
             case volume
-            case protocol
+            case `protocol` = "protocol"
             case behavior
             case signature
         }
@@ -426,7 +426,7 @@ struct DetectedThreat {
 
     enum ThreatSource {
         case external
-        case internal
+        case `internal` = "internal"
         case unknown
     }
 
@@ -568,21 +568,19 @@ struct VulnerabilityScanner {
     let accuracy: Double
     let performance: ScannerPerformance
 
-    enum ScannerType {
-        case network
-        case application
-        let scannerId: String
-        let type: ScannerType
-        let coverage: Double
-        let accuracy: Double
-        let performance: ScannerPerformance
 
-        enum ScannerType {
-            case network
-            case application
-            case database
-            case cloud
-        }
+        case network
+
+        case application
+
+        case network
+
+        case application
+
+        case database
+
+        case cloud
+
     }
 }
 
@@ -890,27 +888,26 @@ struct SecurityResource {
     let owner: String
     let access: ResourceAccess
 
-    enum ResourceType {
-        case data
-        case system
-        let resourceId: String
-        let type: ResourceType
-        let classification: SecurityClassification
-        let owner: String
-        let access: ResourceAccess
 
-        enum ResourceType {
-            case data
-            case system
-            case network
-            case application
-            case physical
-        }
+        case data
+
+        case system
+
+        case data
+
+        case system
+
+        case network
+
+        case application
+
+        case physical
+
     }
 
     enum SecurityClassification {
         case public
-        case internal
+        case `internal` = "internal"
         case confidential
         case restricted
         case topSecret
@@ -936,22 +933,21 @@ struct AccessPolicy {
         let conditionId: String
         let type: ConditionType
         let value: Any
-        let operator: ConditionOperator
+        let `operator`:ConditionOperator
 
-        enum ConditionType {
+
             case time
-            let conditionId: String
-            let type: ConditionType
-            let value: Any
-            let operator: ConditionOperator
 
-            enum ConditionType {
-                case time
-                case location
-                case device
-                case role
-                case clearance
-            }
+            case time
+
+            case location
+
+            case device
+
+            case role
+
+            case clearance
+
         }
 
         enum ConditionOperator {
@@ -980,19 +976,17 @@ struct PermissionManagement {
         let conditions: [RuleCondition]
         let actions: [RuleAction]
 
-        enum RuleType {
-            case allow
-            let ruleId: String
-            let type: RuleType
-            let conditions: [RuleCondition]
-            let actions: [RuleAction]
 
-            enum RuleType {
-                case allow
-                case deny
-                case delegate
-                case audit
-            }
+            case allow
+
+            case allow
+
+            case deny
+
+            case delegate
+
+            case audit
+
         }
     }
 
@@ -1036,20 +1030,17 @@ struct PolicyEnforcement {
         let severity: ViolationSeverity
         let timestamp: Date
 
-        enum ViolationSeverity {
-            case low
-            let violationId: String
-            let policy: String
-            let action: SecurityAction
-            let severity: ViolationSeverity
-            let timestamp: Date
 
-            enum ViolationSeverity {
-                case low
-                case medium
-                case high
-                case critical
-            }
+            case low
+
+            case low
+
+            case medium
+
+            case high
+
+            case critical
+
         }
     }
 }
@@ -1080,20 +1071,17 @@ struct AuditRequirements {
     let retention: TimeInterval
     let scope: AuditScope
 
-    enum AuditScope {
-        case all
-        let requirementsId: String
-        let standards: [AuditStandard]
-        let frequency: TimeInterval
-        let retention: TimeInterval
-        let scope: AuditScope
 
-        enum AuditScope {
-            case all
-            case critical
-            case failed
-            case privileged
-        }
+        case all
+
+        case all
+
+        case critical
+
+        case failed
+
+        case privileged
+
     }
 }
 
@@ -1113,36 +1101,30 @@ struct AccessAudit {
         let description: String
         let evidence: [AuditEvidence]
 
-        enum FindingType {
-            case violation
-            let findingId: String
-            let type: FindingType
-            let severity: FindingSeverity
-            let description: String
-            let evidence: [AuditEvidence]
 
-            enum FindingType {
-                case violation
-                case anomaly
-                case gap
-                case improvement
-            }
+            case violation
+
+            case violation
+
+            case anomaly
+
+            case gap
+
+            case improvement
+
         }
 
-        enum FindingSeverity {
-            case low
-            let findingId: String
-            let type: FindingType
-            let severity: FindingSeverity
-            let description: String
-            let evidence: [AuditEvidence]
 
-            enum FindingSeverity {
-                case low
-                case medium
-                case high
-                case critical
-            }
+            case low
+
+            case low
+
+            case medium
+
+            case high
+
+            case critical
+
         }
     }
 
@@ -1170,21 +1152,17 @@ struct AccessRevocation {
     let notifications: [RevocationNotification]
     let cleanup: RevocationCleanup
 
-    enum RevocationReason {
-        case termination
-        let revocationId: String
-        let users: [SecurityUser]
-        let reasons: [RevocationReason]
-        let revocation: RevocationResult
-        let notifications: [RevocationNotification]
-        let cleanup: RevocationCleanup
 
-        enum RevocationReason {
-            case termination
-            case security
-            case policy
-            case administrative
-        }
+        case termination
+
+        case termination
+
+        case security
+
+        case policy
+
+        case administrative
+
     }
 
     struct RevocationResult {
@@ -1220,41 +1198,32 @@ struct IntrusionAttempt {
     let timestamp: Date
     let blocked: Bool
 
-    enum IntrusionMethod {
-        case portScan
-        let attemptId: String
-        let source: NetworkAddress
-        let target: NetworkAddress
-        let method: IntrusionMethod
-        let severity: AttemptSeverity
-        let timestamp: Date
-        let blocked: Bool
 
-        enum IntrusionMethod {
-            case portScan
-            case exploit
-            case bruteForce
-            case injection
-            case malware
-        }
+        case portScan
+
+        case portScan
+
+        case exploit
+
+        case bruteForce
+
+        case injection
+
+        case malware
+
     }
 
-    enum AttemptSeverity {
-        case low
-        let attemptId: String
-        let source: NetworkAddress
-        let target: NetworkAddress
-        let method: IntrusionMethod
-        let severity: AttemptSeverity
-        let timestamp: Date
-        let blocked: Bool
 
-        enum AttemptSeverity {
-            case low
-            case medium
-            case high
-            case critical
-        }
+        case low
+
+        case low
+
+        case medium
+
+        case high
+
+        case critical
+
     }
 }
 
@@ -1267,56 +1236,45 @@ struct SecurityDefense {
     let coverage: Double
     let status: DefenseStatus
 
-    enum DefenseType {
+
         case firewall
-        let defenseId: String
-        let type: DefenseType
-        let location: DefenseLocation
-        let effectiveness: Double
-        let coverage: Double
-        let status: DefenseStatus
 
-        enum DefenseType {
-            case firewall
-            case ids
-            case ips
-            case honeypot
-            case sandbox
-        }
+        case firewall
+
+        case ids
+
+        case ips
+
+        case honeypot
+
+        case sandbox
+
     }
 
-    enum DefenseLocation {
+
         case network
-        let defenseId: String
-        let type: DefenseType
-        let location: DefenseLocation
-        let effectiveness: Double
-        let coverage: Double
-        let status: DefenseStatus
 
-        enum DefenseLocation {
-            case network
-            case host
-            case application
-            case cloud
-        }
+        case network
+
+        case host
+
+        case application
+
+        case cloud
+
     }
 
-    enum DefenseStatus {
-        case active
-        let defenseId: String
-        let type: DefenseType
-        let location: DefenseLocation
-        let effectiveness: Double
-        let coverage: Double
-        let status: DefenseStatus
 
-        enum DefenseStatus {
-            case active
-            case standby
-            case disabled
-            case compromised
-        }
+        case active
+
+        case active
+
+        case standby
+
+        case disabled
+
+        case compromised
+
     }
 }
 
@@ -1397,34 +1355,30 @@ struct SystemIsolation {
         let threshold: Double
         let action: IsolationAction
 
-        enum CriteriaType {
-            case infection
-            let criteriaId: String
-            let type: CriteriaType
-            let threshold: Double
-            let action: IsolationAction
 
-            enum CriteriaType {
-                case infection
-                case anomaly
-                case compromise
-                case performance
-            }
+            case infection
+
+            case infection
+
+            case anomaly
+
+            case compromise
+
+            case performance
+
         }
 
-        enum IsolationAction {
-            case quarantine
-            let criteriaId: String
-            let type: CriteriaType
-            let threshold: Double
-            let action: IsolationAction
 
-            enum IsolationAction {
-                case quarantine
-                case shutdown
-                case alert
-                case monitor
-            }
+            case quarantine
+
+            case quarantine
+
+            case shutdown
+
+            case alert
+
+            case monitor
+
         }
     }
 
@@ -1548,20 +1502,17 @@ struct HoneypotImplementation {
         let status: HoneypotStatus
         let captures: Int
 
-        enum HoneypotStatus {
-            case active
-            let honeypotId: String
-            let type: HoneypotType
-            let location: NetworkLocation
-            let status: HoneypotStatus
-            let captures: Int
 
-            enum HoneypotStatus {
-                case active
-                case inactive
-                case compromised
-                case maintenance
-            }
+            case active
+
+            case active
+
+            case inactive
+
+            case compromised
+
+            case maintenance
+
         }
     }
 
@@ -1623,23 +1574,19 @@ struct SecurityMetric {
     let timestamp: Date
     let context: MetricContext
 
-    enum MetricType {
-        case count
-        let metricId: String
-        let name: String
-        let type: MetricType
-        let value: Double
-        let unit: String
-        let timestamp: Date
-        let context: MetricContext
 
-        enum MetricType {
-            case count
-            case rate
-            case percentage
-            case duration
-            case score
-        }
+        case count
+
+        case count
+
+        case rate
+
+        case percentage
+
+        case duration
+
+        case score
+
     }
 
     struct MetricContext {
@@ -1697,21 +1644,18 @@ struct TrendAnalysis {
         let magnitude: Double
         let significance: Double
 
-        enum TrendDirection {
-            case increasing
-            let trendId: String
-            let metric: String
-            let direction: TrendDirection
-            let magnitude: Double
-            let significance: Double
 
-            enum TrendDirection {
-                case increasing
+            case increasing
+
+            case increasing
+
             case decreasing
+
             case stable
+
             case fluctuating
+
         }
-    }
 
     struct TrendPattern {
         let patternId: String
@@ -1720,20 +1664,17 @@ struct TrendAnalysis {
         let correlation: Double
         let description: String
 
-        enum PatternType {
-            case seasonal
-            let patternId: String
-            let type: PatternType
-            let frequency: Double
-            let correlation: Double
-            let description: String
 
-            enum PatternType {
-                case seasonal
-                case cyclical
-                case anomalous
-                case emerging
-            }
+            case seasonal
+
+            case seasonal
+
+            case cyclical
+
+            case anomalous
+
+            case emerging
+
         }
     }
 
@@ -1786,22 +1727,19 @@ struct ComplianceStandard {
     let framework: ComplianceFramework
     let authority: RegulatoryAuthority
 
-    enum ComplianceFramework {
-        case iso27001
-        let standardId: String
-        let name: String
-        let version: String
-        let requirements: [ComplianceRequirement]
-        let framework: ComplianceFramework
-        let authority: RegulatoryAuthority
 
-        enum ComplianceFramework {
-            case iso27001
-            case nist
-            case pciDss
-            case hipaa
-            case gdpr
-        }
+        case iso27001
+
+        case iso27001
+
+        case nist
+
+        case pciDss
+
+        case hipaa
+
+        case gdpr
+
     }
 }
 
@@ -1842,42 +1780,34 @@ struct AlertThreshold {
     let thresholdId: String
     let metric: String
     let value: Double
-    let operator: ThresholdOperator
+    let `operator`:ThresholdOperator
     let severity: AlertSeverity
     let escalation: EscalationRule
 
-    enum ThresholdOperator {
-        case greaterThan
-        let thresholdId: String
-        let metric: String
-        let value: Double
-        let operator: ThresholdOperator
-        let severity: AlertSeverity
-        let escalation: EscalationRule
 
-        enum ThresholdOperator {
-            case greaterThan
-            case lessThan
-            case equals
-            case notEquals
-        }
+        case greaterThan
+
+        case greaterThan
+
+        case lessThan
+
+        case equals
+
+        case notEquals
+
     }
 
-    enum AlertSeverity {
-        case low
-        let thresholdId: String
-        let metric: String
-        let value: Double
-        let operator: ThresholdOperator
-        let severity: AlertSeverity
-        let escalation: EscalationRule
 
-        enum AlertSeverity {
-            case low
-            case medium
-            case high
-            case critical
-        }
+        case low
+
+        case low
+
+        case medium
+
+        case high
+
+        case critical
+
     }
 }
 
@@ -1922,20 +1852,17 @@ struct SecurityBenchmark {
     let standards: [BenchmarkStandard]
     let targets: [BenchmarkTarget]
 
-    enum BenchmarkCategory {
-        case performance
-        let benchmarkId: String
-        let category: BenchmarkCategory
-        let metrics: [BenchmarkMetric]
-        let standards: [BenchmarkStandard]
-        let targets: [BenchmarkTarget]
 
-        enum BenchmarkCategory {
-            case performance
-            case security
-            case compliance
-            case efficiency
-        }
+        case performance
+
+        case performance
+
+        case security
+
+        case compliance
+
+        case efficiency
+
     }
 
     struct BenchmarkMetric {
@@ -1999,41 +1926,32 @@ struct SecurityIncident {
     let timeline: IncidentTimeline
     let response: IncidentResponse
 
-    enum IncidentType {
-        case breach
-        let incidentId: String
-        let type: IncidentType
-        let severity: IncidentSeverity
-        let description: String
-        let affected: [AffectedAsset]
-        let timeline: IncidentTimeline
-        let response: IncidentResponse
 
-        enum IncidentType {
-            case breach
-            case attack
-            case compromise
-            case loss
-            case unauthorized
-        }
+        case breach
+
+        case breach
+
+        case attack
+
+        case compromise
+
+        case loss
+
+        case unauthorized
+
     }
 
-    enum IncidentSeverity {
-        case low
-        let incidentId: String
-        let type: IncidentType
-        let severity: IncidentSeverity
-        let description: String
-        let affected: [AffectedAsset]
-        let timeline: IncidentTimeline
-        let response: IncidentResponse
 
-        enum IncidentSeverity {
-            case low
-            case medium
-            case high
-            case critical
-        }
+        case low
+
+        case low
+
+        case medium
+
+        case high
+
+        case critical
+
     }
 
     struct AffectedAsset {
@@ -2042,50 +1960,45 @@ struct SecurityIncident {
         let impact: AssetImpact
         let recovery: RecoveryStatus
 
-        enum AssetType {
+
             case data
-            let assetId: String
-            let type: AssetType
-            let impact: AssetImpact
-            let recovery: RecoveryStatus
 
-            enum AssetType {
-                case data
-                case system
-                case network
-                case user
-                case application
-            }
+            case data
+
+            case system
+
+            case network
+
+            case user
+
+            case application
+
         }
 
-        enum AssetImpact {
+
             case low
-            let assetId: String
-            let type: AssetType
-            let impact: AssetImpact
-            let recovery: RecoveryStatus
 
-            enum AssetImpact {
-                case low
-                case medium
-                case high
-                case critical
-            }
+            case low
+
+            case medium
+
+            case high
+
+            case critical
+
         }
 
-        enum RecoveryStatus {
-            case recovered
-            let assetId: String
-            let type: AssetType
-            let impact: AssetImpact
-            let recovery: RecoveryStatus
 
-            enum RecoveryStatus {
-                case recovered
-                case recovering
-                case unrecoverable
-                case unknown
-            }
+            case recovered
+
+            case recovered
+
+            case recovering
+
+            case unrecoverable
+
+            case unknown
+
         }
     }
 
@@ -2164,21 +2077,19 @@ struct IncidentContainment {
         let executed: Bool
         let timestamp: Date
 
-        enum ActionType {
-            case isolate
-            let actionId: String
-            let type: ActionType
-            let target: String
-            let executed: Bool
-            let timestamp: Date
 
-            enum ActionType {
-                case isolate
-                case block
-                case shutdown
-                case alert
-                case monitor
-            }
+            case isolate
+
+            case isolate
+
+            case block
+
+            case shutdown
+
+            case alert
+
+            case monitor
+
         }
     }
 
@@ -2279,21 +2190,17 @@ struct IncidentCommunication {
         let sent: Bool
         let acknowledged: Bool
 
-        enum MessageType {
-            case alert
-            let messageId: String
-            let type: MessageType
-            let content: String
-            let recipients: [String]
-            let sent: Bool
-            let acknowledged: Bool
 
-            enum MessageType {
-                case alert
-                case update
-                case resolution
-                case report
-            }
+            case alert
+
+            case alert
+
+            case update
+
+            case resolution
+
+            case report
+
         }
     }
 
@@ -2304,21 +2211,19 @@ struct IncidentCommunication {
         let availability: Double
         let security: Double
 
-        enum ChannelType {
-            case email
-            let channelId: String
-            let type: ChannelType
-            let priority: Double
-            let availability: Double
-            let security: Double
 
-            enum ChannelType {
-                case email
-                case phone
-                case sms
-                case portal
-                case broadcast
-            }
+            case email
+
+            case email
+
+            case phone
+
+            case sms
+
+            case portal
+
+            case broadcast
+
         }
     }
 
@@ -2346,20 +2251,17 @@ struct IncidentLearning {
         let category: LessonCategory
         let applicability: Double
 
-        enum LessonCategory {
-            case technical
-            let lessonId: String
-            let incident: String
-            let lesson: String
-            let category: LessonCategory
-            let applicability: Double
 
-            enum LessonCategory {
-                case technical
-                case process
-                case organizational
-                case training
-            }
+            case technical
+
+            case technical
+
+            case process
+
+            case organizational
+
+            case training
+
         }
     }
 

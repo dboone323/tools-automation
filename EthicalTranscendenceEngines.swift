@@ -147,11 +147,15 @@ struct MoralFramework {
         case universal
     }
 
-    enum FrameworkScope {
+
         case individual
+
         case societal
+
         case universal
+
         case cosmic
+
     }
 }
 
@@ -508,12 +512,6 @@ struct EthicalFramework {
     let scope: FrameworkScope
     let universality: Double
 
-    enum FrameworkScope {
-        case individual
-        case societal
-        case universal
-        case cosmic
-    }
 }
 
 /// Ethical rule
@@ -793,11 +791,19 @@ struct FlowOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
+
             case rate
+
             case quality
+
             case universality
+
             case transcendence
+
+            case applicability
+
+            case wisdom
+
         }
     }
 }
@@ -905,12 +911,6 @@ struct EthicalEvolution {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case universality
-            case transcendence
-            case applicability
-            case wisdom
-        }
     }
 }
 

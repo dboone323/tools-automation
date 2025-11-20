@@ -15,7 +15,7 @@ jq_array="[]"
 
 for pkg_file in "${packages[@]}"; do
     pkg_dir="$(dirname "$pkg_file")"
-    rel="${pkg_dir#$ROOT_DIR/}"
+    rel="${pkg_dir#"$ROOT_DIR"/}"
     tests_dir="$pkg_dir/Tests"
     issues=()
     if [[ ! -d "$tests_dir" ]]; then

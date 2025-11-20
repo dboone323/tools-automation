@@ -60,7 +60,7 @@ enum DeploymentStatusType: String, Codable, Sendable {
     case validating
     case completed
     case failed
-    case rolled_back
+    case rolledBack = "rolled_back"
     case paused
     case cancelled
 }
@@ -81,24 +81,24 @@ enum ComponentTypeType: String, Codable, Sendable {
     case database
     case infrastructure
     case configuration
-    case external_service
-    case quantum_service
-    case ai_service
-    case monitoring_service
+    case externalService = "external_service"
+    case quantumService = "quantum_service"
+    case aiService = "ai_service"
+    case monitoringService = "monitoring_service"
 }
 
 /// Artifact type enumeration
 enum ArtifactTypeType: String, Codable, Sendable {
-    case docker_image
-    case jar_file
-    case war_file
-    case zip_archive
-    case sql_script
-    case configuration_file
-    case quantum_circuit
-    case ai_model
-    case terraform_config
-    case helm_chart
+    case dockerImage = "docker_image"
+    case jarFile = "jar_file"
+    case warFile = "war_file"
+    case zipArchive = "zip_archive"
+    case sqlScript = "sql_script"
+    case configurationFile = "configuration_file"
+    case quantumCircuit = "quantum_circuit"
+    case aiModel = "ai_model"
+    case terraformConfig = "terraform_config"
+    case helmChart = "helm_chart"
 }
 
 /// Health check type enumeration
@@ -108,9 +108,9 @@ enum HealthCheckTypeType: String, Codable, Sendable {
     case tcp
     case database
     case custom
-    case quantum_entanglement
-    case ai_model_health
-    case kubernetes_probe
+    case quantumEntanglement = "quantum_entanglement"
+    case aiModelHealth = "ai_model_health"
+    case kubernetesProbe = "kubernetes_probe"
 }
 
 /// Environment type enumeration
@@ -118,10 +118,10 @@ enum EnvironmentTypeType: String, Codable, Sendable {
     case development
     case staging
     case production
-    case disaster_recovery
+    case disasterRecovery = "disaster_recovery"
     case testing
-    case quantum_simulation
-    case ai_training
+    case quantumSimulation = "quantum_simulation"
+    case aiTraining = "ai_training"
 }
 
 /// Platform type enumeration
@@ -129,11 +129,11 @@ enum PlatformType: String, Codable, Sendable {
     case aws
     case azure
     case gcp
-    case on_premise
+    case onPremise = "on_premise"
     case hybrid
-    case quantum_cloud
+    case quantumCloud = "quantum_cloud"
     case kubernetes
-    case docker_swarm
+    case dockerSwarm = "docker_swarm"
 }
 
 /// Database type enumeration
@@ -144,8 +144,8 @@ enum DatabaseTypeType: String, Codable, Sendable {
     case redis
     case elasticsearch
     case cassandra
-    case quantum_database
-    case vector_database
+    case quantumDatabase = "quantum_database"
+    case vectorDatabase = "vector_database"
 }
 
 /// Load balancer type enumeration
@@ -153,26 +153,26 @@ enum LoadBalancerTypeType: String, Codable, Sendable {
     case application
     case network
     case classic
-    case quantum_balancer
+    case quantumBalancer = "quantum_balancer"
 }
 
 /// Secrets provider enumeration
 enum SecretsProviderType: String, Codable, Sendable {
-    case aws_secrets_manager
-    case azure_key_vault
-    case gcp_secret_manager
-    case hashicorp_vault
-    case kubernetes_secrets
-    case quantum_key_distribution
+    case awsSecretsManager = "aws_secrets_manager"
+    case azureKeyVault = "azure_key_vault"
+    case gcpSecretManager = "gcp_secret_manager"
+    case hashicorpVault = "hashicorp_vault"
+    case kubernetesSecrets = "kubernetes_secrets"
+    case quantumKeyDistribution = "quantum_key_distribution"
 }
 
 /// Key management enumeration
 enum KeyManagementType: String, Codable, Sendable {
-    case aws_kms
-    case azure_key_vault
-    case gcp_kms
-    case hashicorp_vault
-    case quantum_key_management
+    case awsKms = "aws_kms"
+    case azureKeyVault = "azure_key_vault"
+    case gcpKms = "gcp_kms"
+    case hashicorpVault = "hashicorp_vault"
+    case quantumKeyManagement = "quantum_key_management"
 }
 
 /// Rotation policy enumeration
@@ -180,28 +180,28 @@ enum RotationPolicyType: String, Codable, Sendable {
     case automatic
     case manual
     case never
-    case quantum_adaptive
+    case quantumAdaptive = "quantum_adaptive"
 }
 
 /// Compliance standard enumeration
 enum ComplianceStandardType: String, Codable, Sendable {
-    case pci_dss
+    case pciDss = "pci_dss"
     case hipaa
     case gdpr
     case sox
     case iso27001
-    case quantum_computing_standard
-    case ai_ethics_compliance
+    case quantumComputingStandard = "quantum_computing_standard"
+    case aiEthicsCompliance = "ai_ethics_compliance"
 }
 
 /// Log aggregation enumeration
 enum LogAggregationType: String, Codable, Sendable {
     case cloudwatch
-    case elk_stack
+    case elkStack = "elk_stack"
     case splunk
     case datadog
     case sumologic
-    case quantum_log_analyzer
+    case quantumLogAnalyzer = "quantum_log_analyzer"
 }
 
 /// Dashboard type enumeration
@@ -210,8 +210,8 @@ enum DashboardTypeType: String, Codable, Sendable {
     case performance
     case security
     case business
-    case quantum_metrics
-    case ai_monitoring
+    case quantumMetrics = "quantum_metrics"
+    case aiMonitoring = "ai_monitoring"
 }
 
 /// Alert severity enumeration
@@ -220,18 +220,18 @@ enum AlertSeverityType: String, Codable, Sendable {
     case warning
     case error
     case critical
-    case quantum_anomaly
+    case quantumAnomaly = "quantum_anomaly"
 }
 
 /// Strategy type enumeration
 enum StrategyTypeType: String, Codable, Sendable {
-    case blue_green
+    case blueGreen = "blue_green"
     case canary
     case rolling
-    case big_bang
-    case quantum_superposition
-    case ai_driven
-    case zero_touch
+    case bigBang = "big_bang"
+    case quantumSuperposition = "quantum_superposition"
+    case aiDriven = "ai_driven"
+    case zeroTouch = "zero_touch"
 }
 
 /// Criterion type enumeration
@@ -240,9 +240,9 @@ enum CriterionTypeType: String, Codable, Sendable {
     case availability
     case functionality
     case security
-    case quantum_stability
-    case ai_accuracy
-    case business_metrics
+    case quantumStability = "quantum_stability"
+    case aiAccuracy = "ai_accuracy"
+    case businessMetrics = "business_metrics"
 }
 
 /// Risk category enumeration
@@ -252,8 +252,8 @@ enum RiskCategoryType: String, Codable, Sendable {
     case security
     case business
     case compliance
-    case quantum_instability
-    case ai_bias
+    case quantumInstability = "quantum_instability"
+    case aiBias = "ai_bias"
     case environmental
 }
 
@@ -278,27 +278,27 @@ enum BusinessImpactType: String, Codable, Sendable {
 enum BackupStrategyType: String, Codable, Sendable {
     case snapshot
     case incremental
-    case full_backup
+    case fullBackup = "full_backup"
     case none
-    case quantum_backup
-    case ai_predictive_backup
+    case quantumBackup = "quantum_backup"
+    case aiPredictiveBackup = "ai_predictive_backup"
 }
 
 /// Wait condition enumeration
 enum WaitConditionType: String, Codable, Sendable {
-    case health_check_pass
-    case service_available
-    case database_ready
-    case manual_approval
-    case quantum_entanglement_stable
-    case ai_model_loaded
-    case dependencies_resolved
+    case healthCheckPass = "health_check_pass"
+    case serviceAvailable = "service_available"
+    case databaseReady = "database_ready"
+    case manualApproval = "manual_approval"
+    case quantumEntanglementStable = "quantum_entanglement_stable"
+    case aiModelLoaded = "ai_model_loaded"
+    case dependenciesResolved = "dependencies_resolved"
 }
 
 /// Phase status enumeration
 enum PhaseStatusType: String, Codable, Sendable {
     case pending
-    case in_progress
+    case inProgress = "in_progress"
     case completed
     case failed
     case skipped
@@ -313,7 +313,7 @@ enum ComponentStatusType: String, Codable, Sendable {
     case completed
     case failed
     case degraded
-    case quantum_superposition
+    case quantumSuperposition = "quantum_superposition"
 }
 
 /// Health status enumeration
@@ -321,7 +321,7 @@ enum HealthStatusType: String, Codable, Sendable {
     case passing
     case failing
     case unknown
-    case quantum_interference
+    case quantumInterference = "quantum_interference"
 }
 
 /// Issue severity enumeration
@@ -330,7 +330,7 @@ enum IssueSeverityType: String, Codable, Sendable {
     case medium
     case high
     case critical
-    case quantum_critical
+    case quantumCritical = "quantum_critical"
 }
 
 /// Trend enumeration
@@ -339,29 +339,29 @@ enum TrendType: String, Codable, Sendable {
     case stable
     case deteriorating
     case oscillating
-    case quantum_fluctuating
+    case quantumFluctuating = "quantum_fluctuating"
 }
 
 /// Prediction type enumeration
 enum PredictionTypeType: String, Codable, Sendable {
     case success
     case failure
-    case performance_degradation
-    case resource_exhaustion
-    case security_breach
-    case quantum_decoherence
-    case ai_model_drift
+    case performanceDegradation = "performance_degradation"
+    case resourceExhaustion = "resource_exhaustion"
+    case securityBreach = "security_breach"
+    case quantumDecoherence = "quantum_decoherence"
+    case aiModelDrift = "ai_model_drift"
 }
 
 /// Recommendation type enumeration
 enum RecommendationTypeType: String, Codable, Sendable {
-    case scale_resources
+    case scaleResources = "scale_resources"
     case rollback
-    case adjust_strategy
-    case monitor_closely
-    case quantum_recalibration
-    case ai_model_update
-    case security_hardening
+    case adjustStrategy = "adjust_strategy"
+    case monitorClosely = "monitor_closely"
+    case quantumRecalibration = "quantum_recalibration"
+    case aiModelUpdate = "ai_model_update"
+    case securityHardening = "security_hardening"
 }
 
 /// Recommendation priority enumeration
@@ -375,83 +375,83 @@ enum RecommendationPriorityType: String, Codable, Sendable {
 
 /// Zero-downtime type enumeration
 enum ZeroDowntimeTypeType: String, Codable, Sendable {
-    case blue_green
+    case blueGreen = "blue_green"
     case canary
     case rolling
-    case quantum_teleportation
-    case ai_predictive_switching
+    case quantumTeleportation = "quantum_teleportation"
+    case aiPredictiveSwitching = "ai_predictive_switching"
 }
 
 /// Session handling enumeration
 enum SessionHandlingType: String, Codable, Sendable {
-    case sticky_sessions
-    case distributed_cache
+    case stickySessions = "sticky_sessions"
+    case distributedCache = "distributed_cache"
     case stateless
-    case quantum_entanglement
+    case quantumEntanglement = "quantum_entanglement"
 }
 
 /// Data synchronization enumeration
 enum DataSynchronizationType: String, Codable, Sendable {
-    case active_active
-    case master_slave
-    case eventual_consistency
-    case quantum_correlation
+    case activeActive = "active_active"
+    case masterSlave = "master_slave"
+    case eventualConsistency = "eventual_consistency"
+    case quantumCorrelation = "quantum_correlation"
 }
 
 /// Cache management enumeration
 enum CacheManagementType: String, Codable, Sendable {
-    case cache_aside
-    case write_through
-    case write_behind
-    case quantum_cache
+    case cacheAside = "cache_aside"
+    case writeThrough = "write_through"
+    case writeBehind = "write_behind"
+    case quantumCache = "quantum_cache"
 }
 
 /// Audience type enumeration
 enum AudienceTypeType: String, Codable, Sendable {
     case percentage
-    case user_segment
+    case userSegment = "user_segment"
     case geographic
-    case beta_users
-    case quantum_computation_users
+    case betaUsers = "beta_users"
+    case quantumComputationUsers = "quantum_computation_users"
 }
 
 /// Metric type enumeration
 enum MetricTypeType: String, Codable, Sendable {
-    case response_time
-    case error_rate
+    case responseTime = "response_time"
+    case errorRate = "error_rate"
     case throughput
     case custom
-    case quantum_entanglement
-    case ai_confidence
-    case business_kpi
+    case quantumEntanglement = "quantum_entanglement"
+    case aiConfidence = "ai_confidence"
+    case businessKpi = "business_kpi"
 }
 
 /// Splitting strategy enumeration
 enum SplittingStrategyType: String, Codable, Sendable {
     case percentage
-    case header_based
-    case cookie_based
+    case headerBased = "header_based"
+    case cookieBased = "cookie_based"
     case geographic
-    case quantum_probability
+    case quantumProbability = "quantum_probability"
 }
 
 /// Progression action enumeration
 enum ProgressionActionType: String, Codable, Sendable {
-    case increase_traffic
-    case decrease_traffic
+    case increaseTraffic = "increase_traffic"
+    case decreaseTraffic = "decrease_traffic"
     case rollback
     case promote
-    case quantum_amplify
-    case ai_adjust
+    case quantumAmplify = "quantum_amplify"
+    case aiAdjust = "ai_adjust"
 }
 
 /// Switching method enumeration
 enum SwitchingMethodType: String, Codable, Sendable {
     case immediate
     case gradual
-    case dns_based
-    case load_balancer
-    case quantum_instantaneous
+    case dnsBased = "dns_based"
+    case loadBalancer = "load_balancer"
+    case quantumInstantaneous = "quantum_instantaneous"
 }
 
 /// Failure type enumeration
@@ -460,8 +460,8 @@ enum FailureTypeType: String, Codable, Sendable {
     case availability
     case functionality
     case security
-    case quantum_decoherence
-    case ai_hallucination
+    case quantumDecoherence = "quantum_decoherence"
+    case aiHallucination = "ai_hallucination"
     case infrastructure
 }
 
@@ -479,38 +479,38 @@ enum RollbackTypeType: String, Codable, Sendable {
     case immediate
     case phased
     case gradual
-    case quantum_rewind
-    case ai_corrective
+    case quantumRewind = "quantum_rewind"
+    case aiCorrective = "ai_corrective"
 }
 
 /// Rollback action enumeration
 enum RollbackActionType: String, Codable, Sendable {
     case automatic
     case manual
-    case alert_only
-    case quantum_automatic
+    case alertOnly = "alert_only"
+    case quantumAutomatic = "quantum_automatic"
 }
 
 /// Quantum technique enumeration
 enum QuantumTechniqueType: String, Codable, Sendable {
-    case decoherence_control
-    case entanglement_breaking
-    case superposition_stabilization
-    case interference_cancellation
-    case quantum_error_correction
-    case quantum_teleportation
+    case decoherenceControl = "decoherence_control"
+    case entanglementBreaking = "entanglement_breaking"
+    case superpositionStabilization = "superposition_stabilization"
+    case interferenceCancellation = "interference_cancellation"
+    case quantumErrorCorrection = "quantum_error_correction"
+    case quantumTeleportation = "quantum_teleportation"
 }
 
 /// Issue type enumeration
 enum IssueTypeType: String, Codable, Sendable {
-    case performance_degradation
-    case service_failure
-    case configuration_error
-    case resource_exhaustion
-    case security_vulnerability
-    case quantum_decoherence
-    case ai_model_drift
-    case dependency_failure
+    case performanceDegradation = "performance_degradation"
+    case serviceFailure = "service_failure"
+    case configurationError = "configuration_error"
+    case resourceExhaustion = "resource_exhaustion"
+    case securityVulnerability = "security_vulnerability"
+    case quantumDecoherence = "quantum_decoherence"
+    case aiModelDrift = "ai_model_drift"
+    case dependencyFailure = "dependency_failure"
 }
 
 /// Issue impact enumeration
@@ -524,13 +524,13 @@ enum IssueImpactType: String, Codable, Sendable {
 
 /// Violation type enumeration
 enum ViolationTypeType: String, Codable, Sendable {
-    case configuration_drift
-    case data_inconsistency
-    case service_mismatch
-    case network_isolation
-    case quantum_interference
-    case ai_bias_detected
-    case security_policy_violation
+    case configurationDrift = "configuration_drift"
+    case dataInconsistency = "data_inconsistency"
+    case serviceMismatch = "service_mismatch"
+    case networkIsolation = "network_isolation"
+    case quantumInterference = "quantum_interference"
+    case aiBiasDetected = "ai_bias_detected"
+    case securityPolicyViolation = "security_policy_violation"
 }
 
 /// Violation severity enumeration
@@ -539,7 +539,7 @@ enum ViolationSeverityType: String, Codable, Sendable {
     case medium
     case high
     case critical
-    case quantum_critical
+    case quantumCritical = "quantum_critical"
 }
 
 /// Check type enumeration
@@ -559,7 +559,7 @@ enum CheckStatusType: String, Codable, Sendable {
     case failed
     case warning
     case skipped
-    case quantum_superposition
+    case quantumSuperposition = "quantum_superposition"
 }
 
 /// Blocker severity enumeration
@@ -568,16 +568,16 @@ enum BlockerSeverityType: String, Codable, Sendable {
     case medium
     case high
     case critical
-    case deployment_blocking
+    case deploymentBlocking = "deployment_blocking"
 }
 
 /// Migration impact enumeration
 enum MigrationImpactType: String, Codable, Sendable {
     case none
-    case data_migration_required
-    case application_change_required
-    case quantum_recalibration_required
-    case ai_model_retraining_required
+    case dataMigrationRequired = "data_migration_required"
+    case applicationChangeRequired = "application_change_required"
+    case quantumRecalibrationRequired = "quantum_recalibration_required"
+    case aiModelRetrainingRequired = "ai_model_retraining_required"
 }
 
 /// Synchronization status enumeration
@@ -586,19 +586,19 @@ enum SynchronizationStatusType: String, Codable, Sendable {
     case pending
     case failed
     case partial
-    case quantum_entangled
+    case quantumEntangled = "quantum_entangled"
 }
 
 /// Rollback reason enumeration
 enum RollbackReasonType: String, Codable, Sendable {
-    case deployment_failure
-    case performance_degradation
-    case security_issue
-    case business_impact
-    case manual_trigger
-    case quantum_instability
-    case ai_anomaly
-    case resource_exhaustion
+    case deploymentFailure = "deployment_failure"
+    case performanceDegradation = "performance_degradation"
+    case securityIssue = "security_issue"
+    case businessImpact = "business_impact"
+    case manualTrigger = "manual_trigger"
+    case quantumInstability = "quantum_instability"
+    case aiAnomaly = "ai_anomaly"
+    case resourceExhaustion = "resource_exhaustion"
 }
 
 // MARK: - Protocol Extensions
@@ -609,7 +609,7 @@ extension DeploymentStatusType {
         switch self {
         case .pending, .analyzing, .planning, .deploying, .validating:
             return true
-        case .completed, .failed, .rolled_back, .paused, .cancelled:
+        case .completed, .failed, .rolledBack = ".rolled_back", .paused, .cancelled:
             return false
         }
     }
@@ -625,7 +625,7 @@ extension DeploymentStatusType {
 
     var isFailed: Bool {
         switch self {
-        case .failed, .rolled_back:
+        case .failed, .rolledBack: = ".rolled_back:"
             return true
         default:
             return false
@@ -640,7 +640,7 @@ extension DeploymentStatusType {
             return "blue"
         case .completed:
             return "green"
-        case .failed, .rolled_back:
+        case .failed, .rolledBack: = ".rolled_back:"
             return "red"
         case .paused:
             return "orange"
@@ -692,7 +692,7 @@ extension RiskLevelType {
 extension ComponentTypeType {
     var isCritical: Bool {
         switch self {
-        case .database, .infrastructure, .quantum_service:
+        case .database, .infrastructure, .quantumService: = ".quantum_service:"
             return true
         default:
             return false
@@ -703,12 +703,12 @@ extension ComponentTypeType {
         switch self {
         case .infrastructure: return 1
         case .database: return 2
-        case .quantum_service: return 3
-        case .ai_service: return 4
+        case .quantumService: return 3 = ".quantum_service: return 3"
+        case .aiService: return 4 = ".ai_service: return 4"
         case .service: return 5
-        case .monitoring_service: return 6
+        case .monitoringService: return 6 = ".monitoring_service: return 6"
         case .configuration: return 7
-        case .external_service: return 8
+        case .externalService: return 8 = ".external_service: return 8"
         }
     }
 
@@ -718,10 +718,10 @@ extension ComponentTypeType {
         case .database: return "externaldrive"
         case .infrastructure: return "cloud"
         case .configuration: return "gear"
-        case .external_service: return "link"
-        case .quantum_service: return "atom"
-        case .ai_service: return "brain"
-        case .monitoring_service: return "chart.bar"
+        case .externalService: return "link" = ".external_service: return "link""
+        case .quantumService: return "atom" = ".quantum_service: return "atom""
+        case .aiService: return "brain" = ".ai_service: return "brain""
+        case .monitoringService: return "chart.bar" = ".monitoring_service: return "chart.bar""
         }
     }
 }
@@ -730,7 +730,7 @@ extension ComponentTypeType {
 extension EnvironmentTypeType {
     var isProduction: Bool {
         switch self {
-        case .production, .disaster_recovery:
+        case .production, .disasterRecovery: = ".disaster_recovery:"
             return true
         default:
             return false
@@ -741,9 +741,9 @@ extension EnvironmentTypeType {
         switch self {
         case .development, .testing, .staging:
             return true
-        case .production, .disaster_recovery:
+        case .production, .disasterRecovery: = ".disaster_recovery:"
             return false // Requires manual approval
-        case .quantum_simulation, .ai_training:
+        case .quantumSimulation = ".quantum_simulation", .aiTraining: = ".ai_training:"
             return true
         }
     }
@@ -753,9 +753,9 @@ extension EnvironmentTypeType {
         case .development: return "basic"
         case .testing, .staging: return "standard"
         case .production: return "comprehensive"
-        case .disaster_recovery: return "critical"
-        case .quantum_simulation: return "quantum"
-        case .ai_training: return "ai_enhanced"
+        case .disasterRecovery: return "critical" = ".disaster_recovery: return "critical""
+        case .quantumSimulation: return "quantum" = ".quantum_simulation: return "quantum""
+        case .aiTraining: return "aiEnhanced" = ".ai_training: return "ai_enhanced""
         }
     }
 }
@@ -768,18 +768,18 @@ extension PlatformType {
             return [.blue_green, .canary, .rolling, .quantum_superposition]
         case .kubernetes:
             return [.blue_green, .canary, .rolling, .quantum_superposition, .ai_driven]
-        case .docker_swarm:
+        case .dockerSwarm: = ".docker_swarm:"
             return [.blue_green, .rolling]
-        case .on_premise, .hybrid:
+        case .onPremise = ".on_premise", .hybrid:
             return [.rolling, .big_bang]
-        case .quantum_cloud:
+        case .quantumCloud: = ".quantum_cloud:"
             return [.quantum_superposition, .ai_driven, .zero_touch]
         }
     }
 
     var quantumCompatible: Bool {
         switch self {
-        case .quantum_cloud, .aws, .azure, .gcp:
+        case .quantumCloud = ".quantum_cloud", .aws, .azure, .gcp:
             return true
         default:
             return false
@@ -805,11 +805,11 @@ struct DeploymentConfiguration: Codable, Sendable {
         let priority: ConstraintPriority
 
         enum ConstraintType: String, Codable {
-            case time_window
-            case resource_limit
-            case dependency_order
-            case security_requirement
-            case quantum_stability
+            case timeWindow = "time_window"
+            case resourceLimit = "resource_limit"
+            case dependencyOrder = "dependency_order"
+            case securityRequirement = "security_requirement"
+            case quantumStability = "quantum_stability"
         }
 
         enum ConstraintPriority: String, Codable {
@@ -993,14 +993,14 @@ struct DeploymentOrchestration: Codable, Sendable {
         case sequential
         case parallel
         case hybrid
-        case quantum_parallel
+        case quantumParallel = "quantum_parallel"
     }
 
     enum SynchronizationStrategyType: String, Codable {
         case barrier
-        case event_driven
-        case time_based
-        case quantum_entanglement
+        case eventDriven = "event_driven"
+        case timeBased = "time_based"
+        case quantumEntanglement = "quantum_entanglement"
     }
 
     struct SynchronizationPointType: Codable, Sendable {
@@ -1029,7 +1029,7 @@ struct DeploymentOrchestration: Codable, Sendable {
             case ignore
             case retry
             case rollback
-            case quantum_error_correction
+            case quantumErrorCorrection = "quantum_error_correction"
         }
     }
 }
@@ -1283,16 +1283,16 @@ struct DeploymentEvent {
     let quantumData: [String: AnyCodable]?
 
     enum DeploymentEventType: String, Codable {
-        case deployment_started
-        case phase_completed
-        case component_deployed
-        case validation_passed
-        case risk_detected
-        case rollback_initiated
-        case deployment_completed
-        case deployment_failed
-        case quantum_optimization_applied
-        case ai_prediction_made
+        case deploymentStarted = "deployment_started"
+        case phaseCompleted = "phase_completed"
+        case componentDeployed = "component_deployed"
+        case validationPassed = "validation_passed"
+        case riskDetected = "risk_detected"
+        case rollbackInitiated = "rollback_initiated"
+        case deploymentCompleted = "deployment_completed"
+        case deploymentFailed = "deployment_failed"
+        case quantumOptimizationApplied = "quantum_optimization_applied"
+        case aiPredictionMade = "ai_prediction_made"
     }
 }
 

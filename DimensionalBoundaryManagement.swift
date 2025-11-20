@@ -297,11 +297,15 @@ struct TransitionValidation {
         let description: String
         let suggestion: String
 
-        enum IssueSeverity {
+
             case low
+
             case medium
+
             case high
+
             case critical
+
         }
     }
 }
@@ -519,12 +523,6 @@ struct CompatibilityResult {
             case performanceMismatch
         }
 
-        enum IssueSeverity {
-            case low
-            case medium
-            case high
-            case critical
-        }
     }
 }
 
@@ -542,11 +540,15 @@ struct InteractionHealth {
         let affectedParticipants: [Int]
         let timestamp: Date
 
-        enum AlertLevel {
+
             case info
+
             case warning
+
             case error
+
             case critical
+
         }
     }
 }
@@ -628,12 +630,6 @@ struct BoundaryAlert {
     let timestamp: Date
     let suggestedActions: [String]
 
-    enum AlertLevel {
-        case info
-        case warning
-        case error
-        case critical
-    }
 }
 
 /// Boundary report

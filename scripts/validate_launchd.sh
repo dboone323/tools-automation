@@ -76,8 +76,10 @@ status_plist() {
     echo "Status for $name:"
 
     if launchctl list 2>/dev/null | grep -q "$name"; then
-        local pid=$(launchctl list 2>/dev/null | grep "$name" | awk '{print $1}')
-        local status=$(launchctl list 2>/dev/null | grep "$name" | awk '{print $2}')
+        local pid
+        pid=$(launchctl list 2>/dev/null | grep "$name" | awk '{print $1}')
+        local status
+        status=$(launchctl list 2>/dev/null | grep "$name" | awk '{print $2}')
         echo "  Status: Running"
         echo "  PID: $pid"
         echo "  Exit Code: $status"

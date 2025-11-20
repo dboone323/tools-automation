@@ -41,12 +41,17 @@ struct SystemHealth {
 
 /// Trend direction
 enum Trend {
-    case increasing, decreasing, stable
+    case increasing
+    case decreasing
+    case stable
 }
 
 /// Resource type
 enum ResourceType {
-    case material, energy, labor, equipment
+    case material
+    case energy
+    case labor
+    case equipment
 }
 
 // MARK: - Core Protocols
@@ -358,9 +363,6 @@ struct MarketFactor {
         case economic, competitive, regulatory, technological
     }
 
-    enum Trend {
-        case increasing, decreasing, stable
-    }
 }
 
 /// Product batch
@@ -597,9 +599,6 @@ struct ResourceUtilization {
     let efficiency: Double
     let waste: Double
 
-    enum ResourceType {
-        case material, energy, labor, equipment
-    }
 }
 
 /// Resource consumption

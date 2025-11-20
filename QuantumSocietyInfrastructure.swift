@@ -328,12 +328,17 @@ struct SocietyImprovementFactor {
     let impact: Double
     let description: String
 
-    enum ImprovementFactorType {
+
         case governance
+
         case economic
+
         case social
+
         case technological
+
         case integrative
+
     }
 }
 
@@ -356,11 +361,15 @@ struct EfficiencyGain {
     let magnitude: Double
     let implementation: String
 
-    enum EfficiencyGainType {
+
         case resource
+
         case productivity
+
         case equity
+
         case stability
+
     }
 }
 
@@ -601,20 +610,7 @@ enum CooperationType {
     case quantum
 }
 
-enum ImprovementFactorType {
-    case governance
-    case economic
-    case social
-    case technological
-    case integrative
-}
 
-enum EfficiencyGainType {
-    case resource
-    case productivity
-    case equity
-    case stability
-}
 
 enum ResolutionStrategy {
     case negotiation

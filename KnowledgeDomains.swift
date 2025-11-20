@@ -116,11 +116,21 @@ struct DomainCapability {
     let prerequisites: [DomainCapability]
     let effectiveness: Double
 
-    enum CapabilityType {
+
         case organization
+
         case specialization
+
         case coordination
+
         case validation
+
+        case categorization
+
+        case structuring
+
+        case optimization
+
     }
 }
 
@@ -166,11 +176,19 @@ struct DomainStructure {
         let type: RelationshipType
         let strength: Double
 
-        enum RelationshipType {
+
             case complementary
+
             case dependent
+
             case conflicting
+
             case independent
+
+            case prerequisite
+
+            case related
+
         }
     }
 
@@ -284,11 +302,39 @@ struct KnowledgeDomainInsights {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
+
             case domainExpansion
+
             case knowledgeIntegration
+
             case specializationEnhancement
+
             case coordinationImprovement
+
+            case restructure
+
+            case expand
+
+            case validate
+
+            case optimize
+
+            case correction
+
+            case expansion
+
+            case refinement
+
+            case verification
+
+            case qualityImprovement
+
+            case knowledgeExpansion
+
+            case structureOptimization
+
+            case validationEnhancement
+
         }
     }
 
@@ -324,12 +370,6 @@ struct DomainOrganizationCapability {
     let domainTypes: [KnowledgeDomainType]
     let efficiency: Double
 
-    enum CapabilityType {
-        case categorization
-        case structuring
-        case optimization
-        case validation
-    }
 }
 
 /// Domain organization
@@ -441,12 +481,6 @@ struct DomainKnowledgeStructure {
             let type: RelationshipType
             let strength: Double
 
-            enum RelationshipType {
-                case prerequisite
-                case related
-                case dependent
-                case complementary
-            }
         }
 
         struct KnowledgeDependency {
@@ -503,21 +537,27 @@ struct DomainOrganizationOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case efficiency
-            case quality
-            case coherence
-            let improvementId: String
-            let type: ImprovementType
-            let factor: Double
-            let description: String
 
-            enum ImprovementType {
-                case efficiency
-                case quality
-                case coherence
-                case adaptability
-            }
+            case efficiency
+
+            case quality
+
+            case coherence
+
+            case efficiency
+
+            case quality
+
+            case coherence
+
+            case adaptability
+
+            case effectiveness
+
+            case harmony
+
+            case synchronization
+
         }
     }
 }
@@ -544,11 +584,23 @@ struct DomainOrganizationValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
+
             case structural
+
             case coverage
+
             case relationship
+
             case efficiency
+
+            case inaccuracy
+
+            case incompleteness
+
+            case inconsistency
+
+            case irrelevance
+
         }
     }
 
@@ -558,12 +610,6 @@ struct DomainOrganizationValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case restructure
-            case expand
-            case validate
-            case optimize
-        }
     }
 }
 
@@ -703,12 +749,17 @@ struct DomainSpecializationValidation {
         let expiryDate: Date?
         let requirements: [String]
 
-        enum CertificationLevel {
+
             case basic
+
             case intermediate
+
             case advanced
+
             case expert
+
             case master
+
         }
     }
 }
@@ -845,12 +896,6 @@ struct DomainCoordinationOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case efficiency
-            case effectiveness
-            case harmony
-            case synchronization
-        }
     }
 }
 
@@ -876,12 +921,6 @@ struct DomainValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
-            case inaccuracy
-            case incompleteness
-            case inconsistency
-            case irrelevance
-        }
     }
 
     struct ValidationRecommendation {
@@ -890,12 +929,6 @@ struct DomainValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case correction
-            case expansion
-            case refinement
-            case verification
-        }
     }
 }
 
@@ -930,22 +963,6 @@ struct DomainQualityAssessment {
         let priority: Double
         let expectedImpact: Double
 
-        enum RecommendationType {
-            case qualityImprovement
-            case knowledgeExpansion
-            let recommendationId: String
-            let type: RecommendationType
-            let description: String
-            let priority: Double
-            let expectedImpact: Double
-
-            enum RecommendationType {
-                case qualityImprovement
-                case knowledgeExpansion
-                case structureOptimization
-                case validationEnhancement
-            }
-        }
     }
 }
 
@@ -983,13 +1000,6 @@ struct DomainExpertiseCertification {
     let assessment: CertificationAssessment
     let issuedDate: Date
 
-    enum CertificationLevel {
-        case basic
-        case intermediate
-        case advanced
-        case expert
-        case master
-    }
 
     struct CertificationRequirement {
         let requirementId: String

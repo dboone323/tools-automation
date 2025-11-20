@@ -19,7 +19,7 @@ struct DimensionalCoordinates: Hashable {
     init(x: Double = 0, y: Double = 0, z: Double = 0, temporal: Double = 0, quantum: Double = 0, multiversal: Double = 0) {
         self.dimensions = [
             "x": x, "y": y, "z": z,
-            "temporal": temporal, "quantum": quantum, "multiversal": multiversal
+            "temporal": temporal, "quantum": quantum, "multiversal": multiversal,
         ]
     }
 
@@ -94,6 +94,12 @@ struct DimensionalMatrix {
     let rows: Int
     let columns: Int
     let elements: [[Double]]
+
+    init(rows: Int, columns: Int, elements: [[Double]]) {
+        self.rows = rows
+        self.columns = columns
+        self.elements = elements
+    }
 
     static func identity(_ size: Int) -> DimensionalMatrix {
         let elements = (0 ..< size).map { i in

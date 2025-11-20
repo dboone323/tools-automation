@@ -50,8 +50,8 @@ if [[ $rc -ne 0 || ! -s "$OUT_JSON" ]]; then
     # Fallback: produce minimal summary by running show and converting to JSON-ish text
     TMP_TXT="$(mktemp)"
     xcrun llvm-cov show -instr-profile "$PROFDATA" "${OBJECTS[@]}" >"$TMP_TXT" 2>/dev/null || true
-    total_lines=$(grep -E "^\s*[0-9]+\s*\|" "$TMP_TXT" | wc -l | awk '{print $1}')
-    covered=$(grep -E "^\s*[1-9][0-9]*\s*\|" "$TMP_TXT" | wc -l | awk '{print $1}')
+    total_lines=$(grep -cE "^\s*[0-9]+\s*\|" "$TMP_TXT")
+    covered=$(grep -cE "^\s*[1-9][0-9]*\s*\|" "$TMP_TXT")
     echo "{\"summary\":{\"lines\":$total_lines,\"covered\":$covered}}" >"$OUT_JSON"
     rm -f "$TMP_TXT"
 fi

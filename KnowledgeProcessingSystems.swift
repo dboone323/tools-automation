@@ -111,11 +111,23 @@ struct TransformationCapability {
     let adaptability: Double
     let domainType: KnowledgeDomainType
 
-    enum TransformationType {
+
         case structural
+
         case semantic
+
         case syntactic
+
         case contextual
+
+        case format
+
+        case structure
+
+        case content
+
+        case metadata
+
     }
 }
 
@@ -128,22 +140,19 @@ struct AnalysisCapability {
     let comprehensiveness: Double
     let domainType: KnowledgeDomainType
 
-    enum AnalysisType {
-        case statistical
-        case semantic
-        let capabilityId: String
-        let type: AnalysisType
-        let depth: Double
-        let precision: Double
-        let comprehensiveness: Double
-        let domainType: KnowledgeDomainType
 
-        enum AnalysisType {
-            case statistical
-            case semantic
-            case structural
-            case temporal
-        }
+        case statistical
+
+        case semantic
+
+        case statistical
+
+        case semantic
+
+        case structural
+
+        case temporal
+
     }
 }
 
@@ -156,11 +165,23 @@ struct ValidationCapability {
     let reliability: Double
     let domainType: KnowledgeDomainType
 
-    enum ValidationType {
+
         case syntactic
+
         case semantic
+
         case logical
+
         case consistency
+
+        case comprehensive
+
+        case quick
+
+        case deep
+
+        case automated
+
     }
 }
 
@@ -241,11 +262,29 @@ struct KnowledgeProcessingInsights {
         let domainType: KnowledgeDomainType
         let timestamp: Date
 
-        enum InsightType {
+
             case bottleneck
+
             case optimization
+
             case pattern
+
             case anomaly
+
+            case discovery
+
+            case trend
+
+            case correlation
+
+            case statistical
+
+            case semantic
+
+            case structural
+
+            case behavioral
+
         }
     }
 
@@ -265,11 +304,41 @@ struct KnowledgeProcessingInsights {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
+
             case pipelineOptimization
+
             case capabilityEnhancement
+
             case resourceAllocation
+
             case processingStrategy
+
+            case fix
+
+            case optimize
+
+            case refactor
+
+            case document
+
+            case investigation
+
+            case action
+
+            case monitoring
+
+            case optimization
+
+            case improve
+
+            case standardize
+
+            case scaling
+
+            case caching
+
+            case parallelization
+
         }
     }
 
@@ -280,11 +349,27 @@ struct KnowledgeProcessingInsights {
         let potentialGain: Double
         let implementationComplexity: Double
 
-        enum OptimizationType {
+
             case parallelization
+
             case caching
+
             case algorithm
+
             case architecture
+
+            case efficiency
+
+            case performance
+
+            case reliability
+
+            case maintainability
+
+            case prioritization
+
+            case stepReordering
+
         }
     }
 
@@ -350,14 +435,29 @@ struct ProcessingStep {
     let dependencies: [String]
     let priority: Int
 
-    enum StepType {
+
         case ingestion
+
         case validation
+
         case transformation
+
         case analysis
+
         case enrichment
+
         case aggregation
+
         case export
+
+        case dataCollection
+
+        case preprocessing
+
+        case computation
+
+        case interpretation
+
     }
 
     struct StepConfiguration {
@@ -408,12 +508,6 @@ struct KnowledgeTransformation {
     let parameters: [String: Any]
     let metadata: TransformationMetadata
 
-    enum TransformationType {
-        case format
-        case structure
-        case content
-        case metadata
-    }
 
     struct TransformationMetadata {
         let created: Date
@@ -444,7 +538,7 @@ struct TransformationRule {
         let conditionId: String
         let type: ConditionType
         let value: Any
-        let `operator`: ConditionOperator
+        let `operator`:ConditionOperator
 
         enum ConditionType {
             case content
@@ -501,11 +595,23 @@ struct TransformationValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
+
             case syntax
+
             case logic
+
             case performance
+
             case compatibility
+
+            case methodological
+
+            case statistical
+
+            case logical
+
+            case data
+
         }
     }
 
@@ -515,12 +621,6 @@ struct TransformationValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case fix
-            case optimize
-            case refactor
-            case document
-        }
     }
 }
 
@@ -538,12 +638,6 @@ struct TransformationOptimization {
         let improvement: Double
         let description: String
 
-        enum OptimizationType {
-            case efficiency
-            case performance
-            case reliability
-            case maintainability
-        }
     }
 }
 
@@ -555,12 +649,6 @@ struct KnowledgeAnalysis {
     let parameters: [String: Any]
     let scope: AnalysisScope
 
-    enum AnalysisType {
-        case statistical
-        case semantic
-        case structural
-        case temporal
-    }
 
     struct AnalysisScope {
         let domainType: KnowledgeDomainType
@@ -578,13 +666,6 @@ struct AnalysisStep {
     let configuration: StepConfiguration
     let dependencies: [String]
 
-    enum StepType {
-        case dataCollection
-        case preprocessing
-        case computation
-        case interpretation
-        case validation
-    }
 
     struct StepConfiguration {
         let algorithm: String
@@ -625,12 +706,6 @@ struct KnowledgeAnalysisResult {
         let confidence: Double
         let impact: Double
 
-        enum InsightType {
-            case discovery
-            case anomaly
-            case trend
-            case correlation
-        }
     }
 
     struct AnalysisMetrics {
@@ -671,12 +746,6 @@ struct AnalysisInsights {
         let significance: Double
         let evidence: [String]
 
-        enum InsightType {
-            case statistical
-            case semantic
-            case structural
-            case behavioral
-        }
     }
 
     struct AnalysisPattern {
@@ -694,12 +763,6 @@ struct AnalysisInsights {
         let priority: Double
         let rationale: String
 
-        enum RecommendationType {
-            case investigation
-            case action
-            case monitoring
-            case optimization
-        }
     }
 
     struct AnalysisVisualization {
@@ -740,12 +803,6 @@ struct AnalysisValidation {
         let description: String
         let resolution: String?
 
-        enum IssueType {
-            case methodological
-            case statistical
-            case logical
-            case data
-        }
     }
 }
 
@@ -757,12 +814,6 @@ struct KnowledgeValidation {
     let criteria: ValidationCriteria
     let scope: ValidationScope
 
-    enum ValidationType {
-        case comprehensive
-        case quick
-        case deep
-        case automated
-    }
 
     struct ValidationCriteria {
         let accuracy: Double
@@ -851,12 +902,6 @@ struct ValidationReport {
         let priority: Double
         let affectedItems: Int
 
-        enum RecommendationType {
-            case fix
-            case improve
-            case standardize
-            case document
-        }
     }
 }
 
@@ -874,12 +919,6 @@ struct ValidationOptimization {
         let improvement: Double
         let description: String
 
-        enum OptimizationType {
-            case parallelization
-            case caching
-            case algorithm
-            case prioritization
-        }
     }
 }
 
@@ -923,12 +962,6 @@ struct PipelineOptimization {
         let improvement: Double
         let description: String
 
-        enum OptimizationType {
-            case stepReordering
-            case parallelization
-            case caching
-            case algorithm
-        }
     }
 }
 
@@ -968,12 +1001,6 @@ struct ProcessingPerformance {
         let description: String
         let expectedImprovement: Double
 
-        enum RecommendationType {
-            case optimization
-            case scaling
-            case caching
-            case parallelization
-        }
     }
 }
 
@@ -1020,7 +1047,7 @@ class KnowledgeProcessingSystemsEngine {
                 accuracy: 0.95,
                 scalability: 0.85,
                 domainType: domain
-            )
+            ),
         ]
 
         let transformationCapabilities = [
@@ -1031,7 +1058,7 @@ class KnowledgeProcessingSystemsEngine {
                 reliability: 0.9,
                 adaptability: 0.85,
                 domainType: domain
-            )
+            ),
         ]
 
         let analysisCapabilities = [
@@ -1042,7 +1069,7 @@ class KnowledgeProcessingSystemsEngine {
                 precision: 0.88,
                 comprehensiveness: 0.92,
                 domainType: domain
-            )
+            ),
         ]
 
         let validationCapabilities = [
@@ -1053,7 +1080,7 @@ class KnowledgeProcessingSystemsEngine {
                 speed: 0.85,
                 reliability: 0.95,
                 domainType: domain
-            )
+            ),
         ]
 
         let system = KnowledgeProcessingSystemInstance(
@@ -1329,7 +1356,7 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
                 type: .caching,
                 improvement: 0.2,
                 description: "Add caching for repeated operations"
-            )
+            ),
         ]
 
         let optimizedPipeline = ProcessingPipeline(
@@ -1363,7 +1390,7 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
                 location: "transformation_step",
                 impact: 0.2,
                 description: "High computational load in transformation"
-            )
+            ),
         ]
 
         let recommendations = [
@@ -1372,7 +1399,7 @@ class KnowledgeProcessorImpl: KnowledgeProcessor {
                 type: .parallelization,
                 description: "Implement parallel processing for transformation steps",
                 expectedImprovement: 0.25
-            )
+            ),
         ]
 
         return ProcessingPerformance(
@@ -1423,7 +1450,7 @@ class KnowledgeTransformerImpl: KnowledgeTransformer {
                 before: rule.pattern,
                 after: rule.replacement,
                 confidence: 0.9
-            )
+            ),
         ] : []
 
         return RuleApplicationResult(
@@ -1468,7 +1495,7 @@ class KnowledgeTransformerImpl: KnowledgeTransformer {
                 type: .performance,
                 improvement: 0.15,
                 description: "Improved caching for repeated transformations"
-            )
+            ),
         ]
 
         let optimizedTransformation = KnowledgeTransformation(
@@ -1500,7 +1527,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 data: ["count": knowledge.count, "average_length": 100],
                 confidence: 0.9,
                 significance: 0.8
-            )
+            ),
         ]
 
         let insights = [
@@ -1510,7 +1537,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 description: "Discovered knowledge patterns",
                 confidence: 0.85,
                 impact: 0.7
-            )
+            ),
         ]
 
         return KnowledgeAnalysisResult(
@@ -1555,7 +1582,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 content: "Statistical analysis reveals patterns",
                 significance: 0.8,
                 evidence: ["pattern_1", "pattern_2"]
-            )
+            ),
         ]
 
         let patterns = [
@@ -1565,7 +1592,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 frequency: 0.6,
                 strength: 0.8,
                 examples: ["example_1", "example_2"]
-            )
+            ),
         ]
 
         let recommendations = [
@@ -1575,7 +1602,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 description: "Investigate identified patterns",
                 priority: 0.7,
                 rationale: "High significance patterns detected"
-            )
+            ),
         ]
 
         let visualizations = [
@@ -1584,7 +1611,7 @@ class KnowledgeAnalyzerImpl: KnowledgeAnalyzer {
                 type: .chart,
                 data: ["data": "visualization_data"],
                 configuration: ["type": "bar_chart"]
-            )
+            ),
         ]
 
         return AnalysisInsights(
@@ -1677,7 +1704,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
                 description: "Improve validation criteria",
                 priority: 0.6,
                 affectedItems: failed
-            )
+            ),
         ]
 
         return ValidationReport(
@@ -1720,7 +1747,7 @@ class KnowledgeValidatorImpl: KnowledgeValidator {
                 type: .caching,
                 improvement: 0.15,
                 description: "Cache validation results for repeated checks"
-            )
+            ),
         ]
 
         let optimizedValidation = KnowledgeValidation(

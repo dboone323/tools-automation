@@ -286,12 +286,23 @@ struct MarketPrediction {
         let priceRange: ClosedRange<Double>
     }
 
-    enum PredictionMethodology {
+
         case quantumAlgorithm
+
         case machineLearning
+
         case statistical
+
         case fundamental
+
         case technical
+
+        case quantum
+
+        case classical
+
+        case hybrid
+
     }
 
     struct PredictionRisk {
@@ -300,11 +311,25 @@ struct MarketPrediction {
         let probability: Double
         let impact: Double
 
-        enum RiskType {
+
             case modelError
+
             case blackSwan
+
             case dataQuality
+
             case marketManipulation
+
+            case market
+
+            case credit
+
+            case liquidity
+
+            case operational
+
+            case geopolitical
+
         }
     }
 }
@@ -415,11 +440,23 @@ struct PolicySimulation {
         let rationale: String
         let priority: Double
 
-        enum RecommendationType {
+
             case implement
+
             case modify
+
             case abandon
+
             case monitor
+
+            case training
+
+            case immigration
+
+            case wagePolicy
+
+            case regulation
+
         }
     }
 }
@@ -493,13 +530,27 @@ struct TradeRegulation {
     let enforcement: EnforcementMechanism
     let penalties: [RegulatoryPenalty]
 
-    enum RegulationType {
+
         case tariff
+
         case quota
+
         case standard
+
         case licensing
+
         case environmental
+
         case safety
+
+        case disclosure
+
+        case trading
+
+        case capital
+
+        case conduct
+
     }
 
     struct RegulatoryRequirement {
@@ -587,13 +638,35 @@ struct InvestmentPortfolio {
         let objectives: [String]
         let constraints: [String]
 
-        enum StrategyType {
+
             case growth
+
             case value
+
             case income
+
             case balanced
+
             case conservative
+
             case aggressive
+
+            case diversification
+
+            case hedging
+
+            case insurance
+
+            case capital
+
+            case momentum
+
+            case meanReversion
+
+            case arbitrage
+
+            case quantitative
+
         }
     }
 
@@ -690,13 +763,6 @@ struct RiskAssessment {
         let impact: Double
         let exposure: Double
 
-        enum RiskType {
-            case market
-            case credit
-            case liquidity
-            case operational
-            case geopolitical
-        }
     }
 
     struct RiskMitigation {
@@ -764,12 +830,23 @@ struct OptimizedAllocation {
         let description: String
         let bound: Double
 
-        enum ConstraintType {
+
             case budget
+
             case capacity
+
             case equity
+
             case sustainability
+
             case regulatory
+
+            case political
+
+            case institutional
+
+            case international
+
         }
     }
 
@@ -986,11 +1063,23 @@ struct EconomicSystem {
         let type: InstitutionType
         let role: String
 
-        enum InstitutionType {
+
             case centralBank
+
             case government
+
             case privateBank
+
             case international
+
+            case bank
+
+            case investment
+
+            case insurance
+
+            case fintech
+
         }
     }
 
@@ -1245,12 +1334,6 @@ struct LaborAnalysis {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case training
-            case immigration
-            case wagePolicy
-            case regulation
-        }
     }
 }
 
@@ -1312,11 +1395,6 @@ struct PricePrediction {
         let volatility: Double
     }
 
-    enum PredictionMethodology {
-        case quantum
-        case classical
-        case hybrid
-    }
 }
 
 /// Trend forecast
@@ -1376,21 +1454,21 @@ struct SentimentAnalysis {
         let weight: Double
         let reliability: Double
 
-        enum SourceType {
-            case news
-            case socialMedia
-            case analyst
-            let sourceId: String
-            let type: SourceType
-            let weight: Double
-            let reliability: Double
 
-            enum SourceType {
-                case news
-                case socialMedia
-                case analyst
-                case institutional
-            }
+            case news
+
+            case socialMedia
+
+            case analyst
+
+            case news
+
+            case socialMedia
+
+            case analyst
+
+            case institutional
+
         }
     }
 
@@ -1459,11 +1537,21 @@ struct EfficiencyOptimization {
         let impact: Double
         let cost: Double
 
-        enum MeasureType {
+
             case process
+
             case technology
+
             case organization
+
             case regulation
+
+            case spending
+
+            case taxation
+
+            case transfer
+
         }
     }
 
@@ -1578,11 +1666,6 @@ struct FiscalPolicy {
         let amount: Double
         let timing: TimeInterval
 
-        enum MeasureType {
-            case spending
-            case taxation
-            case transfer
-        }
     }
 
     struct FiscalImpact {
@@ -1630,11 +1713,23 @@ struct MonetaryPolicy {
         let rate: Double
         let quantity: Double
 
-        enum InstrumentType {
+
             case interestRate
+
             case reserveRequirement
+
             case openMarket
+
             case quantitativeEasing
+
+            case futures
+
+            case options
+
+            case swaps
+
+            case forwards
+
         }
     }
 
@@ -1736,12 +1831,6 @@ struct PolicyOptimization {
         let bound: Double
         let description: String
 
-        enum ConstraintType {
-            case budget
-            case political
-            case institutional
-            case international
-        }
     }
 
     struct OptimalPolicyMix {
@@ -1808,24 +1897,23 @@ struct TradeStandard {
     let adoption: Double
     let impact: Double
 
-    enum StandardCategory {
-        case quality
-        case safety
-        case environmental
-        let standardId: String
-        let name: String
-        let category: StandardCategory
-        let requirements: [String]
-        let adoption: Double
-        let impact: Double
 
-        enum StandardCategory {
-            case quality
-            case safety
-            case environmental
-            case labor
-            case technical
-        }
+        case quality
+
+        case safety
+
+        case environmental
+
+        case quality
+
+        case safety
+
+        case environmental
+
+        case labor
+
+        case technical
+
     }
 }
 
@@ -1975,11 +2063,23 @@ struct SupplyChainOptimization {
         let technologies: [String]
         let redundancies: [String]
 
-        enum OptimizationMethod {
+
             case diversification
+
             case digitization
+
             case resilience
+
             case collaboration
+
+            case linear
+
+            case nonlinear
+
+            case heuristic
+
+            case quantum
+
         }
     }
 
@@ -2159,12 +2259,6 @@ struct FinancialSystem {
         let type: InstitutionType
         let assets: Double
 
-        enum InstitutionType {
-            case bank
-            case investment
-            case insurance
-            case fintech
-        }
     }
 
     struct FinancialInfrastructure {
@@ -2201,39 +2295,15 @@ struct Borrower {
     let financials: FinancialStatements
     let risk: BorrowerRisk
 
-    enum BorrowerType {
+
         case individual
-        let borrowerId: String
-        let name: String
-        let type: BorrowerType
-        let creditHistory: CreditHistory
-        let financials: FinancialStatements
-        let risk: BorrowerRisk
 
-        enum BorrowerType {
-            case individual
-            case corporate
-            case sovereign
-        }
+        case individual
 
-        struct CreditHistory {
-            let score: Double
-            let history: [CreditEvent]
-            let utilization: Double
-        }
+        case corporate
 
-        struct FinancialStatements {
-            let assets: Double
-            let liabilities: Double
-            let revenue: Double
-            let profit: Double
-        }
+        case sovereign
 
-        struct BorrowerRisk {
-            let probability: Double
-            let loss: Double
-            let concentration: Double
-        }
     }
 }
 
@@ -2246,21 +2316,17 @@ struct FinancialExposure {
     let maturity: Date
     let counterparty: String
 
-    enum ExposureType {
-        case interestRate
-        let exposureId: String
-        let type: ExposureType
-        let amount: Double
-        let currency: String
-        let maturity: Date
-        let counterparty: String
 
-        enum ExposureType {
-            case interestRate
-            case currency
-            case commodity
-            case credit
-        }
+        case interestRate
+
+        case interestRate
+
+        case currency
+
+        case commodity
+
+        case credit
+
     }
 }
 
@@ -2273,22 +2339,6 @@ struct HedgingInstrument {
     let maturity: Date
     let premium: Double
 
-    enum InstrumentType {
-        case futures
-        let instrumentId: String
-        let type: InstrumentType
-        let underlying: String
-        let notional: Double
-        let maturity: Date
-        let premium: Double
-
-        enum InstrumentType {
-            case futures
-            case options
-            case swaps
-            case forwards
-        }
-    }
 }
 
 /// Risk management strategy
@@ -2300,22 +2350,6 @@ struct RiskManagementStrategy {
     let effectiveness: Double
     let cost: Double
 
-    enum StrategyType {
-        case diversification
-        let strategyId: String
-        let name: String
-        let type: StrategyType
-        let description: String
-        let effectiveness: Double
-        let cost: Double
-
-        enum StrategyType {
-            case diversification
-            case hedging
-            case insurance
-            case capital
-        }
-    }
 }
 
 /// Economic process
@@ -2372,21 +2406,17 @@ struct Skill {
     let supply: Double
     let wagePremium: Double
 
-    enum SkillCategory {
-        case technical
-        let skillId: String
-        let name: String
-        let category: SkillCategory
-        let demand: Double
-        let supply: Double
-        let wagePremium: Double
 
-        enum SkillCategory {
-            case technical
-            case soft
-            case managerial
-            case specialized
-        }
+        case technical
+
+        case technical
+
+        case soft
+
+        case managerial
+
+        case specialized
+
     }
 }
 
@@ -2453,19 +2483,17 @@ struct AgreementTerm {
     let description: String
     let benefit: Double
 
-    enum TermType {
-        case tariff
-        let termId: String
-        let type: TermType
-        let description: String
-        let benefit: Double
 
-        enum TermType {
-            case tariff
-            case quota
-            case standard
-            case investment
-        }
+        case tariff
+
+        case tariff
+
+        case quota
+
+        case standard
+
+        case investment
+
     }
 }
 
@@ -2505,20 +2533,17 @@ struct MarketParticipant {
     let volume: Double
     let influence: Double
 
-    enum ParticipantType {
-        case individual
-        let participantId: String
-        let name: String
-        let type: ParticipantType
-        let volume: Double
-        let influence: Double
 
-        enum ParticipantType {
-            case individual
-            case institutional
-            case highFrequency
-            case marketMaker
-        }
+        case individual
+
+        case individual
+
+        case institutional
+
+        case highFrequency
+
+        case marketMaker
+
     }
 }
 
@@ -2530,21 +2555,6 @@ struct MarketRegulation {
     let requirements: [String]
     let enforcement: Double
 
-    enum RegulationType {
-        case disclosure
-        let regulationId: String
-        let name: String
-        let type: RegulationType
-        let requirements: [String]
-        let enforcement: Double
-
-        enum RegulationType {
-            case disclosure
-            case trading
-            case capital
-            case conduct
-        }
-    }
 }
 
 /// Trading strategy
@@ -2556,22 +2566,6 @@ struct TradingStrategy {
     let risk: Double
     let expectedReturn: Double
 
-    enum StrategyType {
-        case momentum
-        let strategyId: String
-        let name: String
-        let type: StrategyType
-        let parameters: [String: Any]
-        let risk: Double
-        let expectedReturn: Double
-
-        enum StrategyType {
-            case momentum
-            case meanReversion
-            case arbitrage
-            case quantitative
-        }
-    }
 }
 
 /// Central bank
@@ -2624,19 +2618,17 @@ struct MarketInfrastructure {
         let type: ExchangeType
         let volume: Double
 
-        enum ExchangeType {
-            case stock
-            let exchangeId: String
-            let name: String
-            let type: ExchangeType
-            let volume: Double
 
-            enum ExchangeType {
-                case stock
-                case commodity
-                case derivative
-                case crypto
-            }
+            case stock
+
+            case stock
+
+            case commodity
+
+            case derivative
+
+            case crypto
+
         }
     }
 
@@ -2653,19 +2645,17 @@ struct MarketInfrastructure {
         let speed: TimeInterval
         let reliability: Double
 
-        enum SettlementType {
-            case t1
-            let settlementId: String
-            let type: SettlementType
-            let speed: TimeInterval
-            let reliability: Double
 
-            enum SettlementType {
-                case t1
-                case t2
-                case t3
-                case realTime
-            }
+            case t1
+
+            case t1
+
+            case t2
+
+            case t3
+
+            case realTime
+
         }
     }
 
@@ -2687,18 +2677,17 @@ struct MarketInfrastructure {
             let type: AlgorithmType
             let performance: Double
 
-            enum AlgorithmType {
-                case execution
-                let algorithmId: String
-                let type: AlgorithmType
-                let performance: Double
 
-                enum AlgorithmType {
-                    case execution
-                    case highFrequency
-                    case quantitative
-                    case ai
-                }
+                case execution
+
+                case execution
+
+                case highFrequency
+
+                case quantitative
+
+                case ai
+
             }
         }
     }
@@ -2718,19 +2707,17 @@ struct ResourceManagement {
         let fairness: Double
         let efficiency: Double
 
-        enum AllocationAlgorithm {
-            case marketBased
-            let systemId: String
-            let algorithms: [AllocationAlgorithm]
-            let fairness: Double
-            let efficiency: Double
 
-            enum AllocationAlgorithm {
-                case marketBased
-                case needsBased
-                case meritBased
-                case lottery
-            }
+            case marketBased
+
+            case marketBased
+
+            case needsBased
+
+            case meritBased
+
+            case lottery
+
         }
     }
 
@@ -2740,20 +2727,6 @@ struct ResourceManagement {
         let automation: Double
         let effectiveness: Double
 
-        enum OptimizationMethod {
-            case linear
-            let systemId: String
-            let methods: [OptimizationMethod]
-            let automation: Double
-            let effectiveness: Double
-
-            enum OptimizationMethod {
-                case linear
-                case nonlinear
-                case heuristic
-                case quantum
-            }
-        }
     }
 
     struct ResourceMonitoringSystem {
@@ -2768,19 +2741,17 @@ struct ResourceManagement {
             let location: GeographicLocation
             let accuracy: Double
 
-            enum SensorType {
-                case iot
-                let sensorId: String
-                let type: SensorType
-                let location: GeographicLocation
-                let accuracy: Double
 
-                enum SensorType {
-                    case iot
-                    case satellite
-                    case ground
-                    case human
-                }
+                case iot
+
+                case iot
+
+                case satellite
+
+                case ground
+
+                case human
+
             }
         }
 
@@ -2795,17 +2766,15 @@ struct ResourceManagement {
                 let type: ModelType
                 let accuracy: Double
 
-                enum ModelType {
-                    case timeSeries
-                    let modelId: String
-                    let type: ModelType
-                    let accuracy: Double
 
-                    enum ModelType {
-                        case timeSeries
-                        case machineLearning
-                        case quantum
-                    }
+                    case timeSeries
+
+                    case timeSeries
+
+                    case machineLearning
+
+                    case quantum
+
                 }
             }
 
@@ -2823,19 +2792,17 @@ struct ResourceManagement {
                 let description: String
                 let impact: Double
 
-                enum InsightType {
-                    case efficiency
-                    let insightId: String
-                    let type: InsightType
-                    let description: String
-                    let impact: Double
 
-                    enum InsightType {
-                        case efficiency
-                        case sustainability
-                        case risk
-                        case opportunity
-                    }
+                    case efficiency
+
+                    case efficiency
+
+                    case sustainability
+
+                    case risk
+
+                    case opportunity
+
                 }
             }
         }
@@ -2847,61 +2814,36 @@ struct ResourceManagement {
             let severity: AlertSeverity
             let message: String
 
-            enum AlertCondition {
+
                 case low
-                let alertId: String
-                let resource: String
-                let condition: AlertCondition
-                let severity: AlertSeverity
-                let message: String
 
-                enum AlertCondition {
-                    case low
-                    case high
-                    case critical
-                    case trend
-                }
+                case low
 
-                enum AlertSeverity {
-                    case low
-                    let alertId: String
-                    let resource: String
-                    let condition: AlertCondition
-                    let severity: AlertSeverity
-                    let message: String
+                case high
 
-                    enum AlertCondition {
-                        case low
-                        case high
-                        case critical
-                        case trend
-                    }
+                case critical
 
-                    enum AlertSeverity {
-                        case low
-                        case medium
-                        case high
-                        case critical
-                    }
-                }
-            }
-        }
-    }
+                case trend
 
-    struct ResourceGovernance {
-        let governanceId: String
-        let policies: [ResourcePolicy]
-        let regulations: [ResourceRegulation]
-        let stakeholders: [ResourceStakeholder]
+                case low
 
-        struct ResourcePolicy {
-            let policyId: String
-            let name: String
-            let objectives: [String]
-            let implementation: String
-        }
+                case low
 
-        struct ResourceRegulation {
+                case high
+
+                case critical
+
+                case trend
+
+                case low
+
+                case medium
+
+                case high
+
+                case critical
+
+            }truct ResourceRegulation {
             let regulationId: String
             let name: String
             let requirements: [String]
@@ -2932,20 +2874,17 @@ struct TradeSystems {
         let users: Int
         let volume: Double
 
-        enum PlatformType {
-            case b2b
-            let platformId: String
-            let name: String
-            let type: PlatformType
-            let users: Int
-            let volume: Double
 
-            enum PlatformType {
-                case b2b
-                case b2c
-                case c2c
-                case government
-            }
+            case b2b
+
+            case b2b
+
+            case b2c
+
+            case c2c
+
+            case government
+
         }
     }
 
@@ -2956,21 +2895,19 @@ struct TradeSystems {
         let terms: [AgreementTerm]
         let status: AgreementStatus
 
-        enum AgreementStatus {
-            case proposed
-            let agreementId: String
-            let name: String
-            let parties: [String]
-            let terms: [AgreementTerm]
-            let status: AgreementStatus
 
-            enum AgreementStatus {
-                case proposed
-                case negotiating
-                case signed
-                case implemented
-                case terminated
-            }
+            case proposed
+
+            case proposed
+
+            case negotiating
+
+            case signed
+
+            case implemented
+
+            case terminated
+
         }
     }
 
@@ -2986,19 +2923,25 @@ struct TradeSystems {
             let effectiveness: Double
             let adoption: Double
 
-            enum MechanismType {
-                case singleWindow
-                let mechanismId: String
-                let type: MechanismType
-                let effectiveness: Double
-                let adoption: Double
 
-                enum MechanismType {
-                    case singleWindow
-                    case riskManagement
-                    case cooperation
-                    case technology
-                }
+                case singleWindow
+
+                case singleWindow
+
+                case riskManagement
+
+                case cooperation
+
+                case technology
+
+                case meeting
+
+                case memorandum
+
+                case jointStatement
+
+                case coordinatedAction
+
             }
         }
 
@@ -3050,19 +2993,17 @@ struct TradeSystems {
                 let providers: Int
                 let accessibility: Double
 
-                enum FinancialInstrument {
-                    case letterOfCredit
-                    let financeId: String
-                    let instruments: [FinancialInstrument]
-                    let providers: Int
-                    let accessibility: Double
 
-                    enum FinancialInstrument {
-                        case letterOfCredit
-                        case bankGuarantee
-                        case exportCredit
-                        case factoring
-                    }
+                    case letterOfCredit
+
+                    case letterOfCredit
+
+                    case bankGuarantee
+
+                    case exportCredit
+
+                    case factoring
+
                 }
             }
 
@@ -3072,19 +3013,17 @@ struct TradeSystems {
                 let providers: Int
                 let coverage: Double
 
-                enum InsuranceType {
-                    case cargo
-                    let insuranceId: String
-                    let types: [InsuranceType]
-                    let providers: Int
-                    let coverage: Double
 
-                    enum InsuranceType {
-                        case cargo
-                        case credit
-                        case political
-                        case currency
-                    }
+                    case cargo
+
+                    case cargo
+
+                    case credit
+
+                    case political
+
+                    case currency
+
                 }
             }
 
@@ -3121,20 +3060,17 @@ struct FinancialServices {
         let products: [InvestmentProduct]
         let technology: Double
 
-        enum InvestmentProduct {
-            case mutualFund
-            let servicesId: String
-            let firms: Int
-            let assets: Double
-            let products: [InvestmentProduct]
-            let technology: Double
 
-            enum InvestmentProduct {
-                case mutualFund
-                case etf
-                case pension
-                case wealth
-            }
+            case mutualFund
+
+            case mutualFund
+
+            case etf
+
+            case pension
+
+            case wealth
+
         }
     }
 
@@ -3175,19 +3111,25 @@ struct PolicyFramework {
             let threshold: Double
             let enforcement: Double
 
-            enum RuleType {
-                case debt
-                let ruleId: String
-                let type: RuleType
-                let threshold: Double
-                let enforcement: Double
 
-                enum RuleType {
-                    case debt
-                    case deficit
-                    case expenditure
-                    case revenue
-                }
+                case debt
+
+                case debt
+
+                case deficit
+
+                case expenditure
+
+                case revenue
+
+                case taylor
+
+                case inflationTargeting
+
+                case priceLevel
+
+                case ngdp
+
             }
         }
 
@@ -3225,40 +3167,25 @@ struct PolicyFramework {
             let rules: [MonetaryRule]
             let flexibility: Double
 
-            enum StrategyApproach {
+
                 case rulesBased
-                let strategyId: String
-                let approach: StrategyApproach
-                let rules: [MonetaryRule]
-                let flexibility: Double
 
-                enum StrategyApproach {
-                    case rulesBased
-                    case discretionary
-                    case hybrid
-                }
+                case rulesBased
 
-                struct MonetaryRule {
-                    let ruleId: String
-                    let type: RuleType
-                    let parameter: Double
-                    let adjustment: Double
+                case discretionary
 
-                    enum RuleType {
-                        case taylor
-                        let ruleId: String
-                        let type: RuleType
-                        let parameter: Double
-                        let adjustment: Double
+                case hybrid
 
-                        enum RuleType {
-                            case taylor
-                            case inflationTargeting
-                            case priceLevel
-                            case ngdp
-                        }
-                    }
-                }
+                case taylor
+
+                case taylor
+
+                case inflationTargeting
+
+                case priceLevel
+
+                case ngdp
+
             }
         }
     }
@@ -3324,20 +3251,6 @@ struct PolicyFramework {
             let frequency: TimeInterval
             let effectiveness: Double
 
-            enum MechanismType {
-                case meeting
-                let mechanismId: String
-                let type: MechanismType
-                let frequency: TimeInterval
-                let effectiveness: Double
-
-                enum MechanismType {
-                    case meeting
-                    case memorandum
-                    case jointStatement
-                    case coordinatedAction
-                }
-            }
         }
 
         struct PolicyCommittee {

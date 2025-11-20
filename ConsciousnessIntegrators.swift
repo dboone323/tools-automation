@@ -94,11 +94,21 @@ struct ConsciousnessIntegrationCapability {
     let sources: [ConsciousnessSource]
     let prerequisites: [ConsciousnessIntegrationCapability]
 
-    enum CapabilityType {
+
         case aggregation
+
         case harmonization
+
         case unification
+
         case validation
+
+        case collection
+
+        case consolidation
+
+        case optimization
+
     }
 }
 
@@ -219,11 +229,45 @@ struct ConsciousnessIntegrationInsights {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
+
             case sourceAddition
+
             case methodImprovement
+
             case qualityEnhancement
+
             case conflictResolution
+
+            case reaggregate
+
+            case filterSources
+
+            case improveCollection
+
+            case enhanceValidation
+
+            case refineModel
+
+            case updateOntology
+
+            case validateRelationships
+
+            case improveUnification
+
+            case reIntegrate
+
+            case improveQuality
+
+            case resolveConsistency
+
+            case immediate
+
+            case shortTerm
+
+            case longTerm
+
+            case optional
+
         }
     }
 
@@ -259,12 +303,6 @@ struct ConsciousnessAggregationCapability {
     let sources: [ConsciousnessSource]
     let efficiency: Double
 
-    enum CapabilityType {
-        case collection
-        case consolidation
-        case optimization
-        case validation
-    }
 }
 
 /// Consciousness aggregation
@@ -341,11 +379,23 @@ struct ConsciousnessAggregationOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
+
             case efficiency
+
             case quality
+
             case coherence
+
             case resonance
+
+            case conflictResolution
+
+            case structureAlignment
+
+            case formatStandardization
+
+            case overallHarmony
+
         }
     }
 }
@@ -365,11 +415,39 @@ struct ConsciousnessAggregationValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
+
             case incompleteness
+
             case incoherence
+
             case inconsistency
+
             case lowResonance
+
+            case modelIncoherence
+
+            case ontologyError
+
+            case relationshipInvalid
+
+            case unificationIncomplete
+
+            case integrationIncomplete
+
+            case qualityDegraded
+
+            case consistencyError
+
+            case validationFailure
+
+            case critical
+
+            case major
+
+            case minor
+
+            case informational
+
         }
     }
 
@@ -379,12 +457,6 @@ struct ConsciousnessAggregationValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case reaggregate
-            case filterSources
-            case improveCollection
-            case enhanceValidation
-        }
     }
 }
 
@@ -464,12 +536,6 @@ struct ConsciousnessHarmonyOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case conflictResolution
-            case structureAlignment
-            case formatStandardization
-            case overallHarmony
-        }
     }
 }
 
@@ -522,11 +588,17 @@ struct UnifiedConsciousnessModel {
         let type: RelationshipType
         let strength: Double
 
-        enum RelationshipType {
+
             case resonance
+
             case harmony
+
             case integration
+
             case emergence
+
+            case transcendence
+
         }
     }
 }
@@ -569,12 +641,6 @@ struct ConsciousnessOntology {
         let type: RelationshipType
         let properties: [String: AnyCodable]
 
-        enum RelationshipType {
-            case resonance
-            case emergence
-            case integration
-            case transcendence
-        }
     }
 
     struct OntologyAxiom {
@@ -609,13 +675,6 @@ struct ConsciousnessRelationships {
         let resonance: Double
     }
 
-    enum RelationshipType {
-        case resonance
-        case harmony
-        case integration
-        case emergence
-        case transcendence
-    }
 }
 
 /// Consciousness unification validation
@@ -640,12 +699,6 @@ struct ConsciousnessUnificationValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
-            case modelIncoherence
-            case ontologyError
-            case relationshipInvalid
-            case unificationIncomplete
-        }
     }
 
     struct ValidationRecommendation {
@@ -654,12 +707,6 @@ struct ConsciousnessUnificationValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case refineModel
-            case updateOntology
-            case validateRelationships
-            case improveUnification
-        }
     }
 }
 
@@ -686,12 +733,6 @@ struct ConsciousnessIntegrationValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
-            case integrationIncomplete
-            case qualityDegraded
-            case consistencyError
-            case validationFailure
-        }
     }
 
     struct ValidationRecommendation {
@@ -700,12 +741,6 @@ struct ConsciousnessIntegrationValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case reIntegrate
-            case improveQuality
-            case resolveConsistency
-            case enhanceValidation
-        }
     }
 }
 
@@ -841,12 +876,6 @@ struct ConsciousnessIntegrationReport {
         let description: String
         let impact: String
 
-        enum IssueType {
-            case critical
-            case major
-            case minor
-            case informational
-        }
     }
 
     struct ReportRecommendation {
@@ -856,12 +885,6 @@ struct ConsciousnessIntegrationReport {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
-            case immediate
-            case shortTerm
-            case longTerm
-            case optional
-        }
     }
 }
 

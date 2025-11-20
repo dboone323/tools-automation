@@ -240,11 +240,41 @@ struct EnvironmentalMonitoring {
         let description: String
         let expectedImpact: Double
 
-        enum RecommendationType {
+
             case policy
+
             case technology
+
             case behavior
+
             case infrastructure
+
+            case protection
+
+            case restoration
+
+            case monitoring
+
+            case translocation
+
+            case captiveBreeding
+
+            case corridor
+
+            case barrierRemoval
+
+            case habitatRestoration
+
+            case wildlifeCrossing
+
+            case expand
+
+            case modify
+
+            case terminate
+
+            case replicate
+
         }
     }
 }
@@ -266,11 +296,23 @@ struct ClimateScenario {
         let magnitude: Double
         let trend: TrendDirection
 
-        enum DriverType {
+
             case greenhouseGases
+
             case landUse
+
             case solarActivity
+
             case volcanicActivity
+
+            case climate
+
+            case pollution
+
+            case invasiveSpecies
+
+            case exploitation
+
         }
     }
 
@@ -341,13 +383,29 @@ struct HumanActivity {
     let environmentalImpact: EnvironmentalImpact
     let stakeholders: [ActivityStakeholder]
 
-    enum ActivityType {
+
         case agriculture
+
         case industry
+
         case transportation
+
         case construction
+
         case mining
+
         case forestry
+
+        case inspection
+
+        case cleaning
+
+        case repair
+
+        case upgrade
+
+        case calibration
+
     }
 
     enum ActivityScale {
@@ -363,7 +421,7 @@ struct HumanActivity {
         let influence: Double
 
         enum StakeholderRole {
-            case `operator`
+            case `operator` = "operator"
             case regulator
             case community
             case investor
@@ -563,12 +621,17 @@ struct Ecosystem {
         let trend: TrendDirection
         let sources: [String]
 
-        enum ThreatType {
+
             case pollution
+
             case habitatLoss
+
             case invasiveSpecies
+
             case climateChange
+
             case overexploitation
+
         }
     }
 }
@@ -588,12 +651,27 @@ struct BiodiversityAssessment {
         let trend: TrendDirection
         let significance: Double
 
-        enum IndicatorType {
+
             case speciesRichness
+
             case speciesDiversity
+
             case habitatQuality
+
             case populationSize
+
             case geneticDiversity
+
+            case biodiversity
+
+            case waterQuality
+
+            case soilHealth
+
+            case airQuality
+
+            case habitatIntegrity
+
         }
     }
 
@@ -611,12 +689,6 @@ struct BiodiversityAssessment {
         let description: String
         let expectedOutcome: Double
 
-        enum RecommendationType {
-            case protection
-            case restoration
-            case monitoring
-            case policy
-        }
     }
 }
 
@@ -660,20 +732,17 @@ struct ClimatePattern {
         let duration: TimeInterval
         let significance: Double
 
-        enum AnomalyType {
-            case temperature
-            let anomalyId: String
-            let type: AnomalyType
-            let magnitude: Double
-            let duration: TimeInterval
-            let significance: Double
 
-            enum AnomalyType {
-                case temperature
-                case precipitation
-                case pressure
-                case wind
-            }
+            case temperature
+
+            case temperature
+
+            case precipitation
+
+            case pressure
+
+            case wind
+
         }
     }
 
@@ -799,19 +868,17 @@ struct ClimateForecast {
         let magnitude: Double
         let reducible: Bool
 
-        enum UncertaintySource {
-            case model
-            let uncertaintyId: String
-            let source: UncertaintySource
-            let magnitude: Double
-            let reducible: Bool
 
-            enum UncertaintySource {
-                case model
-                case scenario
-                case naturalVariability
-                case humanBehavior
-            }
+            case model
+
+            case model
+
+            case scenario
+
+            case naturalVariability
+
+            case humanBehavior
+
         }
     }
 }
@@ -932,22 +999,6 @@ struct NetworkMaintenance {
         let duration: TimeInterval
         let impact: Double
 
-        enum ActivityType {
-            case inspection
-            let activityId: String
-            let type: ActivityType
-            let frequency: TimeInterval
-            let duration: TimeInterval
-            let impact: Double
-
-            enum ActivityType {
-                case inspection
-                case cleaning
-                case repair
-                case upgrade
-                case calibration
-            }
-        }
     }
 
     struct MaintenanceResources {
@@ -995,20 +1046,17 @@ struct ProcessedData {
         let confidence: Double
         let actionability: Double
 
-        enum InsightType {
-            case trend
-            let insightId: String
-            let type: InsightType
-            let description: String
-            let confidence: Double
-            let actionability: Double
 
-            enum InsightType {
-                case trend
-                case anomaly
-                case correlation
-                case prediction
-            }
+            case trend
+
+            case trend
+
+            case anomaly
+
+            case correlation
+
+            case prediction
+
         }
     }
 }
@@ -1192,22 +1240,6 @@ struct HealthMonitoring {
         let threshold: Double
         let trend: TrendDirection
 
-        enum IndicatorType {
-            case biodiversity
-            let indicatorId: String
-            let type: IndicatorType
-            let value: Double
-            let threshold: Double
-            let trend: TrendDirection
-
-            enum IndicatorType {
-                case biodiversity
-                case waterQuality
-                case soilHealth
-                case airQuality
-                case habitatIntegrity
-            }
-        }
     }
 
     struct MonitoringProgram {
@@ -1231,20 +1263,6 @@ struct HealthMonitoring {
         let priority: Double
         let description: String
 
-        enum RecommendationType {
-            case restoration
-            let recommendationId: String
-            let type: RecommendationType
-            let priority: Double
-            let description: String
-
-            enum RecommendationType {
-                case restoration
-                case protection
-                case monitoring
-                case policy
-            }
-        }
     }
 }
 
@@ -1307,20 +1325,17 @@ struct ServiceAssessment {
         let method: ValuationMethod
         let uncertainty: Double
 
-        enum ValuationMethod {
-            case market
-            let valuationId: String
-            let service: String
-            let value: Double
-            let method: ValuationMethod
-            let uncertainty: Double
 
-            enum ValuationMethod {
-                case market
-                case replacement
-                case contingent
-                case benefitTransfer
-            }
+            case market
+
+            case market
+
+            case replacement
+
+            case contingent
+
+            case benefitTransfer
+
         }
     }
 
@@ -1348,21 +1363,6 @@ struct ChangePrediction {
         let intensity: Double
         let trend: TrendDirection
 
-        enum DriverType {
-            case climate
-            let driverId: String
-            let type: DriverType
-            let intensity: Double
-            let trend: TrendDirection
-
-            enum DriverType {
-                case climate
-                case landUse
-                case pollution
-                case invasiveSpecies
-                case exploitation
-            }
-        }
     }
 
     struct EcosystemPrediction {
@@ -1433,19 +1433,17 @@ struct EmissionMeasurement {
         let location: GeographicLocation
         let activity: String
 
-        enum SourceType {
-            case stationary
-            let sourceId: String
-            let type: SourceType
-            let location: GeographicLocation
-            let activity: String
 
-            enum SourceType {
-                case stationary
-                case mobile
-                case fugitive
-                case process
-            }
+            case stationary
+
+            case stationary
+
+            case mobile
+
+            case fugitive
+
+            case process
+
         }
     }
 
@@ -1456,20 +1454,17 @@ struct EmissionMeasurement {
         let cost: Double
         let applicability: Double
 
-        enum MethodType {
-            case direct
-            let methodId: String
-            let type: MethodType
-            let accuracy: Double
-            let cost: Double
-            let applicability: Double
 
-            enum MethodType {
-                case direct
-                case indirect
-                case estimation
-                case modeling
-            }
+            case direct
+
+            case direct
+
+            case indirect
+
+            case estimation
+
+            case modeling
+
         }
     }
 
@@ -1495,76 +1490,48 @@ struct EmissionMeasurement {
         let result: VerificationResult
         let confidence: Double
 
-        enum VerificationMethod {
+
             case thirdParty
-            let verificationId: String
-            let method: VerificationMethod
-            let result: VerificationResult
-            let confidence: Double
 
-            enum VerificationMethod {
-                case thirdParty
-                case selfVerification
-                case remoteSensing
-                case modeling
-            }
+            case thirdParty
 
-            enum VerificationResult {
-                case verified
-                let verificationId: String
-                let method: VerificationMethod
-                let result: VerificationResult
-                let confidence: Double
+            case selfVerification
 
-                enum VerificationMethod {
-                    case thirdParty
-                    case selfVerification
-                    case remoteSensing
-                    case modeling
-                }
+            case remoteSensing
 
-                enum VerificationResult {
-                    case verified
-                    case unverified
-                    case disputed
-                }
-            }
-        }
-    }
-}
+            case modeling
 
-/// Credit tracking
-struct CreditTracking {
-    let trackingId: String
-    let credits: [CarbonCredit]
-    let transactions: [CreditTransaction]
-    let balance: Double
-    let retirement: Double
-    let verification: Double
+            case verified
 
-    struct CarbonCredit {
-        let creditId: String
-        let project: String
-        let amount: Double
-        let vintage: Date
+            case thirdParty
+
+            case selfVerification
+
+            case remoteSensing
+
+            case modeling
+
+            case verified
+
+            case unverified
+
+            case disputed
+
+        }et vintage: Date
         let standard: String
         let status: CreditStatus
 
-        enum CreditStatus {
-            case issued
-            let creditId: String
-            let project: String
-            let amount: Double
-            let vintage: Date
-            let standard: String
-            let status: CreditStatus
 
-            enum CreditStatus {
-                case issued
-                case transferred
-                case retired
-                case expired
-            }
+            case issued
+
+            case issued
+
+            case transferred
+
+            case retired
+
+            case expired
+
         }
     }
 
@@ -1627,21 +1594,19 @@ struct OffsetVerification {
         let type: OffsetType
         let vintage: Date
 
-        enum OffsetType {
-            case reforestation
-            let offsetId: String
-            let project: String
-            let amount: Double
-            let type: OffsetType
-            let vintage: Date
 
-            enum OffsetType {
-                case reforestation
-                case renewableEnergy
-                case methaneCapture
-                case soilCarbon
-                case blueCarbon
-            }
+            case reforestation
+
+            case reforestation
+
+            case renewableEnergy
+
+            case methaneCapture
+
+            case soilCarbon
+
+            case blueCarbon
+
         }
     }
 
@@ -1685,21 +1650,19 @@ struct ReductionOptimization {
         let effectiveness: Double
         let timeframe: TimeInterval
 
-        enum StrategyType {
-            case efficiency
-            let strategyId: String
-            let type: StrategyType
-            let description: String
-            let effectiveness: Double
-            let timeframe: TimeInterval
 
-            enum StrategyType {
-                case efficiency
-                case substitution
-                case processChange
-                case productChange
-                case behavioral
-            }
+            case efficiency
+
+            case efficiency
+
+            case substitution
+
+            case processChange
+
+            case productChange
+
+            case behavioral
+
         }
     }
 
@@ -1790,32 +1753,29 @@ struct PopulationMonitoring {
         let impact: Double
         let significance: Double
 
-        enum FactorType {
+
             case habitat
-            let factorId: String
-            let type: FactorType
-            let impact: Double
-            let significance: Double
 
-            enum FactorType {
-                case habitat
-                case predation
-                case competition
-                case disease
-                let factorId: String
-                let type: FactorType
-                let impact: Double
-                let significance: Double
+            case habitat
 
-                enum FactorType {
-                    case habitat
-                    case predation
-                    case competition
-                    case disease
-                    case climate
-                    case humanActivity
-                }
-            }
+            case predation
+
+            case competition
+
+            case disease
+
+            case habitat
+
+            case predation
+
+            case competition
+
+            case disease
+
+            case climate
+
+            case humanActivity
+
         }
     }
 
@@ -1840,20 +1800,6 @@ struct PopulationMonitoring {
         let priority: Double
         let description: String
 
-        enum RecommendationType {
-            case protection
-            let recommendationId: String
-            let type: RecommendationType
-            let priority: Double
-            let description: String
-
-            enum RecommendationType {
-                case protection
-                case restoration
-                case translocation
-                case captiveBreeding
-            }
-        }
     }
 }
 
@@ -1873,21 +1819,19 @@ struct ConnectivityAnalysis {
         let quality: Double
         let location: GeographicLocation
 
-        enum HabitatType {
-            case forest
-            let habitatId: String
-            let type: HabitatType
-            let area: Double
-            let quality: Double
-            let location: GeographicLocation
 
-            enum HabitatType {
-                case forest
-                case grassland
-                case wetland
-                case urban
-                case agricultural
-            }
+            case forest
+
+            case forest
+
+            case grassland
+
+            case wetland
+
+            case urban
+
+            case agricultural
+
         }
     }
 
@@ -1899,21 +1843,17 @@ struct ConnectivityAnalysis {
         let quality: Double
         let connectivity: Double
 
-        enum CorridorType {
-            case natural
-            let corridorId: String
-            let type: CorridorType
-            let length: Double
-            let width: Double
-            let quality: Double
-            let connectivity: Double
 
-            enum CorridorType {
-                case natural
-                case artificial
-                case restored
-                case protected
-            }
+            case natural
+
+            case natural
+
+            case artificial
+
+            case restored
+
+            case protected
+
         }
     }
 
@@ -1931,21 +1871,19 @@ struct ConnectivityAnalysis {
         let impact: Double
         let permeability: Double
 
-        enum BarrierType {
-            case road
-            let barrierId: String
-            let type: BarrierType
-            let location: GeographicLocation
-            let impact: Double
-            let permeability: Double
 
-            enum BarrierType {
-                case road
-                case urban
-                case agricultural
-                case dam
-                case fence
-            }
+            case road
+
+            case road
+
+            case urban
+
+            case agricultural
+
+            case dam
+
+            case fence
+
         }
     }
 
@@ -1956,31 +1894,6 @@ struct ConnectivityAnalysis {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
-            case corridor
-            let recommendationId: String
-            let type: RecommendationType
-            let location: GeographicLocation
-            let priority: Double
-            let expectedBenefit: Double
-
-            enum RecommendationType {
-                case corridor
-                case barrierRemoval
-                let recommendationId: String
-                let type: RecommendationType
-                let location: GeographicLocation
-                let priority: Double
-                let expectedBenefit: Double
-
-                enum RecommendationType {
-                    case corridor
-                    case barrierRemoval
-                    case habitatRestoration
-                    case wildlifeCrossing
-                }
-            }
-        }
     }
 }
 
@@ -2000,22 +1913,19 @@ struct ConservationEvaluation {
         let budget: Double
         let duration: TimeInterval
 
-        enum ProgramType {
-            case protection
-            let programId: String
-            let name: String
-            let type: ProgramType
-            let objectives: [String]
-            let budget: Double
-            let duration: TimeInterval
 
-            enum ProgramType {
-                case protection
-                case restoration
-                case sustainableUse
-                case education
-                case research
-            }
+            case protection
+
+            case protection
+
+            case restoration
+
+            case sustainableUse
+
+            case education
+
+            case research
+
         }
     }
 
@@ -2027,22 +1937,19 @@ struct ConservationEvaluation {
         let target: Double
         let current: Double
 
-        enum MetricType {
-            case biodiversity
-            let metricId: String
-            let name: String
-            let type: MetricType
-            let baseline: Double
-            let target: Double
-            let current: Double
 
-            enum MetricType {
-                case biodiversity
-                case habitat
-                case population
-                case threat
-                case socioeconomic
-            }
+            case biodiversity
+
+            case biodiversity
+
+            case habitat
+
+            case population
+
+            case threat
+
+            case socioeconomic
+
         }
     }
 
@@ -2060,21 +1967,6 @@ struct ConservationEvaluation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case expand
-            let recommendationId: String
-            let program: String
-            let type: RecommendationType
-            let description: String
-            let priority: Double
-
-            enum RecommendationType {
-                case expand
-                case modify
-                case terminate
-                case replicate
-            }
-        }
     }
 }
 
@@ -2093,31 +1985,6 @@ struct ExtinctionPrediction {
         let trend: TrendDirection
         let reversibility: Double
 
-        enum ThreatType {
-            case habitatLoss
-            let threatId: String
-            let type: ThreatType
-            let severity: Double
-            let trend: TrendDirection
-            let reversibility: Double
-
-            enum ThreatType {
-                case habitatLoss
-                let threatId: String
-                let type: ThreatType
-                let severity: Double
-                let trend: TrendDirection
-                let reversibility: Double
-
-                enum ThreatType {
-                    case habitatLoss
-                    case overexploitation
-                    case invasiveSpecies
-                    case pollution
-                    case climateChange
-                }
-            }
-        }
     }
 
     struct RiskAssessment {
@@ -2127,20 +1994,17 @@ struct ExtinctionPrediction {
         let timeframe: TimeInterval
         let confidence: Double
 
-        enum ExtinctionRisk {
-            case low
-            let assessmentId: String
-            let species: String
-            let risk: ExtinctionRisk
-            let timeframe: TimeInterval
-            let confidence: Double
 
-            enum ExtinctionRisk {
-                case low
-                case medium
-                case high
-                case critical
-            }
+            case low
+
+            case low
+
+            case medium
+
+            case high
+
+            case critical
+
         }
     }
 
@@ -2208,7 +2072,7 @@ class QuantumEnvironmentalSystemsEngine {
                     sensors: [],
                     coverage: 0.7,
                     reliability: 0.9
-                )
+                ),
             ],
             dataCenters: [
                 DataCenter(
@@ -2217,7 +2081,7 @@ class QuantumEnvironmentalSystemsEngine {
                     capacity: 1_000_000.0,
                     processing: 0.9,
                     storage: 0.95
-                )
+                ),
             ],
             connectivity: NetworkConnectivity(
                 type: .quantum,
@@ -2237,7 +2101,7 @@ class QuantumEnvironmentalSystemsEngine {
                     resolution: 10.0,
                     parameters: [],
                     algorithms: [.quantumSuperposition]
-                )
+                ),
             ],
             predictions: [],
             scenarios: [],
@@ -2260,7 +2124,7 @@ class QuantumEnvironmentalSystemsEngine {
                     description: "Achieve net-zero carbon emissions",
                     priority: 0.9,
                     timeframe: 31_536_000 * 10 // 10 years
-                )
+                ),
             ],
             strategies: [],
             metrics: [],
@@ -2346,7 +2210,7 @@ class QuantumEnvironmentalSystemsEngine {
                 "temperature": 22.5,
                 "humidity": 65.0,
                 "air_quality": 45.0,
-                "water_quality": 85.0
+                "water_quality": 85.0,
             ],
             quality: .excellent,
             coverage: 0.9
@@ -2362,7 +2226,7 @@ class QuantumEnvironmentalSystemsEngine {
                     magnitude: 0.02,
                     significance: 0.8,
                     timeframe: 2_592_000
-                )
+                ),
             ],
             anomalies: [],
             correlations: [],
@@ -2378,7 +2242,7 @@ class QuantumEnvironmentalSystemsEngine {
                 location: GeographicLocation(latitude: 40.0, longitude: -74.0),
                 description: "Temperature trend detected",
                 recommendedAction: "Implement cooling measures"
-            )
+            ),
         ]
 
         // Generate recommendations
@@ -2389,7 +2253,7 @@ class QuantumEnvironmentalSystemsEngine {
                 priority: 0.7,
                 description: "Implement renewable energy incentives",
                 expectedImpact: 0.6
-            )
+            ),
         ]
 
         let monitoring = EnvironmentalMonitoring(
@@ -2491,7 +2355,7 @@ class QuantumEnvironmentalSystemsEngine {
                     description: "Reduce carbon emissions by 50%",
                     priority: 0.9,
                     timeframe: 31_536_000 * 5
-                )
+                ),
             ],
             methods: [.efficiency],
             technologies: [.renewableEnergy]
@@ -2511,7 +2375,7 @@ class QuantumEnvironmentalSystemsEngine {
                 environmental: 0.4,
                 economic: 0.2,
                 social: 0.1
-            )
+            ),
         ]
 
         let optimizationResult = SustainabilityOptimization(
@@ -2616,7 +2480,7 @@ class QuantumEnvironmentalSystemsEngine {
                     richness: 500,
                     threat: 0.7,
                     protection: 0.6
-                )
+                ),
             ],
             threats: [],
             trends: []
@@ -2629,7 +2493,7 @@ class QuantumEnvironmentalSystemsEngine {
                 priority: 0.8,
                 description: "Establish protected area",
                 expectedOutcome: 0.7
-            )
+            ),
         ]
 
         let biodiversityAssessment = BiodiversityAssessment(
@@ -2688,7 +2552,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 period: 31_536_000,
                 amplitude: 10.0,
                 phase: 0.0
-            )
+            ),
         ]
 
         let anomalies = [
@@ -2698,7 +2562,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 magnitude: 2.5,
                 duration: 2_592_000,
                 significance: 0.9
-            )
+            ),
         ]
 
         let trends = [
@@ -2708,7 +2572,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 slope: 0.02,
                 significance: 0.95,
                 acceleration: 0.001
-            )
+            ),
         ]
 
         return ClimatePattern(
@@ -2729,7 +2593,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 value: 22.0,
                 range: 20.0 ... 24.0,
                 probability: 0.8
-            )
+            ),
         ]
 
         return WeatherPrediction(
@@ -2757,7 +2621,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                         parameter: .temperature,
                         value: 18.5,
                         confidence: 0.8
-                    )
+                    ),
                 ],
                 probabilities: []
             )
@@ -2811,7 +2675,7 @@ class QuantumClimateModelerImpl: QuantumClimateModeler {
                 value: 2.5,
                 confidence: 0.8,
                 timeframe: horizon
-            )
+            ),
         ]
 
         return ClimateForecast(

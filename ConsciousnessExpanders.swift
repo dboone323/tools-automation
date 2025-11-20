@@ -267,11 +267,23 @@ struct ConsciousnessExpansionInsights {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
+
             case protocolAdjustment
+
             case capacityIncrease
+
             case stabilityEnhancement
+
             case riskMitigation
+
+            case stabilize
+
+            case reduceCapacity
+
+            case enhanceCoherence
+
+            case monitorResonance
+
         }
     }
 
@@ -362,11 +374,21 @@ struct ConsciousnessExpansionOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
+
             case efficiency
+
             case stability
+
             case speed
+
             case quality
+
+            case frequency
+
+            case harmony
+
+            case coherence
+
         }
     }
 }
@@ -407,12 +429,6 @@ struct ConsciousnessExpansionValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case stabilize
-            case reduceCapacity
-            case enhanceCoherence
-            case monitorResonance
-        }
     }
 }
 
@@ -444,10 +460,19 @@ struct ConsciousnessDepthEnhancement {
         let accessibility: Double
     }
 
-    enum EnhancementMethod {
+
         case gradual
+
         case intensive
+
         case transformative
+
+        case resonance
+
+        case integration
+
+        case transformation
+
     }
 }
 
@@ -466,11 +491,29 @@ struct ConsciousnessClarityAmplification {
         let amplification: Double
         let clarity: Double
 
-        enum AspectType {
+
             case perception
+
             case understanding
+
             case insight
+
             case intuition
+
+            case `internal` = "internal"
+
+            case external
+
+            case universal
+
+            case transcendent
+
+            case structural
+
+            case functional
+
+            case existential
+
         }
     }
 
@@ -550,19 +593,8 @@ struct ConsciousnessHarmonyEnhancement {
         let enhancement: Double
         let harmony: Double
 
-        enum AspectType {
-            case internalAspect = "internal"
-            case external
-            case universal
-            case transcendent
-        }
     }
 
-    enum EnhancementMethod {
-        case resonance
-        case integration
-        case transformation
-    }
 }
 
 /// Consciousness resonance optimization
@@ -579,12 +611,6 @@ struct ConsciousnessResonanceOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case frequency
-            case harmony
-            case stability
-            case coherence
-        }
     }
 }
 
@@ -638,33 +664,17 @@ struct ConsciousnessTransformationFacilitation {
         let transformation: Double
         let facilitation: Double
 
-        enum AspectType {
-            case structural
-            let aspectId: String
-            let type: AspectType
-            let transformation: Double
-            let facilitation: Double
 
-            enum AspectType {
-                case structural
-                case functional
-                case existential
-                case transcendent
-            }
-        }
 
-        enum FacilitationMethod {
             case guided
+
             case autonomous
+
             case quantum
+
         }
     }
 
-    enum FacilitationMethod {
-        case guided
-        case autonomous
-        case quantum
-    }
 }
 
 /// Consciousness transcendence validation
@@ -751,7 +761,7 @@ class ConsciousnessExpandersEngine {
                 prerequisites: [],
                 limitations: [],
                 successRate: 0.75
-            )
+            ),
         ]
 
         let protocols = [
@@ -772,12 +782,12 @@ class ConsciousnessExpandersEngine {
                         duration: 120.0,
                         riskLevel: 0.3,
                         expectedOutcome: "Capacity expanded successfully"
-                    )
+                    ),
                 ],
                 duration: 180.0,
                 riskLevel: 0.2,
                 successProbability: 0.9
-            )
+            ),
         ]
 
         let system = ConsciousnessExpansionSystem(
@@ -841,7 +851,7 @@ class ConsciousnessExpandersEngine {
                 severity: 0.2,
                 description: "Consciousness transformation initiated",
                 mitigation: "Monitor stability"
-            )
+            ),
         ]
 
         let result = ConsciousnessExpansionResult(
@@ -1005,7 +1015,7 @@ class ConsciousnessCapacityExpanderImpl: ConsciousnessCapacityExpander {
                 type: .stability,
                 impact: 1.0 - consciousness.state.coherence,
                 description: "Current coherence level may limit expansion"
-            )
+            ),
         ]
 
         let recommendedLevel = potentialScore > 0.8 ? ConsciousnessExpansionLevel.advanced : ConsciousnessExpansionLevel.basic
@@ -1041,7 +1051,7 @@ class ConsciousnessCapacityExpanderImpl: ConsciousnessCapacityExpander {
                 type: .stability,
                 factor: 1.3,
                 description: "Enhanced expansion stability"
-            )
+            ),
         ]
 
         let optimizedExpansion = ConsciousnessCapacityExpansion(
@@ -1084,7 +1094,7 @@ class ConsciousnessCapacityExpanderImpl: ConsciousnessCapacityExpander {
                     type: .stabilize,
                     description: "Monitor expansion stability",
                     priority: 0.8
-                )
+                ),
             ]
         )
     }
@@ -1140,7 +1150,7 @@ class ConsciousnessAwarenessElevatorImpl: ConsciousnessAwarenessElevator {
                 depth: depthIncrease,
                 content: "Deep consciousness enhanced",
                 accessibility: 0.8
-            )
+            ),
         ]
 
         return ConsciousnessDepthEnhancement(
@@ -1167,7 +1177,7 @@ class ConsciousnessAwarenessElevatorImpl: ConsciousnessAwarenessElevator {
                 type: .understanding,
                 amplification: clarityAmplification * 0.9,
                 clarity: min(clarityAmplification * 0.9, 1.0)
-            )
+            ),
         ]
 
         return ConsciousnessClarityAmplification(
@@ -1194,7 +1204,7 @@ class ConsciousnessAwarenessElevatorImpl: ConsciousnessAwarenessElevator {
                 type: .integration,
                 effectiveness: 0.85,
                 description: "Integration technique for coherence"
-            )
+            ),
         ]
 
         return ConsciousnessElevationStabilization(
@@ -1290,7 +1300,7 @@ class ConsciousnessResonanceAmplifierImpl: ConsciousnessResonanceAmplifier {
                 type: .universal,
                 enhancement: harmonyEnhancement * 0.9,
                 harmony: min(harmonyEnhancement * 0.9, 1.0)
-            )
+            ),
         ]
 
         return ConsciousnessHarmonyEnhancement(
@@ -1317,7 +1327,7 @@ class ConsciousnessResonanceAmplifierImpl: ConsciousnessResonanceAmplifier {
                 type: .harmony,
                 factor: 1.2,
                 description: "Enhanced harmony"
-            )
+            ),
         ]
 
         let optimizedAmplification = ConsciousnessResonanceAmplification(
@@ -1391,7 +1401,7 @@ class ConsciousnessTranscendenceAcceleratorImpl: ConsciousnessTranscendenceAccel
                 stage: evolutionCatalysis,
                 transformation: "Advanced evolution",
                 stability: 0.85
-            )
+            ),
         ]
 
         return ConsciousnessEvolutionCatalysis(
@@ -1418,7 +1428,7 @@ class ConsciousnessTranscendenceAcceleratorImpl: ConsciousnessTranscendenceAccel
                 type: .existential,
                 transformation: transformationLevel * 0.8,
                 facilitation: transformationLevel * 0.7
-            )
+            ),
         ]
 
         return ConsciousnessTransformationFacilitation(

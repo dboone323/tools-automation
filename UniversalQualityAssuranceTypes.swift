@@ -84,7 +84,7 @@ struct QualityInterferenceDetection: Codable, Sendable {
         let duration: TimeInterval
 
         enum InterferenceType: String, Codable {
-            case external, internal, cross_component, temporal
+            case external, internal, crossComponent = "cross_component", temporal
         }
     }
 
@@ -114,7 +114,7 @@ struct QualityPredictionModel: Codable, Sendable {
     let lastTrained: Date
 
     enum PredictionAlgorithm: String, Codable {
-        case linear_regression, neural_network, random_forest, quantum_ml
+        case linearRegression = "linear_regression", neuralNetwork = "neural_network", randomForest = "random_forest", quantumMl = "quantum_ml"
     }
 }
 
@@ -133,8 +133,19 @@ struct QualityTrendAnalysis: Codable, Sendable {
         let rSquared: Double
         let dataPoints: Int
 
-        enum TrendDirection: String, Codable {
-            case increasing, decreasing, stable, volatile
+
+            case increasing
+
+            case decreasing
+
+            case stable
+
+            case volatile
+
+            case improving
+
+            case declining
+
         }
     }
 
@@ -190,7 +201,7 @@ struct QualityGateImprovementSuggestion: Codable, Sendable {
     let riskAssessment: RiskAssessment
 
     enum ImprovementType: String, Codable {
-        case tighten, loosen, add_condition, remove_condition, adjust_weight
+        case tighten, loosen, addCondition = "add_condition", removeCondition = "remove_condition", adjustWeight = "adjust_weight"
     }
 
     struct ExpectedImpact: Codable, Sendable {
@@ -245,12 +256,12 @@ struct QualityGateEvolutionStrategy: Codable, Sendable {
 
     struct SuccessCriterion: Codable, Sendable {
         let metric: String
-        let operator: ComparisonOperator
+        let `operator`:ComparisonOperator
         let value: Double
         let timeframe: TimeInterval
 
         enum ComparisonOperator: String, Codable {
-            case greater_than, less_than, equal_to, not_equal_to
+            case greaterThan = "greater_than", lessThan = "less_than", equalTo = "equal_to", notEqualTo = "not_equal_to"
         }
     }
 
@@ -332,7 +343,7 @@ struct QualityValidationResult: Codable, Sendable {
     let recommendations: [String]
 
     enum ValidationType: String, Codable {
-        case code_quality, test_quality, performance, security, compliance
+        case codeQuality = "code_quality", testQuality = "test_quality", performance, security, compliance
     }
 
     enum ValidationStatus: String, Codable {
@@ -374,7 +385,7 @@ struct QualityImprovementImplementation: Codable, Sendable {
     let issues: [ImplementationIssue]
 
     enum ImplementationStatus: String, Codable {
-        case pending, in_progress, completed, failed, cancelled
+        case pending, inProgress = "in_progress", completed, failed, cancelled
     }
 
     struct ImplementationResults: Codable, Sendable {
@@ -410,7 +421,7 @@ struct QualityAutomationWorkflow: Codable, Sendable {
         let frequency: String?
 
         enum TriggerType: String, Codable {
-            case manual, scheduled, event, metric_threshold
+            case manual, scheduled, event, metricThreshold = "metric_threshold"
         }
     }
 
@@ -535,7 +546,7 @@ struct QualityCoordinationResult: Codable, Sendable {
     let metrics: [String: Double]
 
     enum CoordinationStatus: String, Codable {
-        case success, partial_success, failed, blocked
+        case success, partialSuccess = "partial_success", failed, blocked
     }
 
     struct CoordinationIssue: Codable, Sendable {
@@ -628,9 +639,6 @@ struct QualityEvolutionTracking: Codable, Sendable {
         let target: Double
         let trend: TrendDirection
 
-        enum TrendDirection: String, Codable {
-            case improving, stable, declining
-        }
     }
 
     struct EvolutionMilestone: Codable, Sendable {
@@ -655,7 +663,7 @@ struct QualityEvolutionTracking: Codable, Sendable {
         let outcome: String
 
         enum InterventionType: String, Codable {
-            case automation, process_change, tool_upgrade, training
+            case automation, processChange = "process_change", toolUpgrade = "tool_upgrade", training
         }
     }
 }
@@ -678,7 +686,7 @@ struct QualityAssuranceDashboard: Codable, Sendable {
         let position: WidgetPosition
 
         enum WidgetType: String, Codable {
-            case metric_chart, quality_score, trend_graph, alert_list, action_items
+            case metricChart = "metric_chart", qualityScore = "quality_score", trendGraph = "trend_graph", alertList = "alert_list", actionItems = "action_items"
         }
 
         struct WidgetPosition: Codable, Sendable {
@@ -697,7 +705,7 @@ struct QualityAssuranceDashboard: Codable, Sendable {
         let defaultValue: String
 
         enum FilterType: String, Codable {
-            case project, environment, time_range, component, severity
+            case project, environment, timeRange = "time_range", component, severity
         }
     }
 }
@@ -878,7 +886,7 @@ struct QualityAssuranceAuditTrail: Codable, Sendable {
         let result: EventResult
 
         enum EventType: String, Codable {
-            case assessment, validation, improvement, configuration_change, alert
+            case assessment, validation, improvement, configurationChange = "configuration_change", alert
         }
 
         enum EventResult: String, Codable {
@@ -906,7 +914,7 @@ struct QualityAssuranceAuditTrail: Codable, Sendable {
             let evidence: [String]
 
             enum ComplianceStatus: String, Codable {
-                case compliant, non_compliant, not_applicable
+                case compliant, nonCompliant = "non_compliant", notApplicable = "not_applicable"
             }
         }
 
@@ -1347,7 +1355,7 @@ extension QualityGateEvolutionStrategy {
             successCriteria: [
                 SuccessCriterion(
                     metric: "overall_quality_score",
-                    operator: .greater_than,
+                    `operator`:.greater_than,
                     value: 0.80,
                     timeframe: 30 * 24 * 3600
                 )

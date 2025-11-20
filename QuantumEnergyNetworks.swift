@@ -524,8 +524,13 @@ struct DemandFactor {
         case weather, economic, demographic, technological
     }
 
-    enum Trend {
-        case increasing, decreasing, stable
+
+        case increasing
+
+        case decreasing
+
+        case stable
+
     }
 }
 
@@ -1777,6 +1782,4 @@ enum Priority {
 }
 
 /// Trend enum
-enum Trend {
-    case increasing, decreasing, stable
-}
+

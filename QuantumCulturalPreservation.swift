@@ -272,8 +272,29 @@ struct Artwork {
         let position: CGPoint
         let properties: [String: Any]
 
-        enum ElementType {
-            case button, slider, canvas, textField, mediaPlayer
+
+            case button
+
+            case slider
+
+            case canvas
+
+            case textField
+
+            case mediaPlayer
+
+            case text
+
+            case image
+
+            case video
+
+            case audio
+
+            case diagram
+
+            case timeline
+
         }
     }
 
@@ -645,9 +666,6 @@ struct CulturalDocument {
         let content: Any
         let metadata: [String: Any]
 
-        enum ElementType {
-            case text, image, video, audio, diagram, timeline
-        }
     }
 
     struct NavigationStructure {

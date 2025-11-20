@@ -100,11 +100,11 @@ struct TimelineEvent: Identifiable, Codable {
     let impact: Double // Impact magnitude
 
     enum EventType: String, Codable {
-        case workflowExecution = "workflow_execution"
-        case entityCreation = "entity_creation"
-        case dimensionalShift = "dimensional_shift"
-        case quantumEntanglement = "quantum_entanglement"
-        case realityStabilization = "reality_stabilization"
+        case workflowExecution= "workflow_execution"
+        case entityCreation= "entity_creation"
+        case dimensionalShift= "dimensional_shift"
+        case quantumEntanglement= "quantum_entanglement"
+        case realityStabilization= "reality_stabilization"
     }
 }
 

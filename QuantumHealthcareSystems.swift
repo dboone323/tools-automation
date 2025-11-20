@@ -43,7 +43,7 @@ protocol QuantumDiagnosticEngine {
 
 /// Protocol for treatment optimization engine
 protocol TreatmentOptimizationEngine {
-    func optimizeTreatmentProtocol(_ protocol: TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization
+    func optimizeTreatmentProtocol(_ `protocol`: TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization
     func personalizeMedication(_ medication: Medication, patient: Patient) async -> PersonalizedMedication
     func coordinateMultidisciplinaryCare(_ patient: Patient, specialists: [MedicalSpecialist]) async -> CareCoordination
     func predictTreatmentOutcomes(_ treatment: Treatment, patient: Patient) async -> OutcomePrediction
@@ -569,13 +569,39 @@ struct TreatmentPlan {
             let frequency: Double
             let duration: TimeInterval
 
-            enum InterventionType {
+
                 case medication
+
                 case surgery
+
                 case radiation
+
                 case chemotherapy
+
                 case physicalTherapy
+
                 case counseling
+
+                case lifestyle
+
+                case screening
+
+                case vaccination
+
+                case quarantine
+
+                case socialDistancing
+
+                case treatment
+
+                case surveillance
+
+                case prevention
+
+                case mitigation
+
+                case elimination
+
             }
         }
 
@@ -629,17 +655,34 @@ struct TreatmentPlan {
             let severity: AlertSeverity
             let action: String
 
-            enum AlertCondition {
+
                 case above
+
                 case below
+
                 case outside
+
+                case criticalHigh
+
+                case high
+
+                case low
+
+                case criticalLow
+
+                case unstable
+
             }
 
-            enum AlertSeverity {
+
                 case low
+
                 case medium
+
                 case high
+
                 case critical
+
             }
         }
     }
@@ -969,15 +1012,29 @@ struct MedicalSpecialist {
         case surgery
         case radiology
         case emergency
-        case internal
+        case `internal` = "internal"
         case family
     }
 
-    enum AvailabilityStatus {
+
         case available
+
         case busy
+
         case offDuty
+
         case onCall
+
+        case abundant
+
+        case adequate
+
+        case limited
+
+        case scarce
+
+        case unavailable
+
     }
 }
 
@@ -1099,12 +1156,25 @@ struct HealthMetric {
     let region: HealthRegion
     let timestamp: Date
 
-    enum MetricCategory {
+
         case access
+
         case quality
+
         case outcomes
+
         case efficiency
+
         case equity
+
+        case clinical
+
+        case operational
+
+        case financial
+
+        case patientExperience
+
     }
 }
 
@@ -1144,12 +1214,21 @@ struct EmergencyResponse {
             let frequency: TimeInterval
             let protocols: [String]
 
-            enum CommunicationChannel {
+
                 case radio
+
                 case phone
+
                 case email
+
                 case satellite
+
                 case socialMedia
+
+                case secureMessaging
+
+                case videoConference
+
             }
         }
 
@@ -1233,12 +1312,25 @@ struct EmergencyResponse {
             let quantity: Int
             let expiration: Date?
 
-            enum SupplyType {
+
                 case medication
+
                 case vaccine
+
                 case ppe
+
                 case food
+
                 case water
+
+                case generic
+
+                case branded
+
+                case specialized
+
+                case emergency
+
             }
         }
 
@@ -1248,12 +1340,23 @@ struct EmergencyResponse {
             let capacity: Int
             let status: FacilityStatus
 
-            enum FacilityType {
+
                 case hospital
+
                 case clinic
+
                 case shelter
+
                 case commandCenter
+
                 case laboratory
+
+                case emergency
+
+                case specialized
+
+                case rehabilitation
+
             }
 
             enum FacilityStatus {
@@ -1376,12 +1479,47 @@ struct HealthAnalysis {
         let priority: Double
         let timeframe: TimeInterval
 
-        enum RecommendationType {
+
             case policy
+
             case resource
+
             case intervention
+
             case monitoring
+
             case research
+
+            case screening
+
+            case prevention
+
+            case geneticCounseling
+
+            case familyTesting
+
+            case stockpile
+
+            case diversify
+
+            case ration
+
+            case substitute
+
+            case implement
+
+            case monitor
+
+            case communicate
+
+            case improvement
+
+            case investment
+
+            case restructuring
+
+            case innovation
+
         }
     }
 
@@ -1501,12 +1639,6 @@ struct DiseasePrediction {
         let effectiveness: Double
         let timeline: TimeInterval
 
-        enum InterventionType {
-            case lifestyle
-            case medication
-            case screening
-            case vaccination
-        }
     }
 }
 
@@ -1549,12 +1681,6 @@ struct GeneticRiskAssessment {
         let description: String
         let urgency: Double
 
-        enum RecommendationType {
-            case screening
-            case prevention
-            case geneticCounseling
-            case familyTesting
-        }
     }
 }
 
@@ -1582,20 +1708,7 @@ struct VitalSignMonitoring {
         let severity: AlertSeverity
         let message: String
 
-        enum AlertCondition {
-            case criticalHigh
-            case high
-            case low
-            case criticalLow
-            case unstable
-        }
 
-        enum AlertSeverity {
-            case low
-            case medium
-            case high
-            case critical
-        }
     }
 
     struct VitalPrediction {
@@ -1846,12 +1959,6 @@ struct CareCoordination {
         let frequency: TimeInterval
         let protocols: [String]
 
-        enum CommunicationChannel {
-            case secureMessaging
-            case videoConference
-            case phone
-            case email
-        }
     }
 
     struct CareTransition {
@@ -1926,11 +2033,23 @@ struct SideEffectMinimization {
         let effectiveness: Double
         let sideEffects: [String]
 
-        enum StrategyType {
+
             case prophylactic
+
             case symptomatic
+
             case doseAdjustment
+
             case alternative
+
+            case containment
+
+            case mitigation
+
+            case suppression
+
+            case elimination
+
         }
     }
 
@@ -2001,12 +2120,6 @@ struct PandemicResponse {
         let implementation: ImplementationPlan
         let monitoring: StrategyMonitoring
 
-        enum StrategyType {
-            case containment
-            case mitigation
-            case suppression
-            case elimination
-        }
 
         struct ImplementationPlan {
             let phases: [ImplementationPhase]
@@ -2344,11 +2457,23 @@ struct MedicalInstitution {
         let quantity: Int
         let availability: Double
 
-        enum ResourceType {
+
             case bed
+
             case physician
+
             case equipment
+
             case laboratory
+
+            case personnel
+
+            case supplies
+
+            case facilities
+
+            case information
+
         }
     }
 
@@ -2389,11 +2514,33 @@ struct SecurityMonitoring {
             let reliability: Double
             let timeliness: Double
 
-            enum SourceType {
+
                 case human
+
                 case signal
+
                 case openSource
+
                 case technical
+
+                case clinicalTrial
+
+                case observational
+
+                case systematicReview
+
+                case guideline
+
+                case consensus
+
+                case clinical
+
+                case administrative
+
+                case research
+
+                case public
+
             }
         }
 
@@ -2558,13 +2705,6 @@ struct MedicalResource {
     let location: GeographicLocation
     let cost: Double
 
-    enum ResourceType {
-        case personnel
-        case equipment
-        case supplies
-        case facilities
-        case information
-    }
 
     enum ResourceCategory {
         case critical
@@ -2573,13 +2713,6 @@ struct MedicalResource {
         case luxury
     }
 
-    enum AvailabilityStatus {
-        case abundant
-        case adequate
-        case limited
-        case scarce
-        case unavailable
-    }
 }
 
 /// Health need
@@ -2751,12 +2884,6 @@ struct SupplyPrediction {
         let description: String
         let urgency: Double
 
-        enum RecommendationType {
-            case stockpile
-            case diversify
-            case ration
-            case substitute
-        }
     }
 }
 
@@ -2779,12 +2906,6 @@ struct MedicalSupply {
         case vaccine
     }
 
-    enum SupplyType {
-        case generic
-        case branded
-        case specialized
-        case emergency
-    }
 
     struct StorageRequirements {
         let temperature: ClosedRange<Double>
@@ -2901,33 +3022,27 @@ struct LogisticsCoordination {
             let routing: RoutingAlgorithm
             let tracking: TrackingSystem
 
-            enum DistributionPriority {
+
                 case critical
+
                 case urgent
-                let protocolId: String
-                let priority: DistributionPriority
-                let routing: RoutingAlgorithm
-                let tracking: TrackingSystem
 
-                enum DistributionPriority {
-                    case critical
-                    case urgent
-                    case routine
-                    case bulk
-                }
+                case critical
 
-                enum RoutingAlgorithm {
-                    case shortest
-                    case fastest
-                    case mostReliable
-                    case optimized
-                }
+                case urgent
 
-                struct TrackingSystem {
-                    let method: String
-                    let frequency: TimeInterval
-                    let accuracy: Double
-                }
+                case routine
+
+                case bulk
+
+                case shortest
+
+                case fastest
+
+                case mostReliable
+
+                case optimized
+
             }
         }
     }
@@ -2980,13 +3095,6 @@ struct HealthFacility {
     let services: [MedicalService]
     let resources: FacilityResources
 
-    enum FacilityType {
-        case hospital
-        case clinic
-        case emergency
-        case specialized
-        case rehabilitation
-    }
 
     struct FacilityCapacity {
         let beds: Int
@@ -3077,11 +3185,23 @@ struct EpidemiologicalAnalysis {
         let fit: Double
         let validation: Double
 
-        enum ModelType {
+
             case sir
+
             case seir
+
             case agentBased
+
             case statistical
+
+            case predictive
+
+            case diagnostic
+
+            case prescriptive
+
+            case descriptive
+
         }
     }
 
@@ -3100,13 +3220,6 @@ struct EpidemiologicalAnalysis {
         let effectiveness: Double
         let cost: Double
 
-        enum InterventionType {
-            case vaccination
-            case quarantine
-            case socialDistancing
-            case treatment
-            case surveillance
-        }
     }
 
     struct EpidemiologicalRecommendation {
@@ -3116,12 +3229,6 @@ struct EpidemiologicalAnalysis {
         let priority: Double
         let evidence: Double
 
-        enum RecommendationType {
-            case implement
-            case monitor
-            case research
-            case communicate
-        }
     }
 }
 
@@ -3192,11 +3299,6 @@ struct RiskFactorIdentification {
         let feasibility: Double
         let cost: Double
 
-        enum InterventionType {
-            case prevention
-            case mitigation
-            case elimination
-        }
     }
 
     struct RiskPrioritization {
@@ -3271,12 +3373,6 @@ struct EffectivenessEvaluation {
         let priority: Double
         let impact: Double
 
-        enum RecommendationType {
-            case improvement
-            case investment
-            case restructuring
-            case innovation
-        }
     }
 }
 
@@ -3328,12 +3424,6 @@ struct PerformanceMetric {
     let trend: TrendDirection
     let source: String
 
-    enum MetricCategory {
-        case clinical
-        case operational
-        case financial
-        case patientExperience
-    }
 }
 
 /// Health data
@@ -3394,7 +3484,7 @@ struct AnalyticsQuery {
     struct QueryFilter {
         let filterId: String
         let variable: String
-        let operator: FilterOperator
+        let `operator`:FilterOperator
         let value: Any
 
         enum FilterOperator {
@@ -3491,21 +3581,19 @@ struct HealthcareInfrastructure {
         let bandwidth: Double
         let reliability: Double
 
-        enum NetworkType {
-            case telemedicine
-            case electronicHealth
-            let networkId: String
-            let type: NetworkType
-            let coverage: Double
-            let bandwidth: Double
-            let reliability: Double
 
-            enum NetworkType {
-                case telemedicine
-                case electronicHealth
-                case emergency
-                case research
-            }
+            case telemedicine
+
+            case electronicHealth
+
+            case telemedicine
+
+            case electronicHealth
+
+            case emergency
+
+            case research
+
         }
     }
 
@@ -3739,11 +3827,23 @@ struct DiagnosticCapabilities {
             let accuracy: Double
             let speed: Double
 
-            enum AlgorithmType {
+
                 case diagnostic
+
                 case predictive
+
                 case prescriptive
+
                 case generative
+
+                case machineLearning
+
+                case statistical
+
+                case ruleBased
+
+                case hybrid
+
             }
         }
 
@@ -3850,13 +3950,6 @@ struct TreatmentProtocols {
             let quality: Double
             let relevance: Double
 
-            enum SourceType {
-                case clinicalTrial
-                case observational
-                case systematicReview
-                case guideline
-                case consensus
-            }
         }
     }
 
@@ -3910,12 +4003,25 @@ struct EmergencyResponseSystem {
             let triggers: [String]
             let response: String
 
-            enum ProtocolType {
+
                 case pandemic
+
                 case disaster
+
                 case massCasualty
+
                 case chemical
+
                 case radiation
+
+                case alert
+
+                case update
+
+                case request
+
+                case coordination
+
             }
         }
 
@@ -3999,12 +4105,6 @@ struct EmergencyResponseSystem {
             let message: String
             let recipients: [String]
 
-            enum ProtocolType {
-                case alert
-                case update
-                case request
-                case coordination
-            }
         }
 
         struct CommunicationTechnology {
@@ -4142,20 +4242,6 @@ struct HealthAnalytics {
             let reliability: Double
             let timeliness: Double
 
-            enum SourceType {
-                case clinical
-                let sourceId: String
-                let type: SourceType
-                let reliability: Double
-                let timeliness: Double
-
-                enum SourceType {
-                    case clinical
-                    case administrative
-                    case research
-                    case public
-                }
-            }
         }
     }
 
@@ -4171,12 +4257,6 @@ struct HealthAnalytics {
             let purpose: String
             let accuracy: Double
 
-            enum ModelType {
-                case predictive
-                case diagnostic
-                case prescriptive
-                case descriptive
-            }
         }
 
         struct AnalyticsAlgorithm {
@@ -4185,12 +4265,6 @@ struct HealthAnalytics {
             let type: AlgorithmType
             let performance: Double
 
-            enum AlgorithmType {
-                case machineLearning
-                case statistical
-                case ruleBased
-                case hybrid
-            }
         }
 
         struct ModelValidation {
@@ -5336,7 +5410,7 @@ class QuantumDiagnosticEngineImpl: QuantumDiagnosticEngine {
 
 /// Treatment optimization engine implementation
 class TreatmentOptimizationEngineImpl: TreatmentOptimizationEngine {
-    func optimizeTreatmentProtocol(_ protocol: TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization {
+    func optimizeTreatmentProtocol(_ `protocol`: TreatmentProtocol, for patient: Patient) async -> ProtocolOptimization {
         // Simplified protocol optimization
         var optimizedProtocol = protocol
 

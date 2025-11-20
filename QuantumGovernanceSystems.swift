@@ -181,22 +181,23 @@ struct GovernanceIssue {
             let reliability: Double
             let recency: Double
 
-            enum DataType {
-                case statistical
-                case survey
-                case expert
-                let sourceId: String
-                let type: DataType
-                let reliability: Double
-                let recency: Double
 
-                enum DataType {
-                    case statistical
-                    case survey
-                    case expert
-                    case sensor
-                    case simulation
-                }
+                case statistical
+
+                case survey
+
+                case expert
+
+                case statistical
+
+                case survey
+
+                case expert
+
+                case sensor
+
+                case simulation
+
             }
         }
     }
@@ -580,11 +581,31 @@ struct PolicySimulationResult {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
+
             case implement
+
             case modify
+
             case abandon
+
             case monitor
+
+            case avoid
+
+            case transfer
+
+            case resource
+
+            case timeline
+
+            case scope
+
+            case justify
+
+            case review
+
+            case override
+
         }
     }
 }
@@ -630,11 +651,23 @@ struct DecisionAnalysis {
             let type: ConstraintType
             let severity: Double
 
-            enum ConstraintType {
+
                 case resource
+
                 case legal
+
                 case ethical
+
                 case technical
+
+                case equality
+
+                case sustainability
+
+                case rights
+
+                case security
+
             }
         }
 
@@ -811,20 +844,19 @@ struct GovernanceStructure {
             let description: String
             let effectiveness: Double
 
-            enum MechanismType {
-                case audit
-                case review
-                let mechanismId: String
-                let type: MechanismType
-                let description: String
-                let effectiveness: Double
 
-                enum MechanismType {
-                    case audit
-                    case review
-                    case monitoring
-                    case reporting
-                }
+                case audit
+
+                case review
+
+                case audit
+
+                case review
+
+                case monitoring
+
+                case reporting
+
             }
         }
 
@@ -895,12 +927,6 @@ struct WelfareConstraints {
         let description: String
         let strictness: Double
 
-        enum ConstraintType {
-            case equality
-            case sustainability
-            case rights
-            case security
-        }
     }
 }
 
@@ -994,12 +1020,6 @@ struct SimulationContext {
         let description: String
         let impact: Double
 
-        enum ConstraintType {
-            case resource
-            case legal
-            case ethical
-            case technical
-        }
     }
 }
 
@@ -1038,11 +1058,15 @@ struct PolicySimulation {
             let value: Double
             let trend: TrendType
 
-            enum TrendType {
+
                 case increasing
+
                 case decreasing
+
                 case stable
+
                 case fluctuating
+
             }
         }
 
@@ -1132,11 +1156,6 @@ struct RiskAnalysis {
             let magnitude: Double
             let timeframe: TimeInterval
 
-            enum TrendType {
-                case increasing
-                case decreasing
-                case stable
-            }
         }
     }
 
@@ -1154,12 +1173,6 @@ struct RiskAnalysis {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case implement
-            case monitor
-            case avoid
-            case transfer
-        }
     }
 }
 
@@ -1199,12 +1212,6 @@ struct FeasibilityValidation {
         let description: String
         let impact: Double
 
-        enum RecommendationType {
-            case modify
-            case resource
-            case timeline
-            case scope
-        }
     }
 }
 
@@ -1247,11 +1254,6 @@ struct EthicalFramework {
             let type: MechanismType
             let description: String
 
-            enum MechanismType {
-                case audit
-                case review
-                case monitoring
-            }
         }
 
         struct OversightBody {
@@ -1291,12 +1293,6 @@ struct EthicalCompliance {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case modify
-            case justify
-            case review
-            case override
-        }
     }
 }
 

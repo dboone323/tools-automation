@@ -195,7 +195,7 @@ struct TemporalRule {
     }
 
     struct TemporalCondition {
-        let `operator`: TemporalOperator
+        let `operator`:TemporalOperator
         let eventType: TemporalEvent.EventType
         let timeWindow: DateInterval?
         let dimension: Int?
@@ -407,11 +407,23 @@ struct TemporalConsistency {
         let severity: ViolationSeverity
         let affectedEvents: [String]
 
-        enum ViolationType {
+
             case ordering
+
             case timing
+
             case causality
+
             case logical
+
+            case cycle
+
+            case contradiction
+
+            case missingLink
+
+            case weakEvidence
+
         }
 
         enum ViolationSeverity {
@@ -564,12 +576,6 @@ struct ConsistencyCheck {
         let description: String
         let affectedNodes: [String]
 
-        enum ViolationType {
-            case cycle
-            case contradiction
-            case missingLink
-            case weakEvidence
-        }
     }
 }
 
@@ -794,7 +800,7 @@ class TemporalCausalityEngine {
                         temporalConstraints: nil,
                         dimensionalConstraints: nil,
                         propertyConstraints: [:]
-                    )
+                    ),
                 ],
                 postconditions: [
                     CausalityRule.CausalityCondition(
@@ -802,11 +808,11 @@ class TemporalCausalityEngine {
                         temporalConstraints: nil,
                         dimensionalConstraints: nil,
                         propertyConstraints: [:]
-                    )
+                    ),
                 ],
                 confidence: 0.8,
                 bidirectional: false
-            )
+            ),
         ]
 
         let temporalRules = [
@@ -816,11 +822,11 @@ class TemporalCausalityEngine {
                 logic: .linear,
                 conditions: [
                     TemporalRule.TemporalCondition(
-                        operator: .precedes,
+                        `operator`:.precedes,
                         eventType: .stateChange,
                         timeWindow: nil,
                         dimension: nil
-                    )
+                    ),
                 ],
                 conclusion: TemporalRule.TemporalConclusion(
                     eventType: .interaction,
@@ -829,7 +835,7 @@ class TemporalCausalityEngine {
                     confidence: 0.8
                 ),
                 confidence: 0.75
-            )
+            ),
         ]
 
         let network = TemporalCausalityNetwork(
@@ -1175,7 +1181,7 @@ class CausalityAnalyzerImpl: CausalityAnalyzer {
             CausalStrength.StrengthComponent(type: .temporalProximity, value: temporalProximity, weight: 0.4),
             CausalStrength.StrengthComponent(type: .correlation, value: 0.8, weight: 0.3),
             CausalStrength.StrengthComponent(type: .experimental, value: 0.6, weight: 0.2),
-            CausalStrength.StrengthComponent(type: .theoretical, value: 0.7, weight: 0.1)
+            CausalStrength.StrengthComponent(type: .theoretical, value: 0.7, weight: 0.1),
         ]
 
         let overallStrength = components.reduce(0) { $0 + $1.value * $1.weight }
@@ -1284,7 +1290,7 @@ class TemporalReasonerImpl: TemporalReasoner {
                     description: "Events not in chronological order",
                     severity: .medium,
                     affectedEvents: sequence.events.map(\.id)
-                )
+                ),
             ],
             recommendations: consistent ? [] : ["Reorder events chronologically"]
         )
@@ -1375,7 +1381,7 @@ class CausalityValidatorImpl: CausalityValidator {
                 type: .statistical,
                 description: "Low confidence in causal relationships",
                 severity: .medium
-            )
+            ),
         ]
 
         return CausalityValidation(
@@ -1399,7 +1405,7 @@ class CausalityValidatorImpl: CausalityValidator {
                     type: .cycle,
                     description: "Causal cycles detected",
                     affectedNodes: graph.cycles.flatMap { $0 }
-                )
+                ),
             ] : [],
             evidence: ["Graph structure analysis"]
         )
@@ -1417,7 +1423,7 @@ class CausalityValidatorImpl: CausalityValidator {
                     type: .temporal,
                     strength: 0.8,
                     description: "Time ordering supports direction"
-                )
+                ),
             ],
             alternativeExplanations: directionConfirmed ? [] : ["Reverse causality possible"]
         )
@@ -1434,7 +1440,7 @@ class CausalityValidatorImpl: CausalityValidator {
                     parameter: "sample_size",
                     sensitivity: 0.3,
                     impact: 0.2
-                )
+                ),
             ],
             stabilityMetrics: [
                 RobustnessAssessment.StabilityMetric(
@@ -1442,7 +1448,7 @@ class CausalityValidatorImpl: CausalityValidator {
                     value: analysis.causalGraph.strength,
                     threshold: 0.7,
                     status: analysis.causalGraph.strength > 0.7 ? .stable : .sensitive
-                )
+                ),
             ],
             recommendations: robustnessScore > 0.8 ? [] : ["Increase sample size for better robustness"]
         )
@@ -1471,7 +1477,7 @@ class TemporalPredictorImpl: TemporalPredictor {
                 predictedTime: Date().addingTimeInterval(horizon),
                 probability: 0.7,
                 conditions: ["Based on historical patterns"]
-            )
+            ),
         ]
 
         return TemporalPrediction(
@@ -1492,7 +1498,7 @@ class TemporalPredictorImpl: TemporalPredictor {
                 predictedTime: cause.timestamp.addingTimeInterval(60),
                 probability: 0.8,
                 causalPath: [cause.id]
-            )
+            ),
         ]
 
         return CausalForecast(
@@ -1539,10 +1545,10 @@ class TemporalPredictorImpl: TemporalPredictor {
                         timeRange: DateInterval(start: Date(), end: Date().addingTimeInterval(300)),
                         probability: 0.8,
                         conditions: ["Normal conditions"]
-                    )
+                    ),
                 ],
                 probability: 0.7
-            )
+            ),
         ]
 
         return scenarios
@@ -1574,14 +1580,14 @@ class TemporalPredictorImpl: TemporalPredictor {
                     type: .assumptionValidity,
                     value: 0.8,
                     weight: 0.1
-                )
+                ),
             ],
             uncertaintySources: [
                 PredictionConfidence.UncertaintySource(
                     source: "External factors",
                     impact: 0.2,
                     mitigation: "Monitor external conditions"
-                )
+                ),
             ],
             recommendations: overallConfidence > 0.8 ? [] : ["Improve data quality", "Refine prediction model"]
         )

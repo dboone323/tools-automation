@@ -213,7 +213,7 @@ struct TransmissionError {
     enum ErrorType {
         case network
         case security
-        case `protocol`
+        case `protocol` = "protocol"
         case timeout
         case congestion
     }
@@ -883,7 +883,7 @@ class MessageRouterImpl: MessageRouter {
                 reliability: 0.99,
                 bandwidth: 1000.0,
                 lastUsed: Date()
-            )
+            ),
         ]
     }
 

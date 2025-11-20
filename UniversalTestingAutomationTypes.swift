@@ -17,7 +17,7 @@ enum ProgrammingLanguage: String, Codable, CaseIterable {
 
 /// Refactoring strategy for test maintenance
 enum RefactoringStrategy: String, Codable {
-    case extract_method, consolidate_setup, remove_duplication, improve_naming, simplify_assertions
+    case extractMethod= "extract_method", consolidateSetup = "consolidate_setup", removeDuplication = "remove_duplication", improveNaming = "improve_naming", simplifyAssertions = "simplify_assertions"
 }
 
 /// Code coverage type
@@ -57,7 +57,7 @@ struct SystemArchitecture: Codable, Sendable {
     let patterns: [String]
 
     enum ArchitectureType: String, Codable {
-        case monolithic, microservices, layered, event_driven, serverless
+        case monolithic, microservices, layered, eventDriven = "event_driven", serverless
     }
 
     struct ArchitectureLayer: Codable, Sendable {
@@ -72,17 +72,28 @@ struct SystemArchitecture: Codable, Sendable {
 struct SystemInterface: Codable, Sendable {
     let name: String
     let type: InterfaceType
-    let protocol: String
+    let `protocol`:String
     let endpoints: [String]
     let authentication: AuthenticationMethod
     let dataFormat: DataFormat
 
     enum InterfaceType: String, Codable {
-        case api, ui, database, messaging, file_system, network
+        case api, ui, database, messaging, fileSystem = "file_system", network
     }
 
-    enum AuthenticationMethod: String, Codable {
-        case none, basic, oauth, jwt, certificate, api_key
+
+        case none
+
+        case basic
+
+        case oauth
+
+        case jwt
+
+        case certificate
+
+        case apiKey= "api_key"
+
     }
 
     enum DataFormat: String, Codable {
@@ -100,11 +111,11 @@ struct DataFlow: Codable, Sendable {
     let transformation: String?
 
     enum DataVolume: String, Codable {
-        case low, medium, high, very_high
+        case low, medium, high, veryHigh= "very_high"
     }
 
     enum DataFrequency: String, Codable {
-        case real_time, hourly, daily, weekly, batch
+        case realTime = "real_time", hourly, daily, weekly, batch
     }
 }
 
@@ -112,25 +123,27 @@ struct DataFlow: Codable, Sendable {
 
 extension TestEnvironment.EnvironmentConfiguration {
     /// Authentication method
-    enum AuthenticationMethod: String, Codable {
-        case none, basic, oauth, certificate
-    }
+
 
     /// Encryption level
     enum EncryptionLevel: String, Codable {
-        case none, tls, mutual_tls
+        case none, tls, mutualTls= "mutual_tls"
     }
 
     /// Retry policy
     enum RetryPolicy: String, Codable {
-        case none, exponential_backoff, fixed_interval
+        case none
+        case exponentialBackoff= "exponential_backoff"
+        case fixedInterval= "fixed_interval"
+        case failedOnly= "failed_only"
+        case all
     }
 }
 
 extension TestEnvironment.EnvironmentDependency {
     /// Dependency type
     enum DependencyType: String, Codable {
-        case database, message_queue, cache, external_service, file_system, api
+        case database, messageQueue = "message_queue", cache, externalService = "external_service", fileSystem = "file_system", api
     }
 }
 
@@ -153,17 +166,24 @@ extension TestAnalysis.CoverageAnalysis.GapAnalysis.CoverageGap {
 extension TestAnalysis.TestRecommendation {
     /// Recommendation type
     enum RecommendationType: String, Codable {
-        case add_test, remove_test, refactor_test, improve_coverage, optimize_performance
+        case addTest= "add_test", removeTest = "remove_test", refactorTest = "refactor_test", improveCoverage = "improve_coverage", optimizePerformance = "optimize_performance"
     }
 
     /// Recommendation priority
     enum RecommendationPriority: String, Codable {
-        case low, medium, high, critical
+        case low
+        case medium
+        case high
+        case critical
     }
 
     /// Effort level
     enum EffortLevel: String, Codable {
-        case trivial, easy, medium, hard, very_hard
+        case trivial
+        case easy
+        case medium
+        case hard
+        case veryHard= "very_hard"
     }
 }
 
@@ -172,21 +192,21 @@ extension TestAnalysis.TestRecommendation {
 extension CleanedTestSuite.RemovedTest {
     /// Removal reason
     enum RemovalReason: String, Codable {
-        case obsolete_code, duplicate_coverage, low_value, high_maintenance, failing_consistently
+        case obsoleteCode= "obsolete_code", duplicateCoverage = "duplicate_coverage", lowValue = "low_value", highMaintenance = "high_maintenance", failingConsistently = "failing_consistently"
     }
 }
 
 extension EvolvedTestSuite.TestEvolution {
     /// Evolution type
     enum EvolutionType: String, Codable {
-        case new_scenario, improved_assertion, better_fixture, enhanced_coverage, new_technology
+        case newScenario= "new_scenario", improvedAssertion = "improved_assertion", betterFixture = "better_fixture", enhancedCoverage = "enhanced_coverage", newTechnology = "new_technology"
     }
 }
 
 extension EvolvedTestSuite.TestFeedback {
     /// Feedback source
     enum FeedbackSource: String, Codable {
-        case developer, qa_engineer, user, automated_analysis, monitoring
+        case developer, qaEngineer = "qa_engineer", user, automatedAnalysis = "automated_analysis", monitoring
     }
 
     /// Feedback priority
@@ -255,7 +275,7 @@ struct FuzzTest: Test, Codable, Sendable {
     }
 
     enum MutationStrategy: String, Codable {
-        case bit_flip, byte_flip, arithmetic, block_insert, block_delete
+        case bitFlip= "bit_flip", byteFlip = "byte_flip", arithmetic, blockInsert = "block_insert", blockDelete = "block_delete"
     }
 
     struct CrashDetection: Codable, Sendable {
@@ -264,7 +284,7 @@ struct FuzzTest: Test, Codable, Sendable {
         let sanitizerEnabled: Bool
 
         enum CrashType: String, Codable {
-            case segfault, abort, exception, timeout, memory_leak
+            case segfault, abort, exception, timeout, memoryLeak= "memory_leak"
         }
     }
 }
@@ -293,7 +313,7 @@ struct ChaosTest: Test, Codable, Sendable {
         let duration: TimeInterval
 
         enum ChaosType: String, Codable {
-            case network_delay, network_loss, cpu_stress, memory_stress, disk_full, service_kill
+            case networkDelay= "network_delay", networkLoss = "network_loss", cpuStress = "cpu_stress", memoryStress = "memory_stress", diskFull = "disk_full", serviceKill = "service_kill"
         }
 
         enum ChaosIntensity: String, Codable {
@@ -304,10 +324,17 @@ struct ChaosTest: Test, Codable, Sendable {
     struct SteadyStateCondition: Codable, Sendable {
         let metric: String
         let threshold: Double
-        let operator: ThresholdOperator
+        let `operator`:ThresholdOperator
 
-        enum ThresholdOperator: String, Codable {
-            case less_than, greater_than, equals, not_equals
+
+            case lessThan= "less_than"
+
+            case greaterThan= "greater_than"
+
+            case equals
+
+            case notEquals= "not_equals"
+
         }
     }
 
@@ -323,7 +350,7 @@ struct ChaosTest: Test, Codable, Sendable {
     }
 
     enum BlastRadius: String, Codable {
-        case single_node, multi_node, zone, region, global
+        case singleNode = "single_node", multiNode = "multi_node", zone, region, global
     }
 }
 
@@ -350,7 +377,7 @@ struct LoadTest: Test, Codable, Sendable {
         let pattern: LoadPattern
 
         enum LoadPattern: String, Codable {
-            case constant, ramp_up, step_up, spike, random_walk
+            case constant, rampUp= "ramp_up", stepUp = "step_up", spike, randomWalk = "random_walk"
         }
     }
 
@@ -367,7 +394,7 @@ struct LoadTest: Test, Codable, Sendable {
             let validation: String?
 
             enum ActionType: String, Codable {
-                case http_get, http_post, click, type, wait
+                case httpGet = "http_get", httpPost = "http_post", click, type, wait
             }
         }
 
@@ -388,7 +415,7 @@ struct LoadTest: Test, Codable, Sendable {
         let collectionInterval: TimeInterval
 
         enum MetricType: String, Codable {
-            case cpu, memory, disk_io, network_io, response_time, throughput, error_rate
+            case cpu, memory, diskIo= "disk_io", networkIo = "network_io", responseTime = "response_time", throughput, errorRate = "error_rate"
         }
     }
 
@@ -421,8 +448,8 @@ struct SecurityTest: Test, Codable, Sendable {
     let complianceRequirements: [ComplianceRequirement]
 
     enum VulnerabilityType: String, Codable {
-        case injection, broken_auth, sensitive_data, xml_external, broken_access, misconfiguration
-        case cryptographic_failure, insecure_design, software_components, monitoring_failure
+        case injection, brokenAuth = "broken_auth", sensitiveData = "sensitive_data", xmlExternal = "xml_external", brokenAccess = "broken_access", misconfiguration
+        case cryptographicFailure= "cryptographic_failure", insecureDesign = "insecure_design", softwareComponents = "software_components", monitoringFailure = "monitoring_failure"
     }
 
     enum AttackVector: String, Codable {
@@ -436,7 +463,7 @@ struct SecurityTest: Test, Codable, Sendable {
         let expectedResult: SecurityResult
 
         enum PayloadType: String, Codable {
-            case sql_injection, xss, csrf, command_injection, path_traversal, buffer_overflow
+            case sqlInjection= "sql_injection", xss, csrf, commandInjection = "command_injection", pathTraversal = "path_traversal", bufferOverflow = "buffer_overflow"
         }
 
         enum SecurityResult: String, Codable {
@@ -450,7 +477,7 @@ struct SecurityTest: Test, Codable, Sendable {
         let effectiveness: Double
 
         enum ControlType: String, Codable {
-            case input_validation, authentication, authorization, encryption, logging, monitoring
+            case inputValidation = "input_validation", authentication, authorization, encryption, logging, monitoring
         }
     }
 
@@ -460,7 +487,7 @@ struct SecurityTest: Test, Codable, Sendable {
         let priority: CompliancePriority
 
         enum ComplianceStandard: String, Codable {
-            case owasp, pci_dss, hipaa, gdpr, iso27001
+            case owasp, pciDss = "pci_dss", hipaa, gdpr, iso27001
         }
 
         enum CompliancePriority: String, Codable {
@@ -486,7 +513,7 @@ struct AccessibilityTest: Test, Codable, Sendable {
     let testScenarios: [AccessibilityScenario]
 
     enum AccessibilityStandard: String, Codable {
-        case wcag2_1, section508, en301549, ada
+        case wcag21 = "wcag2_1", section508, en301549, ada
     }
 
     struct UserProfile: Codable, Sendable {
@@ -515,7 +542,7 @@ struct AccessibilityTest: Test, Codable, Sendable {
     }
 
     enum AssistiveTechnology: String, Codable {
-        case screen_reader, screen_magnifier, voice_control, alternative_keyboard, braille_display
+        case screenReader= "screen_reader", screenMagnifier = "screen_magnifier", voiceControl = "voice_control", alternativeKeyboard = "alternative_keyboard", brailleDisplay = "braille_display"
     }
 
     struct AccessibilityScenario: Codable, Sendable {
@@ -547,8 +574,19 @@ struct TestReport: Codable, Sendable {
         let duration: TimeInterval
         let format: ReportFormat
 
-        enum ReportFormat: String, Codable {
-            case html, pdf, json, xml, markdown
+
+            case html
+
+            case pdf
+
+            case json
+
+            case xml
+
+            case markdown
+
+            case junit
+
         }
     }
 
@@ -559,20 +597,14 @@ struct TestReport: Codable, Sendable {
         let effort: EffortLevel
         let impact: ImpactLevel
 
-        enum RecommendationPriority: String, Codable {
-            case low, medium, high, critical
-        }
 
         enum RecommendationCategory: String, Codable {
-            case test_coverage, test_quality, performance, maintainability, reliability
+            case testCoverage = "test_coverage", testQuality = "test_quality", performance, maintainability, reliability
         }
 
-        enum EffortLevel: String, Codable {
-            case trivial, easy, medium, hard, very_hard
-        }
 
         enum ImpactLevel: String, Codable {
-            case low, medium, high, very_high
+            case low, medium, high, veryHigh= "very_high"
         }
     }
 }
@@ -596,7 +628,7 @@ struct TestDashboard: Codable, Sendable {
         let configuration: [String: String]
 
         enum WidgetType: String, Codable {
-            case test_results_chart, coverage_gauge, failure_trend, performance_metrics, quality_score
+            case testResultsChart= "test_results_chart", coverageGauge = "coverage_gauge", failureTrend = "failure_trend", performanceMetrics = "performance_metrics", qualityScore = "quality_score"
         }
 
         struct WidgetPosition: Codable, Sendable {
@@ -682,7 +714,7 @@ struct CICDPipeline: Codable, Sendable {
     let environment: PipelineEnvironment
 
     enum CIPlatform: String, Codable {
-        case github_actions, gitlab_ci, jenkins, circle_ci, azure_devops
+        case githubActions= "github_actions", gitlabCi = "gitlab_ci", jenkins, circleCi = "circle_ci", azureDevops = "azure_devops"
     }
 
     struct PipelineStage: Codable, Sendable {
@@ -693,7 +725,7 @@ struct CICDPipeline: Codable, Sendable {
         let timeout: TimeInterval
 
         enum StageType: String, Codable {
-            case build, test, deploy, security_scan, performance_test
+            case build, test, deploy, securityScan= "security_scan", performanceTest = "performance_test"
         }
 
         struct PipelineStep: Codable, Sendable {
@@ -711,7 +743,7 @@ struct CICDPipeline: Codable, Sendable {
         let schedule: String?
 
         enum TriggerType: String, Codable {
-            case push, pull_request, schedule, manual, webhook
+            case push, pullRequest = "pull_request", schedule, manual, webhook
         }
     }
 
@@ -755,16 +787,10 @@ struct TestAutomationConfig: Codable, Sendable {
         struct QualityGate: Codable, Sendable {
             let metric: String
             let threshold: Double
-            let operator: ThresholdOperator
+            let `operator`:ThresholdOperator
 
-            enum ThresholdOperator: String, Codable {
-                case greater_than, less_than, equals
-            }
         }
 
-        enum RetryPolicy: String, Codable {
-            case none, failed_only, all
-        }
     }
 
     struct LanguageConfig: Codable, Sendable {
@@ -794,9 +820,6 @@ struct TestAutomationConfig: Codable, Sendable {
         let retention: TimeInterval
         let notifications: [NotificationConfig]
 
-        enum ReportFormat: String, Codable {
-            case html, json, xml, junit, markdown
-        }
 
         struct ReportDestination: Codable, Sendable {
             let type: DestinationType
@@ -804,7 +827,7 @@ struct TestAutomationConfig: Codable, Sendable {
             let credentials: [String: String]?
 
             enum DestinationType: String, Codable {
-                case file_system, s3, azure_blob, gcs, http_endpoint
+                case fileSystem= "file_system", s3, azureBlob = "azure_blob", gcs, httpEndpoint = "http_endpoint"
             }
         }
 
@@ -818,7 +841,7 @@ struct TestAutomationConfig: Codable, Sendable {
             }
 
             enum TestEvent: String, Codable {
-                case test_failure, test_success, quality_gate_failure, coverage_below_threshold
+                case testFailure= "test_failure", testSuccess = "test_success", qualityGateFailure = "quality_gate_failure", coverageBelowThreshold = "coverage_below_threshold"
             }
         }
     }
@@ -830,7 +853,7 @@ struct TestAutomationConfig: Codable, Sendable {
         let webhooks: [WebhookConfig]
 
         enum IntegrationType: String, Codable {
-            case jira, github, gitlab, slack, datadog, new_relic
+            case jira, github, gitlab, slack, datadog, newRelic= "new_relic"
         }
 
         struct WebhookConfig: Codable, Sendable {

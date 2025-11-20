@@ -161,12 +161,6 @@ struct NavigationEntry {
     let success: Bool
     let energyCost: Double
 
-    enum NavigationType {
-        case directHop
-        case wormholeTransit
-        case quantumTunnel
-        case realityBridge
-    }
 }
 
 /// Navigation result representation
@@ -192,12 +186,6 @@ struct CommunicationChannel {
     let latency: Double
     let reliability: Double
 
-    enum ChannelType {
-        case quantumEntanglement
-        case wormhole
-        case realityBridge
-        case temporalLink
-    }
 
     var isReliable: Bool {
         reliability > 0.9 && latency < 1.0
@@ -333,12 +321,6 @@ struct HopTrajectory {
     let stabilityProfile: [Double]
     let timeProfile: [Double]
 
-    enum TrajectoryType {
-        case direct
-        case curved
-        case multiHop
-        case emergency
-    }
 
     var isStable: Bool {
         stabilityProfile.min() ?? 0 > 0.8

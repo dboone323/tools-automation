@@ -4,6 +4,7 @@ set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 SEARCH_PATTERN="/Users/danielstevens/Desktop/Quantum-workspace"
+# shellcheck disable=SC2016
 REPLACE_EXPR='${WORKSPACE_ROOT}'
 
 if [[ "${1:-}" == "--apply" ]]; then

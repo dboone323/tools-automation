@@ -94,11 +94,21 @@ struct IntegrationCapability {
     let sources: [KnowledgeSource]
     let prerequisites: [IntegrationCapability]
 
-    enum CapabilityType {
+
         case aggregation
+
         case harmonization
+
         case unification
+
         case validation
+
+        case collection
+
+        case consolidation
+
+        case optimization
+
     }
 }
 
@@ -219,11 +229,45 @@ struct KnowledgeIntegrationInsights {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
+
             case sourceAddition
+
             case methodImprovement
+
             case qualityEnhancement
+
             case conflictResolution
+
+            case reaggregate
+
+            case filterSources
+
+            case improveCollection
+
+            case enhanceValidation
+
+            case refineModel
+
+            case updateOntology
+
+            case validateRelationships
+
+            case improveUnification
+
+            case reIntegrate
+
+            case improveQuality
+
+            case resolveConsistency
+
+            case immediate
+
+            case shortTerm
+
+            case longTerm
+
+            case optional
+
         }
     }
 
@@ -259,12 +303,6 @@ struct AggregationCapability {
     let sources: [KnowledgeSource]
     let efficiency: Double
 
-    enum CapabilityType {
-        case collection
-        case consolidation
-        case optimization
-        case validation
-    }
 }
 
 /// Knowledge aggregation
@@ -341,11 +379,23 @@ struct AggregationOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
+
             case efficiency
+
             case quality
+
             case speed
+
             case completeness
+
+            case conflictResolution
+
+            case structureAlignment
+
+            case formatStandardization
+
+            case overallHarmony
+
         }
     }
 }
@@ -365,11 +415,39 @@ struct AggregationValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
+
             case incompleteness
+
             case inaccuracy
+
             case inconsistency
+
             case irrelevance
+
+            case modelInconsistency
+
+            case ontologyError
+
+            case relationshipInvalid
+
+            case unificationIncomplete
+
+            case integrationIncomplete
+
+            case qualityDegraded
+
+            case consistencyError
+
+            case validationFailure
+
+            case critical
+
+            case major
+
+            case minor
+
+            case informational
+
         }
     }
 
@@ -379,12 +457,6 @@ struct AggregationValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case reaggregate
-            case filterSources
-            case improveCollection
-            case enhanceValidation
-        }
     }
 }
 
@@ -464,12 +536,6 @@ struct HarmonyOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case conflictResolution
-            case structureAlignment
-            case formatStandardization
-            case overallHarmony
-        }
     }
 }
 
@@ -522,11 +588,33 @@ struct UnifiedKnowledgeModel {
         let type: RelationshipType
         let strength: Double
 
-        enum RelationshipType {
+
             case dependency
+
             case association
+
             case composition
+
             case inheritance
+
+            case subclassOf
+
+            case instanceOf
+
+            case partOf
+
+            case relatedTo
+
+            case prerequisite
+
+            case related
+
+            case contradictory
+
+            case complementary
+
+            case derivative
+
         }
     }
 }
@@ -568,12 +656,6 @@ struct KnowledgeOntology {
         let type: RelationshipType
         let properties: [String: AnyCodable]
 
-        enum RelationshipType {
-            case subclassOf
-            case instanceOf
-            case partOf
-            case relatedTo
-        }
     }
 
     struct OntologyAxiom {
@@ -609,13 +691,6 @@ struct KnowledgeRelationships {
         let context: String?
     }
 
-    enum RelationshipType {
-        case prerequisite
-        case related
-        case contradictory
-        case complementary
-        case derivative
-    }
 }
 
 /// Unification validation
@@ -640,12 +715,6 @@ struct UnificationValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
-            case modelInconsistency
-            case ontologyError
-            case relationshipInvalid
-            case unificationIncomplete
-        }
     }
 
     struct ValidationRecommendation {
@@ -654,12 +723,6 @@ struct UnificationValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case refineModel
-            case updateOntology
-            case validateRelationships
-            case improveUnification
-        }
     }
 }
 
@@ -686,12 +749,6 @@ struct IntegrationValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
-            case integrationIncomplete
-            case qualityDegraded
-            case consistencyError
-            case validationFailure
-        }
     }
 
     struct ValidationRecommendation {
@@ -700,12 +757,6 @@ struct IntegrationValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case reIntegrate
-            case improveQuality
-            case resolveConsistency
-            case enhanceValidation
-        }
     }
 }
 
@@ -841,12 +892,6 @@ struct IntegrationReport {
         let description: String
         let impact: String
 
-        enum IssueType {
-            case critical
-            case major
-            case minor
-            case informational
-        }
     }
 
     struct ReportRecommendation {
@@ -856,12 +901,6 @@ struct IntegrationReport {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
-            case immediate
-            case shortTerm
-            case longTerm
-            case optional
-        }
     }
 }
 

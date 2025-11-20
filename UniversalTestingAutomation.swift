@@ -71,7 +71,7 @@ enum TestComplexity: String, Codable {
 
 /// Execution strategy
 enum ExecutionStrategy: String, Codable {
-    case parallel, sequential, prioritized, adaptive, quantum_optimized
+    case parallel, sequential, prioritized, adaptive, quantumOptimized = "quantum_optimized"
 }
 
 /// Test types
@@ -268,7 +268,7 @@ struct PerformanceTest: Test, Codable, Sendable {
         let pattern: LoadPattern
 
         enum LoadType: String, Codable {
-            case constant, ramp_up, spike, random
+            case constant, rampUp = "ramp_up", spike, random
         }
 
         enum LoadIntensity: String, Codable {
@@ -281,8 +281,8 @@ struct PerformanceTest: Test, Codable, Sendable {
     }
 
     enum PerformanceMetric: String, Codable {
-        case response_time, throughput, memory_usage, cpu_usage, network_bandwidth
-        case error_rate, concurrent_users, latency_percentiles
+        case responseTime = "response_time", throughput, memoryUsage = "memory_usage", cpuUsage = "cpu_usage", networkBandwidth = "network_bandwidth"
+        case errorRate = "error_rate", concurrentUsers = "concurrent_users", latencyPercentiles = "latency_percentiles"
     }
 
     struct PerformanceThreshold: Codable, Sendable {
@@ -292,7 +292,7 @@ struct PerformanceTest: Test, Codable, Sendable {
         let condition: ThresholdCondition
 
         enum ThresholdCondition: String, Codable {
-            case less_than, greater_than, equals, not_equals
+            case lessThan = "less_than", greaterThan = "greater_than", equals, notEquals = "not_equals"
         }
     }
 }
@@ -305,7 +305,7 @@ struct TestEnvironment: Codable, Sendable {
     let dependencies: [EnvironmentDependency]
 
     enum Platform: String, Codable {
-        case local, ci_cd, cloud, container, simulator
+        case local, ciCd = "ci_cd", cloud, container, simulator
     }
 
     struct EnvironmentConfiguration: Codable, Sendable {
@@ -326,8 +326,17 @@ struct TestEnvironment: Codable, Sendable {
             let encryption: EncryptionLevel
         }
 
-        enum RetryPolicy: String, Codable {
-            case none, exponential_backoff, fixed_interval
+
+            case none
+
+            case exponentialBackoff = "exponential_backoff"
+
+            case fixedInterval = "fixed_interval"
+
+            case failedOnly = "failed_only"
+
+            case allTests = "all_tests"
+
         }
 
         enum AuthenticationMethod: String, Codable {
@@ -335,7 +344,7 @@ struct TestEnvironment: Codable, Sendable {
         }
 
         enum EncryptionLevel: String, Codable {
-            case none, tls, mutual_tls
+            case none, tls, mutualTls = "mutual_tls"
         }
     }
 
@@ -354,7 +363,7 @@ struct TestEnvironment: Codable, Sendable {
         let configuration: [String: String]
 
         enum DependencyType: String, Codable {
-            case database, message_queue, cache, external_service, file_system
+            case database, messageQueue = "message_queue", cache, externalService = "external_service", fileSystem = "file_system"
         }
     }
 }
@@ -414,9 +423,6 @@ struct TestExecutionResult: Codable, Sendable {
         let timeout: TimeInterval
         let retryPolicy: RetryPolicy
 
-        enum RetryPolicy: String, Codable {
-            case none, failed_only, all_tests
-        }
     }
 }
 
@@ -461,8 +467,21 @@ struct IntelligentExecutionResult: Codable, Sendable {
         let benefit: Double
         let appliedAt: Date
 
-        enum OptimizationType: String, Codable {
-            case parallelization, prioritization, resource_allocation, dependency_resolution
+
+            case parallelization
+
+            case prioritization
+
+            case resourceAllocation = "resource_allocation"
+
+            case dependencyResolution = "dependency_resolution"
+
+            case consolidation
+
+            case deduplication
+
+            case simplification
+
         }
     }
 }
@@ -488,7 +507,7 @@ struct AdaptedExecutionPlan: Codable, Sendable {
         let benefit: Double
 
         enum AdaptationType: String, Codable {
-            case reordering, parallelization, resource_reallocation, timeout_adjustment
+            case reordering, parallelization, resourceReallocation = "resource_reallocation", timeoutAdjustment = "timeout_adjustment"
         }
     }
 
@@ -560,8 +579,13 @@ struct TestAnalysis: Codable, Sendable {
             let confidence: Double
             let timeWindow: TimeInterval
 
-            enum TrendDirection: String, Codable {
-                case improving, stable, deteriorating
+
+                case improving
+
+                case stable
+
+                case deteriorating
+
             }
         }
     }
@@ -658,8 +682,15 @@ struct TestAnalysis: Codable, Sendable {
                 let gap: Double
                 let priority: GapPriority
 
-                enum GapPriority: String, Codable {
-                    case low, medium, high, critical
+
+                    case low
+
+                    case medium
+
+                    case high
+
+                    case critical
+
                 }
             }
         }
@@ -674,7 +705,7 @@ struct TestAnalysis: Codable, Sendable {
         let implementation: String
 
         enum RecommendationType: String, Codable {
-            case add_test, remove_test, refactor_test, improve_coverage, optimize_performance
+            case addTest = "add_test", removeTest = "remove_test", refactorTest = "refactor_test", improveCoverage = "improve_coverage", optimizePerformance = "optimize_performance"
         }
 
         enum RecommendationPriority: String, Codable {
@@ -682,7 +713,7 @@ struct TestAnalysis: Codable, Sendable {
         }
 
         enum EffortLevel: String, Codable {
-            case trivial, easy, medium, hard, very_hard
+            case trivial, easy, medium, hard, veryHard = "very_hard"
         }
     }
 }
@@ -703,9 +734,6 @@ struct OptimizedTestSuite: Codable, Sendable {
         let benefit: Double
         let tradeoffs: [String]
 
-        enum OptimizationType: String, Codable {
-            case consolidation, parallelization, prioritization, deduplication, simplification
-        }
     }
 
     struct QualityImprovement: Codable, Sendable {
@@ -757,9 +785,6 @@ struct TestHistory: Codable, Sendable {
             let magnitude: Double
             let confidence: Double
 
-            enum TrendDirection: String, Codable {
-                case improving, stable, deteriorating
-            }
         }
     }
 
@@ -780,7 +805,7 @@ struct CodeComponent: Codable, Sendable {
     let configuration: [String: String]
 
     enum ComponentType: String, Codable {
-        case service, repository, controller, utility, external_api
+        case service, repository, controller, utility, externalApi = "external_api"
     }
 
     struct ComponentInterface: Codable, Sendable {
@@ -789,8 +814,25 @@ struct CodeComponent: Codable, Sendable {
         let signature: String
         let contracts: [Contract]
 
-        enum InterfaceType: String, Codable {
-            case method, property, event, callback
+
+            case method
+
+            case property
+
+            case event
+
+            case callback
+
+            case api
+
+            case ui
+
+            case database
+
+            case messaging
+
+            case fileSystem = "file_system"
+
         }
 
         struct Contract: Codable, Sendable {
@@ -816,7 +858,7 @@ struct SystemUnderTest: Codable, Sendable {
         let patterns: [String]
 
         enum ArchitectureType: String, Codable {
-            case monolithic, microservices, layered, event_driven
+            case monolithic, microservices, layered, eventDriven = "event_driven"
         }
 
         struct ArchitectureLayer: Codable, Sendable {
@@ -829,12 +871,9 @@ struct SystemUnderTest: Codable, Sendable {
     struct SystemInterface: Codable, Sendable {
         let name: String
         let type: InterfaceType
-        let `protocol`: String
+        let `protocol`:String
         let endpoints: [String]
 
-        enum InterfaceType: String, Codable {
-            case api, ui, database, messaging, file_system
-        }
     }
 
     struct DataFlow: Codable, Sendable {
@@ -859,11 +898,11 @@ struct TestScenario: Codable, Sendable {
     let riskLevel: RiskLevel
 
     enum ScenarioCategory: String, Codable {
-        case functional, non_functional, integration, end_to_end, exploratory
+        case functional, nonFunctional = "non_functional", integration, endToEnd = "end_to_end", exploratory
     }
 
     enum ScenarioComplexity: String, Codable {
-        case simple, moderate, complex, very_complex
+        case simple, moderate, complex, veryComplex = "very_complex"
     }
 
     enum RiskLevel: String, Codable {
@@ -888,7 +927,7 @@ struct VerificationResult: Codable, Sendable {
         let suggestion: String
 
         enum IssueType: String, Codable {
-            case logic_error, coverage_gap, assertion_weakness, test_smell
+            case logicError = "logic_error", coverageGap = "coverage_gap", assertionWeakness = "assertion_weakness", testSmell = "test_smell"
         }
 
         enum IssueSeverity: String, Codable {
@@ -907,8 +946,8 @@ struct TestSmell: Codable, Sendable {
     let impact: String
 
     enum SmellType: String, Codable {
-        case long_test, duplicate_test, brittle_test, slow_test, complex_test
-        case missing_assertion, over_assertion, indirect_testing, mystery_guest
+        case longTest = "long_test", duplicateTest = "duplicate_test", brittleTest = "brittle_test", slowTest = "slow_test", complexTest = "complex_test"
+        case missingAssertion = "missing_assertion", overAssertion = "over_assertion", indirectTesting = "indirect_testing", mysteryGuest = "mystery_guest"
     }
 
     enum SmellSeverity: String, Codable {
@@ -975,13 +1014,10 @@ struct CoverageValidation: Codable, Sendable {
         let gap: Double
         let priority: GapPriority
 
-        enum GapPriority: String, Codable {
-            case low, medium, high, critical
-        }
     }
 
     enum ComplianceLevel: String, Codable {
-        case compliant, warning, non_compliant
+        case compliant, warning, nonCompliant = "non_compliant"
     }
 }
 
@@ -1038,11 +1074,7 @@ struct RefactoredTestSuite: Codable, Sendable {
         let benefit: String
 
         enum RefactoringType: String, Codable {
-            case extractMethod = "extract_method"
-            case consolidateSetup = "consolidate_setup"
-            case removeDuplication = "remove_duplication"
-            case improveNaming = "improve_naming"
-            case simplifyAssertions = "simplify_assertions"
+            case extractMethod = "extract_method", consolidateSetup = "consolidate_setup", removeDuplication = "remove_duplication", improveNaming = "improve_naming", simplifyAssertions = "simplify_assertions"
         }
     }
 
@@ -1075,7 +1107,7 @@ struct CleanedTestSuite: Codable, Sendable {
         let lastExecution: Date?
 
         enum RemovalReason: String, Codable {
-            case obsolete_code, duplicate_coverage, low_value, high_maintenance
+            case obsoleteCode = "obsolete_code", duplicateCoverage = "duplicate_coverage", lowValue = "low_value", highMaintenance = "high_maintenance"
         }
     }
 
@@ -1101,7 +1133,7 @@ struct EvolvedTestSuite: Codable, Sendable {
         let benefit: Double
 
         enum EvolutionType: String, Codable {
-            case new_scenario, improved_assertion, better_fixture, enhanced_coverage
+            case newScenario = "new_scenario", improvedAssertion = "improved_assertion", betterFixture = "better_fixture", enhancedCoverage = "enhanced_coverage"
         }
     }
 
@@ -1111,8 +1143,25 @@ struct EvolvedTestSuite: Codable, Sendable {
         let priority: FeedbackPriority
         let implemented: Bool
 
-        enum FeedbackSource: String, Codable {
-            case developer, qa_engineer, user, automated_analysis
+
+            case developer
+
+            case qaEngineer = "qa_engineer"
+
+            case user
+
+            case automatedAnalysis = "automated_analysis"
+
+            case manualTesting = "manual_testing"
+
+            case automatedTesting = "automated_testing"
+
+            case codeReview = "code_review"
+
+            case userFeedback = "user_feedback"
+
+            case monitoring
+
         }
 
         enum FeedbackPriority: String, Codable {
@@ -1139,16 +1188,13 @@ struct TestFeedback: Codable, Sendable {
     let actionable: Bool
 
     enum FeedbackType: String, Codable {
-        case bug_report, improvement_suggestion, false_positive, performance_issue, usability_problem
+        case bugReport = "bug_report", improvementSuggestion = "improvement_suggestion", falsePositive = "false_positive", performanceIssue = "performance_issue", usabilityProblem = "usability_problem"
     }
 
     enum FeedbackSeverity: String, Codable {
         case low, medium, high, critical
     }
 
-    enum FeedbackSource: String, Codable {
-        case manual_testing, automated_testing, code_review, user_feedback, monitoring
-    }
 }
 
 /// Test specification
@@ -1190,7 +1236,8 @@ final class UniversalTestingAutomation: ObservableObject {
     init(testGenerator: QuantumTestGenerator = QuantumTestGeneratorImpl(),
          testExecutor: IntelligentTestExecutor = IntelligentTestExecutorImpl(),
          testVerifier: QuantumTestVerifier = QuantumTestVerifierImpl(),
-         testMaintenance: AutomatedTestMaintenance = AutomatedTestMaintenanceImpl()) {
+         testMaintenance: AutomatedTestMaintenance = AutomatedTestMaintenanceImpl())
+    {
         self.testGenerator = testGenerator
         self.testExecutor = testExecutor
         self.testVerifier = testVerifier
@@ -1346,7 +1393,7 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                 tags: ["unit", "basic"],
                 targetFunction: "performOperation",
                 inputParameters: [
-                    UnitTest.TestParameter(name: "input", type: "String", value: "test")
+                    UnitTest.TestParameter(name: "input", type: "String", value: "test"),
                 ],
                 expectedOutput: UnitTest.TestExpectation(
                     type: .exact,
@@ -1355,7 +1402,7 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                 ),
                 preconditions: ["System is initialized"],
                 postconditions: ["Result is valid"]
-            )
+            ),
         ]
     }
 
@@ -1377,22 +1424,22 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                         action: "processRequest",
                         parameters: ["request": "test"],
                         expectedResponse: "success"
-                    )
+                    ),
                 ],
                 successCriteria: [
                     IntegrationTest.SuccessCriterion(
                         condition: "Response received",
                         measurement: "response_time < 1.0"
-                    )
+                    ),
                 ],
                 failureScenarios: [
                     IntegrationTest.FailureScenario(
                         scenario: "Network failure",
                         expectedFailure: "ConnectionError",
                         recoveryAction: "Retry with backoff"
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
     }
 
@@ -1429,16 +1476,16 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                         target: "/register",
                         parameters: [:],
                         waitCondition: "page_loaded"
-                    )
+                    ),
                 ],
                 validationPoints: [
                     SystemTest.ValidationPoint(
                         point: "registration_form",
                         validation: "form_visible",
                         successCriteria: "form renders correctly"
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
     }
 
@@ -1466,9 +1513,9 @@ final class QuantumTestGeneratorImpl: QuantumTestGenerator {
                         value: 1.0,
                         unit: "seconds",
                         condition: .less_than
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
     }
 }
@@ -1558,7 +1605,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     adaptation: "Increased timeout for slow tests",
                     impact: .positive,
                     timestamp: Date()
-                )
+                ),
             ],
             predictions: [],
             optimizations: [
@@ -1567,7 +1614,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     description: "Executed tests in parallel for better performance",
                     benefit: 0.6,
                     appliedAt: Date()
-                )
+                ),
             ]
         )
     }
@@ -1593,7 +1640,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     description: "Reordered tests for optimal execution",
                     affectedTests: results.map(\.testId),
                     benefit: 0.2
-                )
+                ),
             ],
             reasoning: [
                 AdaptedExecutionPlan.AdaptationReason(
@@ -1601,7 +1648,7 @@ final class IntelligentTestExecutorImpl: IntelligentTestExecutor {
                     reasoning: "Reordering to run fast tests first",
                     confidence: 0.8,
                     evidence: ["Historical data shows faster execution"]
-                )
+                ),
             ]
         )
     }
@@ -1652,7 +1699,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                 severity: .medium,
                 refactoring: "Split into multiple focused test methods",
                 impact: "Improved maintainability and debugging"
-            )
+            ),
         ]
     }
 
@@ -1699,7 +1746,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                     actual: 75.0,
                     gap: 15.0,
                     priority: .medium
-                )
+                ),
             ],
             compliance: .warning,
             recommendations: ["Add more error handling tests", "Increase edge case coverage"]
@@ -1769,7 +1816,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                             severity: 0.3,
                             impact: "Slow test execution",
                             mitigation: "Increase memory allocation"
-                        )
+                        ),
                     ],
                     recommendations: ["Optimize memory usage", "Consider parallel execution"]
                 ),
@@ -1807,7 +1854,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                             requiredCoverage: 85.0,
                             gap: 15.0,
                             priority: .medium
-                        )
+                        ),
                     ],
                     priorityGaps: ["Error handling", "Edge cases"],
                     recommendations: ["Add comprehensive error testing", "Implement boundary value testing"]
@@ -1829,7 +1876,7 @@ final class QuantumTestVerifierImpl: QuantumTestVerifier {
                     effort: .easy,
                     expectedBenefit: 0.1,
                     implementation: "Implement parallel test execution"
-                )
+                ),
             ]
         )
     }
@@ -1846,7 +1893,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     testId: "existing_test_1",
                     changes: ["Updated assertions for new API"],
                     reason: "API signature changed"
-                )
+                ),
             ],
             obsoleteTests: [],
             impactAnalysis: TestUpdates.ImpactAnalysis(
@@ -1865,11 +1912,11 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
             refactoredSuite: testSuite, // Assume refactored
             refactorings: [
                 RefactoredTestSuite.TestRefactoring(
-                    type: .extractMethod,
+                    type: .extract_method,
                     description: "Extracted common setup code",
                     affectedTests: ["test1", "test2"],
                     benefit: "Reduced duplication"
-                )
+                ),
             ],
             qualityImprovement: RefactoredTestSuite.QualityDelta(
                 maintainabilityChange: 15.0,
@@ -1896,7 +1943,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     reason: .obsolete_code,
                     coverageImpact: 2.0,
                     lastExecution: Date().addingTimeInterval(-86400 * 30) // 30 days ago
-                )
+                ),
             ],
             coverageImpact: CleanedTestSuite.CoverageImpact(
                 overallChange: -2.0,
@@ -1918,7 +1965,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     description: "Added test for new user scenario",
                     affectedTests: ["new_scenario_test"],
                     benefit: 0.1
-                )
+                ),
             ],
             feedbackIncorporated: [
                 EvolvedTestSuite.TestFeedback(
@@ -1926,7 +1973,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     content: feedback.content,
                     priority: .medium,
                     implemented: true
-                )
+                ),
             ],
             improvementMetrics: EvolvedTestSuite.ImprovementMetrics(
                 defectDetectionIncrease: 0.1,
@@ -1949,7 +1996,7 @@ final class AutomatedTestMaintenanceImpl: AutomatedTestMaintenance {
                     affectedTests: ["test1", "test2"],
                     benefit: 0.15,
                     tradeoffs: ["Slightly more complex test setup"]
-                )
+                ),
             ],
             qualityImprovements: OptimizedTestSuite.QualityImprovement(
                 reliabilityIncrease: 5.0,

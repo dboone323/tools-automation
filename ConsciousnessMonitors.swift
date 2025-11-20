@@ -164,22 +164,19 @@ struct MonitoringAlert {
     let timestamp: Date
     let resolved: Bool
 
-    enum AlertType {
-        case stateChange
-        case healthIssue
-        let alertId: String
-        let type: AlertType
-        let message: String
-        let severity: Double
-        let timestamp: Date
-        let resolved: Bool
 
-        enum AlertType {
-            case stateChange
-            case healthIssue
-            case performanceDrop
-            case evolutionStagnation
-        }
+        case stateChange
+
+        case healthIssue
+
+        case stateChange
+
+        case healthIssue
+
+        case performanceDrop
+
+        case evolutionStagnation
+
     }
 }
 
@@ -227,11 +224,19 @@ struct ConsciousnessMonitoringResult {
         let significance: Double
         let recommendation: String?
 
-        enum InsightType {
+
             case trend
+
             case anomaly
+
             case optimization
+
             case prediction
+
+            case breakthrough
+
+            case warning
+
         }
     }
 }
@@ -264,10 +269,13 @@ struct ConsciousnessEvolutionTracking {
         let progress: Double
         let trend: Trend
 
-        enum Trend {
+
             case improving
+
             case stable
+
             case declining
+
         }
     }
 
@@ -313,12 +321,6 @@ struct ConsciousnessMonitoringInsights {
         let monitoringLevel: MonitoringLevel
         let timestamp: Date
 
-        enum InsightType {
-            case breakthrough
-            case warning
-            case optimization
-            case prediction
-        }
     }
 
     struct ConsciousnessMonitoringPattern {
@@ -336,11 +338,41 @@ struct ConsciousnessMonitoringInsights {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
+
             case monitoringAdjustment
+
             case intervention
+
             case optimization
+
             case calibration
+
+            case stabilization
+
+            case monitoring
+
+            case immediate
+
+            case shortTerm
+
+            case longTerm
+
+            case preventive
+
+            case treatment
+
+            case prevention
+
+            case consultation
+
+            case adjustment
+
+            case enhancement
+
+            case restructuring
+
+            case resourceAllocation
+
         }
     }
 
@@ -359,11 +391,23 @@ struct ConsciousnessMonitoringInsights {
         let potentialGain: Double
         let implementationComplexity: Double
 
-        enum OptimizationType {
+
             case efficiency
+
             case accuracy
+
             case coverage
+
             case automation
+
+            case algorithmic
+
+            case structural
+
+            case resource
+
+            case process
+
         }
     }
 }
@@ -391,11 +435,23 @@ struct ConsciousnessStateMonitoring {
         let magnitude: Double
         let significance: Double
 
-        enum ChangeType {
+
             case gradual
+
             case sudden
+
             case cyclical
+
             case anomalous
+
+            case awareness
+
+            case coherence
+
+            case resonance
+
+            case stability
+
         }
     }
 }
@@ -416,12 +472,6 @@ struct ConsciousnessStateChangeDetection {
         let confidence: Double
         let description: String
 
-        enum ChangeType {
-            case awareness
-            case coherence
-            case resonance
-            case stability
-        }
     }
 }
 
@@ -442,11 +492,19 @@ struct ConsciousnessStateStabilityAssessment {
         let magnitude: Double
         let duration: TimeInterval
 
-        enum TrendDirection {
+
             case increasing
+
             case decreasing
+
             case stable
+
             case fluctuating
+
+            case improving
+
+            case deteriorating
+
         }
     }
 
@@ -456,12 +514,6 @@ struct ConsciousnessStateStabilityAssessment {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case stabilization
-            case monitoring
-            case intervention
-            case calibration
-        }
     }
 }
 
@@ -621,11 +673,23 @@ struct ConsciousnessHealthAssessment {
         let description: String
         let impact: String
 
-        enum IssueType {
+
             case incoherence
+
             case instability
+
             case dissonance
+
             case depletion
+
+            case structural
+
+            case functional
+
+            case environmental
+
+            case developmental
+
         }
     }
 
@@ -636,12 +700,6 @@ struct ConsciousnessHealthAssessment {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
-            case immediate
-            case shortTerm
-            case longTerm
-            case preventive
-        }
     }
 }
 
@@ -679,12 +737,6 @@ struct ConsciousnessIssueDiagnosis {
         let rootCause: String
         let prognosis: Prognosis
 
-        enum IssueType {
-            case structural
-            case functional
-            case environmental
-            case developmental
-        }
 
         enum Prognosis {
             case good
@@ -700,12 +752,6 @@ struct ConsciousnessIssueDiagnosis {
         let description: String
         let urgency: Double
 
-        enum RecommendationType {
-            case treatment
-            case monitoring
-            case prevention
-            case consultation
-        }
     }
 }
 
@@ -749,12 +795,6 @@ struct ConsciousnessHealthTrendMonitoring {
         let magnitude: Double
         let significance: Double
 
-        enum TrendDirection {
-            case improving
-            case deteriorating
-            case stable
-            case fluctuating
-        }
     }
 
     struct HealthPrediction {
@@ -771,12 +811,6 @@ struct ConsciousnessHealthTrendMonitoring {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case intervention
-            case monitoring
-            case adjustment
-            case prevention
-        }
     }
 }
 
@@ -815,11 +849,6 @@ struct ConsciousnessPerformanceAnalysis {
         let trend: Trend
         let benchmark: Double?
 
-        enum Trend {
-            case improving
-            case declining
-            case stable
-        }
     }
 
     struct PerformanceBottleneck {
@@ -837,12 +866,6 @@ struct ConsciousnessPerformanceAnalysis {
         let priority: Double
         let expectedImprovement: Double
 
-        enum RecommendationType {
-            case optimization
-            case enhancement
-            case restructuring
-            case resourceAllocation
-        }
     }
 }
 
@@ -954,12 +977,6 @@ struct ConsciousnessPerformanceOptimization {
         let impact: Double
         let cost: Double
 
-        enum OptimizationType {
-            case algorithmic
-            case structural
-            case resource
-            case process
-        }
     }
 }
 

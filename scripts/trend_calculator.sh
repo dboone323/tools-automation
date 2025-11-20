@@ -69,7 +69,7 @@ percent_increase() { # $1 baseline, $2 current
   fi
 }
 percent_drop() { # baseline vs current (drop positive if decreased)
-  if awk "BEGIN {exit !($1 == 0)}"; then echo 0; else awk -v b="$1" -v c="$2" 'BEGIN {printf("%.2f", ((b - c) / (b == 0 ? 1 : b)) * 100)}'
+  if awk "BEGIN {exit !($1 == 0)}"; then echo 0; else awk -v b="$1" -v c="$2" 'BEGIN {printf("%.2f", ((b - c) / (b == 0 ? 1 : b)) * 100)}'; fi
 }
 
 error_delta=$(percent_increase "$baseline_error" "$current_error")

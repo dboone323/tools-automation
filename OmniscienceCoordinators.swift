@@ -167,12 +167,19 @@ struct DomainConnection {
     let type: ConnectionType
     let established: Date
 
-    enum ConnectionType {
+
         case direct
+
         case indirect
+
         case conceptual
+
         case methodological
+
         case foundational
+
+        case causal
+
     }
 }
 
@@ -301,11 +308,27 @@ struct OmniscienceOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
+
             case coordinationEfficiency
+
             case integrationSpeed
+
             case insightQuality
+
             case domainHarmony
+
+            case frequency
+
+            case effectiveness
+
+            case efficiency
+
+            case quality
+
+            case coherence
+
+            case novelty
+
         }
     }
 }
@@ -428,12 +451,6 @@ struct InteractionOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case frequency
-            case effectiveness
-            case efficiency
-            case quality
-        }
     }
 }
 
@@ -496,12 +513,6 @@ struct KnowledgeNetwork {
         let strength: Double
         let type: ConnectionType
 
-        enum ConnectionType {
-            case direct
-            case indirect
-            case conceptual
-            case causal
-        }
     }
 }
 
@@ -519,12 +530,6 @@ struct SynthesisOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case coherence
-            case novelty
-            case efficiency
-            case quality
-        }
     }
 }
 

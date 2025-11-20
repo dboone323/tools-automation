@@ -93,11 +93,21 @@ struct SynthesisCapability {
     let knowledgeDomains: [KnowledgeDomain]
     let prerequisites: [SynthesisCapability]
 
-    enum CapabilityType {
+
         case generation
+
         case extraction
-        valiation
+
         case application
+
+        case synthesis
+
+        case insight
+
+        case framework
+
+        case optimization
+
     }
 }
 
@@ -110,11 +120,19 @@ struct WisdomFramework {
     let applications: [WisdomApplication]
     let coherence: Double
 
-    enum FrameworkStructure {
+
         case hierarchical
+
         case network
+
         case modular
+
         case integrated
+
+        case linear
+
+        case parallel
+
     }
 
     struct FrameworkComponent {
@@ -318,12 +336,25 @@ struct WisdomMetadata {
         let type: RelationshipType
         let strength: Double
 
-        enum RelationshipType {
+
             case prerequisite
+
             case complementary
+
             case contradictory
+
             case derivative
+
             case foundational
+
+            case causal
+
+            case correlational
+
+            case hierarchical
+
+            case associative
+
         }
     }
 }
@@ -396,11 +427,15 @@ struct WisdomApplications {
             let impact: Double
             let sustainability: Double
 
-            enum OutcomeType {
+
                 case success
+
                 case partial
+
                 case failure
+
                 case unexpected
+
             }
         }
     }
@@ -430,12 +465,43 @@ struct WisdomApplications {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
+
             case immediate
+
             case shortTerm
+
             case longTerm
+
             case preventive
+
             case opportunistic
+
+            case refine
+
+            case expand
+
+            case validate
+
+            case contextualize
+
+            case optional
+
+            case action
+
+            case strategy
+
+            case policy
+
+            case mindset
+
+            case adjust
+
+            case enhance
+
+            case redirect
+
+            case discontinue
+
         }
     }
 }
@@ -448,12 +514,6 @@ struct GenerationCapability {
     let knowledgeDomains: [KnowledgeDomain]
     let efficiency: Double
 
-    enum CapabilityType {
-        case synthesis
-        case insight
-        case framework
-        case optimization
-    }
 }
 
 /// Wisdom synthesis
@@ -488,11 +548,29 @@ struct WisdomOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
+
             case depth
+
             case clarity
+
             case applicability
+
             case universality
+
+            case quality
+
+            case quantity
+
+            case relevance
+
+            case effectiveness
+
+            case efficiency
+
+            case adaptability
+
+            case sustainability
+
         }
     }
 }
@@ -513,11 +591,31 @@ struct WisdomValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
+
             case incoherence
+
             case irrelevance
+
             case inaccuracy
+
             case incompleteness
+
+            case critical
+
+            case major
+
+            case minor
+
+            case informational
+
+            case misalignment
+
+            case ineffectiveness
+
+            case unintended
+
+            case unsustainable
+
         }
     }
 
@@ -527,12 +625,6 @@ struct WisdomValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case refine
-            case expand
-            case validate
-            case contextualize
-        }
     }
 }
 
@@ -604,12 +696,6 @@ struct RelationshipDiscovery {
         let strength: Double
         let context: String?
 
-        enum RelationshipType {
-            case causal
-            case correlational
-            case hierarchical
-            case associative
-        }
     }
 
     enum DiscoveryMethod {
@@ -659,12 +745,6 @@ struct InsightOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case quality
-            case quantity
-            case relevance
-            case clarity
-        }
     }
 }
 
@@ -784,12 +864,6 @@ struct WisdomValidationReport {
         let description: String
         let impact: String
 
-        enum IssueType {
-            case critical
-            case major
-            case minor
-            case informational
-        }
     }
 
     struct ReportRecommendation {
@@ -799,12 +873,6 @@ struct WisdomValidationReport {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
-            case immediate
-            case shortTerm
-            case longTerm
-            case optional
-        }
     }
 }
 
@@ -840,12 +908,6 @@ struct WisdomApplication {
         let impact: Double
         let sustainability: Double
 
-        enum OutcomeType {
-            case success
-            case partial
-            case failure
-            case unexpected
-        }
     }
 }
 
@@ -866,12 +928,6 @@ struct WisdomRecommendations {
         let priority: Double
         let expectedBenefit: Double
 
-        enum RecommendationType {
-            case action
-            case strategy
-            case policy
-            case mindset
-        }
     }
 
     struct RecommendationPrioritization {
@@ -952,12 +1008,6 @@ struct WisdomStrategies {
         let adaptability: Double
         let scalability: Double
 
-        enum FrameworkStructure {
-            case linear
-            case parallel
-            case hierarchical
-            case network
-        }
     }
 }
 
@@ -975,12 +1025,6 @@ struct WisdomApplicationOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case effectiveness
-            case efficiency
-            case adaptability
-            case sustainability
-        }
     }
 }
 
@@ -1000,12 +1044,6 @@ struct WisdomApplicationValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
-            case misalignment
-            case ineffectiveness
-            case unintended
-            case unsustainable
-        }
     }
 
     struct ValidationRecommendation {
@@ -1014,12 +1052,6 @@ struct WisdomApplicationValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case adjust
-            case enhance
-            case redirect
-            case discontinue
-        }
     }
 }
 

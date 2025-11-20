@@ -624,7 +624,7 @@ enum EvolutionAmplification {
 enum IntelligenceType {
     case narrow
     case general
-    case `super`
+    case `super` = "super"
     case transcendent
 }
 
@@ -658,7 +658,7 @@ enum AmplificationType {
 
 enum SensorType {
     case environmental
-    case `internal`
+    case `internal` = "internal"
     case external
     case quantum
 }

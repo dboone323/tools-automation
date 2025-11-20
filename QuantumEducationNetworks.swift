@@ -230,11 +230,15 @@ struct Student {
             let targetLevel: ProficiencyLevel
             let timeframe: TimeInterval
 
-            enum ProficiencyLevel {
+
                 case basic
+
                 case intermediate
+
                 case advanced
+
                 case expert
+
             }
         }
 
@@ -298,12 +302,6 @@ struct Curriculum {
         let level: ProficiencyLevel
         let assessmentCriteria: [String]
 
-        enum ProficiencyLevel {
-            case basic
-            case intermediate
-            case advanced
-            case expert
-        }
     }
 
     struct AssessmentMethod {
@@ -312,12 +310,29 @@ struct Curriculum {
         let frequency: AssessmentFrequency
         let weight: Double
 
-        enum AssessmentType {
+
             case examination
+
             case project
+
             case presentation
+
             case practical
+
             case portfolio
+
+            case quiz
+
+            case exercise
+
+            case formative
+
+            case summative
+
+            case diagnostic
+
+            case predictive
+
         }
 
         enum AssessmentFrequency {
@@ -462,13 +477,29 @@ struct LearningContent {
         let size: Int64
         let format: String
 
-        enum ResourceType {
+
             case video
+
             case audio
+
             case text
+
             case image
+
             case interactive
+
             case downloadable
+
+            case teacher
+
+            case material
+
+            case facility
+
+            case technology
+
+            case funding
+
         }
     }
 
@@ -478,11 +509,6 @@ struct LearningContent {
         let questions: [Question]
         let passingScore: Double
 
-        enum AssessmentType {
-            case quiz
-            case exercise
-            case project
-        }
 
         struct Question {
             let questionId: String
@@ -492,12 +518,27 @@ struct LearningContent {
             let correctAnswer: String
             let explanation: String
 
-            enum QuestionType {
+
                 case multipleChoice
+
                 case trueFalse
+
                 case shortAnswer
+
                 case essay
+
                 case practical
+
+                case knowledge
+
+                case comprehension
+
+                case application
+
+                case analysis
+
+                case synthesis
+
             }
         }
     }
@@ -519,12 +560,27 @@ struct PersonalizedCurriculum {
         let reason: String
         let impact: Double
 
-        enum AdaptationType {
+
             case pace
+
             case content
+
             case method
+
             case assessment
+
             case support
+
+            case simplification
+
+            case elaboration
+
+            case visualization
+
+            case audio
+
+            case interactive
+
         }
     }
 
@@ -601,13 +657,6 @@ struct AdaptedContent {
         let description: String
         let effectiveness: Double
 
-        enum AdaptationType {
-            case simplification
-            case elaboration
-            case visualization
-            case audio
-            case interactive
-        }
     }
 
     struct ContentPacing {
@@ -640,27 +689,27 @@ struct AdaptedContent {
         let content: String
         let trigger: SupportTrigger
 
-        enum SupportType {
+
             case hint
+
             case explanation
-            let supportId: String
-            let type: SupportType
-            let content: String
-            let trigger: SupportTrigger
 
-            enum SupportType {
-                case hint
-                case explanation
-                case example
-                case scaffolding
-            }
+            case hint
 
-            enum SupportTrigger {
-                case difficulty
-                case time
-                case error
-                case request
-            }
+            case explanation
+
+            case example
+
+            case scaffolding
+
+            case difficulty
+
+            case time
+
+            case error
+
+            case request
+
         }
     }
 }
@@ -681,12 +730,6 @@ struct OutcomePrediction {
         let expectedLevel: ProficiencyLevel
         let factors: [InfluencingFactor]
 
-        enum ProficiencyLevel {
-            case basic
-            case intermediate
-            case advanced
-            case expert
-        }
 
         struct InfluencingFactor {
             let factorId: String
@@ -721,12 +764,6 @@ struct OptimizedPath {
         let deadline: Date
         let criteria: [SuccessCriterion]
 
-        enum ProficiencyLevel {
-            case basic
-            case intermediate
-            case advanced
-            case expert
-        }
 
         struct SuccessCriterion {
             let criterionId: String
@@ -763,11 +800,19 @@ struct LearningAnalysis {
         let impact: Double
         let description: String
 
-        enum PatternType {
+
             case strength
+
             case weakness
+
             case preference
+
             case behavior
+
+            case improvement
+
+            case plateau
+
         }
     }
 
@@ -794,12 +839,45 @@ struct LearningAnalysis {
         let priority: Double
         let expectedImpact: Double
 
-        enum RecommendationType {
+
             case content
+
             case method
+
             case pace
+
             case support
+
             case environment
+
+            case review
+
+            case practice
+
+            case advanced
+
+            case remedial
+
+            case project
+
+            case collaboration
+
+            case alignment
+
+            case development
+
+            case revision
+
+            case adoption
+
+            case policy
+
+            case resource
+
+            case training
+
+            case infrastructure
+
         }
     }
 }
@@ -822,13 +900,6 @@ struct QuantumAssessment {
         let difficulty: Double
         let quantumMetrics: QuantumQuestionMetrics
 
-        enum QuestionType {
-            case knowledge
-            case comprehension
-            case application
-            case analysis
-            case synthesis
-        }
 
         struct QuantumQuestionMetrics {
             let coherence: Double
@@ -889,12 +960,6 @@ struct AssessmentResults {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case review
-            case practice
-            case advanced
-            case remedial
-        }
     }
 }
 
@@ -912,12 +977,6 @@ struct AssessmentAnalysis {
         let description: String
         let significance: Double
 
-        enum PatternType {
-            case strength
-            case weakness
-            case improvement
-            case plateau
-        }
     }
 
     struct AssessmentInsight {
@@ -955,25 +1014,6 @@ struct LearningRecommendations {
         let resources: [String]
         let expectedImpact: Double
 
-        enum RecommendationType {
-            case content
-            case method
-            case practice
-            let recommendationId: String
-            let type: RecommendationType
-            let subject: String
-            let description: String
-            let resources: [String]
-            let expectedImpact: Double
-
-            enum RecommendationType {
-                case content
-                case method
-                case practice
-                case project
-                case collaboration
-            }
-        }
     }
 
     struct RecommendationTimeline {
@@ -1048,12 +1088,6 @@ struct StudentAssessment {
     let nextSteps: [String]
     let timestamp: Date
 
-    enum AssessmentType {
-        case formative
-        case summative
-        case diagnostic
-        case predictive
-    }
 }
 
 /// Educational resource
@@ -1067,13 +1101,6 @@ struct EducationalResource {
     let usage: ResourceUsage
     let metadata: ResourceMetadata
 
-    enum ResourceType {
-        case teacher
-        case material
-        case facility
-        case technology
-        case funding
-    }
 
     enum ResourceCategory {
         case primary
@@ -1244,11 +1271,19 @@ struct ResourceSharing {
         let value: Double
         let recipients: [String]
 
-        enum BenefitType {
+
             case cost
+
             case quality
+
             case access
+
             case efficiency
+
+            case equity
+
+            case mobility
+
         }
     }
 }
@@ -1312,12 +1347,6 @@ struct StandardCoordination {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case alignment
-            case development
-            case revision
-            case adoption
-        }
     }
 }
 
@@ -1392,12 +1421,6 @@ struct PolicyHarmonization {
         let value: Double
         let stakeholders: [String]
 
-        enum BenefitType {
-            case efficiency
-            case quality
-            case equity
-            case mobility
-        }
     }
 }
 
@@ -1577,12 +1600,6 @@ struct QualityMonitoring {
         let priority: Double
         let timeline: TimeInterval
 
-        enum RecommendationType {
-            case policy
-            case resource
-            case training
-            case infrastructure
-        }
     }
 }
 

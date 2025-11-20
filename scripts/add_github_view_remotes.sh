@@ -132,7 +132,7 @@ for r in "${REPOS[@]}"; do
             echo "[${r}] DRY RUN: would run: git remote add ${remote_name} ${remote_url}"
         else
             echo "[${r}] Adding remote '${remote_name}' -> ${remote_url}"
-            git remote add ${remote_name} ${remote_url}
+            git remote add "${remote_name}" "${remote_url}"
         fi
     fi
 
@@ -144,9 +144,9 @@ for r in "${REPOS[@]}"; do
             echo "[${r}] Opening ${remote_url} in browser"
             # macOS open, fallback to xdg-open on other systems
             if command -v open >/dev/null 2>&1; then
-                open ${remote_url}
+                open "${remote_url}"
             elif command -v xdg-open >/dev/null 2>&1; then
-                xdg-open ${remote_url}
+                xdg-open "${remote_url}"
             else
                 echo "Unable to open browser. Please open ${remote_url} manually."
             fi

@@ -289,11 +289,19 @@ struct Citizen {
     let rights: CitizenRights
     let status: CitizenStatus
 
-    enum CitizenStatus {
+
         case active
+
         case inactive
+
         case dependent
+
         case contributor
+
+        case suspended
+
+        case deported
+
     }
 }
 
@@ -332,23 +340,36 @@ struct SocialPolicy {
     let duration: TimeInterval
     let status: PolicyStatus
 
-    enum PolicyType {
+
         case welfare
+
         case education
+
         case healthcare
+
         case housing
+
         case employment
+
     }
 
-    enum PolicyStatus {
+
         case proposed
+
         case approved
+
         case active
+
         case implemented
+
         case suspended
+
         case evaluated
+
         case completed
+
         case discontinued
+
     }
 }
 
@@ -375,11 +396,21 @@ struct Community {
     let networks: SocialNetworks
     let status: CommunityStatus
 
-    enum CommunityStatus {
+
         case thriving
+
         case stable
+
         case challenged
+
         case crisis
+
+        case developing
+
+        case established
+
+        case declining
+
     }
 }
 
@@ -393,12 +424,21 @@ struct SocialInequality {
     let consequences: [InequalityConsequence]
     let interventions: [EqualityIntervention]
 
-    enum InequalityType {
+
         case income
+
         case wealth
+
         case opportunity
+
         case health
+
         case education
+
+        case access
+
+        case representation
+
     }
 }
 
@@ -412,18 +452,28 @@ struct EqualityIntervention {
     let timeline: TimeInterval
     let expected: ExpectedOutcome
 
-    enum InterventionType {
+
         case policy
+
         case program
+
         case education
+
         case enforcement
+
+        case directAid
+
     }
 
-    enum InterventionScope {
+
         case individual
+
         case community
+
         case regional
+
         case national
+
     }
 }
 
@@ -492,21 +542,42 @@ struct PovertyProgram {
     let outcomes: [ProgramOutcome]
     let status: ProgramStatus
 
-    enum ProgramType {
+
         case cashTransfer
+
         case foodAssistance
+
         case housingSupport
+
         case educationAid
+
         case healthcareAccess
+
         case jobTraining
+
+        case communityDevelopment
+
+        case socialServices
+
+        case economicSupport
+
+        case healthServices
+
     }
 
-    enum ProgramStatus {
+
         case planning
+
         case active
+
         case completed
+
         case suspended
+
         case cancelled
+
+        case planned
+
     }
 }
 
@@ -2998,12 +3069,7 @@ struct CitizenRights {
 }
 
 /// Citizen status
-enum CitizenStatus {
-    case active
-    case inactive
-    case suspended
-    case deported
-}
+
 
 /// Wealth bracket
 enum WealthBracket {
@@ -3101,12 +3167,7 @@ struct SocialNetworks {
 }
 
 /// Community status
-enum CommunityStatus {
-    case developing
-    case established
-    case thriving
-    case declining
-}
+
 
 /// Basic needs
 struct BasicNeeds {
@@ -3483,22 +3544,10 @@ struct SocialIncident {
 }
 
 /// Policy type
-enum PolicyType {
-    case welfare
-    case education
-    case healthcare
-    case housing
-    case employment
-}
+
 
 /// Policy status
-enum PolicyStatus {
-    case proposed
-    case approved
-    case implemented
-    case evaluated
-    case discontinued
-}
+
 
 /// Policy scope
 enum PolicyScope {
@@ -3518,13 +3567,7 @@ struct EqualityPolicy {
 }
 
 /// Inequality type
-enum InequalityType {
-    case income
-    case wealth
-    case opportunity
-    case access
-    case representation
-}
+
 
 /// Policy enforcement
 struct PolicyEnforcement {
@@ -3864,19 +3907,7 @@ struct SocialIntervention {
     let scope: InterventionScope
     let resources: Double
 
-    enum InterventionType {
-        case policy
-        case program
-        case directAid
-        case education
-    }
 
-    enum InterventionScope {
-        case individual
-        case community
-        case regional
-        case national
-    }
 }
 
 /// Social baseline
@@ -3962,19 +3993,7 @@ struct SupportProgram {
     let budget: Double
     let status: ProgramStatus
 
-    enum ProgramType {
-        case communityDevelopment
-        case socialServices
-        case economicSupport
-        case healthServices
-    }
 
-    enum ProgramStatus {
-        case planned
-        case active
-        case completed
-        case suspended
-    }
 }
 
 /// Resource mobilization

@@ -6,7 +6,7 @@ REPORTS="$ROOT_DIR/reports"
 mkdir -p "$REPORTS"
 
 PY_JSON="$REPORTS/python-coverage.json"
-SWIFT_JSONS=($(ls "$REPORTS"/swift-coverage-*.json 2>/dev/null || true))
+mapfile -t SWIFT_JSONS < <(ls "$REPORTS"/swift-coverage-*.json 2>/dev/null || true)
 
 python_summary=0
 python_total=0

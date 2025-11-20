@@ -6,7 +6,7 @@ import Foundation
 
 // MARK: - Cloud Fallback Policy (Swift)
 
-private struct CloudFallbackPolicy {
+fileprivate struct CloudFallbackPolicy {
     let configPath: String
     let quotaTrackerPath: String
     let escalationLogPath: String
@@ -71,7 +71,7 @@ private struct CloudFallbackPolicy {
         var tracker = Self.readJSON(path: quotaTrackerPath) ?? [:]
         var cb = (tracker["circuit_breaker"] as? [String: Any]) ?? [:]
         var pcb = (cb[priority] as? [String: Any]) ?? [
-            "state": "closed", "failure_count": 0, "last_failure": NSNull(), "opened_at": NSNull()
+            "state": "closed", "failure_count": 0, "last_failure": NSNull(), "opened_at": NSNull(),
         ]
         let now = Self.iso8601Now()
         let failures = ((pcb["failure_count"] as? Int) ?? 0) + 1
@@ -134,7 +134,7 @@ private struct CloudFallbackPolicy {
             "reason": reason,
             "model_attempted": modelAttempted,
             "cloud_provider": provider,
-            "quota_remaining": remaining
+            "quota_remaining": remaining,
         ]
         if let data = try? JSONSerialization.data(withJSONObject: line),
            let s = String(data: data, encoding: .utf8) {
@@ -161,24 +161,20 @@ private struct CloudFallbackPolicy {
     }
 
     // MARK: - Helpers
-
     private static func readJSON(path: String) -> [String: Any]? {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return nil }
         return (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
     }
-
     private static func writeJSON(path: String, object: [String: Any]) {
         if let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]) {
             try? data.write(to: URL(fileURLWithPath: path))
         }
     }
-
     private static func iso8601Now() -> String {
         let f = ISO8601DateFormatter()
         f.formatOptions = [.withInternetDateTime]
         return f.string(from: Date())
     }
-
     private static func iso8601Parse(_ s: String) -> Date? {
         let f = ISO8601DateFormatter()
         f.formatOptions = [.withInternetDateTime]
@@ -230,8 +226,7 @@ class OllamaClient {
     func run(request: OllamaRequest) -> OllamaResponse {
         var policy = CloudFallbackPolicy()
         guard let registry: [String: TaskConfig] = loadJSON(from: modelRegistryPath),
-              let taskConfig = registry[request.task]
-        else {
+              let taskConfig = registry[request.task] else {
             return OllamaResponse(text: nil, model: nil, latency_ms: nil, tokens_est: nil, fallback_used: nil, error: "Task not found")
         }
 
@@ -267,13 +262,13 @@ class OllamaClient {
 
     private func callOllama(model: String, prompt: String, system: String?, preset: [String: AnyCodable]) -> String? {
         var fullPrompt = prompt
-        if let system {
+        if let system = system {
             fullPrompt = "\(system)\n\n\(prompt)"
         }
 
         // Simplified: Use Process to call ollama (assumes no images for Swift)
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/local/bin/ollama") // Adjust path
+        process.executableURL = URL(fileURLWithPath: "/usr/local/bin/ollama")  // Adjust path
         process.arguments = ["run", model, "--format", "json"] + preset.flatMap { ["--\($0.key)", "\($0.value)"] }
         process.standardInput = Pipe()
         process.standardOutput = Pipe()
@@ -298,7 +293,7 @@ class OllamaClient {
 
     private func estimateTokens(prompt: String, output: String) -> Int {
         // Rough: 4 chars per token
-        (prompt.count + output.count) / 4
+        return (prompt.count + output.count) / 4
     }
 }
 

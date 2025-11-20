@@ -126,7 +126,7 @@ struct CoherenceRule {
 
     struct CoherenceCondition {
         let metric: CoherenceMetric
-        let `operator`: ConditionOperator
+        let `operator`:ConditionOperator
         let value: Double
         let dimension: Int?
 
@@ -180,11 +180,23 @@ struct StabilizationRule {
         }
     }
 
-    enum StabilizationMethod {
+
         case feedbackControl
+
         case errorCorrection
+
         case environmentControl
+
         case dynamicalDecoupling
+
+        case continuousFeedback
+
+        case pulseSequence
+
+        case adaptiveControl
+
+        case machineLearning
+
     }
 
     struct SuccessCriterion {
@@ -345,12 +357,6 @@ struct StabilizationResult {
     let method: StabilizationMethod
     let energyCost: Double
 
-    enum StabilizationMethod {
-        case continuousFeedback
-        case pulseSequence
-        case adaptiveControl
-        case machineLearning
-    }
 }
 
 /// Feedback result
@@ -578,21 +584,21 @@ class QuantumCoherenceMaintenanceEngine {
                 conditions: [
                     CoherenceRule.CoherenceCondition(
                         metric: .coherenceLevel,
-                        operator: .lessThan,
+                        `operator`:.lessThan,
                         value: 0.8,
                         dimension: nil
-                    )
+                    ),
                 ],
                 actions: [
                     CoherenceRule.CoherenceAction(
                         type: .stabilize,
                         parameters: ["target": AnyCodable(0.9)],
                         automated: true
-                    )
+                    ),
                 ],
                 priority: 1,
                 threshold: 0.8
-            )
+            ),
         ]
 
         let stabilizationRules = [
@@ -604,7 +610,7 @@ class QuantumCoherenceMaintenanceEngine {
                         type: .coherenceDrop,
                         threshold: 0.85,
                         dimension: nil
-                    )
+                    ),
                 ],
                 methods: [.feedbackControl],
                 successCriteria: [
@@ -612,9 +618,9 @@ class QuantumCoherenceMaintenanceEngine {
                         metric: .coherenceLevel,
                         target: 0.9,
                         tolerance: 0.05
-                    )
+                    ),
                 ]
-            )
+            ),
         ]
 
         let network = QuantumCoherenceNetwork(
@@ -691,7 +697,7 @@ class QuantumCoherenceMaintenanceEngine {
                         type: .energyIncrease,
                         severity: 0.1,
                         description: "Increased energy consumption for error correction"
-                    )
+                    ),
                 ]
             )
         } else {
@@ -805,7 +811,7 @@ class CoherenceControllerImpl: CoherenceController {
                 qubits: [0],
                 duration: 0.0001,
                 fidelity: 0.99
-            )
+            ),
         ]
 
         let metadata = QuantumState.QuantumMetadata(
@@ -894,7 +900,7 @@ class CoherenceControllerImpl: CoherenceController {
                 type: .lowCoherence,
                 description: "Quantum coherence below acceptable threshold",
                 severity: .high
-            )
+            ),
         ]
 
         return CoherenceValidation(
@@ -922,7 +928,7 @@ class DecoherencePreventerImpl: DecoherencePreventer {
                     type: .thermalNoise,
                     probability: 0.6,
                     description: "Thermal fluctuations causing decoherence"
-                )
+                ),
             ],
             confidence: 0.8
         )
@@ -947,7 +953,7 @@ class DecoherencePreventerImpl: DecoherencePreventer {
             components: [
                 DecoherenceRate.RateComponent(type: .t1, rate: 0.001, contribution: 0.4),
                 DecoherenceRate.RateComponent(type: .t2, rate: 0.002, contribution: 0.4),
-                DecoherenceRate.RateComponent(type: .tPhi, rate: 0.001, contribution: 0.2)
+                DecoherenceRate.RateComponent(type: .tPhi, rate: 0.001, contribution: 0.2),
             ],
             lastMeasurement: Date()
         )
@@ -1103,7 +1109,7 @@ class QuantumMonitorImpl: QuantumMonitor {
             performanceMetrics: [
                 "gate_time": 0.0001,
                 "measurement_time": 0.001,
-                "reset_time": 0.01
+                "reset_time": 0.01,
             ]
         )
     }

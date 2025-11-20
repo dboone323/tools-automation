@@ -630,11 +630,23 @@ struct FlowOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
+
             case rate
+
             case quality
+
             case efficiency
+
             case stability
+
+            case depth
+
+            case breadth
+
+            case applicability
+
+            case transformative
+
         }
     }
 }
@@ -733,12 +745,6 @@ struct WisdomEvolution {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case depth
-            case breadth
-            case applicability
-            case transformative
-        }
     }
 }
 

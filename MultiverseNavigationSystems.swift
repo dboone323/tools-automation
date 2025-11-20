@@ -412,11 +412,17 @@ struct NetworkConnection {
     let latency: Double
     let reliability: Double
 
-    enum ConnectionType {
+
         case quantum
+
         case dimensional
+
         case temporal
+
         case multiversal
+
+        case reality
+
     }
 }
 
@@ -974,13 +980,6 @@ struct StabilizedConnection {
     let bandwidthCapacity: Double
     let maintenanceCost: Double
 
-    enum ConnectionType {
-        case quantum
-        case dimensional
-        case temporal
-        case multiversal
-        case reality
-    }
 }
 
 /// Stabilization metrics

@@ -143,8 +143,15 @@ struct OrbitalInfrastructure {
     let spaceStations: [SpaceStation]
     let infrastructureStatus: InfrastructureStatus
 
-    enum InfrastructureStatus {
-        case operational, degraded, critical, offline
+
+        case operational
+
+        case degraded
+
+        case critical
+
+        case offline
+
     }
 }
 
@@ -311,7 +318,7 @@ struct ResourceSustainability {
 struct QuantumLink {
     let id: UUID
     let endpoints: [LinkEndpoint]
-    let `protocol`: QuantumProtocol
+    let `protocol`:QuantumProtocol
     let bandwidth: Double
     let latency: TimeInterval
     let reliability: Double
@@ -390,8 +397,19 @@ struct MultiPlanetOperations {
         let objectives: [String]
         let requirements: OperationRequirements
 
-        enum OperationType {
-            case exploration, colonization, resourceExtraction, research
+
+            case exploration
+
+            case colonization
+
+            case resourceExtraction
+
+            case research
+
+            case deployment
+
+            case maintenance
+
         }
 
         struct OperationRequirements {
@@ -973,9 +991,7 @@ enum Priority {
 }
 
 /// Infrastructure status
-enum InfrastructureStatus {
-    case operational, degraded, critical, offline
-}
+
 
 /// Discovery
 typealias Discovery = ExplorationData.Discovery
@@ -1534,9 +1550,6 @@ struct SpaceOperation {
     let status: OperationStatus
     let location: CelestialLocation
 
-    enum OperationType {
-        case deployment, maintenance, exploration, resourceExtraction
-    }
 
     enum OperationStatus {
         case planning, active, completed, failed

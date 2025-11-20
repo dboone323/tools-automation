@@ -238,13 +238,13 @@ public protocol CodeSynthesisIntegration {
 }
 
 public enum SynthesisCapability: String, Codable {
-    case codeGeneration = "code_generation"
-    case codeCompletion = "code_completion"
-    case codeRefactoring = "code_refactoring"
-    case codeOptimization = "code_optimization"
-    case codeAnalysis = "code_analysis"
-    case patternRecognition = "pattern_recognition"
-    case styleAdaptation = "style_adaptation"
+    case codeGeneration= "code_generation"
+    case codeCompletion= "code_completion"
+    case codeRefactoring= "code_refactoring"
+    case codeOptimization= "code_optimization"
+    case codeAnalysis= "code_analysis"
+    case patternRecognition= "pattern_recognition"
+    case styleAdaptation= "style_adaptation"
 }
 
 public struct IntegrationHealth: Codable, Sendable {
@@ -676,7 +676,7 @@ public enum SynthesisTestingUtils {
                 CodeSpecification.Requirement(
                     type: .functionality,
                     description: "Implement basic functionality",
-                    priority: .mustHave
+                    priority: .must_have
                 )
             ],
             constraints: [],
@@ -710,7 +710,7 @@ public enum SynthesisTestingUtils {
                 namingConvention: .camelCase,
                 indentation: .spaces,
                 lineLengthLimit: 120,
-                documentationStyle: .swiftDocumentation,
+                documentationStyle: .swift_documentation,
                 errorHandling: .throws
             ),
             domainKnowledge: SynthesisContext.DomainKnowledge(
@@ -738,7 +738,7 @@ public enum SynthesisTestingUtils {
                 )
             ),
             securityRequirements: SynthesisContext.SecurityRequirements(
-                threatModel: .webApplication,
+                threatModel: .web_application,
                 complianceStandards: [],
                 encryptionRequirements: SynthesisContext.SecurityRequirements.EncryptionRequirements(
                     dataAtRest: .basic,

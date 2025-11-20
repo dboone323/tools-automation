@@ -69,7 +69,7 @@ struct ArchitectureAnalysis: Codable, Sendable {
         let strength: Double
 
         enum DependencyType: String, Codable {
-            case `import`, inheritance, composition, protocol_conformance, function_call
+            case `import` = "import", inheritance, composition, protocolConformance = "protocol_conformance", functionCall = "function_call"
 
         }
     }
@@ -115,14 +115,14 @@ struct ArchitecturalPattern: Codable, Sendable {
     let suggestions: [String]
 
     enum PatternType: String, Codable {
-        case mvvm, mvp, mvc, viper, clean_architecture, hexagonal
+        case mvvm, mvp, mvc, viper, cleanArchitecture = "clean_architecture", hexagonal
         case factory, singleton, observer, strategy, decorator
-        case repository, service_layer, dependency_injection
+        case repository, serviceLayer = "service_layer", dependencyInjection = "dependency_injection"
         case custom
     }
 
     enum PatternQuality: String, Codable {
-        case excellent, good, fair, poor, anti_pattern
+        case excellent, good, fair, poor, antiPattern = "anti_pattern"
     }
 }
 
@@ -136,29 +136,40 @@ struct CodeSmell: Codable, Sendable {
     let refactoringEffort: EffortLevel
 
     enum SmellType: String, Codable {
-        case longMethod = "long_method"
-        case largeClass = "large_class"
-        case featureEnvy = "feature_envy"
-        case dataClump = "data_clump"
-        case primitiveObsession = "primitive_obsession"
-        case switchStatement = "switch_statement"
-        case temporaryField = "temporary_field"
-        case refusedBequest = "refused_bequest"
-        case alternativeClasses = "alternative_classes"
-        case divergentChange = "divergent_change"
-        case shotgunSurgery = "shotgun_surgery"
-        case parallelInheritance = "parallel_inheritance"
+        case longMethod= "long_method"
+        case largeClass= "large_class"
+        case featureEnvy= "feature_envy"
+        case dataClump= "data_clump"
+        case primitiveObsession= "primitive_obsession"
+        case switchStatement= "switch_statement"
+        case temporaryField= "temporary_field"
+        case refusedBequest= "refused_bequest"
+        case alternativeClasses= "alternative_classes"
+        case divergentChange= "divergent_change"
+        case shotgunSurgery= "shotgun_surgery"
+        case parallelInheritance= "parallel_inheritance"
         case comments
-        case duplicateCode = "duplicate_code"
-        case middleMan = "middle_man"
-        case lazyClass = "lazy_class"
-        case speculativeGenerality = "speculative_generality"
-        case messageChains = "message_chains"
-        case inappropriateIntimacy = "inappropriate_intimacy"
+        case duplicateCode= "duplicate_code"
+        case middleMan= "middle_man"
+        case lazyClass= "lazy_class"
+        case speculativeGenerality= "speculative_generality"
+        case messageChains= "message_chains"
+        case inappropriateIntimacy= "inappropriate_intimacy"
     }
 
-    enum Severity: String, Codable {
-        case low, medium, high, critical
+
+        case low
+
+        case medium
+
+        case high
+
+        case critical
+
+        case warning
+
+        case error
+
     }
 
     struct ImpactMetrics: Codable, Sendable {
@@ -168,8 +179,17 @@ struct CodeSmell: Codable, Sendable {
         let performance: Double
     }
 
-    enum EffortLevel: String, Codable {
-        case trivial, easy, medium, hard, very_hard
+
+        case trivial
+
+        case easy
+
+        case medium
+
+        case hard
+
+        case veryHard = "very_hard"
+
     }
 }
 
@@ -186,59 +206,65 @@ struct RefactoringSuggestion: Codable, Sendable {
     let dependencies: [String]
 
     enum RefactoringType: String, Codable {
-        case extractMethod = "extract_method"
-        case extractClass = "extract_class"
-        case moveMethod = "move_method"
-        case moveField = "move_field"
-        case inlineMethod = "inline_method"
-        case inlineClass = "inline_class"
-        case renameMethod = "rename_method"
-        case renameClass = "rename_class"
-        case changeSignature = "change_signature"
-        case introduceParameterObject = "introduce_parameter_object"
-        case preserveWholeObject = "preserve_whole_object"
-        case replaceParameterWithMethod = "replace_parameter_with_method"
-        case introduceLocalExtension = "introduce_local_extension"
-        case removeMiddleMan = "remove_middle_man"
-        case replaceDelegationWithInheritance = "replace_delegation_with_inheritance"
-        case replaceInheritanceWithDelegation = "replace_inheritance_with_delegation"
-        case extractSuperclass = "extract_superclass"
-        case extractSubclass = "extract_subclass"
-        case extractInterface = "extract_interface"
-        case collapseHierarchy = "collapse_hierarchy"
-        case formTemplateMethod = "form_template_method"
-        case replaceInheritanceWithComposition = "replace_inheritance_with_composition"
-        case replaceConditionalWithPolymorphism = "replace_conditional_with_polymorphism"
-        case introduceNullObject = "introduce_null_object"
-        case replaceErrorCodeWithException = "replace_error_code_with_exception"
-        case replaceExceptionWithTest = "replace_exception_with_test"
-        case introduceAssertion = "introduce_assertion"
-        case encapsulateField = "encapsulate_field"
-        case encapsulateCollection = "encapsulate_collection"
-        case replaceRecordWithDataClass = "replace_record_with_data_class"
-        case replaceTypeCodeWithClass = "replace_type_code_with_class"
-        case replaceTypeCodeWithSubclasses = "replace_type_code_with_subclasses"
-        case replaceTypeCodeWithState = "replace_type_code_with_state"
-        case replaceSubclassWithFields = "replace_subclass_with_fields"
-        case introduceForeignMethod = "introduce_foreign_method"
-        case introduceLocalExtension = "introduce_local_extension_duplicate"
-        case removeParameter = "remove_parameter"
-        case renameParameter = "rename_parameter"
-        case addParameter = "add_parameter"
-        case separateQueryFromModifier = "separate_query_from_modifier"
-        case parameterizeMethod = "parameterize_method"
-        case removeSettingMethod = "remove_setting_method"
-        case hideMethod = "hide_method"
-        case replaceConstructorWithFactoryMethod = "replace_constructor_with_factory_method"
-        case replaceErrorCodeWithExceptionDuplicate = "replace_error_code_with_exception_duplicate"
-        case replaceExceptionWithTestDuplicate = "replace_exception_with_test_duplicate"
-        case introduceNamedParameter = "introduce_named_parameter"
-        case eliminatePrimitiveObsession = "eliminate_primitive_obsession"
-        case introduceDesignByContract = "introduce_design_by_contract"
+        case extractMethod= "extract_method"
+        case extractClass= "extract_class"
+        case moveMethod= "move_method"
+        case moveField= "move_field"
+        case inlineMethod= "inline_method"
+        case inlineClass= "inline_class"
+        case renameMethod= "rename_method"
+        case renameClass= "rename_class"
+        case changeSignature= "change_signature"
+        case introduceParameterObject= "introduce_parameter_object"
+        case preserveWholeObject= "preserve_whole_object"
+        case replaceParameterWithMethod= "replace_parameter_with_method"
+        case introduceLocalExtension= "introduce_local_extension"
+        case removeMiddleMan= "remove_middle_man"
+        case replaceDelegationWithInheritance= "replace_delegation_with_inheritance"
+        case replaceInheritanceWithDelegation= "replace_inheritance_with_delegation"
+        case extractSuperclass= "extract_superclass"
+        case extractSubclass= "extract_subclass"
+        case extractInterface= "extract_interface"
+        case collapseHierarchy= "collapse_hierarchy"
+        case formTemplateMethod= "form_template_method"
+        case replaceInheritanceWithComposition= "replace_inheritance_with_composition"
+        case replaceConditionalWithPolymorphism= "replace_conditional_with_polymorphism"
+        case introduceNullObject= "introduce_null_object"
+        case replaceErrorCodeWithException= "replace_error_code_with_exception"
+        case replaceExceptionWithTest= "replace_exception_with_test"
+        case introduceAssertion= "introduce_assertion"
+        case encapsulateField= "encapsulate_field"
+        case encapsulateCollection= "encapsulate_collection"
+        case replaceRecordWithDataClass= "replace_record_with_data_class"
+        case replaceTypeCodeWithClass= "replace_type_code_with_class"
+        case replaceTypeCodeWithSubclasses= "replace_type_code_with_subclasses"
+        case replaceTypeCodeWithState= "replace_type_code_with_state"
+        case replaceSubclassWithFields= "replace_subclass_with_fields"
+        case introduceForeignMethod= "introduce_foreign_method"
+        
+        case removeParameter= "remove_parameter"
+        case renameParameter= "rename_parameter"
+        case addParameter= "add_parameter"
+        case separateQueryFromModifier= "separate_query_from_modifier"
+        case parameterizeMethod= "parameterize_method"
+        case removeSettingMethod= "remove_setting_method"
+        case hideMethod= "hide_method"
+        case replaceConstructorWithFactoryMethod= "replace_constructor_with_factory_method"
+        
+        case introduceNamedParameter= "introduce_named_parameter"
+        case eliminatePrimitiveObsession= "eliminate_primitive_obsession"
+        case introduceDesignByContract= "introduce_design_by_contract"
     }
 
-    enum Priority: String, Codable {
-        case low, medium, high, critical
+
+        case low
+
+        case medium
+
+        case high
+
+        case critical
+
     }
 
     struct BenefitMetrics: Codable, Sendable {
@@ -249,8 +275,17 @@ struct RefactoringSuggestion: Codable, Sendable {
         let totalBenefit: Double
     }
 
-    enum RiskLevel: String, Codable {
-        case very_low, low, medium, high, very_high
+
+        case veryLow = "very_low"
+
+        case low
+
+        case medium
+
+        case high
+
+        case veryHigh = "very_high"
+
     }
 }
 
@@ -270,8 +305,25 @@ struct RefactoringResult: Codable, Sendable {
         let linesChanged: ClosedRange<Int>
         let contentPreview: String
 
-        enum ChangeType: String, Codable {
-            case modified, added, deleted, renamed
+
+            case modified
+
+            case added
+
+            case deleted
+
+            case renamed
+
+            case complexityIncrease = "complexity_increase"
+
+            case maintainabilityDecline = "maintainability_decline"
+
+            case performanceDegradation = "performance_degradation"
+
+            case securityRisk = "security_risk"
+
+            case scalabilityIssue = "scalability_issue"
+
         }
     }
 
@@ -316,9 +368,6 @@ struct ValidationResult: Codable, Sendable {
             case compilation, logic, performance, security, style
         }
 
-        enum Severity: String, Codable {
-            case warning, error, critical
-        }
     }
 
     struct QualityMetrics: Codable, Sendable {
@@ -346,7 +395,7 @@ struct EvolutionConstraints: Codable, Sendable {
     let performanceRequirements: PerformanceRequirements
 
     enum RiskTolerance: String, Codable {
-        case very_conservative, conservative, moderate, aggressive, very_aggressive
+        case veryConservative = "very_conservative", conservative, moderate, aggressive, veryAggressive = "very_aggressive"
     }
 
     struct QualityThresholds: Codable, Sendable {
@@ -402,12 +451,9 @@ struct ArchitectureEvolution: Codable, Sendable {
         let mitigationStrategy: String
 
         enum RiskType: String, Codable {
-            case compilation_failure, test_regression, performance_degradation, security_vulnerability, breaking_change
+            case compilationFailure = "compilation_failure", testRegression = "test_regression", performanceDegradation = "performance_degradation", securityVulnerability = "security_vulnerability", breakingChange = "breaking_change"
         }
 
-        enum Severity: String, Codable {
-            case low, medium, high, critical
-        }
     }
 
     struct EvolutionRecommendation: Codable, Sendable {
@@ -417,16 +463,10 @@ struct ArchitectureEvolution: Codable, Sendable {
         let implementationEffort: EffortLevel
 
         enum RecommendationType: String, Codable {
-            case adopt_pattern, remove_anti_pattern, improve_testing, enhance_security, optimize_performance
+            case adoptPattern = "adopt_pattern", removeAntiPattern = "remove_anti_pattern", improveTesting = "improve_testing", enhanceSecurity = "enhance_security", optimizePerformance = "optimize_performance"
         }
 
-        enum Priority: String, Codable {
-            case low, medium, high, critical
-        }
 
-        enum EffortLevel: String, Codable {
-            case trivial, easy, medium, hard, very_hard
-        }
     }
 }
 
@@ -444,9 +484,6 @@ struct ArchitecturePrediction: Codable, Sendable {
         let confidence: Double
         let impact: ImpactMetrics
 
-        enum ChangeType: String, Codable {
-            case complexity_increase, maintainability_decline, performance_degradation, security_risk, scalability_issue
-        }
 
         struct ImpactMetrics: Codable, Sendable {
             let severity: Double
@@ -460,9 +497,6 @@ struct ArchitecturePrediction: Codable, Sendable {
         let riskFactors: [RiskFactor]
         let mitigationStrategies: [String]
 
-        enum RiskLevel: String, Codable {
-            case very_low, low, medium, high, very_high
-        }
 
         struct RiskFactor: Codable, Sendable {
             let factor: String
@@ -479,13 +513,7 @@ struct ArchitecturePrediction: Codable, Sendable {
         let expectedBenefit: Double
         let implementationEffort: EffortLevel
 
-        enum Priority: String, Codable {
-            case low, medium, high, critical
-        }
 
-        enum EffortLevel: String, Codable {
-            case trivial, easy, medium, hard, very_hard
-        }
     }
 }
 
@@ -503,9 +531,6 @@ struct OptimizationPlan: Codable, Sendable {
         let targetValue: Double
         let priority: Priority
 
-        enum Priority: String, Codable {
-            case low, medium, high, critical
-        }
     }
 
     struct OptimizationStep: Codable, Sendable {
@@ -521,9 +546,6 @@ struct OptimizationPlan: Codable, Sendable {
             case refactoring, restructuring, optimization, testing, documentation
         }
 
-        enum RiskLevel: String, Codable {
-            case very_low, low, medium, high, very_high
-        }
     }
 
     struct ExpectedOutcomes: Codable, Sendable {
@@ -585,7 +607,8 @@ final class AutonomousArchitectureEvolution: ObservableObject {
 
     init(analyzer: ArchitectureAnalyzer = CodebaseAnalyzer(),
          refactorer: IntelligentRefactorer = IntelligentRefactoringEngine(),
-         architect: AutonomousArchitect = AutonomousArchitectureArchitect()) {
+         architect: AutonomousArchitect = AutonomousArchitectureArchitect())
+    {
         self.analyzer = analyzer
         self.refactorer = refactorer
         self.architect = architect
@@ -747,7 +770,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                 interfaces: ["Codable"],
                 classes: ["ReviewModel"],
                 functions: ["init", "encode"]
-            )
+            ),
         ]
     }
 
@@ -765,7 +788,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                 to: "Combine",
                 type: .import,
                 strength: 0.6
-            )
+            ),
         ]
     }
 
@@ -822,7 +845,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                 locations: ["Projects/CodingReviewer/Models/"],
                 quality: .fair,
                 suggestions: ["Standardize repository interfaces", "Add error handling patterns"]
-            )
+            ),
         ]
     }
 
@@ -854,7 +877,7 @@ final class CodebaseAnalyzer: ArchitectureAnalyzer {
                     performance: 0.95
                 ),
                 refactoringEffort: .hard
-            )
+            ),
         ]
     }
 }
@@ -872,7 +895,7 @@ final class IntelligentRefactoringEngine: IntelligentRefactorer {
 
         // Generate suggestions based on patterns
         for pattern in patterns {
-            if pattern.quality == .poor || pattern.quality == .antiPattern {
+            if pattern.quality == .poor || pattern.quality == .anti_pattern {
                 let suggestion = try await generatePatternSuggestion(for: pattern)
                 suggestions.append(suggestion)
             }
@@ -975,7 +998,7 @@ final class IntelligentRefactoringEngine: IntelligentRefactorer {
                     changeType: .modified,
                     linesChanged: 1 ... 10,
                     contentPreview: "// Refactored code"
-                )
+                ),
             ],
             compilationErrors: [],
             testResults: RefactoringResult.TestResults(
@@ -1073,7 +1096,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     testCoverageChange: 2.0,
                     performanceChange: 0.5
                 )
-            )
+            ),
         ]
 
         return ArchitectureEvolution(
@@ -1094,7 +1117,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     priority: .medium,
                     description: "Consider adopting more MVVM patterns for better separation of concerns",
                     implementationEffort: .medium
-                )
+                ),
             ]
         )
     }
@@ -1116,7 +1139,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                         affectedComponents: ["new_features"],
                         mitigationCost: 3600
                     )
-                )
+                ),
             ],
             riskAssessment: ArchitecturePrediction.RiskAssessment(
                 overallRiskLevel: .low,
@@ -1126,12 +1149,12 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                         probability: 0.6,
                         impact: 0.3,
                         riskScore: 0.18
-                    )
+                    ),
                 ],
                 mitigationStrategies: [
                     "Regular refactoring sessions",
                     "Code review for complexity",
-                    "Automated complexity monitoring"
+                    "Automated complexity monitoring",
                 ]
             ),
             recommendedActions: [
@@ -1141,7 +1164,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     timeline: 30 * 86400, // 30 days
                     expectedBenefit: 0.7,
                     implementationEffort: .easy
-                )
+                ),
             ]
         )
     }
@@ -1185,7 +1208,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                         area: "code_quality",
                         improvement: "Improved maintainability through targeted optimizations",
                         longTermBenefit: "Reduced technical debt and easier future development"
-                    )
+                    ),
                 ]
             ),
             implementationTimeline: [
@@ -1209,7 +1232,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     steps: phaseSteps[2],
                     milestones: ["Validation complete", "Deployed to production"],
                     deliverables: ["Validation report", "Deployment confirmation"]
-                )
+                ),
             ],
             riskMitigation: [
                 OptimizationPlan.RiskMitigation(
@@ -1223,7 +1246,7 @@ final class AutonomousArchitectureArchitect: AutonomousArchitect {
                     mitigationStrategy: "Performance benchmarking before and after changes",
                     contingencyPlan: "Optimize performance-critical sections",
                     monitoringApproach: "Continuous performance monitoring"
-                )
+                ),
             ]
         )
     }

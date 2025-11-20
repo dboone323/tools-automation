@@ -207,12 +207,27 @@ struct KnowledgeValidation {
         let description: String
         let resolution: String?
 
-        enum IssueType {
+
             case inconsistency
+
             case incompleteness
+
             case inaccuracy
+
             case irrelevance
+
             case obsolescence
+
+            case extractionFailure
+
+            case analysisError
+
+            case structureIssue
+
+            case metadataIncomplete
+
+            case sourceUnreliable
+
         }
     }
 }
@@ -249,13 +264,37 @@ struct KnowledgeEntity {
         let strength: Double
         let direction: RelationshipDirection
 
-        enum RelationshipType {
+
             case relatedTo
+
             case partOf
+
             case causes
+
             case dependsOn
+
             case contradicts
+
             case supports
+
+            case dependency
+
+            case association
+
+            case causation
+
+            case composition
+
+            case prerequisite
+
+            case related
+
+            case contradictory
+
+            case complementary
+
+            case derivative
+
         }
 
         enum RelationshipDirection {
@@ -305,12 +344,6 @@ struct KnowledgeStructure {
         let type: RelationshipType
         let strength: Double
 
-        enum RelationshipType {
-            case dependency
-            case association
-            case causation
-            case composition
-        }
     }
 }
 
@@ -341,13 +374,6 @@ struct KnowledgeRelationship {
     let strength: Double
     let context: String?
 
-    enum RelationshipType {
-        case prerequisite
-        case related
-        case contradictory
-        case complementary
-        case derivative
-    }
 }
 
 /// Processing capability
@@ -412,12 +438,6 @@ struct KnowledgeProcessingResult {
         let severity: Double
         let description: String
 
-        enum IssueType {
-            case extractionFailure
-            case analysisError
-            case structureIssue
-            case metadataIncomplete
-        }
     }
 }
 
@@ -438,13 +458,6 @@ struct KnowledgeValidationResult {
         let description: String
         let evidence: String?
 
-        enum IssueType {
-            case inconsistency
-            case inaccuracy
-            case incompleteness
-            case irrelevance
-            case sourceUnreliable
-        }
     }
 
     struct ValidationRecommendation {
@@ -879,12 +892,25 @@ struct FlowOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
+
             case rate
+
             case quality
+
             case efficiency
+
             case reliability
+
             case adaptability
+
+            case compression
+
+            case clarity
+
+            case accessibility
+
+            case relevance
+
         }
     }
 }
@@ -903,13 +929,6 @@ struct KnowledgeOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case compression
-            case clarity
-            case accessibility
-            case relevance
-            case efficiency
-        }
     }
 }
 

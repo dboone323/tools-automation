@@ -11,6 +11,7 @@ WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 if [[ -f "${WORKSPACE_ROOT}/agents/agent_config.sh" ]]; then
     # Save current SCRIPT_DIR before sourcing
     ORIGINAL_SCRIPT_DIR="${SCRIPT_DIR}"
+    # shellcheck source=/dev/null
     source "${WORKSPACE_ROOT}/agents/agent_config.sh"
     # Restore our SCRIPT_DIR
     SCRIPT_DIR="${ORIGINAL_SCRIPT_DIR}"

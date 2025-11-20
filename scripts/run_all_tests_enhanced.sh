@@ -49,6 +49,7 @@ fi
 # Load retry helper if available
 RETRY_HELPER="$ROOT_DIR/scripts/test_retry_helper.sh"
 if [[ -f "$RETRY_HELPER" ]]; then
+    # shellcheck source=/dev/null
     source "$RETRY_HELPER"
 fi
 
@@ -99,7 +100,8 @@ record_test_result() {
     esac
 
     # Log to test results file
-    local results_file="$ROOT_DIR/reports/test_results_$(date +%Y%m%d_%H%M%S).jsonl"
+    local results_file
+    results_file="$ROOT_DIR/reports/test_results_$(date +%Y%m%d_%H%M%S).jsonl"
     mkdir -p "$ROOT_DIR/reports"
     echo "{\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"test\":\"$test_name\",\"result\":\"$result\"}" >> "$results_file"
 }
@@ -193,7 +195,7 @@ python_tests() {
         # Build pytest command
         local cmd=("$PY" -m pytest)
         if [[ "${COVERAGE:-0}" == "1" ]] && "$PY" -c "import coverage" >/dev/null 2>&1; then
-            cmd=("$PY" -m coverage run -m pytest")
+            cmd=("$PY" -m coverage run -m pytest)
         fi
 
         # Add parallel execution in CI
@@ -278,7 +280,7 @@ swift_tests() {
                 if command -v llvm-cov >/dev/null 2>&1; then
                     llvm-cov export \
                         -format="lcov" \
-                        .build/debug/${pkg}PackageTests.xctest/Contents/MacOS/${pkg}PackageTests \
+                        .build/debug/"${pkg}"PackageTests.xctest/Contents/MacOS/"${pkg}"PackageTests \
                         -instr-profile .build/debug/codecov/default.profdata \
                         > "$ROOT_DIR/reports/swift-coverage-${pkg}.json" 2>/dev/null || true
                 fi
@@ -299,7 +301,8 @@ merge_coverage_reports() {
 
 # Generate test summary report
 generate_test_summary() {
-    local summary_file="$ROOT_DIR/reports/test_summary_$(date +%Y%m%d_%H%M%S).json"
+    local summary_file
+    summary_file="$ROOT_DIR/reports/test_summary_$(date +%Y%m%d_%H%M%S).json"
     mkdir -p "$ROOT_DIR/reports"
 
     cat >"$summary_file" <<EOF

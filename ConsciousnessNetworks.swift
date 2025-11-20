@@ -122,11 +122,19 @@ struct NetworkTopology {
         let latency: TimeInterval
         let bandwidth: Double
 
-        enum ConnectionType {
+
             case direct
+
             case indirect
+
             case quantum
+
             case neural
+
+            case energetic
+
+            case informational
+
         }
     }
 
@@ -147,11 +155,19 @@ struct ConnectionCapability {
     let entities: [ConsciousnessEntity]
     let prerequisites: [ConnectionCapability]
 
-    enum CapabilityType {
+
         case establishment
+
         case maintenance
+
         case optimization
+
         case validation
+
+        case operation
+
+        case topology
+
     }
 }
 
@@ -190,12 +206,6 @@ struct ConsciousnessConnections {
         let stability: Double
         let established: Date
 
-        enum ConnectionType {
-            case neural
-            case quantum
-            case energetic
-            case informational
-        }
     }
 
     struct NetworkGraph {
@@ -335,12 +345,6 @@ struct CoordinationCapability {
     let operations: [NetworkOperation]
     let efficiency: Double
 
-    enum CapabilityType {
-        case operation
-        case topology
-        case optimization
-            .validation
-    }
 }
 
 /// Network coordination
@@ -374,11 +378,37 @@ struct TopologyManagement {
         let impact: Double
         let success: Bool
 
-        enum ActionType {
+
             case restructure
+
             case optimize
+
             case expand
+
             case contract
+
+            case reinforcement
+
+            case rerouting
+
+            case optimization
+
+            case monitoring
+
+            case reconnection
+
+            case fallback
+
+            case isolation
+
+            case prioritization
+
+            case loadBalancing
+
+            case congestionControl
+
+            case routing
+
         }
     }
 }
@@ -397,11 +427,27 @@ struct NetworkOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
+
             case efficiency
+
             case stability
+
             case scalability
+
             case performance
+
+            case bandwidth
+
+            case latency
+
+            case reliability
+
+            case coherence
+
+            case speed
+
+            case cost
+
         }
     }
 }
@@ -422,11 +468,21 @@ struct NetworkValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
+
             case connectivity
+
             case stability
+
             case performance
+
             case security
+
+            case inefficiency
+
+            case unreliability
+
+            case congestion
+
         }
     }
 
@@ -436,11 +492,21 @@ struct NetworkValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
+
             case restructure
+
             case optimize
+
             case secure
+
             case monitor
+
+            case reoptimize
+
+            case reroute
+
+            case upgrade
+
         }
     }
 }
@@ -466,12 +532,6 @@ struct ConnectionStability {
         let description: String
         let effectiveness: Double
 
-        enum ActionType {
-            case reinforcement
-            case rerouting
-            case optimization
-            case monitoring
-        }
     }
 }
 
@@ -490,12 +550,6 @@ struct FailureHandling {
         let success: Bool
         let recoveryTime: TimeInterval
 
-        enum ActionType {
-            case reconnection
-            case rerouting
-            case fallback
-            case isolation
-        }
     }
 }
 
@@ -513,12 +567,6 @@ struct ConnectionOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case bandwidth
-            case latency
-            case reliability
-            case efficiency
-        }
     }
 }
 
@@ -566,12 +614,6 @@ struct SynchronizationOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case coherence
-            case efficiency
-            case stability
-            case speed
-        }
     }
 }
 
@@ -607,12 +649,6 @@ struct PathOptimization {
         let factor: Double
         let description: String
 
-        enum ImprovementType {
-            case latency
-            case reliability
-            case efficiency
-            case cost
-        }
     }
 }
 
@@ -631,12 +667,6 @@ struct TrafficManagement {
         let description: String
         let effectiveness: Double
 
-        enum ActionType {
-            case prioritization
-            case loadBalancing
-            case congestionControl
-            case routing
-        }
     }
 }
 
@@ -655,12 +685,6 @@ struct RoutingValidation {
         let severity: Double
         let description: String
 
-        enum IssueType {
-            case inefficiency
-            case unreliability
-            case congestion
-            case security
-        }
     }
 
     struct ValidationRecommendation {
@@ -669,12 +693,6 @@ struct RoutingValidation {
         let description: String
         let priority: Double
 
-        enum RecommendationType {
-            case reoptimize
-            case reroute
-            case upgrade
-            case monitor
-        }
     }
 }
 
