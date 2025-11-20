@@ -125,6 +125,96 @@ git checkout -b fix/issue-number-description
 ./run_linting.sh
 ```
 
+## Code Quality & Linting Standards
+
+### Overview
+
+All code contributions must pass automated linting checks before being merged. We use language-specific linters to ensure consistent code quality and style.
+
+### Swift Projects (PlannerApp, MomentumFinance, etc.)
+
+**SwiftLint** is enforced on all Swift projects:
+
+```bash
+# Install SwiftLint
+brew install swiftlint
+
+# Run SwiftLint in a project
+cd PlannerApp
+swiftlint
+
+# Auto-fix violations
+swiftlint --fix
+```
+
+**Requirements:**
+- ✅ **Zero serious violations** (errors)
+- ⚠️ Style violations (warnings) should be fixed but won't block PR
+
+**Common violations and how to fix them:**
+- See [docs/linting-guide.md](../docs/linting-guide.md) for detailed examples
+
+### Shell Scripts
+
+**Shellcheck** is required for all `.sh` files:
+
+```bash
+# Install Shellcheck
+brew install shellcheck
+
+# Check a script
+shellcheck scripts/my_script.sh
+
+# Check all scripts
+find scripts -name "*.sh" -exec shellcheck {} \;
+```
+
+### Python Code
+
+**flake8** and **black** for Python formatting:
+
+```bash
+# Install tools
+pip install flake8 black
+
+# Check code
+flake8 .
+
+# Auto-format
+black .
+```
+
+### Pre-Commit Hooks (Recommended)
+
+Set up pre-commit hooks to catch issues early:
+
+```bash
+# Copy the pre-commit hook template
+cp .git-hooks/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+This will automatically run linting before each commit.
+
+### CI/CD Integration
+
+All PRs automatically run:
+- **SwiftLint** on all Swift projects
+- **Shellcheck** on all shell scripts
+- **Python syntax** validation
+- **YAML** linting for workflows
+
+**Your PR will be blocked if:**
+- SwiftLint finds serious violations (errors)
+- Shellcheck reports errors in scripts
+- Tests fail
+
+**Your PR will show warnings if:**
+- Style violations exist (but won't block merge)
+- Documentation needs improvement
+
+For detailed linting guidelines, examples, and troubleshooting: [**Linting Guide**](../docs/linting-guide.md)
+
 ### 5. Submit a Pull Request
 
 - Push your branch to GitHub
