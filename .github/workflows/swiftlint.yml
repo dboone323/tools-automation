@@ -1,0 +1,124 @@
+name: SwiftLint
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '**.swift'
+      - '.swiftlint.yml'
+      - '**/Package.swift'
+      - 'PlannerApp/**'
+      - 'MomentumFinance/**'
+      - 'HabitQuest/**'
+      - 'AvoidObstaclesGame/**'
+      - 'CodingReviewer/**'
+      - 'shared-kit/**'
+  push:
+    branches: [main]
+    paths:
+      - '**.swift'
+      - '.swiftlint.yml'
+
+jobs:
+  swiftlint:
+    name: SwiftLint Analysis
+    runs-on: macos-latest
+    timeout-minutes: 15
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - name: PlannerApp
+            path: PlannerApp
+            fail-on-warning: false
+          - name: MomentumFinance
+            path: MomentumFinance
+            fail-on-warning: false  # Has 54 known warnings
+          - name: HabitQuest
+            path: HabitQuest
+            fail-on-warning: false
+          - name: AvoidObstaclesGame
+            path: AvoidObstaclesGame
+            fail-on-warning: false
+          - name: CodingReviewer
+            path: CodingReviewer
+            fail-on-warning: false
+          - name: shared-kit
+            path: shared-kit
+            fail-on-warning: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install SwiftLint
+        run: |
+          brew install swiftlint
+          swiftlint version
+
+      - name: Run SwiftLint on ${{ matrix.project.name }}
+        id: swiftlint
+        continue-on-error: ${{ matrix.project.fail-on-warning == false }}
+        working-directory: ${{ matrix.project.path }}
+        run: |
+          echo "::group::SwiftLint Results for ${{ matrix.project.name }}"
+          
+          # Run swiftlint and capture output
+          swiftlint lint --reporter github-actions-logging > swiftlint-results.txt 2>&1 || true
+          
+          # Also generate JSON report for artifact
+          swiftlint lint --reporter json > swiftlint-report.json 2>&1 || true
+          
+          # Display summary
+          echo "::endgroup::"
+          echo "::group::Summary"
+          
+          VIOLATIONS=$(cat swiftlint-results.txt | grep -c "warning:" || echo "0")
+          SERIOUS=$(cat swiftlint-results.txt | grep -c "error:" || echo "0")
+          
+          echo "Total warnings: $VIOLATIONS"
+          echo "Serious violations (errors): $SERIOUS"
+          echo "violations=$VIOLATIONS" >> $GITHUB_OUTPUT
+          echo "serious=$SERIOUS" >> $GITHUB_OUTPUT
+          
+          # Show actual results
+          cat swiftlint-results.txt
+          
+          echo "::endgroup::"
+          
+          # Fail if there are serious violations (errors)
+          if [ "$SERIOUS" -gt 0 ]; then
+            echo "::error::Found $SERIOUS serious SwiftLint violations in ${{ matrix.project.name }}"
+            exit 1
+          fi
+          
+          # Warn if there are non-serious violations
+          if [ "$VIOLATIONS" -gt 0 ]; then
+            echo "::warning::Found $VIOLATIONS SwiftLint warnings in ${{ matrix.project.name }}"
+          fi
+
+      - name: Upload SwiftLint Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiftlint-report-${{ matrix.project.name }}
+          path: |
+            ${{ matrix.project.path }}/swiftlint-results.txt
+            ${{ matrix.project.path }}/swiftlint-report.json
+          retention-days: 30
+
+  summary:
+    name: SwiftLint Summary
+    runs-on: ubuntu-latest
+    needs: swiftlint
+    if: always()
+    
+    steps:
+      - name: Check Results
+        run: |
+          echo "::notice::SwiftLint analysis complete for all projects"
+          echo "Review individual project results above for details"

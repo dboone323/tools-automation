@@ -42,3 +42,24 @@ jobs:
            for f in files if f.endswith('.py')]
           print('Python syntax OK')
           "
+
+  lint-swift:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      - name: Check Swift Projects
+        run: |
+          # Quick lint check for Swift projects
+          for project in PlannerApp MomentumFinance HabitQuest AvoidObstaclesGame CodingReviewer shared-kit; do
+            if [ -d "$project" ]; then
+              echo "Checking $project..."
+              cd "$project"
+              swiftlint lint --quiet --reporter summary || echo "⚠️  $project has linting warnings"
+              cd ..
+            fi
+          done
