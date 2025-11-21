@@ -6,6 +6,10 @@ on:
     pull_request:
         branches: [main]
 
+permissions:
+    contents: write  # Required to push tags and commits
+    actions: read    # Required to trigger other workflows
+
 jobs:
     versioning:
         runs-on: ubuntu-latest
