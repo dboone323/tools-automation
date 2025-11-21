@@ -24,7 +24,7 @@ jobs:
                     ]
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
               with:
                   submodules: recursive
 
@@ -43,7 +43,7 @@ jobs:
                     "${{ matrix.submodule }}"
 
             - name: Upload validation artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
               with:
                   name: validation-${{ matrix.submodule }}
                   path: metrics/validation/${{ matrix.submodule }}.json
@@ -53,12 +53,12 @@ jobs:
         needs: [validate]
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
               with:
                   submodules: recursive
 
             - name: Download artifacts
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
               with:
                   path: metrics/validation
 
@@ -73,7 +73,7 @@ jobs:
               shell: bash
 
             - name: Store combined summary
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
               with:
                   name: validation-combined
                   path: metrics/validation/combined.json
