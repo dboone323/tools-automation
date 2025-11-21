@@ -30,7 +30,7 @@ jobs:
               uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
             - name: Set up Python
-              uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c
+              uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
               with:
                   python-version: "3.11"
 
@@ -147,7 +147,7 @@ jobs:
               uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
             - name: Set up Python
-              uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c
+              uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
               with:
                   python-version: "3.11"
 
