@@ -105,7 +105,7 @@ jobs:
           coverage html
 
       - name: Upload coverage reports
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: htmlcov/
@@ -152,7 +152,7 @@ jobs:
           python run_performance_benchmarks.py
 
       - name: Upload performance results
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
+        uses: actions/upload-artifact@v4
         with:
           name: performance-results
           path: performance_results/
@@ -188,7 +188,7 @@ jobs:
           fi
 
       - name: Upload flaky test results
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
+        uses: actions/upload-artifact@v4
         with:
           name: flaky-test-results
           path: test_results/
@@ -239,7 +239,7 @@ jobs:
           python run_48hour_validation.py --duration-hours 48
 
       - name: Upload validation results
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
+        uses: actions/upload-artifact@v4
         with:
           name: 48hour-validation-results
           path: validation_results/
@@ -289,7 +289,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
+        uses: actions/download-artifact@v4
 
       - name: Generate comprehensive report
         run: |
@@ -319,7 +319,7 @@ jobs:
           echo "- 48-hour validation logs" >> report.md
 
       - name: Upload summary report
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
+        uses: actions/upload-artifact@v4
         with:
           name: phase2-summary-report
           path: report.md
