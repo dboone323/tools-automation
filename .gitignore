@@ -155,3 +155,7 @@ DerivedData/
 # Archives (top-level github-projects)
 archives/
 
+# Ignore tauri build artifacts
+hybrid-desktop-app/src-tauri/target/
+hybrid-desktop-app/src-tauri/target/**
+
