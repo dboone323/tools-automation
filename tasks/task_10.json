@@ -1,8 +1,0 @@
-{
-  "id": "task_10",
-  "agent": "pytest-agent",
-  "command": "status",
-  "project": "",
-  "status": "error",
-  "stderr": "[Errno 2] No such file or directory: './Tools/Automation/master_automation.sh'"
-}

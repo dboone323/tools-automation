@@ -1,0 +1,134 @@
+name: iOS/macOS Tests with Retry and Monitoring
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  XCODE_VERSION: '17.0'
+  IOS_SIMULATOR: 'iPhone 17'
+  SIMULATOR_OS: 'iOS 26.2'
+  MAX_RETRIES: 3
+  WARMUP_DELAY: 15
+
+jobs:
+  test-ios:
+    name: Test iOS Projects
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - name: MomentumFinance
+            scheme: MomentumFinance
+            platforms: [iOS, macOS]
+          - name: HabitQuest
+            scheme: HabitQuest
+            platforms: [iOS]
+          - name: PlannerApp
+            scheme: PlannerApp
+            platforms: [iOS, macOS]
+          - name: AvoidObstaclesGame
+            scheme: AvoidObstaclesGame
+            platforms: [iOS, macOS]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
+      
+      - name: Show Xcode version
+        run: xcodebuild -version
+      
+      - name: List available simulators
+        run: xcrun simctl list devices available
+      
+      - name: Warmup iOS Simulator
+        if: contains(matrix.project.platforms, 'iOS')
+        run: |
+          ./scripts/warmup_simulator.sh "${{ env.IOS_SIMULATOR }}" ${{ env.WARMUP_DELAY }}
+        working-directory: ${{ matrix.project.name }}
+      
+      - name: Run iOS Tests (with retry)
+        if: contains(matrix.project.platforms, 'iOS')
+        env:
+          PARALLEL_TESTING: 'NO'
+          TEST_TIMEOUT: 1800
+        run: |
+          ../scripts/run_tests_with_retry.sh \
+            "${{ matrix.project.scheme }}" \
+            "platform=iOS Simulator,name=${{ env.IOS_SIMULATOR }}" \
+            ${{ env.MAX_RETRIES }}
+        working-directory: ${{ matrix.project.name }}
+      
+      - name: Run macOS Tests (with retry)
+        if: contains(matrix.project.platforms, 'macOS')
+        env:
+          PARALLEL_TESTING: 'NO'
+          TEST_TIMEOUT: 900
+        run: |
+          ../scripts/run_tests_with_retry.sh \
+            "${{ matrix.project.scheme }}" \
+            "platform=macOS" \
+            ${{ env.MAX_RETRIES }}
+        working-directory: ${{ matrix.project.name }}
+      
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-${{ matrix.project.name }}-${{ github.run_number }}
+          path: ${{ matrix.project.name }}/test_logs/
+          retention-days: 30
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.project.name }}-${{ github.run_number }}
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/*.xcresult
+          retention-days: 30
+      
+      - name: Analyze resource usage
+        if: always()
+        run: |
+          if [ -f test_logs/resource_monitoring_*.log ]; then
+            echo "## Resource Usage Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ${{ matrix.project.name }}" >> $GITHUB_STEP_SUMMARY
+            
+            # Get the latest monitoring log
+            LATEST_LOG=$(ls -t test_logs/resource_monitoring_*.log 2>/dev/null | head -1)
+            
+            if [ -f "$LATEST_LOG" ]; then
+              MAX_CPU=$(awk -F',' 'NR>2 {if($2>max) max=$2} END {print max}' "$LATEST_LOG")
+              MAX_MEM=$(awk -F',' 'NR>2 {if($3>max) max=$3} END {print max}' "$LATEST_LOG")
+              AVG_CPU=$(awk -F',' 'NR>2 {sum+=$2; count++} END {if(count>0) print sum/count; else print 0}' "$LATEST_LOG")
+              
+              echo "- **Max CPU**: ${MAX_CPU}%" >> $GITHUB_STEP_SUMMARY
+              echo "- **Max Memory**: ${MAX_MEM} MB" >> $GITHUB_STEP_SUMMARY
+              echo "- **Avg CPU**: ${AVG_CPU}%" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+        working-directory: ${{ matrix.project.name }}
+  
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: test-ios
+    if: always()
+    
+    steps:
+      - name: Check test results
+        run: |
+          echo "All tests completed. Check individual job results."
+          if [ "${{ needs.test-ios.result }}" != "success" ]; then
+            echo "Some tests failed. Please review the logs."
+            exit 1
+          fi

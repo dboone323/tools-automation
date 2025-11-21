@@ -8,15 +8,15 @@
   <array>
     <string>/usr/bin/env</string>
     <string>python3</string>
-    <string>/Users/danielstevens/Desktop/Code/Tools/Automation/mcp_server.py</string>
+    <string>/Users/danielstevens/Desktop/github-projects/tools-automation/mcp_server.py</string>
   </array>
   <key>RunAtLoad</key>
   <true/>
   <key>KeepAlive</key>
   <true/>
   <key>StandardOutPath</key>
-  <string>/Users/danielstevens/Desktop/Code/Tools/Automation/logs/mcp_server.log</string>
+  <string>/Users/danielstevens/Library/Logs/tools-automation/mcp_server.log</string>
   <key>StandardErrorPath</key>
-  <string>/Users/USERNAME/Code/Tools/Automation/logs/mcp_server.log</string>
+  <string>/Users/danielstevens/Library/Logs/tools-automation/mcp_server.err.log</string>
 </dict>
 </plist>

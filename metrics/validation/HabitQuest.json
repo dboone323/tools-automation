@@ -7,8 +7,8 @@
   },
   "validation": {
     "mode": "xcode",
-    "status": "ok"
+    "status": "issues"
   },
   "coverage": "skipped",
-  "timestamp": 1762469256
+  "timestamp": 1763683926
 }

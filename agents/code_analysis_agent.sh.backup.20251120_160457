@@ -1,0 +1,12 @@
+#!/bin/bash
+# Mock code analysis agent for testing
+echo "Mock code analysis agent started with PID: $$"
+
+# In TEST_MODE, just sleep briefly and exit
+if [[ "$TEST_MODE" == "true" ]]; then
+    sleep 10  # Sleep long enough for tests to check if it's running
+else
+    while true; do
+        sleep 1
+    done
+fi

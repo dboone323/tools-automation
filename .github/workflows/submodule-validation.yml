@@ -43,7 +43,7 @@ jobs:
                     "${{ matrix.submodule }}"
 
             - name: Upload validation artifact
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v4
               with:
                   name: validation-${{ matrix.submodule }}
                   path: metrics/validation/${{ matrix.submodule }}.json
@@ -58,9 +58,11 @@ jobs:
                   submodules: recursive
 
             - name: Download artifacts
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v4
               with:
                   path: metrics/validation
+                  pattern: validation-*
+                  merge-multiple: true
 
             - name: AI summary (optional)
               run: |
@@ -68,12 +70,12 @@ jobs:
 
             - name: Upload combined summary
               run: |
-                  jq -s '[.[]]' metrics/validation/*.json > \
-                    metrics/validation/combined.json
+                  find metrics/validation -name '*.json' -type f | \
+                    xargs jq -s '[.[]]' > metrics/validation/combined.json
               shell: bash
 
             - name: Store combined summary
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v4
               with:
                   name: validation-combined
                   path: metrics/validation/combined.json

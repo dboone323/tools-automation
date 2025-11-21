@@ -1,4 +1,27 @@
         #!/usr/bin/env bash
+
+# ══════════════════════════════════════════════════════════════
+# Enhanced with Agent Autonomy Features
+# ══════════════════════════════════════════════════════════════
+
+# Dynamic Configuration Discovery
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "${SCRIPT_DIR}/agent_config_discovery.sh" ]]; then
+    source "${SCRIPT_DIR}/agent_config_discovery.sh"
+    WORKSPACE_ROOT=$(get_workspace_root 2>/dev/null || echo "$HOME/workspace")
+    MCP_URL=$(get_mcp_url 2>/dev/null || echo "http://127.0.0.1:5000")
+fi
+
+# AI Decision Helpers (optional - uncomment to enable)
+# if [[ -f "${SCRIPT_DIR}/../monitoring/ai_helpers.sh" ]]; then
+#     source "${SCRIPT_DIR}/../monitoring/ai_helpers.sh"
+# fi
+
+# State Manager Integration (optional - uncomment to enable)
+# STATE_MANAGER="${SCRIPT_DIR}/../monitoring/state_manager.py"
+
+# ══════════════════════════════════════════════════════════════
+
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
