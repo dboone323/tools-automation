@@ -60,14 +60,11 @@ jobs:
             echo "No changes to commit"
           else
             git add ENHANCEMENT_PLAN_TRACKER.md
-            git commit -m "🔄 Automated progress tracking update
-
-- Updated system health metrics
-- Refreshed TODO processing status
-- Updated test coverage information
-- Recorded performance benchmarks
-
-$(date '+%Y-%m-%d %H:%M:%S %Z')" || echo "No changes to commit"
+            if git diff --quiet && git diff --staged --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "🔄 Automated progress tracking update - $(date '+%Y-%m-%d %H:%M:%S %Z')" || echo "No changes to commit"
+            fi
           fi
 
       - name: Push changes
