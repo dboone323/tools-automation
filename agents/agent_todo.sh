@@ -75,7 +75,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/todo_ai_config.sh"
 
 AGENTS_DIR=$(get_agents_dir)
-TODO_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Projects/todo-tree-output.json"
+TODO_FILE="${WORKSPACE_ROOT}/Projects/todo-tree-output.json"
 LOG_FILE="${AGENTS_DIR}/todo_agent.log"
 MCP_URL=$(get_mcp_url)
 WORKSPACE_ROOT=$(get_workspace_root)

@@ -307,3 +307,12 @@ export -f add_task_to_queue
 export -f increment_task_count
 export -f set_resource_limits
 export -f with_resource_limits
+
+# Register this agent with MCP server (stub implementation)
+register_with_mcp() {
+    local agent_name="$1"
+    local tags="$2"
+    # Simple logging; in real implementation this would POST to MCP
+    echo "[$(date)] ${agent_name}: Registered with MCP (tags: ${tags})" >> "${LOG_FILE:-/tmp/auto_restart_monitor.log}"
+    return 0
+}

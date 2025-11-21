@@ -65,6 +65,7 @@ fi
 # Source shared functions for file locking and monitoring
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
+STATUS_UTIL="${SCRIPT_DIR}/status_utils.py"
 
 AGENTS_DIR=$(get_agents_dir)
 LOG_FILE="${AGENTS_DIR}/supervisor.log"
@@ -138,7 +139,7 @@ run_with_timeout() {
 check_resource_limits() {
     # Check file count limit (1000 files max)
     local file_count
-    file_count=$(find "${WORKSPACE_ROOT:-/Users/danielstevens/Desktop/Quantum-workspace}" -type f 2>/dev/null | wc -l | tr -d ' ')
+    file_count=$(find "${WORKSPACE_ROOT:-.}" -type f 2>/dev/null | wc -l | tr -d ' ')
     if [[ $file_count -gt 1000 ]]; then
         log_message "ERROR" "File count limit exceeded: $file_count files (max: 1000)"
         return 1
@@ -238,6 +239,7 @@ MANAGED_AGENTS=(
     "agent_testing.sh"
     "task_orchestrator.sh"
     "unified_dashboard_agent.sh"
+    "auto_restart_monitor.sh"
 )
 
 declare -A STATUS_ALIAS_MAP=(
@@ -460,9 +462,9 @@ get_existing_agent_pids() {
     local alt_agents_dir
     alt_agents_dir="${AGENTS_DIR%/Automation/agents}/agents"
     {
-        pgrep -f "${AGENTS_DIR}/${agent_script}" 2>/dev/null
-        pgrep -f "${alt_agents_dir}/${agent_script}" 2>/dev/null
-        pgrep -f "[[:space:]]${agent_script}" 2>/dev/null
+        pgrep -f "${AGENTS_DIR}/${agent_script}" 2>/dev/null || true
+        pgrep -f "${alt_agents_dir}/${agent_script}" 2>/dev/null || true
+        pgrep -f "[[:space:]]${agent_script}" 2>/dev/null || true
     } | sort -u
 }
 
@@ -538,19 +540,22 @@ set_agent_status() {
     local status="$2"
 
     if ! update_agent_entry_python "${agent_script}" --status "${status}" >/dev/null 2>&1; then
-        legacy_set_agent_status "${agent_script}" "${status}"
+        legacy_set_agent_status "${agent_script}" "${status}" || true
     fi
 }
 
 start_agent() {
     local agent_script primary_pid
-    local -a existing_pids duplicates
+    local -a existing_pids=() duplicates=()
     agent_script="$1"
+    echo "DEBUG: start_agent ${agent_script}" >>"${LOG_FILE}"
 
     # Normalize any already-running processes so we do not spawn duplicates.
     while IFS= read -r pid; do
         [[ -n ${pid} ]] && existing_pids+=("${pid}")
     done < <(get_existing_agent_pids "${agent_script}")
+
+    echo "DEBUG: existing_pids count: ${#existing_pids[@]}" >>"${LOG_FILE}"
 
     if ((${#existing_pids[@]} > 0)); then
         primary_pid="${existing_pids[0]}"
@@ -581,9 +586,12 @@ start_agent() {
         fi
     fi
 
+    echo "DEBUG: starting agent ${agent_script}" >>"${LOG_FILE}"
     set_agent_status "${agent_script}" "starting"
+    echo "DEBUG: set_agent_status starting done" >>"${LOG_FILE}"
     nohup bash "${AGENTS_DIR}/${agent_script}" >>"${LOG_FILE}" 2>&1 &
     local pid=$!
+    echo "DEBUG: nohup done, pid=$pid" >>"${LOG_FILE}"
     record_agent_pid "${agent_script}" "${pid}"
     echo "${agent_script} started with PID ${pid}" >>"${LOG_FILE}"
     sleep 1

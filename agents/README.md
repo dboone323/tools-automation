@@ -1,59 +1,104 @@
-# Automation Agents System
+# Agents Directory
 
-This directory contains autonomous agents for continuous automation, AI/ML log analysis, multi-level backup/restore, plugin extensibility, and secure API access.
+This directory contains all automation agents for the `tools-automation` project.
 
-## Agents & Tools
+## Directory Structure
 
-- **agent_build.sh**: Watches for triggers and builds the project automatically, with backup/restore and test validation.
-- **agent_debug.sh**: Runs diagnostics/tests and applies auto-fixes if errors are detected, with backup/restore.
-- **agent_codegen.sh**: Runs code generation and auto-fix routines on a schedule, with backup/restore.
-- **agent_supervisor.sh**: Starts and monitors all agents, restarts on error/rollback, runs AI log analyzer.
-- **backup_manager.sh**: Multi-level backup/restore for projects, with audit logging.
-- **plugin_api.sh**: Plugin system with access control and policy enforcement.
-- **api_server.py**: HTTP API for plugin listing/execution, with audit logging and policy enforcement.
-- **ai_log_analyzer.py**: AI/ML log analysis for anomaly detection and recommendations.
-
-## Onboarding
-
-Run the onboarding script to set up permissions and environment:
-
-```sh
-./onboard.sh
+```
+agents/
+├── logs/           # Agent runtime logs (.log, .out, .pid files)
+├── status/         # Agent status JSON files (*_status.json)
+├── tests/          # Test scripts and temporary test data
+├── bin/            # (Reserved for compiled binaries if needed)
+├── communication/  # Agent-to-agent communication files
+├── backups/        # Agent backup configurations
+└── *.sh            # Agent scripts (executable)
 ```
 
-## Usage
+## Available Agents
 
-1. Start the supervisor to launch all agents:
-   ```sh
-   ./agent_supervisor.sh
-   ```
-2. Run the API server for plugin access:
-   ```sh
-   python3 api_server.py
-   ```
-3. Analyze logs with AI/ML:
-   ```sh
-   python3 ai_log_analyzer.py
-   ```
-4. Check logs and `audit.log` for all actions and events.
+### Core Agents
+- **agent_codegen.sh**: Code generation and scaffolding
+- **agent_build.sh**: Build automation and validation
+- **agent_testing.sh**: Test execution and reporting
+- **agent_deployment.sh**: Deployment orchestration
+- **agent_monitoring.sh**: System health monitoring
 
-## Security & Policy
+### Quality Agents
+- **agent_security.sh**: Security scanning and audits
+- **code_review_agent.sh**: Automated code review
+- **quality_agent.sh**: Code quality enforcement
 
-- All critical actions are logged to `audit.log`.
-- Plugins and API require `API_TOKEN` and are restricted by `policy.conf`.
+### Documentation Agents
+- **agent_documentation.sh**: Documentation generation
+- **knowledge_base_agent.sh**: Knowledge base maintenance
 
-## Knowledge Base
+### Orchestration
+- **task_orchestrator.sh**: Task scheduling and coordination
+- **agent_supervisor.sh**: Agent health management
 
-See `KNOWLEDGE_BASE.md` for an auto-generated summary of all agents, tools, and policies.
+## Running Agents
 
--
+### Start an Agent
+```bash
+cd agents
+./agent_codegen.sh
+```
 
-## Distributed/Scalable Agents
+### Check Agent Status
+```bash
+cat agents/status/codegen_status.json
+```
 
-- Use `distributed_launcher.sh` to launch agent supervisors on remote hosts via SSH.
-- Use `distributed_health_check.sh` to check health/status of remote agent supervisors.
+### View Agent Logs
+```bash
+tail -f agents/logs/agent_codegen.log
+```
 
-## Customization
+## Agent Development
 
-- Edit agent scripts to change intervals, add notifications, or extend agent logic.
-- Add new agents or plugins by following the same pattern.
+### Creating a New Agent
+
+1. Create your script in `agents/`
+2. Follow naming convention: `agent_<name>.sh` or `<name>_agent.sh`
+3. Ensure executable: `chmod +x agents/agent_<name>.sh`
+4. Log to `logs/`, status to `status/`
+5. Add documentation to this README
+
+### Best Practices
+
+- Use `${REPO_ROOT}` for absolute paths
+- Write status to `status/<name>_status.json`
+- Write logs to `logs/<name>.log`
+- Handle signals (SIGTERM, SIGINT) gracefully
+- Implement health checks
+
+## Troubleshooting
+
+### Agent Won't Start
+1. Check executable permissions: `ls -l agents/agent_<name>.sh`
+2. View recent logs: `tail -n 50 agents/logs/agent_<name>.log`
+3. Verify dependencies: `./scripts/verify_agents.sh`
+
+### Status Files Not Updating
+1. Check write permissions on `agents/status/`
+2. Ensure agent is running: `ps aux | grep agent`
+3. Check for lock files: `ls agents/*.lock`
+
+## Maintenance
+
+### Cleanup Old Logs
+Use the cleanup script:
+```bash
+./scripts/cleanup.sh --retention 30 --confirm
+```
+
+### Health Check
+```bash
+./scripts/verify_agents.sh
+```
+
+## Related Documentation
+- [MCP Integration](../mcp/README.md)
+- [Cleanup Policy](../CLEANUP.md)
+- [Main README](../README.md)

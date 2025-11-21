@@ -422,6 +422,9 @@ The repository includes automated security scanning that runs on every commit an
 - **Secrets Management**: Use system keychain or secure environment variables
 - **Network Security**: All services configured for local access only
 
+### Maintenance
+- [Cleanup Policy](CLEANUP.md): Instructions for safe disk cleanup and archiving.
+
 ### Best Practices for Contributors
 
 1. **Never commit secrets**: Use `.env` files (gitignored) or secure keychain storage

@@ -1,4 +1,12 @@
 # Root ignore for generated artifacts and local state
+.venv/
+venv/
+test_venv/
+tools-automation-archive/
+quarantine/
+agents/logs/
+agents/status/
+agents/tests/tmp/
 
 # TODO export output (generated)
 Projects/todo-tree-output.json
