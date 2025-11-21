@@ -30,7 +30,7 @@ jobs:
               uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
             - name: Set up Python
-              uses: actions/setup-python@v4
+              uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c
               with:
                   python-version: "3.11"
 
@@ -70,7 +70,7 @@ jobs:
               uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
             - name: Set up Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
               with:
                   node-version: "18"
                   registry-url: "https://registry.npmjs.org"
@@ -116,7 +116,7 @@ jobs:
                   fetch-depth: 0
 
             - name: Set up Go
-              uses: actions/setup-go@v4
+              uses: actions/setup-go@19bb51245e9c80abacb2e91cc42b33fa478b8639
               with:
                   go-version: "1.21"
 
@@ -147,17 +147,17 @@ jobs:
               uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
             - name: Set up Python
-              uses: actions/setup-python@v4
+              uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c
               with:
                   python-version: "3.11"
 
             - name: Set up Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
               with:
                   node-version: "18"
 
             - name: Set up Go
-              uses: actions/setup-go@v4
+              uses: actions/setup-go@19bb51245e9c80abacb2e91cc42b33fa478b8639
               with:
                   go-version: "1.21"
 
@@ -167,7 +167,7 @@ jobs:
 
             - name: Deploy to GitHub Pages
               if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-              uses: peaceiris/actions-gh-pages@v3
+              uses: peaceiris/actions-gh-pages@4a2e02b36f31d8974a0d09d3bb9f3172aa2d0d0d
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: ./docs/sdk
@@ -186,7 +186,7 @@ jobs:
               run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
             - name: Create GitHub Release
-              uses: actions/create-release@v1
+              uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:

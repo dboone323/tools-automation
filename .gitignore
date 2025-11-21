@@ -10,10 +10,6 @@ Tools/Automation/process_todos.log
 Tools/logs/
 Tools/Automation/agents/.dashboard_metrics_state.json
 
-# Cache and analysis files
-cache/
-agents/unified_todos.json
-
 # macOS junk
 .DS_Store
 */.DS_Store
@@ -56,12 +52,6 @@ Carthage/Build/
 *.log
 *.tmp
 *.swp
-
-# Process ID files
-*.pid
-
-# Resource usage logs
-logs/resource_usage.csv
 
 # Tools snapshots and imports
 Tools/Imported/
@@ -106,10 +96,6 @@ Tools/Automation/agents/*.processing
 Tools/Automation/agents/*.tmp.*
 Tools/Automation/agents/task_queue.json.old
 Tools/Automation/export_todos.pid
-
-# Large data files (should not be in git)
-config/task_queue.json
-**/task_queue.json
 
 # Temporary TODO export files
 Projects/todo-tree-output.json.broken
@@ -169,23 +155,7 @@ DerivedData/
 # Archives (top-level github-projects)
 archives/
 
-# Monitoring system generated files
-monitoring/metrics/*.json
-monitoring/alerts/*.json
-monitoring/reports/*.md
-monitoring/baselines/*.json
-
-# Ollama backups and registries
-ollama_backups/*.json
-
-# Generated reports
-reports/*.json
-reports/*.md
-
-# Dependency reports
-Tools/Automation/services/dependency_report_*.md
-
-# Agent communication files (temporary)
-agents/communication/*.notification.txt
-agents/communication/task_queue.json.tmp
+# Ignore tauri build artifacts
+hybrid-desktop-app/src-tauri/target/
+hybrid-desktop-app/src-tauri/target/**
 

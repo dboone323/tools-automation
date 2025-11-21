@@ -6,10 +6,6 @@ on:
     pull_request:
         branches: [main]
 
-permissions:
-    contents: write  # Required to push tags and commits
-    actions: read    # Required to trigger other workflows
-
 jobs:
     versioning:
         runs-on: ubuntu-latest
@@ -23,10 +19,9 @@ jobs:
               uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
               with:
                   fetch-depth: 0
-                  lfs: false
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
               with:
                   node-version: "18"
 
@@ -105,11 +100,6 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
-              with:
-                  fetch-depth: 0
-                  lfs: false
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  persist-credentials: true
 
             - name: Update Python SDK version
               run: |
@@ -135,11 +125,9 @@ jobs:
                   git commit -m "chore: bump version to ${{ needs.versioning.outputs.new_version }}"
 
             - name: Create git tag
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   git tag ${{ needs.versioning.outputs.new_tag }}
-                  git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git ${{ needs.versioning.outputs.new_tag }}
+                  git push origin ${{ needs.versioning.outputs.new_tag }}
 
             - name: Trigger SDK publishing
               uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b

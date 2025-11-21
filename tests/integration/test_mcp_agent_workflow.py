@@ -15,7 +15,18 @@ class TestMCPAgentWorkflowIntegration:
 
     @pytest.fixture(scope="class")
     def mcp_server(self):
-        """Start MCP server for testing."""
+        """Start MCP server for testing or use existing one."""
+        # Check if server is already running (e.g., in CI)
+        try:
+            response = requests.get("http://localhost:5005/health", timeout=5)
+            if response.status_code in [200, 503, 429]:
+                # Server is already running, don't start a new one
+                yield None
+                return
+        except requests.RequestException:
+            # Server not running, start a new one
+            pass
+
         # Start MCP server in background
         proc = subprocess.Popen(
             ["python3", "mcp_server.py"],
@@ -41,12 +52,13 @@ class TestMCPAgentWorkflowIntegration:
 
         yield proc
 
-        # Cleanup
-        proc.terminate()
-        try:
-            proc.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            proc.kill()
+        # Cleanup only if we started the process
+        if proc:
+            proc.terminate()
+            try:
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
 
     @pytest.fixture
     def agent_status_file(self, tmp_path):
@@ -141,7 +153,9 @@ class TestMCPAgentWorkflowIntegration:
         # Test task assignment
         assigned_agent = orchestrator.assign_task(task)
         assert assigned_agent is not None
-        assert "agent" in assigned_agent
+        assert assigned_agent["result"] == "assigned"
+        assert "assigned_agent" in assigned_agent["task"]
+        assert assigned_agent["task"]["assigned_agent"] is not None
 
     def test_workflow_execution_chain(self, mcp_server):
         """Test complete workflow execution chain."""
