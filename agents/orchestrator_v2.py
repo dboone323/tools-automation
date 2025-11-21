@@ -323,6 +323,26 @@ def snapshot() -> Dict[str, Any]:
     }
 
 
+class TaskOrchestrator:
+    """Task Orchestrator class for managing agent task assignment."""
+
+    def __init__(self):
+        """Initialize the task orchestrator."""
+        pass
+
+    def assign_task(self, task: Dict[str, Any]) -> Dict[str, Any]:
+        """Assign a task to an agent or queue it."""
+        return assign_task(task)
+
+    def balance_load(self) -> Dict[str, Any]:
+        """Get current load distribution."""
+        return balance_load()
+
+    def get_status(self) -> Dict[str, Any]:
+        """Get orchestrator snapshot."""
+        return snapshot()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Agent Orchestrator v2")
     sub = parser.add_subparsers(dest="cmd")

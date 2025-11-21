@@ -85,9 +85,24 @@ jobs:
           # Clear persisted tasks for clean testing state
           rm -rf tasks/
           export RATE_LIMIT_MAX_REQS=500
-          python mcp_server.py &
-          sleep 10
-          curl -f http://localhost:5005/health || (echo "MCP server failed to start" && exit 1)
+          # Start server in background and capture logs
+          nohup python -u mcp_server.py > mcp_server.log 2>&1 &
+          MCP_PID=$!
+          echo "MCP PID: $MCP_PID"
+          # Poll health for up to 30s
+          for i in $(seq 1 30); do
+            if curl -sSf http://localhost:5005/health; then
+              echo "MCP server started"
+              break
+            fi
+            sleep 1
+          done
+          if ! curl -sSf http://localhost:5005/health; then
+            echo "MCP server failed to start, last 200 lines of mcp_server.log:"
+            tail -n 200 mcp_server.log || true
+            kill $MCP_PID || true
+            exit 1
+          fi
 
       - name: Run Unit Tests
         run: |
@@ -96,6 +111,13 @@ jobs:
       - name: Run Integration Tests
         run: |
           python -m pytest tests/integration/ -v --tb=short --cov=tests/integration --cov-report=xml --cov-append
+
+      - name: Upload server logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcp-server-log
+          path: mcp_server.log
 
       - name: Run E2E Tests
         run: |
@@ -210,9 +232,24 @@ jobs:
           # Clear persisted tasks for clean testing state
           rm -rf tasks/
           export RATE_LIMIT_MAX_REQS=500
-          python mcp_server.py &
-          sleep 20
-          curl -f http://localhost:5005/health
+          # Start server in background and capture logs
+          nohup python -u mcp_server.py > mcp_server.log 2>&1 &
+          MCP_PID=$!
+          echo "MCP PID: $MCP_PID"
+          # Poll health for up to 30s
+          for i in $(seq 1 30); do
+            if curl -sSf http://localhost:5005/health; then
+              echo "MCP server started"
+              break
+            fi
+            sleep 1
+          done
+          if ! curl -sSf http://localhost:5005/health; then
+            echo "MCP server failed to start, last 200 lines of mcp_server.log:"
+            tail -n 200 mcp_server.log || true
+            kill $MCP_PID || true
+            exit 1
+          fi
 
       - name: Generate Validation Config
         run: |

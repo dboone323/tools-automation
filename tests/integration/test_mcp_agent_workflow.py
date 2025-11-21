@@ -141,7 +141,9 @@ class TestMCPAgentWorkflowIntegration:
         # Test task assignment
         assigned_agent = orchestrator.assign_task(task)
         assert assigned_agent is not None
-        assert "agent" in assigned_agent
+        assert assigned_agent["result"] == "assigned"
+        assert "assigned_agent" in assigned_agent["task"]
+        assert assigned_agent["task"]["assigned_agent"] is not None
 
     def test_workflow_execution_chain(self, mcp_server):
         """Test complete workflow execution chain."""

@@ -9,7 +9,11 @@ AGENT_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Agent configuration
 AGENT_NAME="HelpersAgent"
-LOG_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/helpers_agent.log"
+# Use AGENT_LOG_DIR env or default to ./agents/logs
+AGENT_LOG_DIR="${AGENT_LOG_DIR:-$(pwd)/agents/logs}"
+mkdir -p "$AGENT_LOG_DIR"
+HELPER_LOG_FILE="${AGENT_LOG_DIR}/helpers_agent.log"
+LOG_FILE="${HELPER_LOG_FILE}"
 export STATUS_FILE="${AGENT_LIB_DIR}/agent_status.json"
 export TASK_QUEUE="${AGENT_LIB_DIR}/task_queue.json"
 export PID=$$
@@ -62,7 +66,7 @@ check_resource_limits() {
 
     # Check available disk space (require at least 1GB)
     local available_space
-    available_space=$(df -k "/Users/danielstevens/Desktop/Quantum-workspace" | tail -1 | awk '{print $4}')
+    available_space=$(df -k "${WORKSPACE_ROOT:-$(pwd)}" | tail -1 | awk '{print $4}')
     if [[ ${available_space} -lt 1048576 ]]; then # 1GB in KB
         echo "[$(date)] ${AGENT_NAME}: ❌ Insufficient disk space for ${operation_name}" >>"${LOG_FILE}"
         return 1
@@ -78,7 +82,7 @@ check_resource_limits() {
 
     # Check file count limits (prevent runaway helper operations)
     local file_count
-    file_count=$(find "/Users/danielstevens/Desktop/Quantum-workspace" -type f 2>/dev/null | wc -l)
+    file_count=$(find "${WORKSPACE_ROOT:-$(pwd)}" -type f 2>/dev/null | wc -l)
     if [[ ${file_count} -gt 50000 ]]; then
         echo "[$(date)] ${AGENT_NAME}: ❌ Too many files in workspace for ${operation_name}" >>"${LOG_FILE}"
         return 1
@@ -340,7 +344,7 @@ process_helper_task() {
 
     # Create backup before helper operations
     echo "[$(date)] ${AGENT_NAME}: Creating backup before helper operations..." >>"${LOG_FILE}"
-    /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup "global" "helper_operation_${task_id}" >>"${LOG_FILE}" 2>&1 || true
+    "${AGENT_LIB_DIR}/backup_manager.sh" backup "global" "helper_operation_${task_id}" >>"${LOG_FILE}" 2>&1 || true
 
     case "$task_type" in
     "suggest_fix")
