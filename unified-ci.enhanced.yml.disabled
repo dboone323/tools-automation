@@ -39,15 +39,8 @@ jobs:
           echo "project_list=$json" >> "$GITHUB_OUTPUT"
           echo "Detected: $json"
       - id: baseline
-          run: |
-            if [[ -f "$COVERAGE_BASELINE_FILE" ]]; then
-              echo "has_baseline=true" >> $GITHUB_OUTPUT
-              baseline_json=$(jq -c . "$COVERAGE_BASELINE_FILE" 2>/dev/null || echo '{}')
-              echo "baseline_json=$baseline_json" >> $GITHUB_OUTPUT
-            else
-              echo "has_baseline=false" >> $GITHUB_OUTPUT
-              echo "baseline_json={}" >> $GITHUB_OUTPUT
-            fi
+        run: |
+          if [[ -f "$COVERAGE_BASELINE_FILE" ]]; then echo "has_baseline=true" >> $GITHUB_OUTPUT; echo "baseline_json=$(jq -c . $COVERAGE_BASELINE_FILE)" >> $GITHUB_OUTPUT; else echo "has_baseline=false" >> $GITHUB_OUTPUT; echo 'baseline_json={}' >> $GITHUB_OUTPUT; fi
 
   build-test:
     runs-on: macos-14
@@ -85,8 +78,8 @@ jobs:
         with:
           mode: check
           scope: all
-    - name: SwiftPM Build & Test
-      if: steps.schemes.outputs.has_schemes == 'false'
+  - name: SwiftPM Build & Test
+        if: steps.schemes.outputs.has_schemes == 'false'
         working-directory: ${{ matrix.project }}
         run: |
           if [[ -f Package.swift ]]; then
@@ -100,7 +93,7 @@ jobs:
                 llvm-cov export -format=json -instr-profile=../$COVERAGE_DIR/swiftpm/${{ matrix.project }}/coverage.profdata $bin > ../$COVERAGE_DIR/swiftpm/${{ matrix.project }}/coverage.json || true
                 total=$(jq '[.data[].files[].segments[] | select(.[2] > 0)] | length' ../$COVERAGE_DIR/swiftpm/${{ matrix.project }}/coverage.json 2>/dev/null || echo 0)
                 covered=$(jq '[.data[].files[].segments[] | select(.[2] > 0 and .[3] > 0)] | length' ../$COVERAGE_DIR/swiftpm/${{ matrix.project }}/coverage.json 2>/dev/null || echo 0)
-            if [[ $total -gt 0 ]]; then pct=$(awk -v c="$covered" -v t="$total" 'BEGIN{printf "%.2f", (c/t)*100}'); echo $pct > ../$COVERAGE_DIR/swiftpm/${{ matrix.project }}/line_coverage_pct.txt; fi
+        if [[ $total -gt 0 ]]; then pct=$(awk -v c="$covered" -v t="$total" 'BEGIN{printf "%.2f", (c/t)*100}'); echo $pct > ../$COVERAGE_DIR/swiftpm/${{ matrix.project }}/line_coverage_pct.txt; fi
               fi
             fi
           fi
