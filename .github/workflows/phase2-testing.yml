@@ -29,19 +29,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    services:
-      # MCP Server for integration testing
-      mcp-server:
-        image: python:3.9-slim
-        ports:
-          - 5005:5005
-        env:
-          MCP_PORT: 5005
-        options: >-
-          --health-cmd "python -c 'import requests; requests.get(\"http://localhost:5005/health\")'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    # NOTE: we start the MCP server from a runner step instead of a service
+    # services:
+    #   mcp-server:
+    #     image: python:3.9-slim
+    #     ports:
+    #       - 5005:5005
+    #     env:
+    #       MCP_PORT: 5005
+    #     options: >-
+    #       --health-cmd "python -c 'import requests; requests.get(\"http://localhost:5005/health\")'"
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
@@ -116,18 +116,7 @@ jobs:
     timeout-minutes: 45
     needs: phase2-testing
 
-    services:
-      mcp-server:
-        image: python:3.9-slim
-        ports:
-          - 5005:5005
-        env:
-          MCP_PORT: 5005
-        options: >-
-          --health-cmd "python -c 'import requests; requests.get(\"http://localhost:5005/health\")'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    # performance-testing uses the same runner-launched server; no service required
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
@@ -199,18 +188,7 @@ jobs:
     timeout-minutes: 2880  # 48 hours
     if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_type == '48hour-validation')
 
-    services:
-      mcp-server:
-        image: python:3.9-slim
-        ports:
-          - 5005:5005
-        env:
-          MCP_PORT: 5005
-        options: >-
-          --health-cmd "python -c 'import requests; requests.get(\"http://localhost:5005/health\")'"
-          --health-interval 30s
-          --health-timeout 10s
-          --health-retries 10
+    # validation-48hour uses runner-launched server as well; no service container
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
