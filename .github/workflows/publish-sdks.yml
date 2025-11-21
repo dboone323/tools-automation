@@ -167,7 +167,7 @@ jobs:
 
             - name: Deploy to GitHub Pages
               if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-              uses: peaceiris/actions-gh-pages@4a2e02b36f31d8974a0d09d3bb9f3172aa2d0d0d
+              uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: ./docs/sdk
