@@ -82,6 +82,8 @@ jobs:
 
       - name: Start MCP Server
         run: |
+          # Clear persisted tasks for clean testing state
+          rm -rf tasks/
           export RATE_LIMIT_MAX_REQS=500
           python mcp_server.py &
           sleep 10
@@ -205,6 +207,8 @@ jobs:
 
       - name: Start MCP Server
         run: |
+          # Clear persisted tasks for clean testing state
+          rm -rf tasks/
           export RATE_LIMIT_MAX_REQS=500
           python mcp_server.py &
           sleep 20
