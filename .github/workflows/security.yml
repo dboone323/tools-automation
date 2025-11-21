@@ -21,10 +21,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8
         with:
           scan-type: "fs"
           scan-ref: "."
@@ -43,7 +43,7 @@ jobs:
 
       - name: Check for secrets using TruffleHog (PRs)
         if: github.event_name == 'pull_request'
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@939fabea556a4637a66ab79fb8fa5d0e8a436077
         with:
           path: ./
           base: ${{ github.event.pull_request.base.sha }}
@@ -52,7 +52,7 @@ jobs:
 
       - name: Check for secrets using TruffleHog (Scheduled)
         if: github.event_name == 'schedule'
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@939fabea556a4637a66ab79fb8fa5d0e8a436077
         with:
           path: ./
           extra_args: --debug --only-verified
@@ -68,7 +68,7 @@ jobs:
         continue-on-error: true
 
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@master
+        uses: ludeeus/action-shellcheck@00b27aa7cb85167568cb48a3838b75f4265f2bca
         with:
           severity: warning
           ignore_paths: node_modules
@@ -86,7 +86,9 @@ jobs:
 
       - name: Check for large files
         run: |
-          find . -type f -size +50M -not -path './.git/*' | head -10 || echo "No large files found"      - name: Validate repository structure
+          find . -type f -size +50M -not -path './.git/*' | head -10 || echo "No large files found"
+
+      - name: Validate repository structure
         run: |
           # Check for required security files
           [[ -f ".github/SECURITY.md" ]] || \
