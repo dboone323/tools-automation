@@ -1,0 +1,12 @@
+#!/bin/bash
+# Mock workflow optimization agent for testing
+echo "Mock workflow optimization agent started with PID: $$"
+
+# In TEST_MODE, sleep longer to allow tests to complete
+if [[ "$TEST_MODE" == "true" ]]; then
+    sleep 30  # Sleep long enough for all tests to check if it's running
+else
+    while true; do
+        sleep 1
+    done
+fi

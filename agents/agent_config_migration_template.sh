@@ -1,0 +1,221 @@
+#!/usr/bin/env bash
+
+# ══════════════════════════════════════════════════════════════
+# Enhanced with Agent Autonomy Features
+# ══════════════════════════════════════════════════════════════
+
+# Dynamic Configuration Discovery
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "${SCRIPT_DIR}/agent_config_discovery.sh" ]]; then
+    source "${SCRIPT_DIR}/agent_config_discovery.sh" 2>/dev/null || true
+    WORKSPACE_ROOT=$(get_workspace_root 2>/dev/null || echo "${WORKSPACE_ROOT:-$HOME/workspace}")
+    MCP_URL=$(get_mcp_url 2>/dev/null || echo "${MCP_URL:-http://127.0.0.1:5000}")
+fi
+
+# AI Decision Helpers (uncomment to enable)
+# if [[ -f "${SCRIPT_DIR}/../monitoring/ai_helpers.sh" ]]; then
+#     source "${SCRIPT_DIR}/../monitoring/ai_helpers.sh"
+# fi
+
+# ══════════════════════════════════════════════════════════════
+
+# Example: Integration of Dynamic Configuration Discovery into Existing Agent
+# This template shows how to update an agent to use the new config discovery system
+
+# ============================================================================
+# BEFORE (Hardcoded Paths)
+# ============================================================================
+
+# OLD CODE (DO NOT USE):
+# AGENTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents"
+# WORKSPACE_ROOT="/Users/danielstevens/Desktop/Quantum-workspace"
+# MCP_URL="http://127.0.0.1:5005"
+
+#============================================================================
+# AFTER (Dynamic Configuration Discovery)
+# ============================================================================
+
+# Get script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source configuration discovery
+if [[ -f "${SCRIPT_DIR}/agent_config_discovery.sh" ]]; then
+    source "${SCRIPT_DIR}/agent_config_discovery.sh"
+else
+    echo "ERROR: agent_config_discovery.sh not found"
+    exit 1
+fi
+
+# NEW CODE (USE THIS):
+# Discover all configuration dynamically
+WORKSPACE_ROOT=$(get_workspace_root)
+TOOLS_DIR=$(get_tools_automation_dir)
+AGENTS_DIR=$(get_agents_dir)
+MCP_URL=$(get_mcp_url)
+
+# Verify critical paths exist
+if [[ ! -d "$WORKSPACE_ROOT" ]]; then
+    echo "ERROR: Workspace root not found: $WORKSPACE_ROOT"
+    exit 1
+fi
+
+# ============================================================================
+# Example Agent Implementation
+# ============================================================================
+
+#!/usr/bin/env bash
+# agent_example.sh - Example agent using dynamic configuration
+
+set -euo pipefail
+
+# STEP 1: Discover configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/agent_config_discovery.sh"
+
+WORKSPACE_ROOT=$(get_workspace_root)
+AGENTS_DIR=$(get_agents_dir)
+MCP_URL=$(get_mcp_url)
+
+# STEP 2: Set up agent-specific paths relative to discovered config
+AGENT_NAME="agent_example"
+LOG_FILE="${AGENTS_DIR}/${AGENT_NAME}.log"
+STATUS_FILE="${AGENTS_DIR}/../config/agent_status.json"
+TASK_QUEUE="${AGENTS_DIR}/task_queue.json"
+
+# STEP 3: Source shared functions (now path-independent)
+if [[ -f "${AGENTS_DIR}/shared_functions.sh" ]]; then
+    source "${AGENTS_DIR}/shared_functions.sh"
+fi
+
+# STEP 4: Use discovered configuration
+log_message() {
+    echo "[$(date)] [$AGENT_NAME] $*" | tee -a "$LOG_FILE"
+}
+
+# Example usage
+log_message "Workspace root: $WORKSPACE_ROOT"
+log_message "MCP URL: $MCP_URL"
+log_message "Agents directory: $AGENTS_DIR"
+
+# ============================================================================
+# Migration Checklist for Existing Agents
+# ============================================================================
+
+# For each agent file (agent_*.sh, *_agent.sh):
+# 
+# 1. Add configuration discovery source:
+#    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+#    source "${SCRIPT_DIR}/agent_config_discovery.sh"
+#
+# 2. Replace hardcoded paths:
+#    - WORKSPACE_ROOT="/hard/coded/path"  →  WORKSPACE_ROOT=$(get_workspace_root)
+#    - AGENTS_DIR="/hard/coded/path"      →  AGENTS_DIR=$(get_agents_dir)
+#    - MCP_URL="http://..."               →  MCP_URL=$(get_mcp_url)
+#
+# 3. Update all derived paths to use discovered config:
+#    - LOG_FILE="${AGENTS_DIR}/${AGENT_NAME}.log"
+#    - STATUS_FILE="$(dirname "${AGENTS_DIR}")/config/agent_status.json"
+#
+# 4. Test the agent:
+#    ./agent_name.sh
+#
+# 5. Verify it works in different directories:
+#    cd /tmp && /path/to/agent_name.sh
+#
+# ============================================================================
+# Automated Migration Script
+# ============================================================================
+
+migrate_agent_to_dynamic_config() {
+    local agent_file="$1"
+    
+    if [[ ! -f "$agent_file" ]]; then
+        echo "ERROR: Agent file not found: $agent_file"
+        return 1
+    fi
+    
+    # Create backup
+    cp "$agent_file" "${agent_file}.backup.$(date +%Y%m%d_%H%M%S)"
+    
+    # Create temporary file
+    local temp_file="${agent_file}.migrating"
+    
+    # Add configuration discovery after shebang/header
+    {
+        # Copy shebang and header comments
+        sed -n '1,/^$/p' "$agent_file"
+        
+        # Add config discovery
+        cat <<'EOF'
+
+# Dynamic configuration discovery
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "${SCRIPT_DIR}/agent_config_discovery.sh" ]]; then
+    source "${SCRIPT_DIR}/agent_config_discovery.sh"
+    WORKSPACE_ROOT=$(get_workspace_root)
+    AGENTS_DIR=$(get_agents_dir)
+    MCP_URL=$(get_mcp_url)
+else
+    echo "ERROR: agent_config_discovery.sh not found"
+    exit 1
+fi
+
+EOF
+        
+        # Copy rest of file, replacing hardcoded paths
+        sed '1,/^$/d' "$agent_file" | \
+            sed 's|WORKSPACE_ROOT="/[^"]*"|WORKSPACE_ROOT=$(get_workspace_root)|g' | \
+            sed 's|AGENTS_DIR="/[^"]*"|AGENTS_DIR=$(get_agents_dir)|g' | \
+            sed 's|MCP_URL="http://127.0.0.1:[0-9]*"|MCP_URL=$(get_mcp_url)|g'
+        
+    } > "$temp_file"
+    
+    # Replace original with migrated version
+    mv "$temp_file" "$agent_file"
+    
+    echo "✅ Migrated: $agent_file"
+    echo "   Backup: ${agent_file}.backup.*"
+}
+
+# Example: Migrate all agents
+migrate_all_agents() {
+    local agents_dir="${1:-$(pwd)}"
+    
+    echo "🔄 Migrating agents to dynamic configuration..."
+    echo ""
+    
+    find "$agents_dir" -maxdepth 1 -name "agent_*.sh" -o -name "*_agent.sh" | while read -r agent_file; do
+        # Skip the config discovery script itself
+        if [[ "$(basename "$agent_file")" == "agent_config_discovery.sh" ]]; then
+            continue
+        fi
+        
+        migrate_agent_to_dynamic_config "$agent_file" || echo "⚠️  Failed to migrate: $agent_file"
+    done
+    
+    echo ""
+    echo "✅ Migration complete!"
+    echo ""
+    echo "Next steps:"
+    echo "1. Test each agent: ./agent_name.sh"
+    echo "2. Verify configuration: ./agent_config_discovery.sh validate"
+    echo "3. Remove .backup files when confirmed working"
+}
+
+# Uncomment to run migration:
+# migrate_all_agents "/path/to/agents"
+
+# ============================================================================
+# Environment Variable Override Examples
+# ============================================================================
+
+# For testing or special environments, you can override discovery:
+#
+# export AGENT_WORKSPACE_ROOT="/custom/workspace"
+# export AGENT_DIR="/custom/agents"
+# export MCP_URL="http://custom-mcp-server:8080"
+# ./agent_name.sh
+#
+# Or use the export command:
+# eval $(./agent_config_discovery.sh export)
+# ./agent_name.sh

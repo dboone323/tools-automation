@@ -1,4 +1,17 @@
         #!/usr/bin/env bash
+# Enhanced with autonomy features - 2025-11-20
+
+# Dynamic configuration discovery
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "${SCRIPT_DIR}/agent_config_discovery.sh" ]]; then
+    source "${SCRIPT_DIR}/agent_config_discovery.sh"
+    WORKSPACE_ROOT=$(get_workspace_root)
+    MCP_URL=$(get_mcp_url)
+fi
+
+# AI decision making (uncomment to enable)
+# source "${SCRIPT_DIR}/../monitoring/ai_helpers.sh"
+
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

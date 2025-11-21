@@ -1,4 +1,17 @@
         #!/usr/bin/env bash
+
+# Dynamic configuration discovery
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./agent_config_discovery.sh
+if [[ -f "${SCRIPT_DIR}/agent_config_discovery.sh" ]]; then
+    source "${SCRIPT_DIR}/agent_config_discovery.sh"
+    WORKSPACE_ROOT=$(get_workspace_root)
+    AGENTS_DIR=$(get_agents_dir)
+    MCP_URL=$(get_mcp_url)
+else
+    echo "ERROR: agent_config_discovery.sh not found"
+    exit 1
+fi
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -29,8 +42,8 @@ fi
 if [[ "${1-}" == "--health" || "${1-}" == "health" || "${1-}" == "-h" ]]; then
   if type agent_health_check >/dev/null 2>&1; then
     agent_health_check
-    local available_space
-    available_space=$(df -k "${WORKSPACE_ROOT}" | tail -1 | awk '{print $4}')
+    exit $?
+  fi
   issues=()
   if [[ ! -w "/tmp" ]]; then
     issues+=("tmp_not_writable")

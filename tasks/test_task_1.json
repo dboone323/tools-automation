@@ -1,9 +1,0 @@
-{
-  "id": "test_task_1",
-  "command": "analyze",
-  "project": "test_project",
-  "status": "success",
-  "returncode": 0,
-  "stdout": "Task completed successfully",
-  "stderr": ""
-}

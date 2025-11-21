@@ -538,7 +538,15 @@ class MCPHandler(BaseHTTPRequestHandler):
             or (self.command == "GET" and self.path.startswith("/api/ai/"))
         ):
             return False
-        ip = self.client_address[0]
+            
+        try:
+            # Handle case where client_address might be None or empty
+            if not hasattr(self, 'client_address') or not self.client_address:
+                return False
+            ip = self.client_address[0]
+        except Exception:
+            return False
+            
         # if client identifies itself via header and is whitelisted, bypass rate limiting
         client_id = None
         try:
@@ -547,11 +555,18 @@ class MCPHandler(BaseHTTPRequestHandler):
             client_id = None
         if client_id and client_id in RATE_LIMIT_WHITELIST:
             return False
+            
         now = __import__("time").time()
         window = RATE_LIMIT_WINDOW_SEC
         maxreq = RATE_LIMIT_MAX_REQS
+        
         try:
-            with self.server.rate_limit_lock:
+            # Use a timeout for lock acquisition to prevent deadlocks
+            if not self.server.rate_limit_lock.acquire(timeout=1.0):
+                # If we can't get the lock, fail open (allow request)
+                return False
+                
+            try:
                 bucket = self.server.request_counters.setdefault(ip, [])
                 # remove old timestamps
                 while bucket and bucket[0] < now - window:
@@ -559,33 +574,39 @@ class MCPHandler(BaseHTTPRequestHandler):
                 if len(bucket) >= maxreq:
                     return True
                 bucket.append(now)
+            finally:
+                self.server.rate_limit_lock.release()
         except Exception:
             # on any error, be permissive
             return False
         return False
 
     def _send_json(self, data, status=200):
-        body = json.dumps(data, indent=2).encode("utf-8")
-        self.send_response(status)
-        # Add security headers
-        self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("X-Frame-Options", "DENY")
-        self.send_header("X-XSS-Protection", "1; mode=block")
-        self.send_header("Content-Security-Policy", "default-src 'self'")
-        # Add CORS headers for cross-origin requests
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header(
-            "Access-Control-Allow-Headers",
-            "Content-Type, X-Correlation-ID, X-Client-Id, X-GitHub-Event, X-Hub-Signature-256",
-        )
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(body)))
-        # Add correlation ID to response if present
-        if hasattr(self, "correlation_id"):
-            self.send_header("X-Correlation-ID", self.correlation_id)
-        self.end_headers()
-        self.wfile.write(body)
+        try:
+            body = json.dumps(data, indent=2).encode("utf-8")
+            self.send_response(status)
+            # Add security headers
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("X-Frame-Options", "DENY")
+            self.send_header("X-XSS-Protection", "1; mode=block")
+            self.send_header("Content-Security-Policy", "default-src 'self'")
+            # Add CORS headers for cross-origin requests
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            self.send_header(
+                "Access-Control-Allow-Headers",
+                "Content-Type, X-Correlation-ID, X-Client-Id, X-GitHub-Event, X-Hub-Signature-256",
+            )
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            # Add correlation ID to response if present
+            if hasattr(self, "correlation_id"):
+                self.send_header("X-Correlation-ID", self.correlation_id)
+            self.end_headers()
+            self.wfile.write(body)
+        except Exception as e:
+            print(f"Error sending response: {e}")
+            raise
 
     def _get_detailed_health(self):
         """Detailed health check with system metrics"""
@@ -740,6 +761,7 @@ class MCPHandler(BaseHTTPRequestHandler):
         if self._is_rate_limited():
             self._send_json({"error": "rate_limited"}, status=429)
             return
+
         parsed = urlparse(self.path)
         if parsed.path == "/metrics":
             # Expose simple metrics in Prometheus text format
@@ -771,7 +793,9 @@ class MCPHandler(BaseHTTPRequestHandler):
                 self._send_json({"error": "metrics_error"}, status=500)
             return
         if parsed.path == "/status":
-            return self._get_status_data()
+            data = self._get_status_data()
+            self._send_json(data)
+            return
 
         if parsed.path == "/health" or parsed.path == "/v1/health":
             # Detailed health check for external supervisors

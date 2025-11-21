@@ -1,4 +1,17 @@
         #!/usr/bin/env bash
+
+# Dynamic configuration discovery
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./agent_config_discovery.sh
+if [[ -f "${SCRIPT_DIR}/agent_config_discovery.sh" ]]; then
+    source "${SCRIPT_DIR}/agent_config_discovery.sh"
+    WORKSPACE_ROOT=$(get_workspace_root)
+    AGENTS_DIR=$(get_agents_dir)
+    MCP_URL=$(get_mcp_url)
+else
+    echo "ERROR: agent_config_discovery.sh not found"
+    exit 1
+fi
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -61,11 +74,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Source AI configuration
 source "${SCRIPT_DIR}/todo_ai_config.sh"
 
-AGENTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents"
+AGENTS_DIR=$(get_agents_dir)
 TODO_FILE="/Users/danielstevens/Desktop/Quantum-workspace/Projects/todo-tree-output.json"
 LOG_FILE="${AGENTS_DIR}/todo_agent.log"
-MCP_URL="http://127.0.0.1:5005"
-WORKSPACE_ROOT="/Users/danielstevens/Desktop/Quantum-workspace"
+MCP_URL=$(get_mcp_url)
+WORKSPACE_ROOT=$(get_workspace_root)
 
 # Add reliability features for enterprise-grade operation
 set -euo pipefail

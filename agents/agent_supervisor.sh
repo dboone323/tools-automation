@@ -1,4 +1,17 @@
         #!/usr/bin/env bash
+
+# Dynamic configuration discovery
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./agent_config_discovery.sh
+if [[ -f "${SCRIPT_DIR}/agent_config_discovery.sh" ]]; then
+    source "${SCRIPT_DIR}/agent_config_discovery.sh"
+    WORKSPACE_ROOT=$(get_workspace_root)
+    AGENTS_DIR=$(get_agents_dir)
+    MCP_URL=$(get_mcp_url)
+else
+    echo "ERROR: agent_config_discovery.sh not found"
+    exit 1
+fi
         # Auto-injected health & reliability shim
 
         DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -53,7 +66,7 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/shared_functions.sh"
 
-AGENTS_DIR="/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents"
+AGENTS_DIR=$(get_agents_dir)
 LOG_FILE="${AGENTS_DIR}/supervisor.log"
 
 # Add reliability features for enterprise-grade operation
