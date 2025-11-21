@@ -82,6 +82,7 @@ jobs:
 
       - name: Start MCP Server
         run: |
+          export RATE_LIMIT_MAX_REQS=500
           python mcp_server.py &
           sleep 10
           curl -f http://localhost:5005/health || (echo "MCP server failed to start" && exit 1)
@@ -204,6 +205,7 @@ jobs:
 
       - name: Start MCP Server
         run: |
+          export RATE_LIMIT_MAX_REQS=500
           python mcp_server.py &
           sleep 20
           curl -f http://localhost:5005/health
