@@ -43,7 +43,7 @@ jobs:
                     "${{ matrix.submodule }}"
 
             - name: Upload validation artifact
-              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+              uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
               with:
                   name: validation-${{ matrix.submodule }}
                   path: metrics/validation/${{ matrix.submodule }}.json
@@ -73,7 +73,7 @@ jobs:
               shell: bash
 
             - name: Store combined summary
-              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+              uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
               with:
                   name: validation-combined
                   path: metrics/validation/combined.json
