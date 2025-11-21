@@ -15,7 +15,18 @@ class TestMCPAgentWorkflowIntegration:
 
     @pytest.fixture(scope="class")
     def mcp_server(self):
-        """Start MCP server for testing."""
+        """Start MCP server for testing or use existing one."""
+        # Check if server is already running (e.g., in CI)
+        try:
+            response = requests.get("http://localhost:5005/health", timeout=5)
+            if response.status_code in [200, 503, 429]:
+                # Server is already running, don't start a new one
+                yield None
+                return
+        except requests.RequestException:
+            # Server not running, start a new one
+            pass
+
         # Start MCP server in background
         proc = subprocess.Popen(
             ["python3", "mcp_server.py"],
@@ -41,12 +52,13 @@ class TestMCPAgentWorkflowIntegration:
 
         yield proc
 
-        # Cleanup
-        proc.terminate()
-        try:
-            proc.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            proc.kill()
+        # Cleanup only if we started the process
+        if proc:
+            proc.terminate()
+            try:
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
 
     @pytest.fixture
     def agent_status_file(self, tmp_path):
