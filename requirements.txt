@@ -18,3 +18,4 @@ freezegun==1.2.2
 faker==20.1.0
 aiohttp==3.9.1
 redis==5.0.1
+psutil==5.9.0
