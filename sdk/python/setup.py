@@ -12,7 +12,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="mcp-sdk",
-    version="1.0.0",
+    version="1.1.0",
     author="Tools Automation",
     author_email="sdk@tools-automation.com",
     description="Python SDK for MCP (Model Context Protocol) server",

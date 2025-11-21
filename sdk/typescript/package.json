@@ -1,6 +1,6 @@
 {
   "name": "@tools-automation/mcp-sdk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "TypeScript SDK for MCP (Model Context Protocol) server",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
