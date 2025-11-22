@@ -22,32 +22,18 @@ scrape_configs:
 
   - job_name: 'autonomy-system'
     static_configs:
-      - targets: ['autonomy-system:80']
-    metrics_path: '/api/metrics/system'
-    scrape_interval: 30s
-
-  - job_name: 'mcp-server'
-    static_configs:
-      - targets: ['host.docker.internal:5005']
-    metrics_path: '/metrics'
+      - targets: ['tools-automation-autonomy-system:80']
+    metrics_path: '/api/metrics'
     scrape_interval: 30s
 
   - job_name: 'agent-dashboard'
     static_configs:
-      - targets: ['host.docker.internal:8080']
+      - targets: ['host.docker.internal:5555']
     metrics_path: '/metrics'
     scrape_interval: 30s
-
-  - job_name: 'redis'
-    static_configs:
-      - targets: ['redis:6379']
 
   - job_name: 'grafana'
     static_configs:
       - targets: ['grafana:3000']
     metrics_path: '/metrics'
     scrape_interval: 30s
-
-  - job_name: 'uptime-kuma'
-    static_configs:
-      - targets: ['uptime-kuma:3001']

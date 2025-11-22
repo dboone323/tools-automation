@@ -157,7 +157,7 @@ run_with_timeout() {
 check_resource_limits() {
     # Check file count limit (1000 files max)
     local file_count
-    file_count=$(find "${WORKSPACE_ROOT:-/Users/danielstevens/Desktop/Quantum-workspace}" -type f 2>/dev/null | wc -l | tr -d ' ')
+    file_count=$(find "${WORKSPACE_ROOT:-${WORKSPACE_ROOT:-$(get_workspace_root)}}" -type f 2>/dev/null | wc -l | tr -d ' ')
     if [[ $file_count -gt 1000 ]]; then
         log_message "ERROR" "File count limit exceeded: $file_count files (max: 1000)"
         return 1

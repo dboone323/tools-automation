@@ -1,4 +1,6 @@
-        #!/usr/bin/env bash
+#!/usr/bin/env bash
+# Quantum Enhanced TODO Processing Agent: AI-powered code review, analysis, and automated task delegation
+# Integrates AI code review and analysis to automatically discover and delegate improvement tasks
 
 # Dynamic configuration discovery
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,76 +14,26 @@ else
     echo "ERROR: agent_config_discovery.sh not found"
     exit 1
 fi
-        # Auto-injected health & reliability shim
 
-        DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Prefer shared helpers when available
-if [[ -f "$DIR/shared_functions.sh" ]]; then
-  # shellcheck disable=SC1091
-  source "$DIR/shared_functions.sh"
+# Source shared functions
+if [[ -f "${SCRIPT_DIR}/shared_functions.sh" ]]; then
+    # shellcheck disable=SC1091
+    source "${SCRIPT_DIR}/shared_functions.sh"
 fi
-
-if [[ -f "$DIR/agent_helpers.sh" ]]; then
-  # shellcheck disable=SC1091
-  source "$DIR/agent_helpers.sh"
-fi
-
-set -euo pipefail
-
-AGENT_NAME="agent_todo.sh"
-LOG_FILE="${LOG_FILE:-$DIR/${AGENT_NAME}.log}"
-PID=$$
-
-if type update_agent_status >/dev/null 2>&1; then
-  trap 'update_agent_status "${AGENT_NAME}" "stopped" $$ ""; exit 0' SIGTERM SIGINT
-else
-  trap 'exit 0' SIGTERM SIGINT
-fi
-
-if [[ "${1-}" == "--health" || "${1-}" == "health" || "${1-}" == "-h" ]]; then
-  if type agent_health_check >/dev/null 2>&1; then
-    agent_health_check
-    exit $?
-  fi
-  issues=()
-  if [[ ! -w "/tmp" ]]; then
-    issues+=("tmp_not_writable")
-  fi
-  if [[ ! -d "$DIR" ]]; then
-    issues+=("cwd_missing")
-  fi
-  if [[ ${#issues[@]} -gt 0 ]]; then
-    printf '{"ok":false,"issues":["%s"]}\n' "${issues[*]}"
-    exit 2
-  fi
-  printf '{"ok":true}\n'
-  exit 0
-fi
-
-# Original agent script continues below
-#!/usr/bin/env bash
-# Quantum Enhanced TODO Processing Agent: AI-powered code review, analysis, and automated task delegation
-# Integrates AI code review and analysis to automatically discover and delegate improvement tasks
 
 # Exit early if in test mode
 if [[ "${TEST_MODE:-}" == "true" ]]; then
     return 0 2>/dev/null || exit 0
 fi
 
-# Get script directory for relative paths
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # Source AI configuration
 source "${SCRIPT_DIR}/todo_ai_config.sh"
 
-AGENTS_DIR=$(get_agents_dir)
 TODO_FILE="${WORKSPACE_ROOT}/Projects/todo-tree-output.json"
 LOG_FILE="${AGENTS_DIR}/todo_agent.log"
-MCP_URL=$(get_mcp_url)
-WORKSPACE_ROOT=$(get_workspace_root)
 
-# Add reliability features for enterprise-grade operation
-set -euo pipefail
+# Add reliability features - removed pipefail to prevent exit on pipe failures
+set -eo
 
 # Portable run_with_timeout: run a command and kill it if it exceeds timeout (seconds)
 # Usage: run_with_timeout <seconds> <cmd> [args...]
@@ -147,11 +99,11 @@ run_with_timeout() {
 
 # Check resource limits before operations
 check_resource_limits() {
-    # Check file count limit (1000 files max)
+    # Check file count limit (optimized with maxdepth)
     local file_count
-    file_count=$(find "${WORKSPACE_ROOT}" -type f 2>/dev/null | wc -l | tr -d ' ')
-    if [[ $file_count -gt 1000 ]]; then
-        log "ERROR" "File count limit exceeded: $file_count files (max: 1000)"
+    file_count=$(find "${WORKSPACE_ROOT}" -maxdepth 3 -type f 2>/dev/null | wc -l | tr -d ' ')
+    if [[ $file_count -gt 200000 ]]; then
+        log "ERROR" "File count limit exceeded: $file_count files (max: 200000)"
         return 1
     fi
 
@@ -161,9 +113,10 @@ check_resource_limits() {
         local mem_usage
         mem_usage=$(vm_stat | grep "Pages active" | awk '{print $3}' | tr -d '.')
         local total_mem
-        total_mem=$(echo "$(sysctl -n hw.memsize) / 1024 / 1024" | bc 2>/dev/null || echo "8192")
+        local total_pages
+        total_pages=$(echo "$(sysctl -n hw.memsize) / 4096" | bc 2>/dev/null)
         local mem_percent
-        mem_percent=$((mem_usage * 4096 * 100 / (total_mem * 1024 * 1024 / 4096)))
+        mem_percent=$((mem_usage * 100 / total_pages))
         if [[ $mem_percent -gt 80 ]]; then
             log "ERROR" "Memory usage too high: ${mem_percent}% (max: 80%)"
             return 1
@@ -174,8 +127,8 @@ check_resource_limits() {
     if command -v ps >/dev/null 2>&1; then
         local cpu_usage
         cpu_usage=$(ps -A -o %cpu | awk '{s+=$1} END {print s}')
-        if [[ $(echo "$cpu_usage > 90" | bc 2>/dev/null) -eq 1 ]]; then
-            log "ERROR" "CPU usage too high: ${cpu_usage}% (max: 90%)"
+        if [[ $(echo "$cpu_usage > 800" | bc 2>/dev/null) -eq 1 ]]; then
+            log "ERROR" "CPU usage too high: ${cpu_usage}% (max: 800%)"
             return 1
         fi
     fi
@@ -821,7 +774,9 @@ trap cleanup SIGTERM SIGINT
 
 # Alias log to log_message for backward compatibility
 log() {
-    log_message "INFO" "$1"
+    local level="$1"
+    shift
+    log_message "$level" "$*"
 }
 
 # Function to read TODOs from JSON file
@@ -1016,17 +971,21 @@ scan_cycle=0
 metrics_cycle=0
 
 while true; do
+    log_message "DEBUG" "[LOOP] Entering main loop iteration"
+    
     # Check resource limits before processing
     if ! check_resource_limits; then
         log_message "WARN" "Resource limits exceeded, skipping cycle"
         sleep 60
         continue
     fi
+    log_message "DEBUG" "[LOOP] Resource limits check passed"
 
     log_message "INFO" "Starting TODO processing cycle..."
 
     # Scan for new TODOs from code comments (every N cycles)
-    ((scan_cycle++))
+    log_message "DEBUG" "[LOOP] Checking if TODO scan needed (cycle: $scan_cycle/$TODO_SCAN_CYCLE)"
+    ((scan_cycle++)) || true
     if [[ $scan_cycle -ge ${TODO_SCAN_CYCLE} ]] && [[ "${ENABLE_CODE_SCANNING}" == "true" ]]; then
         scan_cycle=0
         if scan_for_todos; then
@@ -1035,25 +994,31 @@ while true; do
             log_message "WARN" "Codebase scan for TODOs failed"
         fi
     fi
+    log_message "DEBUG" "[LOOP] TODO scan section completed"
 
     # Prioritize TODOs for processing
+    log_message "DEBUG" "[LOOP] Checking if prioritization needed"
     if [[ "${ENABLE_PRIORITIZATION}" == "true" ]]; then
         if prioritize_todos; then
             log_message "DEBUG" "TODOs prioritized for processing"
         fi
     fi
+    log_message "DEBUG" "[LOOP] Prioritization section completed"
 
     # Generate metrics (every N cycles)
-    ((metrics_cycle++))
+    log_message "DEBUG" "[LOOP] Checking if metrics generation needed (cycle: $metrics_cycle/$METRICS_GENERATION_CYCLE)"
+    ((metrics_cycle++)) || true
     if [[ $metrics_cycle -ge ${METRICS_GENERATION_CYCLE} ]] && [[ "${ENABLE_METRICS}" == "true" ]]; then
         metrics_cycle=0
         if generate_metrics; then
             log_message "INFO" "TODO metrics generated"
         fi
     fi
+    log_message "DEBUG" "[LOOP] Metrics generation section completed"
 
     # Run AI project analysis every N cycles (configured)
-    ((ai_analysis_cycle++))
+    log_message "DEBUG" "[LOOP] Checking if AI analysis needed (cycle: $ai_analysis_cycle/$AI_ANALYSIS_CYCLE)"
+    ((ai_analysis_cycle++)) || true
     # shellcheck disable=SC2153  # comparing counter (ai_analysis_cycle) to configured threshold (AI_ANALYSIS_CYCLE)
     if [[ $ai_analysis_cycle -ge ${AI_ANALYSIS_CYCLE} ]]; then
         ai_analysis_cycle=0
@@ -1072,8 +1037,9 @@ while true; do
     fi
 
     # Run AI code review on recently modified files
+    log_message "DEBUG" "[LOOP] Starting AI code review section"
     log_message "INFO" "Running AI code review on recently modified files"
-    find "${WORKSPACE_ROOT}/Projects" -name "*.swift" -o -name "*.py" -o -name "*.js" -o -name "*.ts" | head -"${AI_CODE_REVIEW_LIMIT}" | while read -r file_path; do
+    find "${WORKSPACE_ROOT}/Projects" -name "*.swift" -o -name "*.py" -o -name "*.js" -o -name "*.ts" 2>/dev/null | head -"${AI_CODE_REVIEW_LIMIT}" | while read -r file_path; do
         # Determine project from path
         project=""
         if [[ $file_path == *"/CodingReviewer/"* ]]; then
@@ -1096,8 +1062,10 @@ while true; do
             fi
         fi
     done
+    log_message "DEBUG" "[LOOP] AI code review section completed"
 
     # Read current TODOs with timeout protection
+    log_message "DEBUG" "[LOOP] Starting TODO reading section"
     if ! todos=$(run_with_timeout 30 "read_todos 2>>'${LOG_FILE}'"); then
         log_message "ERROR" "Error reading TODOs: ${todos}"
         sleep 60
@@ -1146,6 +1114,9 @@ while true; do
         fi
     done
 
+    log_message "DEBUG" "[LOOP] Reached end of cycle, about to sleep"
     log_message "INFO" "TODO processing cycle completed, sleeping for 300 seconds"
     sleep 300 # Check every 5 minutes
+    log_message "DEBUG" "[LOOP] Woke up from sleep, continuing loop"
 done
+log_message "ERROR" "[LOOP] Exited main loop unexpectedly!"

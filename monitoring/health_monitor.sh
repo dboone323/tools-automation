@@ -73,37 +73,44 @@ collect_system_metrics() {
     local timestamp
     timestamp=$(date +%s)
 
-    # CPU metrics
+    # CPU metrics (Linux compatible)
     local cpu_usage
-    cpu_usage=$(top -l 1 | grep "CPU usage" | awk '{print $3}' | sed 's/%//')
+    if command -v top >/dev/null; then
+        # Try to get CPU usage from top in batch mode
+        cpu_usage=$(top -bn1 2>/dev/null | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}' 2>/dev/null || echo "0")
+    else
+        cpu_usage=0
+    fi
 
-    # Memory metrics - calculate percentage properly
+    # Memory metrics (Linux compatible)
     local mem_usage
-    local total_mem
-    local used_mem
-
-    # Get memory info in MB
-    total_mem=$(echo "scale=2; $(sysctl -n hw.memsize) / 1024 / 1024" | bc 2>/dev/null || echo "16384")
-    used_mem=$(ps -A -o rss= | awk '{sum+=$1} END {print sum/1024}' 2>/dev/null || echo "0")
-
-    # Calculate percentage (ensure it's between 0-100)
-    if (($(echo "$total_mem > 0" | bc -l 2>/dev/null || echo "0"))); then
-        mem_usage=$(echo "scale=2; ($used_mem / $total_mem) * 100" | bc 2>/dev/null | awk '{if($1>100) print 100; else if($1<0) print 0; else print int($1+0.5)}' 2>/dev/null || echo "0")
+    if [ -f /proc/meminfo ]; then
+        local total_mem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+        local free_mem=$(grep MemFree /proc/meminfo | awk '{print $2}')
+        local buffers=$(grep Buffers /proc/meminfo | awk '{print $2}')
+        local cached=$(grep ^Cached /proc/meminfo | awk '{print $2}')
+        
+        if [ -n "$total_mem" ] && [ "$total_mem" -gt 0 ]; then
+            local used_mem=$((total_mem - free_mem - buffers - cached))
+            mem_usage=$(awk "BEGIN {printf \"%.2f\", ($used_mem * 100 / $total_mem)}")
+        else
+            mem_usage=0
+        fi
     else
         mem_usage=0
-    fi # Disk metrics
+    fi
+
+    # Disk metrics
     local disk_usage
     disk_usage=$(df -h / | tail -1 | awk '{print $5}' | sed 's/%//')
 
-    # Network metrics (basic)
-    local network_rx
-    local network_tx
-    network_rx=$(netstat -ib | grep en0 | head -1 | awk '{print $7}')
-    network_tx=$(netstat -ib | grep en0 | head -1 | awk '{print $10}')
-
-    # Ensure numeric values
-    network_rx=${network_rx:-0}
-    network_tx=${network_tx:-0}
+    # Network metrics
+    local network_rx=0
+    local network_tx=0
+    if [ -f /proc/net/dev ]; then
+        network_rx=$(awk '/eth0/ {print $2}' /proc/net/dev 2>/dev/null || echo "0")
+        network_tx=$(awk '/eth0/ {print $10}' /proc/net/dev 2>/dev/null || echo "0")
+    fi
 
     # Process count
     local process_count
@@ -111,22 +118,32 @@ collect_system_metrics() {
 
     # Load average
     local load_avg
-    load_avg=$(uptime | awk -F'load averages:' '{print $2}' | awk '{print $1}')
+    if [ -f /proc/loadavg ]; then
+        load_avg=$(cat /proc/loadavg | awk '{print $1}')
+    else
+        load_avg=0
+    fi
+
+    # System Info
+    local os_version="Linux"
+    if [ -f /etc/os-release ]; then
+        os_version=$(grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '"')
+    fi
 
     # Create metrics JSON
     cat >"$METRICS_DIR/system_metrics_$timestamp.json" <<EOF
 {
   "timestamp": $timestamp,
-  "cpu_usage_percent": $cpu_usage,
-  "memory_usage_percent": $mem_usage,
-  "disk_usage_percent": $disk_usage,
-  "network_rx_bytes": $network_rx,
-  "network_tx_bytes": $network_tx,
-  "process_count": $process_count,
-  "load_average": $load_avg,
+  "cpu_usage_percent": ${cpu_usage:-0},
+  "memory_usage_percent": ${mem_usage:-0},
+  "disk_usage_percent": ${disk_usage:-0},
+  "network_rx_bytes": ${network_rx:-0},
+  "network_tx_bytes": ${network_tx:-0},
+  "process_count": ${process_count:-0},
+  "load_average": ${load_avg:-0},
   "system_info": {
     "hostname": "$(hostname)",
-    "os_version": "$(sw_vers -productVersion)",
+    "os_version": "$os_version",
     "kernel_version": "$(uname -r)"
   }
 }
@@ -699,6 +716,9 @@ EOF
 # Start monitoring daemon
 start_monitoring() {
     log_info "Starting system health monitoring daemon..."
+    
+    # Ensure initialization
+    initialize_monitoring
 
     # Create PID file
     echo $$ >"$MONITORING_DIR/monitoring.pid"
@@ -814,7 +834,11 @@ show_status() {
 # Main function
 main() {
     local command="$1"
-    shift
+    if [ -z "$command" ]; then
+        command="start"
+    else
+        shift
+    fi
 
     case "$command" in
     "init")

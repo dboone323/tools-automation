@@ -1,0 +1,35 @@
+{
+    "established_date": "2025-11-22T13:13:00Z",
+    "system_baselines": {
+    "cpu_usage_percent": 0,
+    "cpu_cores": ,
+    "memory_total_gb": 16,
+    "memory_used_gb": 0.105419,
+    "disk_usage_percent": 6,
+    "network_connectivity": "OK"
+},
+    "application_baselines": {
+    "mcp_server_status": "DOWN",
+    "total_agents": 188,
+    "active_agents": 0,
+    "plugin_count": 0,
+    "plugin_health": "UNKNOWN",
+    "python_sdk_exists": false,
+    "typescript_sdk_exists": false,
+    "go_sdk_exists": false
+},
+    "performance_baselines": {
+    "response_time_ms": "N/A",
+    "load_test_status": "NO_RECENT_TESTS",
+    "error_count_today": 0,
+    "uptime_seconds": "3:16"
+},
+    "baseline_period_days": 7,
+    "alert_thresholds": {
+        "cpu_usage_percent": 80,
+        "memory_usage_percent": 85,
+        "disk_usage_percent": 90,
+        "response_time_ms": 500,
+        "error_rate_threshold": 10
+    }
+}

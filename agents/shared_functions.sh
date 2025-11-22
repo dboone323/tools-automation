@@ -308,6 +308,27 @@ export -f increment_task_count
 export -f set_resource_limits
 export -f with_resource_limits
 
+# Standardized logging function
+log_message() {
+    local level="$1"
+    shift
+    local message="$*"
+    local timestamp
+    timestamp=$(date +'%Y-%m-%d %H:%M:%S')
+    local agent="${AGENT_NAME:-unknown_agent}"
+    local log_file="${LOG_FILE:-/dev/stdout}"
+
+    case "$level" in
+    "ERROR") echo "[$timestamp] [$agent] ❌ $message" | tee -a "${log_file}" ;;
+    "WARN") echo "[$timestamp] [$agent] ⚠️  $message" | tee -a "${log_file}" ;;
+    "INFO") echo "[$timestamp] [$agent] ℹ️  $message" | tee -a "${log_file}" ;;
+    "SUCCESS") echo "[$timestamp] [$agent] ✅ $message" | tee -a "${log_file}" ;;
+    "DEBUG") echo "[$timestamp] [$agent] 🔍 $message" | tee -a "${log_file}" ;;
+    *) echo "[$timestamp] [$agent] 📝 $message" | tee -a "${log_file}" ;;
+    esac
+}
+export -f log_message
+
 # Register this agent with MCP server (stub implementation)
 register_with_mcp() {
     local agent_name="$1"

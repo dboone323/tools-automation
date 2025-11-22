@@ -144,8 +144,8 @@ export PROJECT_NAME="${PROJECT_NAME:-CodingReviewer}"
 CONSECUTIVE_FAILURES=0
 MAX_CONSECUTIVE_FAILURES=3
 
-echo "[$(date)] build_agent: Script started, PID=$$" >>"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/build_agent.log"
-echo "[$(date)] build_agent: Auto-debug task creation enabled (max consecutive failures: ${MAX_CONSECUTIVE_FAILURES})" >>"/Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/build_agent.log"
+echo "[$(date)] build_agent: Script started, PID=$$" >>"${TOOLS_DIR:-$(get_tools_automation_dir)}/agents/build_agent.log"
+echo "[$(date)] build_agent: Auto-debug task creation enabled (max consecutive failures: ${MAX_CONSECUTIVE_FAILURES})" >>"${TOOLS_DIR:-$(get_tools_automation_dir)}/agents/build_agent.log"
 # Build Agent: Watches for changes and triggers builds automatically
 
 WORKSPACE="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
@@ -394,17 +394,17 @@ process_task() {
 
     # Process the build task
     echo "[$(date)] ${AGENT_NAME}: Creating multi-level backup before build..." >>"${LOG_FILE}"
-    nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed CodingReviewer >>"${LOG_FILE}" 2>&1 || true
+    nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/agents/backup_manager.sh backup_if_needed CodingReviewer >>"${LOG_FILE}" 2>&1 || true
     log_message "INFO" "Running build..."
-    nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh build >>"${LOG_FILE}" 2>&1
+    nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/automate.sh build >>"${LOG_FILE}" 2>&1
     log_message "INFO" "Running AI enhancement analysis..."
-    nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh analyze CodingReviewer >>"${LOG_FILE}" 2>&1
+    nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/ai_enhancement_system.sh analyze CodingReviewer >>"${LOG_FILE}" 2>&1
     log_message "INFO" "Auto-applying safe AI enhancements..."
-    nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh auto-apply CodingReviewer >>"${LOG_FILE}" 2>&1
+    nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/ai_enhancement_system.sh auto-apply CodingReviewer >>"${LOG_FILE}" 2>&1
     log_message "INFO" "Validating build and enhancements..."
-    nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/intelligent_autofix.sh validate CodingReviewer >>"${LOG_FILE}" 2>&1
+    nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/intelligent_autofix.sh validate CodingReviewer >>"${LOG_FILE}" 2>&1
     log_message "INFO" "Running automated tests after build and enhancements..."
-    nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1
+    nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/automate.sh test >>"${LOG_FILE}" 2>&1
 
     if tail -40 "${LOG_FILE}" | grep -q 'ROLLBACK'; then
         log_message "WARN" "Rollback detected after validation. Investigate issues."
@@ -418,7 +418,7 @@ process_task() {
         fi
     elif tail -40 "${LOG_FILE}" | grep -q 'error'; then
         log_message "ERROR" "Test failure detected, restoring last backup..."
-        /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh restore CodingReviewer >>"${LOG_FILE}" 2>&1
+        ${TOOLS_DIR:-$(get_tools_automation_dir)}/agents/backup_manager.sh restore CodingReviewer >>"${LOG_FILE}" 2>&1
         CONSECUTIVE_FAILURES=$((CONSECUTIVE_FAILURES + 1))
         log_message "WARN" "Consecutive failures: ${CONSECUTIVE_FAILURES}"
         success_flag="false"
@@ -649,28 +649,28 @@ perform_project_build() {
 
     # Run build operations with timeout protection
     log_message "INFO" "Creating multi-level backup before build..."
-    run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed "${project}" >>"${LOG_FILE}" 2>&1 || true
+    run_with_timeout 300 nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/agents/backup_manager.sh backup_if_needed "${project}" >>"${LOG_FILE}" 2>&1 || true
 
     log_message "INFO" "Running build..."
-    if ! run_with_timeout 600 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh build >>"${LOG_FILE}" 2>&1; then
+    if ! run_with_timeout 600 nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/automate.sh build >>"${LOG_FILE}" 2>&1; then
         log_message "ERROR" "Build failed for ${project}"
         return 1
     fi
 
     log_message "INFO" "Running AI enhancement analysis..."
-    run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh analyze "${project}" >>"${LOG_FILE}" 2>&1 || true
+    run_with_timeout 300 nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/ai_enhancement_system.sh analyze "${project}" >>"${LOG_FILE}" 2>&1 || true
 
     log_message "INFO" "Auto-applying safe AI enhancements..."
-    run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh auto-apply "${project}" >>"${LOG_FILE}" 2>&1 || true
+    run_with_timeout 300 nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/ai_enhancement_system.sh auto-apply "${project}" >>"${LOG_FILE}" 2>&1 || true
 
     log_message "INFO" "Validating build and enhancements..."
-    if ! run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/intelligent_autofix.sh validate "${project}" >>"${LOG_FILE}" 2>&1; then
+    if ! run_with_timeout 300 nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/intelligent_autofix.sh validate "${project}" >>"${LOG_FILE}" 2>&1; then
         log_message "ERROR" "Validation failed for ${project}"
         return 1
     fi
 
     log_message "INFO" "Running automated tests after build and enhancements..."
-    if ! run_with_timeout 600 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1; then
+    if ! run_with_timeout 600 nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/automate.sh test >>"${LOG_FILE}" 2>&1; then
         log_message "ERROR" "Tests failed for ${project}"
         return 1
     fi
@@ -700,7 +700,7 @@ perform_project_tests() {
 
     # Run tests with timeout protection
     log_message "INFO" "Running tests for ${project}..."
-    if ! run_with_timeout 600 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/automate.sh test >>"${LOG_FILE}" 2>&1; then
+    if ! run_with_timeout 600 nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/automate.sh test >>"${LOG_FILE}" 2>&1; then
         log_message "ERROR" "Tests failed for ${project}"
         return 1
     fi
@@ -726,7 +726,7 @@ perform_project_analysis() {
 
     # Run analysis operations
     log_message "INFO" "Running AI enhancement analysis for ${project}..."
-    run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/ai_enhancement_system.sh analyze "${project}" >>"${LOG_FILE}" 2>&1 || true
+    run_with_timeout 300 nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/ai_enhancement_system.sh analyze "${project}" >>"${LOG_FILE}" 2>&1 || true
 
     log_message "INFO" "Analysis completed for ${project}"
     return 0
@@ -739,7 +739,7 @@ perform_project_backup() {
     log_message "INFO" "Performing project backup for ${project}..."
 
     # Run backup operation
-    run_with_timeout 300 nice -n 19 /Users/danielstevens/Desktop/Quantum-workspace/Tools/Automation/agents/backup_manager.sh backup_if_needed "${project}" >>"${LOG_FILE}" 2>&1 || true
+    run_with_timeout 300 nice -n 19 ${TOOLS_DIR:-$(get_tools_automation_dir)}/agents/backup_manager.sh backup_if_needed "${project}" >>"${LOG_FILE}" 2>&1 || true
 
     log_message "INFO" "Backup completed for ${project}"
     return 0

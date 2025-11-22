@@ -45,8 +45,19 @@ get_agent_status() {
         
         if [[ $pid -gt 0 ]]; then
             status="running"
-            # Get uptime (seconds)
-            uptime=$(ps -p "$pid" -o etimes= 2>/dev/null | tr -d ' ' || echo "0")
+            # Get uptime (seconds) using lstart for macOS compatibility
+            local lstart
+            lstart=$(ps -p "$pid" -o lstart= 2>/dev/null)
+            if [[ -n "$lstart" ]]; then
+                local start_ts
+                start_ts=$(date -j -f "%a %b %d %T %Y" "$lstart" +%s 2>/dev/null || echo "0")
+                local current_ts
+                current_ts=$(date +%s)
+                if [[ "$start_ts" -gt 0 ]]; then
+                    uptime=$((current_ts - start_ts))
+                fi
+            fi
+            
             # Get memory (KB)
             memory=$(ps -p "$pid" -o rss= 2>/dev/null | tr -d ' ' || echo "0")
             # Get CPU percentage
@@ -66,7 +77,8 @@ get_agent_status() {
         status_json+="}"
     done
     
-    status_json+="],"
+    status_json+="]"
+    status_json+=","
     
     # System summary
     local running_count=$(pgrep -f "agent.*\.sh" 2>/dev/null | wc -l | tr -d ' ')

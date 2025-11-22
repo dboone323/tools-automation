@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: tools-automation-autonomy-system
     ports:
       - "8000:80" # Web dashboards
       - "3000:3000" # API port (if needed)

@@ -61,16 +61,6 @@
       "dependencies": []
     },
     {
-      "id": "todo_assign_1762989917764617000",
-      "type": "debug",
-      "description": "TODO: Implement actual save functionality (File: CodingReviewer/CodingReviewer/MainApp/CodingReviewer.swift:71)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990657,
-      "dependencies": []
-    },
-    {
       "id": "todo_assign_1762989917827040000",
       "type": "review",
       "description": "TODO: Implement review creation logic (File: CodingReviewer/CodingReviewer/NewReviewView.swift:27)",
@@ -81,64 +71,15 @@
       "dependencies": []
     },
     {
-      "id": "todo_assign_1762989917898573000",
-      "type": "debug",
-      "description": "TODO: Implement error handling (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:47)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990657,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762989917969733000",
-      "type": "debug",
-      "description": "FIXME: This method needs refactoring (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:68)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
-    },
-    {
       "id": "todo_assign_1762989918152131000",
       "type": "debug",
       "description": "TODO: Add validation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:161)",
       "priority": 5,
       "assigned_agent": "agent_debug.sh",
-      "status": "queued",
+      "status": "in_progress",
       "created": 1762990658,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762989918227771000",
-      "type": "debug",
-      "description": "TODO: First task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:212)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762989918298638000",
-      "type": "debug",
-      "description": "TODO: Second task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:213)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762989918369973000",
-      "type": "debug",
-      "description": "TODO: Add implementation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:227)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
+      "dependencies": [],
+      "started_at": 1763819954
     },
     {
       "id": "todo_assign_1762989918417358000",
@@ -151,71 +92,11 @@
       "dependencies": []
     },
     {
-      "id": "todo_assign_1762989918490930000",
-      "type": "debug",
-      "description": "TODO: Fix this later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:29)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
-    },
-    {
       "id": "todo_assign_1762989918534839000",
       "type": "security",
       "description": "TODO: Implement security check (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:79)",
       "priority": 5,
       "assigned_agent": "security_agent.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762989918618872000",
-      "type": "debug",
-      "description": "TODO: Fix later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:135)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762989918943760000",
-      "type": "debug",
-      "description": "TODO: is typically medium severity (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:192)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762989919084369000",
-      "type": "debug",
-      "description": "TODO: Complete implementation (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:301)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762989919155598000",
-      "type": "debug",
-      "description": "TODO: Fix this (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:394)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990658,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762989919232132000",
-      "type": "debug",
-      "description": "TODO: Add error handling (File: CodingReviewer/CodingReviewerTests/CodingReviewerTests.swift:75)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
       "status": "queued",
       "created": 1762990658,
       "dependencies": []
@@ -281,81 +162,11 @@
       "dependencies": []
     },
     {
-      "id": "todo_assign_1762990229611791000",
-      "type": "debug",
-      "description": "TODO: Implement actual save functionality (File: CodingReviewer/CodingReviewer/MainApp/CodingReviewer.swift:71)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
       "id": "todo_assign_1762990229674558000",
       "type": "review",
       "description": "TODO: Implement review creation logic (File: CodingReviewer/CodingReviewer/NewReviewView.swift:27)",
       "priority": 5,
       "assigned_agent": "code_review_agent.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990229747959000",
-      "type": "debug",
-      "description": "TODO: Implement error handling (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:47)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990229820940000",
-      "type": "debug",
-      "description": "FIXME: This method needs refactoring (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:68)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990230005787000",
-      "type": "debug",
-      "description": "TODO: Add validation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:161)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990230083654000",
-      "type": "debug",
-      "description": "TODO: First task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:212)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990230155964000",
-      "type": "debug",
-      "description": "TODO: Second task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:213)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990230227516000",
-      "type": "debug",
-      "description": "TODO: Add implementation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:227)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
       "status": "queued",
       "created": 1762990659,
       "dependencies": []
@@ -371,71 +182,11 @@
       "dependencies": []
     },
     {
-      "id": "todo_assign_1762990230346369000",
-      "type": "debug",
-      "description": "TODO: Fix this later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:29)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
       "id": "todo_assign_1762990230387765000",
       "type": "security",
       "description": "TODO: Implement security check (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:79)",
       "priority": 5,
       "assigned_agent": "security_agent.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990230459007000",
-      "type": "debug",
-      "description": "TODO: Fix later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:135)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990230777873000",
-      "type": "debug",
-      "description": "TODO: is typically medium severity (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:192)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990230918276000",
-      "type": "debug",
-      "description": "TODO: Complete implementation (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:301)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990230988283000",
-      "type": "debug",
-      "description": "TODO: Fix this (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:394)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990659,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990231058928000",
-      "type": "debug",
-      "description": "TODO: Add error handling (File: CodingReviewer/CodingReviewerTests/CodingReviewerTests.swift:75)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
       "status": "queued",
       "created": 1762990659,
       "dependencies": []
@@ -511,81 +262,11 @@
       "dependencies": []
     },
     {
-      "id": "todo_assign_1762990548244698000",
-      "type": "debug",
-      "description": "TODO: Implement actual save functionality (File: CodingReviewer/CodingReviewer/MainApp/CodingReviewer.swift:71)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
       "id": "todo_assign_1762990548316393000",
       "type": "review",
       "description": "TODO: Implement review creation logic (File: CodingReviewer/CodingReviewer/NewReviewView.swift:27)",
       "priority": 5,
       "assigned_agent": "code_review_agent.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990548410410000",
-      "type": "debug",
-      "description": "TODO: Implement error handling (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:47)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990548504469000",
-      "type": "debug",
-      "description": "FIXME: This method needs refactoring (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:68)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990548714623000",
-      "type": "debug",
-      "description": "TODO: Add validation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:161)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990548799999000",
-      "type": "debug",
-      "description": "TODO: First task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:212)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990548890671000",
-      "type": "debug",
-      "description": "TODO: Second task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:213)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990549003129000",
-      "type": "debug",
-      "description": "TODO: Add implementation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:227)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
       "status": "queued",
       "created": 1762990660,
       "dependencies": []
@@ -601,51 +282,11 @@
       "dependencies": []
     },
     {
-      "id": "todo_assign_1762990549146146000",
-      "type": "debug",
-      "description": "TODO: Fix this later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:29)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
       "id": "todo_assign_1762990549198069000",
       "type": "security",
       "description": "TODO: Implement security check (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:79)",
       "priority": 5,
       "assigned_agent": "security_agent.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990549296805000",
-      "type": "debug",
-      "description": "TODO: Fix later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:135)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990549673131000",
-      "type": "debug",
-      "description": "TODO: is typically medium severity (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:192)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
-      "status": "queued",
-      "created": 1762990660,
-      "dependencies": []
-    },
-    {
-      "id": "todo_assign_1762990549857136000",
-      "type": "debug",
-      "description": "TODO: Complete implementation (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:301)",
-      "priority": 5,
-      "assigned_agent": "agent_debug.sh",
       "status": "queued",
       "created": 1762990660,
       "dependencies": []
@@ -680,5 +321,440 @@
       "created": 1762990661,
       "dependencies": []
     }
-  ]
+  ],
+  "completed": [
+    {
+      "id": "todo_assign_1762989917764617000",
+      "type": "debug",
+      "description": "TODO: Implement actual save functionality (File: CodingReviewer/CodingReviewer/MainApp/CodingReviewer.swift:71)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990657,
+      "dependencies": [],
+      "started_at": 1763819939,
+      "completed_at": 1763819939
+    },
+    {
+      "id": "todo_assign_1762989917898573000",
+      "type": "debug",
+      "description": "TODO: Implement error handling (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:47)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990657,
+      "dependencies": [],
+      "started_at": 1763819941,
+      "completed_at": 1763819941
+    },
+    {
+      "id": "todo_assign_1762989917969733000",
+      "type": "debug",
+      "description": "FIXME: This method needs refactoring (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:68)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763819945,
+      "completed_at": 1763819946
+    },
+    {
+      "id": "todo_assign_1762989918227771000",
+      "type": "debug",
+      "description": "TODO: First task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:212)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763819958,
+      "completed_at": 1763819958
+    },
+    {
+      "id": "todo_assign_1762989918298638000",
+      "type": "debug",
+      "description": "TODO: Second task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:213)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763819960,
+      "completed_at": 1763819960
+    },
+    {
+      "id": "todo_assign_1762989918369973000",
+      "type": "debug",
+      "description": "TODO: Add implementation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:227)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763819964,
+      "completed_at": 1763819964
+    },
+    {
+      "id": "todo_assign_1762989918490930000",
+      "type": "debug",
+      "description": "TODO: Fix this later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:29)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763819972,
+      "completed_at": 1763819973
+    },
+    {
+      "id": "todo_assign_1762989918618872000",
+      "type": "debug",
+      "description": "TODO: Fix later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:135)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763819992,
+      "completed_at": 1763819992
+    },
+    {
+      "id": "todo_assign_1762989918943760000",
+      "type": "debug",
+      "description": "TODO: is typically medium severity (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:192)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763819994,
+      "completed_at": 1763819994
+    },
+    {
+      "id": "todo_assign_1762989919084369000",
+      "type": "debug",
+      "description": "TODO: Complete implementation (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:301)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763819998,
+      "completed_at": 1763819999
+    },
+    {
+      "id": "todo_assign_1762989919155598000",
+      "type": "debug",
+      "description": "TODO: Fix this (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:394)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763820007,
+      "completed_at": 1763820007
+    },
+    {
+      "id": "todo_assign_1762989919232132000",
+      "type": "debug",
+      "description": "TODO: Add error handling (File: CodingReviewer/CodingReviewerTests/CodingReviewerTests.swift:75)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990658,
+      "dependencies": [],
+      "started_at": 1763820023,
+      "completed_at": 1763820023
+    },
+    {
+      "id": "todo_assign_1762990229611791000",
+      "type": "debug",
+      "description": "TODO: Implement actual save functionality (File: CodingReviewer/CodingReviewer/MainApp/CodingReviewer.swift:71)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820055,
+      "completed_at": 1763820055
+    },
+    {
+      "id": "todo_assign_1762990229747959000",
+      "type": "debug",
+      "description": "TODO: Implement error handling (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:47)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820120,
+      "completed_at": 1763820120
+    },
+    {
+      "id": "todo_assign_1762990229820940000",
+      "type": "debug",
+      "description": "FIXME: This method needs refactoring (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:68)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820267,
+      "completed_at": 1763820267
+    },
+    {
+      "id": "todo_assign_1762990230005787000",
+      "type": "debug",
+      "description": "TODO: Add validation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:161)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820269,
+      "completed_at": 1763820269
+    },
+    {
+      "id": "todo_assign_1762990230083654000",
+      "type": "debug",
+      "description": "TODO: First task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:212)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820273,
+      "completed_at": 1763820273
+    },
+    {
+      "id": "todo_assign_1762990230155964000",
+      "type": "debug",
+      "description": "TODO: Second task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:213)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820282,
+      "completed_at": 1763820282
+    },
+    {
+      "id": "todo_assign_1762990230227516000",
+      "type": "debug",
+      "description": "TODO: Add implementation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:227)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820301,
+      "completed_at": 1763820301
+    },
+    {
+      "id": "todo_assign_1762990230346369000",
+      "type": "debug",
+      "description": "TODO: Fix this later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:29)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820304,
+      "completed_at": 1763820304
+    },
+    {
+      "id": "todo_assign_1762990230459007000",
+      "type": "debug",
+      "description": "TODO: Fix later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:135)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820308,
+      "completed_at": 1763820308
+    },
+    {
+      "id": "todo_assign_1762990230777873000",
+      "type": "debug",
+      "description": "TODO: is typically medium severity (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:192)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820316,
+      "completed_at": 1763820316
+    },
+    {
+      "id": "todo_assign_1762990230918276000",
+      "type": "debug",
+      "description": "TODO: Complete implementation (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:301)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820332,
+      "completed_at": 1763820333
+    },
+    {
+      "id": "todo_assign_1762990230988283000",
+      "type": "debug",
+      "description": "TODO: Fix this (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:394)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820365,
+      "completed_at": 1763820365
+    },
+    {
+      "id": "todo_assign_1762990231058928000",
+      "type": "debug",
+      "description": "TODO: Add error handling (File: CodingReviewer/CodingReviewerTests/CodingReviewerTests.swift:75)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990659,
+      "dependencies": [],
+      "started_at": 1763820429,
+      "completed_at": 1763820429
+    },
+    {
+      "id": "todo_assign_1762990548244698000",
+      "type": "debug",
+      "description": "TODO: Implement actual save functionality (File: CodingReviewer/CodingReviewer/MainApp/CodingReviewer.swift:71)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820578,
+      "completed_at": 1763820578
+    },
+    {
+      "id": "todo_assign_1762990548410410000",
+      "type": "debug",
+      "description": "TODO: Implement error handling (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:47)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820581,
+      "completed_at": 1763820581
+    },
+    {
+      "id": "todo_assign_1762990548504469000",
+      "type": "debug",
+      "description": "FIXME: This method needs refactoring (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:68)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820585,
+      "completed_at": 1763820585
+    },
+    {
+      "id": "todo_assign_1762990548714623000",
+      "type": "debug",
+      "description": "TODO: Add validation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:161)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820593,
+      "completed_at": 1763820593
+    },
+    {
+      "id": "todo_assign_1762990548799999000",
+      "type": "debug",
+      "description": "TODO: First task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:212)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820613,
+      "completed_at": 1763820613
+    },
+    {
+      "id": "todo_assign_1762990548890671000",
+      "type": "debug",
+      "description": "TODO: Second task (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:213)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820615,
+      "completed_at": 1763820615
+    },
+    {
+      "id": "todo_assign_1762990549003129000",
+      "type": "debug",
+      "description": "TODO: Add implementation (File: CodingReviewer/CodingReviewerTests/BugDetectionServiceTests.swift:227)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820619,
+      "completed_at": 1763820619
+    },
+    {
+      "id": "todo_assign_1762990549146146000",
+      "type": "debug",
+      "description": "TODO: Fix this later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:29)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820627,
+      "completed_at": 1763820628
+    },
+    {
+      "id": "todo_assign_1762990549296805000",
+      "type": "debug",
+      "description": "TODO: Fix later (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:135)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820644,
+      "completed_at": 1763820644
+    },
+    {
+      "id": "todo_assign_1762990549673131000",
+      "type": "debug",
+      "description": "TODO: is typically medium severity (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:192)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820676,
+      "completed_at": 1763820676
+    },
+    {
+      "id": "todo_assign_1762990549857136000",
+      "type": "debug",
+      "description": "TODO: Complete implementation (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:301)",
+      "priority": 5,
+      "assigned_agent": "agent_debug.sh",
+      "status": "completed",
+      "created": 1762990660,
+      "dependencies": [],
+      "started_at": 1763820740,
+      "completed_at": 1763820740
+    }
+  ],
+  "failed": []
 }
