@@ -16,3 +16,6 @@
 [submodule "shared-kit"]
 	path = shared-kit
 	url = https://github.com/dboone323/shared-kit.git
+[submodule "src/mcp-sdk"]
+	path = src/mcp-sdk
+	url = https://github.com/dboone323/mcp-sdk.git

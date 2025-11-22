@@ -83,7 +83,7 @@
     },
     "task_orchestrator.sh": {
       "status": "active",
-      "last_seen": 1763820761,
+      "last_seen": 1763820883,
       "tasks_completed": 0
     },
     "auto_update_agent.sh": {
@@ -163,14 +163,14 @@
     },
     "ControlAgent": {
       "status": "idle",
-      "last_seen": 1763820773,
+      "last_seen": 1763820891,
       "pid": 84934
     }
   },
-  "last_update": 1763820773,
+  "last_update": 1763820891,
   "orchestrator": {
     "status": "available",
-    "last_seen": 1763820761,
+    "last_seen": 1763820883,
     "pid": 71364,
     "is_running": true,
     "tasks_queued": 0,

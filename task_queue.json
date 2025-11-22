@@ -297,9 +297,10 @@
       "description": "TODO: Fix this (File: CodingReviewer/CodingReviewerTests/CodeAnalysisEngineIntegrationTests.swift:394)",
       "priority": 5,
       "assigned_agent": "agent_debug.sh",
-      "status": "queued",
+      "status": "in_progress",
       "created": 1762990660,
-      "dependencies": []
+      "dependencies": [],
+      "started_at": 1763820869
     },
     {
       "id": "todo_assign_1762990550039901000",
