@@ -6,8 +6,8 @@
       "pid": 77777
     },
     "agent_debug.sh": {
-      "status": "available",
-      "last_seen": 1763820761,
+      "status": "idle",
+      "last_seen": 1763820944,
       "tasks_completed": 5
     },
     "agent_build.sh": {
@@ -83,7 +83,7 @@
     },
     "task_orchestrator.sh": {
       "status": "active",
-      "last_seen": 1763820883,
+      "last_seen": 1763821006,
       "tasks_completed": 0
     },
     "auto_update_agent.sh": {
@@ -163,14 +163,14 @@
     },
     "ControlAgent": {
       "status": "idle",
-      "last_seen": 1763820891,
+      "last_seen": 1763821004,
       "pid": 84934
     }
   },
-  "last_update": 1763820891,
+  "last_update": 1763821006,
   "orchestrator": {
     "status": "available",
-    "last_seen": 1763820883,
+    "last_seen": 1763821006,
     "pid": 71364,
     "is_running": true,
     "tasks_queued": 0,
